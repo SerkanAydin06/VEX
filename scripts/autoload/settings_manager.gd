@@ -286,5 +286,5 @@ func _set_bus_volume(bus_name: StringName, linear_value: float) -> void:
 func _center_window() -> void:
 	var screen := DisplayServer.window_get_current_screen()
 	var screen_size := DisplayServer.screen_get_size(screen)
-	var new_position := (screen_size - resolution) / 2
+	var new_position := (screen_size - resolution) / 2.0
 	DisplayServer.window_set_position(new_position)
