@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mp90_empty"]
+
+[node name="MP90Sprite" type="AnimatedSprite2D"]
+visible = false
+texture_filter = 2
+position = Vector2(982, 790)
+sprite_frames = SubResource("SpriteFrames_mp90_empty")

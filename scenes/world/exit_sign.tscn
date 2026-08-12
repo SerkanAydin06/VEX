@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dao3phjjleug0"]
+
+[ext_resource type="Texture2D" uid="uid://kerrqy8ki16c" path="res://assets/world/exit_sign_frame_v2.png" id="1_frame"]
+[ext_resource type="FontFile" uid="uid://dt6b8nj54csq0" path="res://assets/fonts/vex_ui_bold.ttf" id="2_font"]
+
+[node name="ExitSign" type="Node3D"]
+
+[node name="Frame" type="Sprite3D" parent="."]
+pixel_size = 0.0025
+alpha_cut = 1
+texture_filter = 5
+texture = ExtResource("1_frame")
+
+[node name="Text" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.015)
+pixel_size = 0.0032
+alpha_cut = 1
+render_priority = 1
+modulate = Color(0.48, 1, 0.82, 1)
+outline_modulate = Color(0.005, 0.025, 0.028, 1)
+text = "ÇIKIŞ"
+font = ExtResource("2_font")
+font_size = 96

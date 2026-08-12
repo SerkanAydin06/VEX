@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://bx5ec3r640gak"]
+
+[ext_resource type="Script" uid="uid://d0imi3o7q2nw8" path="res://scripts/props/finish_switch.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bfl1mcv8ljpdd" path="res://assets/world/finish_switch.png" id="2_ue8u2"]
+
+[sub_resource type="BoxShape3D" id="BoxShape_switch"]
+size = Vector3(0.96, 1.36, 0.18)
+
+[node name="FinishSwitch" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="PanelBody" type="StaticBody3D" parent="."]
+collision_layer = 8
+collision_mask = 0
+
+[node name="FinishSwitchVisual" type="Sprite3D" parent="PanelBody"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0.105)
+pixel_size = 0.002
+alpha_cut = 1
+texture_filter = 1
+texture = ExtResource("2_ue8u2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PanelBody"]
+shape = SubResource("BoxShape_switch")

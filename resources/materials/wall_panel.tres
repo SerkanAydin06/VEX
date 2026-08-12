@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://8sahkd53buaf"]
+
+[ext_resource type="Texture2D" uid="uid://dcb0f7jpq35jm" path="res://assets/world/wall_panel_v2.png" id="1_texture"]
+
+[resource]
+resource_name = "Wall Panel — replace albedo texture here"
+albedo_texture = ExtResource("1_texture")
+albedo_texture_force_srgb = true
+roughness = 0.78
+uv1_scale = Vector3(2, 2, 1)
+uv1_triplanar_sharpness = 8.0
+texture_filter = 2

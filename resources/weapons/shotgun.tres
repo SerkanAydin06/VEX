@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
+
+[resource]
+script = ExtResource("1_weapon")
+weapon_id = &"shotgun"
+display_name = "KIRICI POMPALI"
+ammo_type = &"shells"
+magazine_size = 6
+damage_per_pellet = 11
+pellet_count = 8
+fire_interval = 0.82
+reload_duration = 1.45
+spread_degrees = 5.5
+maximum_range = 48.0
+automatic = false
+recoil_vertical_degrees = 3.8
+recoil_horizontal_degrees = 0.45
+recoil_max_vertical_degrees = 5.6
+recoil_max_horizontal_degrees = 1.0
+recoil_recovery_degrees_per_second = 6.0
+

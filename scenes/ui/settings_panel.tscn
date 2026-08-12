@@ -1,0 +1,186 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/settings_panel.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/ui/vex_theme.tres" id="2_theme"]
+
+[node name="SettingsPanel" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(820, 880)
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+theme_override_constants/margin_left = 42
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 42
+theme_override_constants/margin_bottom = 28
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Margin/VBox"]
+theme_override_colors/font_color = Color(0.3, 0.87, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "AYARLAR"
+
+[node name="Divider" type="HSeparator" parent="Margin/VBox"]
+
+[node name="SettingsGrid" type="GridContainer" parent="Margin/VBox"]
+size_flags_vertical = 3
+theme_override_constants/h_separation = 28
+theme_override_constants/v_separation = 13
+columns = 2
+
+[node name="DifficultyLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "ZORLUK"
+
+[node name="DifficultyOption" type="OptionButton" parent="Margin/VBox/SettingsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 56)
+size_flags_horizontal = 3
+tooltip_text = "Yeni oyun başlatıldığında uygulanır ve kayıt boyunca korunur."
+
+[node name="ResolutionLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "ÇÖZÜNÜRLÜK"
+
+[node name="ResolutionOption" type="OptionButton" parent="Margin/VBox/SettingsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 56)
+size_flags_horizontal = 3
+
+[node name="GraphicsQualityLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "3B GÖRÜNTÜ KALİTESİ"
+
+[node name="GraphicsQualityOption" type="OptionButton" parent="Margin/VBox/SettingsGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 56)
+size_flags_horizontal = 3
+tooltip_text = "Yalnız 3B dünyayı ölçekler; arayüz ve nişangah tam çözünürlükte kalır."
+
+[node name="FullscreenLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "TAM EKRAN"
+
+[node name="FullscreenCheck" type="CheckButton" parent="Margin/VBox/SettingsGrid"]
+unique_name_in_owner = true
+text = "ETKİN"
+
+[node name="VsyncLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "DİKEY EŞİTLEME"
+
+[node name="VsyncCheck" type="CheckButton" parent="Margin/VBox/SettingsGrid"]
+unique_name_in_owner = true
+text = "ETKİN"
+
+[node name="MasterLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "ANA SES"
+
+[node name="MasterRow" type="HBoxContainer" parent="Margin/VBox/SettingsGrid"]
+theme_override_constants/separation = 12
+
+[node name="MasterSlider" type="HSlider" parent="Margin/VBox/SettingsGrid/MasterRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(270, 38)
+size_flags_horizontal = 3
+value = 85.0
+
+[node name="MasterValue" type="Label" parent="Margin/VBox/SettingsGrid/MasterRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+text = "85%"
+horizontal_alignment = 2
+
+[node name="MusicLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "MÜZİK"
+
+[node name="MusicRow" type="HBoxContainer" parent="Margin/VBox/SettingsGrid"]
+theme_override_constants/separation = 12
+
+[node name="MusicSlider" type="HSlider" parent="Margin/VBox/SettingsGrid/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(270, 38)
+size_flags_horizontal = 3
+value = 65.0
+
+[node name="MusicValue" type="Label" parent="Margin/VBox/SettingsGrid/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+text = "65%"
+horizontal_alignment = 2
+
+[node name="SfxLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "EFEKT SESİ"
+
+[node name="SfxRow" type="HBoxContainer" parent="Margin/VBox/SettingsGrid"]
+theme_override_constants/separation = 12
+
+[node name="SfxSlider" type="HSlider" parent="Margin/VBox/SettingsGrid/SfxRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(270, 38)
+size_flags_horizontal = 3
+value = 85.0
+
+[node name="SfxValue" type="Label" parent="Margin/VBox/SettingsGrid/SfxRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+text = "85%"
+horizontal_alignment = 2
+
+[node name="BrightnessLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "PARLAKLIK"
+
+[node name="BrightnessRow" type="HBoxContainer" parent="Margin/VBox/SettingsGrid"]
+theme_override_constants/separation = 12
+
+[node name="BrightnessSlider" type="HSlider" parent="Margin/VBox/SettingsGrid/BrightnessRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(270, 38)
+size_flags_horizontal = 3
+min_value = 35.0
+max_value = 200.0
+step = 1.0
+value = 115.0
+
+[node name="BrightnessValue" type="Label" parent="Margin/VBox/SettingsGrid/BrightnessRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+text = "115%"
+horizontal_alignment = 2
+
+[node name="SensitivityLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "FARE HASSASİYETİ"
+
+[node name="SensitivityRow" type="HBoxContainer" parent="Margin/VBox/SettingsGrid"]
+theme_override_constants/separation = 12
+
+[node name="SensitivitySlider" type="HSlider" parent="Margin/VBox/SettingsGrid/SensitivityRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(270, 38)
+size_flags_horizontal = 3
+min_value = 30.0
+max_value = 300.0
+step = 1.0
+value = 110.0
+
+[node name="SensitivityValue" type="Label" parent="Margin/VBox/SettingsGrid/SensitivityRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+text = "0.11"
+horizontal_alignment = 2
+
+[node name="ShakeLabel" type="Label" parent="Margin/VBox/SettingsGrid"]
+text = "EKRAN SARSINTISI"
+
+[node name="ShakeCheck" type="CheckButton" parent="Margin/VBox/SettingsGrid"]
+unique_name_in_owner = true
+text = "ETKİN"
+button_pressed = true
+
+[node name="Hint" type="Label" parent="Margin/VBox"]
+theme_override_colors/font_color = Color(0.47, 0.61, 0.67, 1)
+theme_override_font_sizes/font_size = 17
+text = "Ayarlar otomatik kaydedilir. Parlaklık ve 3B kalite anında uygulanır. Zorluk seçimi yeni oyunda uygulanır."
+autowrap_mode = 2
+
+[node name="CloseButton" type="Button" parent="Margin/VBox"]
+unique_name_in_owner = true
+text = "GERİ"

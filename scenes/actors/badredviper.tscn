@@ -1,0 +1,241 @@
+[gd_scene load_steps=31 format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/badredviper.gd" id="1_script"]
+[ext_resource type="AudioStream" path="res://assets/audio/enemy_hurt_pro.wav" id="2_hurt_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/redviper_death.mp3" id="3_death_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/redviper_attack.mp3" id="4_attack_audio"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_attack_1.png" id="5_attack1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_attack_2.png" id="6_attack2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_attack_3.png" id="7_attack3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_attack_4.png" id="8_attack4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_death_1.png" id="9_death1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_death_2.png" id="10_death2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_death_3.png" id="11_death3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_death_4.png" id="12_death4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_1.png" id="13_idle1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_2.png" id="14_idle2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_3.png" id="15_idle3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_4.png" id="16_idle4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_back_1.png" id="17_idle_back1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_back_2.png" id="18_idle_back2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_back_3.png" id="19_idle_back3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_back_4.png" id="20_idle_back4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_1.png" id="21_walk1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_2.png" id="22_walk2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_3.png" id="23_walk3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_4.png" id="24_walk4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_back_1.png" id="25_walk_back1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_back_2.png" id="26_walk_back2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_back_3.png" id="27_walk_back3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_back_4.png" id="28_walk_back4"]
+[ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="29_shadow"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_badredviper"]
+radius = 0.82
+height = 3.1
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_badredviper"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_attack1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_attack2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_attack3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_attack4")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_death1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_death2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_death3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_death4")
+}],
+"loop": false,
+"name": &"death",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_death1")
+}],
+"loop": false,
+"name": &"hurt",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_idle1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_idle2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_idle3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_idle4")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 3.2
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_idle_back1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_idle_back2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_idle_back3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_idle_back4")
+}],
+"loop": true,
+"name": &"idle_back",
+"speed": 3.2
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_walk1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_walk2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_walk3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_walk4")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("25_walk_back1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_walk_back2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_walk_back3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_walk_back4")
+}],
+"loop": true,
+"name": &"walk_back",
+"speed": 7.0
+}]
+
+[node name="BadRedViper" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 11
+floor_snap_length = 0.3
+safe_margin = 0.06
+script = ExtResource("1_script")
+enemy_id = &"badredviper"
+maximum_health = 190
+spawn_min_difficulty = 0
+apply_difficulty_scaling = true
+move_speed = 3.0
+chase_speed = 6.8
+movement_acceleration = 18.0
+braking_acceleration = 12.0
+gravity_scale = 1.0
+floor_stick_velocity = -0.1
+patrol_offset = Vector3(2, 0, 0)
+patrol_pause_duration = 0.65
+patrol_reach_distance = 0.35
+investigation_reach_distance = 0.55
+detour_duration = 0.55
+detection_range = 15.0
+pursuit_range = 26.0
+initial_view_angle = 360.0
+lost_sight_timeout = 20.0
+search_duration = 10.0
+ally_alert_radius = 10.0
+sight_origin_height = 1.7
+sight_target_height = 0.45
+attack_range = 2.25
+attack_damage = 28
+attack_cooldown = 0.95
+attack_windup = 0.25
+attack_range_tolerance = 0.45
+attack_lunge_speed = 11.4
+attack_lunge_acceleration = 52.0
+attack_lunge_duration = 0.25
+attack_lunge_stop_distance = 1.05
+back_view_threshold = -0.15
+hurt_reaction_duration = 0.08
+hurt_stops_movement = false
+hurt_flash_color = Color(1, 0.3, 0.25, 1)
+hurt_flash_duration = 0.08
+corpse_visual_y = 1.1865
+death_settle_duration = 0.55
+near_sight_interval = 0.08
+far_sight_interval = 0.18
+dormant_distance = 32.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0532, 0)
+shape = SubResource("CapsuleShape_badredviper")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1865, 0)
+cast_shadow = 0
+pixel_size = 0.0062
+billboard = 1
+shaded = true
+texture_filter = 1
+alpha_cut = 1
+sprite_frames = SubResource("SpriteFrames_badredviper")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="GroundShadow" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.4768, 0)
+modulate = Color(1, 1, 1, 0.74)
+cast_shadow = 0
+pixel_size = 0.0085
+texture_filter = 5
+render_priority = -1
+texture = ExtResource("29_shadow")
+
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_hurt_audio")
+volume_db = -2.0
+max_distance = 18.0
+bus = &"SFX"
+
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_death_audio")
+volume_db = 0.5
+max_distance = 20.0
+bus = &"SFX"
+
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_attack_audio")
+volume_db = -1.0
+max_polyphony = 2
+max_distance = 18.0
+bus = &"SFX"

@@ -1,0 +1,256 @@
+[gd_scene load_steps=33 format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/hellmagma.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_attack_1.png" id="2_attack1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_attack_2.png" id="3_attack2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_attack_3.png" id="4_attack3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_attack_4.png" id="5_attack4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_death_1.png" id="6_death1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_death_2.png" id="7_death2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_death_3.png" id="8_death3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_death_4.png" id="9_death4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_1.png" id="10_idle1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_2.png" id="11_idle2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_3.png" id="12_idle3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_4.png" id="13_idle4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_back_1.png" id="14_idle_back1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_back_2.png" id="15_idle_back2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_back_3.png" id="16_idle_back3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_back_4.png" id="17_idle_back4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_1.png" id="18_walk1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_2.png" id="19_walk2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_3.png" id="20_walk3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_4.png" id="21_walk4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_back_1.png" id="22_walk_back1"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_back_2.png" id="23_walk_back2"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_back_3.png" id="24_walk_back3"]
+[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_back_4.png" id="25_walk_back4"]
+[ext_resource type="PackedScene" path="res://scenes/actors/hellmagma_projectile.tscn" id="26_projectile"]
+[ext_resource type="AudioStream" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/enemy_death_scream_pro.wav" id="29_death_audio"]
+[ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="30_shadow"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_hellmagma"]
+radius = 1.0
+height = 3.6
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hellmagma"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_attack1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_attack2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_attack3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_attack4")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_death1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_death2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_death3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_death4")
+}],
+"loop": false,
+"name": &"death",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_death1")
+}],
+"loop": false,
+"name": &"hurt",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_idle1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_idle2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_idle3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_idle4")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_idle_back1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_idle_back2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_idle_back3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_idle_back4")
+}],
+"loop": true,
+"name": &"idle_back",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_walk1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_walk2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_walk3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_walk4")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("22_walk_back1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_walk_back2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_walk_back3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_walk_back4")
+}],
+"loop": true,
+"name": &"walk_back",
+"speed": 5.5
+}]
+
+[node name="HellMagma" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 11
+floor_snap_length = 0.3
+safe_margin = 0.06
+script = ExtResource("1_script")
+enemy_id = &"hellmagma"
+maximum_health = 240
+spawn_min_difficulty = 0
+apply_difficulty_scaling = true
+move_speed = 3.2
+movement_acceleration = 14.0
+braking_acceleration = 22.0
+gravity_scale = 1.0
+floor_stick_velocity = -0.1
+patrol_offset = Vector3(1, 0, 0)
+detection_range = 22.0
+pursuit_range = 28.0
+initial_view_angle = 360.0
+lost_sight_timeout = 20.0
+search_duration = 10.0
+search_turn_speed = 55.0
+ally_alert_radius = 13.0
+sight_origin_height = 1.8
+sight_target_height = 0.45
+sight_collision_mask = 3
+attack_damage = 28
+attack_range = 15.0
+attack_cooldown = 1.05
+attack_windup = 0.43
+attack_range_tolerance = 5.0
+projectile_scene = ExtResource("26_projectile")
+projectile_spawn_height = 2.0
+projectile_spawn_side_offset = 0.0
+projectile_target_height = 0.4
+projectile_lead_factor = 1.0
+projectile_max_lead_time = 1.8
+attack_approach_speed = 2.4
+attack_strafe_speed = 1.0
+attack_preferred_distance = 6.5
+path_refresh_interval = 0.3
+waypoint_link_distance = 9.0
+navigation_clearance = 1.0
+waypoint_reach_distance = 0.8
+path_target_change_distance = 1.0
+patrol_path_refresh_interval = 0.45
+endpoint_link_distance_multiplier = 1.5
+endpoint_candidate_count = 12
+endpoint_connection_limit = 5
+investigation_candidate_count = 20
+navigation_collision_mask = 9
+idle_detection_margin = 8.0
+near_sight_interval = 0.1
+medium_sight_interval = 0.16
+distant_think_distance = 28.0
+distant_sight_interval = 0.2
+idle_far_sight_interval = 0.3
+distant_path_refresh_interval = 0.55
+dormant_distance = 36.0
+back_view_threshold = -0.15
+hurt_reaction_duration = 0.12
+corpse_visual_y = 0.2
+back_corpse_visual_y = 0.2
+death_fall_time = 0.35
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape_hellmagma")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+cast_shadow = 0
+pixel_size = 0.0073547
+billboard = 1
+shaded = true
+texture_filter = 1
+alpha_cut = 1
+sprite_frames = SubResource("SpriteFrames_hellmagma")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="GroundShadow" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -1.78, 0)
+modulate = Color(1, 1, 1, 0.78)
+cast_shadow = 0
+pixel_size = 0.0103
+texture_filter = 5
+render_priority = -1
+texture = ExtResource("30_shadow")
+
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("27_attack_audio")
+volume_db = 1.0
+max_distance = 24.0
+bus = &"SFX"
+
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("28_hurt_audio")
+volume_db = -1.0
+max_distance = 22.0
+bus = &"SFX"
+
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("29_death_audio")
+volume_db = 2.5
+max_distance = 26.0
+bus = &"SFX"

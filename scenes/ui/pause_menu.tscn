@@ -1,0 +1,93 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/ui/vex_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/ui/settings_panel.tscn" id="3_settings"]
+
+[node name="PauseMenu" type="Control"]
+visible = false
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.003, 0.008, 0.012, 0.82)
+
+[node name="MenuPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 650.0
+offset_top = 210.0
+offset_right = 1270.0
+offset_bottom = 870.0
+
+[node name="Margin" type="MarginContainer" parent="MenuPanel"]
+theme_override_constants/margin_left = 58
+theme_override_constants/margin_top = 46
+theme_override_constants/margin_right = 58
+theme_override_constants/margin_bottom = 46
+
+[node name="VBox" type="VBoxContainer" parent="MenuPanel/Margin"]
+theme_override_constants/separation = 20
+
+[node name="Eyebrow" type="Label" parent="MenuPanel/Margin/VBox"]
+theme_override_colors/font_color = Color(1, 0.35, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "// SİSTEM DURAKLATILDI"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="MenuPanel/Margin/VBox"]
+theme_override_colors/font_color = Color(0.38, 0.88, 1, 1)
+theme_override_font_sizes/font_size = 46
+text = "DURAKLATILDI"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="MenuPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 20)
+
+[node name="ResumeButton" type="Button" parent="MenuPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+text = "OYUNA DÖN"
+
+[node name="CheckpointButton" type="Button" parent="MenuPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+text = "BÖLÜMÜ BAŞTAN BAŞLAT"
+
+[node name="SettingsButton" type="Button" parent="MenuPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+text = "AYARLAR"
+
+[node name="MainMenuButton" type="Button" parent="MenuPanel/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+text = "ANA MENÜ"
+
+[node name="Hint" type="Label" parent="MenuPanel/Margin/VBox"]
+theme_override_colors/font_color = Color(0.42, 0.55, 0.6, 1)
+theme_override_font_sizes/font_size = 17
+text = "ESC ile oyuna dönebilirsin."
+horizontal_alignment = 1
+
+[node name="SettingsPanel" parent="." instance=ExtResource("3_settings")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 550.0
+offset_top = 105.0
+offset_right = 1370.0
+offset_bottom = 925.0
+

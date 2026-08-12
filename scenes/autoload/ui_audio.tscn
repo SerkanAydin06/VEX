@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/autoload/ui_audio.gd" id="1_script"]
+[ext_resource type="AudioStream" path="res://assets/audio/menu_button_pro.wav" id="2_click"]
+
+[node name="UiAudio" type="Node"]
+process_mode = 3
+script = ExtResource("1_script")
+
+[node name="MenuButtonAudio" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("2_click")
+volume_db = -2.5
+bus = &"SFX"

@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/ravager_projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_projectile.png" id="2_texture"]
+[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_impact.png" id="3_impact"]
+[ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="4_impact_audio"]
+
+[sub_resource type="SphereShape3D" id="SphereShape_hellmagma_projectile"]
+radius = 0.48
+
+[node name="HellMagmaProjectile" type="Area3D"]
+collision_layer = 0
+collision_mask = 11
+monitorable = false
+script = ExtResource("1_script")
+speed = 20.0
+lifetime = 4.0
+impact_surface_offset = 0.42
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape_hellmagma_projectile")
+
+[node name="Visual" type="Sprite3D" parent="."]
+billboard = 1
+double_sided = true
+texture = ExtResource("2_texture")
+pixel_size = 0.0042
+texture_filter = 1
+alpha_cut = 1
+
+[node name="ImpactVisual" type="Sprite3D" parent="."]
+visible = false
+billboard = 1
+double_sided = true
+texture = ExtResource("3_impact")
+pixel_size = 0.0048
+texture_filter = 1
+alpha_cut = 1
+
+[node name="Light" type="OmniLight3D" parent="."]
+light_color = Color(1, 0.12, 0.015, 1)
+light_energy = 3.2
+omni_range = 4.0
+shadow_enabled = false
+shadow_bias = 0.02
+shadow_normal_bias = 0.35
+distance_fade_enabled = true
+distance_fade_begin = 18.0
+distance_fade_length = 5.0
+
+[node name="ImpactAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_impact_audio")
+volume_db = -1.0
+bus = &"SFX"
+max_distance = 20.0

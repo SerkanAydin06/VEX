@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/world/wall_lamp_red.png" id="1_texture"]
+
+[node name="WallLampRed" type="Node3D"]
+
+[node name="Visual" type="Sprite3D" parent="."]
+double_sided = true
+texture = ExtResource("1_texture")
+pixel_size = 0.00175
+texture_filter = 5
+alpha_cut = 1
+shaded = false
+
+[node name="Light" type="SpotLight3D" parent="."]
+position = Vector3(0, -0.08, 0.38)
+rotation = Vector3(0, 3.14159, 0)
+light_color = Color(1, 0.12, 0.045, 1)
+light_energy = 0.58
+light_indirect_energy = 0.0
+spot_range = 3.2
+spot_angle = 48.0
+spot_angle_attenuation = 1.15
+spot_attenuation = 1.45
+shadow_enabled = false
+shadow_bias = 0.01
+shadow_normal_bias = 0.15
+distance_fade_enabled = true
+distance_fade_begin = 14.0
+distance_fade_length = 4.0

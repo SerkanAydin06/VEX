@@ -1,0 +1,71 @@
+[gd_scene load_steps=11 format=3 uid="uid://82rd5gtnqw5i"]
+
+[ext_resource type="Script" uid="uid://ukc236nu1fj2" path="res://scripts/props/door.gd" id="1_script"]
+[ext_resource type="Material" uid="uid://cgatjdqcgo3yc" path="res://resources/materials/door_blue.tres" id="2_door_material"]
+[ext_resource type="Material" uid="uid://ca32nvot0hmo7" path="res://resources/materials/door_frame.tres" id="3_frame_material"]
+[ext_resource type="AudioStream" uid="uid://csl6nml0h1v1s" path="res://assets/audio/door_motion_pro.wav" id="4_open_audio"]
+[ext_resource type="AudioStream" uid="uid://cthqgc3k3m2nv" path="res://assets/audio/door_locked_pro.wav" id="5_denied_audio"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_door"]
+size = Vector3(0.56, 4.48, 4.36)
+
+[sub_resource type="QuadMesh" id="QuadMesh_door_face"]
+size = Vector2(4.28, 4.42)
+
+[sub_resource type="BoxShape3D" id="BoxShape_door"]
+size = Vector3(0.56, 4.48, 4.36)
+
+[sub_resource type="BoxShape3D" id="BoxShape_safety"]
+size = Vector3(2.3, 3.1, 4.52)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_door"]
+size = Vector3(0.56, 4.48, 4.36)
+
+[node name="Door" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="DoorPanel" type="AnimatableBody3D" parent="."]
+collision_mask = 0
+
+[node name="DoorFrameBody" type="MeshInstance3D" parent="DoorPanel"]
+material_override = ExtResource("3_frame_material")
+mesh = SubResource("BoxMesh_door")
+
+[node name="FrontVisual" type="MeshInstance3D" parent="DoorPanel"]
+transform = Transform3D(-3.9819893e-06, 0, 1, 0, 1, 0, -1.1, 0, -3.6199901e-06, 0.286, 0, 0)
+material_override = ExtResource("2_door_material")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_door_face")
+
+[node name="BackVisual" type="MeshInstance3D" parent="DoorPanel"]
+transform = Transform3D(-3.9819893e-06, 0, -1, 0, 1, 0, 1.1, 0, -3.6199901e-06, -0.286, 0, 0)
+material_override = ExtResource("2_door_material")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_door_face")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorPanel"]
+shape = SubResource("BoxShape_door")
+
+[node name="DoorOccluder" type="OccluderInstance3D" parent="."]
+occluder = SubResource("BoxOccluder3D_door")
+
+[node name="SafetySensor" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
+collision_layer = 0
+collision_mask = 6
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SafetySensor"]
+shape = SubResource("BoxShape_safety")
+
+[node name="OpenAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_open_audio")
+volume_db = -2.0
+max_distance = 18.0
+bus = &"SFX"
+
+[node name="DeniedAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_denied_audio")
+volume_db = -2.0
+max_distance = 14.0
+bus = &"SFX"

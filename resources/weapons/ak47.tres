@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=2 format=3 uid="uid://cqxwolkagivyx"]
+
+[ext_resource type="Script" uid="uid://bld4sc8fopa04" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
+
+[resource]
+script = ExtResource("1_weapon")
+weapon_id = &"ak47"
+display_name = "AK-47"
+ammo_type = &"rifle_ammo"
+magazine_size = 30
+damage_per_pellet = 14
+fire_interval = 0.1
+reload_duration = 1.2
+spread_degrees = 1.1
+maximum_range = 90.0
+automatic = true
+recoil_vertical_degrees = 0.62
+recoil_horizontal_degrees = 0.28
+recoil_max_vertical_degrees = 6.5
+recoil_max_horizontal_degrees = 1.8
+recoil_recovery_degrees_per_second = 4.3

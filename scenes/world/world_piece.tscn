@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3 uid="uid://dqe7kn4gmrjkv"]
+
+[ext_resource type="Script" uid="uid://cmetcy0rwgonp" path="res://scripts/world/world_piece.gd" id="1_script"]
+[ext_resource type="Material" path="res://resources/materials/wall_floor_trim.tres" id="2_trim_material"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_piece"]
+resource_local_to_scene = true
+size = Vector3(4, 3, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor_trim"]
+resource_local_to_scene = true
+size = Vector3(4.08, 0.34, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape_piece"]
+resource_local_to_scene = true
+size = Vector3(4, 3, 0.3)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_piece"]
+resource_local_to_scene = true
+size = Vector3(4, 3, 0.3)
+
+[node name="WorldPiece" type="StaticBody3D"]
+collision_mask = 0
+script = ExtResource("1_script")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_piece")
+
+[node name="BaseTrim" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.27, 0)
+material_override = ExtResource("2_trim_material")
+mesh = SubResource("BoxMesh_floor_trim")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape_piece")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="."]
+occluder = SubResource("BoxOccluder3D_piece")

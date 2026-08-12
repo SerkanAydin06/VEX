@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://cgatjdqcgo3yc"]
+
+[ext_resource type="Texture2D" path="res://assets/world/door_vex_v5.png" id="1_texture"]
+
+[resource]
+resource_name = "VEX Blast Door — replace albedo texture here"
+cull_mode = 2
+albedo_texture = ExtResource("1_texture")
+metallic = 0.67
+roughness = 0.68
+emission_enabled = true
+texture_repeat = false
