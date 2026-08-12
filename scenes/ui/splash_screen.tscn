@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://crjxkykh7n87m"]
+[gd_scene format=3 uid="uid://crjxkykh7n87m"]
 
 [ext_resource type="Script" uid="uid://rwn46yd0pxuj" path="res://scripts/ui/splash_screen.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
 [ext_resource type="AudioStream" uid="uid://bgayt3yu5wqho" path="res://assets/audio/splash_intro_pro.wav" id="3_intro_audio"]
 
-[node name="SplashScreen" type="Control"]
+[node name="SplashScreen" type="Control" unique_id=1687812979]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,7 +15,7 @@ mouse_filter = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=345609583]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,7 +25,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.003, 0.008, 0.012, 1)
 
-[node name="TopShade" type="ColorRect" parent="."]
+[node name="TopShade" type="ColorRect" parent="." unique_id=242024676]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -34,7 +34,7 @@ grow_horizontal = 2
 mouse_filter = 2
 color = Color(0.005, 0.02, 0.027, 0.35)
 
-[node name="BottomShade" type="ColorRect" parent="."]
+[node name="BottomShade" type="ColorRect" parent="." unique_id=301259431]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -46,7 +46,7 @@ grow_vertical = 0
 mouse_filter = 2
 color = Color(0.005, 0.02, 0.027, 0.35)
 
-[node name="AccentLine" type="ColorRect" parent="."]
+[node name="AccentLine" type="ColorRect" parent="." unique_id=652226781]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -63,7 +63,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.18, 0.78, 1, 0.9)
 
-[node name="CompanyCenter" type="CenterContainer" parent="."]
+[node name="CompanyCenter" type="CenterContainer" parent="." unique_id=1186891030]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -72,13 +72,13 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CompanyGroup" type="VBoxContainer" parent="CompanyCenter"]
+[node name="CompanyGroup" type="VBoxContainer" parent="CompanyCenter" unique_id=493217833]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="CompanyName" type="Label" parent="CompanyCenter/CompanyGroup"]
+[node name="CompanyName" type="Label" parent="CompanyCenter/CompanyGroup" unique_id=742097123]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.96, 1, 1)
 theme_override_colors/font_outline_color = Color(0.005, 0.012, 0.018, 1)
@@ -87,7 +87,7 @@ theme_override_font_sizes/font_size = 72
 text = "PARDUS GAMES"
 horizontal_alignment = 1
 
-[node name="Presents" type="Label" parent="CompanyCenter/CompanyGroup"]
+[node name="Presents" type="Label" parent="CompanyCenter/CompanyGroup" unique_id=1189212647]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.72, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
@@ -96,7 +96,7 @@ theme_override_font_sizes/font_size = 20
 text = "PRESENTS"
 horizontal_alignment = 1
 
-[node name="CreatorCenter" type="CenterContainer" parent="."]
+[node name="CreatorCenter" type="CenterContainer" parent="." unique_id=557104235]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -105,13 +105,13 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CreatorGroup" type="VBoxContainer" parent="CreatorCenter"]
+[node name="CreatorGroup" type="VBoxContainer" parent="CreatorCenter" unique_id=411692402]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 9
 alignment = 1
 
-[node name="CreatorPrefix" type="Label" parent="CreatorCenter/CreatorGroup"]
+[node name="CreatorPrefix" type="Label" parent="CreatorCenter/CreatorGroup" unique_id=2127311751]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.33, 0.78, 0.9, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
@@ -120,7 +120,7 @@ theme_override_font_sizes/font_size = 20
 text = "A GAME BY"
 horizontal_alignment = 1
 
-[node name="CreatorName" type="Label" parent="CreatorCenter/CreatorGroup"]
+[node name="CreatorName" type="Label" parent="CreatorCenter/CreatorGroup" unique_id=1398080252]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.91, 0.97, 1, 1)
 theme_override_colors/font_outline_color = Color(0.005, 0.012, 0.018, 1)
@@ -129,7 +129,7 @@ theme_override_font_sizes/font_size = 64
 text = "SERKAN AYDIN"
 horizontal_alignment = 1
 
-[node name="Footer" type="Label" parent="."]
+[node name="Footer" type="Label" parent="." unique_id=1881304299]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -144,7 +144,7 @@ theme_override_font_sizes/font_size = 13
 text = "VEX // STARTUP SEQUENCE"
 horizontal_alignment = 1
 
-[node name="IntroMusic" type="AudioStreamPlayer" parent="."]
+[node name="IntroMusic" type="AudioStreamPlayer" parent="." unique_id=411794519]
 process_mode = 3
 stream = ExtResource("3_intro_audio")
 volume_db = -2.0
