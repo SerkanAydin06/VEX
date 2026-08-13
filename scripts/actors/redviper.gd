@@ -52,7 +52,15 @@ const BURN_REMAINS_SCENE := preload("res://scenes/props/burn_remains.tscn")
 @export_range(0.0, 2.0, 0.01) var hurt_flash_duration := 0.12
 @export_range(-2.0, 2.0, 0.01) var corpse_visual_y := 0.4032225
 @export_range(0.0, 3.0, 0.05) var death_settle_duration := 0.55
-@export_range(0.0, 4.0, 0.05) var corpse_hold_duration := 1.1
+@export_range(0.0, 4.0, 0.05) var corpse_hold_duration := 2.2
+@export_range(0.005, 0.1, 0.005) var corpse_floor_clearance := 0.02
+@export var idle_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var idle_back_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var walk_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var walk_back_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var attack_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var hurt_frame_y_offsets := PackedFloat32Array([0.0])
+@export var death_frame_y_offsets := PackedFloat32Array([0.0, -0.008, -0.016, -0.024])
 
 @export_category("07 - Ölüm Sonrası İz")
 @export_range(0.4, 3.0, 0.05) var burn_remains_scale := 1.0
@@ -105,10 +113,15 @@ var _sight_check_remaining := 0.0
 var _cached_player_visible := false
 var _dormant_active := false
 var _burn_remains: Node3D = null
+var _visual_base_y := 0.0
 
 
 func _ready() -> void:
 	_base_sprite_modulate = animated_sprite.modulate
+	_visual_base_y = animated_sprite.position.y
+	if not animated_sprite.frame_changed.is_connected(_on_visual_frame_changed):
+		animated_sprite.frame_changed.connect(_on_visual_frame_changed)
+	_apply_frame_ground_offset()
 	# Editörde de RedViper görünsün ve idle animasyonu oynasın.
 	# AI, GameState ve devriye kodları editör modunda çalıştırılmaz.
 	if Engine.is_editor_hint():
@@ -604,6 +617,52 @@ func _snap_body_to_floor(max_correction: float = 2.0) -> void:
 
 
 
+func _on_visual_frame_changed() -> void:
+	_apply_frame_ground_offset()
+
+
+func _apply_frame_ground_offset() -> void:
+	if animated_sprite == null:
+		return
+	var offsets := _frame_offsets_for_animation(animated_sprite.animation)
+	var frame_offset := 0.0
+	if not offsets.is_empty():
+		frame_offset = offsets[mini(animated_sprite.frame, offsets.size() - 1)]
+	animated_sprite.position.y = _visual_base_y + frame_offset
+
+
+func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Array:
+	match animation_name:
+		&"idle":
+			return idle_frame_y_offsets
+		&"idle_back":
+			return idle_back_frame_y_offsets
+		&"walk":
+			return walk_frame_y_offsets
+		&"walk_back":
+			return walk_back_frame_y_offsets
+		&"attack":
+			return attack_frame_y_offsets
+		&"hurt":
+			return hurt_frame_y_offsets
+		&"death":
+			return death_frame_y_offsets
+	return PackedFloat32Array()
+
+
+func _get_animation_duration(animation_name: StringName) -> float:
+	if animated_sprite.sprite_frames == null:
+		return 0.0
+	if not animated_sprite.sprite_frames.has_animation(animation_name):
+		return 0.0
+	var frame_count := animated_sprite.sprite_frames.get_frame_count(animation_name)
+	var speed := animated_sprite.sprite_frames.get_animation_speed(animation_name)
+	if frame_count <= 0 or speed <= 0.001:
+		return 0.0
+	return float(frame_count) / speed
+
+
+
 func _restore_defeated_state() -> void:
 	_dead = true
 	_attack_generation += 1
@@ -686,18 +745,24 @@ func _die() -> void:
 	and animated_sprite.sprite_frames.has_animation(&"death") \
 	and animated_sprite.sprite_frames.get_frame_count(&"death") > 0:
 		_play_animation(&"death")
-		await get_tree().create_timer(death_settle_duration).timeout
+		var death_duration := maxf(death_settle_duration, _get_animation_duration(&"death"))
+		await get_tree().create_timer(death_duration).timeout
 		if not is_inside_tree():
 			return
 		animated_sprite.pause()
 		animated_sprite.frame = animated_sprite.sprite_frames.get_frame_count(&"death") - 1
-		animated_sprite.position.y = corpse_visual_y
+		animated_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+		animated_sprite.rotation_degrees = Vector3.ZERO
+		_apply_frame_ground_offset()
 		await get_tree().create_timer(corpse_hold_duration).timeout
 		if not is_inside_tree():
 			return
 	else:
 		_play_animation(&"idle")
 		animated_sprite.pause()
+		animated_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+		animated_sprite.rotation_degrees = Vector3.ZERO
+		_apply_frame_ground_offset()
 		await get_tree().create_timer(corpse_hold_duration).timeout
 		if not is_inside_tree():
 			return
@@ -878,6 +943,7 @@ func _play_animation(animation_name: StringName) -> void:
 	if animated_sprite.animation == target_animation and animated_sprite.is_playing():
 		return
 	animated_sprite.play(target_animation)
+	_apply_frame_ground_offset()
 
 
 func _has_animation(animation_name: StringName) -> bool:

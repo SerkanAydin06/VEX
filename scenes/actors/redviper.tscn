@@ -198,7 +198,15 @@ corpse_visual_y = 0.4032225
 burn_remains_scale = 0.95
 burn_smoke_duration = 7.5
 burn_smoke_alpha = 0.12
-corpse_hold_duration = 1.15
+corpse_hold_duration = 2.2
+hurt_frame_y_offsets = PackedFloat32Array(0)
+attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+corpse_floor_clearance = 0.02
+death_frame_y_offsets = PackedFloat32Array(0, -0.008, -0.016, -0.024)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4032, 0)
@@ -211,7 +219,7 @@ pixel_size = 0.003315
 billboard = 2
 shaded = true
 alpha_cut = 1
-texture_filter = 1
+texture_filter = 3
 sprite_frames = SubResource("SpriteFrames_redviper")
 animation = &"idle"
 autoplay = "idle"

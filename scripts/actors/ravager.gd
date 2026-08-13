@@ -84,7 +84,15 @@ enum State {
 @export_range(-1.0, 2.0, 0.01) var corpse_visual_y := -0.0999775
 @export_range(-1.0, 2.0, 0.01) var back_corpse_visual_y := -0.0999775
 @export_range(0.05, 1.0, 0.05) var death_fall_time := 0.3
-@export_range(0.0, 4.0, 0.05) var corpse_hold_duration := 1.2
+@export_range(0.0, 4.0, 0.05) var corpse_hold_duration := 2.4
+@export_range(0.005, 0.1, 0.005) var corpse_floor_clearance := 0.02
+@export var idle_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var idle_back_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var walk_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var walk_back_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var attack_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export var hurt_frame_y_offsets := PackedFloat32Array([0.0])
+@export var death_frame_y_offsets := PackedFloat32Array([0.0, -0.008, -0.016, -0.025])
 
 @export_category("08 - Ölüm Sonrası İz")
 @export_range(0.4, 3.5, 0.05) var burn_remains_scale := 1.0
@@ -139,9 +147,14 @@ var _runtime_attack_cooldown := 1.0
 var _runtime_attack_windup := 0.1
 var _dormant_active := false
 var _burn_remains: Node3D = null
+var _visual_base_y := 0.0
 
 
 func _ready() -> void:
+	_visual_base_y = animated_sprite.position.y
+	if not animated_sprite.frame_changed.is_connected(_on_visual_frame_changed):
+		animated_sprite.frame_changed.connect(_on_visual_frame_changed)
+	_apply_frame_ground_offset()
 	if GameState.active_difficulty < spawn_min_difficulty:
 		queue_free()
 		return
@@ -292,6 +305,7 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		):
 			_hurt_reaction_locked = true
 			animated_sprite.play(&"hurt")
+			_apply_frame_ground_offset()
 			_resume_animation_after_hurt()
 
 
@@ -854,6 +868,7 @@ func _play_directional_animation(
 	var frame_count := animated_sprite.sprite_frames.get_frame_count(target_animation)
 	if frame_count > 0:
 		animated_sprite.frame = mini(previous_frame, frame_count - 1)
+	_apply_frame_ground_offset()
 
 
 func _directional_animation(
@@ -998,6 +1013,7 @@ func _attempt_attack() -> void:
 	_attack_strafe_direction *= -1.0
 	if _has_animation(&"attack"):
 		animated_sprite.play(&"attack")
+		_apply_frame_ground_offset()
 	if attack_audio.stream != null:
 		attack_audio.play()
 
@@ -1165,6 +1181,40 @@ func _snap_body_to_floor(max_correction: float = 2.0) -> void:
 
 
 
+func _on_visual_frame_changed() -> void:
+	_apply_frame_ground_offset()
+
+
+func _apply_frame_ground_offset() -> void:
+	if animated_sprite == null:
+		return
+	var offsets := _frame_offsets_for_animation(animated_sprite.animation)
+	var frame_offset := 0.0
+	if not offsets.is_empty():
+		frame_offset = offsets[mini(animated_sprite.frame, offsets.size() - 1)]
+	animated_sprite.position.y = _visual_base_y + frame_offset
+
+
+func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Array:
+	match animation_name:
+		&"idle":
+			return idle_frame_y_offsets
+		&"idle_back":
+			return idle_back_frame_y_offsets
+		&"walk":
+			return walk_frame_y_offsets
+		&"walk_back":
+			return walk_back_frame_y_offsets
+		&"attack":
+			return attack_frame_y_offsets
+		&"hurt":
+			return hurt_frame_y_offsets
+		&"death":
+			return death_frame_y_offsets
+	return PackedFloat32Array()
+
+
+
 func _finalize_death_visual() -> void:
 	animated_sprite.visible = false
 	animated_sprite.pause()
@@ -1210,6 +1260,7 @@ func _die() -> void:
 	var death_duration := maxf(_get_animation_duration(death_animation), death_fall_time)
 	if _has_animation(death_animation):
 		animated_sprite.play(death_animation)
+		_apply_frame_ground_offset()
 	else:
 		animated_sprite.pause()
 	_place_corpse_on_floor(true)
@@ -1220,7 +1271,9 @@ func _die() -> void:
 	if _has_animation(death_animation):
 		animated_sprite.pause()
 		animated_sprite.frame = maxi(0, animated_sprite.sprite_frames.get_frame_count(death_animation) - 1)
-	_place_corpse_on_floor(false)
+	animated_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	animated_sprite.rotation_degrees = Vector3.ZERO
+	_apply_frame_ground_offset()
 	await get_tree().create_timer(corpse_hold_duration).timeout
 	if not is_inside_tree():
 		return

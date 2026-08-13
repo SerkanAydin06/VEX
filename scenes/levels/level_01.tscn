@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://8mjxykh63ant" path="res://scripts/levels/level_01.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dqe7kn4gmrjkv" path="res://scenes/world/world_piece.tscn" id="2_piece"]
 [ext_resource type="Material" uid="uid://8sahkd53buaf" path="res://resources/materials/wall_panel.tres" id="3_wall"]
-[ext_resource type="Material" path="res://resources/materials/floor_plate.tres" id="4_floor"]
+[ext_resource type="Material" uid="uid://b6iwkxii8d24p" path="res://resources/materials/floor_plate.tres" id="4_floor"]
 [ext_resource type="Material" uid="uid://bg1sokgl4xh75" path="res://resources/materials/ceiling_panel.tres" id="5_ceiling"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="6_player"]
 [ext_resource type="PackedScene" path="res://scenes/actors/ravager.tscn" id="7_ravager"]
@@ -25,7 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/redviper.tscn" id="23_redviper"]
 [ext_resource type="Texture2D" uid="uid://cpynb4dxqlela" path="res://assets/pickups/night_vision.png" id="24_night_vision"]
 [ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/hellmagma.tscn" id="25_hellmagma"]
-[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="26_room_light"]
+[ext_resource type="PackedScene" uid="uid://5r74f1q7t1pj" path="res://scenes/world/ceiling_light_white_horror.tscn" id="26_room_light"]
 
 [sub_resource type="Environment" id="Environment_level"]
 background_mode = 1
@@ -854,9 +854,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 6.82, 15)
 
 [node name="CeilingWhite_Room_16" parent="RoomLights" instance=ExtResource("26_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, 25)
-light_energy = 3.15
-light_range = 10.2
-cone_angle = 42.0
 
 [node name="CeilingWhite_Room_17" parent="RoomLights" instance=ExtResource("26_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, 25)

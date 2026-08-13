@@ -215,7 +215,15 @@ death_fall_time = 0.3
 burn_remains_scale = 0.95
 burn_smoke_duration = 8.0
 burn_smoke_alpha = 0.12
-corpse_hold_duration = 1.25
+corpse_hold_duration = 2.4
+hurt_frame_y_offsets = PackedFloat32Array(0)
+attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+corpse_floor_clearance = 0.02
+death_frame_y_offsets = PackedFloat32Array(0, -0.008, -0.016, -0.025)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
@@ -227,7 +235,7 @@ cast_shadow = 0
 pixel_size = 0.003315
 billboard = 2
 shaded = true
-texture_filter = 1
+texture_filter = 3
 alpha_cut = 1
 sprite_frames = SubResource("SpriteFrames_enemy")
 animation = &"idle"
