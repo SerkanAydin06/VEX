@@ -31,6 +31,7 @@ def main() -> int:
     _check_enemy_scene_settings(failures)
     _check_balance_matrix(failures)
     _check_performance_package(failures)
+    _check_level1_horror_visual_test(failures)
 
     if failures:
         for failure in failures:
@@ -59,6 +60,10 @@ def main() -> int:
     print(
         "Performans Paketi 1 doğrulandı: oklüzyon, ışık LOD'u, düşman uyku "
         "mesafeleri, aralıklı görüş ve 3B kalite profilleri temiz."
+    )
+    print(
+        "VEX-01 görsel testi doğrulandı: 18 merkez beyaz ışık, 19 yana açılan "
+        "kapı ve final hava kilidinin iki yüzündeki EXIT tabelaları temiz."
     )
     return 0
 
@@ -143,11 +148,12 @@ def _check_duplicate_properties(failures: list[str]) -> None:
 def _check_level_counts(failures: list[str]) -> None:
     expected = {
         "scenes/levels/level_01.tscn": {
-            'instance=ExtResource("2_piece")': 71,
+            'instance=ExtResource("2_piece")': 119,
             'instance=ExtResource("8_door")': 19,
             'instance=ExtResource("9_pickup")': 22,
             'instance=ExtResource("10_barrel")': 4,
             'instance=ExtResource("19_lamp_red")': 38,
+            'instance=ExtResource("26_room_light")': 18,
             'groups=["enemy_navigation_waypoint"]': 18,
             'instance=ExtResource("25_hellmagma")': 1,
         },
@@ -202,8 +208,8 @@ def _check_required_strings(failures: list[str]) -> None:
         failures.append("VEX-01 → VEX-02 geçiş yolu eksik.")
     if 'call_deferred("complete_level", next_level_path)' not in finish_script:
         failures.append("FinishSwitch geçiş yolunu GameState'e aktarmıyor.")
-    if 'config/version="3.1.1"' not in project_config:
-        failures.append("Proje sürümü 3.1.1 değil.")
+    if 'config/version="3.1.2"' not in project_config:
+        failures.append("Proje sürümü 3.1.2 değil.")
     if "billboard = 2" not in pickup_scene:
         failures.append("Pickup sabit-Y billboard modunda değil.")
     legacy_map_tokens = (
@@ -311,7 +317,7 @@ def _check_required_strings(failures: list[str]) -> None:
         "height = 1.8",
         "pixel_size = 0.003315",
         "projectile_spawn_height = 0.31",
-        "corpse_visual_y = -0.1",
+        "corpse_visual_y = -0.0999775",
         'name="GroundShadow"',
         "shaded = true",
     ):
@@ -414,7 +420,7 @@ def _check_required_strings(failures: list[str]) -> None:
         "height = 1.8",
         "pixel_size = 0.003315",
         "texture_filter = 1",
-        "corpse_visual_y = 0.4032",
+        "corpse_visual_y = 0.4032225",
         'name="GroundShadow"',
         "shaded = true",
     ):
@@ -514,7 +520,7 @@ def _check_required_strings(failures: list[str]) -> None:
         "radius = 1.0",
         "height = 3.6",
         "pixel_size = 0.0073547",
-        "corpse_visual_y = 0.2",
+        "corpse_visual_y = 0.19680105",
         'name="GroundShadow"',
         "shaded = true",
     ):
@@ -959,7 +965,7 @@ def _check_enemy_scene_settings(failures: list[str]) -> None:
         shadow_y = shadow_position[1] if shadow_position else float("inf")
         sprite_floor = sprite_y - 543.0 * pixel_size * 0.5
         collision_floor = collision_y - capsule_height * 0.5
-        if not math.isclose(sprite_floor, collision_floor, abs_tol=0.01):
+        if not math.isclose(sprite_floor, collision_floor, abs_tol=0.001):
             failures.append(
                 f"{label} sprite/hitbox zemin hizası farklı: "
                 f"sprite={sprite_floor:.4f} hitbox={collision_floor:.4f}"
@@ -981,6 +987,16 @@ def _check_enemy_scene_settings(failures: list[str]) -> None:
         < geometry_standard["HellMagma"]["pixel_size"]
     ):
         failures.append("Düşman insan/orta/büyük görsel boyut sırası bozuk.")
+    for script_path, label in (
+        (ROOT / "scripts/actors/redviper.gd", "RedViper/BadRedViper"),
+        (ROOT / "scripts/actors/ravager.gd", "Ravager/HellMagma"),
+    ):
+        ground_script = script_path.read_text(encoding="utf-8")
+        if "func _snap_body_to_floor" not in ground_script:
+            failures.append(f"{label} ölüm/başlangıç zemin snap sistemi eksik.")
+        if ground_script.count("_snap_body_to_floor(2.0)") < 2:
+            failures.append(f"{label} zemin snap sistemi başlangıç ve ölümde birlikte çalışmıyor.")
+
     for human_scale_enemy in ("Ravager", "RedViper"):
         canvas_height = 543.0 * geometry_standard[human_scale_enemy]["pixel_size"]
         if not math.isclose(canvas_height, 1.8, abs_tol=0.001):
@@ -1039,6 +1055,15 @@ def _check_enemy_scene_settings(failures: list[str]) -> None:
             failures.append(message)
 
     player_script = (ROOT / "scripts/player/player.gd").read_text(encoding="utf-8")
+    weapon_controller_script = (ROOT / "scripts/player/weapon_controller.gd").read_text(encoding="utf-8")
+    pickup_script = (ROOT / "scripts/props/pickup.gd").read_text(encoding="utf-8")
+    if "func add_ammo(ammo_type: StringName, amount: int) -> int:" not in weapon_controller_script:
+        failures.append("Mühimmat ekleme gerçek kabul edilen miktarı döndürmüyor.")
+    if "collected_ammo" not in player_script or "ammo_name, collected_ammo" not in player_script:
+        failures.append("Pickup bildirimi gerçek eklenen mühimmat miktarını göstermiyor.")
+    if "pickup görünmez ama toplanabilir kalacak" not in pickup_script:
+        failures.append("Görseli eksik pickup için güvenli toplanabilir fallback eksik.")
+
     sprint_match = re.search(
         r"^@export[^\n]*\bvar\s+sprint_speed\s*:=\s*([0-9.]+)",
         player_script,
@@ -1417,6 +1442,251 @@ def _check_performance_package(failures: list[str]) -> None:
     hud_script = (ROOT / "scripts/ui/hud.gd").read_text(encoding="utf-8")
     if "world_ui_sample_interval" not in hud_script or "_update_world_ui_sample" not in hud_script:
         failures.append("HUD dünya sorguları performans aralığıyla örneklenmiyor.")
+
+
+def _check_level1_horror_visual_test(failures: list[str]) -> None:
+    """İlk bölüme özel beyaz merkez ışığı ve yana açılan kapı testini doğrula."""
+    level_01_path = ROOT / "scenes/levels/level_01.tscn"
+    level_02_path = ROOT / "scenes/levels/level_02.tscn"
+    level_01 = level_01_path.read_text(encoding="utf-8")
+    level_02 = level_02_path.read_text(encoding="utf-8")
+    door_scene = (ROOT / "scenes/props/door_side_slide.tscn").read_text(
+        encoding="utf-8"
+    )
+    door_script = (ROOT / "scripts/props/door.gd").read_text(encoding="utf-8")
+    light_scene = (ROOT / "scenes/world/ceiling_light_white_horror.tscn").read_text(
+        encoding="utf-8"
+    )
+
+    if 'path="res://scenes/props/door_side_slide.tscn" id="8_door"' not in level_01:
+        failures.append("VEX-01 yana açılan kapı sahnesini kullanmıyor.")
+    if 'path="res://scenes/props/door.tscn" id="8_door"' not in level_02:
+        failures.append("VEX-02 kapısı deneme sırasında değiştirilmiş.")
+    for token in (
+        "opening_mode = 1",
+        'name="DoorPanelRight"',
+        'region = Rect2(0, 0, 627, 1254)',
+        'region = Rect2(627, 0, 627, 1254)',
+    ):
+        if token not in door_scene:
+            failures.append("Yana açılan kapı sahne ayarı eksik: " + token)
+    for function_name in (
+        "_is_split_side_door",
+        "_get_open_distance_ratio",
+        "_get_close_distance_ratio",
+    ):
+        if f"func {function_name}" not in door_script:
+            failures.append("Yana açılan kapı hareket işlevi eksik: " + function_name)
+
+    for token in (
+        'size = Vector3(0.56, 4.48, 2.3)',
+        'size = Vector3(0.56, 4.48, 4.6)',
+        'position = Vector3(0, 0, -1.15)',
+        'position = Vector3(0, 0, 1.15)',
+        'opening_width = 2.47',
+    ):
+        if token not in door_scene:
+            failures.append("Yana açılan kapı 4.60 m duvar açıklığını tam kapatmıyor: " + token)
+
+    standard_door_scene = (ROOT / "scenes/props/door.tscn").read_text(encoding="utf-8")
+    for token in (
+        'size = Vector3(0.56, 4.48, 4.6)',
+        'size = Vector2(4.52, 4.42)',
+        'size = Vector3(2.3, 3.1, 4.76)',
+    ):
+        if token not in standard_door_scene:
+            failures.append("Standart kapı 4.60 m duvar açıklığını tam kapatmıyor: " + token)
+
+    rear_left = re.search(
+        r'\[node name="BackVisual" type="Sprite3D" parent="DoorPanel"\](.*?)(?=^\[node )',
+        door_scene,
+        re.MULTILINE | re.DOTALL,
+    )
+    rear_right = re.search(
+        r'\[node name="BackVisual" type="Sprite3D" parent="DoorPanelRight"\](.*?)(?=^\[node )',
+        door_scene,
+        re.MULTILINE | re.DOTALL,
+    )
+    if rear_left is None or 'texture = SubResource("AtlasTexture_left")' not in rear_left.group(1):
+        failures.append("Yana açılan kapının arka sol panelinde V yarısı ters eşlenmiş.")
+    if rear_right is None or 'texture = SubResource("AtlasTexture_right")' not in rear_right.group(1):
+        failures.append("Yana açılan kapının arka sağ panelinde V yarısı ters eşlenmiş.")
+
+    # 7 m facility geometry contract: every wall reaches y=7, ceilings start at y=7,
+    # red door lamps are centered at y=5.5. Door top-fill pieces preserve the 4.48 m opening.
+    for level_name, level_text in (("VEX-01", level_01), ("VEX-02", level_02)):
+        node_blocks = re.split(r"(?=^\[node )", level_text, flags=re.MULTILINE)
+        for node_block in node_blocks:
+            if 'parent="Geometry"' in node_block and 'surface_material = ExtResource("3_wall")' in node_block:
+                size_match = re.search(r"piece_size = Vector3\(([^\n]+)\)", node_block)
+                transform_match = re.search(r"transform = Transform3D\(([^\n]+)\)", node_block)
+                if size_match is None or transform_match is None:
+                    continue
+                size_values = [float(value.strip()) for value in size_match.group(1).split(",")]
+                transform_values = [float(value.strip()) for value in transform_match.group(1).split(",")]
+                wall_height = size_values[1]
+                wall_center_y = transform_values[10]
+                is_full_wall = abs(wall_height - 7.0) < 0.001 and abs(wall_center_y - 3.5) < 0.001
+                is_door_fill = abs(wall_height - 2.52) < 0.001 and abs(wall_center_y - 5.74) < 0.001
+                if not (is_full_wall or is_door_fill):
+                    failures.append(f"{level_name} duvar yüksekliği 7 m standardında değil.")
+                    break
+        for node_block in node_blocks:
+            if 'parent="Geometry"' in node_block and 'surface_material = ExtResource("5_ceiling")' in node_block:
+                transform_match = re.search(r"transform = Transform3D\(([^\n]+)\)", node_block)
+                if transform_match is None:
+                    continue
+                transform_values = [float(value.strip()) for value in transform_match.group(1).split(",")]
+                if abs(transform_values[10] - 7.15) > 0.001:
+                    failures.append(f"{level_name} tavanı 7 m duvar yüksekliğine hizalı değil.")
+                    break
+        for node_block in node_blocks:
+            if 'instance=ExtResource("19_lamp_red")' in node_block:
+                transform_match = re.search(r"transform = Transform3D\(([^\n]+)\)", node_block)
+                if transform_match is None:
+                    continue
+                transform_values = [float(value.strip()) for value in transform_match.group(1).split(",")]
+                if abs(transform_values[10] - 5.5) > 0.001:
+                    failures.append(f"{level_name} kırmızı kapı lambası 5.5 m yüksekliğinde değil.")
+                    break
+
+    room_light_matches = re.findall(
+        r'\[node name="CeilingWhite_Room_(\d{2})"[^\]]*\]\s*'
+        r'position = Vector3\(([-0-9.]+), ([-0-9.]+), ([-0-9.]+)\)',
+        level_01,
+    )
+    expected_positions = [
+        (room, float(x), 6.82, float(z))
+        for room, (x, z) in enumerate(
+            (
+                (-12, -25), (0, -25), (12, -25),
+                (-12, -15), (0, -15), (12, -15),
+                (-12, -5), (0, -5), (12, -5),
+                (-12, 5), (0, 5), (12, 5),
+                (-12, 15), (0, 15), (12, 15),
+                (-12, 25), (0, 25), (12, 25),
+            ),
+            1,
+        )
+    ]
+    actual_positions = [
+        (int(room), float(x), float(y), float(z))
+        for room, x, y, z in room_light_matches
+    ]
+    if actual_positions != expected_positions:
+        failures.append("VEX-01 beyaz ışıkları 18 oda merkezine doğru yerleşmemiş.")
+
+    light_properties = _read_root_node_properties(
+        ROOT / "scenes/world/ceiling_light_white_horror.tscn"
+    )
+    light_range = float(light_properties.get("light_range", "0"))
+    cone_angle = float(light_properties.get("cone_angle", "90"))
+    floor_radius = math.tan(math.radians(cone_angle)) * 6.68
+    room_corner_distance = math.hypot(6.0, 5.0)
+    if not 6.9 <= light_range <= 7.5:
+        failures.append("Beyaz oda ışığı zemine kontrollü ulaşan menzilde değil.")
+    if not 1.8 <= floor_radius < 2.5:
+        failures.append(
+            "Beyaz oda ışığı merkezi aydınlatıp köşeleri karanlık bırakmıyor."
+        )
+    for token in (
+        "shadow_enabled = true",
+        "distance_fade_enabled = true",
+        "spot_angle = 18.0",
+        "spot_attenuation = 0.35",
+    ):
+        if token not in light_scene:
+            failures.append("Beyaz oda ışığı profili eksik: " + token)
+
+    for token in (
+        'light_specular = 0.0',
+        'light_volumetric_fog_energy = 0.0',
+    ):
+        if token not in light_scene:
+            failures.append("Beyaz oda ışığı güvenli profil ayarı eksik: " + token)
+
+    for forbidden_token in (
+        '[node name="LightBeam" type="MeshInstance3D" parent="."]',
+        'Shader_beam',
+        'ShaderMaterial_beam',
+        'CylinderMesh_beam',
+        'beam_alpha',
+        'edge_power',
+        'no_depth_test = true',
+        'fog_disabled = true',
+        'blend_mode = 1',
+    ):
+        if forbidden_token in light_scene:
+            failures.append("Beyaz ışıkta kaldırılması gereken görünür hüzme kalıntısı var: " + forbidden_token)
+    light_script = (ROOT / "scripts/world/room_ceiling_light.gd").read_text(encoding="utf-8")
+    for forbidden_token in (
+        "beam_same_room_only",
+        "beam_top_radius",
+        "beam_bottom_radius",
+        "beam_height",
+        "beam_alpha",
+        "beam_modulate",
+        'get_node_or_null("LightBeam")',
+        'get_first_node_in_group("player")',
+        "room_half_extents",
+        "material.no_depth_test = true",
+        "material.fog_disabled",
+    ):
+        if forbidden_token in light_script:
+            failures.append("Beyaz ışıkta görüşe göre yapay gizleme/eskimiş beam ayarı kaldı: " + forbidden_token)
+
+    for room in range(1, 19):
+        if f'[node name="Floor_R{room:02d}" parent="Geometry"' not in level_01:
+            failures.append(f"VEX-01 bölünmüş zemin eksik: Floor_R{room:02d}")
+        if f'[node name="Ceiling_R{room:02d}" parent="Geometry"' not in level_01:
+            failures.append(f"VEX-01 bölünmüş tavan eksik: Ceiling_R{room:02d}")
+    if 'limits/opengl/max_lights_per_object=16' not in (ROOT / "project.godot").read_text(encoding="utf-8"):
+        failures.append("Compatibility ışık limiti güvenlik payı 16 olarak ayarlanmamış.")
+
+    exit_sign_positions = []
+    for source in (level_01, level_02):
+        lines = source.splitlines()
+        for index, line in enumerate(lines):
+            if line.startswith('[node name="') and "ExitSign" in line:
+                block = "\n".join(lines[index + 1:index + 4])
+                position_match = re.search(r'position = Vector3\([^,]+, ([-0-9.]+),', block)
+                transform_match = re.search(r'transform = Transform3D\((?:[^,]+, ){10}([-0-9.]+),', block)
+                if position_match:
+                    exit_sign_positions.append(float(position_match.group(1)))
+                elif transform_match:
+                    exit_sign_positions.append(float(transform_match.group(1)))
+    if not exit_sign_positions or any(abs(y - 4.85) > 0.001 for y in exit_sign_positions):
+        failures.append("Tüm EXIT tabelaları 4.85 m yüksekliğinde değil.")
+
+    if '[node name="ExitSign" parent="Triggers"' in level_01:
+        failures.append("Eski FinishSwitch üzerindeki EXIT tabelası kaldırılmamış.")
+    for sign_name in (
+        "ExitSign_FinalDoor_Room6",
+        "ExitSign_FinalDoor_Room3",
+    ):
+        if f'[node name="{sign_name}" parent="Triggers"' not in level_01:
+            failures.append("Final kapısı EXIT tabelası eksik: " + sign_name)
+
+    light_asset = ROOT / "assets/world/ceiling_light_white_horror_v1.png"
+    door_asset = ROOT / "assets/world/door_side_slide_v1.png"
+    for asset_path, expected_size in (
+        (light_asset, (1536, 1024)),
+        (door_asset, (1254, 1254)),
+    ):
+        header = asset_path.read_bytes()[:26] if asset_path.exists() else b""
+        if len(header) < 26 or header[:8] != b"\x89PNG\r\n\x1a\n":
+            failures.append("Yeni korku görseli geçerli PNG değil: " + asset_path.name)
+            continue
+        if struct.unpack(">II", header[16:24]) != expected_size:
+            failures.append("Yeni korku görseli ölçüsü değişmiş: " + asset_path.name)
+    if light_asset.exists():
+        try:
+            _width, _height, light_pixels = _decode_rgba_png(light_asset)
+            alpha_values = light_pixels[3::4]
+            if not alpha_values or min(alpha_values) != 0 or max(alpha_values) < 250:
+                failures.append("Beyaz tavan armatürü gerçek alfa şeffaflığı içermiyor.")
+        except (ValueError, zlib.error) as error:
+            failures.append(f"Beyaz tavan armatürü çözümlenemiyor: {error}")
 
 
 def _check_balance_matrix(failures: list[str]) -> None:

@@ -8,6 +8,11 @@ enum DoorState {
 	CLOSING,
 }
 
+enum DoorOpeningMode {
+	UP,
+	SPLIT_SIDE,
+}
+
 @export_category("Kapı")
 @export var display_name := "GÜVENLİK KAPISI"
 @export var locked := false
@@ -15,7 +20,11 @@ enum DoorState {
 @export var required_keys: Array[StringName] = []
 @export var required_key_label := ""
 @export var objective_on_unlock := ""
+
+@export_category("Açılma Hareketi")
+@export_enum("Yukarı", "İki Yana") var opening_mode: int = DoorOpeningMode.UP
 @export_range(1.0, 8.0, 0.1) var opening_height := 4.2
+@export_range(1.0, 4.0, 0.05) var opening_width := 2.35
 @export_range(0.1, 3.0, 0.05) var opening_time := 0.75
 @export var auto_close := true
 @export_range(1.0, 15.0, 0.5) var auto_close_delay := 4.0
@@ -25,6 +34,7 @@ enum DoorState {
 @export_range(0.1, 2.0, 0.1) var safety_clear_time := 0.5
 
 var door_panel: AnimatableBody3D
+var door_panel_right: AnimatableBody3D
 var safety_sensor: Area3D
 var door_occluder: OccluderInstance3D
 var is_open := false
@@ -32,6 +42,7 @@ var is_moving := false
 
 var _state: DoorState = DoorState.CLOSED
 var _closed_panel_position := Vector3.ZERO
+var _closed_right_panel_position := Vector3.ZERO
 var _motion_tween: Tween
 var _motion_generation := 0
 var _auto_close_generation := 0
@@ -42,6 +53,7 @@ var _denied_audio: AudioStreamPlayer3D
 func _ready() -> void:
 	add_to_group("interactable")
 	door_panel = get_node_or_null("DoorPanel") as AnimatableBody3D
+	door_panel_right = get_node_or_null("DoorPanelRight") as AnimatableBody3D
 	safety_sensor = get_node_or_null("SafetySensor") as Area3D
 	door_occluder = get_node_or_null("DoorOccluder") as OccluderInstance3D
 	_open_audio = get_node_or_null("OpenAudio") as AudioStreamPlayer3D
@@ -54,6 +66,16 @@ func _ready() -> void:
 		return
 
 	_closed_panel_position = door_panel.position
+	if door_panel_right != null:
+		_closed_right_panel_position = door_panel_right.position
+	if opening_mode == DoorOpeningMode.SPLIT_SIDE and door_panel_right == null:
+		push_warning(
+			"%s: İki yana açılma için DoorPanelRight bulunamadı; kapı devre dışı."
+			% get_path()
+		)
+		auto_close = false
+		set_physics_process(false)
+		return
 	_sync_occluder_visibility()
 
 	if safety_sensor == null:
@@ -158,15 +180,30 @@ func _begin_opening() -> void:
 	if _open_audio != null and _open_audio.stream != null:
 		_open_audio.play()
 
-	var target_position := _closed_panel_position + Vector3.UP * opening_height
-	var distance_ratio := clampf(
-		door_panel.position.distance_to(target_position) / maxf(opening_height, 0.001),
-		0.0,
-		1.0
-	)
+	var distance_ratio := _get_open_distance_ratio()
 	var duration := maxf(0.05, opening_time * distance_ratio)
 	_motion_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	_motion_tween.tween_property(door_panel, "position", target_position, duration)
+	if _is_split_side_door():
+		_motion_tween.set_parallel(true)
+		_motion_tween.tween_property(
+			door_panel,
+			"position",
+			_closed_panel_position + Vector3(0.0, 0.0, -opening_width),
+			duration
+		)
+		_motion_tween.tween_property(
+			door_panel_right,
+			"position",
+			_closed_right_panel_position + Vector3(0.0, 0.0, opening_width),
+			duration
+		)
+	else:
+		_motion_tween.tween_property(
+			door_panel,
+			"position",
+			_closed_panel_position + Vector3.UP * opening_height,
+			duration
+		)
 	_motion_tween.finished.connect(
 		_on_opening_finished.bind(motion_generation, close_generation)
 	)
@@ -211,14 +248,30 @@ func _begin_closing() -> void:
 	_set_state(DoorState.CLOSING)
 	set_physics_process(true)
 
-	var distance_ratio := clampf(
-		door_panel.position.distance_to(_closed_panel_position) / maxf(opening_height, 0.001),
-		0.0,
-		1.0
-	)
+	var distance_ratio := _get_close_distance_ratio()
 	var duration := maxf(0.05, opening_time * distance_ratio)
 	_motion_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	_motion_tween.tween_property(door_panel, "position", _closed_panel_position, duration)
+	if _is_split_side_door():
+		_motion_tween.set_parallel(true)
+		_motion_tween.tween_property(
+			door_panel,
+			"position",
+			_closed_panel_position,
+			duration
+		)
+		_motion_tween.tween_property(
+			door_panel_right,
+			"position",
+			_closed_right_panel_position,
+			duration
+		)
+	else:
+		_motion_tween.tween_property(
+			door_panel,
+			"position",
+			_closed_panel_position,
+			duration
+		)
 	_motion_tween.finished.connect(_on_closing_finished.bind(motion_generation))
 
 
@@ -268,6 +321,44 @@ func _sync_occluder_visibility() -> void:
 		# Hareketli oklüder kullanılmaz: açılma başlar başlamaz devre dışı kalır,
 		# kapı tam kapanınca sabit konumunda yeniden etkinleşir.
 		door_occluder.visible = _state == DoorState.CLOSED
+
+
+func _is_split_side_door() -> bool:
+	return (
+		opening_mode == DoorOpeningMode.SPLIT_SIDE
+		and door_panel_right != null
+	)
+
+
+func _get_open_distance_ratio() -> float:
+	if _is_split_side_door():
+		var left_target := _closed_panel_position + Vector3(0.0, 0.0, -opening_width)
+		var right_target := _closed_right_panel_position + Vector3(0.0, 0.0, opening_width)
+		var traveled := maxf(
+			door_panel.position.distance_to(left_target),
+			door_panel_right.position.distance_to(right_target)
+		)
+		return clampf(traveled / maxf(opening_width, 0.001), 0.0, 1.0)
+	var target_position := _closed_panel_position + Vector3.UP * opening_height
+	return clampf(
+		door_panel.position.distance_to(target_position) / maxf(opening_height, 0.001),
+		0.0,
+		1.0
+	)
+
+
+func _get_close_distance_ratio() -> float:
+	if _is_split_side_door():
+		var traveled := maxf(
+			door_panel.position.distance_to(_closed_panel_position),
+			door_panel_right.position.distance_to(_closed_right_panel_position)
+		)
+		return clampf(traveled / maxf(opening_width, 0.001), 0.0, 1.0)
+	return clampf(
+		door_panel.position.distance_to(_closed_panel_position) / maxf(opening_height, 0.001),
+		0.0,
+		1.0
+	)
 
 
 func _cancel_motion() -> void:

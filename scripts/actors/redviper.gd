@@ -2,6 +2,8 @@
 class_name VexRedViper
 extends CharacterBody3D
 
+const BURN_REMAINS_SCENE := preload("res://scenes/props/burn_remains.tscn")
+
 @export_category("01 - Kimlik, Can ve Zorluk")
 @export var enemy_id: StringName = &"redviper"
 @export_range(1, 1000, 1) var maximum_health := 90
@@ -48,8 +50,14 @@ extends CharacterBody3D
 @export var hurt_stops_movement := false
 @export var hurt_flash_color := Color(1.0, 0.3, 0.25, 1.0)
 @export_range(0.0, 2.0, 0.01) var hurt_flash_duration := 0.12
-@export_range(-2.0, 2.0, 0.01) var corpse_visual_y := 0.60
+@export_range(-2.0, 2.0, 0.01) var corpse_visual_y := 0.4032225
 @export_range(0.0, 3.0, 0.05) var death_settle_duration := 0.55
+@export_range(0.0, 4.0, 0.05) var corpse_hold_duration := 1.1
+
+@export_category("07 - Ölüm Sonrası İz")
+@export_range(0.4, 3.0, 0.05) var burn_remains_scale := 1.0
+@export_range(0.0, 20.0, 0.1) var burn_smoke_duration := 8.5
+@export_range(0.0, 1.0, 0.01) var burn_smoke_alpha := 0.14
 
 @export_category("06 - Performans")
 @export_range(0.02, 1.0, 0.01) var near_sight_interval := 0.08
@@ -61,6 +69,7 @@ extends CharacterBody3D
 @onready var hurt_audio: AudioStreamPlayer3D = $HurtAudio
 @onready var death_audio: AudioStreamPlayer3D = $DeathAudio
 @onready var attack_audio: AudioStreamPlayer3D = $AttackAudio
+@onready var ground_shadow: Sprite3D = get_node_or_null("GroundShadow") as Sprite3D
 
 var health := 90
 var _spawn_position := Vector3.ZERO
@@ -95,6 +104,7 @@ var _runtime_attack_lunge_speed := 0.0
 var _sight_check_remaining := 0.0
 var _cached_player_visible := false
 var _dormant_active := false
+var _burn_remains: Node3D = null
 
 
 func _ready() -> void:
@@ -119,9 +129,10 @@ func _ready() -> void:
 		float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 		* gravity_scale
 	)
+	_snap_body_to_floor(2.0)
 
 	if GameState.was_enemy_defeated(enemy_id):
-		queue_free()
+		_restore_defeated_state()
 		return
 
 	# Çok sayıdaki Viper aynı fizik karesinde görüş ışını atmasın.
@@ -562,6 +573,87 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 	_play_hurt_feedback()
 
 
+func _collision_floor_local_y() -> float:
+	var capsule := collision_shape.shape as CapsuleShape3D
+	if capsule == null:
+		return collision_shape.position.y
+	return collision_shape.position.y - capsule.height * 0.5
+
+
+func _snap_body_to_floor(max_correction: float = 2.0) -> void:
+	if not is_inside_tree() or collision_shape == null or collision_shape.shape == null:
+		return
+	var ray_origin := global_position + Vector3.UP * 0.5
+	var ray_end := global_position + Vector3.DOWN * (max_correction + 2.0)
+	var query := PhysicsRayQueryParameters3D.create(
+		ray_origin,
+		ray_end,
+		1,
+		[get_rid()]
+	)
+	query.collide_with_areas = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var target_root_y := float(hit["position"].y) - _collision_floor_local_y()
+	if absf(target_root_y - global_position.y) > max_correction:
+		return
+	global_position.y = target_root_y
+	velocity.y = floor_stick_velocity
+
+
+
+
+func _restore_defeated_state() -> void:
+	_dead = true
+	_attack_generation += 1
+	_attack_locked = false
+	_attack_lunge_remaining = 0.0
+	_hurt_anim_locked = false
+	_aggro = false
+	_lost_sight_remaining = 0.0
+	_search_remaining = 0.0
+	velocity = Vector3.ZERO
+	_snap_body_to_floor(2.0)
+	collision_shape.set_deferred("disabled", true)
+	set_collision_layer_value(3, false)
+	set_collision_mask_value(1, false)
+	set_collision_mask_value(2, false)
+	set_collision_mask_value(4, false)
+	_finalize_death_visual()
+
+
+func _finalize_death_visual() -> void:
+	animated_sprite.visible = false
+	animated_sprite.pause()
+	if ground_shadow != null:
+		ground_shadow.visible = false
+	_show_burn_remains()
+
+
+func _show_burn_remains() -> void:
+	if _burn_remains != null and is_instance_valid(_burn_remains):
+		return
+	var remains := BURN_REMAINS_SCENE.instantiate()
+	remains.position = Vector3(0.0, _collision_floor_local_y(), 0.0)
+	remains.set("scorch_size", burn_remains_scale)
+	remains.set("smoke_enabled", false)
+	remains.set("smoke_duration", burn_smoke_duration)
+	remains.set("smoke_alpha", 0.0)
+	remains.set("scorch_tint", Color(0.44, 0.04, 0.04, 0.95))
+	remains.set("ember_tint", Color(0.70, 0.08, 0.08, 0.38))
+	remains.set("ember_emission_energy", 0.14)
+	if enemy_id == &"badredviper":
+		remains.set("scorch_size", burn_remains_scale * 1.26)
+		remains.set("scorch_tint", Color(0.40, 0.03, 0.03, 0.97))
+		remains.set("ember_tint", Color(0.72, 0.08, 0.08, 0.42))
+		remains.set("ember_emission_energy", 0.18)
+	elif enemy_id == &"redviper":
+		remains.set("ember_tint", Color(0.78, 0.10, 0.10, 0.34))
+	add_child(remains)
+	_burn_remains = remains
+
+
 func _die() -> void:
 	if _dead:
 		return
@@ -574,6 +666,7 @@ func _die() -> void:
 	_lost_sight_remaining = 0.0
 	_search_remaining = 0.0
 	velocity = Vector3.ZERO
+	_snap_body_to_floor(2.0)
 	collision_shape.set_deferred("disabled", true)
 	set_collision_layer_value(3, false)
 	set_collision_mask_value(1, false)
@@ -599,9 +692,16 @@ func _die() -> void:
 		animated_sprite.pause()
 		animated_sprite.frame = animated_sprite.sprite_frames.get_frame_count(&"death") - 1
 		animated_sprite.position.y = corpse_visual_y
+		await get_tree().create_timer(corpse_hold_duration).timeout
+		if not is_inside_tree():
+			return
 	else:
 		_play_animation(&"idle")
 		animated_sprite.pause()
+		await get_tree().create_timer(corpse_hold_duration).timeout
+		if not is_inside_tree():
+			return
+	_finalize_death_visual()
 
 
 func _play_hurt_feedback() -> void:

@@ -1,8 +1,8 @@
 # VEX // Yapı Bilgisi
 
-- Yapı: `COMPLETE BUILD 3.1.1`
-- Oyun sürümü: `3.1.1`
-- Godot hedefi: `4.5` / GL Compatibility
+- Yapı: `COMPLETE BUILD 3.1.2`
+- Oyun sürümü: `3.1.2`
+- Godot hedefi: `4.5.1` / GL Compatibility
 - Başlangıç sahnesi: `res://scenes/ui/splash_screen.tscn`
 - Oyun akışı: `VEX-01 → sonuç ekranı → VEX-02 → sonuç ekranı`
 - Görsel biçimi: çalışma zamanındaki görseller PNG; SVG bağımlılığı yok
@@ -51,3 +51,22 @@
 - Dört düşman tipi sahneden ayarlanabilir `dormant_distance` ile uzakta pasifleşir. Viper görüş ışınları önbellekli aralıklarla, Ravager/HellMagma ışınları kademeli aralıklarla çalışır.
 - Ayarlar menüsündeki `3B GÖRÜNTÜ KALİTESİ` seçimi 3B dünya için `0,75 / 0,85 / 1,00` ölçeklerini anında uygular; HUD ve nişangah tam çözünürlükte kalır.
 - Harita konumu ve etkileşim metni sorguları 20 Hz'de örneklenir; nişangah, hasar geri bildirimi ve silah animasyonları kare hızında kalır.
+
+## VEX-01 // Korku Işıklandırması ve Yana Açılan Kapı Testi
+
+- Deneme yalnız VEX-01'e uygulanmıştır; VEX-02 eski yukarı açılan kapı ve mevcut ışık düzenini korur.
+- 18 odanın tam merkezinde, tavan altında birer soğuk beyaz endüstriyel armatür bulunur. `11 m` menzil ve `32°` koni açısı merkezi aydınlatır; yaklaşık `7,81 m` uzaklıktaki oda köşelerine ulaşmadan ışık söner.
+- Yeni armatürün enerji, renk, menzil, koni, gölge, uzaklık LOD'u ve görsel boyutu `ceiling_light_white_horror.tscn` kökünden Inspector ile değiştirilebilir.
+- VEX-01'in 19 kapısı iki eşit panel hâlinde yerel yatay eksende `2,35 m` sağa/sola kayar. Güvenlik sensörü, anahtar şartları, otomatik kapanma ve kapalı kapı oklüderi korunur.
+- EXIT tabelası FinishSwitch üzerinden kaldırılmış ve iki yönden okunabilmesi için final hava kilidi `Door_3_6` kapısının iki yüzüne taşınmıştır.
+
+## 3.1.2 // Son bütünlük düzeltmeleri
+
+- BadRedViper asset klasörü tüm `res://` referanslarıyla aynı olacak şekilde küçük harfe normalize edildi; Linux/Web case-sensitive export güvenliği sağlandı.
+- VEX-01 ve VEX-02 içindeki `shotgun_pickup_v2.png` UID kayıtları gerçek import UID'siyle eşitlendi.
+- VEX-01 yana açılan kapının arka yüzündeki atlas yarıları ters eşlenerek V işaretinin iki yönden de bütün görünmesi sağlandı.
+- GL Compatibility altında görünür hacimsel ışık hissi için düşük maliyetli, gölgesiz ve çift taraflı konik `LightBeam` mesh'i eklendi; desteklenmeyen volumetric fog katkısı sıfırlandı.
+- RedViper ve HellMagma temel sahnelerinde Inspector export alanları açıkça kaydedildi; script varsayılanı değiştiğinde istemsiz denge kayması önlendi.
+- Mühimmat pickup bildirimi artık kapasiteye gerçekten eklenen miktarı gösterir.
+- Görsel düğümü kayıp/bozuk pickup artık görünmez kalsa bile toplanabilir; null görselde toplama sonrası hata üretmez.
+- Kullanılmayan `ravager_hurt` ve eski `shotgun_pickup` kaynakları teslim paketinden çıkarıldı.

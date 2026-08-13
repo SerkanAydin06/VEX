@@ -111,7 +111,7 @@ func reload() -> void:
 	broadcast_state()
 
 
-func add_ammo(ammo_type: StringName, amount: int) -> bool:
+func add_ammo(ammo_type: StringName, amount: int) -> int:
 	var maximum := 60
 	match ammo_type:
 		&"bullets":
@@ -123,11 +123,12 @@ func add_ammo(ammo_type: StringName, amount: int) -> bool:
 		&"mp90_ammo":
 			maximum = 300
 	var current := int(reserve_ammo.get(ammo_type, 0))
-	if current >= maximum:
-		return false
-	reserve_ammo[ammo_type] = mini(maximum, current + amount)
+	if current >= maximum or amount <= 0:
+		return 0
+	var accepted := mini(amount, maximum - current)
+	reserve_ammo[ammo_type] = current + accepted
 	broadcast_state()
-	return true
+	return accepted
 
 
 func unlock_weapon(weapon_id: StringName, bonus_ammo: int) -> void:

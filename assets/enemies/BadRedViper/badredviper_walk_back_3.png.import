@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dhgfq3yknodic"
-path.s3tc="res://.godot/imported/badredviper_walk_back_3.png-df8754e9aa6c07dd0d317f593fa9e77a.s3tc.ctex"
+path.s3tc="res://.godot/imported/badredviper_walk_back_3.png-9b0ceaff29bfe11c3104d1459051c2cf.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/enemies/BadRedViper/badredviper_walk_back_3.png"
-dest_files=["res://.godot/imported/badredviper_walk_back_3.png-df8754e9aa6c07dd0d317f593fa9e77a.s3tc.ctex"]
+source_file="res://assets/enemies/badredviper/badredviper_walk_back_3.png"
+dest_files=["res://.godot/imported/badredviper_walk_back_3.png-9b0ceaff29bfe11c3104d1459051c2cf.s3tc.ctex"]
 
 [params]
 

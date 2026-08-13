@@ -7,22 +7,26 @@
 [ext_resource type="AudioStream" uid="uid://cthqgc3k3m2nv" path="res://assets/audio/door_locked_pro.wav" id="5_denied_audio"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_door"]
-size = Vector3(0.56, 4.48, 4.36)
+size = Vector3(0.56, 4.48, 4.6)
 
 [sub_resource type="QuadMesh" id="QuadMesh_door_face"]
-size = Vector2(4.28, 4.42)
+size = Vector2(4.52, 4.42)
 
 [sub_resource type="BoxShape3D" id="BoxShape_door"]
-size = Vector3(0.56, 4.48, 4.36)
+size = Vector3(0.56, 4.48, 4.6)
 
 [sub_resource type="BoxShape3D" id="BoxShape_safety"]
-size = Vector3(2.3, 3.1, 4.52)
+size = Vector3(2.3, 3.1, 4.76)
 
 [sub_resource type="BoxOccluder3D" id="BoxOccluder3D_door"]
-size = Vector3(0.56, 4.48, 4.36)
+size = Vector3(0.56, 4.48, 4.6)
 
 [node name="Door" type="Node3D"]
 script = ExtResource("1_script")
+opening_mode = 0
+opening_height = 4.2
+opening_width = 2.35
+opening_time = 0.75
 
 [node name="DoorPanel" type="AnimatableBody3D" parent="."]
 collision_mask = 0

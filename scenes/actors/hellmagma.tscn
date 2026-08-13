@@ -1,34 +1,34 @@
-[gd_scene load_steps=33 format=3]
+[gd_scene load_steps=33 format=3 uid="uid://d3hv0gr27g6kr"]
 
-[ext_resource type="Script" path="res://scripts/actors/hellmagma.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_attack_1.png" id="2_attack1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_attack_2.png" id="3_attack2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_attack_3.png" id="4_attack3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_attack_4.png" id="5_attack4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_death_1.png" id="6_death1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_death_2.png" id="7_death2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_death_3.png" id="8_death3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_death_4.png" id="9_death4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_1.png" id="10_idle1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_2.png" id="11_idle2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_3.png" id="12_idle3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_4.png" id="13_idle4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_back_1.png" id="14_idle_back1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_back_2.png" id="15_idle_back2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_back_3.png" id="16_idle_back3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_idle_back_4.png" id="17_idle_back4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_1.png" id="18_walk1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_2.png" id="19_walk2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_3.png" id="20_walk3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_4.png" id="21_walk4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_back_1.png" id="22_walk_back1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_back_2.png" id="23_walk_back2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_back_3.png" id="24_walk_back3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/HellMagma/HellMagma_walk_back_4.png" id="25_walk_back4"]
+[ext_resource type="Script" uid="uid://ceaxa6s7v5v5y" path="res://scripts/actors/hellmagma.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://ci14i8fp07yma" path="res://assets/enemies/HellMagma/HellMagma_attack_1.png" id="2_attack1"]
+[ext_resource type="Texture2D" uid="uid://joaix8xyacnn" path="res://assets/enemies/HellMagma/HellMagma_attack_2.png" id="3_attack2"]
+[ext_resource type="Texture2D" uid="uid://3qjytn82adjq" path="res://assets/enemies/HellMagma/HellMagma_attack_3.png" id="4_attack3"]
+[ext_resource type="Texture2D" uid="uid://chukpqn0iutlv" path="res://assets/enemies/HellMagma/HellMagma_attack_4.png" id="5_attack4"]
+[ext_resource type="Texture2D" uid="uid://behoppnu230gv" path="res://assets/enemies/HellMagma/HellMagma_death_1.png" id="6_death1"]
+[ext_resource type="Texture2D" uid="uid://b03rn4riuqlv3" path="res://assets/enemies/HellMagma/HellMagma_death_2.png" id="7_death2"]
+[ext_resource type="Texture2D" uid="uid://cktx08fckdbfp" path="res://assets/enemies/HellMagma/HellMagma_death_3.png" id="8_death3"]
+[ext_resource type="Texture2D" uid="uid://71s287yuuckj" path="res://assets/enemies/HellMagma/HellMagma_death_4.png" id="9_death4"]
+[ext_resource type="Texture2D" uid="uid://daijgdu6j0f6w" path="res://assets/enemies/HellMagma/HellMagma_idle_1.png" id="10_idle1"]
+[ext_resource type="Texture2D" uid="uid://dkjks2by05pqn" path="res://assets/enemies/HellMagma/HellMagma_idle_2.png" id="11_idle2"]
+[ext_resource type="Texture2D" uid="uid://qkwxlqkqdpaf" path="res://assets/enemies/HellMagma/HellMagma_idle_3.png" id="12_idle3"]
+[ext_resource type="Texture2D" uid="uid://bxoq6vc5p6qst" path="res://assets/enemies/HellMagma/HellMagma_idle_4.png" id="13_idle4"]
+[ext_resource type="Texture2D" uid="uid://c2ho0ioqvfsbq" path="res://assets/enemies/HellMagma/HellMagma_idle_back_1.png" id="14_idle_back1"]
+[ext_resource type="Texture2D" uid="uid://cocc7ipa2k3xc" path="res://assets/enemies/HellMagma/HellMagma_idle_back_2.png" id="15_idle_back2"]
+[ext_resource type="Texture2D" uid="uid://8jeqfxubde57" path="res://assets/enemies/HellMagma/HellMagma_idle_back_3.png" id="16_idle_back3"]
+[ext_resource type="Texture2D" uid="uid://tudjc2akmkdb" path="res://assets/enemies/HellMagma/HellMagma_idle_back_4.png" id="17_idle_back4"]
+[ext_resource type="Texture2D" uid="uid://cag0q80jdgak5" path="res://assets/enemies/HellMagma/HellMagma_walk_1.png" id="18_walk1"]
+[ext_resource type="Texture2D" uid="uid://bssmolxa12h0a" path="res://assets/enemies/HellMagma/HellMagma_walk_2.png" id="19_walk2"]
+[ext_resource type="Texture2D" uid="uid://b4q21ebhiqjhn" path="res://assets/enemies/HellMagma/HellMagma_walk_3.png" id="20_walk3"]
+[ext_resource type="Texture2D" uid="uid://bhvnvvnpblmxn" path="res://assets/enemies/HellMagma/HellMagma_walk_4.png" id="21_walk4"]
+[ext_resource type="Texture2D" uid="uid://d1wnunum07j6l" path="res://assets/enemies/HellMagma/HellMagma_walk_back_1.png" id="22_walk_back1"]
+[ext_resource type="Texture2D" uid="uid://cnovevng3sk23" path="res://assets/enemies/HellMagma/HellMagma_walk_back_2.png" id="23_walk_back2"]
+[ext_resource type="Texture2D" uid="uid://bedsslbc6kv33" path="res://assets/enemies/HellMagma/HellMagma_walk_back_3.png" id="24_walk_back3"]
+[ext_resource type="Texture2D" uid="uid://bn2qvqn1m1viu" path="res://assets/enemies/HellMagma/HellMagma_walk_back_4.png" id="25_walk_back4"]
 [ext_resource type="PackedScene" path="res://scenes/actors/hellmagma_projectile.tscn" id="26_projectile"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_death_scream_pro.wav" id="29_death_audio"]
+[ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
+[ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
+[ext_resource type="AudioStream" uid="uid://clas3vxrwxpr3" path="res://assets/audio/enemy_death_scream_pro.wav" id="29_death_audio"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="30_shadow"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_hellmagma"]
@@ -156,24 +156,16 @@ safe_margin = 0.06
 script = ExtResource("1_script")
 enemy_id = &"hellmagma"
 maximum_health = 240
-spawn_min_difficulty = 0
-apply_difficulty_scaling = true
 move_speed = 3.2
 movement_acceleration = 14.0
 braking_acceleration = 22.0
-gravity_scale = 1.0
-floor_stick_velocity = -0.1
 patrol_offset = Vector3(1, 0, 0)
 detection_range = 22.0
 pursuit_range = 28.0
 initial_view_angle = 360.0
-lost_sight_timeout = 20.0
-search_duration = 10.0
 search_turn_speed = 55.0
 ally_alert_radius = 13.0
 sight_origin_height = 1.8
-sight_target_height = 0.45
-sight_collision_mask = 3
 attack_damage = 28
 attack_range = 15.0
 attack_cooldown = 1.05
@@ -181,57 +173,52 @@ attack_windup = 0.43
 attack_range_tolerance = 5.0
 projectile_scene = ExtResource("26_projectile")
 projectile_spawn_height = 2.0
-projectile_spawn_side_offset = 0.0
-projectile_target_height = 0.4
 projectile_lead_factor = 1.0
 projectile_max_lead_time = 1.8
 attack_approach_speed = 2.4
 attack_strafe_speed = 1.0
 attack_preferred_distance = 6.5
 path_refresh_interval = 0.3
-waypoint_link_distance = 9.0
 navigation_clearance = 1.0
 waypoint_reach_distance = 0.8
-path_target_change_distance = 1.0
 patrol_path_refresh_interval = 0.45
-endpoint_link_distance_multiplier = 1.5
 endpoint_candidate_count = 12
-endpoint_connection_limit = 5
 investigation_candidate_count = 20
-navigation_collision_mask = 9
 idle_detection_margin = 8.0
 near_sight_interval = 0.1
 medium_sight_interval = 0.16
 distant_think_distance = 28.0
-distant_sight_interval = 0.2
 idle_far_sight_interval = 0.3
 distant_path_refresh_interval = 0.55
 dormant_distance = 36.0
-back_view_threshold = -0.15
 hurt_reaction_duration = 0.12
-corpse_visual_y = 0.2
-back_corpse_visual_y = 0.2
+corpse_visual_y = 0.19680105
+back_corpse_visual_y = 0.19680105
 death_fall_time = 0.35
+corpse_hold_duration = 1.45
+burn_remains_scale = 1.35
+burn_smoke_duration = 11.0
+burn_smoke_alpha = 0.16
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape_hellmagma")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17522775, 0)
 cast_shadow = 0
 pixel_size = 0.0073547
-billboard = 1
+billboard = 2
 shaded = true
-texture_filter = 1
 alpha_cut = 1
+texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_hellmagma")
 animation = &"idle"
 autoplay = "idle"
 
 [node name="GroundShadow" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -1.78, 0)
-modulate = Color(1, 1, 1, 0.78)
 cast_shadow = 0
+modulate = Color(1, 1, 1, 0.78)
 pixel_size = 0.0103
 texture_filter = 5
 render_priority = -1

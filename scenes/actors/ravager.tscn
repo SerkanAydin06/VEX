@@ -209,19 +209,23 @@ distant_path_refresh_interval = 0.6
 dormant_distance = 32.0
 back_view_threshold = -0.15
 hurt_reaction_duration = 0.16
-corpse_visual_y = -0.1
-back_corpse_visual_y = -0.1
+corpse_visual_y = -0.0999775
+back_corpse_visual_y = -0.0999775
 death_fall_time = 0.3
+burn_remains_scale = 0.95
+burn_smoke_duration = 8.0
+burn_smoke_alpha = 0.12
+corpse_hold_duration = 1.25
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 shape = SubResource("CapsuleShape_enemy")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0999775, 0)
 cast_shadow = 0
 pixel_size = 0.003315
-billboard = 1
+billboard = 2
 shaded = true
 texture_filter = 1
 alpha_cut = 1

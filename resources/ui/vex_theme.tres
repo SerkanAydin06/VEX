@@ -1,4 +1,4 @@
-[gd_resource type="Theme" format=3 uid="uid://caa7b7etp2exm"]
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://caa7b7etp2exm"]
 
 [ext_resource type="FontFile" uid="uid://dt6b8nj54csq0" path="res://assets/fonts/vex_ui_bold.ttf" id="1_ui_font"]
 

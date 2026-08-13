@@ -141,7 +141,8 @@ func collect_pickup(pickup_type: StringName, amount: int) -> bool:
 			armor = mini(maximum_armor, armor + amount)
 			GameState.notify_pickup("ZIRH +%d" % collected_armor, &"armor")
 		&"bullets", &"shells", &"rifle_ammo", &"mp90_ammo":
-			if not weapon_controller.call("add_ammo", pickup_type, amount):
+			var collected_ammo := int(weapon_controller.call("add_ammo", pickup_type, amount))
+			if collected_ammo <= 0:
 				return false
 			var ammo_name := "9×19 MERMİ"
 			if pickup_type == &"shells":
@@ -150,7 +151,7 @@ func collect_pickup(pickup_type: StringName, amount: int) -> bool:
 				ammo_name = "7.62×39 MERMİ"
 			elif pickup_type == &"mp90_ammo":
 				ammo_name = "5.7×28 MERMİ"
-			GameState.notify_pickup("%s +%d" % [ammo_name, amount], &"ammo")
+			GameState.notify_pickup("%s +%d" % [ammo_name, collected_ammo], &"ammo")
 		&"shotgun":
 			weapon_controller.call("unlock_weapon", &"shotgun", amount)
 			GameState.notify_pickup("KIRICI POMPALI AKTİF", &"weapon")

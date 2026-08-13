@@ -45,10 +45,6 @@ func _ready() -> void:
 	_resolve_scene_nodes()
 	_apply_default_texture_for_type()
 	_apply_visual()
-	if visual == null or visual_pivot == null:
-		push_warning("%s: Visual veya VisualPivot/Visual bulunamadı; pickup görseli devre dışı." % get_path())
-		set_process(false)
-		return
 	if Engine.is_editor_hint():
 		set_process(false)
 		return
@@ -57,11 +53,18 @@ func _ready() -> void:
 		queue_free()
 		return
 
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
+
+	if visual == null or visual_pivot == null:
+		push_warning("%s: Visual veya VisualPivot/Visual bulunamadı; pickup görünmez ama toplanabilir kalacak." % get_path())
+		set_process(false)
+		return
+
 	_base_pivot_position = visual_pivot.position
 	_phase = randf_range(0.0, TAU)
 	_elapsed = 0.0
 	set_process(true)
-	body_entered.connect(_on_body_entered)
 
 
 func _apply_difficulty_amount() -> void:
@@ -141,7 +144,8 @@ func _on_body_entered(body: Node3D) -> void:
 	set_deferred("monitoring", false)
 	if collision_shape != null:
 		collision_shape.set_deferred("disabled", true)
-	visual.visible = false
+	if visual != null:
+		visual.visible = false
 	if pickup_audio != null and pickup_audio.stream != null:
 		pickup_audio.play()
 	call_deferred("_finish_collection")

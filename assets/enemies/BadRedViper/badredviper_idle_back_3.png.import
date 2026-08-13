@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfn3xun01gtki"
-path.s3tc="res://.godot/imported/badredviper_idle_back_3.png-d8b951ceb9df9c273d29325f642a2684.s3tc.ctex"
+path.s3tc="res://.godot/imported/badredviper_idle_back_3.png-1d939a9c464f40df03f6fe12cb423537.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/enemies/BadRedViper/badredviper_idle_back_3.png"
-dest_files=["res://.godot/imported/badredviper_idle_back_3.png-d8b951ceb9df9c273d29325f642a2684.s3tc.ctex"]
+source_file="res://assets/enemies/badredviper/badredviper_idle_back_3.png"
+dest_files=["res://.godot/imported/badredviper_idle_back_3.png-1d939a9c464f40df03f6fe12cb423537.s3tc.ctex"]
 
 [params]
 

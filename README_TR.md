@@ -1,6 +1,6 @@
-# VEX 3.1.1 Github test
+# VEX 3.1.2
 
-Godot 4.5 ile hazırlanmış, 2D sprite tabanlı pseudo-3D bir FPS projesidir. Paket iki oynanabilir bölüm, dört zorluk seviyesi, iki anahtarlı geri dönüşlü rota, keşif sisli TAB haritası, dört silah, gece görüşü, sabit cesetler ve zincirleme patlayan variller içerir.
+Godot 4.5.1 hedefiyle hazırlanmış, 2D sprite tabanlı pseudo-3D bir FPS projesidir. Paket iki oynanabilir bölüm, dört zorluk seviyesi, iki anahtarlı geri dönüşlü rota, keşif sisli TAB haritası, dört silah, gece görüşü, sabit cesetler ve zincirleme patlayan variller içerir.
 
 ## Çalıştırma
 

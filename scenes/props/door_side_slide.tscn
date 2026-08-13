@@ -1,0 +1,119 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/props/door.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/world/door_side_slide_v1.png" id="2_texture"]
+[ext_resource type="Material" path="res://resources/materials/door_frame.tres" id="3_frame_material"]
+[ext_resource type="AudioStream" path="res://assets/audio/door_motion_pro.wav" id="4_open_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/door_locked_pro.wav" id="5_denied_audio"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_left"]
+atlas = ExtResource("2_texture")
+region = Rect2(0, 0, 627, 1254)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_right"]
+atlas = ExtResource("2_texture")
+region = Rect2(627, 0, 627, 1254)
+filter_clip = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_panel_half"]
+size = Vector3(0.56, 4.48, 2.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape_panel_half"]
+size = Vector3(0.56, 4.48, 2.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape_safety"]
+size = Vector3(2.3, 3.1, 4.76)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_door"]
+size = Vector3(0.56, 4.48, 4.6)
+
+[node name="DoorSideSlide" type="Node3D"]
+script = ExtResource("1_script")
+opening_mode = 1
+opening_height = 4.2
+opening_width = 2.47
+opening_time = 0.75
+
+[node name="DoorPanel" type="AnimatableBody3D" parent="."]
+position = Vector3(0, 0, -1.15)
+collision_mask = 0
+
+[node name="PanelBody" type="MeshInstance3D" parent="DoorPanel"]
+material_override = ExtResource("3_frame_material")
+mesh = SubResource("BoxMesh_panel_half")
+
+[node name="FrontVisual" type="Sprite3D" parent="DoorPanel"]
+transform = Transform3D(0, 0, 1.05505, 0, 1, 0, -1, 0, 0, 0.286, 0, 0)
+cast_shadow = 0
+pixel_size = 0.00347687
+flip_h = true
+double_sided = true
+shaded = true
+texture_filter = 5
+texture = SubResource("AtlasTexture_left")
+
+[node name="BackVisual" type="Sprite3D" parent="DoorPanel"]
+transform = Transform3D(0, 0, -1.05505, 0, 1, 0, 1, 0, 0, -0.286, 0, 0)
+cast_shadow = 0
+pixel_size = 0.00347687
+double_sided = true
+shaded = true
+texture_filter = 5
+texture = SubResource("AtlasTexture_left")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorPanel"]
+shape = SubResource("BoxShape_panel_half")
+
+[node name="DoorPanelRight" type="AnimatableBody3D" parent="."]
+position = Vector3(0, 0, 1.15)
+collision_mask = 0
+
+[node name="PanelBody" type="MeshInstance3D" parent="DoorPanelRight"]
+material_override = ExtResource("3_frame_material")
+mesh = SubResource("BoxMesh_panel_half")
+
+[node name="FrontVisual" type="Sprite3D" parent="DoorPanelRight"]
+transform = Transform3D(0, 0, 1.05505, 0, 1, 0, -1, 0, 0, 0.286, 0, 0)
+cast_shadow = 0
+pixel_size = 0.00347687
+double_sided = true
+shaded = true
+texture_filter = 5
+texture = SubResource("AtlasTexture_left")
+
+[node name="BackVisual" type="Sprite3D" parent="DoorPanelRight"]
+transform = Transform3D(0, 0, -1.05505, 0, 1, 0, 1, 0, 0, -0.286, 0, 0)
+cast_shadow = 0
+pixel_size = 0.00347687
+double_sided = true
+shaded = true
+texture_filter = 5
+texture = SubResource("AtlasTexture_right")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorPanelRight"]
+shape = SubResource("BoxShape_panel_half")
+
+[node name="DoorOccluder" type="OccluderInstance3D" parent="."]
+occluder = SubResource("BoxOccluder3D_door")
+
+[node name="SafetySensor" type="Area3D" parent="."]
+position = Vector3(0, -0.55, 0)
+collision_layer = 0
+collision_mask = 6
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SafetySensor"]
+shape = SubResource("BoxShape_safety")
+
+[node name="OpenAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_open_audio")
+volume_db = -2.0
+max_distance = 18.0
+bus = &"SFX"
+
+[node name="DeniedAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_denied_audio")
+volume_db = -2.0
+max_distance = 14.0
+bus = &"SFX"

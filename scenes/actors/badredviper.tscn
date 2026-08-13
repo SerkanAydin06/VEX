@@ -195,6 +195,10 @@ death_settle_duration = 0.55
 near_sight_interval = 0.08
 far_sight_interval = 0.18
 dormant_distance = 32.0
+burn_remains_scale = 1.2
+burn_smoke_duration = 9.5
+burn_smoke_alpha = 0.14
+corpse_hold_duration = 1.25
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0532, 0)
@@ -204,7 +208,7 @@ shape = SubResource("CapsuleShape_badredviper")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1865, 0)
 cast_shadow = 0
 pixel_size = 0.0062
-billboard = 1
+billboard = 2
 shaded = true
 texture_filter = 1
 alpha_cut = 1

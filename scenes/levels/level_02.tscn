@@ -20,7 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://b13876t0wruyx" path="res://assets/pickups/mp90.png" id="15_cu4fk"]
 [ext_resource type="Texture2D" uid="uid://cle0acxmkyrcq" path="res://assets/pickups/mp90_ammo.png" id="16_fsjua"]
 [ext_resource type="Texture2D" uid="uid://6vbr6yts5f0b" path="res://assets/pickups/ammo_shells_v2.png" id="16_shells"]
-[ext_resource type="Texture2D" uid="uid://bj4jbqlhq11xi" path="res://assets/pickups/shotgun_pickup_v2.png" id="17_shotgun"]
+[ext_resource type="Texture2D" uid="uid://cvj17rfok1hmg" path="res://assets/pickups/shotgun_pickup_v2.png" id="17_shotgun"]
 [ext_resource type="Texture2D" uid="uid://dysy6t7ijbk03" path="res://assets/pickups/key_blue_v2.png" id="18_key"]
 [ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_red.tscn" id="19_lamp_red"]
 [ext_resource type="AudioStream" uid="uid://bc6m2yvln3f84" path="res://assets/audio/game_music_pro.mp3" id="20_level_music"]
@@ -60,7 +60,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C1_R0" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 10.15, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.15, -24)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -70,7 +70,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C2_R0" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 10.15, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 7.15, -24)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -80,7 +80,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C7_R0" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 10.15, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.15, -24)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -90,7 +90,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C1_R1" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 10.15, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.15, -16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -100,7 +100,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C2_R1" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 10.15, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 7.15, -16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -110,7 +110,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C3_R1" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 10.15, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 7.15, -16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -120,7 +120,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C6_R1" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.15, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 7.15, -16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -130,7 +130,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C7_R1" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 10.15, -16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.15, -16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -140,7 +140,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C0_R2" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 10.15, -8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 7.15, -8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -150,7 +150,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C1_R2" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 10.15, -8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.15, -8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -160,7 +160,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C3_R2" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 10.15, -8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 7.15, -8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -170,7 +170,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C6_R2" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.15, -8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 7.15, -8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -180,7 +180,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C0_R3" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 10.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 7.15, 0)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -190,7 +190,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C2_R3" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 10.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 7.15, 0)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -200,7 +200,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C3_R3" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 10.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 7.15, 0)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -210,7 +210,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C4_R3" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.15, 0)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -220,7 +220,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C5_R3" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 10.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7.15, 0)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -230,7 +230,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C6_R3" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 7.15, 0)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -240,7 +240,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C7_R3" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 10.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.15, 0)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -250,7 +250,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C8_R3" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 10.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 7.15, 0)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -260,7 +260,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C0_R4" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 10.15, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 7.15, 8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -270,7 +270,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C1_R4" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 10.15, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.15, 8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -280,7 +280,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C2_R4" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 10.15, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 7.15, 8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -290,7 +290,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C7_R4" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 10.15, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.15, 8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -300,7 +300,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C8_R4" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 10.15, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 7.15, 8)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -310,7 +310,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C0_R5" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 10.15, 16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 7.15, 16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -320,7 +320,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C1_R5" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 10.15, 16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.15, 16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -330,7 +330,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C6_R5" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.15, 16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 7.15, 16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -340,7 +340,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C7_R5" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 10.15, 16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.15, 16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -350,7 +350,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C8_R5" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 10.15, 16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 7.15, 16)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -360,7 +360,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C6_R6" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 10.15, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 7.15, 24)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -370,7 +370,7 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C7_R6" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 10.15, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.15, 24)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
@@ -380,653 +380,653 @@ piece_size = Vector3(8, 0.5, 8)
 surface_material = ExtResource("4_floor")
 
 [node name="Ceiling_C8_R6" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 10.15, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 7.15, 24)
 piece_size = Vector3(8, 0.3, 8)
 surface_material = ExtResource("5_ceiling")
 
 [node name="Outer_1_0_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 5, -28)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.5, -28)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_Block_1_0_2_0" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, -24)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.5, -24)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_01_Secret_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 5, -20)
-piece_size = Vector3(4.75, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 3.5, -20)
+piece_size = Vector3(4.75, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_01_Secret_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.825, 5, -20)
-piece_size = Vector3(1.65, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.825, 3.5, -20)
+piece_size = Vector3(1.65, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_1_0_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, -24)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, -24)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_2_0_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 5, -28)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3.5, -28)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_2_0_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5, -24)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -24)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_02_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.8, 5, -20)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.8, 3.5, -20)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_02_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 5, -20)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 3.5, -20)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_7_0_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 5, -28)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.5, -28)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_7_0_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, -24)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -24)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_03_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.2, 5, -20)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.2, 3.5, -20)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_03_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.8, 5, -20)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.8, 3.5, -20)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_7_0_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, -24)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, -24)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_04_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, -18.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.5, -18.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_04_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, -13.2)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.5, -13.2)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_05_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.8, 5, -12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.8, 3.5, -12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_05_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.2, 5, -12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.2, 3.5, -12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_1_1_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, -16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, -16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="D01_SideA" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5, -19.15)
-piece_size = Vector3(0.4, 10, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -19.15)
+piece_size = Vector3(0.4, 7, 1.7)
 surface_material = ExtResource("3_wall")
 
 [node name="D01_SideB" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5, -12.85)
-piece_size = Vector3(0.4, 10, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -12.85)
+piece_size = Vector3(0.4, 7, 1.7)
 surface_material = ExtResource("3_wall")
 
 [node name="D01_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.24, -16)
-piece_size = Vector3(0.4, 5.52, 4.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5.74, -16)
+piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_2_1_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 5, -12)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3.5, -12)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_3_1_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 5, -20)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3.5, -20)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_3_1_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 5, -16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3.5, -16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_07_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 5, -12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 3.5, -12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_07_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 5, -12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 3.5, -12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_1_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 5, -20)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3.5, -20)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="D02_SideA" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, -19.15)
-piece_size = Vector3(0.4, 10, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, -19.15)
+piece_size = Vector3(0.4, 7, 1.7)
 surface_material = ExtResource("3_wall")
 
 [node name="D02_SideB" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, -12.85)
-piece_size = Vector3(0.4, 10, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, -12.85)
+piece_size = Vector3(0.4, 7, 1.7)
 surface_material = ExtResource("3_wall")
 
 [node name="D02_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 7.24, -16)
-piece_size = Vector3(0.4, 5.52, 4.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5.74, -16)
+piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_09_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2, 5, -12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2, 3.5, -12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_09_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.8, 5, -12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.8, 3.5, -12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_1_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5, -16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, -16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_7_1_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, -16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_7_1_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 5, -12)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.5, -12)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_0_2_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 5, -12)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 3.5, -12)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_10_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, -10.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, -10.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_10_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, -5.2)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, -5.2)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_11_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.8, 5, -4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.8, 3.5, -4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_11_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.2, 5, -4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.2, 3.5, -4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_0_2_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 5, -8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 3.5, -8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_1_2_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, -8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.5, -8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_1_2_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 5, -4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.5, -4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_3_2_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 5, -8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3.5, -8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_12_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 5, -4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 3.5, -4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_12_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 5, -4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 3.5, -4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_3_2_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5, -8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_2_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, -8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, -8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_13_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2, 5, -4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2, 3.5, -4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_13_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.8, 5, -4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.8, 3.5, -4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_2_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5, -8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, -8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_0_3_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, 0)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, 0)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_14_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.8, 5, 4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.8, 3.5, 4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_14_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.2, 5, 4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.2, 3.5, 4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_0_3_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 5, 0)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 3.5, 0)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_2_3_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 5, -4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3.5, -4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_15_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5, -2.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -2.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_15_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5, 2.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 2.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_16_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.8, 5, 4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.8, 3.5, 4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_16_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 5, 4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 3.5, 4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_2_3_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, 0)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.5, 0)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_3_3_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 5, 4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 3.5, 4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_4_3_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="D03_SideA" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 5, -3.15)
-piece_size = Vector3(0.4, 10, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.5, -3.15)
+piece_size = Vector3(0.4, 7, 1.7)
 surface_material = ExtResource("3_wall")
 
 [node name="D03_SideB" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 5, 3.15)
-piece_size = Vector3(0.4, 10, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.5, 3.15)
+piece_size = Vector3(0.4, 7, 1.7)
 surface_material = ExtResource("3_wall")
 
 [node name="D03_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 7.24, 0)
-piece_size = Vector3(0.4, 5.52, 4.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 5.74, 0)
+piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_4_3_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_5_3_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 5, -4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.5, -4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_5_3_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 5, 4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.5, 4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_20_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, -2.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, -2.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_20_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, 2.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, 2.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_3_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 5, 4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3.5, 4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_7_3_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 5, -4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.5, -4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_21_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, -2.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, -2.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_21_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, 2.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, 2.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_Block_7_3_7_4" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 5, 4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.5, 4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_8_3_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 5, -4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 3.5, -4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_8_3_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 5, 0)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 3.5, 0)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_22_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.2, 5, 4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.2, 3.5, 4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_22_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.8, 5, 4)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.8, 3.5, 4)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_Block_0_4_1_4" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, 8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, 8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_23_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.8, 5, 12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.8, 3.5, 12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_23_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.2, 5, 12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.2, 3.5, 12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_0_4_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 5, 8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 3.5, 8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_1_4_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 5, 4)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.5, 4)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_24_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, 5.2)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.5, 5.2)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_24_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, 10.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.5, 10.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_25_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.8, 5, 12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.8, 3.5, 12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_25_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.2, 5, 12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.2, 3.5, 12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_2_4_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5, 8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_2_4_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 5, 12)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 3.5, 12)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_26_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, 5.2)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, 5.2)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_26_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, 10.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, 10.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_27_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.2, 5, 12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.2, 3.5, 12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_27_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.8, 5, 12)
-piece_size = Vector3(2.4, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.8, 3.5, 12)
+piece_size = Vector3(2.4, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_7_4_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, 8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, 8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_8_4_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 5, 8)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 3.5, 8)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_28_Secret_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.825, 5, 12)
-piece_size = Vector3(1.65, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.825, 3.5, 12)
+piece_size = Vector3(1.65, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_28_Secret_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.625, 5, 12)
-piece_size = Vector3(4.75, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.625, 3.5, 12)
+piece_size = Vector3(4.75, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_29_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, 13.2)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, 13.2)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_29_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, 18.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, 18.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_0_5_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 5, 20)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 3.5, 20)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_0_5_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 5, 16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 3.5, 16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_1_5_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5, 16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3.5, 16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_1_5_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 5, 20)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.5, 20)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_5_N" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 5, 12)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3.5, 12)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_30_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, 13.2)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, 13.2)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_30_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, 18.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, 18.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="D04_SideA" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.85, 5, 20)
-piece_size = Vector3(1.7, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.85, 3.5, 20)
+piece_size = Vector3(1.7, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="D04_SideB" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.15, 5, 20)
-piece_size = Vector3(1.7, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.15, 3.5, 20)
+piece_size = Vector3(1.7, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="D04_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 7.24, 20)
-piece_size = Vector3(4.6, 5.52, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 5.74, 20)
+piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_5_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5, 16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_Block_7_5_8_5" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, 16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, 16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_Block_7_5_7_6" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 5, 20)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.5, 20)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_8_5_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 5, 16)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 3.5, 16)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_Block_8_5_8_6" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 5, 20)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 3.5, 20)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_32_A" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, 21.2)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, 21.2)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Edge_32_B" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5, 26.8)
-piece_size = Vector3(0.4, 10, 2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3.5, 26.8)
+piece_size = Vector3(0.4, 7, 2.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_6_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 5, 28)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 3.5, 28)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_6_6_W" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5, 24)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 24)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="D05_SideA" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, 20.85)
-piece_size = Vector3(0.4, 10, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, 20.85)
+piece_size = Vector3(0.4, 7, 1.7)
 surface_material = ExtResource("3_wall")
 
 [node name="D05_SideB" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5, 27.15)
-piece_size = Vector3(0.4, 10, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 3.5, 27.15)
+piece_size = Vector3(0.4, 7, 1.7)
 surface_material = ExtResource("3_wall")
 
 [node name="D05_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 7.24, 24)
-piece_size = Vector3(0.4, 5.52, 4.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 5.74, 24)
+piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_7_6_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 5, 28)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.5, 28)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_8_6_E" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 5, 24)
-piece_size = Vector3(0.4, 10, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 3.5, 24)
+piece_size = Vector3(0.4, 7, 8)
 surface_material = ExtResource("3_wall")
 
 [node name="Outer_8_6_S" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 5, 28)
-piece_size = Vector3(8, 10, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 3.5, 28)
+piece_size = Vector3(8, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="SecretAK_Mask" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.3, 5, -23.1)
-piece_size = Vector3(0.4, 10, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.3, 3.5, -23.1)
+piece_size = Vector3(0.4, 7, 4)
 surface_material = ExtResource("3_wall")
 
 [node name="SecretMP90_Mask" parent="Geometry" instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.7, 5, 16.9)
-piece_size = Vector3(0.4, 10, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.7, 3.5, 16.9)
+piece_size = Vector3(0.4, 7, 4)
 surface_material = ExtResource("3_wall")
 
 [node name="EnemyNavigation" type="Node3D" parent="."]
@@ -1167,34 +1167,34 @@ required_key = &""
 [node name="Lights" type="Node3D" parent="."]
 
 [node name="D01_Lamp1" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.00020365318, 0, -1, 0, 1, 0, 1, 0, -0.00020365318, -12.32, 8.5, -16)
+transform = Transform3D(-0.00020365318, 0, -1, 0, 1, 0, 1, 0, -0.00020365318, -12.32, 5.5, -16)
 
 [node name="D01_Lamp2" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.00020365318, 0, 1, 0, 1, 0, -1, 0, -0.00020365318, -11.68, 8.5, -16)
+transform = Transform3D(-0.00020365318, 0, 1, 0, 1, 0, -1, 0, -0.00020365318, -11.68, 5.5, -16)
 
 [node name="D02_Lamp1" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.00020365318, 0, -1, 0, 1, 0, 1, 0, -0.00020365318, 19.68, 8.5, -16)
+transform = Transform3D(-0.00020365318, 0, -1, 0, 1, 0, 1, 0, -0.00020365318, 19.68, 5.5, -16)
 
 [node name="D02_Lamp2" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.00020365318, 0, 1, 0, 1, 0, -1, 0, -0.00020365318, 20.32, 8.5, -16)
+transform = Transform3D(-0.00020365318, 0, 1, 0, 1, 0, -1, 0, -0.00020365318, 20.32, 5.5, -16)
 
 [node name="D03_Lamp1" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.00020365318, 0, -1, 0, 1, 0, 1, 0, -0.00020365318, 3.68, 8.5, 0)
+transform = Transform3D(-0.00020365318, 0, -1, 0, 1, 0, 1, 0, -0.00020365318, 3.68, 5.5, 0)
 
 [node name="D03_Lamp2" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.00020365318, 0, 1, 0, 1, 0, -1, 0, -0.00020365318, 4.32, 8.5, 0)
+transform = Transform3D(-0.00020365318, 0, 1, 0, 1, 0, -1, 0, -0.00020365318, 4.32, 5.5, 0)
 
 [node name="D04_Lamp1" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.99999994, 0, -0.00040730633, 0, 1, 0, 0.00040730633, 0, -0.99999994, 16, 8.5, 19.68)
+transform = Transform3D(-0.99999994, 0, -0.00040730633, 0, 1, 0, 0.00040730633, 0, -0.99999994, 16, 5.5, 19.68)
 
 [node name="D04_Lamp2" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 8.5, 20.32)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 5.5, 20.32)
 
 [node name="D05_Lamp1" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.00020365318, 0, -1, 0, 1, 0, 1, 0, -0.00020365318, 27.68, 8.5, 24)
+transform = Transform3D(-0.00020365318, 0, -1, 0, 1, 0, 1, 0, -0.00020365318, 27.68, 5.5, 24)
 
 [node name="D05_Lamp2" parent="Lights" instance=ExtResource("19_lamp_red")]
-transform = Transform3D(-0.00020365318, 0, 1, 0, 1, 0, -1, 0, -0.00020365318, 28.32, 8.5, 24)
+transform = Transform3D(-0.00020365318, 0, 1, 0, 1, 0, -1, 0, -0.00020365318, 28.32, 5.5, 24)
 
 [node name="Props" type="Node3D" parent="."]
 
@@ -1219,70 +1219,70 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.8, 0.7, 23.1)
 [node name="Enemies" type="Node3D" parent="."]
 
 [node name="Ravager_01" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.15, 1, -0.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.15, 1.0, -0.75)
 enemy_id = &"v2_ravager_01"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_02" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.85, 1, 7.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.85, 1.0, 7.25)
 enemy_id = &"v2_ravager_02"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="RedViper_03" parent="Enemies" instance=ExtResource("24_redviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.15, 1, 16.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.15, 0.4968, 16.75)
 enemy_id = &"v2_redviper_03"
 
 [node name="Ravager_04" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.85, 1, -0.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.85, 1.0, -0.75)
 enemy_id = &"v2_ravager_04"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_05" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.15, 1, -8.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.15, 1.0, -8.75)
 enemy_id = &"v2_ravager_05"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_06" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 1, -15.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 1.0, -15.25)
 enemy_id = &"v2_ravager_06"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_07" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15, 1, -8.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15, 1.0, -8.75)
 enemy_id = &"v2_ravager_07"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_08" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.15, 1, -0.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.15, 1.0, -0.75)
 enemy_id = &"v2_ravager_08"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_09" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.85, 1, -7.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.85, 1.0, -7.25)
 enemy_id = &"v2_ravager_09"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="RedViper_10" parent="Enemies" instance=ExtResource("24_redviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.15, 1, -16.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.15, 0.4968, -16.75)
 enemy_id = &"v2_redviper_10"
 
 [node name="Ravager_11" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1, -0.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1.0, -0.75)
 enemy_id = &"v2_ravager_11"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_12" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.15, 1, 8.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.15, 1.0, 8.75)
 enemy_id = &"v2_ravager_12"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_13" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1, 15.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1.0, 15.25)
 enemy_id = &"v2_ravager_13"
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="BadRedViper_FinalGuard" parent="Enemies" instance=ExtResource("25_badredviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.15, 1, 23.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.15, 0.4968, 23.25)
 enemy_id = &"v2_badredviper_final_guard"
 maximum_health = 260
 detection_range = 18.0
@@ -1293,102 +1293,102 @@ ally_alert_radius = 12.0
 patrol_offset = Vector3(0, 0, 0)
 
 [node name="Ravager_15" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.15, 1, 8.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.15, 1.0, 8.75)
 enemy_id = &"v2_ravager_15"
 spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_16" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.85, 1, 7.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.85, 1.0, 7.25)
 enemy_id = &"v2_ravager_16"
 spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="BadRedViper_17" parent="Enemies" instance=ExtResource("25_badredviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.15, 1, -16.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.15, 0.4968, -16.75)
 enemy_id = &"v2_badredviper_17"
 spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="RedViper_18" parent="Enemies" instance=ExtResource("24_redviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.15, 1, 0.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.15, 0.4968, 0.75)
 enemy_id = &"v2_redviper_18"
 spawn_min_difficulty = 1
 
 [node name="Ravager_19" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1, -24.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1.0, -24.75)
 enemy_id = &"v2_ravager_19"
 spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_20" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.15, 1, -0.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.15, 1.0, -0.75)
 enemy_id = &"v2_ravager_20"
 spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_21" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.15, 1, 16.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.15, 1.0, 16.75)
 enemy_id = &"v2_ravager_21"
 spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_22" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.85, 1, -8.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.85, 1.0, -8.75)
 enemy_id = &"v2_ravager_22"
 spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_23" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15, 1, -16.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15, 1.0, -16.75)
 enemy_id = &"v2_ravager_23"
 spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_24" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.15, 1, -15.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.15, 1.0, -15.25)
 enemy_id = &"v2_ravager_24"
 spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_25" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1, 7.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1.0, 7.25)
 enemy_id = &"v2_ravager_25"
 spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="BadRedViper_26" parent="Enemies" instance=ExtResource("25_badredviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.15, 1, 15.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.15, 0.4968, 15.25)
 enemy_id = &"v2_badredviper_26"
 spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_27" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15, 1, 0.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15, 1.0, 0.75)
 enemy_id = &"v2_ravager_27"
 spawn_min_difficulty = 3
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_28" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 1, -24.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 1.0, -24.75)
 enemy_id = &"v2_ravager_28"
 spawn_min_difficulty = 3
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_29" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.85, 1, -0.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.85, 1.0, -0.75)
 enemy_id = &"v2_ravager_29"
 spawn_min_difficulty = 3
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="Ravager_30" parent="Enemies" instance=ExtResource("7_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.15, 1, -7.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.15, 1.0, -7.25)
 enemy_id = &"v2_ravager_30"
 spawn_min_difficulty = 3
 patrol_offset = Vector3(0, 0, 2)
 
 [node name="BadRedViper_31" parent="Enemies" instance=ExtResource("25_badredviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 1, 23.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.85, 0.4968, 23.25)
 enemy_id = &"v2_badredviper_31"
 spawn_min_difficulty = 3
 patrol_offset = Vector3(0, 0, 2)
@@ -1613,7 +1613,7 @@ display_name = "KIRIK OMURGA TAHLİYE KONTROLÜ"
 required_enemy_id = &"v2_badredviper_final_guard"
 
 [node name="ExitSign" parent="Triggers" instance=ExtResource("22_exit_sign")]
-transform = Transform3D(-3.6199901e-06, 0, -1, 0, 1, 0, 1, 0, -3.6199901e-06, 35.62, 3.45, 24)
+transform = Transform3D(-3.6199901e-06, 0, -1, 0, 1, 0, 1, 0, -3.6199901e-06, 35.62, 4.85, 24)
 
 [node name="Player" parent="." instance=ExtResource("6_player")]
 transform = Transform3D(-3.6199901e-06, 0, -1, 0, 1, 0, 1, 0, -3.6199901e-06, 0, 1, 0)

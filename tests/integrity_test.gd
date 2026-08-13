@@ -16,12 +16,14 @@ const REQUIRED_RESOURCES: PackedStringArray = [
 	"res://scenes/actors/redviper.tscn",
 	"res://scenes/actors/badredviper.tscn",
 	"res://scenes/props/door.tscn",
+	"res://scenes/props/door_side_slide.tscn",
 	"res://scenes/props/pickup.tscn",
 	"res://scenes/props/explosive_barrel.tscn",
 	"res://scenes/props/finish_switch.tscn",
 	"res://scenes/props/secret_trigger.tscn",
 	"res://scenes/world/world_piece.tscn",
 	"res://scenes/world/wall_lamp_red.tscn",
+	"res://scenes/world/ceiling_light_white_horror.tscn",
 	"res://scenes/world/exit_sign.tscn",
 	"res://scenes/levels/level_01.tscn",
 	"res://scenes/levels/level_02.tscn",
@@ -43,6 +45,8 @@ const REQUIRED_RESOURCES: PackedStringArray = [
 	"res://assets/pickups/mp90.png",
 	"res://assets/world/finish_switch.png",
 	"res://assets/world/wall_lamp_red.png",
+	"res://assets/world/ceiling_light_white_horror_v1.png",
+	"res://assets/world/door_side_slide_v1.png",
 	"res://assets/enemies/redviper/redviper_attack_1.png",
 	"res://assets/enemies/redviper/redviper_death_4.png",
 	"res://assets/enemies/redviper/redviper_idle_back_1.png",
@@ -76,7 +80,7 @@ func _run_integrity_test() -> void:
 
 	if failures.is_empty():
 		print(
-			"VEX 3.1.1 bütünlük testi başarılı: %d kaynak ve 2 bölüm doğrulandı."
+			"VEX 3.1.2 bütünlük testi başarılı: %d kaynak ve 2 bölüm doğrulandı."
 			% REQUIRED_RESOURCES.size()
 		)
 		quit(0)
@@ -108,6 +112,7 @@ func _validate_level_01(failures: Array[String]) -> void:
 	_validate_collection_count(level, "EnemyNavigation", 18, "VEX-01 rota noktası", failures)
 	_validate_collection_count(level, "Doors", 19, "VEX-01 kapı", failures)
 	_validate_collection_count(level, "Lights", 38, "VEX-01 kırmızı lamba", failures)
+	_validate_collection_count(level, "RoomLights", 18, "VEX-01 beyaz merkez ışığı", failures)
 	_validate_collection_count(level, "Props", 4, "VEX-01 varil", failures)
 	_validate_collection_count(level, "Enemies", 28, "VEX-01 düşman yerleşimi", failures)
 	_validate_collection_count(level, "Pickups", 22, "VEX-01 pickup", failures)
@@ -160,6 +165,53 @@ func _validate_level_01(failures: Array[String]) -> void:
 		var keys: Array = final_door.get("required_keys") as Array
 		_expect(keys.size() == 2 and keys.has(&"blue") and keys.has(&"red"), "VEX-01 final kapısı iki anahtar istemeli.", failures)
 		_expect(not str(final_door.get("objective_on_unlock")).is_empty(), "VEX-01 final kapısı görev metni eksik.", failures)
+		_expect(
+			int(final_door.get("opening_mode")) == 1
+			and final_door.has_node("DoorPanel")
+			and final_door.has_node("DoorPanelRight"),
+			"VEX-01 final kapısı iki yana açılan panel standardında değil.",
+			failures
+		)
+
+	var expected_light_positions: Array[Vector3] = [
+		Vector3(-12, 6.82, -25), Vector3(0, 6.82, -25), Vector3(12, 6.82, -25),
+		Vector3(-12, 6.82, -15), Vector3(0, 6.82, -15), Vector3(12, 6.82, -15),
+		Vector3(-12, 6.82, -5), Vector3(0, 6.82, -5), Vector3(12, 6.82, -5),
+		Vector3(-12, 6.82, 5), Vector3(0, 6.82, 5), Vector3(12, 6.82, 5),
+		Vector3(-12, 6.82, 15), Vector3(0, 6.82, 15), Vector3(12, 6.82, 15),
+		Vector3(-12, 6.82, 25), Vector3(0, 6.82, 25), Vector3(12, 6.82, 25),
+	]
+	var room_lights := level.get_node_or_null("RoomLights")
+	if room_lights != null:
+		for light_index: int in range(expected_light_positions.size()):
+			var room_light := room_lights.get_child(light_index) as Node3D
+			_expect(
+				room_light != null
+				and room_light.position.is_equal_approx(expected_light_positions[light_index]),
+				"VEX-01 oda merkez ışığı yanlış konumda: %d" % (light_index + 1),
+				failures
+			)
+			if room_light == null:
+				continue
+			var spot := room_light.get_node_or_null("Light") as SpotLight3D
+			_expect(
+				spot != null
+				and is_equal_approx(spot.spot_range, 11.0)
+				and is_equal_approx(spot.spot_angle, 32.0)
+				and not spot.shadow_enabled
+				and spot.distance_fade_enabled,
+				"VEX-01 beyaz ışık korku/performance profili yanlış: %d"
+				% (light_index + 1),
+				failures
+			)
+
+	_expect(
+		level.has_node("Triggers/ExitSign_FinalDoor_Room6")
+		and level.has_node("Triggers/ExitSign_FinalDoor_Room3")
+		and not level.has_node("Triggers/ExitSign"),
+		"EXIT tabelaları final hava kilidinin iki yüzünde değil.",
+		failures
+	)
 
 	var finish_switch := level.get_node_or_null("Triggers/FinishSwitch")
 	_expect(finish_switch != null, "VEX-01 FinishSwitch bulunamadı.", failures)
@@ -200,6 +252,14 @@ func _validate_level_02(failures: Array[String]) -> void:
 	_validate_collection_count(level, "Enemies", 31, "VEX-02 düşman yerleşimi", failures)
 	_validate_collection_count(level, "Pickups", 24, "VEX-02 pickup", failures)
 	_validate_collection_count(level, "Triggers", 4, "VEX-02 tetikleyici", failures)
+	var level_02_doors := level.get_node_or_null("Doors")
+	if level_02_doors != null:
+		for door_node: Node in level_02_doors.get_children():
+			_expect(
+				int(door_node.get("opening_mode")) == 0,
+				"VEX-02 kapısı ilk bölüm denemesinden etkilenmiş: " + str(door_node.name),
+				failures
+			)
 	_validate_unique_ids(level.get_node_or_null("Enemies"), &"enemy_id", failures)
 	_validate_unique_ids(level.get_node_or_null("Pickups"), &"pickup_id", failures)
 	_validate_enemy_distribution(

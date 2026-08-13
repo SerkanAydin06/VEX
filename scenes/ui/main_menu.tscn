@@ -271,7 +271,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.32, 0.48, 0.54, 1)
 theme_override_font_sizes/font_size = 14
-text = "VEX v3.1.1 // COMPLETE BUILD"
+text = "VEX v3.1.2 // COMPLETE BUILD"
 
 [node name="SystemClock" type="Label" parent="MainShell/Margin/VBox/BuildLine"]
 unique_name_in_owner = true

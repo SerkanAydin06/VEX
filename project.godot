@@ -15,14 +15,14 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="VEX"
-config/version="3.1.1"
+config/version="3.1.2"
 run/main_scene="res://scenes/ui/splash_screen.tscn"
-config/features=PackedStringArray("4.7", "GL Compatibility")
+config/features=PackedStringArray("4.5", "GL Compatibility")
 boot_splash/bg_color=Color(0.012, 0.018, 0.027, 1)
 boot_splash/show_image=false
-boot_splash/stretch_mode=0
 boot_splash/image="res://assets/ui/vex_logo.png"
 config/icon="res://assets/ui/icon.png"
+boot_splash/stretch_mode=0
 
 [audio]
 
@@ -132,5 +132,6 @@ automap={
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+limits/opengl/max_lights_per_object=16
 environment/defaults/default_clear_color=Color(0.005, 0.008, 0.012, 1)
 occlusion_culling/use_occlusion_culling=true

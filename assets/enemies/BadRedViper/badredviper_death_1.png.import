@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vludx8nssioj"
-path.s3tc="res://.godot/imported/badredviper_death_1.png-28a086440454f53e3b10e1783490a809.s3tc.ctex"
+path.s3tc="res://.godot/imported/badredviper_death_1.png-f9362f66ede3cf09471b73b2cca7113f.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/enemies/BadRedViper/badredviper_death_1.png"
-dest_files=["res://.godot/imported/badredviper_death_1.png-28a086440454f53e3b10e1783490a809.s3tc.ctex"]
+source_file="res://assets/enemies/badredviper/badredviper_death_1.png"
+dest_files=["res://.godot/imported/badredviper_death_1.png-f9362f66ede3cf09471b73b2cca7113f.s3tc.ctex"]
 
 [params]
 

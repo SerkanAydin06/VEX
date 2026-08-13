@@ -1,6 +1,8 @@
 class_name VexRavager
 extends CharacterBody3D
 
+const BURN_REMAINS_SCENE := preload("res://scenes/props/burn_remains.tscn")
+
 enum State {
 	IDLE,
 	PATROL,
@@ -79,15 +81,22 @@ enum State {
 @export_category("07 - Görsel ve Animasyon")
 @export_range(-1.0, 1.0, 0.05) var back_view_threshold := -0.15
 @export_range(0.0, 2.0, 0.01) var hurt_reaction_duration := 0.16
-@export_range(-1.0, 2.0, 0.01) var corpse_visual_y := -0.34
-@export_range(-1.0, 2.0, 0.01) var back_corpse_visual_y := -0.20
+@export_range(-1.0, 2.0, 0.01) var corpse_visual_y := -0.0999775
+@export_range(-1.0, 2.0, 0.01) var back_corpse_visual_y := -0.0999775
 @export_range(0.05, 1.0, 0.05) var death_fall_time := 0.3
+@export_range(0.0, 4.0, 0.05) var corpse_hold_duration := 1.2
+
+@export_category("08 - Ölüm Sonrası İz")
+@export_range(0.4, 3.5, 0.05) var burn_remains_scale := 1.0
+@export_range(0.0, 20.0, 0.1) var burn_smoke_duration := 9.0
+@export_range(0.0, 1.0, 0.01) var burn_smoke_alpha := 0.14
 
 @onready var animated_sprite: AnimatedSprite3D = $AnimatedSprite3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var attack_audio: AudioStreamPlayer3D = $AttackAudio
 @onready var hurt_audio: AudioStreamPlayer3D = $HurtAudio
 @onready var death_audio: AudioStreamPlayer3D = $DeathAudio
+@onready var ground_shadow: Sprite3D = get_node_or_null("GroundShadow") as Sprite3D
 
 var health := 75
 var state := State.IDLE
@@ -129,6 +138,7 @@ var _runtime_pursuit_range := 1.0
 var _runtime_attack_cooldown := 1.0
 var _runtime_attack_windup := 0.1
 var _dormant_active := false
+var _burn_remains: Node3D = null
 
 
 func _ready() -> void:
@@ -144,6 +154,7 @@ func _ready() -> void:
 		float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 		* gravity_scale
 	)
+	_snap_body_to_floor(2.0)
 
 	var initial_patrol_direction := patrol_offset
 	initial_patrol_direction.y = 0.0
@@ -1123,22 +1134,97 @@ func _clear_path() -> void:
 	_has_path_target = false
 
 
+func _collision_floor_local_y() -> float:
+	var capsule := collision_shape.shape as CapsuleShape3D
+	if capsule == null:
+		return collision_shape.position.y
+	return collision_shape.position.y - capsule.height * 0.5
+
+
+func _snap_body_to_floor(max_correction: float = 2.0) -> void:
+	if not is_inside_tree() or collision_shape == null or collision_shape.shape == null:
+		return
+	var ray_origin := global_position + Vector3.UP * 0.5
+	var ray_end := global_position + Vector3.DOWN * (max_correction + 2.0)
+	var query := PhysicsRayQueryParameters3D.create(
+		ray_origin,
+		ray_end,
+		1,
+		[get_rid()]
+	)
+	query.collide_with_areas = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var target_root_y := float(hit["position"].y) - _collision_floor_local_y()
+	if absf(target_root_y - global_position.y) > max_correction:
+		return
+	global_position.y = target_root_y
+	velocity.y = floor_stick_velocity
+
+
+
+
+func _finalize_death_visual() -> void:
+	animated_sprite.visible = false
+	animated_sprite.pause()
+	if ground_shadow != null:
+		ground_shadow.visible = false
+	_show_burn_remains()
+
+
+func _show_burn_remains() -> void:
+	if _burn_remains != null and is_instance_valid(_burn_remains):
+		return
+	var remains := BURN_REMAINS_SCENE.instantiate()
+	remains.position = Vector3(0.0, _collision_floor_local_y(), 0.0)
+	remains.set("scorch_size", burn_remains_scale)
+	remains.set("smoke_enabled", false)
+	remains.set("smoke_duration", burn_smoke_duration)
+	remains.set("smoke_alpha", 0.0)
+	remains.set("scorch_tint", Color(0.18, 0.03, 0.06, 0.96))
+	remains.set("ember_tint", Color(0.36, 0.06, 0.12, 0.26))
+	remains.set("ember_emission_energy", 0.10)
+	if enemy_id == &"hellmagma":
+		remains.set("scorch_size", burn_remains_scale * 1.18)
+		remains.set("scorch_tint", Color(0.16, 0.08, 0.04, 0.98))
+		remains.set("ember_tint", Color(1.0, 0.24, 0.04, 0.62))
+		remains.set("ember_emission_energy", 0.82)
+	elif enemy_id == &"ravager":
+		remains.set("ember_tint", Color(0.44, 0.08, 0.14, 0.22))
+	add_child(remains)
+	_burn_remains = remains
+
+
 func _die() -> void:
 	var death_animation := _directional_animation(&"death", &"death_back")
 	state = State.DEAD
 	velocity = Vector3.ZERO
+	_snap_body_to_floor(2.0)
 	_attack_locked = true
 	_attack_windup_active = false
 	_clear_path()
 	collision_shape.set_deferred("disabled", true)
 	if death_audio.stream != null:
 		death_audio.play()
+	var death_duration := maxf(_get_animation_duration(death_animation), death_fall_time)
 	if _has_animation(death_animation):
 		animated_sprite.play(death_animation)
 	else:
 		animated_sprite.pause()
 	_place_corpse_on_floor(true)
 	GameState.register_enemy_defeated(enemy_id)
+	await get_tree().create_timer(death_duration).timeout
+	if not is_inside_tree():
+		return
+	if _has_animation(death_animation):
+		animated_sprite.pause()
+		animated_sprite.frame = maxi(0, animated_sprite.sprite_frames.get_frame_count(death_animation) - 1)
+	_place_corpse_on_floor(false)
+	await get_tree().create_timer(corpse_hold_duration).timeout
+	if not is_inside_tree():
+		return
+	_finalize_death_visual()
 
 
 func _restore_defeated_state() -> void:
@@ -1151,7 +1237,7 @@ func _restore_defeated_state() -> void:
 	var death_animation := _directional_animation(&"death", &"death_back")
 	if not _has_animation(death_animation):
 		animated_sprite.pause()
-		_place_corpse_on_floor(false)
+		_finalize_death_visual()
 		return
 	animated_sprite.animation = death_animation
 	animated_sprite.frame = maxi(
@@ -1159,7 +1245,21 @@ func _restore_defeated_state() -> void:
 		animated_sprite.sprite_frames.get_frame_count(death_animation) - 1
 	)
 	animated_sprite.pause()
-	_place_corpse_on_floor(false)
+	_finalize_death_visual()
+
+
+func _get_animation_duration(animation_name: StringName) -> float:
+	if animated_sprite.sprite_frames == null:
+		return 0.0
+	if not animated_sprite.sprite_frames.has_animation(animation_name):
+		return 0.0
+	var frame_count := animated_sprite.sprite_frames.get_frame_count(animation_name)
+	if frame_count <= 0:
+		return 0.0
+	var speed := animated_sprite.sprite_frames.get_animation_speed(animation_name)
+	if speed <= 0.001:
+		return 0.0
+	return float(frame_count) / speed
 
 
 func _place_corpse_on_floor(animated: bool) -> void:

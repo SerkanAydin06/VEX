@@ -1,4 +1,4 @@
-# VEX 3.1.1 // QA Raporu
+# VEX 3.1.2 // QA Raporu
 
 ## Sonuç
 
@@ -11,9 +11,9 @@ Kaynak paketi statik doğrulamalarda **0 hata** ile tamamlandı.
 | Sahipsiz `.import` | 0 |
 | Yinelenen sahne özelliği | 0 |
 | Yinelenen düşman / pickup kimliği | 0 |
-| GDScript sözdizimi | 27 dosya, 0 tanı |
-| Godot `.tscn` / `.tres` sözdizimi | 37 dosya, 0 ayrıştırma hatası |
-| PNG bütünlüğü | 154 dosya açıldı, 0 hata |
+| GDScript sözdizimi | 28 dosya, 0 tanı |
+| Godot `.tscn` / `.tres` sözdizimi | 39 dosya, 0 ayrıştırma hatası |
+| PNG bütünlüğü | 156 dosya açıldı, 0 hata |
 | Ses bütünlüğü | 25 dosya açıldı |
 | Font bütünlüğü | 2 dosya açıldı |
 | Sıfır baytlık dosya | 0 |
@@ -27,6 +27,9 @@ Kaynak paketi statik doğrulamalarda **0 hata** ile tamamlandı.
 | Dinamik ışık bütçesi | 4/4 ışık sahnesinde uzaklık LOD'u; mermi gölgeleri kapalı |
 | Düşman işlem bütçesi | 4/4 sahnede uyku mesafesi; Viper görüş önbelleği etkin |
 | 3B kalite profilleri | Performans `0,75`; Dengeli `0,85`; Yüksek `1,00` |
+| VEX-01 beyaz merkez ışıkları | 18/18 oda merkezi; `32°`, gölgesiz, uzaklık LOD'lu ve Compatibility `LightBeam` hüzmeli |
+| VEX-01 yana açılan kapılar | 19/19 kapı; çift çarpışmalı panel, güvenlik sensörü ve iki yüzde doğru V eşleşmesi |
+| Final EXIT yerleşimi | `Door_3_6` kapısının iki yüzünde; eski switch tabelası kaldırıldı |
 
 ## Kritik akışlar
 
@@ -40,11 +43,21 @@ Kaynak paketi statik doğrulamalarda **0 hata** ile tamamlandı.
 - Pickup sprite'ı yalnızca Y ekseninde döner; yan açıda görünür kalırken kamera yüksekliğine doğru eğilmez.
 - Ravager ve RedViper normal insan boyunda, BadRedViper orta, HellMagma mevcut büyük boyundadır. Görsel, kapsül ve görüş/atış yüksekliği aynı sınıfa göre ayarlanmıştır.
 - Dört düşmanın ana sprite'ı çevre ışığını alır; düşük maliyetli `GroundShadow` zemin temasını korur. Dinamik billboard gölgesi kapalıdır.
-- Kapı 4,2 metre açılır; 3,9936 metrelik HellMagma görseline ve 3,6 metrelik kapsülüne güvenli üst pay bırakır. Güvenlik sensörü oyuncu/düşman katmanlarını izlemeye devam eder.
+- VEX-01 kapısı iki paneli yana çekerek `4,7 m` net geçiş oluşturur; 3,6 metrelik HellMagma kapsülüne yatay ve dikey güvenli pay bırakır. VEX-02'nin yukarı açılan kapısı `4,2 m` hareketini korur. Güvenlik sensörü oyuncu/düşman katmanlarını izlemeye devam eder.
 - Duvar ve kapı oklüderleri kapalı alanlarda görünmeyen oda içeriğini eler. Kapı oklüderi hareket sırasında kapalıdır; açık geçitte yanlış görünmezlik oluşturmaz.
 - Uzak, alarma geçmemiş yaratıklar fizik/rota/görüş yükünden çıkar; hasar veya müttefik alarmı aldıklarında anında uyanır.
 - Ayarlardaki 3B kalite seçimi yalnız dünya render ölçeğini değiştirir; menü, HUD, harita ve nişangah yerel çözünürlükte kalır.
 
+## 3.1.2 düzeltme doğrulamaları
+
+- BadRedViper dosya yolları ve klasör harf büyüklüğü tek standarda getirildi.
+- İki bölümdeki shotgun pickup UID uyuşmazlıkları temizlendi.
+- RedViper/HellMagma Inspector export alanlarının tamamı temel sahnede açıkça kayıtlıdır.
+- Yana açılan kapının arka yüz atlas eşleşmesi regresyon testiyle korunur.
+- Compatibility renderer için `LightBeam` konisi çift taraflı ve kapsızdır; kullanılmayan volumetric fog katkısı kapalıdır.
+- Mühimmat bildirimi kapasiteye kabul edilen gerçek miktarı kullanır.
+- Görseli bulunamayan pickup toplanabilir kalır ve null görsel erişimi yapmaz.
+
 ## Çalıştırma notu
 
-Bu çalışma ortamında Godot yürütücü dosyası bulunmadığı için motor içi headless oyun testi burada çalıştırılamadı. Paket, Godot 4.5 hedefi için kaynak/sahne ayrıştırması, referans denetimi ve medya bütünlüğüyle doğrulandı. Projedeki `tests/integrity_test.gd`, Godot 4.5 bulunan bir makinede motor içi son denetimi yapmak için hazırdır.
+Bu çalışma ortamında Godot yürütücü dosyası bulunmadığı için motor içi headless oyun testi burada çalıştırılamadı. Paket, Godot 4.5.1 hedefi için kaynak/sahne ayrıştırması, referans denetimi ve medya bütünlüğüyle doğrulandı. Projedeki `tests/integrity_test.gd`, Godot 4.5.1 bulunan bir makinede motor içi son denetimi yapmak için hazırdır.

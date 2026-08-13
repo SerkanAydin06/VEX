@@ -20,7 +20,6 @@ shape = SubResource("SphereShape_pickup")
 [node name="Visual" type="Sprite3D" parent="VisualPivot"]
 pixel_size = 0.00255
 billboard = 2
-double_sided = true
 alpha_cut = 1
 
 [node name="PickupAudio" type="AudioStreamPlayer3D" parent="."]
