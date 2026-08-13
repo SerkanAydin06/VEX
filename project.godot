@@ -17,12 +17,12 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="VEX"
 config/version="3.1.2"
 run/main_scene="res://scenes/ui/splash_screen.tscn"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.012, 0.018, 0.027, 1)
 boot_splash/show_image=false
+boot_splash/stretch_mode=0
 boot_splash/image="res://assets/ui/vex_logo.png"
 config/icon="res://assets/ui/icon.png"
-boot_splash/stretch_mode=0
 
 [audio]
 
