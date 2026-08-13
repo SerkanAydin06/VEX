@@ -82,3 +82,4 @@ func _apply_configuration() -> void:
 	if fixture != null:
 		fixture.pixel_size = fixture_pixel_size
 		fixture.modulate = fixture_modulate
+

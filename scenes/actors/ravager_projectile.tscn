@@ -1,12 +1,92 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/actors/ravager_projectile.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_projectile.png" id="2_texture"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_impact.png" id="3_impact"]
+[ext_resource type="Texture2D" path="res://assets/enemies/ravager/ravager_projectile_sheet.png" id="2_projectile_sheet"]
+[ext_resource type="Texture2D" path="res://assets/enemies/ravager/ravager_impact_sheet.png" id="3_impact_sheet"]
 [ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="4_impact_audio"]
 
 [sub_resource type="SphereShape3D" id="SphereShape_projectile"]
 radius = 0.38
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_1"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_2"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_3"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_4"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_projectile"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_projectile_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_projectile_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_projectile_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_projectile_4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_1"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_2"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_3"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_4"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_impact"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_impact_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_impact_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_impact_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_impact_4")
+}],
+"loop": false,
+"name": &"default",
+"speed": 18.0
+}]
 
 [node name="RavagerProjectile" type="Area3D"]
 collision_layer = 0
@@ -14,31 +94,34 @@ collision_mask = 11
 monitorable = false
 script = ExtResource("1_script")
 speed = 17.0
+lifetime = 4.0
+impact_surface_offset = 0.32
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape_projectile")
 
-[node name="Visual" type="Sprite3D" parent="."]
+[node name="Visual" type="AnimatedSprite3D" parent="."]
 billboard = 1
 double_sided = true
-texture = ExtResource("2_texture")
-pixel_size = 0.003
-texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_projectile")
+autoplay = "default"
+pixel_size = 0.00195
+texture_filter = 3
 alpha_cut = 1
 
-[node name="ImpactVisual" type="Sprite3D" parent="."]
+[node name="ImpactVisual" type="AnimatedSprite3D" parent="."]
 visible = false
 billboard = 1
 double_sided = true
-texture = ExtResource("3_impact")
-pixel_size = 0.0035
-texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_impact")
+pixel_size = 0.00195
+texture_filter = 3
 alpha_cut = 1
 
 [node name="Light" type="OmniLight3D" parent="."]
 light_color = Color(1, 0.18, 0.04, 1)
-light_energy = 2.2
-omni_range = 3.0
+light_energy = 2.15
+omni_range = 3.2
 shadow_enabled = false
 shadow_bias = 0.02
 shadow_normal_bias = 0.35

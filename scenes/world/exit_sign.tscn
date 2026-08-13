@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dao3phjjleug0"]
 
-[ext_resource type="Texture2D" uid="uid://kerrqy8ki16c" path="res://assets/world/exit_sign_frame_v2.png" id="1_frame"]
+[ext_resource type="Texture2D" path="res://assets/world/exit_sign_frame.png" id="1_frame"]
 [ext_resource type="FontFile" uid="uid://dt6b8nj54csq0" path="res://assets/fonts/vex_ui_bold.ttf" id="2_font"]
 
 [node name="ExitSign" type="Node3D"]

@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var map_revision := "VEX02-R46-PRO-AUTOMAP"
+@export var map_revision := "VEX02-R47-MODULAR-STANDARD"
 @export var level_display_name := "VEX-02 // KIRIK OMURGA"
 @export var first_objective := "BATI KANADINDA MAVİ ERİŞİM KARTINI BUL"
 @export_range(0, 20, 1) var total_secrets := 2
@@ -43,8 +43,8 @@ func get_automap_config() -> Dictionary:
 		"title": "TESİS HARİTASI // VEX-02",
 		"columns": 9,
 		"rows": 7,
-		"world_min": Vector2(-36.0, -28.0),
-		"world_max": Vector2(36.0, 28.0),
+		"world_min": Vector2(-54.0, -35.0),
+		"world_max": Vector2(54.0, 35.0),
 		"walkable_cells": AUTOMAP_WALKABLE_CELLS,
 		"start_cell": Vector2i(4, 3),
 		"exit_cell": Vector2i(8, 6),

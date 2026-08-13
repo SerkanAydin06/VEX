@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dtqyd0obhroa6" path="res://scripts/ui/main_menu.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://b0716insvh2gq" path="res://assets/ui/main_menu_background_v2.png" id="3_background"]
-[ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="4_logo"]
+[ext_resource type="Texture2D" path="res://assets/ui/main_menu_background.png" id="3_background"]
+[ext_resource type="Texture2D" path="res://assets/ui/vex_logo.png" id="4_logo"]
 [ext_resource type="PackedScene" path="res://scenes/ui/settings_panel.tscn" id="5_settings"]
 [ext_resource type="AudioStream" uid="uid://dfc8ful0dedx2" path="res://assets/audio/menu_background_pro.mp3" id="6_menu_music"]
 
@@ -271,7 +271,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.32, 0.48, 0.54, 1)
 theme_override_font_sizes/font_size = 14
-text = "VEX v3.1.2 // COMPLETE BUILD"
+text = "VEX v3.1.1 // COMPLETE BUILD"
 
 [node name="SystemClock" type="Label" parent="MainShell/Margin/VBox/BuildLine"]
 unique_name_in_owner = true

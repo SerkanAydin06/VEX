@@ -1,12 +1,92 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/actors/ravager_projectile.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_projectile.png" id="2_texture"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_impact.png" id="3_impact"]
+[ext_resource type="Texture2D" path="res://assets/enemies/hellmagma/hellmagma_projectile_sheet.png" id="2_projectile_sheet"]
+[ext_resource type="Texture2D" path="res://assets/enemies/hellmagma/hellmagma_impact_sheet.png" id="3_impact_sheet"]
 [ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="4_impact_audio"]
 
 [sub_resource type="SphereShape3D" id="SphereShape_hellmagma_projectile"]
 radius = 0.48
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_1"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_2"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_3"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_4"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_projectile"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_projectile_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_projectile_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_projectile_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_projectile_4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 11.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_1"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_2"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_3"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_4"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_impact"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_impact_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_impact_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_impact_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_impact_4")
+}],
+"loop": false,
+"name": &"default",
+"speed": 16.0
+}]
 
 [node name="HellMagmaProjectile" type="Area3D"]
 collision_layer = 0
@@ -16,31 +96,35 @@ script = ExtResource("1_script")
 speed = 20.0
 lifetime = 4.0
 impact_surface_offset = 0.42
+light_pulse_amplitude = 0.45
+light_pulse_speed = 9.0
+impact_light_energy = 5.8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape_hellmagma_projectile")
 
-[node name="Visual" type="Sprite3D" parent="."]
+[node name="Visual" type="AnimatedSprite3D" parent="."]
 billboard = 1
 double_sided = true
-texture = ExtResource("2_texture")
-pixel_size = 0.0042
-texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_projectile")
+autoplay = "default"
+pixel_size = 0.00205
+texture_filter = 3
 alpha_cut = 1
 
-[node name="ImpactVisual" type="Sprite3D" parent="."]
+[node name="ImpactVisual" type="AnimatedSprite3D" parent="."]
 visible = false
 billboard = 1
 double_sided = true
-texture = ExtResource("3_impact")
-pixel_size = 0.0048
-texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_impact")
+pixel_size = 0.00225
+texture_filter = 3
 alpha_cut = 1
 
 [node name="Light" type="OmniLight3D" parent="."]
-light_color = Color(1, 0.12, 0.015, 1)
-light_energy = 3.2
-omni_range = 4.0
+light_color = Color(1, 0.16, 0.03, 1)
+light_energy = 3.6
+omni_range = 4.8
 shadow_enabled = false
 shadow_bias = 0.02
 shadow_normal_bias = 0.35

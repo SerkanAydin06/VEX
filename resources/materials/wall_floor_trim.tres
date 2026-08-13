@@ -1,6 +1,6 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://1bosks68ivyg"]
 
-[ext_resource type="Texture2D" uid="uid://cxbx1tikjpo0p" path="res://assets/world/wall_floor_trim_v1.png" id="1_texture"]
+[ext_resource type="Texture2D" path="res://assets/world/wall_floor_trim.png" id="1_texture"]
 
 [resource]
 resource_name = "Wall-Floor Impact Trim — replace albedo texture here"

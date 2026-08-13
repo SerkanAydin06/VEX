@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bbawohf60emqi"]
+[gd_scene format=3 uid="uid://bbawohf60emqi"]
 
 [ext_resource type="Script" uid="uid://cgjvdqkc8dqr3" path="res://scripts/props/explosive_barrel.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bm6ithej7nmkm" path="res://assets/world/barrel_v2.png" id="2_barrel"]
-[ext_resource type="Texture2D" uid="uid://dr2qq1xg24mqg" path="res://assets/world/explosion_v2.png" id="3_explosion"]
+[ext_resource type="Texture2D" uid="uid://ky66tdpx5qj0" path="res://assets/world/barrel.png" id="2_barrel"]
+[ext_resource type="Texture2D" uid="uid://dyi7ir32y3wsr" path="res://assets/world/explosion.png" id="3_explosion"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="4_shadow"]
 [ext_resource type="AudioStream" uid="uid://r1pitif5hig1" path="res://assets/audio/barrel_explosion_pro.wav" id="5_explosion_audio"]
 
@@ -10,25 +10,23 @@
 radius = 0.42
 height = 1.35
 
-[node name="ExplosiveBarrel" type="StaticBody3D"]
+[node name="ExplosiveBarrel" type="StaticBody3D" unique_id=662313964]
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_script")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=136830146]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.016235173, 0)
 shape = SubResource("CapsuleShape_barrel")
 
-[node name="BarrelVisual" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04597658, 0)
-pixel_size = 0.0025
+[node name="BarrelVisual" type="Sprite3D" parent="." unique_id=1714155836]
+pixel_size = 0.002
 billboard = 2
-double_sided = true
 alpha_cut = 1
 texture_filter = 5
 texture = ExtResource("2_barrel")
 
-[node name="GroundShadow" type="Sprite3D" parent="."]
+[node name="GroundShadow" type="Sprite3D" parent="." unique_id=843569410]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.65739644, 0)
 cast_shadow = 0
 pixel_size = 0.0032
@@ -36,7 +34,7 @@ texture_filter = 5
 render_priority = -1
 texture = ExtResource("4_shadow")
 
-[node name="ExplosionVisual" type="Sprite3D" parent="."]
+[node name="ExplosionVisual" type="Sprite3D" parent="." unique_id=1335583326]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 visible = false
 pixel_size = 0.004
@@ -45,19 +43,19 @@ alpha_cut = 1
 texture_filter = 5
 texture = ExtResource("3_explosion")
 
-[node name="ExplosionLight" type="OmniLight3D" parent="."]
+[node name="ExplosionLight" type="OmniLight3D" parent="." unique_id=1910085762]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 visible = false
 light_color = Color(1, 0.23, 0.07, 1)
 light_energy = 7.0
 shadow_bias = 0.02
 shadow_normal_bias = 0.35
-omni_range = 7.0
 distance_fade_enabled = true
 distance_fade_begin = 18.0
 distance_fade_length = 6.0
+omni_range = 7.0
 
-[node name="ExplosionAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="ExplosionAudio" type="AudioStreamPlayer3D" parent="." unique_id=1784066691]
 stream = ExtResource("5_explosion_audio")
 volume_db = -3.0
 max_distance = 26.0

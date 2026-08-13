@@ -1,238 +1,291 @@
-[gd_scene load_steps=33 format=3]
+[gd_scene format=3 uid="uid://cpdi2qa0vdcq5"]
 
-[ext_resource type="Script" path="res://scripts/actors/ravager.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_attack_1.png" id="2_attack1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_attack_2.png" id="3_attack2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_attack_3.png" id="4_attack3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_attack_4.png" id="5_attack4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_death_1.png" id="6_death1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_death_2.png" id="7_death2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_death_3.png" id="8_death3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_death_4.png" id="9_death4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_idle_1.png" id="10_idle1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_idle_2.png" id="11_idle2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_idle_3.png" id="12_idle3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_idle_4.png" id="13_idle4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_idle_back_1.png" id="14_idle_back1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_idle_back_2.png" id="15_idle_back2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_idle_back_3.png" id="16_idle_back3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_idle_back_4.png" id="17_idle_back4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_walk_1.png" id="18_walk1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_walk_2.png" id="19_walk2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_walk_3.png" id="20_walk3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_walk_4.png" id="21_walk4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_walk_back_1.png" id="22_walk_back1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_walk_back_2.png" id="23_walk_back2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_walk_back_3.png" id="24_walk_back3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/Ravager/ravager_walk_back_4.png" id="25_walk_back4"]
+[ext_resource type="Script" uid="uid://c681xjbwrnbxa" path="res://scripts/actors/ravager.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cd067ng1bxgx7" path="res://assets/enemies/ravager/ravager_spritesheet.png" id="2_sheet"]
 [ext_resource type="PackedScene" path="res://scenes/actors/ravager_projectile.tscn" id="26_projectile"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_death_scream_pro.wav" id="29_death_audio"]
+[ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
+[ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
+[ext_resource type="AudioStream" uid="uid://clas3vxrwxpr3" path="res://assets/audio/enemy_death_scream_pro.wav" id="29_death_audio"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="30_shadow"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
 radius = 0.42
 height = 1.8
 
+[sub_resource type="AtlasTexture" id="Atlas_attack1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(171, 0, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(342, 0, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(513, 0, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(684, 0, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(855, 0, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1026, 0, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1197, 0, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 256, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(171, 256, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(342, 256, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(513, 256, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(684, 256, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(855, 256, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1026, 256, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1197, 256, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 512, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(171, 512, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(342, 512, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(513, 512, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(684, 512, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(855, 512, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1026, 512, 171, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1197, 512, 171, 256)
+filter_clip = true
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_attack1")
+"texture": SubResource("Atlas_attack1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_attack2")
+"texture": SubResource("Atlas_attack2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_attack3")
+"texture": SubResource("Atlas_attack3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_attack4")
+"texture": SubResource("Atlas_attack4")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack",
 "speed": 7.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_death1")
+"texture": SubResource("Atlas_death1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_death2")
+"texture": SubResource("Atlas_death2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_death3")
+"texture": SubResource("Atlas_death3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_death4")
+"texture": SubResource("Atlas_death4")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_death1")
+"texture": SubResource("Atlas_death1")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt",
 "speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("10_idle1")
+"texture": SubResource("Atlas_idle1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_idle2")
+"texture": SubResource("Atlas_idle2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("12_idle3")
+"texture": SubResource("Atlas_idle3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("13_idle4")
+"texture": SubResource("Atlas_idle4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle",
 "speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("14_idle_back1")
+"texture": SubResource("Atlas_idle_back1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("15_idle_back2")
+"texture": SubResource("Atlas_idle_back2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("16_idle_back3")
+"texture": SubResource("Atlas_idle_back3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("17_idle_back4")
+"texture": SubResource("Atlas_idle_back4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_back",
 "speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("18_walk1")
+"texture": SubResource("Atlas_walk1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("19_walk2")
+"texture": SubResource("Atlas_walk2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("20_walk3")
+"texture": SubResource("Atlas_walk3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("21_walk4")
+"texture": SubResource("Atlas_walk4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk",
 "speed": 5.5
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("22_walk_back1")
+"texture": SubResource("Atlas_walk_back1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("23_walk_back2")
+"texture": SubResource("Atlas_walk_back2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("24_walk_back3")
+"texture": SubResource("Atlas_walk_back3")
 }, {
 "duration": 1.0,
-"texture": ExtResource("25_walk_back4")
+"texture": SubResource("Atlas_walk_back4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_back",
 "speed": 5.5
 }]
 
-[node name="Ravager" type="CharacterBody3D"]
+[node name="Ravager" type="CharacterBody3D" unique_id=218972591]
 collision_layer = 4
 collision_mask = 11
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
-enemy_id = &"ravager"
-maximum_health = 75
-spawn_min_difficulty = 0
-apply_difficulty_scaling = true
-move_speed = 2.7
-movement_acceleration = 12.0
-braking_acceleration = 21.0
-gravity_scale = 1.0
-floor_stick_velocity = -0.1
-patrol_offset = Vector3(0, 0, 3)
-detection_range = 18.0
-pursuit_range = 18.0
-initial_view_angle = 150.0
-lost_sight_timeout = 20.0
-search_duration = 10.0
-search_turn_speed = 45.0
-ally_alert_radius = 10.5
 sight_origin_height = 0.25
-sight_target_height = 0.45
-sight_collision_mask = 3
 attack_damage = 14
 attack_range = 12.0
 attack_cooldown = 0.9
-attack_windup = 0.28
+attack_windup = 0.31
 attack_range_tolerance = 4.0
 projectile_scene = ExtResource("26_projectile")
-projectile_spawn_height = 0.31
-projectile_spawn_side_offset = 0.4
-projectile_target_height = 0.4
+projectile_spawn_height = -0.14
+projectile_spawn_side_offset = 0.45
+projectile_spawn_forward_offset = 0.18
 projectile_lead_factor = 0.95
 projectile_max_lead_time = 1.65
 attack_approach_speed = 0.8
 attack_strafe_speed = 1.2
 attack_preferred_distance = 8.0
-path_refresh_interval = 0.35
-waypoint_link_distance = 9.0
 navigation_clearance = 0.5
-waypoint_reach_distance = 0.65
-path_target_change_distance = 1.0
-patrol_path_refresh_interval = 0.5
-endpoint_link_distance_multiplier = 1.5
-endpoint_candidate_count = 10
-endpoint_connection_limit = 5
-investigation_candidate_count = 18
-navigation_collision_mask = 9
-idle_detection_margin = 6.0
-near_sight_interval = 0.12
-medium_sight_interval = 0.18
-distant_think_distance = 24.0
-distant_sight_interval = 0.2
-idle_far_sight_interval = 0.32
-distant_path_refresh_interval = 0.6
-dormant_distance = 32.0
-back_view_threshold = -0.15
-hurt_reaction_duration = 0.16
-corpse_visual_y = -0.0999775
-back_corpse_visual_y = -0.0999775
-death_fall_time = 0.3
+idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+hurt_frame_y_offsets = PackedFloat32Array(0)
+death_frame_y_offsets = PackedFloat32Array(0, -0.008, -0.016, -0.025)
 burn_remains_scale = 0.95
 burn_smoke_duration = 8.0
 burn_smoke_alpha = 0.12
-corpse_hold_duration = 2.4
-hurt_frame_y_offsets = PackedFloat32Array(0)
-attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-corpse_floor_clearance = 0.02
-death_frame_y_offsets = PackedFloat32Array(0, -0.008, -0.016, -0.025)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1324797644]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 shape = SubResource("CapsuleShape_enemy")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0999775, 0)
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1265488416]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 cast_shadow = 0
-pixel_size = 0.003315
+pixel_size = 0.00705
 billboard = 2
 shaded = true
 texture_filter = 3
@@ -241,28 +294,28 @@ sprite_frames = SubResource("SpriteFrames_enemy")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="GroundShadow" type="Sprite3D" parent="."]
+[node name="GroundShadow" type="Sprite3D" parent="." unique_id=354420041]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.98, 0)
-modulate = Color(1, 1, 1, 0.72)
 cast_shadow = 0
+modulate = Color(1, 1, 1, 0.72)
 pixel_size = 0.0045
 texture_filter = 5
 render_priority = -1
 texture = ExtResource("30_shadow")
 
-[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=1003444921]
 stream = ExtResource("27_attack_audio")
 volume_db = -1.0
 max_distance = 20.0
 bus = &"SFX"
 
-[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=1779851824]
 stream = ExtResource("28_hurt_audio")
 volume_db = -2.0
 max_distance = 18.0
 bus = &"SFX"
 
-[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=828026958]
 stream = ExtResource("29_death_audio")
 volume_db = 1.5
 max_distance = 20.0

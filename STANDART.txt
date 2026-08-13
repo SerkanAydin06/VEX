@@ -1,0 +1,20 @@
+YENİ STANDART
+-------------
+Oda modülü       : 12 x 10 m
+Net iç yükseklik : 7.0 m
+Zemin kalınlığı  : 0.40 m
+Tavan kalınlığı  : 0.40 m
+Duvar kalınlığı  : 0.40 m
+Kapı açıklığı    : 4.60 m
+Kapı merkez Y    : 2.24 m
+Kırmızı ışık Y   : 5.50 m
+Beyaz ışık Y     : 6.82 m
+EXIT tabela Y    : 4.85 m
+Zemin/tavan grid : 5 x 5 m dünya ölçeği
+Texture standard : sürüm eki yok; klasör/dosya adları lowercase snake_case
+Enemy filtre     : Linear Mipmap; Fixed-Y billboard
+
+Hellmagma	 : Position Y = -0.1
+Ravager		 : Position Y = -0.25
+Voidweaver       : Position Y = -0.02
+

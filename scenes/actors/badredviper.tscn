@@ -1,147 +1,169 @@
-[gd_scene load_steps=31 format=3]
+[gd_scene load_steps=33 format=3]
 
 [ext_resource type="Script" path="res://scripts/actors/badredviper.gd" id="1_script"]
 [ext_resource type="AudioStream" path="res://assets/audio/enemy_hurt_pro.wav" id="2_hurt_audio"]
 [ext_resource type="AudioStream" path="res://assets/audio/redviper_death.mp3" id="3_death_audio"]
 [ext_resource type="AudioStream" path="res://assets/audio/redviper_attack.mp3" id="4_attack_audio"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_attack_1.png" id="5_attack1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_attack_2.png" id="6_attack2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_attack_3.png" id="7_attack3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_attack_4.png" id="8_attack4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_death_1.png" id="9_death1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_death_2.png" id="10_death2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_death_3.png" id="11_death3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_death_4.png" id="12_death4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_1.png" id="13_idle1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_2.png" id="14_idle2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_3.png" id="15_idle3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_4.png" id="16_idle4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_back_1.png" id="17_idle_back1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_back_2.png" id="18_idle_back2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_back_3.png" id="19_idle_back3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_idle_back_4.png" id="20_idle_back4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_1.png" id="21_walk1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_2.png" id="22_walk2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_3.png" id="23_walk3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_4.png" id="24_walk4"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_back_1.png" id="25_walk_back1"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_back_2.png" id="26_walk_back2"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_back_3.png" id="27_walk_back3"]
-[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_walk_back_4.png" id="28_walk_back4"]
+[ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_spritesheet.png" id="5_sheet"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="29_shadow"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_badredviper"]
 radius = 0.82
 height = 3.1
 
+[sub_resource type="AtlasTexture" id="Atlas_attack1"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(0, 0, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_attack2"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(171, 0, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_attack3"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(342, 0, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_attack4"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(513, 0, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_death1"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(684, 0, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_death2"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(855, 0, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_death3"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(1026, 0, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_death4"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(1197, 0, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_idle1"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(0, 256, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_idle2"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(171, 256, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_idle3"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(342, 256, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_idle4"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(513, 256, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(684, 256, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(855, 256, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(1026, 256, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(1197, 256, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_walk1"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(0, 512, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_walk2"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(171, 512, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_walk3"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(342, 512, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_walk4"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(513, 512, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(684, 512, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back2"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(855, 512, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back3"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(1026, 512, 171, 256)
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back4"]
+atlas = ExtResource("5_sheet")
+filter_clip = true
+region = Rect2(1197, 512, 171, 256)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_badredviper"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("5_attack1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("6_attack2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("7_attack3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("8_attack4")
-}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack4")}],
 "loop": false,
 "name": &"attack",
 "speed": 8.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("9_death1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("10_death2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("11_death3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("12_death4")
-}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death1")}, {"duration": 1.0, "texture": SubResource("Atlas_death2")}, {"duration": 1.0, "texture": SubResource("Atlas_death3")}, {"duration": 1.0, "texture": SubResource("Atlas_death4")}],
 "loop": false,
 "name": &"death",
 "speed": 6.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("9_death1")
-}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death1")}],
 "loop": false,
 "name": &"hurt",
 "speed": 1.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("13_idle1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("14_idle2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("15_idle3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("16_idle4")
-}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle4")}],
 "loop": true,
 "name": &"idle",
 "speed": 3.2
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("17_idle_back1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("18_idle_back2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("19_idle_back3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("20_idle_back4")
-}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_back1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back4")}],
 "loop": true,
 "name": &"idle_back",
 "speed": 3.2
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("21_walk1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("22_walk2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("23_walk3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("24_walk4")
-}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk4")}],
 "loop": true,
 "name": &"walk",
 "speed": 7.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("25_walk_back1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("26_walk_back2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("27_walk_back3")
-}, {
-"duration": 1.0,
-"texture": ExtResource("28_walk_back4")
-}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_back1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back4")}],
 "loop": true,
 "name": &"walk_back",
 "speed": 7.0
@@ -215,7 +237,7 @@ shape = SubResource("CapsuleShape_badredviper")
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1865, 0)
 cast_shadow = 0
-pixel_size = 0.0062
+pixel_size = 0.013150781
 billboard = 2
 shaded = true
 texture_filter = 3

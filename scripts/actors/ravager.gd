@@ -46,8 +46,9 @@ enum State {
 @export_range(0.05, 2.0, 0.05) var attack_windup := 0.25
 @export_range(0.0, 8.0, 0.05) var attack_range_tolerance := 0.65
 @export var projectile_scene: PackedScene
-@export_range(0.0, 3.0, 0.05) var projectile_spawn_height := 0.55
-@export_range(-2.0, 2.0, 0.05) var projectile_spawn_side_offset := 0.0
+@export_range(-2.0, 3.0, 0.01) var projectile_spawn_height := 0.55
+@export_range(-2.0, 2.0, 0.01) var projectile_spawn_side_offset := 0.0
+@export_range(0.0, 2.0, 0.01) var projectile_spawn_forward_offset := 0.0
 @export_range(0.0, 3.0, 0.05) var projectile_target_height := 0.40
 @export_range(0.0, 1.0, 0.05) var projectile_lead_factor := 0.0
 @export_range(0.0, 2.0, 0.05) var projectile_max_lead_time := 0.0
@@ -1057,10 +1058,16 @@ func _fire_projectile() -> void:
 		spawn_right = Vector3.RIGHT
 	else:
 		spawn_right = spawn_right.normalized()
+	var spawn_forward := _facing_direction
+	if spawn_forward.length_squared() <= 0.001:
+		spawn_forward = -global_transform.basis.z
+	else:
+		spawn_forward = spawn_forward.normalized()
 	projectile.global_position = (
 		global_position
 		+ Vector3.UP * projectile_spawn_height
 		+ spawn_right * projectile_spawn_side_offset
+		+ spawn_forward * projectile_spawn_forward_offset
 	)
 	var target_position := (
 		_player.global_position

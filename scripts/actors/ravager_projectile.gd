@@ -4,10 +4,13 @@ extends Area3D
 @export_range(1.0, 40.0, 0.5) var speed := 11.0
 @export_range(0.2, 10.0, 0.1) var lifetime := 4.0
 @export_range(0.0, 1.0, 0.01) var impact_surface_offset := 0.32
+@export_range(0.0, 6.0, 0.05) var light_pulse_amplitude := 0.32
+@export_range(0.0, 20.0, 0.1) var light_pulse_speed := 8.0
+@export_range(0.0, 8.0, 0.05) var impact_light_energy := 4.4
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
-@onready var visual: Sprite3D = $Visual
-@onready var impact_visual: Sprite3D = $ImpactVisual
+@onready var visual: SpriteBase3D = $Visual
+@onready var impact_visual: SpriteBase3D = $ImpactVisual
 @onready var projectile_light: OmniLight3D = $Light
 @onready var impact_audio: AudioStreamPlayer3D = $ImpactAudio
 
@@ -15,10 +18,19 @@ var damage := 10
 var direction := Vector3.FORWARD
 var source: Node = null
 var _active := true
+var _base_light_energy := 0.0
+var _pulse_time := 0.0
 
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	_base_light_energy = projectile_light.light_energy
+	if visual is AnimatedSprite3D:
+		(visual as AnimatedSprite3D).play(&"default")
+	if impact_visual is AnimatedSprite3D:
+		var animated_impact := impact_visual as AnimatedSprite3D
+		animated_impact.stop()
+		animated_impact.frame = 0
 	_expire_later()
 
 
@@ -28,14 +40,17 @@ func launch(new_direction: Vector3, new_source: Node, new_damage: int) -> void:
 	damage = new_damage
 
 
+func _process(delta: float) -> void:
+	if not _active:
+		return
+	_pulse_time += delta * light_pulse_speed
+	projectile_light.light_energy = _base_light_energy + (sin(_pulse_time) * 0.5 + 0.5) * light_pulse_amplitude
+
+
 func _physics_process(delta: float) -> void:
 	if not _active:
 		return
 
-	# Area3D'yi yalnızca konumlandırmak, duran bir gövdeye doğru hareket
-	# ederken bazı fizik karelerinde body_entered sinyalinin kaçmasına yol
-	# açabiliyor. Her karede merminin katettiği yolu tarayarak hem hareketli
-	# hem de hareketsiz oyuncuya çarpışmayı güvenilir hâle getir.
 	var start_position := global_position
 	var end_position := start_position + direction * speed * delta
 	var exclusions: Array[RID] = [get_rid()]
@@ -70,8 +85,6 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node3D) -> void:
 	if not _active or body == source:
 		return
-	# Küresel çarpışma şekli duvara değdiğinde mermi merkezi yüzeyin içine
-	# girmiş olabilir. Patlama görselini geliş yönüne çekerek duvarın önünde tut.
 	global_position -= direction * impact_surface_offset
 	var damage_target := _resolve_damage_target(body)
 	if damage_target != null:
@@ -93,19 +106,35 @@ func _impact() -> void:
 	if not _active:
 		return
 	_active = false
+	set_process(false)
 	set_deferred("monitoring", false)
 	collision_shape.set_deferred("disabled", true)
 	visual.visible = false
 	impact_visual.visible = true
-	impact_visual.scale = Vector3(0.55, 0.55, 0.55)
-	projectile_light.light_energy = 4.0
+	impact_visual.modulate = Color(1, 1, 1, 1)
+	impact_visual.scale = Vector3(0.92, 0.92, 0.92)
+	projectile_light.light_energy = impact_light_energy
 	if impact_audio.stream != null:
 		impact_audio.play()
-	var impact_tween := create_tween().set_parallel(true)
-	impact_tween.tween_property(impact_visual, "scale", Vector3(1.35, 1.35, 1.35), 0.14)
-	impact_tween.tween_property(impact_visual, "modulate:a", 0.0, 0.16)
-	impact_tween.tween_property(projectile_light, "light_energy", 0.0, 0.16)
-	await impact_tween.finished
+
+	if impact_visual is AnimatedSprite3D:
+		var animated_impact := impact_visual as AnimatedSprite3D
+		animated_impact.frame = 0
+		animated_impact.play(&"default")
+		var impact_tween := create_tween().set_parallel(true)
+		impact_tween.tween_property(impact_visual, "scale", Vector3(1.08, 1.08, 1.08), 0.22)
+		impact_tween.tween_property(projectile_light, "light_energy", 0.0, 0.26)
+		var fade_track := impact_tween.tween_property(impact_visual, "modulate:a", 0.0, 0.12)
+		fade_track.set_delay(0.14)
+		await animated_impact.animation_finished
+		await impact_tween.finished
+	else:
+		var fallback_tween := create_tween().set_parallel(true)
+		fallback_tween.tween_property(impact_visual, "scale", Vector3(1.35, 1.35, 1.35), 0.14)
+		fallback_tween.tween_property(impact_visual, "modulate:a", 0.0, 0.16)
+		fallback_tween.tween_property(projectile_light, "light_energy", 0.0, 0.16)
+		await fallback_tween.finished
+
 	if impact_audio.stream != null and impact_audio.playing:
 		await impact_audio.finished
 	if is_inside_tree():
