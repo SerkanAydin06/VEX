@@ -92,3 +92,20 @@ TERMINAL / KAPI SAHNE OTORİTESİ
 - Deployment sırasında terminal sahneden çıkarken ekran refresh çağrısı yapılmaz.
 - DoorSideSlide görsel PanelBody kalınlığı 0.30 m; collision kalınlığı 0.38 m ve 0.40 m duvar içinde açık durumda gizlenir.
 - Kapı görsel yüzleri PanelBody yüzeyinde ±0.15 m konumundadır.
+
+
+KAPI / DUVAR AÇIKLIK STANDARDI
+- Referans kapı: scenes/props/door_side_slide.tscn.
+- Net kapı açıklığı: 4.44 m; yan duvar parçaları kapı gövdesinin dış kenarında tam biter.
+- Kapı panel gövdesi/collision: 0.20 x 4.48 x 2.20 m.
+- Kapı üst dolgusu: 4.44 x 2.52 m; alt kot 4.48 m, tavan 7.00 m.
+- DoorThreshold kapı sahnesinin içindedir: 0.72 x 0.035 x 4.44 m, koyu güçlendirilmiş standart zemin materyali.
+- Level 1/2 kapıları E ile açılır ve otomatik kapanır; Bastion-7 kapıları automatic_open=true + auto_close=true ile yaklaşınca açılır ve uzaklaşınca kapanır.
+- Tüm kapı hareket/auto-close değerleri sahne Inspector ayarlarıdır; kod sabit ölçü üretmez.
+
+
+BASTION-7 OTOMATİK KAPI / EŞİK STANDARDI
+- automatic_open=true olan kapılar manuel [E] etkileşim yazısı göstermez ve E ile tetiklenmez.
+- DoorThreshold kapalı kapının 0.20 m gövdesinin altında gizlenecek şekilde 0.18 m derinliktedir.
+- Threshold görseli: res://assets/world/door_threshold_strip.png.
+- Operator Pad altında ayrı mavi yükselti yoktur; OperatorPadVisual doğrudan zemin üstünde Y=0.012 bulunur.

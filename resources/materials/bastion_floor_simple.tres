@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://7y2x5ghgrdtu"]
+
+[ext_resource type="Texture2D" uid="uid://4erp5fy6mpy5" path="res://assets/world/bastion7/floor_bastion_simple.png" id="1_texture"]
+
+[resource]
+resource_name = "Bastion Floor Simple"
+albedo_texture = ExtResource("1_texture")
+metallic = 0.38
+roughness = 0.72
+uv1_scale = Vector3(6, 4, 5)

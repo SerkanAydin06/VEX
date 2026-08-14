@@ -31,6 +31,7 @@ enum DoorOpeningMode {
 @export_range(0.1, 3.0, 0.05) var opening_time := 0.75
 @export var auto_close := true
 @export_range(1.0, 15.0, 0.5) var auto_close_delay := 4.0
+@export var automatic_open := false
 
 @export_category("Güvenli Kapanma")
 @export_flags_3d_physics var safety_collision_mask := 2 | 4
@@ -41,6 +42,7 @@ enum DoorOpeningMode {
 var door_panel: AnimatableBody3D
 var door_panel_right: AnimatableBody3D
 var safety_sensor: Area3D
+var proximity_sensor: Area3D
 var door_occluder: OccluderInstance3D
 var is_open := false
 var is_moving := false
@@ -64,6 +66,7 @@ func _ready() -> void:
 	door_panel = get_node_or_null("DoorPanel") as AnimatableBody3D
 	door_panel_right = get_node_or_null("DoorPanelRight") as AnimatableBody3D
 	safety_sensor = get_node_or_null("SafetySensor") as Area3D
+	proximity_sensor = get_node_or_null("ProximitySensor") as Area3D
 	door_occluder = get_node_or_null("DoorOccluder") as OccluderInstance3D
 	_open_audio = get_node_or_null("OpenAudio") as AudioStreamPlayer3D
 	_denied_audio = get_node_or_null("DeniedAudio") as AudioStreamPlayer3D
@@ -101,6 +104,8 @@ func _ready() -> void:
 	safety_sensor.monitorable = false
 	if not safety_sensor.body_entered.is_connected(_on_safety_body_entered):
 		safety_sensor.body_entered.connect(_on_safety_body_entered)
+	if proximity_sensor != null and not proximity_sensor.body_entered.is_connected(_on_proximity_body_entered):
+		proximity_sensor.body_entered.connect(_on_proximity_body_entered)
 	# Yalnızca kapanma hareketi sırasında güvenlik sorgusu gerekir.
 	set_physics_process(false)
 
@@ -112,6 +117,8 @@ func _physics_process(_delta: float) -> void:
 
 
 func get_interaction_text(player: Node) -> String:
+	if automatic_open:
+		return ""
 	if door_panel == null or _state != DoorState.CLOSED:
 		return ""
 	if permanently_locked:
@@ -122,6 +129,8 @@ func get_interaction_text(player: Node) -> String:
 
 
 func interact(player: Node) -> void:
+	if automatic_open:
+		return
 	if door_panel == null or _state != DoorState.CLOSED:
 		return
 	if permanently_locked:
@@ -299,6 +308,15 @@ func _on_closing_finished(motion_generation: int) -> void:
 	set_physics_process(false)
 
 
+func _on_proximity_body_entered(body: Node3D) -> void:
+	if not automatic_open or body == null or body != GameState.player:
+		return
+	if permanently_locked or _runtime_locked:
+		return
+	if _state == DoorState.CLOSED or _state == DoorState.CLOSING:
+		_begin_opening()
+
+
 func _on_safety_body_entered(_body: Node3D) -> void:
 	if _state == DoorState.CLOSING:
 		_begin_opening()
@@ -312,7 +330,13 @@ func _is_doorway_blocked() -> bool:
 	# Canlı oyuncu ve düşman gövdeleri sensör tarafından doğrudan algılanır.
 	# Ölü düşmanların çarpışması kapalıdır; cesetler kapıyı sonsuza dek açık
 	# tutmaz ve her kapı her kare bütün enemy grubunu taramaz.
-	return not safety_sensor.get_overlapping_bodies().is_empty()
+	if not safety_sensor.get_overlapping_bodies().is_empty():
+		return true
+	if automatic_open and proximity_sensor != null and proximity_sensor.is_inside_tree():
+		for body: Node3D in proximity_sensor.get_overlapping_bodies():
+			if body == GameState.player:
+				return true
+	return false
 
 
 func _can_auto_close(close_generation: int) -> bool:

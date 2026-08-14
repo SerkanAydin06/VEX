@@ -228,8 +228,8 @@ def check_level(
         if not size_m:
             continue
         sx, sy, sz = vec3(size_m.group(1))
-        if abs(sy - 2.52) > 1e-4 or not (abs(sx - 4.6) < 1e-4 or abs(sz - 4.6) < 1e-4):
-            fail(f"{rel}: kapı üst dolgusu 4.60×2.52 standardında değil: {name}")
+        if abs(sy - 2.52) > 1e-4 or not (abs(sx - 4.44) < 1e-4 or abs(sz - 4.44) < 1e-4):
+            fail(f"{rel}: kapı üst dolgusu 4.44×2.52 standardında değil: {name}")
 
     for match in re.finditer(r'\[node name="ExitSign[^"]*"[^\n]*\]\n(.*?)(?=\n\[node|\Z)', text, re.S):
         trans_m = re.search(r'transform = Transform3D\(([^\n]+)\)', match.group(1))
@@ -313,9 +313,11 @@ def check_bastion_7() -> None:
     operator_floor = node_block(text, "Floor_OperatorPlatform")
     if "position = Vector3(0, -0.2, 28)" not in operator_floor or "piece_size = Vector3(6.2, 0.4, 6)" not in operator_floor:
         fail("Bastion-7 Operator Platform kompakt 6.2x6 standardında değil")
-    pad_block = node_block(text, "OperatorPad")
-    if "position = Vector3(0, 0.08, 27.9)" not in pad_block:
-        fail("Bastion-7 Operator Pad kapıya bitişik konumda değil")
+    if '[node name="OperatorPad" type="MeshInstance3D" parent="Props"]' in text:
+        fail("Bastion-7 Operator Pad altında ayrı yükseltilmiş mavi platform kalmış")
+    pad_block = node_block(text, "OperatorPadVisual")
+    if "position = Vector3(0, 0.012, 27.9)" not in pad_block:
+        fail("Bastion-7 Operator Pad görseli doğrudan zemin üstünde değil")
     terminal_block = node_block(text, "DeploymentTerminal")
     if 'display_name = "OPERASYON TERMİNALİ"' not in terminal_block:
         fail("Bastion-7 tek Operasyon Terminali standardı eksik")
@@ -740,12 +742,93 @@ def check_terminal_scene_authority() -> None:
         fail("hub_terminal.gd: tree dışı terminal erişimi güvenli değil")
 
 
+def check_door_opening_fit(rel: str, scene: str) -> None:
+    walls = geometry_wall_boxes(scene)
+    for match in re.finditer(
+        r'\[node name="([^"]+)" parent="Doors"[^\n]*instance=ExtResource\("8_door"\)[^\n]*\]\n(.*?)(?=\n\[node|\Z)',
+        scene,
+        re.S,
+    ):
+        door_name, block = match.group(1), match.group(2)
+        trans_m = re.search(r'transform = Transform3D\(([^\n]+)\)', block)
+        pos_m = re.search(r'^position = Vector3\(([^)]*)\)', block, re.M)
+        rot_m = re.search(r'^rotation = Vector3\(([^)]*)\)', block, re.M)
+        if trans_m:
+            vals = [float(v.strip()) for v in trans_m.group(1).split(",")]
+            door_pos = (vals[9], vals[10], vals[11])
+            opening_axis = "x" if abs(vals[2]) > 0.5 or abs(vals[6]) > 0.5 else "z"
+        elif pos_m:
+            door_pos = vec3(pos_m.group(1))
+            rotation = vec3(rot_m.group(1)) if rot_m else (0.0, 0.0, 0.0)
+            opening_axis = "x" if abs(rotation[1]) > 0.7 else "z"
+        else:
+            fail(f"{rel}: kapı pozisyonu okunamadı: {door_name}")
+            continue
+
+        center = door_pos[0] if opening_axis == "x" else door_pos[2]
+        wall_line = door_pos[2] if opening_axis == "x" else door_pos[0]
+        negative_edges: list[float] = []
+        positive_edges: list[float] = []
+        for _wall_name, position, size, orientation in walls:
+            if opening_axis == "x":
+                if orientation != "H" or abs(position[2] - wall_line) > 0.25:
+                    continue
+                wall_center, length = position[0], size[0]
+            else:
+                if orientation != "V" or abs(position[0] - wall_line) > 0.25:
+                    continue
+                wall_center, length = position[2], size[2]
+            wall_min = wall_center - length * 0.5
+            wall_max = wall_center + length * 0.5
+            if wall_max <= center + 1e-4 and center - wall_max < 6.0:
+                negative_edges.append(wall_max)
+            if wall_min >= center - 1e-4 and wall_min - center < 6.0:
+                positive_edges.append(wall_min)
+
+        if not negative_edges or not positive_edges:
+            fail(f"{rel}: kapı yan duvarları bulunamadı: {door_name}")
+            continue
+        opening_width = min(positive_edges) - max(negative_edges)
+        if abs(opening_width - 4.44) > 1e-4:
+            fail(f"{rel}: {door_name} duvar açıklığı 4.44 m değil: {opening_width:.3f}")
+
+
 def check_door_and_trim_standard() -> None:
     door = read("scenes/props/door_side_slide.tscn")
-    if 'size = Vector3(0.30, 4.48, 2.3)' not in door:
-        fail("Yana açılan kapı PanelBody görsel kalınlığı 0.30 m değil")
-    if ', 0.15, 0, 0)' not in door or ', -0.15, 0, 0)' not in door:
-        fail("Kapı sprite yüzleri 0.30 m PanelBody yüzeyinde değil")
+    if door.count('size = Vector3(0.2, 4.48, 2.2)') < 2:
+        fail("Yana açılan kapı PanelBody mesh/collision 0.20×4.48×2.20 standardında değil")
+    if ', 0.15, 0, 0.03)' not in door or ', -0.15, 0, 0.03)' not in door:
+        fail("Kapı sol panel görsel yüzleri simetrik değil")
+    if ', 0.15, 0, -0.03)' not in door or ', -0.15, 0, -0.03)' not in door:
+        fail("Kapı sağ panel görsel yüzleri simetrik değil")
+    if '[node name="DoorThreshold" type="MeshInstance3D" parent="."]' not in door:
+        fail("Kapı altı DoorThreshold görseli eksik")
+    if '[sub_resource type="PlaneMesh" id="PlaneMesh_door_threshold"]' not in door or 'size = Vector2(0.18, 4.44)' not in door:
+        fail("DoorThreshold 0.18×4.44 m gizli eşik standardında değil")
+    if 'res://resources/materials/door_threshold.tres' not in door:
+        fail("DoorThreshold standart materyali kullanılmıyor")
+    if 'automatic_open = false' not in door:
+        fail("Kapı automatic_open varsayılanı sahnede kayıtlı değil")
+    door_script = read("scripts/props/door.gd")
+    if '@export var automatic_open := false' not in door_script:
+        fail("door.gd automatic_open Inspector export değil")
+    if 'func _on_proximity_body_entered(body: Node3D)' not in door_script:
+        fail("door.gd otomatik yaklaşma açılışı eksik")
+    if 'if automatic_open:\n\t\treturn ""' not in door_script:
+        fail("Otomatik kapılar manuel [E] etkileşim yazısını bastırmıyor")
+
+    for rel in ["scenes/levels/level_01.tscn", "scenes/levels/level_02.tscn", "scenes/hub/bastion_7.tscn"]:
+        scene = read(rel)
+        check_door_opening_fit(rel, scene)
+
+    bastion = read("scenes/hub/bastion_7.tscn")
+    for door_name in ["ArmoryDoor", "FiringRangeDoor", "ResearchDoor", "WorkshopDoor", "EngineeringDoor", "OperatorDoor"]:
+        block = node_block(bastion, door_name)
+        if "automatic_open = true" not in block or "auto_close = true" not in block:
+            fail(f"Bastion-7 {door_name} otomatik açılıp kapanacak şekilde sahnede ayarlı değil")
+        if "auto_close_delay = 1.5" not in block:
+            fail(f"Bastion-7 {door_name} auto-close gecikmesi 1.5 sn değil")
+
     world_piece = read("scenes/world/world_piece.tscn")
     world_piece_script = read("scripts/world/world_piece.gd")
     for forbidden in ["floor_trim_height", "floor_trim_depth", "floor_trim_vertical_offset", "runs_along_x", "trim_end_margin"]:
@@ -757,6 +840,7 @@ def check_door_and_trim_standard() -> None:
         fail("world_piece.tscn BaseTrim sahne boyutu eksik")
     if "opening_offset_left = Vector3(0, 0, -2.47)" not in door or "opening_offset_right = Vector3(0, 0, 2.47)" not in door:
         fail("Kapı açık konumu sahne offsetlerinden yönetilmiyor")
+
 
 def main() -> int:
     check_paths()

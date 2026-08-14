@@ -5,6 +5,7 @@ const REQUIRED_RESOURCES := [
 	"res://resources/materials/ceiling_standard.tres",
 	"res://resources/materials/wall_panel.tres",
 	"res://scenes/props/door_side_slide.tscn",
+	"res://resources/materials/door_threshold.tres",
 	"res://scenes/props/burn_remains.tscn",
 	"res://scenes/props/pickup.tscn",
 	"res://scenes/props/explosive_barrel.tscn",
@@ -325,4 +326,9 @@ func _check_door() -> void:
 	var front := door.get_node_or_null("DoorPanel/FrontVisual") as Sprite3D
 	if front == null or not front.flip_h:
 		failures.append("DoorPanel/FrontVisual Flip H standardı eksik.")
+	var threshold := door.get_node_or_null("DoorThreshold") as MeshInstance3D
+	if threshold == null:
+		failures.append("DoorThreshold kapı sahnesinde eksik.")
+	if not _has_property(door, &"automatic_open"):
+		failures.append("Kapı automatic_open Inspector ayarı eksik.")
 	door.queue_free()
