@@ -1,0 +1,39 @@
+BASTION-7 HUB YERLEŞİMİ
+=======================
+
+                    [ MISSION CONTROL ]
+                            |
+                     [ NORTH CORRIDOR ]
+                            |
+ [ FIRING RANGE ]--[ ARMORY ]--[ COMMAND NORTH ]--[ RESEARCH LAB ]
+      KİLİTLİ          AÇIK             |
+                                  [ COMMAND HALL ]
+                         [COMMAND WEST]-[CENTER]-[COMMAND EAST]
+                                          |
+                     [ WEAPON WORKSHOP ]-[COMMAND SOUTH]-[ ENGINEERING BAY ]
+                           KİLİTLİ                           KİLİTLİ
+                                          |
+                                   [ SOUTH CORRIDOR ]
+                                          |
+                                  [ OPERATOR PLATFORM ]
+
+AKTİF DÖNGÜ
+-----------
+1. Bölüm 1 tamamlanır.
+2. Sonuç ekranında "BASTION-7'YE DÖN" seçilir.
+3. Oyuncu Operator Platform bölgesinde üsse gelir.
+4. Mission Control terminalinden sonraki görev seçilir.
+5. Armory'de daha önce açılmış silahlardan biri kuşanılabilir.
+6. Operator Platform terminaline dönülüp seçilen göreve deployment yapılır.
+7. Bölüm 2 tamamlanınca tekrar Bastion-7'ye dönülür.
+8. Mevcut projede Level 3 olmadığı için Mission Control bu noktada yeni operasyon beklediğini gösterir.
+
+BAŞLANGIÇTA KAPALI
+------------------
+- Weapon Workshop
+- Engineering Bay
+- Research Lab
+- Firing Range
+
+Bu odalar fiziksel olarak sahnede hazırdır. Kapılar Inspector'da `permanently_locked = true`
+olarak tutulur. İleride gameplay sistemleri eklendiğinde sahne ayarından açılabilirler.

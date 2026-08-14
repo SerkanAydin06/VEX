@@ -14,6 +14,15 @@ height = 1.35
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_script")
+damage_collision_mask = 14
+max_overlap_results = 32
+explosion_end_scale_multiplier = 2.3
+explosion_scale_duration = 0.22
+explosion_fade_duration = 0.28
+explosion_light_fade_duration = 0.32
+health = 35
+explosion_radius = 4.5
+maximum_damage = 70
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=136830146]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.016235173, 0)

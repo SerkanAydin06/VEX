@@ -6,6 +6,7 @@
 [ ] pickupların görselleri oyunaa uygun hale getirilecek
 [ ] ortak kullanılan sesler her canavar için ayrı şekilde düzenlenecek
 [ ] redviper ve badredviper görselleri düzenlenecek ya da çıkarılacak
-[ ] bölüm sonu ekranı tekrar düzenlenecek
+[ ] bölüm sonu ekranı tekrar düzenlenecek ve finish swicth hareketli hale getirilecek
 [ ] silah eklentileri ve geliştirmeleri, oyuncu geliştirmeleri ile silahlar pickup olarak mı toplanmalı yoksa satın mı a
 [ ] oyun hikayesi tasarlanacak
+[ ] main base eklenecek

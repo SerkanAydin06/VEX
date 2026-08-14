@@ -1,9 +1,18 @@
 class_name VexExplosiveBarrel
 extends StaticBody3D
 
+@export_category("01 - Hasar")
 @export_range(1, 500, 1) var health := 35
 @export_range(1.0, 12.0, 0.25) var explosion_radius := 4.5
 @export_range(1, 200, 1) var maximum_damage := 70
+@export_flags_3d_physics var damage_collision_mask := 2 | 4 | 8
+@export_range(1, 128, 1) var max_overlap_results := 32
+
+@export_category("02 - Patlama Görseli")
+@export_range(0.1, 6.0, 0.05) var explosion_end_scale_multiplier := 2.3
+@export_range(0.0, 2.0, 0.01) var explosion_scale_duration := 0.22
+@export_range(0.0, 2.0, 0.01) var explosion_fade_duration := 0.28
+@export_range(0.0, 2.0, 0.01) var explosion_light_fade_duration := 0.32
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var barrel_visual: Sprite3D = $BarrelVisual
@@ -12,17 +21,21 @@ extends StaticBody3D
 @onready var explosion_audio: AudioStreamPlayer3D = $ExplosionAudio
 
 var _exploded := false
+var _current_health := 0
+var _base_explosion_scale := Vector3.ONE
 
 
 func _ready() -> void:
+	_current_health = health
+	_base_explosion_scale = explosion_visual.scale
 	add_to_group("damageable")
 
 
 func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = null) -> void:
 	if _exploded:
 		return
-	health -= amount
-	if health <= 0:
+	_current_health -= amount
+	if _current_health <= 0:
 		_explode()
 
 
@@ -36,9 +49,14 @@ func _explode() -> void:
 	collision_shape.set_deferred("disabled", true)
 	_apply_area_damage()
 	var tween := create_tween().set_parallel(true)
-	tween.tween_property(explosion_visual, "scale", Vector3(2.3, 2.3, 2.3), 0.22)
-	tween.tween_property(explosion_visual, "modulate:a", 0.0, 0.28)
-	tween.tween_property(explosion_light, "light_energy", 0.0, 0.32)
+	tween.tween_property(
+		explosion_visual,
+		"scale",
+		_base_explosion_scale * explosion_end_scale_multiplier,
+		explosion_scale_duration
+	)
+	tween.tween_property(explosion_visual, "modulate:a", 0.0, explosion_fade_duration)
+	tween.tween_property(explosion_light, "light_energy", 0.0, explosion_light_fade_duration)
 	await tween.finished
 	if is_inside_tree():
 		queue_free()
@@ -50,11 +68,11 @@ func _apply_area_damage() -> void:
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = sphere
 	query.transform = Transform3D(Basis.IDENTITY, global_position)
-	query.collision_mask = 2 | 4 | 8
+	query.collision_mask = damage_collision_mask
 	query.exclude = [get_rid()]
 	query.collide_with_bodies = true
 	query.collide_with_areas = true
-	var results := get_world_3d().direct_space_state.intersect_shape(query, 32)
+	var results := get_world_3d().direct_space_state.intersect_shape(query, max_overlap_results)
 	var damaged_ids: Dictionary = {}
 	for result: Dictionary in results:
 		var collider := result.get("collider") as Object

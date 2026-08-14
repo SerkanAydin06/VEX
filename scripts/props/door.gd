@@ -20,6 +20,8 @@ enum DoorOpeningMode {
 @export var required_keys: Array[StringName] = []
 @export var required_key_label := ""
 @export var objective_on_unlock := ""
+@export var permanently_locked := false
+@export var permanent_lock_message := "POWER OFFLINE"
 
 @export_category("Açılma Hareketi")
 @export_enum("Yukarı", "İki Yana") var opening_mode: int = DoorOpeningMode.UP
@@ -30,8 +32,10 @@ enum DoorOpeningMode {
 @export_range(1.0, 15.0, 0.5) var auto_close_delay := 4.0
 
 @export_category("Güvenli Kapanma")
+@export_flags_3d_physics var safety_collision_mask := 2 | 4
 @export_range(0.05, 1.0, 0.05) var safety_recheck_time := 0.2
 @export_range(0.1, 2.0, 0.1) var safety_clear_time := 0.5
+@export_range(0.01, 0.5, 0.01) var minimum_motion_time := 0.05
 
 var door_panel: AnimatableBody3D
 var door_panel_right: AnimatableBody3D
@@ -46,12 +50,16 @@ var _closed_right_panel_position := Vector3.ZERO
 var _motion_tween: Tween
 var _motion_generation := 0
 var _auto_close_generation := 0
+var _runtime_locked := false
+var _auto_close_available := false
 var _open_audio: AudioStreamPlayer3D
 var _denied_audio: AudioStreamPlayer3D
 
 
 func _ready() -> void:
 	add_to_group("interactable")
+	_runtime_locked = locked
+	_auto_close_available = auto_close
 	door_panel = get_node_or_null("DoorPanel") as AnimatableBody3D
 	door_panel_right = get_node_or_null("DoorPanelRight") as AnimatableBody3D
 	safety_sensor = get_node_or_null("SafetySensor") as Area3D
@@ -61,7 +69,7 @@ func _ready() -> void:
 
 	if door_panel == null:
 		push_warning("%s: DoorPanel bulunamadı; kapı devre dışı bırakıldı." % get_path())
-		auto_close = false
+		_auto_close_available = false
 		set_physics_process(false)
 		return
 
@@ -73,7 +81,7 @@ func _ready() -> void:
 			"%s: İki yana açılma için DoorPanelRight bulunamadı; kapı devre dışı."
 			% get_path()
 		)
-		auto_close = false
+		_auto_close_available = false
 		set_physics_process(false)
 		return
 	_sync_occluder_visibility()
@@ -83,12 +91,12 @@ func _ready() -> void:
 		# Bu nedenle çalışma anında düğüm üretmek yerine otomatik kapanmayı
 		# güvenli biçimde devre dışı bırakıyoruz. Tam kapı sahnesinde sensör hazırdır.
 		push_warning("%s: SafetySensor bulunamadı; otomatik kapanma kapatıldı." % get_path())
-		auto_close = false
+		_auto_close_available = false
 		set_physics_process(false)
 		return
 
 	safety_sensor.collision_layer = 0
-	safety_sensor.collision_mask = 2 | 4
+	safety_sensor.collision_mask = safety_collision_mask
 	safety_sensor.monitorable = false
 	if not safety_sensor.body_entered.is_connected(_on_safety_body_entered):
 		safety_sensor.body_entered.connect(_on_safety_body_entered)
@@ -105,7 +113,9 @@ func _physics_process(_delta: float) -> void:
 func get_interaction_text(player: Node) -> String:
 	if door_panel == null or _state != DoorState.CLOSED:
 		return ""
-	if locked and not _player_has_required_keys(player):
+	if permanently_locked:
+		return "[E] %s — %s" % [display_name, permanent_lock_message]
+	if _runtime_locked and not _player_has_required_keys(player):
 		return "[E] %s — %s GEREKLİ" % [display_name, _get_required_key_label()]
 	return "[E] %s AÇ" % display_name
 
@@ -113,13 +123,18 @@ func get_interaction_text(player: Node) -> String:
 func interact(player: Node) -> void:
 	if door_panel == null or _state != DoorState.CLOSED:
 		return
-	if locked:
+	if permanently_locked:
+		if _denied_audio != null and _denied_audio.stream != null:
+			_denied_audio.play()
+		GameState.notify("%s — %s" % [display_name, permanent_lock_message])
+		return
+	if _runtime_locked:
 		if not _player_has_required_keys(player):
 			if _denied_audio != null and _denied_audio.stream != null:
 				_denied_audio.play()
 			GameState.notify("KAPI KİLİTLİ — %s GEREKLİ" % _get_required_key_label())
 			return
-		locked = false
+		_runtime_locked = false
 		GameState.notify("%s AÇILDI" % display_name)
 		if not objective_on_unlock.is_empty():
 			GameState.set_objective(objective_on_unlock)
@@ -160,7 +175,7 @@ func _get_required_key_label() -> String:
 
 
 func force_open() -> void:
-	locked = false
+	_runtime_locked = false
 	if door_panel != null and _state != DoorState.OPEN and _state != DoorState.OPENING:
 		_begin_opening()
 
@@ -181,7 +196,7 @@ func _begin_opening() -> void:
 		_open_audio.play()
 
 	var distance_ratio := _get_open_distance_ratio()
-	var duration := maxf(0.05, opening_time * distance_ratio)
+	var duration := maxf(minimum_motion_time, opening_time * distance_ratio)
 	_motion_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 	if _is_split_side_door():
 		_motion_tween.set_parallel(true)
@@ -214,7 +229,7 @@ func _on_opening_finished(motion_generation: int, close_generation: int) -> void
 		return
 	_motion_tween = null
 	_set_state(DoorState.OPEN)
-	if auto_close and safety_sensor != null:
+	if _auto_close_available and safety_sensor != null:
 		_auto_close_sequence(close_generation)
 
 
@@ -249,7 +264,7 @@ func _begin_closing() -> void:
 	set_physics_process(true)
 
 	var distance_ratio := _get_close_distance_ratio()
-	var duration := maxf(0.05, opening_time * distance_ratio)
+	var duration := maxf(minimum_motion_time, opening_time * distance_ratio)
 	_motion_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 	if _is_split_side_door():
 		_motion_tween.set_parallel(true)
@@ -302,7 +317,7 @@ func _is_doorway_blocked() -> bool:
 func _can_auto_close(close_generation: int) -> bool:
 	return (
 		is_inside_tree()
-		and auto_close
+		and _auto_close_available
 		and safety_sensor != null
 		and _state == DoorState.OPEN
 		and close_generation == _auto_close_generation

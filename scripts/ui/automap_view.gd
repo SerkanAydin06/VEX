@@ -63,9 +63,6 @@ var _redraw_remaining := 0.0
 
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_STOP
-	focus_mode = Control.FOCUS_ALL
-	clip_contents = true
 	_zoom = clampf(default_zoom, minimum_zoom, maximum_zoom)
 	set_process(true)
 

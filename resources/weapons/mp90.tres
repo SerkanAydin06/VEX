@@ -14,6 +14,7 @@ fire_interval = 0.07
 reload_duration = 1.35
 spread_degrees = 1.2
 maximum_range = 75.0
+reserve_ammo_capacity = 300
 automatic = true
 recoil_vertical_degrees = 0.38
 recoil_horizontal_degrees = 0.22

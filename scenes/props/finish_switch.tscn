@@ -8,6 +8,12 @@ size = Vector3(0.96, 1.36, 0.18)
 
 [node name="FinishSwitch" type="Node3D"]
 script = ExtResource("1_script")
+display_name = "TAHLİYE KONTROLÜ"
+required_keys = Array[StringName]([&"blue", &"red"])
+required_enemy_id = &""
+next_level_path = ""
+visual_world_size = Vector2(0.9, 1.3)
+activated_modulate = Color(0.55, 0.65, 0.55, 1)
 
 [node name="PanelBody" type="StaticBody3D" parent="."]
 collision_layer = 8

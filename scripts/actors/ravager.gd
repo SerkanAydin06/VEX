@@ -1,8 +1,6 @@
 class_name VexRavager
 extends CharacterBody3D
 
-const BURN_REMAINS_SCENE := preload("res://scenes/props/burn_remains.tscn")
-
 enum State {
 	IDLE,
 	PATROL,
@@ -19,12 +17,24 @@ enum State {
 @export_range(0, 3, 1) var spawn_min_difficulty := 0
 @export var apply_difficulty_scaling := true
 
+@export_category("01B - Zorluk Çarpanları (Sahne)")
+@export var difficulty_health_multipliers := PackedFloat32Array([0.75, 1.0, 1.20, 1.45])
+@export var difficulty_damage_multipliers := PackedFloat32Array([0.65, 1.0, 1.25, 1.55])
+@export var difficulty_speed_multipliers := PackedFloat32Array([0.90, 1.0, 1.08, 1.15])
+@export var difficulty_detection_multipliers := PackedFloat32Array([0.90, 1.0, 1.08, 1.20])
+@export var difficulty_cooldown_multipliers := PackedFloat32Array([1.25, 1.0, 0.85, 0.70])
+@export var difficulty_windup_multipliers := PackedFloat32Array([1.20, 1.0, 0.90, 0.75])
+
 @export_category("02 - Hareket ve Devriye")
 @export_range(0.5, 10.0, 0.1) var move_speed := 2.7
 @export_range(0.5, 40.0, 0.5) var movement_acceleration := 12.0
 @export_range(0.5, 40.0, 0.5) var braking_acceleration := 21.0
 @export_range(0.0, 4.0, 0.05) var gravity_scale := 1.0
 @export_range(-5.0, 0.0, 0.05) var floor_stick_velocity := -0.1
+@export_flags_3d_physics var floor_collision_mask := 1
+@export_range(0.1, 5.0, 0.1) var floor_snap_max_correction := 2.0
+@export_range(0.0, 2.0, 0.05) var floor_snap_ray_start_height := 0.5
+@export_range(0.0, 4.0, 0.1) var floor_snap_ray_extra_depth := 2.0
 @export var patrol_offset := Vector3(0, 0, 3.0)
 
 @export_category("03 - Algılama ve Takip")
@@ -38,6 +48,10 @@ enum State {
 @export_range(0.0, 3.0, 0.05) var sight_origin_height := 0.55
 @export_range(0.0, 3.0, 0.05) var sight_target_height := 0.45
 @export_flags_3d_physics var sight_collision_mask := 1 | 2
+@export var aggro_on_damage := true
+@export var alert_allies_on_damage := true
+@export var receive_ally_alerts := true
+@export var hurt_reaction_enabled := true
 
 @export_category("04 - Saldırı")
 @export_range(1, 100, 1) var attack_damage := 12
@@ -96,7 +110,13 @@ enum State {
 @export var death_frame_y_offsets := PackedFloat32Array([0.0, -0.008, -0.016, -0.025])
 
 @export_category("08 - Ölüm Sonrası İz")
+@export var burn_remains_scene: PackedScene
 @export_range(0.4, 3.5, 0.05) var burn_remains_scale := 1.0
+@export_range(0.1, 2.0, 0.01) var burn_remains_scale_multiplier := 1.0
+@export var burn_scorch_tint := Color(0.18, 0.03, 0.06, 0.96)
+@export var burn_ember_tint := Color(0.44, 0.08, 0.14, 0.22)
+@export_range(0.0, 2.0, 0.01) var burn_ember_emission_energy := 0.10
+@export var burn_smoke_enabled := false
 @export_range(0.0, 20.0, 0.1) var burn_smoke_duration := 9.0
 @export_range(0.0, 1.0, 0.01) var burn_smoke_alpha := 0.14
 
@@ -107,7 +127,7 @@ enum State {
 @onready var death_audio: AudioStreamPlayer3D = $DeathAudio
 @onready var ground_shadow: Sprite3D = get_node_or_null("GroundShadow") as Sprite3D
 
-var health := 75
+var health := 0
 var state := State.IDLE
 
 var _spawn_position := Vector3.ZERO
@@ -168,7 +188,6 @@ func _ready() -> void:
 		float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 		* gravity_scale
 	)
-	_snap_body_to_floor(2.0)
 
 	var initial_patrol_direction := patrol_offset
 	initial_patrol_direction.y = 0.0
@@ -197,47 +216,26 @@ func _configure_runtime_stats() -> void:
 	if not apply_difficulty_scaling:
 		return
 
-	var profile := GameState.get_active_difficulty_profile()
-	_runtime_maximum_health = maxi(
-		1,
-		int(round(
-			float(maximum_health)
-			* float(profile.get("health_multiplier", 1.0))
-		))
-	)
-	_runtime_attack_damage = maxi(
-		1,
-		int(round(
-			float(attack_damage)
-			* float(profile.get("damage_multiplier", 1.0))
-		))
-	)
-	_runtime_move_speed = clampf(
-		move_speed * float(profile.get("speed_multiplier", 1.0)),
-		0.5,
-		10.0
-	)
-	var detection_multiplier := float(profile.get("detection_multiplier", 1.0))
-	_runtime_detection_range = clampf(
-		detection_range * detection_multiplier,
-		1.0,
-		50.0
-	)
-	_runtime_pursuit_range = clampf(
-		pursuit_range * detection_multiplier,
-		1.0,
-		50.0
-	)
-	_runtime_attack_cooldown = clampf(
-		attack_cooldown * float(profile.get("cooldown_multiplier", 1.0)),
-		0.2,
-		5.0
-	)
-	_runtime_attack_windup = clampf(
-		attack_windup * float(profile.get("windup_multiplier", 1.0)),
-		0.05,
-		2.0
-	)
+	var health_scale := _scene_difficulty_multiplier(difficulty_health_multipliers)
+	var damage_scale := _scene_difficulty_multiplier(difficulty_damage_multipliers)
+	var speed_scale := _scene_difficulty_multiplier(difficulty_speed_multipliers)
+	var detection_scale := _scene_difficulty_multiplier(difficulty_detection_multipliers)
+	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
+	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
+	_runtime_maximum_health = maxi(1, int(round(float(maximum_health) * health_scale)))
+	_runtime_attack_damage = maxi(1, int(round(float(attack_damage) * damage_scale)))
+	_runtime_move_speed = maxf(0.0, move_speed * speed_scale)
+	_runtime_detection_range = maxf(0.0, detection_range * detection_scale)
+	_runtime_pursuit_range = maxf(0.0, pursuit_range * detection_scale)
+	_runtime_attack_cooldown = maxf(0.01, attack_cooldown * cooldown_scale)
+	_runtime_attack_windup = maxf(0.0, attack_windup * windup_scale)
+
+
+func _scene_difficulty_multiplier(values: PackedFloat32Array) -> float:
+	if values.is_empty():
+		return 1.0
+	var difficulty_index := clampi(GameState.active_difficulty, 0, values.size() - 1)
+	return maxf(0.0, values[difficulty_index])
 
 
 func _physics_process(delta: float) -> void:
@@ -270,26 +268,28 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 
 	health -= amount
 	_exit_dormant_mode()
-	_alerted = true
-	_seconds_without_sight = 0.0
-	_search_remaining = 0.0
-	# Hasar, başlamış bir saldırıyı iptal etmesin. Düşman saldırı hazırlığı
-	# içindeyse ATTACK durumu ve zamanlayıcı korunur; yalnız hedef bilgisi
-	# güncellenir. Böylece seri atışla düşmanı kalıcı olarak kilitlemek mümkün olmaz.
-	if not _attack_locked:
-		state = State.CHASE
-	if _source is Node3D:
-		var source_node := _source as Node3D
-		_last_seen_position = source_node.global_position
-		_has_last_seen_position = true
-	elif _player != null and is_instance_valid(_player):
-		_last_seen_position = _player.global_position
-		_has_last_seen_position = true
-	_path_refresh_remaining = 0.0
-	if _has_last_seen_position:
-		_alert_nearby_allies(_last_seen_position)
-	else:
-		_alert_nearby_allies(global_position)
+	if aggro_on_damage:
+		_alerted = true
+		_seconds_without_sight = 0.0
+		_search_remaining = 0.0
+		# Hasar, başlamış bir saldırıyı iptal etmesin. Düşman saldırı hazırlığı
+		# içindeyse ATTACK durumu ve zamanlayıcı korunur; yalnız hedef bilgisi
+		# güncellenir. Böylece seri atışla düşmanı kalıcı olarak kilitlemek mümkün olmaz.
+		if not _attack_locked:
+			state = State.CHASE
+		if _source is Node3D:
+			var source_node := _source as Node3D
+			_last_seen_position = source_node.global_position
+			_has_last_seen_position = true
+		elif _player != null and is_instance_valid(_player):
+			_last_seen_position = _player.global_position
+			_has_last_seen_position = true
+		_path_refresh_remaining = 0.0
+		if alert_allies_on_damage:
+			if _has_last_seen_position:
+				_alert_nearby_allies(_last_seen_position)
+			else:
+				_alert_nearby_allies(global_position)
 
 	if health <= 0:
 		_die()
@@ -300,7 +300,8 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		# Diğer durumlarda da kısa bir reaksiyon kilidi, pompalı gibi çok saçmalı
 		# silahların aynı karede art arda flinch başlatmasını engeller.
 		if (
-			not _attack_locked
+			hurt_reaction_enabled
+			and not _attack_locked
 			and not _hurt_reaction_locked
 			and _has_animation(&"hurt")
 		):
@@ -311,7 +312,7 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 
 
 func receive_ally_alert(suspected_position: Vector3) -> void:
-	if state == State.DEAD or _player_visible:
+	if state == State.DEAD or _player_visible or not receive_ally_alerts:
 		return
 
 	_exit_dormant_mode()
@@ -1164,15 +1165,15 @@ func _collision_floor_local_y() -> float:
 	return collision_shape.position.y - capsule.height * 0.5
 
 
-func _snap_body_to_floor(max_correction: float = 2.0) -> void:
+func _snap_body_to_floor(max_correction: float) -> void:
 	if not is_inside_tree() or collision_shape == null or collision_shape.shape == null:
 		return
-	var ray_origin := global_position + Vector3.UP * 0.5
-	var ray_end := global_position + Vector3.DOWN * (max_correction + 2.0)
+	var ray_origin := global_position + Vector3.UP * floor_snap_ray_start_height
+	var ray_end := global_position + Vector3.DOWN * (max_correction + floor_snap_ray_extra_depth)
 	var query := PhysicsRayQueryParameters3D.create(
 		ray_origin,
 		ray_end,
-		1,
+		floor_collision_mask,
 		[get_rid()]
 	)
 	query.collide_with_areas = false
@@ -1233,31 +1234,29 @@ func _finalize_death_visual() -> void:
 func _show_burn_remains() -> void:
 	if _burn_remains != null and is_instance_valid(_burn_remains):
 		return
-	var remains := BURN_REMAINS_SCENE.instantiate()
-	remains.position = Vector3(0.0, _collision_floor_local_y(), 0.0)
-	remains.set("scorch_size", burn_remains_scale)
-	remains.set("smoke_enabled", false)
+	if burn_remains_scene == null:
+		return
+	var remains := burn_remains_scene.instantiate()
+	if not (remains is Node3D):
+		remains.queue_free()
+		return
+	(remains as Node3D).position = Vector3(0.0, _collision_floor_local_y(), 0.0)
+	remains.set("scorch_size", burn_remains_scale * burn_remains_scale_multiplier)
+	remains.set("smoke_enabled", burn_smoke_enabled)
 	remains.set("smoke_duration", burn_smoke_duration)
-	remains.set("smoke_alpha", 0.0)
-	remains.set("scorch_tint", Color(0.18, 0.03, 0.06, 0.96))
-	remains.set("ember_tint", Color(0.36, 0.06, 0.12, 0.26))
-	remains.set("ember_emission_energy", 0.10)
-	if enemy_id == &"hellmagma":
-		remains.set("scorch_size", burn_remains_scale * 1.18)
-		remains.set("scorch_tint", Color(0.16, 0.08, 0.04, 0.98))
-		remains.set("ember_tint", Color(1.0, 0.24, 0.04, 0.62))
-		remains.set("ember_emission_energy", 0.82)
-	elif enemy_id == &"ravager":
-		remains.set("ember_tint", Color(0.44, 0.08, 0.14, 0.22))
+	remains.set("smoke_alpha", burn_smoke_alpha)
+	remains.set("scorch_tint", burn_scorch_tint)
+	remains.set("ember_tint", burn_ember_tint)
+	remains.set("ember_emission_energy", burn_ember_emission_energy)
 	add_child(remains)
-	_burn_remains = remains
+	_burn_remains = remains as Node3D
 
 
 func _die() -> void:
 	var death_animation := _directional_animation(&"death", &"death_back")
 	state = State.DEAD
 	velocity = Vector3.ZERO
-	_snap_body_to_floor(2.0)
+	_snap_body_to_floor(floor_snap_max_correction)
 	_attack_locked = true
 	_attack_windup_active = false
 	_clear_path()
@@ -1278,8 +1277,6 @@ func _die() -> void:
 	if _has_animation(death_animation):
 		animated_sprite.pause()
 		animated_sprite.frame = maxi(0, animated_sprite.sprite_frames.get_frame_count(death_animation) - 1)
-	animated_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-	animated_sprite.rotation_degrees = Vector3.ZERO
 	_apply_frame_ground_offset()
 	await get_tree().create_timer(corpse_hold_duration).timeout
 	if not is_inside_tree():

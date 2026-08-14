@@ -11,6 +11,9 @@ extends Area3D
 @export_category("Zorluk Dağılımı")
 @export_range(0, 3, 1) var spawn_max_difficulty := 3
 @export var scale_amount_with_difficulty := true
+@export var difficulty_amount_multipliers := PackedFloat32Array([1.35, 1.0, 0.80, 0.60])
+
+@export_category("Görsel")
 @export var visual_texture: Texture2D:
 	set(value):
 		visual_texture = value
@@ -33,17 +36,18 @@ var _base_pivot_position := Vector3.ZERO
 var _phase := 0.0
 var _elapsed := 0.0
 var _collected := false
+var _runtime_amount := 0
 
 
 func _ready() -> void:
+	_runtime_amount = amount
 	if not Engine.is_editor_hint():
 		if GameState.active_difficulty > spawn_max_difficulty:
 			queue_free()
 			return
-		_apply_difficulty_amount()
+		_runtime_amount = _get_runtime_amount()
 
 	_resolve_scene_nodes()
-	_apply_default_texture_for_type()
 	_apply_visual()
 	if visual == null or visual_pivot == null:
 		push_warning("%s: Visual veya VisualPivot/Visual bulunamadı; pickup görseli devre dışı." % get_path())
@@ -64,54 +68,20 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 
 
-func _apply_difficulty_amount() -> void:
+func _get_runtime_amount() -> int:
 	if not scale_amount_with_difficulty:
-		return
+		return amount
 	if pickup_type in ["shotgun", "ak47", "mp90", "night_vision", "key_blue", "key_red"]:
-		return
-	var profile := GameState.get_active_difficulty_profile()
-	var multiplier := float(profile.get("resource_multiplier", 1.0))
-	amount = maxi(1, int(round(float(amount) * multiplier)))
-
-
-func _apply_default_texture_for_type() -> void:
-	if visual_texture != null:
-		return
-	var candidates: Array[String] = []
-	match pickup_type:
-		"ak47":
-			candidates = [
-				"res://assets/pickups/ak47.png",
-			]
-		"rifle_ammo":
-			candidates = [
-				"res://assets/pickups/ak47_ammo.png",
-			]
-		"mp90":
-			candidates = [
-				"res://assets/pickups/mp90.png",
-			]
-		"mp90_ammo":
-			candidates = [
-				"res://assets/pickups/mp90_ammo.png",
-			]
-		"night_vision":
-			candidates = [
-				"res://assets/pickups/night_vision.png",
-			]
-	for candidate: String in candidates:
-		if ResourceLoader.exists(candidate):
-			visual_texture = load(candidate) as Texture2D
-			return
-
-	# Dosya adı uyuşmazsa pickup görünmez kalmasın.
-	var fallback := ""
-	if pickup_type in ["ak47", "mp90"]:
-		fallback = "res://assets/pickups/shotgun.png"
-	elif pickup_type in ["rifle_ammo", "mp90_ammo"]:
-		fallback = "res://assets/pickups/ammo_bullets.png"
-	if not candidates.is_empty() and not fallback.is_empty() and ResourceLoader.exists(fallback):
-		visual_texture = load(fallback) as Texture2D
+		return amount
+	if difficulty_amount_multipliers.is_empty():
+		return amount
+	var difficulty_index := clampi(
+		GameState.active_difficulty,
+		0,
+		difficulty_amount_multipliers.size() - 1
+	)
+	var multiplier := maxf(0.0, difficulty_amount_multipliers[difficulty_index])
+	return maxi(1, int(round(float(amount) * multiplier)))
 
 
 func _process(delta: float) -> void:
@@ -130,7 +100,7 @@ func _on_body_entered(body: Node3D) -> void:
 	if _collected or not body.has_method("collect_pickup"):
 		return
 
-	var consumed := bool(body.call("collect_pickup", StringName(pickup_type), amount))
+	var consumed := bool(body.call("collect_pickup", StringName(pickup_type), _runtime_amount))
 	if not consumed:
 		GameState.notify("%s KAPASİTESİ DOLU" % display_name)
 		return
@@ -176,6 +146,3 @@ func _apply_visual() -> void:
 	if target != null:
 		target.texture = visual_texture
 		target.pixel_size = visual_pixel_size
-		target.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
-		target.double_sided = true
-		target.modulate = Color(1, 1, 1, 1)

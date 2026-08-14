@@ -9,6 +9,8 @@ Kapı açıklığı    : 4.60 m
 Kapı merkez Y    : 2.24 m
 Kırmızı ışık Y   : 5.50 m
 Beyaz ışık Y     : 6.82 m
+Beyaz ışık gölge : Kapalı (performans + shadow-acne/çizgi artefaktını önlemek için)
+Spawn tam ışık   : 3 ışık, energy 3.8, range 9.2 m, cone 42°, attenuation 0.3
 EXIT tabela Y    : 4.85 m
 Zemin/tavan grid : 5 x 5 m dünya ölçeği
 Texture standard : sürüm eki yok; klasör/dosya adları lowercase snake_case
@@ -18,3 +20,37 @@ Hellmagma	 : Position Y = -0.1
 Ravager		 : Position Y = -0.25
 Voidweaver       : Position Y = -0.02
 
+
+SAHNE OTORİTESİ
+---------------
+- Oynanış ve görsel tuning değerlerinin tek kaynağı sahne/Inspector ayarlarıdır.
+- Scriptler @export konfigürasyon değişkenlerini runtime sırasında değiştirmez.
+- Can gibi oyun sırasında değişmesi gereken değerler ayrı runtime değişkenlerinde tutulur.
+- Zorluk seçimini GameState yapar; can, hasar, hız, algılama, cooldown ve windup çarpanları enemy sahnesindedir.
+- RedViper, BadRedViper, Ravager, HellMagma ve Voidweaver'ın tüm export ayarları kendi .tscn dosyalarında açıkça saklanır.
+- Enemy zemin snap, aggro/ally davranışı, ölüm izi renk/ölçek/smoke ve frame Y offsetleri Inspector'dan düzenlenir.
+- Ravager/HellMagma/Voidweaver projectile uçuş, ışık ve impact zaman/ölçek ayarları projectile sahnelerindedir.
+- Pickup miktarı/zorluk çarpanları, patlayıcı varil can/hasar/efekt değerleri ve kapı kilit/otomatik kapanma ayarları sahne tarafından belirlenir.
+- Player hareket/can-zırh/hasar emme/kamera bob/adım/night vision ayarları player.tscn Inspector'ındadır.
+- WeaponController başlangıç mühimmatı, geçiş cooldown'u, hitscan maskesi ve otomatik recoil birikimi player.tscn içindeki WeaponController node'undadır.
+- Silah hasar, şarjör, atış hızı, reload, spread, menzil, recoil ve reserve ammo kapasitesi resources/weapons/*.tres Inspector'ındadır.
+- Kod yalnız runtime state'i (mevcut can, AI state, animasyon, geçici kilit, görünürlük vb.) yönetir; sahne konfigürasyonunu geri yazmaz.
+
+- Level 1 / Level 2 bölüm adı, ilk hedef, secret sayısı, intro gecikmesi ve automap grid/bounds/cell ayarları level sahnelerindeki Inspector değerlerinden gelir; level scriptinde harita tuning sabiti tutulmaz.
+- HUD ve Automap görünüm/renk/zoom ayarları `hud.tscn` içindeki ilgili node üzerinde saklanır. Automap kodu mouse/focus/clip gibi sahne ayarlarını `_ready()` içinde tekrar ezmez.
+- `world_piece.tscn` geometri boyutu/materyal/gölge/occlusion/trim ayarlarının; `ceiling_light_white_horror.tscn` ise beyaz ışık ve armatür ayarlarının tek kaynağıdır.
+
+
+BASTION-7 HUB STANDARDI
+-----------------------
+- Bastion-7 sahnesi: res://scenes/hub/bastion_7.tscn
+- Hub da 12 x 10 m modüler zemin/tavan ve 7.0 m net yükseklik standardını kullanır.
+- Aktif alanlar: Command Hall, Mission Control, Armory, Operator Platform.
+- Başlangıçta kilitli alanlar: Weapon Workshop, Engineering Bay, Research Lab, Firing Range.
+- Kilitli üs kapıları `permanently_locked` + `permanent_lock_message` Inspector ayarlarıyla yönetilir; kod kapı ayarını değiştirmez.
+- Level 1 ve Level 2 tamamlanınca önce bölüm sonuç ekranı, ardından Bastion-7 gelir.
+- Mission Control görev seçer; Operator Platform seçilen göreve deployment yapar. Görev yolları/isimleri Bastion-7 sahnesindeki `mission_paths` / `mission_labels` Inspector ayarlarıdır.
+- Bölümün campaign ilerleme değeri level sahnesindeki `campaign_completion_stage` Inspector ayarıdır; GameState yalnız runtime stage değerini tutar.
+- Armory rafları yalnız görevlerde daha önce açılmış silahları kuşandırır; kilitli silahı kod açmaz.
+- Hub terminal, silah rafı, automap, ambience ve ışık ayarları Inspector'dan düzenlenir.
+- Bastion-7 güvenli bölge olduğundan `allow_weapon_fire = false`; silah değiştirme serbest, ateş etme kapalıdır.

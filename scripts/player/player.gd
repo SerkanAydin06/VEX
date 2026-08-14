@@ -9,6 +9,33 @@ extends CharacterBody3D
 @export_category("Dayanıklılık")
 @export_range(1, 500, 1) var maximum_health := 100
 @export_range(0, 500, 1) var maximum_armor := 100
+@export_range(0, 500, 1) var initial_armor := 0
+@export_range(0.0, 1.0, 0.01) var armor_absorption_ratio := 0.60
+@export_range(0.0, 5.0, 0.05) var hurt_audio_cooldown := 0.90
+
+@export_category("Kamera ve Fizik")
+@export_range(-5.0, 0.0, 0.01) var floor_stick_velocity := -0.10
+@export_range(30.0, 89.0, 1.0) var pitch_limit_degrees := 82.0
+@export_range(0.0, 1.0, 0.01) var recoil_yaw_recovery_multiplier := 0.85
+
+@export_category("Kamera Sallanması ve Adım")
+@export_range(0.0, 1.0, 0.01) var bob_activation_threshold := 0.05
+@export_range(0.1, 4.0, 0.05) var bob_speed_multiplier := 1.70
+@export_range(0.1, 2.0, 0.05) var bob_horizontal_frequency_multiplier := 0.50
+@export_range(0.0, 0.2, 0.001) var bob_horizontal_amplitude := 0.025
+@export_range(0.0, 0.2, 0.001) var bob_vertical_amplitude := 0.035
+@export_range(1.0, 30.0, 0.5) var bob_lerp_speed := 12.0
+@export_range(1.0, 30.0, 0.5) var bob_return_lerp_speed := 10.0
+@export_range(0.5, 1.5, 0.01) var footstep_pitch_min := 0.94
+@export_range(0.5, 1.5, 0.01) var footstep_pitch_max := 1.06
+@export_range(0.05, 2.0, 0.01) var sprint_footstep_interval := 0.34
+@export_range(0.05, 2.0, 0.01) var walk_footstep_interval := 0.46
+@export_range(0.0, 2.0, 0.05) var sprint_detection_margin := 0.10
+
+@export_category("Night Vision")
+@export var night_vision_shader: Shader
+@export var night_vision_fallback_color := Color(0.05, 0.32, 0.08, 0.32)
+@export_range(-16, 16, 1) var night_vision_canvas_layer := -1
 
 @onready var view_pivot: Node3D = $ViewPivot
 @onready var camera: Camera3D = $ViewPivot/Camera3D
@@ -17,7 +44,7 @@ extends CharacterBody3D
 @onready var footstep_audio: AudioStreamPlayer3D = $FootstepAudio
 @onready var hurt_audio: AudioStreamPlayer = $HurtAudio
 
-var health := 100
+var health := 0
 var armor := 0
 var keys: Array[StringName] = []
 var is_dead := false
@@ -27,8 +54,6 @@ var _camera_rest_position := Vector3.ZERO
 var _gravity := 20.0
 var _footstep_remaining := 0.0
 var _hurt_audio_cooldown_remaining := 0.0
-const HURT_AUDIO_COOLDOWN := 0.9
-const NIGHT_VISION_SHADER_PATH := "res://shaders/night_vision.gdshader"
 
 var _has_night_vision := false
 var _night_vision_enabled := false
@@ -45,6 +70,7 @@ func _ready() -> void:
 	_camera_rest_position = camera.position
 	_gravity = float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 	health = maximum_health
+	armor = clampi(initial_armor, 0, maximum_armor)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GameState.register_player(self)
 	_setup_night_vision_overlay()
@@ -69,7 +95,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
 	else:
-		velocity.y = -0.1
+		velocity.y = floor_stick_velocity
 	move_and_slide()
 	_update_recoil(delta)
 	_update_view_bob(delta, input_vector.length(), target_speed)
@@ -99,8 +125,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		rotate_y(deg_to_rad(-mouse_event.relative.x * SettingsManager.mouse_sensitivity))
 		_pitch = clampf(
 			_pitch - deg_to_rad(mouse_event.relative.y * SettingsManager.mouse_sensitivity),
-			deg_to_rad(-82.0),
-			deg_to_rad(82.0)
+			deg_to_rad(-pitch_limit_degrees),
+			deg_to_rad(pitch_limit_degrees)
 		)
 		_apply_view_rotation()
 	elif event.is_action_pressed("interact"):
@@ -193,7 +219,7 @@ func collect_pickup(pickup_type: StringName, amount: int) -> bool:
 func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = null) -> void:
 	if is_dead or amount <= 0:
 		return
-	var absorbed := mini(armor, int(round(float(amount) * 0.6)))
+	var absorbed := mini(armor, int(round(float(amount) * armor_absorption_ratio)))
 	armor -= absorbed
 	var health_damage := amount - absorbed
 	health = maxi(0, health - health_damage)
@@ -209,7 +235,7 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		if hurt_audio.playing:
 			hurt_audio.stop()
 		hurt_audio.play()
-		_hurt_audio_cooldown_remaining = HURT_AUDIO_COOLDOWN
+		_hurt_audio_cooldown_remaining = hurt_audio_cooldown
 
 	broadcast_state()
 	if health <= 0:
@@ -264,7 +290,7 @@ func _update_recoil(delta: float) -> void:
 	_recoil_yaw_degrees = move_toward(
 		_recoil_yaw_degrees,
 		0.0,
-		_recoil_recovery_degrees_per_second * 0.85 * delta
+		_recoil_recovery_degrees_per_second * recoil_yaw_recovery_multiplier * delta
 	)
 	_apply_view_rotation()
 	_publish_recoil_to_hud()
@@ -273,8 +299,8 @@ func _update_recoil(delta: float) -> void:
 func _apply_view_rotation() -> void:
 	view_pivot.rotation.x = clampf(
 		_pitch + deg_to_rad(_recoil_pitch_degrees),
-		deg_to_rad(-82.0),
-		deg_to_rad(82.0)
+		deg_to_rad(-pitch_limit_degrees),
+		deg_to_rad(pitch_limit_degrees)
 	)
 	view_pivot.rotation.y = deg_to_rad(_recoil_yaw_degrees)
 
@@ -337,7 +363,7 @@ func _setup_night_vision_overlay() -> void:
 
 	# HUD layer 0'da kalır. -1 layer, efekti 3D dünya görüntüsüne uygular
 	# fakat HUD/harita/menü yazılarını yeşile boyamaz.
-	_night_vision_layer.layer = -1
+	_night_vision_layer.layer = night_vision_canvas_layer
 	add_child(_night_vision_layer)
 
 	_night_vision_rect = ColorRect.new()
@@ -348,14 +374,13 @@ func _setup_night_vision_overlay() -> void:
 	_night_vision_rect.color = Color.WHITE
 	_night_vision_rect.visible = false
 
-	var shader := load(NIGHT_VISION_SHADER_PATH) as Shader
-	if shader != null:
+	if night_vision_shader != null:
 		var material := ShaderMaterial.new()
-		material.shader = shader
+		material.shader = night_vision_shader
 		_night_vision_rect.material = material
 	else:
 		# Shader bulunamazsa tamamen bozulmak yerine basit yeşil filtre kalır.
-		_night_vision_rect.color = Color(0.05, 0.32, 0.08, 0.32)
+		_night_vision_rect.color = night_vision_fallback_color
 
 
 func _set_night_vision_enabled(enabled: bool, show_message := true) -> void:
@@ -377,20 +402,30 @@ func _set_night_vision_enabled(enabled: bool, show_message := true) -> void:
 
 func _update_view_bob(delta: float, movement_amount: float, movement_speed: float) -> void:
 	_footstep_remaining = maxf(0.0, _footstep_remaining - delta)
-	if is_on_floor() and movement_amount > 0.05:
-		_bob_time += delta * movement_speed * 1.7
+	if is_on_floor() and movement_amount > bob_activation_threshold:
+		_bob_time += delta * movement_speed * bob_speed_multiplier
 		var bob_offset := Vector3(
-			cos(_bob_time * 0.5) * 0.025,
-			sin(_bob_time) * 0.035,
+			cos(_bob_time * bob_horizontal_frequency_multiplier) * bob_horizontal_amplitude,
+			sin(_bob_time) * bob_vertical_amplitude,
 			0.0
 		)
-		camera.position = camera.position.lerp(_camera_rest_position + bob_offset, delta * 12.0)
+		camera.position = camera.position.lerp(
+			_camera_rest_position + bob_offset,
+			delta * bob_lerp_speed
+		)
 		if footstep_audio.stream != null and _footstep_remaining <= 0.0:
-			footstep_audio.pitch_scale = randf_range(0.94, 1.06)
+			footstep_audio.pitch_scale = randf_range(footstep_pitch_min, footstep_pitch_max)
 			footstep_audio.play()
-			_footstep_remaining = 0.34 if movement_speed > walk_speed + 0.1 else 0.46
+			_footstep_remaining = (
+				sprint_footstep_interval
+				if movement_speed > walk_speed + sprint_detection_margin
+				else walk_footstep_interval
+			)
 	else:
-		camera.position = camera.position.lerp(_camera_rest_position, delta * 10.0)
+		camera.position = camera.position.lerp(
+			_camera_rest_position,
+			delta * bob_return_lerp_speed
+		)
 
 
 func _resolve_interactable(collider: Object) -> Node:

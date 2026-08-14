@@ -1,0 +1,44 @@
+BASTION-7 SON GÖRSEL ASSET LİSTESİ
+=================================
+
+Şu an sahne eksiksiz oynanabilir placeholder geometri/Label3D ile kuruludur.
+Aşağıdaki görseller daha sonra kullanıcı tarafından hazırlanıp mevcut placeholder'ların yerine takılabilir:
+
+1. bastion_7_wall_logo.png
+   - Büyük Command Hall VEX / BASTION-7 duvar amblemi.
+
+2. mission_control_screen.png
+   - Mission Control terminal ana ekranı.
+
+3. deployment_screen.png
+   - Operator Platform / deployment terminal ekranı.
+
+4. armory_sign.png
+5. mission_control_sign.png
+6. research_sign.png
+7. engineering_sign.png
+8. weapon_workshop_sign.png
+9. firing_range_sign.png
+   - Oda tabelaları.
+
+10. power_offline_screen.png
+11. access_restricted_screen.png
+    - Başlangıçta kapalı alanların durum ekranları.
+
+12. armory_weapon_rack.png
+    - Pistol / Shotgun / AK47 / MP90 fiziksel duvar rafı çerçevesi.
+
+13. operator_platform.png
+    - Göreve çıkış platform/pod görseli.
+
+14. bastion_monitor_01.png / bastion_monitor_02.png / bastion_monitor_03.png
+    - Command Hall dekoratif askeri monitörleri.
+
+15. bastion_wall_variant.png
+    - İleride ana üs ile görev tesislerini görsel olarak ayırmak için isteğe bağlı özel duvar varyantı.
+
+16. firing_range_target.png
+    - Atış poligonu hedef görseli.
+
+Yeni zemin, standart tavan, standart kapı veya standart beyaz/kırmızı ışık görseli gerekmiyor;
+Bastion-7 mevcut VEX dünya standardını bunlarda aynen kullanıyor.

@@ -1,16 +1,35 @@
 class_name VexWeaponController
 extends Node
 
+@export_category("Başlangıç")
 @export var weapon_definitions: Array[WeaponDefinition] = []
+@export var initial_unlocked_weapons: Array[StringName] = [&"pistol"]
+@export var initial_weapon_id: StringName = &"pistol"
+@export var fill_initial_magazines := true
 @export var initial_bullets := 48
 @export var initial_shells := 0
 @export var initial_rifle_ammo := 0
 @export var initial_mp90_ammo := 0
 
-var unlocked_weapons: Array[StringName] = [&"pistol"]
-var magazines: Dictionary = {&"pistol": 12, &"shotgun": 0, &"ak47": 0, &"mp90": 0}
-var reserve_ammo: Dictionary = {&"bullets": 48, &"shells": 0, &"rifle_ammo": 0, &"mp90_ammo": 0}
-var current_weapon_id: StringName = &"pistol"
+@export_category("Ateş ve Geçiş")
+@export_range(0.0, 2.0, 0.01) var equip_cooldown := 0.15
+@export_range(0.0, 2.0, 0.01) var empty_trigger_cooldown := 0.25
+@export_flags_3d_physics var hitscan_collision_mask := 1 | 4 | 8
+
+@export_category("Otomatik Silah Sekme Birikimi")
+@export_range(0.0, 2.0, 0.01) var burst_reset_min_time := 0.22
+@export_range(0.0, 8.0, 0.1) var burst_reset_fire_interval_multiplier := 2.5
+@export_range(0.0, 3.0, 0.01) var automatic_vertical_base_multiplier := 0.78
+@export_range(0.0, 1.0, 0.01) var automatic_vertical_per_shot := 0.07
+@export_range(0.0, 3.0, 0.01) var automatic_vertical_max_multiplier := 1.35
+@export_range(0.0, 3.0, 0.01) var automatic_horizontal_base_multiplier := 0.68
+@export_range(0.0, 1.0, 0.01) var automatic_horizontal_per_shot := 0.09
+@export_range(0.0, 3.0, 0.01) var automatic_horizontal_max_multiplier := 1.45
+
+var unlocked_weapons: Array[StringName] = []
+var magazines: Dictionary = {}
+var reserve_ammo: Dictionary = {}
+var current_weapon_id: StringName = &""
 var is_reloading := false
 var _cooldown_remaining := 0.0
 var _definitions_by_id: Dictionary = {}
@@ -21,12 +40,36 @@ var _burst_reset_remaining := 0.0
 
 func _ready() -> void:
 	_player = get_parent() as VexPlayer
+	for definition: WeaponDefinition in weapon_definitions:
+		if definition == null:
+			continue
+		_definitions_by_id[definition.weapon_id] = definition
+		magazines[definition.weapon_id] = 0
+		if not reserve_ammo.has(definition.ammo_type):
+			reserve_ammo[definition.ammo_type] = 0
+
+	unlocked_weapons.clear()
+	for weapon_id in initial_unlocked_weapons:
+		if _definitions_by_id.has(weapon_id) and not unlocked_weapons.has(weapon_id):
+			unlocked_weapons.append(weapon_id)
+	if unlocked_weapons.is_empty() and not weapon_definitions.is_empty():
+		var fallback_definition := weapon_definitions[0]
+		if fallback_definition != null:
+			unlocked_weapons.append(fallback_definition.weapon_id)
+
+	if fill_initial_magazines:
+		for weapon_id in unlocked_weapons:
+			var definition := _definitions_by_id.get(weapon_id) as WeaponDefinition
+			if definition != null:
+				magazines[weapon_id] = definition.magazine_size
+
 	reserve_ammo[&"bullets"] = initial_bullets
 	reserve_ammo[&"shells"] = initial_shells
 	reserve_ammo[&"rifle_ammo"] = initial_rifle_ammo
 	reserve_ammo[&"mp90_ammo"] = initial_mp90_ammo
-	for definition: WeaponDefinition in weapon_definitions:
-		_definitions_by_id[definition.weapon_id] = definition
+	current_weapon_id = initial_weapon_id
+	if not unlocked_weapons.has(current_weapon_id):
+		current_weapon_id = unlocked_weapons[0] if not unlocked_weapons.is_empty() else &""
 	call_deferred("broadcast_state")
 
 
@@ -75,7 +118,7 @@ func switch_to(weapon_id: StringName) -> void:
 	if is_reloading or not unlocked_weapons.has(weapon_id) or not _definitions_by_id.has(weapon_id):
 		return
 	current_weapon_id = weapon_id
-	_cooldown_remaining = 0.15
+	_cooldown_remaining = equip_cooldown
 	_burst_shots = 0
 	_burst_reset_remaining = 0.0
 	broadcast_state()
@@ -112,16 +155,9 @@ func reload() -> void:
 
 
 func add_ammo(ammo_type: StringName, amount: int) -> int:
-	var maximum := 60
-	match ammo_type:
-		&"bullets":
-			maximum = 180
-		&"shells":
-			maximum = 60
-		&"rifle_ammo":
-			maximum = 240
-		&"mp90_ammo":
-			maximum = 300
+	var maximum := _get_reserve_ammo_capacity(ammo_type)
+	if maximum <= 0:
+		return 0
 	var current := int(reserve_ammo.get(ammo_type, 0))
 	if current >= maximum or amount <= 0:
 		return 0
@@ -129,6 +165,14 @@ func add_ammo(ammo_type: StringName, amount: int) -> int:
 	reserve_ammo[ammo_type] = current + accepted
 	broadcast_state()
 	return accepted
+
+
+func _get_reserve_ammo_capacity(ammo_type: StringName) -> int:
+	var maximum := 0
+	for definition: WeaponDefinition in weapon_definitions:
+		if definition != null and definition.ammo_type == ammo_type:
+			maximum = maxi(maximum, definition.reserve_ammo_capacity)
+	return maximum
 
 
 func unlock_weapon(weapon_id: StringName, bonus_ammo: int) -> void:
@@ -167,16 +211,23 @@ func restore_state(state: Dictionary) -> void:
 		broadcast_state()
 		return
 	unlocked_weapons.clear()
-	var stored_weapons: Array = state.get("unlocked_weapons", [&"pistol"]) as Array
+	var stored_weapons: Array = state.get("unlocked_weapons", initial_unlocked_weapons) as Array
 	for stored_weapon: Variant in stored_weapons:
 		unlocked_weapons.append(StringName(str(stored_weapon)))
 	if unlocked_weapons.is_empty():
-		unlocked_weapons.append(&"pistol")
+		for weapon_id in initial_unlocked_weapons:
+			if _definitions_by_id.has(weapon_id):
+				unlocked_weapons.append(weapon_id)
+				break
 	magazines = (state.get("magazines", magazines) as Dictionary).duplicate(true)
 	reserve_ammo = (state.get("reserve_ammo", reserve_ammo) as Dictionary).duplicate(true)
-	current_weapon_id = StringName(str(state.get("current_weapon_id", &"pistol")))
+	current_weapon_id = StringName(str(state.get("current_weapon_id", initial_weapon_id)))
 	if not unlocked_weapons.has(current_weapon_id):
-		current_weapon_id = unlocked_weapons[0]
+		current_weapon_id = (
+			unlocked_weapons[0]
+			if not unlocked_weapons.is_empty()
+			else &""
+		)
 	broadcast_state()
 
 
@@ -188,7 +239,7 @@ func _try_fire() -> void:
 	if magazine <= 0:
 		_play_hud_action(&"empty")
 		GameState.notify("ŞARJÖR BOŞ — R İLE DOLDUR")
-		_cooldown_remaining = 0.25
+		_cooldown_remaining = empty_trigger_cooldown
 		return
 	magazines[current_weapon_id] = magazine - 1
 	_cooldown_remaining = weapon.fire_interval
@@ -203,13 +254,24 @@ func _apply_recoil(weapon: WeaponDefinition) -> void:
 		return
 
 	_burst_shots += 1
-	_burst_reset_remaining = maxf(0.22, weapon.fire_interval * 2.5)
+	_burst_reset_remaining = maxf(
+		burst_reset_min_time,
+		weapon.fire_interval * burst_reset_fire_interval_multiplier
+	)
 
 	var vertical_multiplier := 1.0
 	var horizontal_multiplier := 1.0
 	if weapon.automatic:
-		vertical_multiplier = minf(1.35, 0.78 + float(_burst_shots) * 0.07)
-		horizontal_multiplier = minf(1.45, 0.68 + float(_burst_shots) * 0.09)
+		vertical_multiplier = minf(
+			automatic_vertical_max_multiplier,
+			automatic_vertical_base_multiplier
+			+ float(_burst_shots) * automatic_vertical_per_shot
+		)
+		horizontal_multiplier = minf(
+			automatic_horizontal_max_multiplier,
+			automatic_horizontal_base_multiplier
+			+ float(_burst_shots) * automatic_horizontal_per_shot
+		)
 
 	var vertical_kick: float = (
 		float(weapon.recoil_vertical_degrees) * vertical_multiplier
@@ -265,7 +327,7 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 		var query := PhysicsRayQueryParameters3D.create(
 			origin,
 			origin + direction * weapon.maximum_range,
-			1 | 4 | 8,
+			hitscan_collision_mask,
 			[_player.get_rid()]
 		)
 		query.collide_with_areas = true

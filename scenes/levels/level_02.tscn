@@ -51,6 +51,22 @@ adjustment_brightness = 1.15
 
 [node name="Level02_BrokenSpine" type="Node3D"]
 script = ExtResource("1_script")
+map_revision = "VEX02-R47-MODULAR-STANDARD"
+campaign_completion_stage = 2
+level_display_name = "VEX-02 // KIRIK OMURGA"
+first_objective = "BATI KANADINDA MAVİ ERİŞİM KARTINI BUL"
+total_secrets = 2
+intro_message_delay = 0.5
+automap_title = "TESİS HARİTASI // VEX-02"
+automap_columns = 9
+automap_rows = 7
+automap_world_min = Vector2(-54, -35)
+automap_world_max = Vector2(54, 35)
+automap_walkable_cells = Array[Vector2i]([Vector2i(1, 0), Vector2i(2, 0), Vector2i(7, 0), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), Vector2i(6, 1), Vector2i(7, 1), Vector2i(0, 2), Vector2i(1, 2), Vector2i(3, 2), Vector2i(6, 2), Vector2i(0, 3), Vector2i(2, 3), Vector2i(3, 3), Vector2i(4, 3), Vector2i(5, 3), Vector2i(6, 3), Vector2i(7, 3), Vector2i(8, 3), Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(7, 4), Vector2i(8, 4), Vector2i(0, 5), Vector2i(1, 5), Vector2i(6, 5), Vector2i(7, 5), Vector2i(8, 5), Vector2i(6, 6), Vector2i(7, 6), Vector2i(8, 6)])
+automap_start_cell = Vector2i(4, 3)
+automap_exit_cell = Vector2i(8, 6)
+automap_merge_adjacent_cells = true
+automap_show_room_numbers = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." groups=["brightness_environment"]]
 environment = SubResource("Environment_level")
@@ -1282,6 +1298,27 @@ position = Vector3(-12, 6.82, 0)
 
 [node name="CeilingWhite_C4_R3" parent="RoomLights" instance=ExtResource("26_room_light")]
 position = Vector3(0, 6.82, 0)
+light_energy = 3.8
+light_range = 9.2
+cone_angle = 42.0
+distance_attenuation = 0.3
+shadow_enabled = false
+
+[node name="CeilingWhite_SpawnFill_A" parent="RoomLights" instance=ExtResource("26_room_light")]
+position = Vector3(-3, 6.82, 0)
+light_energy = 3.8
+light_range = 9.2
+cone_angle = 42.0
+distance_attenuation = 0.3
+shadow_enabled = false
+
+[node name="CeilingWhite_SpawnFill_B" parent="RoomLights" instance=ExtResource("26_room_light")]
+position = Vector3(3, 6.82, 0)
+light_energy = 3.8
+light_range = 9.2
+cone_angle = 42.0
+distance_attenuation = 0.3
+shadow_enabled = false
 
 [node name="CeilingWhite_C5_R3" parent="RoomLights" instance=ExtResource("26_room_light")]
 position = Vector3(12, 6.82, 0)
@@ -1809,6 +1846,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 1.5, 20)
 secret_id = &"v2_secret_mp90"
 
 [node name="FinishSwitch" parent="Triggers" instance=ExtResource("11_finish")]
+next_level_path = "res://scenes/hub/bastion_7.tscn"
 transform = Transform3D(-0.000004, 0, -1, 0, 1, 0, 1, 0, -0.000004, 53.58, 1.6, 30)
 display_name = "KIRIK OMURGA TAHLİYE KONTROLÜ"
 required_enemy_id = &"v2_badredviper_final_guard"

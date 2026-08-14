@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3]
+[gd_scene load_steps=34 format=3]
 
 [ext_resource type="Script" path="res://scripts/actors/badredviper.gd" id="1_script"]
 [ext_resource type="AudioStream" path="res://assets/audio/enemy_hurt_pro.wav" id="2_hurt_audio"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/redviper_attack.mp3" id="4_attack_audio"]
 [ext_resource type="Texture2D" path="res://assets/enemies/badredviper/badredviper_spritesheet.png" id="5_sheet"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="29_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_badredviper"]
 radius = 0.82
@@ -229,6 +230,26 @@ idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
 idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
 corpse_floor_clearance = 0.02
 death_frame_y_offsets = PackedFloat32Array(0, -0.015, -0.03, -0.04)
+difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
+difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
+difficulty_speed_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.15)
+difficulty_detection_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.2)
+difficulty_cooldown_multipliers = PackedFloat32Array(1.25, 1, 0.85, 0.7)
+difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
+floor_collision_mask = 1
+floor_snap_max_correction = 2.0
+floor_snap_ray_start_height = 0.5
+floor_snap_ray_extra_depth = 2.0
+aggro_on_damage = true
+alert_allies_on_damage = true
+receive_ally_alerts = true
+burn_remains_scene = ExtResource("31_burn")
+burn_remains_scale_multiplier = 1.26
+burn_scorch_tint = Color(0.4, 0.03, 0.03, 0.97)
+burn_ember_tint = Color(0.72, 0.08, 0.08, 0.42)
+burn_ember_emission_energy = 0.18
+burn_smoke_enabled = false
+alert_allies_on_detection = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0532, 0)

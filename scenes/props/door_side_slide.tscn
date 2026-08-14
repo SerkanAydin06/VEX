@@ -34,6 +34,20 @@ opening_mode = 1
 opening_height = 4.2
 opening_width = 2.47
 opening_time = 0.75
+safety_collision_mask = 6
+minimum_motion_time = 0.05
+display_name = "GÜVENLİK KAPISI"
+locked = false
+required_key = &"blue"
+required_keys = Array[StringName]([])
+required_key_label = ""
+objective_on_unlock = ""
+permanently_locked = false
+permanent_lock_message = "POWER OFFLINE"
+auto_close = true
+auto_close_delay = 4.0
+safety_recheck_time = 0.2
+safety_clear_time = 0.5
 
 [node name="DoorPanel" type="AnimatableBody3D" parent="."]
 position = Vector3(0, 0, -1.15)

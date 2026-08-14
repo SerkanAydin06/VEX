@@ -11,6 +11,17 @@ collision_layer = 0
 collision_mask = 2
 monitorable = false
 script = ExtResource("1_script")
+difficulty_amount_multipliers = PackedFloat32Array(1.35, 1, 0.8, 0.6)
+pickup_id = &"pickup"
+pickup_type = "health"
+amount = 25
+display_name = "NESNE"
+spawn_max_difficulty = 3
+scale_amount_with_difficulty = true
+visual_texture = null
+visual_pixel_size = 0.00255
+bob_height = 0.09
+bob_speed = 1.8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape_pickup")

@@ -1,12 +1,23 @@
 class_name VexRavagerProjectile
 extends Area3D
 
+@export_category("01 - Uçuş")
 @export_range(1.0, 40.0, 0.5) var speed := 11.0
 @export_range(0.2, 10.0, 0.1) var lifetime := 4.0
 @export_range(0.0, 1.0, 0.01) var impact_surface_offset := 0.32
+
+@export_category("02 - Işık")
 @export_range(0.0, 6.0, 0.05) var light_pulse_amplitude := 0.32
 @export_range(0.0, 20.0, 0.1) var light_pulse_speed := 8.0
 @export_range(0.0, 8.0, 0.05) var impact_light_energy := 4.4
+@export_range(0.0, 2.0, 0.01) var impact_light_fade_duration := 0.26
+
+@export_category("03 - Impact Animasyonu")
+@export_range(0.05, 3.0, 0.01) var impact_start_scale_multiplier := 0.92
+@export_range(0.05, 4.0, 0.01) var impact_end_scale_multiplier := 1.08
+@export_range(0.0, 2.0, 0.01) var impact_scale_duration := 0.22
+@export_range(0.0, 2.0, 0.01) var impact_fade_delay := 0.14
+@export_range(0.0, 2.0, 0.01) var impact_fade_duration := 0.12
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var visual: SpriteBase3D = $Visual
@@ -19,12 +30,16 @@ var direction := Vector3.FORWARD
 var source: Node = null
 var _active := true
 var _base_light_energy := 0.0
+var _base_impact_scale := Vector3.ONE
+var _base_impact_modulate := Color.WHITE
 var _pulse_time := 0.0
 
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	_base_light_energy = projectile_light.light_energy
+	_base_impact_scale = impact_visual.scale
+	_base_impact_modulate = impact_visual.modulate
 	if visual is AnimatedSprite3D:
 		(visual as AnimatedSprite3D).play(&"default")
 	if impact_visual is AnimatedSprite3D:
@@ -111,29 +126,39 @@ func _impact() -> void:
 	collision_shape.set_deferred("disabled", true)
 	visual.visible = false
 	impact_visual.visible = true
-	impact_visual.modulate = Color(1, 1, 1, 1)
-	impact_visual.scale = Vector3(0.92, 0.92, 0.92)
+	impact_visual.modulate = _base_impact_modulate
+	impact_visual.scale = _base_impact_scale * impact_start_scale_multiplier
 	projectile_light.light_energy = impact_light_energy
 	if impact_audio.stream != null:
 		impact_audio.play()
+
+	var impact_tween := create_tween().set_parallel(true)
+	impact_tween.tween_property(
+		impact_visual,
+		"scale",
+		_base_impact_scale * impact_end_scale_multiplier,
+		impact_scale_duration
+	)
+	impact_tween.tween_property(
+		projectile_light,
+		"light_energy",
+		0.0,
+		impact_light_fade_duration
+	)
+	var fade_track := impact_tween.tween_property(
+		impact_visual,
+		"modulate:a",
+		0.0,
+		impact_fade_duration
+	)
+	fade_track.set_delay(impact_fade_delay)
 
 	if impact_visual is AnimatedSprite3D:
 		var animated_impact := impact_visual as AnimatedSprite3D
 		animated_impact.frame = 0
 		animated_impact.play(&"default")
-		var impact_tween := create_tween().set_parallel(true)
-		impact_tween.tween_property(impact_visual, "scale", Vector3(1.08, 1.08, 1.08), 0.22)
-		impact_tween.tween_property(projectile_light, "light_energy", 0.0, 0.26)
-		var fade_track := impact_tween.tween_property(impact_visual, "modulate:a", 0.0, 0.12)
-		fade_track.set_delay(0.14)
 		await animated_impact.animation_finished
-		await impact_tween.finished
-	else:
-		var fallback_tween := create_tween().set_parallel(true)
-		fallback_tween.tween_property(impact_visual, "scale", Vector3(1.35, 1.35, 1.35), 0.14)
-		fallback_tween.tween_property(impact_visual, "modulate:a", 0.0, 0.16)
-		fallback_tween.tween_property(projectile_light, "light_energy", 0.0, 0.16)
-		await fallback_tween.finished
+	await impact_tween.finished
 
 	if impact_audio.stream != null and impact_audio.playing:
 		await impact_audio.finished

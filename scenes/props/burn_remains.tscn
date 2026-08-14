@@ -4,3 +4,12 @@
 
 [node name="BurnRemains" type="Node3D"]
 script = ExtResource("1_script")
+scorch_size = 1.0
+scorch_tint = Color(0.46, 0.05, 0.05, 0.92)
+ember_tint = Color(0.72, 0.1, 0.1, 0.36)
+ember_emission_energy = 0.16
+smoke_duration = 8.0
+smoke_alpha = 0.14
+ground_offset = 0.02
+smoke_enabled = false
+smoke_wisp_count = 2

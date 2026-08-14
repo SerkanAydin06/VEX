@@ -11,6 +11,7 @@ extends Resource
 @export_range(0.1, 5.0, 0.05) var reload_duration := 1.1
 @export_range(0.0, 20.0, 0.1) var spread_degrees := 1.0
 @export_range(5.0, 200.0, 1.0) var maximum_range := 80.0
+@export_range(1, 1000, 1) var reserve_ammo_capacity := 180
 @export var automatic := false
 
 @export_category("Sekme")

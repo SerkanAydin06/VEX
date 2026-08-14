@@ -9,6 +9,7 @@ extends Node3D
 
 @export_category("Finish Switch Görseli")
 @export var visual_world_size := Vector2(0.90, 1.30)
+@export var activated_modulate := Color(0.55, 0.65, 0.55, 1.0)
 
 @onready var finish_switch_visual: Sprite3D = $PanelBody/FinishSwitchVisual
 
@@ -43,7 +44,7 @@ func interact(player: Node) -> void:
 		return
 
 	_used = true
-	finish_switch_visual.modulate = Color(0.55, 0.65, 0.55, 1.0)
+	finish_switch_visual.modulate = activated_modulate
 	GameState.notify("BÖLÜM ÇIKIŞI ETKİNLEŞTİRİLDİ")
 	GameState.call_deferred("complete_level", next_level_path)
 

@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/hub/hub_terminal.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="Material_body"]
+albedo_color = Color(0.055, 0.065, 0.075, 1)
+metallic = 0.72
+roughness = 0.34
+
+[sub_resource type="StandardMaterial3D" id="Material_screen"]
+albedo_color = Color(0.025, 0.075, 0.09, 1)
+emission_enabled = true
+emission = Color(0.05, 0.56, 0.68, 1)
+emission_energy_multiplier = 1.25
+metallic = 0.18
+roughness = 0.24
+
+[sub_resource type="BoxMesh" id="BoxMesh_body"]
+size = Vector3(1.8, 1.3, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_screen"]
+size = Vector3(1.52, 0.62, 0.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape_terminal"]
+size = Vector3(1.8, 1.3, 0.8)
+
+[node name="HubTerminal" type="StaticBody3D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_script")
+terminal_mode = 2
+display_name = "BASTION TERMİNALİ"
+info_message = "BASTION-7 SİSTEMİ ÇEVRİMİÇİ"
+offline = false
+offline_message = "POWER OFFLINE"
+screen_header = "VEX // BASTION-7"
+active_color = Color(0.32, 0.95, 1, 1)
+offline_color = Color(1, 0.2, 0.08, 1)
+
+[node name="Body" type="MeshInstance3D" parent="."]
+material_override = SubResource("Material_body")
+mesh = SubResource("BoxMesh_body")
+
+[node name="Screen" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.18, -0.425)
+material_override = SubResource("Material_screen")
+mesh = SubResource("BoxMesh_screen")
+
+[node name="ScreenLabel" type="Label3D" parent="."]
+position = Vector3(0, 0.2, -0.47)
+billboard = 1
+pixel_size = 0.0023
+font_size = 24
+outline_size = 6
+text = "VEX // BASTION-7\nSYSTEM ONLINE"
+horizontal_alignment = 1
+vertical_alignment = 1
+modulate = Color(0.32, 0.95, 1, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape_terminal")

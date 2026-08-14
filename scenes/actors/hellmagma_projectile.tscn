@@ -99,6 +99,12 @@ impact_surface_offset = 0.42
 light_pulse_amplitude = 0.45
 light_pulse_speed = 9.0
 impact_light_energy = 5.8
+impact_light_fade_duration = 0.26
+impact_start_scale_multiplier = 0.92
+impact_end_scale_multiplier = 1.08
+impact_scale_duration = 0.22
+impact_fade_delay = 0.14
+impact_fade_duration = 0.12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape_hellmagma_projectile")

@@ -12,10 +12,12 @@ signal level_stats_changed(kills: int, total_enemies: int, secrets: int, total_s
 signal hit_confirmed
 signal damage_received(amount: int)
 signal player_died
+signal hub_mission_changed(path: String, label: String)
 
 const MAIN_MENU_PATH := "res://scenes/ui/main_menu.tscn"
 const LEVEL_01_PATH := "res://scenes/levels/level_01.tscn"
 const LEVEL_02_PATH := "res://scenes/levels/level_02.tscn"
+const BASTION_7_PATH := "res://scenes/hub/bastion_7.tscn"
 const LEVEL_COMPLETE_PATH := "res://scenes/ui/level_complete.tscn"
 const SAVE_PATH := "user://vex_save.cfg"
 const SAVE_VERSION := 3
@@ -40,6 +42,9 @@ var current_level_path := LEVEL_01_PATH
 var pending_next_level_path := ""
 var pending_player_restore_state: Dictionary = {}
 var current_level_start_state: Dictionary = {}
+var campaign_stage := 0
+var hub_selected_mission_path := ""
+var hub_selected_mission_label := ""
 
 
 func start_new_game() -> void:
@@ -51,6 +56,9 @@ func start_new_game() -> void:
 	pending_player_restore_state = {}
 	current_level_start_state = {}
 	pending_next_level_path = ""
+	hub_selected_mission_path = ""
+	hub_selected_mission_label = ""
+	campaign_stage = 0
 	current_level_path = LEVEL_01_PATH
 	_reset_level_counters()
 	active_difficulty = SettingsManager.difficulty
@@ -91,6 +99,8 @@ func return_to_main_menu() -> void:
 	hud = null
 	pending_next_level_path = ""
 	pending_player_restore_state = {}
+	hub_selected_mission_path = ""
+	hub_selected_mission_label = ""
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().change_scene_to_file(MAIN_MENU_PATH)
 
@@ -252,6 +262,7 @@ func complete_level(next_level_path: String = "") -> void:
 	if current_scene != null and current_scene.has_method("get_level_display_name"):
 		level_label = str(current_scene.call("get_level_display_name"))
 
+	_register_campaign_completion(current_scene)
 	pending_next_level_path = next_level_path
 	if next_level_path != "" and player != null and is_instance_valid(player) and player.has_method("capture_run_state"):
 		var carry_state: Dictionary = player.call("capture_run_state")
@@ -299,6 +310,68 @@ func continue_to_next_level() -> void:
 	run_started_msec = Time.get_ticks_msec()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	get_tree().change_scene_to_file(current_level_path)
+
+
+func pending_next_is_hub() -> bool:
+	return pending_next_level_path == BASTION_7_PATH
+
+
+func select_hub_mission(mission_path: String, mission_label: String) -> bool:
+	if mission_path.is_empty():
+		hub_selected_mission_path = ""
+		hub_selected_mission_label = ""
+		hub_mission_changed.emit("", "")
+		notify("BASTION-7 // YENİ OPERASYON HENÜZ HAZIR DEĞİL")
+		return false
+	hub_selected_mission_path = mission_path
+	hub_selected_mission_label = mission_label
+	hub_mission_changed.emit(hub_selected_mission_path, hub_selected_mission_label)
+	notify("OPERASYON SEÇİLDİ // %s" % hub_selected_mission_label)
+	set_objective("OPERATOR PLATFORMUNA GİT")
+	return true
+
+
+func has_hub_selected_mission() -> bool:
+	return not hub_selected_mission_path.is_empty()
+
+
+func get_hub_selected_mission_label() -> String:
+	return hub_selected_mission_label
+
+
+func deploy_selected_hub_mission() -> bool:
+	if hub_selected_mission_path.is_empty():
+		notify("ÖNCE MISSION CONTROL TERMİNALİNDEN GÖREV SEÇ")
+		set_objective("MISSION CONTROL TERMİNALİNİ KULLAN")
+		return false
+
+	var carry_state: Dictionary = {}
+	if player != null and is_instance_valid(player) and player.has_method("capture_run_state"):
+		carry_state = player.call("capture_run_state")
+		carry_state.erase("position")
+		carry_state.erase("rotation_y")
+		carry_state["keys"] = []
+
+	var next_path := hub_selected_mission_path
+	hub_selected_mission_path = ""
+	hub_selected_mission_label = ""
+	loading_saved_state = false
+	saved_run_state = {}
+	current_level_path = next_path
+	_reset_level_counters()
+	current_level_start_state = carry_state.duplicate(true)
+	pending_player_restore_state = carry_state
+	run_started_msec = Time.get_ticks_msec()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	get_tree().change_scene_to_file(current_level_path)
+	return true
+
+
+func _register_campaign_completion(current_scene: Node) -> void:
+	if current_scene == null or not current_scene.has_method("get_campaign_completion_stage"):
+		return
+	var completed_stage := int(current_scene.call("get_campaign_completion_stage"))
+	campaign_stage = maxi(campaign_stage, completed_stage)
 
 
 func _clear_saved_run() -> void:

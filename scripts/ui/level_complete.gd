@@ -30,7 +30,11 @@ func _ready() -> void:
 		completion = (completion + float(secrets) / float(total_secrets)) * 0.5
 	rating_value.text = _get_rating(completion)
 	if GameState.has_pending_next_level():
-		replay_button.text = "SONRAKİ BÖLÜM"
+		replay_button.text = (
+			"BASTION-7'YE DÖN"
+			if GameState.pending_next_is_hub()
+			else "SONRAKİ BÖLÜM"
+		)
 		replay_button.pressed.connect(GameState.continue_to_next_level)
 	else:
 		replay_button.text = "BÖLÜMÜ TEKRAR OYNA"
