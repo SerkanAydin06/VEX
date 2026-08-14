@@ -15,6 +15,15 @@ enum TerminalMode {
 @export var offline_message := "POWER OFFLINE"
 @export var screen_header := "VEX // BASTION-7"
 
+@export_category("Ekran Metinleri")
+@export var mission_control_text := "MISSION CONTROL"
+@export var deployment_ready_text := "DEPLOYMENT HAZIR"
+@export var operation_text := "OPERASYON"
+@export var no_mission_text := "YENİ GÖREV YOK"
+@export var mission_waiting_text := "YENİ OPERASYON BEKLENİYOR"
+@export var select_operation_text := "OPERASYON SEÇ"
+@export var deploy_text := "GÖREVE ÇIK"
+
 @export_category("Ekran")
 @export var active_color := Color(0.32, 0.95, 1.0, 1.0)
 @export var offline_color := Color(1.0, 0.20, 0.08, 1.0)
@@ -37,12 +46,15 @@ func get_interaction_text(_player: Node) -> String:
 			var mission_path := _get_next_mission_path()
 			var mission_label := _get_next_mission_label()
 			if mission_path.is_empty():
-				return "[E] %s — YENİ GÖREV YOK" % display_name
+				return "[E] %s — %s" % [display_name, no_mission_text]
 			return "[E] %s // %s" % [display_name, mission_label]
 		TerminalMode.DEPLOYMENT:
 			if not GameState.has_hub_selected_mission():
-				return "[E] %s — GÖREV SEÇİLMEDİ" % display_name
-			return "[E] GÖREVE ÇIK // %s" % GameState.get_hub_selected_mission_label()
+				var mission_path := _get_next_mission_path()
+				if mission_path.is_empty():
+					return "[E] %s — %s" % [display_name, no_mission_text]
+				return "[E] %s // %s" % [select_operation_text, _get_next_mission_label()]
+			return "[E] %s // %s" % [deploy_text, GameState.get_hub_selected_mission_label()]
 		_:
 			return "[E] %s" % display_name
 
@@ -55,18 +67,31 @@ func interact(_player: Node) -> void:
 		TerminalMode.MISSION_CONTROL:
 			GameState.select_hub_mission(_get_next_mission_path(), _get_next_mission_label())
 		TerminalMode.DEPLOYMENT:
-			GameState.deploy_selected_hub_mission()
+			if GameState.has_hub_selected_mission():
+				GameState.deploy_selected_hub_mission()
+				return
+			GameState.select_hub_mission(_get_next_mission_path(), _get_next_mission_label())
 		_:
 			GameState.notify(info_message)
-	_refresh_screen()
+	if is_inside_tree():
+		_refresh_screen()
 
 
 func _on_hub_mission_changed(_path: String, _label: String) -> void:
+	if not is_inside_tree():
+		return
 	_refresh_screen()
 
 
 func _get_hub_scene() -> Node:
-	return get_tree().current_scene
+	if not is_inside_tree():
+		return null
+	var current: Node = self
+	while current != null:
+		if current.has_method("get_next_mission_path") and current.has_method("get_next_mission_label"):
+			return current
+		current = current.get_parent()
+	return null
 
 
 func _get_next_mission_path() -> String:
@@ -80,11 +105,11 @@ func _get_next_mission_label() -> String:
 	var hub := _get_hub_scene()
 	if hub != null and hub.has_method("get_next_mission_label"):
 		return str(hub.call("get_next_mission_label"))
-	return "YENİ OPERASYON BEKLENİYOR"
+	return mission_waiting_text
 
 
 func _refresh_screen() -> void:
-	if screen_label == null:
+	if not is_inside_tree() or screen_label == null:
 		return
 	if offline:
 		screen_label.modulate = offline_color
@@ -93,16 +118,24 @@ func _refresh_screen() -> void:
 	screen_label.modulate = active_color
 	match terminal_mode:
 		TerminalMode.MISSION_CONTROL:
-			screen_label.text = "%s\nMISSION CONTROL\n%s" % [
+			screen_label.text = "%s\n%s\n%s" % [
 				screen_header,
+				mission_control_text,
 				_get_next_mission_label(),
 			]
 		TerminalMode.DEPLOYMENT:
-			var selected := (
-				GameState.get_hub_selected_mission_label()
-				if GameState.has_hub_selected_mission()
-				else "STANDBY // GÖREV SEÇİLMEDİ"
-			)
-			screen_label.text = "%s\nDEPLOYMENT\n%s" % [screen_header, selected]
+			if GameState.has_hub_selected_mission():
+				screen_label.text = "%s\n%s\n%s" % [
+					screen_header,
+					deployment_ready_text,
+					GameState.get_hub_selected_mission_label(),
+				]
+			else:
+				screen_label.text = "%s\n%s\n%s" % [
+					screen_header,
+					operation_text,
+					_get_next_mission_label(),
+				]
+
 		_:
 			screen_label.text = "%s\n%s" % [screen_header, info_message]

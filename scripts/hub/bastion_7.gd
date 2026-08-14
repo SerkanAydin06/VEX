@@ -3,7 +3,7 @@ extends Node3D
 
 @export_category("01 - Üs")
 @export var hub_display_name := "BASTION-7 // VEX ANA ÜSSÜ"
-@export var first_objective := "MISSION CONTROL TERMİNALİNİ KULLAN"
+@export var first_objective := "OPERASYON TERMİNALİNİ KULLAN"
 @export_range(0.0, 5.0, 0.05) var intro_message_delay := 0.45
 @export var arrival_message := "BASTION-7 // GÜVENLİ BÖLGE"
 @export var allow_weapon_fire := false

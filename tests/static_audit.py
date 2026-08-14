@@ -43,6 +43,56 @@ def node_block(scene: str, name: str) -> str:
     return match.group(1)
 
 
+
+def geometry_wall_boxes(scene: str) -> list[tuple[str, tuple[float, float, float], tuple[float, float, float], str]]:
+    walls: list[tuple[str, tuple[float, float, float], tuple[float, float, float], str]] = []
+    for match in re.finditer(
+        r'\[node name="([^"]+)" parent="Geometry"[^\n]*\]\n(.*?)(?=\n\[node|\Z)',
+        scene,
+        re.S,
+    ):
+        name, block = match.group(1), match.group(2)
+        size_m = re.search(r'piece_size = Vector3\(([^)]*)\)', block)
+        if not size_m:
+            continue
+        size = vec3(size_m.group(1))
+        if abs(size[1] - 7.0) > 1e-4 or min(size[0], size[2]) > 1.2:
+            continue
+        pos_m = re.search(r'^position = Vector3\(([^)]*)\)', block, re.M)
+        trans_m = re.search(r'transform = Transform3D\(([^\n]+)\)', block)
+        if pos_m:
+            position = vec3(pos_m.group(1))
+        elif trans_m:
+            position = transform_translation(trans_m.group(1))
+        else:
+            continue
+        orientation = "H" if size[0] > size[2] else "V"
+        walls.append((name, position, size, orientation))
+    return walls
+
+
+def check_wall_butt_joints(rel: str, scene: str) -> None:
+    walls = geometry_wall_boxes(scene)
+    for index, first in enumerate(walls):
+        for second in walls[index + 1:]:
+            if first[3] == second[3]:
+                continue
+            first_min_x = first[1][0] - first[2][0] * 0.5
+            first_max_x = first[1][0] + first[2][0] * 0.5
+            first_min_z = first[1][2] - first[2][2] * 0.5
+            first_max_z = first[1][2] + first[2][2] * 0.5
+            second_min_x = second[1][0] - second[2][0] * 0.5
+            second_max_x = second[1][0] + second[2][0] * 0.5
+            second_min_z = second[1][2] - second[2][2] * 0.5
+            second_max_z = second[1][2] + second[2][2] * 0.5
+            overlap_x = min(first_max_x, second_max_x) - max(first_min_x, second_min_x)
+            overlap_z = min(first_max_z, second_max_z) - max(first_min_z, second_min_z)
+            if overlap_x > 1e-4 and overlap_z > 1e-4:
+                fail(
+                    f"{rel}: duvarlar üst üste biniyor: {first[0]} <-> {second[0]} "
+                    f"(X={overlap_x:.3f}, Z={overlap_z:.3f})"
+                )
+
 def check_paths() -> None:
     text_extensions = {".tscn", ".tres", ".gd", ".godot", ".gdshader", ".cfg"}
     for path in ROOT.rglob("*"):
@@ -94,6 +144,7 @@ def check_level(
     text = read(rel)
     if not text:
         return
+    check_wall_butt_joints(rel, text)
     floor_matches = list(re.finditer(
         r'\[node name="Floor_[^"]+" parent="Geometry"[^\n]*\]\n(.*?)(?=\n\[node|\Z)',
         text,
@@ -140,6 +191,15 @@ def check_level(
         size = vec3(size_m.group(1))
         if abs(size[1] - 7.0) > 1e-4 and abs(size[1] - 2.52) > 1e-4:
             fail(f"{rel}: duvar yüksekliği standart dışı {name}: {size[1]}")
+        if min(size[0], size[2]) <= 1.2 and size[1] >= 1.0:
+            if "occlusion_enabled = true" not in block:
+                fail(f"{rel}: duvar occlusion ayarı sahnede açık değil: {name}")
+            if abs(size[1] - 7.0) < 1e-4:
+                for prop in ["floor_trim_enabled = true", "floor_trim_size = Vector3(", "floor_trim_position = Vector3("]:
+                    if prop not in block:
+                        fail(f"{rel}: BaseTrim sahne ayarı eksik {name}: {prop}")
+            elif "floor_trim_enabled = false" not in block:
+                fail(f"{rel}: kısa/üst duvar BaseTrim'i sahneden kapalı değil: {name}")
 
     if 'res://resources/materials/floor_standard.tres' not in text:
         fail(f"{rel}: ortak zemin materyali kullanılmıyor")
@@ -211,10 +271,11 @@ def check_bastion_7() -> None:
     text = read(rel)
     if not text:
         return
+    check_wall_butt_joints(rel, text)
 
     floors = re.findall(r'\[node name="Floor_[^"]+" parent="Geometry"[^\n]*\]', text)
     ceilings = re.findall(r'\[node name="Ceiling_[^"]+" parent="Geometry"[^\n]*\]', text)
-    if len(floors) != 14 or len(ceilings) != 14:
+    if len(floors) != 13 or len(ceilings) != 13:
         fail(f"{rel}: hub modül sayısı yanlış: floor={len(floors)} ceiling={len(ceilings)}")
 
     for prefix, expected_y in (("Floor_", -0.2), ("Ceiling_", 7.2)):
@@ -225,23 +286,39 @@ def check_bastion_7() -> None:
         ):
             block = match.group(1)
             size_m = re.search(r'piece_size = Vector3\(([^)]*)\)', block)
-            pos_m = re.search(r'position = Vector3\(([^)]*)\)', block)
+            pos_m = re.search(r'^position = Vector3\(([^)]*)\)', block, re.M)
             if not size_m or not pos_m:
                 fail(f"{rel}: hub zemin/tavan boyut veya pozisyon eksik")
                 continue
-            if vec3(size_m.group(1)) != (12.0, 0.4, 10.0):
-                fail(f"{rel}: hub modül boyutu 12x0.4x10 değil")
+            node_header = match.group(0).split("\n", 1)[0]
+            is_operator = "OperatorPlatform" in node_header
+            expected_size = (6.2, 0.4, 6.0) if is_operator else (12.0, 0.4, 10.0)
+            if vec3(size_m.group(1)) != expected_size:
+                fail(f"{rel}: hub modül boyutu yanlış: {node_header}")
             if abs(vec3(pos_m.group(1))[1] - expected_y) > 1e-4:
                 fail(f"{rel}: hub {prefix} Y standardı yanlış")
             if "cast_shadow = false" not in block:
                 fail(f"{rel}: hub zemin/tavan gölgesi kapalı değil")
 
-    if len(re.findall(r'instance=ExtResource\("8_door"\)', text)) != 7:
-        fail("Bastion-7 kapı sayısı 7 değil")
-    if len(re.findall(r'instance=ExtResource\("9_white"\)', text)) != 12:
-        fail("Bastion-7 aktif beyaz ışık sayısı 12 değil")
-    if len(re.findall(r'instance=ExtResource\("10_red"\)', text)) != 14:
-        fail("Bastion-7 kapı kırmızı ışık sayısı 14 değil")
+    if len(re.findall(r'instance=ExtResource\("8_door"\)', text)) != 6:
+        fail("Bastion-7 kapı sayısı 6 değil")
+    if len(re.findall(r'instance=ExtResource\("9_white"\)', text)) != 9:
+        fail("Bastion-7 aktif beyaz ışık sayısı 9 değil")
+    if len(re.findall(r'instance=ExtResource\("10_red"\)', text)) != 12:
+        fail("Bastion-7 kapı kırmızı ışık sayısı 12 değil")
+
+    if '[node name="MissionControl' in text or '[node name="MissionTerminal' in text:
+        fail("Bastion-7 kaldırılan Mission Control alanına hâlâ sahne düğümü olarak referans içeriyor")
+
+    operator_floor = node_block(text, "Floor_OperatorPlatform")
+    if "position = Vector3(0, -0.2, 28)" not in operator_floor or "piece_size = Vector3(6.2, 0.4, 6)" not in operator_floor:
+        fail("Bastion-7 Operator Platform kompakt 6.2x6 standardında değil")
+    pad_block = node_block(text, "OperatorPad")
+    if "position = Vector3(0, 0.08, 27.9)" not in pad_block:
+        fail("Bastion-7 Operator Pad kapıya bitişik konumda değil")
+    terminal_block = node_block(text, "DeploymentTerminal")
+    if 'display_name = "OPERASYON TERMİNALİ"' not in terminal_block:
+        fail("Bastion-7 tek Operasyon Terminali standardı eksik")
 
     for locked_door in ["FiringRangeDoor", "ResearchDoor", "WorkshopDoor", "EngineeringDoor"]:
         block = node_block(text, locked_door)
@@ -294,11 +371,6 @@ def check_lighting() -> None:
             "CeilingWhite_SpawnFill_A",
             "CeilingWhite_SpawnFill_B",
         ],
-        "scenes/hub/bastion_7.tscn": [
-            "CeilingWhite_OperatorPlatform",
-            "CeilingWhite_SpawnFill_A",
-            "CeilingWhite_SpawnFill_B",
-        ],
     }
     for scene_path, light_names in spawn_profiles.items():
         spawn_scene = read(scene_path)
@@ -312,6 +384,19 @@ def check_lighting() -> None:
             ]:
                 if setting not in block:
                     fail(f"{scene_path}: {light_name} başlangıç tam ışık standardı eksik: {setting}")
+
+
+    hub_scene = read("scenes/hub/bastion_7.tscn")
+    hub_spawn = node_block(hub_scene, "CeilingWhite_OperatorPlatform")
+    for setting in [
+        "light_energy = 4.4",
+        "light_range = 7.4",
+        "cone_angle = 48.0",
+        "distance_attenuation = 0.28",
+        "shadow_enabled = false",
+    ]:
+        if setting not in hub_spawn:
+            fail(f"Bastion-7 kompakt spawn ışığı eksik: {setting}")
 
 
 def check_enemies() -> None:
@@ -626,8 +711,57 @@ def check_scene_authority() -> None:
     if re.search(r'(?<!_)\bauto_close\s*=\s*false', door_script):
         fail("door.gd: export auto_close runtime'da değiştiriliyor")
 
+
+def check_terminal_scene_authority() -> None:
+    script = read("scripts/hub/hub_terminal.gd")
+    scene = read("scenes/hub/hub_terminal.tscn")
+    bastion = read("scenes/hub/bastion_7.tscn")
+    required_exports = [
+        "mission_control_text",
+        "deployment_ready_text",
+        "operation_text",
+        "no_mission_text",
+        "mission_waiting_text",
+        "select_operation_text",
+        "deploy_text",
+    ]
+    for prop in required_exports:
+        if f"@export var {prop}" not in script:
+            fail(f"hub_terminal.gd: {prop} Inspector export değil")
+        if f"{prop} = " not in scene:
+            fail(f"hub_terminal.tscn: {prop} sahne değeri açıkça kayıtlı değil")
+    deployment = node_block(bastion, "DeploymentTerminal")
+    for prop in required_exports:
+        if f"{prop} = " not in deployment:
+            fail(f"Bastion-7 DeploymentTerminal: {prop} Inspector override eksik")
+    if "GameState.deploy_selected_hub_mission()\n\t\t\t\treturn" not in script:
+        fail("hub_terminal.gd: deployment sonrası terminal refresh engellenmiyor")
+    if "if not is_inside_tree():\n\t\treturn null" not in script:
+        fail("hub_terminal.gd: tree dışı terminal erişimi güvenli değil")
+
+
+def check_door_and_trim_standard() -> None:
+    door = read("scenes/props/door_side_slide.tscn")
+    if 'size = Vector3(0.30, 4.48, 2.3)' not in door:
+        fail("Yana açılan kapı PanelBody görsel kalınlığı 0.30 m değil")
+    if ', 0.15, 0, 0)' not in door or ', -0.15, 0, 0)' not in door:
+        fail("Kapı sprite yüzleri 0.30 m PanelBody yüzeyinde değil")
+    world_piece = read("scenes/world/world_piece.tscn")
+    world_piece_script = read("scripts/world/world_piece.gd")
+    for forbidden in ["floor_trim_height", "floor_trim_depth", "floor_trim_vertical_offset", "runs_along_x", "trim_end_margin"]:
+        if forbidden in world_piece_script:
+            fail(f"BaseTrim ölçüsü koddan hesaplanıyor: {forbidden}")
+    if "trim_mesh.size = floor_trim_size" not in world_piece_script or "target_trim.position = floor_trim_position" not in world_piece_script:
+        fail("BaseTrim sahne-owned size/position değerlerini doğrudan kullanmıyor")
+    if "floor_trim_size = Vector3(3.96, 0.28, 0.32)" not in world_piece:
+        fail("world_piece.tscn BaseTrim sahne boyutu eksik")
+    if "opening_offset_left = Vector3(0, 0, -2.47)" not in door or "opening_offset_right = Vector3(0, 0, 2.47)" not in door:
+        fail("Kapı açık konumu sahne offsetlerinden yönetilmiyor")
+
 def main() -> int:
     check_paths()
+    check_terminal_scene_authority()
+    check_door_and_trim_standard()
     check_canonical_names()
     check_level("scenes/levels/level_01.tscn", 18, 20, 38, (12.0, 0.4, 10.0))
     check_level("scenes/levels/level_02.tscn", 33, 35, 10, (12.0, 0.4, 10.0))

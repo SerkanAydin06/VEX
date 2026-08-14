@@ -327,7 +327,7 @@ func select_hub_mission(mission_path: String, mission_label: String) -> bool:
 	hub_selected_mission_label = mission_label
 	hub_mission_changed.emit(hub_selected_mission_path, hub_selected_mission_label)
 	notify("OPERASYON SEÇİLDİ // %s" % hub_selected_mission_label)
-	set_objective("OPERATOR PLATFORMUNA GİT")
+	set_objective("OPERASYON TERMİNALİNDEN GÖREVE ÇIK")
 	return true
 
 
@@ -341,8 +341,8 @@ func get_hub_selected_mission_label() -> String:
 
 func deploy_selected_hub_mission() -> bool:
 	if hub_selected_mission_path.is_empty():
-		notify("ÖNCE MISSION CONTROL TERMİNALİNDEN GÖREV SEÇ")
-		set_objective("MISSION CONTROL TERMİNALİNİ KULLAN")
+		notify("ÖNCE OPERASYON TERMİNALİNDEN GÖREV SEÇ")
+		set_objective("OPERASYON TERMİNALİNİ KULLAN")
 		return false
 
 	var carry_state: Dictionary = {}

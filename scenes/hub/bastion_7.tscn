@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" path="res://assets/pickups/shotgun.png" id="15_shotgun"]
 [ext_resource type="Texture2D" path="res://assets/pickups/ak47.png" id="16_ak47"]
 [ext_resource type="Texture2D" path="res://assets/pickups/mp90.png" id="17_mp90"]
+[ext_resource type="Texture2D" path="res://assets/world/bastion7/operator_pad.png" id="18_operator_pad"]
 
 [sub_resource type="Environment" id="Environment_hub"]
 background_mode = 1
@@ -65,25 +66,35 @@ size = Vector3(3.0, 0.9, 1.0)
 size = Vector3(5.2, 3.4, 0.22)
 
 [sub_resource type="BoxMesh" id="BoxMesh_platform"]
-size = Vector3(6.0, 0.16, 5.2)
+size = Vector3(5.8, 0.16, 5.8)
 
 [sub_resource type="BoxMesh" id="BoxMesh_target"]
 size = Vector3(0.18, 1.8, 1.1)
 
+[sub_resource type="StandardMaterial3D" id="Material_operator_pad"]
+albedo_texture = ExtResource("18_operator_pad")
+metallic = 0.35
+roughness = 0.48
+texture_filter = 3
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_operator_pad"]
+material = SubResource("Material_operator_pad")
+size = Vector2(5.8, 5.8)
+
 [node name="Bastion7" type="Node3D"]
 script = ExtResource("1_script")
 hub_display_name = "BASTION-7 // VEX ANA ÜSSÜ"
-first_objective = "MISSION CONTROL TERMİNALİNİ KULLAN"
+first_objective = "OPERASYON TERMİNALİNİ KULLAN"
 intro_message_delay = 0.45
 arrival_message = "BASTION-7 // GÜVENLİ BÖLGE"
 allow_weapon_fire = false
 automap_title = "BASTION-7 // ÜS HARİTASI"
 automap_columns = 5
-automap_rows = 7
-automap_world_min = Vector2(-30, -35)
+automap_rows = 6
+automap_world_min = Vector2(-30, -25)
 automap_world_max = Vector2(30, 35)
-automap_walkable_cells = Array[Vector2i]([Vector2i(0, 2), Vector2i(1, 2), Vector2i(1, 3), Vector2i(1, 4), Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(2, 5), Vector2i(2, 6), Vector2i(3, 2), Vector2i(3, 3), Vector2i(3, 4)])
-automap_start_cell = Vector2i(2, 6)
+automap_walkable_cells = Array[Vector2i]([Vector2i(0, 1), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 3), Vector2i(2, 0), Vector2i(2, 1), Vector2i(2, 2), Vector2i(2, 3), Vector2i(2, 4), Vector2i(2, 5), Vector2i(3, 1), Vector2i(3, 2), Vector2i(3, 3)])
+automap_start_cell = Vector2i(2, 5)
 automap_exit_cell = Vector2i(2, 0)
 automap_merge_adjacent_cells = false
 automap_show_room_numbers = false
@@ -96,404 +107,545 @@ environment = SubResource("Environment_hub")
 
 [node name="Geometry" type="Node3D" parent="."]
 
-[node name="Floor_MissionControl" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(0, -0.2, -30)
-piece_size = Vector3(12, 0.4, 10)
-surface_material = ExtResource("4_floor")
-cast_shadow = false
-
-[node name="Ceiling_MissionControl" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(0, 7.2, -30)
-piece_size = Vector3(12, 0.4, 10)
-surface_material = ExtResource("5_ceiling")
-cast_shadow = false
-
 [node name="Floor_NorthCorridor" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, -0.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_NorthCorridor" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, 7.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_FiringRange" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-24, -0.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_FiringRange" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-24, 7.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_Armory" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-12, -0.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_Armory" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-12, 7.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_CommandNorth" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, -0.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_CommandNorth" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, 7.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_ResearchLab" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(12, -0.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_ResearchLab" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(12, 7.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_CommandWest" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-12, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_CommandWest" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-12, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_CommandCenter" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_CommandCenter" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_CommandEast" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(12, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_CommandEast" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(12, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_WeaponWorkshop" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-12, -0.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_WeaponWorkshop" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-12, 7.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_CommandSouth" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, -0.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_CommandSouth" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, 7.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_EngineeringBay" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(12, -0.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_EngineeringBay" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(12, 7.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_SouthCorridor" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, -0.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_SouthCorridor" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0, 7.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_OperatorPlatform" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(0, -0.2, 30)
-piece_size = Vector3(12, 0.4, 10)
+position = Vector3(0, -0.2, 28)
+piece_size = Vector3(6.2, 0.4, 6)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_OperatorPlatform" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(0, 7.2, 30)
-piece_size = Vector3(12, 0.4, 10)
+position = Vector3(0, 7.2, 28)
+piece_size = Vector3(6.2, 0.4, 6)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
-[node name="Wall_MissionControl_W" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-6, 3.5, -30)
-piece_size = Vector3(0.4, 7, 10)
+[node name="Wall_NorthCorridor_N" parent="Geometry" instance=ExtResource("2_piece")]
+position = Vector3(0, 3.5, -25)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-
-[node name="Wall_MissionControl_E" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(6, 3.5, -30)
-piece_size = Vector3(0.4, 7, 10)
-surface_material = ExtResource("3_wall")
-
-[node name="Wall_MissionControl_N" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(0, 3.5, -35)
-piece_size = Vector3(12, 7, 0.4)
-surface_material = ExtResource("3_wall")
-
-[node name="MissionControlDoor_WallSegA" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-4.15, 3.5, -25.0)
-piece_size = Vector3(3.7, 7, 0.4)
-surface_material = ExtResource("3_wall")
-
-[node name="MissionControlDoor_WallSegB" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(4.15, 3.5, -25.0)
-piece_size = Vector3(3.7, 7, 0.4)
-surface_material = ExtResource("3_wall")
-
-[node name="MissionControlDoor_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(0.0, 5.74, -25.0)
-piece_size = Vector3(4.6, 2.52, 0.4)
-surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_NorthCorridor_W" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-6, 3.5, -20)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_NorthCorridor_E" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(6, 3.5, -20)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_FiringRange_W" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-30, 3.5, -10)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="FiringRangeDoor_WallSegA" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-18.0, 3.5, -13.65)
+position = Vector3(-18, 3.5, -13.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="FiringRangeDoor_WallSegB" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-18.0, 3.5, -6.35)
+position = Vector3(-18, 3.5, -6.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="FiringRangeDoor_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-18.0, 5.74, -10.0)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="Wall_FiringRange_N" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-24, 3.5, -15)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_FiringRange_S" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-24, 3.5, -5)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ArmoryDoor_WallSegA" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-6.0, 3.5, -13.65)
+position = Vector3(-6, 3.5, -13.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ArmoryDoor_WallSegB" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-6.0, 3.5, -6.35)
+position = Vector3(-6, 3.5, -6.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ArmoryDoor_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-6.0, 5.74, -10.0)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="Wall_Armory_N" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-12, 3.5, -15)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ResearchDoor_WallSegA" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(6.0, 3.5, -13.65)
+position = Vector3(6, 3.5, -13.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ResearchDoor_WallSegB" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(6.0, 3.5, -6.35)
+position = Vector3(6, 3.5, -6.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ResearchDoor_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(6.0, 5.74, -10.0)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="Wall_ResearchLab_E" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(18, 3.5, -10)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_ResearchLab_N" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(12, 3.5, -15)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_CommandWest_W" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-18, 3.5, 0)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_CommandEast_E" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(18, 3.5, 0)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_WeaponWorkshop_W" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-18, 3.5, 10)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WorkshopDoor_WallSegA" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-6.0, 3.5, 6.35)
+position = Vector3(-6, 3.5, 6.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WorkshopDoor_WallSegB" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-6.0, 3.5, 13.65)
+position = Vector3(-6, 3.5, 13.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WorkshopDoor_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-6.0, 5.74, 10.0)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="Wall_WeaponWorkshop_S" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-12, 3.5, 15)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EngineeringDoor_WallSegA" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(6.0, 3.5, 6.35)
+position = Vector3(6, 3.5, 6.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EngineeringDoor_WallSegB" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(6.0, 3.5, 13.65)
+position = Vector3(6, 3.5, 13.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EngineeringDoor_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(6.0, 5.74, 10.0)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="Wall_EngineeringBay_E" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(18, 3.5, 10)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_EngineeringBay_S" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(12, 3.5, 15)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_SouthCorridor_W" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(-6, 3.5, 20)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_SouthCorridor_E" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(6, 3.5, 20)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="OperatorDoor_WallSegA" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-4.15, 3.5, 25.0)
-piece_size = Vector3(3.7, 7, 0.4)
+position = Vector3(-4.05, 3.5, 25)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="OperatorDoor_WallSegB" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(4.15, 3.5, 25.0)
-piece_size = Vector3(3.7, 7, 0.4)
+position = Vector3(4.05, 3.5, 25)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="OperatorDoor_TopFill" parent="Geometry" instance=ExtResource("2_piece")]
 position = Vector3(0.0, 5.74, 25.0)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="Wall_OperatorPlatform_W" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(-6, 3.5, 30)
-piece_size = Vector3(0.4, 7, 10)
+position = Vector3(-3.1, 3.5, 28.1)
+piece_size = Vector3(0.4, 7, 5.8)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 5.76)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_OperatorPlatform_E" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(6, 3.5, 30)
-piece_size = Vector3(0.4, 7, 10)
+position = Vector3(3.1, 3.5, 28.1)
+piece_size = Vector3(0.4, 7, 5.8)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 5.76)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_OperatorPlatform_S" parent="Geometry" instance=ExtResource("2_piece")]
-position = Vector3(0, 3.5, 35)
-piece_size = Vector3(12, 7, 0.4)
+position = Vector3(0, 3.5, 31)
+piece_size = Vector3(5.8, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(5.76, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Doors" type="Node3D" parent="."]
-
-[node name="MissionControlDoor" parent="Doors" instance=ExtResource("8_door")]
-position = Vector3(0.0, 2.24, -25.0)
-rotation = Vector3(0, 1.57079633, 0)
-display_name = "MISSION CONTROL"
-locked = false
-required_key = &""
-required_keys = Array[StringName]([])
-required_key_label = ""
-objective_on_unlock = ""
-permanently_locked = false
-permanent_lock_message = "POWER OFFLINE"
-auto_close = false
-auto_close_delay = 4.0
 
 [node name="ArmoryDoor" parent="Doors" instance=ExtResource("8_door")]
 position = Vector3(-6.0, 2.24, -10.0)
@@ -587,9 +739,6 @@ position = Vector3(-12, 6.82, -10)
 [node name="CeilingWhite_CommandWest" parent="RoomLights" instance=ExtResource("9_white")]
 position = Vector3(-12, 6.82, 0)
 
-[node name="CeilingWhite_MissionControl" parent="RoomLights" instance=ExtResource("9_white")]
-position = Vector3(0, 6.82, -30)
-
 [node name="CeilingWhite_NorthCorridor" parent="RoomLights" instance=ExtResource("9_white")]
 position = Vector3(0, 6.82, -20)
 
@@ -606,41 +755,16 @@ position = Vector3(0, 6.82, 10)
 position = Vector3(0, 6.82, 20)
 
 [node name="CeilingWhite_OperatorPlatform" parent="RoomLights" instance=ExtResource("9_white")]
-position = Vector3(0, 6.82, 30)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
+position = Vector3(0, 6.82, 28)
+light_energy = 4.4
+light_range = 7.4
+cone_angle = 48.0
+distance_attenuation = 0.28
 shadow_enabled = false
-
-[node name="CeilingWhite_SpawnFill_A" parent="RoomLights" instance=ExtResource("9_white")]
-position = Vector3(-3, 6.82, 30)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
-[node name="CeilingWhite_SpawnFill_B" parent="RoomLights" instance=ExtResource("9_white")]
-position = Vector3(3, 6.82, 30)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="CeilingWhite_CommandEast" parent="RoomLights" instance=ExtResource("9_white")]
 position = Vector3(12, 6.82, 0)
 
 [node name="DoorLights" type="Node3D" parent="."]
-
-[node name="Lamp_MissionControlDoor_A" parent="DoorLights" instance=ExtResource("10_red")]
-position = Vector3(0.0, 5.5, -25.32)
-rotation = Vector3(0, 0, 0)
-
-[node name="Lamp_MissionControlDoor_B" parent="DoorLights" instance=ExtResource("10_red")]
-position = Vector3(0.0, 5.5, -24.68)
-rotation = Vector3(0, 3.14159265, 0)
 
 [node name="Lamp_ArmoryDoor_A" parent="DoorLights" instance=ExtResource("10_red")]
 position = Vector3(-6.32, 5.5, -10.0)
@@ -709,15 +833,6 @@ font_size = 28
 outline_size = 8
 text = "COMMAND HALL"
 modulate = Color(0.62, 0.78, 0.82, 1)
-
-[node name="Sign_MissionControlDoor" type="Label3D" parent="Signage"]
-position = Vector3(0.0, 4.95, -25.0)
-billboard = 1
-pixel_size = 0.0025
-font_size = 25
-outline_size = 7
-text = "MISSION CONTROL"
-modulate = Color(0.42, 0.92, 1, 1)
 
 [node name="Sign_ArmoryDoor" type="Label3D" parent="Signage"]
 position = Vector3(-6.0, 4.95, -10.0)
@@ -799,9 +914,14 @@ material_override = SubResource("Material_hub_metal")
 mesh = SubResource("BoxMesh_console")
 
 [node name="OperatorPad" type="MeshInstance3D" parent="Props"]
-position = Vector3(0, 0.08, 30)
+position = Vector3(0, 0.08, 27.9)
 material_override = SubResource("Material_hub_cyan")
 mesh = SubResource("BoxMesh_platform")
+
+[node name="OperatorPadVisual" type="MeshInstance3D" parent="Props"]
+position = Vector3(0, 0.17, 27.9)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_operator_pad")
 
 [node name="ResearchTable" type="MeshInstance3D" parent="Props"]
 position = Vector3(12, 0.45, -10)
@@ -835,29 +955,23 @@ mesh = SubResource("BoxMesh_target")
 
 [node name="Systems" type="Node3D" parent="."]
 
-[node name="MissionTerminal" parent="Systems" instance=ExtResource("11_terminal")]
-position = Vector3(0, 0.65, -32.8)
-rotation = Vector3(0, 3.14159265, 0)
-terminal_mode = 0
-display_name = "MISSION CONTROL"
-info_message = "AKTİF OPERASYONLAR"
-offline = false
-offline_message = "POWER OFFLINE"
-screen_header = "VEX // BASTION-7"
-active_color = Color(0.32, 0.95, 1, 1)
-offline_color = Color(1, 0.2, 0.08, 1)
-
 [node name="DeploymentTerminal" parent="Systems" instance=ExtResource("11_terminal")]
-position = Vector3(0, 0.65, 32.8)
+position = Vector3(0, 0.65, 30.25)
 terminal_mode = 1
-display_name = "OPERATOR PLATFORMU"
-info_message = "DEPLOYMENT CONTROL"
+display_name = "OPERASYON TERMİNALİ"
+info_message = "OPERASYON SEÇ / DEPLOY"
 offline = false
 offline_message = "POWER OFFLINE"
 screen_header = "VEX // BASTION-7"
+mission_control_text = "MISSION CONTROL"
+deployment_ready_text = "DEPLOYMENT HAZIR"
+operation_text = "OPERASYON"
+no_mission_text = "YENİ GÖREV YOK"
+mission_waiting_text = "YENİ OPERASYON BEKLENİYOR"
+select_operation_text = "OPERASYON SEÇ"
+deploy_text = "GÖREVE ÇIK"
 active_color = Color(0.32, 0.95, 1, 1)
 offline_color = Color(1, 0.2, 0.08, 1)
-
 [node name="CommandStatusTerminal" parent="Systems" instance=ExtResource("11_terminal")]
 position = Vector3(0, 0.65, -1.8)
 terminal_mode = 2
@@ -935,8 +1049,7 @@ active_label_color = Color(0.3, 1, 0.68, 1)
 locked_label_color = Color(0.65, 0.22, 0.18, 1)
 
 [node name="Player" parent="." instance=ExtResource("6_player")]
-position = Vector3(0, 1, 29)
-
+position = Vector3(0, 1, 27.35)
 [node name="HUD" parent="." instance=ExtResource("7_hud")]
 
 [node name="AmbientLoop" type="AudioStreamPlayer" parent="."]

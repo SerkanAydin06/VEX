@@ -130,21 +130,26 @@ func _check_bastion_7() -> void:
 				floors += 1
 			elif child.name.begins_with("Ceiling_"):
 				ceilings += 1
-		if floors != 14 or ceilings != 14:
+		if floors != 13 or ceilings != 13:
 			failures.append("Bastion-7 modül sayısı yanlış: %d floor / %d ceiling" % [floors, ceilings])
 	var doors := hub.get_node_or_null("Doors")
-	if doors == null or doors.get_child_count() != 7:
+	if doors == null or doors.get_child_count() != 6:
 		failures.append("Bastion-7 kapı sayısı yanlış.")
 	var lights := hub.get_node_or_null("RoomLights")
-	if lights == null or lights.get_child_count() != 10:
+	if lights == null or lights.get_child_count() != 9:
 		failures.append("Bastion-7 beyaz ışık sayısı yanlış.")
 	var door_lights := hub.get_node_or_null("DoorLights")
-	if door_lights == null or door_lights.get_child_count() != 14:
+	if door_lights == null or door_lights.get_child_count() != 12:
 		failures.append("Bastion-7 kırmızı kapı ışığı sayısı yanlış.")
 	for door_name in ["FiringRangeDoor", "ResearchDoor", "WorkshopDoor", "EngineeringDoor"]:
 		var door := hub.get_node_or_null("Doors/%s" % door_name)
 		if door == null or not bool(door.get("permanently_locked")):
 			failures.append("Bastion-7 kilitli alan standardı eksik: %s" % door_name)
+	if hub.get_node_or_null("Systems/MissionTerminal") != null:
+		failures.append("Bastion-7 MissionTerminal kaldırılmamış.")
+	var operations_terminal := hub.get_node_or_null("Systems/DeploymentTerminal")
+	if operations_terminal == null or str(operations_terminal.get("display_name")) != "OPERASYON TERMİNALİ":
+		failures.append("Bastion-7 tek Operasyon Terminali standardı eksik.")
 	hub.queue_free()
 
 

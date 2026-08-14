@@ -1,10 +1,8 @@
 BASTION-7 HUB YERLEŞİMİ
 =======================
 
-                    [ MISSION CONTROL ]
-                            |
-                     [ NORTH CORRIDOR ]
-                            |
+                    [ NORTH CORRIDOR / KAPALI UÇ ]
+                              |
  [ FIRING RANGE ]--[ ARMORY ]--[ COMMAND NORTH ]--[ RESEARCH LAB ]
       KİLİTLİ          AÇIK             |
                                   [ COMMAND HALL ]
@@ -15,18 +13,19 @@ BASTION-7 HUB YERLEŞİMİ
                                           |
                                    [ SOUTH CORRIDOR ]
                                           |
-                                  [ OPERATOR PLATFORM ]
+                         [ KOMPAKT OPERATOR / DEPLOYMENT PAD ]
+                            1 TERMİNAL + OPERATOR PAD
 
 AKTİF DÖNGÜ
 -----------
-1. Bölüm 1 tamamlanır.
-2. Sonuç ekranında "BASTION-7'YE DÖN" seçilir.
-3. Oyuncu Operator Platform bölgesinde üsse gelir.
-4. Mission Control terminalinden sonraki görev seçilir.
-5. Armory'de daha önce açılmış silahlardan biri kuşanılabilir.
-6. Operator Platform terminaline dönülüp seçilen göreve deployment yapılır.
-7. Bölüm 2 tamamlanınca tekrar Bastion-7'ye dönülür.
-8. Mevcut projede Level 3 olmadığı için Mission Control bu noktada yeni operasyon beklediğini gösterir.
+1. Bölüm tamamlanınca oyuncu Bastion-7 Operator Pad üzerinde doğar.
+2. Tek Operasyon Terminaline ilk etkileşimde sıradaki görev seçilir.
+3. Aynı terminal ikinci etkileşimde deployment başlatır.
+4. Armory'de daha önce açılmış silahlardan biri kuşanılabilir.
+5. Görev tamamlanınca tekrar Bastion-7'ye dönülür.
+
+Mission Control odası ve ikinci görev ekranı kaldırılmıştır. Operator bölmesi 6.2 x 6.0 m
+kompakt bir deployment alanıdır. Pad kapı eşiğinde başlar ve bölmenin neredeyse tüm zeminini kaplar.
 
 BAŞLANGIÇTA KAPALI
 ------------------

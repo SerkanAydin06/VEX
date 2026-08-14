@@ -25,8 +25,9 @@ enum DoorOpeningMode {
 
 @export_category("Açılma Hareketi")
 @export_enum("Yukarı", "İki Yana") var opening_mode: int = DoorOpeningMode.UP
-@export_range(1.0, 8.0, 0.1) var opening_height := 4.2
-@export_range(1.0, 4.0, 0.05) var opening_width := 2.35
+@export var opening_offset_up := Vector3(0.0, 4.2, 0.0)
+@export var opening_offset_left := Vector3(0.0, 0.0, -2.47)
+@export var opening_offset_right := Vector3(0.0, 0.0, 2.47)
 @export_range(0.1, 3.0, 0.05) var opening_time := 0.75
 @export var auto_close := true
 @export_range(1.0, 15.0, 0.5) var auto_close_delay := 4.0
@@ -203,20 +204,20 @@ func _begin_opening() -> void:
 		_motion_tween.tween_property(
 			door_panel,
 			"position",
-			_closed_panel_position + Vector3(0.0, 0.0, -opening_width),
+			_closed_panel_position + opening_offset_left,
 			duration
 		)
 		_motion_tween.tween_property(
 			door_panel_right,
 			"position",
-			_closed_right_panel_position + Vector3(0.0, 0.0, opening_width),
+			_closed_right_panel_position + opening_offset_right,
 			duration
 		)
 	else:
 		_motion_tween.tween_property(
 			door_panel,
 			"position",
-			_closed_panel_position + Vector3.UP * opening_height,
+			_closed_panel_position + opening_offset_up,
 			duration
 		)
 	_motion_tween.finished.connect(
@@ -347,16 +348,16 @@ func _is_split_side_door() -> bool:
 
 func _get_open_distance_ratio() -> float:
 	if _is_split_side_door():
-		var left_target := _closed_panel_position + Vector3(0.0, 0.0, -opening_width)
-		var right_target := _closed_right_panel_position + Vector3(0.0, 0.0, opening_width)
+		var left_target := _closed_panel_position + opening_offset_left
+		var right_target := _closed_right_panel_position + opening_offset_right
 		var traveled := maxf(
 			door_panel.position.distance_to(left_target),
 			door_panel_right.position.distance_to(right_target)
 		)
-		return clampf(traveled / maxf(opening_width, 0.001), 0.0, 1.0)
-	var target_position := _closed_panel_position + Vector3.UP * opening_height
+		return clampf(traveled / maxf(maxf(opening_offset_left.length(), opening_offset_right.length()), 0.001), 0.0, 1.0)
+	var target_position := _closed_panel_position + opening_offset_up
 	return clampf(
-		door_panel.position.distance_to(target_position) / maxf(opening_height, 0.001),
+		door_panel.position.distance_to(target_position) / maxf(opening_offset_up.length(), 0.001),
 		0.0,
 		1.0
 	)
@@ -368,9 +369,9 @@ func _get_close_distance_ratio() -> float:
 			door_panel.position.distance_to(_closed_panel_position),
 			door_panel_right.position.distance_to(_closed_right_panel_position)
 		)
-		return clampf(traveled / maxf(opening_width, 0.001), 0.0, 1.0)
+		return clampf(traveled / maxf(maxf(opening_offset_left.length(), opening_offset_right.length()), 0.001), 0.0, 1.0)
 	return clampf(
-		door_panel.position.distance_to(_closed_panel_position) / maxf(opening_height, 0.001),
+		door_panel.position.distance_to(_closed_panel_position) / maxf(opening_offset_up.length(), 0.001),
 		0.0,
 		1.0
 	)

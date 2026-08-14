@@ -71,632 +71,998 @@ environment = SubResource("Environment_level")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, -25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R01" parent="Geometry" unique_id=1614047544 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, -25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R02" parent="Geometry" unique_id=159262351 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R02" parent="Geometry" unique_id=909087577 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.2, -25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R03" parent="Geometry" unique_id=1454773415 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.2, -25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R03" parent="Geometry" unique_id=611325764 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 7.2, -25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R04" parent="Geometry" unique_id=1381627169 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, -15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R04" parent="Geometry" unique_id=489526496 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, -15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R05" parent="Geometry" unique_id=1902600684 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R05" parent="Geometry" unique_id=1184579898 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.2, -15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R06" parent="Geometry" unique_id=935510957 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.2, -15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R06" parent="Geometry" unique_id=1889937945 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 7.2, -15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R07" parent="Geometry" unique_id=1591657215 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, -5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R07" parent="Geometry" unique_id=1460168271 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, -5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R08" parent="Geometry" unique_id=1164403562 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R08" parent="Geometry" unique_id=1576769723 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.2, -5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R09" parent="Geometry" unique_id=872479816 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.2, -5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R09" parent="Geometry" unique_id=1140023876 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 7.2, -5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R10" parent="Geometry" unique_id=1079923848 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, 5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R10" parent="Geometry" unique_id=378374266 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, 5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R11" parent="Geometry" unique_id=2098181675 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R11" parent="Geometry" unique_id=1210467659 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.2, 5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R12" parent="Geometry" unique_id=1934189386 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.2, 5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R12" parent="Geometry" unique_id=1802528280 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 7.2, 5)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R13" parent="Geometry" unique_id=1412219059 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, 15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R13" parent="Geometry" unique_id=270186376 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, 15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R14" parent="Geometry" unique_id=1404384119 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R14" parent="Geometry" unique_id=1322029531 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.2, 15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R15" parent="Geometry" unique_id=1949490739 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.2, 15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R15" parent="Geometry" unique_id=1988387716 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 7.2, 15)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R16" parent="Geometry" unique_id=894260000 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, 25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R16" parent="Geometry" unique_id=2078854930 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, 25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R17" parent="Geometry" unique_id=822731307 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R17" parent="Geometry" unique_id=50253468 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.2, 25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Floor_R18" parent="Geometry" unique_id=973648998 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.2, 25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="Ceiling_R18" parent="Geometry" unique_id=1416602105 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 7.2, 25)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
+floor_trim_enabled = false
 cast_shadow = false
 
 [node name="NorthOuterWall_R01" parent="Geometry" unique_id=88131846 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -30)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="SouthOuterWall_R01" parent="Geometry" unique_id=807776011 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 30)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="NorthOuterWall_R02" parent="Geometry" unique_id=891310636 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -30)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="SouthOuterWall_R02" parent="Geometry" unique_id=949348824 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 30)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="NorthOuterWall_R03" parent="Geometry" unique_id=315355903 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, -30)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="SouthOuterWall_R03" parent="Geometry" unique_id=229484677 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 30)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WestOuterWall_R01" parent="Geometry" unique_id=1451999369 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, -25)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EastOuterWall_R01" parent="Geometry" unique_id=868176936 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, -25)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WestOuterWall_R02" parent="Geometry" unique_id=1964375780 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, -15)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EastOuterWall_R02" parent="Geometry" unique_id=1868870337 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, -15)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WestOuterWall_R03" parent="Geometry" unique_id=1912992837 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, -5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EastOuterWall_R03" parent="Geometry" unique_id=1082107018 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, -5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WestOuterWall_R04" parent="Geometry" unique_id=1658100506 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, 5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EastOuterWall_R04" parent="Geometry" unique_id=1621869622 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, 5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WestOuterWall_R05" parent="Geometry" unique_id=70959938 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, 15)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EastOuterWall_R05" parent="Geometry" unique_id=1280504469 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, 15)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WestOuterWall_R06" parent="Geometry" unique_id=67745038 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, 25)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EastOuterWall_R06" parent="Geometry" unique_id=1082905671 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, 25)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R1_2_WallTopSeg" parent="Geometry" unique_id=2027773007 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -28.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R1_2_WallBottomSeg" parent="Geometry" unique_id=122200310 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -21.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R1_2_TopFill" parent="Geometry" unique_id=1259956027 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.74, -25)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R2_3_FullWall" parent="Geometry" unique_id=833134108 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -25)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R4_5_WallTopSeg" parent="Geometry" unique_id=1873131863 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -18.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R4_5_WallBottomSeg" parent="Geometry" unique_id=1574269632 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -11.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R4_5_TopFill" parent="Geometry" unique_id=294027515 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.74, -15)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R5_6_WallTopSeg" parent="Geometry" unique_id=1532697293 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -18.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R5_6_WallBottomSeg" parent="Geometry" unique_id=662973264 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -11.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R5_6_TopFill" parent="Geometry" unique_id=1726739956 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.74, -15)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R7_8_WallTopSeg" parent="Geometry" unique_id=1761764280 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -8.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R7_8_WallBottomSeg" parent="Geometry" unique_id=756146476 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -1.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R7_8_TopFill" parent="Geometry" unique_id=1971929433 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.74, -5)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R8_9_WallTopSeg" parent="Geometry" unique_id=1846595775 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -8.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R8_9_WallBottomSeg" parent="Geometry" unique_id=1184845380 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -1.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R8_9_TopFill" parent="Geometry" unique_id=1984154794 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.74, -5)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R10_11_FullWall" parent="Geometry" unique_id=139658260 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R11_12_FullWall" parent="Geometry" unique_id=2008671249 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R13_14_WallTopSeg" parent="Geometry" unique_id=1976747828 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 11.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R13_14_WallBottomSeg" parent="Geometry" unique_id=43199885 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 18.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R13_14_TopFill" parent="Geometry" unique_id=1400127209 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.74, 15)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R14_15_WallTopSeg" parent="Geometry" unique_id=579390544 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 11.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R14_15_WallBottomSeg" parent="Geometry" unique_id=123582737 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 18.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R14_15_TopFill" parent="Geometry" unique_id=618802143 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.74, 15)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R16_17_WallTopSeg" parent="Geometry" unique_id=1412374590 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 21.35)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R16_17_WallBottomSeg" parent="Geometry" unique_id=1231756294 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 28.65)
 piece_size = Vector3(0.4, 7, 2.7)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 2.66)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R16_17_TopFill" parent="Geometry" unique_id=977565958 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.74, 25)
 piece_size = Vector3(0.4, 2.52, 4.6)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R17_18_FullWall" parent="Geometry" unique_id=564540337 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 25)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(0.42, 0.28, 9.96)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R1_4_FullWall" parent="Geometry" unique_id=447450162 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -20)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R2_5_WallLeftSeg" parent="Geometry" unique_id=1026679369 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.15, 3.5, -20)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.05, 3.5, -20)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R2_5_WallRightSeg" parent="Geometry" unique_id=1746558162 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, 3.5, -20)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, 3.5, -20)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R2_5_TopFill" parent="Geometry" unique_id=1455145059 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.74, -20)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R3_6_WallLeftSeg" parent="Geometry" unique_id=1620870175 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.85, 3.5, -20)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.95, 3.5, -20)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R3_6_WallRightSeg" parent="Geometry" unique_id=1113656320 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.15, 3.5, -20)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.05, 3.5, -20)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R3_6_TopFill" parent="Geometry" unique_id=587398455 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5.74, -20)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R4_7_WallLeftSeg" parent="Geometry" unique_id=430580869 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.15, 3.5, -10)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.05, 3.5, -10)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R4_7_WallRightSeg" parent="Geometry" unique_id=1885660211 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.85, 3.5, -10)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.95, 3.5, -10)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R4_7_TopFill" parent="Geometry" unique_id=52578878 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5.74, -10)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R5_8_WallLeftSeg" parent="Geometry" unique_id=421082268 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.15, 3.5, -10)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.05, 3.5, -10)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R5_8_WallRightSeg" parent="Geometry" unique_id=1417589554 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, 3.5, -10)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, 3.5, -10)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R5_8_TopFill" parent="Geometry" unique_id=1140601993 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.74, -10)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R6_9_WallLeftSeg" parent="Geometry" unique_id=1011588598 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.85, 3.5, -10)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.95, 3.5, -10)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R6_9_WallRightSeg" parent="Geometry" unique_id=1640907494 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.15, 3.5, -10)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.05, 3.5, -10)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R6_9_TopFill" parent="Geometry" unique_id=1761431634 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5.74, -10)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R7_10_WallLeftSeg" parent="Geometry" unique_id=147244140 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.15, 3.5, 0)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.05, 3.5, 0)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R7_10_WallRightSeg" parent="Geometry" unique_id=29262235 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.85, 3.5, 0)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.95, 3.5, 0)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R7_10_TopFill" parent="Geometry" unique_id=2133700743 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5.74, 0)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R8_11_WallLeftSeg" parent="Geometry" unique_id=117664358 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.15, 3.5, 0)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.05, 3.5, 0)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R8_11_WallRightSeg" parent="Geometry" unique_id=2111616601 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, 3.5, 0)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, 3.5, 0)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R8_11_TopFill" parent="Geometry" unique_id=171323914 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.74, 0)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R9_12_WallLeftSeg" parent="Geometry" unique_id=612058556 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.85, 3.5, 0)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.95, 3.5, 0)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R9_12_WallRightSeg" parent="Geometry" unique_id=1131650565 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.15, 3.5, 0)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.05, 3.5, 0)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R9_12_TopFill" parent="Geometry" unique_id=1440490774 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5.74, 0)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R10_13_FullWall" parent="Geometry" unique_id=1208743492 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 10)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R11_14_WallLeftSeg" parent="Geometry" unique_id=1481618700 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.15, 3.5, 10)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.05, 3.5, 10)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R11_14_WallRightSeg" parent="Geometry" unique_id=638446842 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, 3.5, 10)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, 3.5, 10)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R11_14_TopFill" parent="Geometry" unique_id=91805644 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.74, 10)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R12_15_FullWall" parent="Geometry" unique_id=529183916 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 10)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R13_16_FullWall" parent="Geometry" unique_id=1900483178 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 20)
-piece_size = Vector3(12, 7, 0.4)
+piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(11.56, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R14_17_WallLeftSeg" parent="Geometry" unique_id=1278449488 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.15, 3.5, 20)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.05, 3.5, 20)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R14_17_WallRightSeg" parent="Geometry" unique_id=372545328 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.15, 3.5, 20)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, 3.5, 20)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R14_17_TopFill" parent="Geometry" unique_id=1883620721 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.74, 20)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="R15_18_WallLeftSeg" parent="Geometry" unique_id=1119533559 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.85, 3.5, 20)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.95, 3.5, 20)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R15_18_WallRightSeg" parent="Geometry" unique_id=1648377563 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.15, 3.5, 20)
-piece_size = Vector3(3.7, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.05, 3.5, 20)
+piece_size = Vector3(3.5, 7, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = true
+floor_trim_size = Vector3(3.46, 0.28, 0.42)
+floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="R15_18_TopFill" parent="Geometry" unique_id=1058389698 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5.74, 20)
 piece_size = Vector3(4.6, 2.52, 0.4)
 surface_material = ExtResource("3_wall")
+occlusion_enabled = true
+floor_trim_enabled = false
 
 [node name="EnemyNavigation" type="Node3D" parent="." unique_id=174762807]
 

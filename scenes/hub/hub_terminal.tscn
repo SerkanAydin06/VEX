@@ -34,6 +34,13 @@ info_message = "BASTION-7 SİSTEMİ ÇEVRİMİÇİ"
 offline = false
 offline_message = "POWER OFFLINE"
 screen_header = "VEX // BASTION-7"
+mission_control_text = "MISSION CONTROL"
+deployment_ready_text = "DEPLOYMENT HAZIR"
+operation_text = "OPERASYON"
+no_mission_text = "YENİ GÖREV YOK"
+mission_waiting_text = "YENİ OPERASYON BEKLENİYOR"
+select_operation_text = "OPERASYON SEÇ"
+deploy_text = "GÖREVE ÇIK"
 active_color = Color(0.32, 0.95, 1, 1)
 offline_color = Color(1, 0.2, 0.08, 1)
 

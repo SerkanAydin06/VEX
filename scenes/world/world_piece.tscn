@@ -9,7 +9,7 @@ size = Vector3(4, 3, 0.3)
 
 [sub_resource type="BoxMesh" id="BoxMesh_floor_trim"]
 resource_local_to_scene = true
-size = Vector3(4.08, 0.34, 0.48)
+size = Vector3(3.96, 0.28, 0.32)
 
 [sub_resource type="BoxShape3D" id="BoxShape_piece"]
 resource_local_to_scene = true
@@ -26,16 +26,16 @@ piece_size = Vector3(4, 3, 0.3)
 surface_material = null
 cast_shadow = true
 occlusion_enabled = true
-floor_trim_enabled = true
-floor_trim_height = 0.34
-floor_trim_depth = 0.18
-floor_trim_vertical_offset = 0.06
+floor_trim_enabled = false
+floor_trim_size = Vector3(3.96, 0.28, 0.32)
+floor_trim_position = Vector3(0, -1.33, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_piece")
 
 [node name="BaseTrim" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.27, 0)
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.33, 0)
 material_override = ExtResource("2_trim_material")
 mesh = SubResource("BoxMesh_floor_trim")
 

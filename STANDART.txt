@@ -54,3 +54,41 @@ BASTION-7 HUB STANDARDI
 - Armory rafları yalnız görevlerde daha önce açılmış silahları kuşandırır; kilitli silahı kod açmaz.
 - Hub terminal, silah rafı, automap, ambience ve ışık ayarları Inspector'dan düzenlenir.
 - Bastion-7 güvenli bölge olduğundan `allow_weapon_fire = false`; silah değiştirme serbest, ateş etme kapalıdır.
+
+
+BASE TRIM STANDARDI
+- BaseTrim materyali sade, tileable, triplanar metal strip kullanır.
+- BaseTrim yatay izdüşümde duvar gövdesinden taşmaz.
+- BaseTrim kalınlığı duvar kalınlığı ile aynıdır.
+- Trim ana eksende 0.04 m teknik iç pay ile kısaltılır; köşelerde üst üste binme azaltılır.
+- Varsayılan: yükseklik 0.28 m, depth extra 0.0, vertical offset 0.03.
+
+
+DUVAR BİRLEŞİM STANDARDI
+- 0.40 m duvarlar köşelerde hacim olarak üst üste binmez.
+- Yatay ve dikey duvar birleşiminde biten parça diğer duvarın yüzünde tam biter.
+- T birleşiminde sona eren duvar devam eden duvarın yüzünde biter.
+- Level 1, Level 2 ve Bastion-7 bu butt-joint standardındadır.
+
+KAPI GİZLENME STANDARDI
+- Yana açılan kapının görsel PanelBody kalınlığı 0.30 m'dir; fizik/collision gövdesi 0.38 m kalır.
+- Kapı görselleri 0.40 m duvar yüzeyinin içinde kalır; tam açıkken yan duvarın dışından görünmez.
+
+BASE TRIM GÜNCEL STANDARDI
+- BaseTrim ana eksende duvardan toplam 0.04 m kısa tutulur.
+- Duvar kalınlığından toplam yalnız 0.02 m daha kalındır; her yüzde yaklaşık 0.01 m çıkıntı yapar.
+- Varsayılan floor_trim_depth = 0.02 m.
+
+
+SAHNE OTORİTESİ — GEOMETRİ / KAPI
+- WorldPiece kodu BaseTrim ölçüsü hesaplamaz. Her duvarın floor_trim_size ve floor_trim_position değeri ilgili .tscn sahnesinde açıkça saklanır.
+- floor_trim_enabled ve occlusion_enabled her geometry instance için sahneden belirlenir.
+- BaseTrim standart çıkıntısı duvar kalınlığından toplam 0.02 m fazladır (her yüzde yaklaşık 0.01 m).
+- Kapı açık hedefleri opening_offset_left / opening_offset_right / opening_offset_up olarak door_side_slide.tscn Inspector ayarıdır. Kod hedef mesafe üretmez; yalnız sahnedeki offset'e tween uygular.
+- Runtime kodu sahne tuning değerlerini değiştirmez.
+
+TERMINAL / KAPI SAHNE OTORİTESİ
+- Hub terminal durum metinleri hub_terminal.tscn Inspector export alanlarından düzenlenir; kod metin hard-code etmez.
+- Deployment sırasında terminal sahneden çıkarken ekran refresh çağrısı yapılmaz.
+- DoorSideSlide görsel PanelBody kalınlığı 0.30 m; collision kalınlığı 0.38 m ve 0.40 m duvar içinde açık durumda gizlenir.
+- Kapı görsel yüzleri PanelBody yüzeyinde ±0.15 m konumundadır.
