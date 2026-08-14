@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://cn2d45b6k6ypg"]
+
+[ext_resource type="Texture2D" uid="uid://bx60c3mrcanmr" path="res://assets/world/Dark-Metal-Texture.png" id="1_dlbc2"]
+[ext_resource type="Texture2D" uid="uid://bwttj75mesnnw" path="res://assets/world/metal_texture_image.png" id="2_0i56b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dlbc2"]
+albedo_color = Color(0.33288082, 0.33288062, 0.33288077, 1)
+albedo_texture = ExtResource("1_dlbc2")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0i56b"]
+albedo_color = Color(0.40392157, 0.40392157, 0.40392157, 1)
+albedo_texture = ExtResource("2_0i56b")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e160j"]
+albedo_color = Color(0.40392157, 0.40392157, 0.40392157, 1)
+albedo_texture = ExtResource("2_0i56b")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aq7pb"]
+albedo_color = Color(0.40392157, 0.40392157, 0.40392157, 1)
+albedo_texture = ExtResource("2_0i56b")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rp5w5"]
+albedo_color = Color(0.40392157, 0.40392157, 0.40392157, 1)
+albedo_texture = ExtResource("2_0i56b")
+uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ox1dq"]
+size = Vector3(2.102291, 1.597992, 1.3239746)
+
+[node name="Table" type="Node3D" unique_id=1255500891]
+
+[node name="Table" type="StaticBody3D" parent="." unique_id=324226767]
+
+[node name="TableTop" type="CSGBox3D" parent="Table" unique_id=293063597]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+size = Vector3(2, 0.1, 1.2)
+material = SubResource("StandardMaterial3D_dlbc2")
+
+[node name="TableLeg1" type="CSGBox3D" parent="Table" unique_id=1683109460]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.5, 0.464)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("StandardMaterial3D_0i56b")
+
+[node name="TableLeg2" type="CSGBox3D" parent="Table" unique_id=824907964]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.5, 0.433)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("StandardMaterial3D_e160j")
+
+[node name="TableLeg3" type="CSGBox3D" parent="Table" unique_id=718310692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.5, -0.453)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("StandardMaterial3D_aq7pb")
+
+[node name="TableLeg4" type="CSGBox3D" parent="Table" unique_id=779960111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.5, -0.468)
+size = Vector3(0.08, 1, 0.08)
+material = SubResource("StandardMaterial3D_rp5w5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Table" unique_id=818696150]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0013809204, 0.29899597, 0.022094727)
+shape = SubResource("BoxShape3D_ox1dq")
