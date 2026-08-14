@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dqe7kn4gmrjkv"]
+[gd_scene format=3 uid="uid://dqe7kn4gmrjkv"]
 
 [ext_resource type="Script" uid="uid://cmetcy0rwgonp" path="res://scripts/world/world_piece.gd" id="1_script"]
 [ext_resource type="Material" uid="uid://1bosks68ivyg" path="res://resources/materials/wall_floor_trim.tres" id="2_trim_material"]
@@ -9,7 +9,7 @@ size = Vector3(4, 3, 0.3)
 
 [sub_resource type="BoxMesh" id="BoxMesh_floor_trim"]
 resource_local_to_scene = true
-size = Vector3(3.96, 0.28, 0.32)
+size = Vector3(4.0040917, 0.28, 0.32)
 
 [sub_resource type="BoxShape3D" id="BoxShape_piece"]
 resource_local_to_scene = true
@@ -19,28 +19,23 @@ size = Vector3(4, 3, 0.3)
 resource_local_to_scene = true
 size = Vector3(4, 3, 0.3)
 
-[node name="WorldPiece" type="StaticBody3D"]
+[node name="WorldPiece" type="StaticBody3D" unique_id=614928355]
 collision_mask = 0
 script = ExtResource("1_script")
-piece_size = Vector3(4, 3, 0.3)
-surface_material = null
-cast_shadow = true
-occlusion_enabled = true
-floor_trim_enabled = false
-floor_trim_size = Vector3(3.96, 0.28, 0.32)
-floor_trim_position = Vector3(0, -1.33, 0)
+cast_shadow = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1116505730]
+cast_shadow = 0
 mesh = SubResource("BoxMesh_piece")
 
-[node name="BaseTrim" type="MeshInstance3D" parent="."]
-visible = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.33, 0)
+[node name="BaseTrim" type="MeshInstance3D" parent="." unique_id=42417128]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0006982684, -1.3853002, 0)
 material_override = ExtResource("2_trim_material")
+cast_shadow = 0
 mesh = SubResource("BoxMesh_floor_trim")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=629371637]
 shape = SubResource("BoxShape_piece")
 
-[node name="OccluderInstance3D" type="OccluderInstance3D" parent="."]
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=1076661441]
 occluder = SubResource("BoxOccluder3D_piece")
