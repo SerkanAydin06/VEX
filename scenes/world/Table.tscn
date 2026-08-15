@@ -29,40 +29,38 @@ albedo_texture = ExtResource("2_0i56b")
 [sub_resource type="BoxShape3D" id="BoxShape3D_ox1dq"]
 size = Vector3(2.102291, 1.597992, 1.3239746)
 
-[node name="Table" type="Node3D" unique_id=1255500891]
+[node name="Table" type="StaticBody3D" unique_id=324226767]
 
-[node name="Table" type="StaticBody3D" parent="." unique_id=324226767]
-
-[node name="TableTop" type="CSGBox3D" parent="Table" unique_id=293063597]
+[node name="TableTop" type="CSGBox3D" parent="." unique_id=293063597]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 cast_shadow = 0
 size = Vector3(2, 0.05, 1)
 material = SubResource("StandardMaterial3D_dlbc2")
 
-[node name="TableLeg1" type="CSGBox3D" parent="Table" unique_id=1683109460]
+[node name="TableLeg1" type="CSGBox3D" parent="." unique_id=1683109460]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.5, 0.464)
 cast_shadow = 0
 size = Vector3(0.04, 1, 0.04)
 material = SubResource("StandardMaterial3D_0i56b")
 
-[node name="TableLeg2" type="CSGBox3D" parent="Table" unique_id=824907964]
+[node name="TableLeg2" type="CSGBox3D" parent="." unique_id=824907964]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.5, 0.433)
 cast_shadow = 0
 size = Vector3(0.04, 1, 0.04)
 material = SubResource("StandardMaterial3D_e160j")
 
-[node name="TableLeg3" type="CSGBox3D" parent="Table" unique_id=718310692]
+[node name="TableLeg3" type="CSGBox3D" parent="." unique_id=718310692]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.5, -0.453)
 cast_shadow = 0
 size = Vector3(0.04, 1, 0.04)
 material = SubResource("StandardMaterial3D_aq7pb")
 
-[node name="TableLeg4" type="CSGBox3D" parent="Table" unique_id=779960111]
+[node name="TableLeg4" type="CSGBox3D" parent="." unique_id=779960111]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.5, -0.468)
 cast_shadow = 0
 size = Vector3(0.04, 1, 0.04)
 material = SubResource("StandardMaterial3D_rp5w5")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Table" unique_id=818696150]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=818696150]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0013809204, 0.29899597, 0.022094727)
 shape = SubResource("BoxShape3D_ox1dq")
