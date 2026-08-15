@@ -1,3 +1,79 @@
 [gd_scene format=3 uid="uid://88mtv7yws8dd"]
 
-[node name="Pc" type="Node3D" unique_id=910757071]
+[ext_resource type="Texture2D" uid="uid://0evsgpec0d5g" path="res://assets/world/pc_sides.png" id="1_byjfj"]
+[ext_resource type="Texture2D" uid="uid://cfcj53j6uhph5" path="res://assets/world/pc_rear.png" id="2_yhp6e"]
+[ext_resource type="Texture2D" uid="uid://b4pgmj7lali6o" path="res://assets/world/pc_front.png" id="3_35w6y"]
+[ext_resource type="Texture2D" uid="uid://cw5tgq80gjals" path="res://assets/world/pc_screen.png" id="4_35w6y"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8mx28"]
+size = Vector3(1.4179688, 0.9375, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0edim"]
+albedo_color = Color(0.56078434, 0.56078434, 0.56078434, 1)
+albedo_texture = ExtResource("1_byjfj")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kgt02"]
+albedo_color = Color(0.5609549, 0.5609549, 0.5609549, 1)
+albedo_texture = ExtResource("3_35w6y")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8mx28"]
+albedo_color = Color(0.56078434, 0.56078434, 0.56078434, 1)
+albedo_texture = ExtResource("2_yhp6e")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s3qqb"]
+albedo_color = Color(0.36282945, 0.36282945, 0.36282945, 1)
+albedo_texture = ExtResource("1_byjfj")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yh0xl"]
+albedo_color = Color(0.3779188, 0.37791887, 0.37791884, 1)
+albedo_texture = ExtResource("4_35w6y")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_35w6y"]
+albedo_texture = ExtResource("1_byjfj")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xdv4f"]
+albedo_color = Color(0.24840015, 0.24840018, 0.24840015, 1)
+albedo_texture = ExtResource("1_byjfj")
+
+[node name="Pc" type="StaticBody3D" unique_id=1229393752]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1791135717]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20898438, 0.03125, 0)
+shape = SubResource("BoxShape3D_8mx28")
+
+[node name="Case" type="CSGBox3D" parent="." unique_id=1620025451]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22715682, -0.012708873, 0)
+size = Vector3(0.25, 0.5, 0.5)
+material = SubResource("StandardMaterial3D_0edim")
+
+[node name="CaseFront" type="CSGBox3D" parent="." unique_id=726236188]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22775063, -0.012220591, 0.24913168)
+size = Vector3(0.232, 0.484, 0.009)
+material = SubResource("StandardMaterial3D_kgt02")
+
+[node name="CaseRear" type="CSGBox3D" parent="." unique_id=1987526603]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22747803, -0.0042555034, -0.25084668)
+size = Vector3(0.23205566, 0.48382568, 0.008666992)
+material = SubResource("StandardMaterial3D_8mx28")
+
+[node name="ScreenFrame" type="CSGBox3D" parent="." unique_id=1982698465]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46313184, 0.068222046, -0.004486084)
+size = Vector3(0.886, 0.5, 0.026)
+material = SubResource("StandardMaterial3D_s3qqb")
+
+[node name="Screen" type="CSGBox3D" parent="." unique_id=302345903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46180564, 0.06596176, 0)
+size = Vector3(0.8249756, 0.4407715, 0.02)
+material = SubResource("StandardMaterial3D_yh0xl")
+
+[node name="ScreenLeg" type="CSGBox3D" parent="." unique_id=477578479]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47664943, -0.13502502, -0.023354255)
+size = Vector3(0.07257421, 0.20239258, 0.026)
+material = SubResource("StandardMaterial3D_35w6y")
+
+[node name="ScreenLegBottom" type="CSGCylinder3D" parent="." unique_id=1701524325]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47660255, -0.25698632, -0.024946094)
+radius = 0.16210938
+height = 0.044189453
+sides = 32
+material = SubResource("StandardMaterial3D_xdv4f")
