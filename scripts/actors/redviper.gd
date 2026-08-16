@@ -42,6 +42,8 @@ extends CharacterBody3D
 @export_range(2.0, 20.0, 0.5) var ally_alert_radius := 9.0
 @export_range(0.0, 3.0, 0.05) var sight_origin_height := 0.65
 @export_range(0.0, 3.0, 0.05) var sight_target_height := 0.45
+@export_range(0.0, 1.0, 0.05) var crouch_detection_chance := 0.45
+@export_range(0.5, 5.0, 0.25) var crouch_guaranteed_detection_distance := 3.0
 @export var aggro_on_damage := true
 @export var alert_allies_on_detection := true
 @export var alert_allies_on_damage := true
@@ -448,16 +450,53 @@ func _check_line_of_sight() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
 
+	# Crouch sırasında oyuncunun kapsülünün üstü alçalıyor. Sabit 0.45 m
+	# hedef noktası crouched kapsülün üstünde kalabildiği için ray oyuncuya
+	# hiç çarpmıyordu. Hedefi oyuncunun gerçek collision shape yüksekliğine göre
+	# belirliyoruz.
+	var target_height := sight_target_height
+	if _player.get("is_crouching") == true:
+		target_height = _get_crouched_sight_target_height()
+
 	var origin: Vector3 = global_position + Vector3.UP * sight_origin_height
-	var target: Vector3 = _player.global_position + Vector3.UP * sight_target_height
+	var target: Vector3 = _player.global_position + Vector3.UP * target_height
 	var query := PhysicsRayQueryParameters3D.create(
 		origin,
 		target,
-		collision_mask,
+		1 | 2,
 		[get_rid()]
 	)
 	var result: Dictionary = get_world_3d().direct_space_state.intersect_ray(query)
-	return not result.is_empty() and result.get("collider") == _player
+	if result.is_empty():
+		return false
+
+	var collider := result.get("collider") as Node
+	if not _is_player_collider(collider):
+		return false
+
+	var player_distance := _horizontal_distance(global_position, _player.global_position)
+	if _player.get("is_crouching") == true and player_distance > crouch_guaranteed_detection_distance:
+		return randf() <= crouch_detection_chance
+
+	return true
+
+
+func _get_crouched_sight_target_height() -> float:
+	var shape_node := _player.get_node_or_null("CollisionShape3D") as CollisionShape3D
+	if shape_node != null:
+		var capsule := shape_node.shape as CapsuleShape3D
+		if capsule != null:
+			var top_height := shape_node.position.y + (capsule.height * 0.5)
+			return clampf(top_height * 0.5, -0.2, sight_target_height)
+	return 0.0
+
+
+func _is_player_collider(collider: Node) -> bool:
+	if collider == null:
+		return false
+	if collider == _player:
+		return true
+	return collider.get_parent() == _player
 
 
 func _get_cached_player_visibility(
