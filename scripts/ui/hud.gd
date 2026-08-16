@@ -150,7 +150,19 @@ func _input(event: InputEvent) -> void:
 	if _is_dead:
 		return
 
-	if event.is_action_pressed("automap"):
+	# TAB is the primary automap shortcut. Keep the InputMap action as a
+	# configurable fallback, but also accept the physical/keycode directly
+	# so the map cannot silently stop working when the project input mapping
+	# is changed or regenerated.
+	var is_tab_pressed := false
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+		is_tab_pressed = key_event.pressed and not key_event.echo and (
+			key_event.keycode == KEY_TAB
+			or key_event.physical_keycode == KEY_TAB
+		)
+
+	if event.is_action_pressed("automap") or is_tab_pressed:
 		if not pause_menu.visible and not get_tree().paused:
 			get_viewport().set_input_as_handled()
 			_set_map_open(not map_overlay.visible)

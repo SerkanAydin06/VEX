@@ -117,7 +117,6 @@ func _physics_process(delta: float) -> void:
 	var input_vector := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var local_direction := Vector3(input_vector.x, 0.0, input_vector.y)
 	var world_direction := (transform.basis * local_direction).normalized()
-	_update_crouch_state()
 	_update_aiming(delta)
 	var wants_to_sprint := (
 		Input.is_action_pressed("sprint")
@@ -151,7 +150,16 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_dead or get_tree().paused:
 		return
 
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	if event.is_action_pressed("crouch"):
+		# C = toggle crouch. Basili tutma gerekmez. Ayağa kalkmak için
+		# yeterli alan yoksa mevcut çömelme korunur.
+		if is_crouching:
+			if _can_stand_up():
+				_set_crouching(false)
+		else:
+			_set_crouching(true)
+		get_viewport().set_input_as_handled()
+	elif event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mouse_event := event as InputEventMouseMotion
 		rotate_y(deg_to_rad(-mouse_event.relative.x * SettingsManager.mouse_sensitivity))
 		_pitch = clampf(
@@ -512,13 +520,6 @@ func _setup_crouch_dimensions() -> void:
 		capsule.radius * 2.0,
 		_standing_capsule_height
 	)
-
-
-func _update_crouch_state() -> void:
-	if Input.is_action_pressed("crouch"):
-		_set_crouching(true)
-	elif is_crouching and _can_stand_up():
-		_set_crouching(false)
 
 
 func _set_crouching(value: bool) -> void:
