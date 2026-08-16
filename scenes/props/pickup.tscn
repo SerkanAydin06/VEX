@@ -19,7 +19,7 @@ display_name = "NESNE"
 spawn_max_difficulty = 3
 scale_amount_with_difficulty = true
 visual_texture = null
-visual_pixel_size = 0.00255
+visual_pixel_size = 0.00055
 bob_height = 0.09
 bob_speed = 1.8
 
@@ -29,7 +29,7 @@ shape = SubResource("SphereShape_pickup")
 [node name="VisualPivot" type="Node3D" parent="."]
 
 [node name="Visual" type="Sprite3D" parent="VisualPivot"]
-pixel_size = 0.00255
+pixel_size = 0.00055
 billboard = 2
 alpha_cut = 1
 

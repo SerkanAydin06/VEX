@@ -1,26 +1,28 @@
-[gd_scene load_steps=35 format=3 uid="uid://c4gn8k6ogvf0n"]
+[gd_scene format=3 uid="uid://c4gn8k6ogvf0n"]
 
 [ext_resource type="Script" uid="uid://dcjn4lehfpt6g" path="res://scripts/ui/hud.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/ui/hud_frame.png" id="3_frame"]
-[ext_resource type="Texture2D" path="res://assets/ui/crosshair_doom3_circle.png" id="4_crosshair"]
-[ext_resource type="Texture2D" path="res://assets/ui/automap_console_frame.png" id="6_map_frame"]
-[ext_resource type="Script" path="res://scripts/ui/automap_view.gd" id="7_automap"]
-[ext_resource type="Texture2D" path="res://assets/pickups/key_blue.png" id="8_key"]
-[ext_resource type="Texture2D" path="res://assets/weapons/pistol_idle.png" id="9_pistol_idle"]
-[ext_resource type="Texture2D" path="res://assets/weapons/pistol_fire.png" id="10_pistol_fire"]
-[ext_resource type="Texture2D" path="res://assets/weapons/shotgun_idle.png" id="11_shotgun_idle"]
-[ext_resource type="Texture2D" path="res://assets/weapons/shotgun_fire.png" id="12_shotgun_fire"]
+[ext_resource type="Texture2D" uid="uid://dk2rx77u2jg88" path="res://assets/ui/hud_frame.png" id="3_frame"]
+[ext_resource type="Texture2D" uid="uid://drjnb7q64xjwu" path="res://assets/ui/crosshair_doom3_circle.png" id="4_crosshair"]
+[ext_resource type="Texture2D" uid="uid://bn1ug716sunu0" path="res://assets/ui/automap_console_frame.png" id="6_map_frame"]
+[ext_resource type="Script" uid="uid://ct0slkur86ywi" path="res://scripts/ui/automap_view.gd" id="7_automap"]
+[ext_resource type="Texture2D" uid="uid://bjeurg4ipxvmu" path="res://assets/pickups/key_blue.png" id="8_key_blue"]
+[ext_resource type="Texture2D" uid="uid://clp5g0eqcky2c" path="res://assets/pickups/key_red.png" id="9_key_red"]
+[ext_resource type="Texture2D" uid="uid://c5wwjhxd32t8d" path="res://assets/weapons/pistol_idle.png" id="9_pistol_idle"]
+[ext_resource type="Texture2D" uid="uid://blwigqvrkpxbe" path="res://assets/pickups/key_yellow.png" id="10_key_yellow"]
+[ext_resource type="Texture2D" uid="uid://bnrec1nktim3e" path="res://assets/weapons/pistol_fire.png" id="10_pistol_fire"]
+[ext_resource type="Texture2D" uid="uid://c5rugkiy6ngcn" path="res://assets/weapons/shotgun_idle.png" id="11_shotgun_idle"]
+[ext_resource type="Texture2D" uid="uid://unrvo2i62rpv" path="res://assets/weapons/shotgun_fire.png" id="12_shotgun_fire"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="13_pause"]
-[ext_resource type="Texture2D" path="res://assets/ui/blood_vignette.png" id="14_blood"]
-[ext_resource type="Texture2D" path="res://assets/ui/blood_vignette_critical.png" id="15_blood_critical"]
-[ext_resource type="Texture2D" path="res://assets/ui/hud_bottom_panel.png" id="16_bottom_panel"]
-[ext_resource type="Texture2D" path="res://assets/ui/hud_objective_panel.png" id="17_objective_panel"]
+[ext_resource type="Texture2D" uid="uid://dwv6dgosxheen" path="res://assets/ui/blood_vignette.png" id="14_blood"]
+[ext_resource type="Texture2D" uid="uid://b6iwopfobi8ob" path="res://assets/ui/blood_vignette_critical.png" id="15_blood_critical"]
+[ext_resource type="Texture2D" uid="uid://7te3y5qk5ekc" path="res://assets/ui/hud_bottom_panel.png" id="16_bottom_panel"]
+[ext_resource type="Texture2D" uid="uid://dat1se0hmkvxa" path="res://assets/ui/hud_objective_panel.png" id="17_objective_panel"]
 [ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="18_mono_font"]
-[ext_resource type="Texture2D" path="res://assets/weapons/pistol_reload_1.png" id="19_pistol_reload_1"]
-[ext_resource type="Texture2D" path="res://assets/weapons/pistol_reload_2.png" id="20_pistol_reload_2"]
-[ext_resource type="Texture2D" path="res://assets/weapons/shotgun_reload_1.png" id="21_shotgun_reload_1"]
-[ext_resource type="Texture2D" path="res://assets/weapons/shotgun_reload_2.png" id="22_shotgun_reload_2"]
+[ext_resource type="Texture2D" uid="uid://lbgatekppr8w" path="res://assets/weapons/pistol_reload_1.png" id="19_pistol_reload_1"]
+[ext_resource type="Texture2D" uid="uid://cwx47xhvrc8nl" path="res://assets/weapons/pistol_reload_2.png" id="20_pistol_reload_2"]
+[ext_resource type="Texture2D" uid="uid://cd6fjch1kktsm" path="res://assets/weapons/shotgun_reload_1.png" id="21_shotgun_reload_1"]
+[ext_resource type="Texture2D" uid="uid://n15fw2fj0a6a" path="res://assets/weapons/shotgun_reload_2.png" id="22_shotgun_reload_2"]
 [ext_resource type="AudioStream" uid="uid://6r2ekfh65cg2" path="res://assets/audio/pistol_fire_pro.wav" id="23_pistol_audio"]
 [ext_resource type="AudioStream" uid="uid://km5n3iai504p" path="res://assets/audio/shotgun_fire_pro.wav" id="24_shotgun_audio"]
 [ext_resource type="AudioStream" uid="uid://dfiiq8d0261ko" path="res://assets/audio/pistol_reload_pro.wav" id="25_pistol_reload_audio"]
@@ -35,7 +37,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("9_pistol_idle")
 }],
-"loop": false,
+"loop": 0,
 "name": &"equip",
 "speed": 1.0
 }, {
@@ -46,7 +48,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("9_pistol_idle")
 }],
-"loop": false,
+"loop": 0,
 "name": &"fire",
 "speed": 12.0
 }, {
@@ -54,7 +56,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("9_pistol_idle")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle",
 "speed": 1.0
 }, {
@@ -71,7 +73,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("9_pistol_idle")
 }],
-"loop": false,
+"loop": 0,
 "name": &"reload",
 "speed": 3.6
 }]
@@ -82,7 +84,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("11_shotgun_idle")
 }],
-"loop": false,
+"loop": 0,
 "name": &"equip",
 "speed": 1.0
 }, {
@@ -93,7 +95,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("11_shotgun_idle")
 }],
-"loop": false,
+"loop": 0,
 "name": &"fire",
 "speed": 7.0
 }, {
@@ -101,7 +103,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("11_shotgun_idle")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle",
 "speed": 1.0
 }, {
@@ -118,7 +120,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("11_shotgun_idle")
 }],
-"loop": false,
+"loop": 0,
 "name": &"reload",
 "speed": 2.8
 }]
@@ -151,15 +153,11 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" unique_id=1189378943]
 process_mode = 3
 script = ExtResource("1_script")
-crosshair_default_color = Color(0.93, 0.96, 1, 0.78)
-crosshair_hit_color = Color(1, 0, 0, 1)
-crosshair_hit_duration = 0.24
-world_ui_sample_interval = 0.05
 
-[node name="Root" type="Control" parent="."]
+[node name="Root" type="Control" parent="." unique_id=190228756]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -169,7 +167,7 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("2_theme")
 
-[node name="WeaponLayer" type="Control" parent="Root"]
+[node name="WeaponLayer" type="Control" parent="Root" unique_id=1206836322]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -179,7 +177,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PistolSprite" type="AnimatedSprite2D" parent="Root/WeaponLayer"]
+[node name="PistolSprite" type="AnimatedSprite2D" parent="Root/WeaponLayer" unique_id=1600221760]
 unique_name_in_owner = true
 texture_filter = 2
 position = Vector2(992, 706)
@@ -187,7 +185,7 @@ sprite_frames = SubResource("SpriteFrames_pistol")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="ShotgunSprite" type="AnimatedSprite2D" parent="Root/WeaponLayer"]
+[node name="ShotgunSprite" type="AnimatedSprite2D" parent="Root/WeaponLayer" unique_id=1615587853]
 unique_name_in_owner = true
 visible = false
 texture_filter = 2
@@ -196,59 +194,59 @@ sprite_frames = SubResource("SpriteFrames_shotgun")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="AK47Sprite" type="AnimatedSprite2D" parent="Root/WeaponLayer"]
+[node name="AK47Sprite" type="AnimatedSprite2D" parent="Root/WeaponLayer" unique_id=2049858700]
 unique_name_in_owner = true
 visible = false
 texture_filter = 2
 position = Vector2(990, 790)
 rotation = 0.0698132
 
-[node name="PistolAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer"]
+[node name="PistolAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1631838649]
 unique_name_in_owner = true
 stream = ExtResource("23_pistol_audio")
 volume_db = -4.0
 max_polyphony = 12
 bus = &"SFX"
 
-[node name="ShotgunAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer"]
+[node name="ShotgunAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1667912531]
 unique_name_in_owner = true
 stream = ExtResource("24_shotgun_audio")
 volume_db = -3.0
 max_polyphony = 4
 bus = &"SFX"
 
-[node name="PistolReloadAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer"]
+[node name="PistolReloadAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=974088784]
 unique_name_in_owner = true
 stream = ExtResource("25_pistol_reload_audio")
 volume_db = 1.0
 bus = &"SFX"
 
-[node name="ShotgunReloadAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer"]
+[node name="ShotgunReloadAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1053402625]
 unique_name_in_owner = true
 stream = ExtResource("26_shotgun_reload_audio")
 volume_db = -2.0
 bus = &"SFX"
 
-[node name="EmptyGunAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer"]
+[node name="EmptyGunAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=259141196]
 unique_name_in_owner = true
 stream = ExtResource("29_empty_gun_audio")
 volume_db = -3.0
 bus = &"SFX"
 
-[node name="PlayerDeathAudio" type="AudioStreamPlayer" parent="Root"]
+[node name="PlayerDeathAudio" type="AudioStreamPlayer" parent="Root" unique_id=2107423274]
 unique_name_in_owner = true
 process_mode = 3
 stream = ExtResource("27_player_death_audio")
 volume_db = -1.0
 bus = &"SFX"
 
-[node name="GameOverMusic" type="AudioStreamPlayer" parent="Root"]
+[node name="GameOverMusic" type="AudioStreamPlayer" parent="Root" unique_id=252384199]
 unique_name_in_owner = true
 process_mode = 3
 stream = ExtResource("28_game_over_audio")
 bus = &"Music"
 
-[node name="HUDFrame" type="TextureRect" parent="Root"]
+[node name="HUDFrame" type="TextureRect" parent="Root" unique_id=939175155]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -260,7 +258,7 @@ texture = ExtResource("3_frame")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="LowHealthOverlay" type="TextureRect" parent="Root"]
+[node name="LowHealthOverlay" type="TextureRect" parent="Root" unique_id=1203046058]
 unique_name_in_owner = true
 visible = false
 modulate = Color(1, 1, 1, 0)
@@ -276,7 +274,7 @@ texture = ExtResource("14_blood")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="CriticalHealthOverlay" type="TextureRect" parent="Root"]
+[node name="CriticalHealthOverlay" type="TextureRect" parent="Root" unique_id=1165529963]
 unique_name_in_owner = true
 visible = false
 modulate = Color(1, 1, 1, 0)
@@ -292,7 +290,7 @@ texture = ExtResource("15_blood_critical")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="ObjectivePanelArtwork" type="TextureRect" parent="Root"]
+[node name="ObjectivePanelArtwork" type="TextureRect" parent="Root" unique_id=2020335886]
 layout_mode = 0
 offset_left = 470.0
 offset_top = 26.0
@@ -302,7 +300,7 @@ mouse_filter = 2
 texture = ExtResource("17_objective_panel")
 expand_mode = 1
 
-[node name="ObjectivePanel" type="PanelContainer" parent="Root"]
+[node name="ObjectivePanel" type="PanelContainer" parent="Root" unique_id=571007821]
 layout_mode = 0
 offset_left = 470.0
 offset_top = 26.0
@@ -311,7 +309,7 @@ offset_bottom = 88.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_bottom_clear")
 
-[node name="ObjectiveLabel" type="Label" parent="Root/ObjectivePanel"]
+[node name="ObjectiveLabel" type="Label" parent="Root/ObjectivePanel" unique_id=2061030227]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.47, 0.9, 1, 1)
@@ -324,7 +322,7 @@ text = "GÖREV: MAVİ ERİŞİM ANAHTARINI BUL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Crosshair" type="TextureRect" parent="Root"]
+[node name="Crosshair" type="TextureRect" parent="Root" unique_id=1323792274]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 916.0
@@ -336,7 +334,7 @@ texture = ExtResource("4_crosshair")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="InteractionLabel" type="Label" parent="Root"]
+[node name="InteractionLabel" type="Label" parent="Root" unique_id=1086321890]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 570.0
@@ -350,7 +348,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 24
 horizontal_alignment = 1
 
-[node name="NotificationPanel" type="PanelContainer" parent="Root"]
+[node name="NotificationPanel" type="PanelContainer" parent="Root" unique_id=1048370112]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -361,7 +359,7 @@ offset_bottom = 196.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_bottom_clear")
 
-[node name="NotificationLabel" type="Label" parent="Root/NotificationPanel"]
+[node name="NotificationLabel" type="Label" parent="Root/NotificationPanel" unique_id=1488073792]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.65, 0.3, 1)
@@ -374,7 +372,7 @@ theme_override_font_sizes/font_size = 21
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PickupFeedLeft" type="Control" parent="Root"]
+[node name="PickupFeedLeft" type="Control" parent="Root" unique_id=1399563771]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 0
@@ -384,7 +382,7 @@ offset_right = 650.0
 offset_bottom = 792.0
 mouse_filter = 2
 
-[node name="PickupLeftAccent" type="ColorRect" parent="Root/PickupFeedLeft"]
+[node name="PickupLeftAccent" type="ColorRect" parent="Root/PickupFeedLeft" unique_id=1605750662]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 4.0
@@ -393,7 +391,7 @@ offset_bottom = 108.0
 mouse_filter = 2
 color = Color(1, 0.31, 0.18, 1)
 
-[node name="PickupLeftCategory" type="Label" parent="Root/PickupFeedLeft"]
+[node name="PickupLeftCategory" type="Label" parent="Root/PickupFeedLeft" unique_id=2124599154]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 20.0
@@ -405,7 +403,7 @@ theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 15
 text = "// YAŞAMSAL DESTEK"
 
-[node name="PickupLeftValue" type="Label" parent="Root/PickupFeedLeft"]
+[node name="PickupLeftValue" type="Label" parent="Root/PickupFeedLeft" unique_id=2083093514]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 20.0
@@ -423,7 +421,7 @@ theme_override_font_sizes/font_size = 29
 text = "SAĞLIK +25"
 vertical_alignment = 1
 
-[node name="PickupFeedRight" type="Control" parent="Root"]
+[node name="PickupFeedRight" type="Control" parent="Root" unique_id=1157410164]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 0
@@ -433,7 +431,7 @@ offset_right = 1862.0
 offset_bottom = 792.0
 mouse_filter = 2
 
-[node name="PickupRightAccent" type="ColorRect" parent="Root/PickupFeedRight"]
+[node name="PickupRightAccent" type="ColorRect" parent="Root/PickupFeedRight" unique_id=547196876]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 587.0
@@ -443,7 +441,7 @@ offset_bottom = 108.0
 mouse_filter = 2
 color = Color(1, 0.61, 0.24, 1)
 
-[node name="PickupRightCategory" type="Label" parent="Root/PickupFeedRight"]
+[node name="PickupRightCategory" type="Label" parent="Root/PickupFeedRight" unique_id=616473428]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 12.0
@@ -456,7 +454,7 @@ theme_override_font_sizes/font_size = 15
 text = "// MÜHİMMAT"
 horizontal_alignment = 2
 
-[node name="PickupRightValue" type="Label" parent="Root/PickupFeedRight"]
+[node name="PickupRightValue" type="Label" parent="Root/PickupFeedRight" unique_id=19044273]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 12.0
@@ -475,7 +473,7 @@ text = "9×19 MERMİ +30"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="BottomBarArtwork" type="TextureRect" parent="Root"]
+[node name="BottomBarArtwork" type="TextureRect" parent="Root" unique_id=1704422968]
 layout_mode = 0
 offset_top = 953.0
 offset_right = 1919.0
@@ -484,45 +482,45 @@ mouse_filter = 2
 texture = ExtResource("16_bottom_panel")
 expand_mode = 1
 
-[node name="BottomBar" type="PanelContainer" parent="Root"]
+[node name="BottomBar" type="PanelContainer" parent="Root" unique_id=543367913]
 layout_mode = 0
-offset_left = 49.0
-offset_top = 966.0
-offset_right = 1863.0
-offset_bottom = 1076.0
+offset_left = 3.0
+offset_top = 960.0
+offset_right = 1868.0
+offset_bottom = 1080.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_bottom_clear")
 
-[node name="Margin" type="MarginContainer" parent="Root/BottomBar"]
+[node name="Margin" type="MarginContainer" parent="Root/BottomBar" unique_id=1939492063]
 layout_mode = 2
 theme_override_constants/margin_left = 72
 theme_override_constants/margin_top = 11
 theme_override_constants/margin_right = 72
 theme_override_constants/margin_bottom = 11
 
-[node name="HBox" type="HBoxContainer" parent="Root/BottomBar/Margin"]
+[node name="HBox" type="HBoxContainer" parent="Root/BottomBar/Margin" unique_id=2142793308]
 layout_mode = 2
 theme_override_constants/separation = 28
 
-[node name="HealthBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox"]
+[node name="HealthBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=1958174740]
 custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox"]
+[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox" unique_id=886028440]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.24, 1)
 theme_override_font_sizes/font_size = 14
 text = "YAŞAMSAL"
 
-[node name="HealthValue" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox"]
+[node name="HealthValue" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox" unique_id=211198935]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("18_mono_font")
 theme_override_font_sizes/font_size = 39
 text = "100"
 
-[node name="HealthMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/HealthBox"]
+[node name="HealthMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/HealthBox" unique_id=1904337075]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
@@ -532,32 +530,32 @@ theme_override_styles/fill = SubResource("StyleBox_health_fill")
 value = 100.0
 show_percentage = false
 
-[node name="HealthStatus" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox"]
+[node name="HealthStatus" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox" unique_id=1997389689]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "SİSTEM NORMAL"
 
-[node name="ArmorBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox"]
+[node name="ArmorBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=1565230011]
 custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox"]
+[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox" unique_id=1409654448]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.84, 1, 1)
 theme_override_font_sizes/font_size = 14
 text = "ZIRH PLAKASI"
 
-[node name="ArmorValue" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox"]
+[node name="ArmorValue" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox" unique_id=1670384165]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("18_mono_font")
 theme_override_font_sizes/font_size = 39
 text = "000"
 
-[node name="ArmorMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/ArmorBox"]
+[node name="ArmorMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/ArmorBox" unique_id=2057743221]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
@@ -566,35 +564,35 @@ theme_override_styles/background = SubResource("StyleBox_meter_background")
 theme_override_styles/fill = SubResource("StyleBox_armor_fill")
 show_percentage = false
 
-[node name="ArmorStatus" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox"]
+[node name="ArmorStatus" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox" unique_id=669131206]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.52, 0.56, 1)
 theme_override_font_sizes/font_size = 12
 text = "KORUMA PASİF"
 
-[node name="Separator1" type="VSeparator" parent="Root/BottomBar/Margin/HBox"]
+[node name="Separator1" type="VSeparator" parent="Root/BottomBar/Margin/HBox" unique_id=1841201007]
 layout_mode = 2
 
-[node name="StaminaBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox"]
+[node name="StaminaBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=1539297605]
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_constants/separation = 1
 
-[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox"]
+[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox" unique_id=1928237795]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.9, 0.68, 1)
 theme_override_font_sizes/font_size = 14
 text = "DAYANIKLILIK"
 
-[node name="StaminaValue" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox"]
+[node name="StaminaValue" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox" unique_id=700610787]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("18_mono_font")
 theme_override_font_sizes/font_size = 39
 text = "100"
 
-[node name="StaminaMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/StaminaBox"]
+[node name="StaminaMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/StaminaBox" unique_id=1803680561]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2
@@ -604,23 +602,23 @@ theme_override_styles/fill = SubResource("StyleBox_armor_fill")
 value = 100.0
 show_percentage = false
 
-[node name="StaminaStatus" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox"]
+[node name="StaminaStatus" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox" unique_id=991646754]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.9, 0.68, 1)
 theme_override_font_sizes/font_size = 12
 text = "HAZIR"
 
-[node name="WeaponBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox"]
+[node name="WeaponBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=200914943]
 custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="Header" type="HBoxContainer" parent="Root/BottomBar/Margin/HBox/WeaponBox"]
+[node name="Header" type="HBoxContainer" parent="Root/BottomBar/Margin/HBox/WeaponBox" unique_id=1673729839]
 layout_mode = 2
 
-[node name="WeaponName" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/Header"]
+[node name="WeaponName" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/Header" unique_id=1308200709]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -628,7 +626,7 @@ theme_override_colors/font_color = Color(0.57, 0.82, 0.9, 1)
 theme_override_font_sizes/font_size = 15
 text = "V-9 TABANCA"
 
-[node name="WeaponSlot" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/Header"]
+[node name="WeaponSlot" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/Header" unique_id=995191833]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.4, 0.23, 1)
@@ -637,18 +635,18 @@ theme_override_font_sizes/font_size = 13
 text = "SLOT 01"
 horizontal_alignment = 2
 
-[node name="AmmoRow" type="HBoxContainer" parent="Root/BottomBar/Margin/HBox/WeaponBox"]
+[node name="AmmoRow" type="HBoxContainer" parent="Root/BottomBar/Margin/HBox/WeaponBox" unique_id=378556146]
 layout_mode = 2
 theme_override_constants/separation = 7
 
-[node name="AmmoValue" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/AmmoRow"]
+[node name="AmmoValue" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/AmmoRow" unique_id=390681858]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("18_mono_font")
 theme_override_font_sizes/font_size = 39
 text = "12"
 
-[node name="ReserveValue" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/AmmoRow"]
+[node name="ReserveValue" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/AmmoRow" unique_id=728369011]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.47, 0.62, 0.67, 1)
@@ -657,51 +655,76 @@ theme_override_font_sizes/font_size = 23
 text = "/ 048"
 vertical_alignment = 2
 
-[node name="AmmoType" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox"]
+[node name="AmmoType" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox" unique_id=1677673825]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.39, 0.58, 0.64, 1)
 theme_override_font_sizes/font_size = 12
 text = "9×19 MM // YARI OTOMATİK"
 
-[node name="Separator2" type="VSeparator" parent="Root/BottomBar/Margin/HBox"]
+[node name="Separator2" type="VSeparator" parent="Root/BottomBar/Margin/HBox" unique_id=543160902]
 layout_mode = 2
 
-[node name="MissionBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox"]
+[node name="MissionBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=234073710]
 custom_minimum_size = Vector2(480, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 3
 
-[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox"]
+[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox" unique_id=2137551346]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.63, 0.35, 1)
 theme_override_font_sizes/font_size = 14
 text = "İMHA / GİZLİ"
 
-[node name="KillsValue" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox"]
+[node name="KillsValue" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox" unique_id=1155440397]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("18_mono_font")
 theme_override_font_sizes/font_size = 24
 text = "00 / 26     GİZLİ: 0 / 2"
 
-[node name="LevelId" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox"]
+[node name="LevelId" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox" unique_id=2067109904]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.38, 0.58, 0.64, 1)
 theme_override_font_sizes/font_size = 12
 text = "SEKTÖR 01 // KARANTİNA TESİSİ"
 
-[node name="KeyIcon" type="TextureRect" parent="Root/BottomBar/Margin/HBox"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(108, 74)
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=1545655328]
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-texture = ExtResource("8_key")
+
+[node name="KeyIcon" type="TextureRect" parent="Root/BottomBar/Margin/HBox/VBoxContainer" unique_id=1902846092]
+unique_name_in_owner = true
+texture_filter = 3
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("8_key_blue")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="DamageFlash" type="ColorRect" parent="Root"]
+[node name="RedKeyIcon" type="TextureRect" parent="Root/BottomBar/Margin/HBox/VBoxContainer" unique_id=1836058944]
+unique_name_in_owner = true
+texture_filter = 3
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("9_key_red")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="YellowKeyIcon" type="TextureRect" parent="Root/BottomBar/Margin/HBox/VBoxContainer" unique_id=1836058945]
+unique_name_in_owner = true
+texture_filter = 3
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("10_key_yellow")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DamageFlash" type="ColorRect" parent="Root" unique_id=310167254]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -713,7 +736,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.9, 0.03, 0.01, 0.34)
 
-[node name="DamageAmount" type="Label" parent="Root"]
+[node name="DamageAmount" type="Label" parent="Root" unique_id=205403873]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -729,7 +752,7 @@ theme_override_font_sizes/font_size = 54
 text = "-12"
 horizontal_alignment = 1
 
-[node name="MapOverlay" type="Control" parent="Root"]
+[node name="MapOverlay" type="Control" parent="Root" unique_id=636881684]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -740,7 +763,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Dim" type="ColorRect" parent="Root/MapOverlay"]
+[node name="Dim" type="ColorRect" parent="Root/MapOverlay" unique_id=1597438349]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -750,7 +773,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.001, 0.006, 0.01, 0.96)
 
-[node name="AutomapFrame" type="TextureRect" parent="Root/MapOverlay"]
+[node name="AutomapFrame" type="TextureRect" parent="Root/MapOverlay" unique_id=823481094]
 layout_mode = 0
 offset_left = 333.0
 offset_top = -100.0
@@ -761,53 +784,24 @@ texture = ExtResource("6_map_frame")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AutomapView" type="Control" parent="Root/MapOverlay"]
+[node name="AutomapView" type="Control" parent="Root/MapOverlay" unique_id=1715131032]
 unique_name_in_owner = true
-layout_mode = 0
+clip_contents = true
+anchors_preset = 0
 offset_left = 420.0
 offset_top = 140.0
 offset_right = 1500.0
 offset_bottom = 890.0
-mouse_filter = 0
 focus_mode = 2
 script = ExtResource("7_automap")
-clip_contents = true
-map_padding = 34.0
-room_gap = 4.0
-room_number_size = 15.0
-marker_size = 15.0
-wall_width = 2.0
-door_width = 4.0
-door_half_world_length = 2.1
-default_zoom = 1.0
-minimum_zoom = 0.75
-maximum_zoom = 2.8
-zoom_step = 0.16
-redraw_interval = 0.05
-background_color = Color(0.002, 0.015, 0.022, 0.72)
-grid_color = Color(0.05, 0.38, 0.48, 0.13)
-undiscovered_fill_color = Color(0.003, 0.012, 0.017, 0.94)
-undiscovered_edge_color = Color(0.1, 0.28, 0.33, 0.34)
-discovered_fill_color = Color(0.025, 0.22, 0.27, 0.78)
-discovered_edge_color = Color(0.2, 0.91, 1, 0.95)
-fog_boundary_color = Color(0.1, 0.52, 0.62, 0.52)
-player_color = Color(1, 0.38, 0.13, 1)
-player_glow_color = Color(1, 0.2, 0.05, 0.26)
-normal_door_color = Color(1, 0.66, 0.22, 1)
-open_door_color = Color(0.18, 1, 0.61, 1)
-blue_lock_color = Color(0.2, 0.58, 1, 1)
-red_lock_color = Color(1, 0.18, 0.12, 1)
-start_color = Color(0.3, 0.98, 0.78, 0.95)
-exit_color = Color(1, 0.24, 0.12, 0.98)
 
-[node name="MapTitle" type="Label" parent="Root/MapOverlay"]
+[node name="MapTitle" type="Label" parent="Root/MapOverlay" unique_id=1353268105]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 500.0
 offset_top = 42.0
 offset_right = 1420.0
 offset_bottom = 88.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.35, 0.9, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
@@ -816,14 +810,13 @@ theme_override_font_sizes/font_size = 34
 text = "TESİS HARİTASI // VEX-01"
 horizontal_alignment = 1
 
-[node name="MapStatus" type="Label" parent="Root/MapOverlay"]
+[node name="MapStatus" type="Label" parent="Root/MapOverlay" unique_id=1012992375]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 500.0
 offset_top = 91.0
 offset_right = 1420.0
 offset_bottom = 120.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.35, 0.68, 0.75, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
@@ -833,13 +826,12 @@ theme_override_font_sizes/font_size = 17
 text = "KEŞİF 00/18  //  000%"
 horizontal_alignment = 1
 
-[node name="Legend" type="Label" parent="Root/MapOverlay"]
+[node name="Legend" type="Label" parent="Root/MapOverlay" unique_id=294879161]
 layout_mode = 0
 offset_left = 438.0
 offset_top = 906.0
 offset_right = 1482.0
 offset_bottom = 936.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.48, 0.76, 0.81, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
@@ -849,13 +841,12 @@ theme_override_font_sizes/font_size = 14
 text = "▲ KONUM   ◆ TAHLİYE   ━ KAPI   MAVİ/KIRMIZI: KİLİTLİ   YEŞİL: AÇIK"
 horizontal_alignment = 1
 
-[node name="Hint" type="Label" parent="Root/MapOverlay"]
+[node name="Hint" type="Label" parent="Root/MapOverlay" unique_id=1299318952]
 layout_mode = 0
 offset_left = 400.0
 offset_top = 1000.0
 offset_right = 1520.0
 offset_bottom = 1042.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.45, 0.62, 0.67, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
@@ -864,11 +855,11 @@ theme_override_font_sizes/font_size = 16
 text = "TAB KAPAT  •  TEKERLEK YAKINLAŞTIR  •  SÜRÜKLE KAYDIR  •  SAĞ TIK MERKEZLE"
 horizontal_alignment = 1
 
-[node name="PauseMenu" parent="Root" instance=ExtResource("13_pause")]
+[node name="PauseMenu" parent="Root" unique_id=446453292 instance=ExtResource("13_pause")]
 unique_name_in_owner = true
 layout_mode = 1
 
-[node name="DeathPanel" type="PanelContainer" parent="Root"]
+[node name="DeathPanel" type="PanelContainer" parent="Root" unique_id=2089239628]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -877,32 +868,32 @@ offset_top = 290.0
 offset_right = 1310.0
 offset_bottom = 790.0
 
-[node name="Margin" type="MarginContainer" parent="Root/DeathPanel"]
+[node name="Margin" type="MarginContainer" parent="Root/DeathPanel" unique_id=2010674071]
 layout_mode = 2
 theme_override_constants/margin_left = 56
 theme_override_constants/margin_top = 44
 theme_override_constants/margin_right = 56
 theme_override_constants/margin_bottom = 44
 
-[node name="VBox" type="VBoxContainer" parent="Root/DeathPanel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Root/DeathPanel/Margin" unique_id=1341982455]
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="Eyebrow" type="Label" parent="Root/DeathPanel/Margin/VBox"]
+[node name="Eyebrow" type="Label" parent="Root/DeathPanel/Margin/VBox" unique_id=93987414]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.3, 0.18, 1)
 theme_override_font_sizes/font_size = 19
 text = "// YAŞAMSAL SİNYAL KESİLDİ"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Root/DeathPanel/Margin/VBox"]
+[node name="Title" type="Label" parent="Root/DeathPanel/Margin/VBox" unique_id=1815380996]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.42, 0.28, 1)
 theme_override_font_sizes/font_size = 54
 text = "ÖLDÜN"
 horizontal_alignment = 1
 
-[node name="Description" type="Label" parent="Root/DeathPanel/Margin/VBox"]
+[node name="Description" type="Label" parent="Root/DeathPanel/Margin/VBox" unique_id=1623829947]
 layout_mode = 2
 size_flags_vertical = 3
 text = "Karantina tesisi seni yuttu. Oyun sona erdi. Yeniden başladığında bölümün en başından başlayacaksın."
@@ -910,13 +901,13 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="RestartButton" type="Button" parent="Root/DeathPanel/Margin/VBox"]
+[node name="RestartButton" type="Button" parent="Root/DeathPanel/Margin/VBox" unique_id=782576471]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 text = "EN BAŞTAN BAŞLA"
 
-[node name="DeathMainMenuButton" type="Button" parent="Root/DeathPanel/Margin/VBox"]
+[node name="DeathMainMenuButton" type="Button" parent="Root/DeathPanel/Margin/VBox" unique_id=260336087]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2

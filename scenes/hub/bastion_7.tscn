@@ -14,9 +14,9 @@
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_rack"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="13_ambient"]
 [ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="14_logo"]
-[ext_resource type="Texture2D" uid="uid://ceusdhf8gb3va" path="res://assets/pickups/shotgun.png" id="15_shotgun"]
-[ext_resource type="Texture2D" uid="uid://bcwoug68wplwm" path="res://assets/pickups/ak47.png" id="16_ak47"]
-[ext_resource type="Texture2D" uid="uid://bi640kr8sx51h" path="res://assets/pickups/mp90.png" id="17_mp90"]
+[ext_resource type="Texture2D" uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png" id="15_shotgun"]
+[ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="16_ak47"]
+[ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="17_mp90"]
 [ext_resource type="Texture2D" uid="uid://cxwpf6cn3ejr7" path="res://assets/world/bastion7/operator_pad.png" id="18_operator_pad"]
 
 

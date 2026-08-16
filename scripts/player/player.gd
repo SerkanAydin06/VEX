@@ -2,12 +2,12 @@ class_name VexPlayer
 extends CharacterBody3D
 
 @export_category("Hareket")
-@export_range(1.0, 12.0, 0.1) var walk_speed := 5.4
+@export_range(1.0, 12.0, 0.1) var walk_speed := 4.0
 @export_range(1.0, 16.0, 0.1) var sprint_speed := 8.0
 @export_range(1.0, 40.0, 0.5) var acceleration := 18.0
 @export_range(1.0, 40.0, 0.5) var deceleration := 22.0
 @export_category("Zıplama")
-@export_range(1.0, 15.0, 0.1) var jump_velocity := 7.0
+@export_range(1.0, 20.0, 0.1) var jump_velocity := 7.0
 @export_range(0.0, 100.0, 1.0) var jump_stamina_cost := 15.0
 @export_category("Çömelme")
 @export_range(1.0, 12.0, 0.1) var crouch_speed := 2.9
@@ -80,6 +80,7 @@ var _gravity := 20.0
 var _footstep_remaining := 0.0
 var _hurt_audio_cooldown_remaining := 0.0
 var _stamina_recovery_delay_remaining := 0.0
+var _jump_requested := false
 var _standing_capsule_height := 0.0
 var _standing_collision_shape_y := 0.0
 var _standing_view_pivot_height := 0.0
@@ -139,18 +140,11 @@ func _physics_process(delta: float) -> void:
 	var rate := acceleration if world_direction != Vector3.ZERO else deceleration
 	velocity.x = move_toward(velocity.x, target_velocity.x, rate * delta)
 	velocity.z = move_toward(velocity.z, target_velocity.z, rate * delta)
-
-	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_crouching:
-		if stamina >= jump_stamina_cost:
-			stamina = maxf(0.0, stamina - jump_stamina_cost)
-			_stamina_recovery_delay_remaining = maxf(
-				_stamina_recovery_delay_remaining,
-				stamina_recovery_delay
-			)
-			velocity.y = jump_velocity
-			GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
-		else:
-			velocity.y = floor_stick_velocity
+	if _jump_requested:
+		# Consume the jump request before floor/gravity handling so the
+		# floor-stick velocity cannot overwrite the jump impulse.
+		_jump_requested = false
+		velocity.y = jump_velocity
 	elif not is_on_floor():
 		velocity.y -= _gravity * delta
 	else:
@@ -165,7 +159,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_dead or get_tree().paused:
 		return
 
-	if event.is_action_pressed("crouch"):
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_SPACE:
+		_try_jump()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("crouch"):
 		# C = toggle crouch. Basili tutma gerekmez. Ayağa kalkmak için
 		# yeterli alan yoksa mevcut çömelme korunur.
 		if is_crouching:
@@ -190,6 +187,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("interact"):
 		try_interact()
 
+
+func _try_jump() -> void:
+	if is_dead or get_tree().paused or is_crouching:
+		return
+	if not is_on_floor():
+		return
+	if stamina < jump_stamina_cost:
+		return
+	stamina -= jump_stamina_cost
+	_stamina_recovery_delay_remaining = stamina_recovery_delay
+	_jump_requested = true
 
 func try_interact() -> void:
 	interaction_ray.force_raycast_update()
@@ -260,14 +268,19 @@ func collect_pickup(pickup_type: StringName, amount: int) -> bool:
 			keys.append(&"blue")
 			GameState.publish_keys(keys)
 			GameState.notify_pickup("MAVİ ERİŞİM ANAHTARI", &"key")
-			GameState.set_objective("KIRMIZI ERİŞİM ANAHTARINI DA BUL")
 		&"key_red":
 			if has_key(&"red"):
 				return false
 			keys.append(&"red")
 			GameState.publish_keys(keys)
 			GameState.notify_pickup("KIRMIZI ERİŞİM ANAHTARI", &"key")
-			GameState.set_objective("TAHLİYE GEÇİDİNE GERİ DÖN")
+			# Anahtar toplama artık görev metnini değiştirmez; ilerleme kapı/oyun akışı üzerinden gösterilir.
+		&"key_yellow":
+			if has_key(&"yellow"):
+				return false
+			keys.append(&"yellow")
+			GameState.publish_keys(keys)
+			GameState.notify_pickup("SARI ERİŞİM ANAHTARI", &"key")
 		_:
 			return false
 	broadcast_state()
