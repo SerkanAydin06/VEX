@@ -22,7 +22,13 @@ size = Vector3(4, 3, 0.3)
 [node name="WorldPiece" type="StaticBody3D" unique_id=614928355]
 collision_mask = 0
 script = ExtResource("1_script")
+piece_size = Vector3(4, 3, 0.3)
+surface_material = null
 cast_shadow = false
+occlusion_enabled = true
+floor_trim_enabled = false
+floor_trim_size = Vector3(3.96, 0.28, 0.32)
+floor_trim_position = Vector3(0, -1.33, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1116505730]
 cast_shadow = 0

@@ -2,6 +2,7 @@ extends Node
 
 signal player_registered(player: Node)
 signal player_stats_changed(health: int, max_health: int, armor: int)
+signal player_stamina_changed(current: float, maximum: float, sprinting: bool)
 signal weapon_changed(weapon_id: StringName, display_name: String)
 signal ammo_changed(current: int, reserve: int)
 signal key_inventory_changed(keys: Array[StringName])
@@ -162,6 +163,10 @@ func notify_pickup(text: String, category: StringName) -> void:
 
 func publish_player_stats(health: int, max_health: int, armor: int) -> void:
 	player_stats_changed.emit(health, max_health, armor)
+
+
+func publish_player_stamina(current: float, maximum: float, sprinting: bool) -> void:
+	player_stamina_changed.emit(current, maximum, sprinting)
 
 
 func publish_weapon(weapon_id: StringName, display_name: String) -> void:

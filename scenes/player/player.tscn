@@ -1,100 +1,54 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene format=3 uid="uid://c026efgr2oia3"]
 
-[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_player"]
-[ext_resource type="Script" path="res://scripts/player/weapon_controller.gd" id="2_weapon_controller"]
+[ext_resource type="Script" uid="uid://8rnsjmnfa0dn" path="res://scripts/player/player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://chtweeovuy46q" path="res://scripts/player/weapon_controller.gd" id="2_weapon_controller"]
 [ext_resource type="Resource" path="res://resources/weapons/pistol.tres" id="3_pistol"]
+[ext_resource type="Script" uid="uid://bld4sc8fopa04" path="res://scripts/player/weapon_definition.gd" id="4_h17s1"]
 [ext_resource type="Resource" path="res://resources/weapons/shotgun.tres" id="4_shotgun"]
-[ext_resource type="Resource" path="res://resources/weapons/ak47.tres" id="7_ak47"]
+[ext_resource type="AudioStream" uid="uid://dy727qbjov6r7" path="res://assets/audio/footstep_pro.wav" id="5_footstep_audio"]
+[ext_resource type="AudioStream" uid="uid://k8ycpgqn64hb" path="res://assets/audio/player_hurt_pro.wav" id="6_hurt_audio"]
+[ext_resource type="Resource" uid="uid://cqxwolkagivyx" path="res://resources/weapons/ak47.tres" id="7_ak47"]
 [ext_resource type="Resource" path="res://resources/weapons/mp90.tres" id="8_mp90"]
-[ext_resource type="AudioStream" path="res://assets/audio/footstep_pro.wav" id="5_footstep_audio"]
-[ext_resource type="AudioStream" path="res://assets/audio/player_hurt_pro.wav" id="6_hurt_audio"]
-[ext_resource type="Shader" path="res://shaders/night_vision.gdshader" id="9_night_vision_shader"]
+[ext_resource type="Shader" uid="uid://diwveryjsl587" path="res://shaders/night_vision.gdshader" id="9_night_vision_shader"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_player"]
 radius = 0.34
 height = 1.8
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" unique_id=180461347]
 collision_layer = 2
 collision_mask = 13
-floor_snap_length = 0.35
 floor_max_angle = 0.872665
+floor_snap_length = 0.35
 script = ExtResource("1_player")
-
-walk_speed = 5.4
-sprint_speed = 8.0
-acceleration = 18.0
-deceleration = 22.0
-maximum_health = 100
-maximum_armor = 100
-initial_armor = 0
-armor_absorption_ratio = 0.60
-hurt_audio_cooldown = 0.90
-floor_stick_velocity = -0.10
-pitch_limit_degrees = 82.0
-recoil_yaw_recovery_multiplier = 0.85
-bob_activation_threshold = 0.05
-bob_speed_multiplier = 1.70
-bob_horizontal_frequency_multiplier = 0.50
-bob_horizontal_amplitude = 0.025
-bob_vertical_amplitude = 0.035
-bob_lerp_speed = 12.0
-bob_return_lerp_speed = 10.0
-footstep_pitch_min = 0.94
-footstep_pitch_max = 1.06
-sprint_footstep_interval = 0.34
-walk_footstep_interval = 0.46
-sprint_detection_margin = 0.10
 night_vision_shader = ExtResource("9_night_vision_shader")
-night_vision_fallback_color = Color(0.05, 0.32, 0.08, 0.32)
-night_vision_canvas_layer = -1
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1594553253]
 shape = SubResource("CapsuleShape_player")
 
-[node name="ViewPivot" type="Node3D" parent="."]
-position = Vector3(0, 0.62, 0)
+[node name="ViewPivot" type="Node3D" parent="." unique_id=906006744]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, 0)
 
-[node name="Camera3D" type="Camera3D" parent="ViewPivot"]
+[node name="Camera3D" type="Camera3D" parent="ViewPivot" unique_id=1740792464]
 current = true
 fov = 78.0
-near = 0.05
 
-[node name="InteractionRay" type="RayCast3D" parent="ViewPivot/Camera3D"]
+[node name="InteractionRay" type="RayCast3D" parent="ViewPivot/Camera3D" unique_id=1102246330]
 target_position = Vector3(0, 0, -2.8)
 collision_mask = 9
 collide_with_areas = true
 
-[node name="WeaponController" type="Node" parent="."]
+[node name="WeaponController" type="Node" parent="." unique_id=1571382257]
 script = ExtResource("2_weapon_controller")
-weapon_definitions = Array[Resource("res://scripts/player/weapon_definition.gd")]([ExtResource("3_pistol"), ExtResource("4_shotgun"), ExtResource("7_ak47"), ExtResource("8_mp90")])
+weapon_definitions = Array[ExtResource("4_h17s1")]([ExtResource("3_pistol"), ExtResource("4_shotgun"), ExtResource("7_ak47"), ExtResource("8_mp90")])
 
-initial_unlocked_weapons = Array[StringName]([&"pistol"])
-initial_weapon_id = &"pistol"
-fill_initial_magazines = true
-initial_bullets = 48
-initial_shells = 0
-initial_rifle_ammo = 0
-initial_mp90_ammo = 0
-equip_cooldown = 0.15
-empty_trigger_cooldown = 0.25
-hitscan_collision_mask = 13
-burst_reset_min_time = 0.22
-burst_reset_fire_interval_multiplier = 2.5
-automatic_vertical_base_multiplier = 0.78
-automatic_vertical_per_shot = 0.07
-automatic_vertical_max_multiplier = 1.35
-automatic_horizontal_base_multiplier = 0.68
-automatic_horizontal_per_shot = 0.09
-automatic_horizontal_max_multiplier = 1.45
-
-[node name="FootstepAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="FootstepAudio" type="AudioStreamPlayer3D" parent="." unique_id=578205698]
 stream = ExtResource("5_footstep_audio")
 volume_db = -7.0
-bus = &"SFX"
 max_distance = 7.0
+bus = &"SFX"
 
-[node name="HurtAudio" type="AudioStreamPlayer" parent="."]
+[node name="HurtAudio" type="AudioStreamPlayer" parent="." unique_id=769022027]
 stream = ExtResource("6_hurt_audio")
 volume_db = -2.0
 bus = &"SFX"

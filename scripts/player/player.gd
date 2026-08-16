@@ -6,6 +6,23 @@ extends CharacterBody3D
 @export_range(1.0, 16.0, 0.1) var sprint_speed := 8.0
 @export_range(1.0, 40.0, 0.5) var acceleration := 18.0
 @export_range(1.0, 40.0, 0.5) var deceleration := 22.0
+@export_category("Çömelme")
+@export_range(1.0, 12.0, 0.1) var crouch_speed := 2.9
+@export_range(0.7, 2.5, 0.01) var crouch_capsule_height := 1.10
+@export_range(0.1, 1.8, 0.01) var crouch_view_pivot_height := 0.30
+@export_range(1.0, 30.0, 0.5) var crouch_transition_speed := 12.0
+@export_range(0.0, 0.1, 0.005) var stand_clearance_margin := 0.02
+@export_category("Nişan Alma / ADS")
+@export_range(20.0, 100.0, 1.0) var ads_fov := 50.0
+@export_range(1.0, 500.0, 0.5) var ads_transition_speed := 200.0
+@export_range(0.05, 1.0, 0.01) var ads_spread_multiplier := 0.45
+@export_range(0.05, 1.0, 0.01) var ads_recoil_multiplier := 0.72
+@export_category("Sprint Dayanıklılığı")
+@export_range(1.0, 300.0, 1.0) var maximum_stamina := 100.0
+@export_range(1.0, 120.0, 0.5) var sprint_stamina_drain_per_second := 26.0
+@export_range(1.0, 120.0, 0.5) var stamina_recovery_per_second := 20.0
+@export_range(0.0, 5.0, 0.05) var stamina_recovery_delay := 0.65
+@export_range(0.0, 1.0, 0.01) var sprint_input_threshold := 0.10
 @export_category("Dayanıklılık")
 @export_range(1, 500, 1) var maximum_health := 100
 @export_range(0, 500, 1) var maximum_armor := 100
@@ -40,20 +57,30 @@ extends CharacterBody3D
 @onready var view_pivot: Node3D = $ViewPivot
 @onready var camera: Camera3D = $ViewPivot/Camera3D
 @onready var interaction_ray: RayCast3D = $ViewPivot/Camera3D/InteractionRay
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var weapon_controller: Node = $WeaponController
 @onready var footstep_audio: AudioStreamPlayer3D = $FootstepAudio
 @onready var hurt_audio: AudioStreamPlayer = $HurtAudio
 
 var health := 0
 var armor := 0
+var stamina := 0.0
 var keys: Array[StringName] = []
 var is_dead := false
+var is_sprinting := false
+var is_crouching := false
+var is_aiming := false
 var _pitch := 0.0
 var _bob_time := 0.0
 var _camera_rest_position := Vector3.ZERO
 var _gravity := 20.0
 var _footstep_remaining := 0.0
 var _hurt_audio_cooldown_remaining := 0.0
+var _stamina_recovery_delay_remaining := 0.0
+var _standing_capsule_height := 0.0
+var _standing_collision_shape_y := 0.0
+var _standing_view_pivot_height := 0.0
+var _default_fov := 78.0
 
 var _has_night_vision := false
 var _night_vision_enabled := false
@@ -68,9 +95,12 @@ var _recoil_recovery_degrees_per_second := 7.0
 func _ready() -> void:
 	add_to_group("player")
 	_camera_rest_position = camera.position
+	_default_fov = camera.fov
+	_setup_crouch_dimensions()
 	_gravity = float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 	health = maximum_health
 	armor = clampi(initial_armor, 0, maximum_armor)
+	stamina = maximum_stamina
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GameState.register_player(self)
 	_setup_night_vision_overlay()
@@ -87,7 +117,22 @@ func _physics_process(delta: float) -> void:
 	var input_vector := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var local_direction := Vector3(input_vector.x, 0.0, input_vector.y)
 	var world_direction := (transform.basis * local_direction).normalized()
-	var target_speed := sprint_speed if Input.is_action_pressed("sprint") else walk_speed
+	_update_crouch_state()
+	_update_aiming(delta)
+	var wants_to_sprint := (
+		Input.is_action_pressed("sprint")
+		and input_vector.length() >= sprint_input_threshold
+		and stamina > 0.0
+		and not is_crouching
+		and not is_aiming
+	)
+	is_sprinting = wants_to_sprint
+	_update_stamina(delta)
+	var target_speed := (
+		crouch_speed
+		if is_crouching
+		else (sprint_speed if is_sprinting else walk_speed)
+	)
 	var target_velocity := world_direction * target_speed
 	var rate := acceleration if world_direction != Vector3.ZERO else deceleration
 	velocity.x = move_toward(velocity.x, target_velocity.x, rate * delta)
@@ -97,6 +142,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.y = floor_stick_velocity
 	move_and_slide()
+	_update_crouch_view(delta)
 	_update_recoil(delta)
 	_update_view_bob(delta, input_vector.length(), target_speed)
 
@@ -104,21 +150,6 @@ func _physics_process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead or get_tree().paused:
 		return
-
-	if event is InputEventKey:
-		var key_event := event as InputEventKey
-		if (
-			key_event.pressed
-			and not key_event.echo
-			and (
-				key_event.keycode == KEY_N
-				or key_event.physical_keycode == KEY_N
-			)
-		):
-			if _has_night_vision:
-				get_viewport().set_input_as_handled()
-				_set_night_vision_enabled(not _night_vision_enabled)
-			return
 
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mouse_event := event as InputEventMouseMotion
@@ -129,6 +160,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			deg_to_rad(pitch_limit_degrees)
 		)
 		_apply_view_rotation()
+	elif event.is_action_pressed("night_vision"):
+		if _has_night_vision:
+			get_viewport().set_input_as_handled()
+			_set_night_vision_enabled(not _night_vision_enabled)
 	elif event.is_action_pressed("interact"):
 		try_interact()
 
@@ -250,6 +285,14 @@ func get_view_camera() -> Camera3D:
 	return camera
 
 
+func get_weapon_spread_multiplier() -> float:
+	return ads_spread_multiplier if is_aiming else 1.0
+
+
+func get_weapon_recoil_multiplier() -> float:
+	return ads_recoil_multiplier if is_aiming else 1.0
+
+
 func apply_weapon_recoil(
 	vertical_degrees: float,
 	horizontal_degrees: float,
@@ -315,6 +358,7 @@ func _publish_recoil_to_hud() -> void:
 
 func broadcast_state() -> void:
 	GameState.publish_player_stats(health, maximum_health, armor)
+	GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
 	GameState.publish_keys(keys)
 	if weapon_controller != null and weapon_controller.has_method("broadcast_state"):
 		weapon_controller.call("broadcast_state")
@@ -325,18 +369,24 @@ func capture_run_state() -> Dictionary:
 	return {
 		"health": health,
 		"armor": armor,
+		"stamina": stamina,
 		"keys": keys.duplicate(),
 		"position": global_position,
 		"rotation_y": rotation.y,
 		"weapon_state": weapon_state,
 		"night_vision_owned": _has_night_vision,
 		"night_vision_enabled": _night_vision_enabled,
+		"is_crouching": is_crouching,
 	}
 
 
 func restore_run_state(state: Dictionary) -> void:
 	health = clampi(int(state.get("health", maximum_health)), 1, maximum_health)
 	armor = clampi(int(state.get("armor", 0)), 0, maximum_armor)
+	stamina = clampf(float(state.get("stamina", maximum_stamina)), 0.0, maximum_stamina)
+	is_sprinting = false
+	_stamina_recovery_delay_remaining = 0.0
+	_set_crouching(bool(state.get("is_crouching", false)))
 	keys.clear()
 	var stored_keys: Array = state.get("keys", []) as Array
 	for stored_key: Variant in stored_keys:
@@ -426,6 +476,118 @@ func _update_view_bob(delta: float, movement_amount: float, movement_speed: floa
 			_camera_rest_position,
 			delta * bob_return_lerp_speed
 		)
+
+
+func _update_stamina(delta: float) -> void:
+	if is_sprinting:
+		stamina = maxf(0.0, stamina - sprint_stamina_drain_per_second * delta)
+		_stamina_recovery_delay_remaining = stamina_recovery_delay
+		if stamina <= 0.0:
+			is_sprinting = false
+		GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
+		return
+
+	_stamina_recovery_delay_remaining = maxf(
+		0.0,
+		_stamina_recovery_delay_remaining - delta
+	)
+	if _stamina_recovery_delay_remaining <= 0.0:
+		stamina = minf(
+			maximum_stamina,
+			stamina + stamina_recovery_per_second * delta
+		)
+	GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
+
+
+func _setup_crouch_dimensions() -> void:
+	var capsule := collision_shape.shape as CapsuleShape3D
+	if capsule == null:
+		push_error("Player için CapsuleShape3D gerekli; çömelme devre dışı bırakıldı.")
+		return
+	_standing_capsule_height = capsule.height
+	_standing_collision_shape_y = collision_shape.position.y
+	_standing_view_pivot_height = view_pivot.position.y
+	crouch_capsule_height = clampf(
+		crouch_capsule_height,
+		capsule.radius * 2.0,
+		_standing_capsule_height
+	)
+
+
+func _update_crouch_state() -> void:
+	if Input.is_action_pressed("crouch"):
+		_set_crouching(true)
+	elif is_crouching and _can_stand_up():
+		_set_crouching(false)
+
+
+func _set_crouching(value: bool) -> void:
+	if value == is_crouching:
+		return
+	var capsule := collision_shape.shape as CapsuleShape3D
+	if capsule == null or _standing_capsule_height <= 0.0:
+		return
+	is_crouching = value
+	var target_height := crouch_capsule_height if is_crouching else _standing_capsule_height
+	capsule.height = target_height
+	collision_shape.position.y = _standing_collision_shape_y - (
+		(_standing_capsule_height - target_height) * 0.5
+	)
+
+
+func _can_stand_up() -> bool:
+	if _standing_capsule_height <= 0.0:
+		return true
+	var current_capsule := collision_shape.shape as CapsuleShape3D
+	if current_capsule == null:
+		return true
+
+	# Tam ayakta kapsülü taramak zemini de çakışma olarak görebilir. Yalnızca
+	# çömelmiş kapsülün üstüne eklenecek baş/omuz hacmini kontrol ediyoruz.
+	var added_height := _standing_capsule_height - crouch_capsule_height
+	if added_height <= 0.0:
+		return true
+	var clearance_shape := BoxShape3D.new()
+	clearance_shape.size = Vector3(
+		current_capsule.radius * 2.0,
+		added_height,
+		current_capsule.radius * 2.0
+	)
+	var crouch_center_y := _standing_collision_shape_y - (added_height * 0.5)
+	var crouch_top_y := crouch_center_y + (crouch_capsule_height * 0.5)
+	var stand_top_y := _standing_collision_shape_y + (_standing_capsule_height * 0.5)
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = clearance_shape
+	query.transform = global_transform * Transform3D(
+		Basis.IDENTITY,
+		Vector3(0.0, (crouch_top_y + stand_top_y) * 0.5, 0.0)
+	)
+	query.collision_mask = collision_mask
+	query.collide_with_areas = false
+	query.exclude = [get_rid()]
+	query.margin = stand_clearance_margin
+	return get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty()
+
+
+func _update_crouch_view(delta: float) -> void:
+	if _standing_view_pivot_height <= 0.0:
+		return
+	var target_height := (
+		crouch_view_pivot_height
+		if is_crouching
+		else _standing_view_pivot_height
+	)
+	view_pivot.position.y = move_toward(
+		view_pivot.position.y,
+		target_height,
+		crouch_transition_speed * delta
+	)
+
+
+func _update_aiming(delta: float) -> void:
+	is_aiming = Input.is_action_pressed("aim")
+	var target_fov := ads_fov if is_aiming else _default_fov
+	camera.fov = move_toward(camera.fov, target_fov, ads_transition_speed * delta)
 
 
 func _resolve_interactable(collider: Object) -> Node:

@@ -31,7 +31,7 @@ size = Vector3(0.2, 4.48, 4.44)
 size = Vector3(2.2925782, 3.1, 4.412107)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_door_threshold"]
-size = Vector2(0.37, 4.5)
+size = Vector2(0.18, 4.44)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pocket_floor"]
 size = Vector3(0.37, 0.03, 2.18)

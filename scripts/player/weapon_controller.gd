@@ -97,17 +97,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		switch_to(&"pistol")
 	elif event.is_action_pressed("weapon_2"):
 		switch_to(&"shotgun")
+	elif event.is_action_pressed("weapon_3"):
+		switch_to(&"ak47")
+	elif event.is_action_pressed("weapon_4"):
+		switch_to(&"mp90")
 	elif event.is_action_pressed("weapon_next"):
 		cycle_weapon(1)
 	elif event.is_action_pressed("weapon_previous"):
 		cycle_weapon(-1)
-	elif event is InputEventKey:
-		var key_event := event as InputEventKey
-		if key_event.pressed and not key_event.echo:
-			if key_event.keycode == KEY_3 or key_event.physical_keycode == KEY_3:
-				switch_to(&"ak47")
-			elif key_event.keycode == KEY_4 or key_event.physical_keycode == KEY_4:
-				switch_to(&"mp90")
 
 
 func get_current_weapon() -> WeaponDefinition:
@@ -274,11 +271,17 @@ func _apply_recoil(weapon: WeaponDefinition) -> void:
 		)
 
 	var vertical_kick: float = (
-		float(weapon.recoil_vertical_degrees) * vertical_multiplier
+		float(weapon.recoil_vertical_degrees)
+		* vertical_multiplier
+		* _player.get_weapon_recoil_multiplier()
 	)
 	var horizontal_kick: float = randf_range(
-		-float(weapon.recoil_horizontal_degrees) * horizontal_multiplier,
-		float(weapon.recoil_horizontal_degrees) * horizontal_multiplier
+		-float(weapon.recoil_horizontal_degrees)
+		* horizontal_multiplier
+		* _player.get_weapon_recoil_multiplier(),
+		float(weapon.recoil_horizontal_degrees)
+		* horizontal_multiplier
+		* _player.get_weapon_recoil_multiplier()
 	)
 
 	_player.apply_weapon_recoil(
@@ -311,7 +314,9 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 	var forward: Vector3 = camera.project_ray_normal(aim_screen_position).normalized()
 	var right: Vector3 = camera.global_transform.basis.x
 	var up: Vector3 = camera.global_transform.basis.y
-	var spread_tangent: float = tan(deg_to_rad(weapon.spread_degrees))
+	var spread_tangent: float = tan(
+		deg_to_rad(weapon.spread_degrees * _player.get_weapon_spread_multiplier())
+	)
 	var hit_something := false
 	# Aynı tetik çekişinde bir hedefe isabet eden saçmaları tek hasar çağrısında
 	# birleştir. Böylece pompalı 6-8 ayrı take_damage() çağrısıyla düşmanın

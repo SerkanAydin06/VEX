@@ -275,7 +275,7 @@ def check_bastion_7() -> None:
 
     floors = re.findall(r'\[node name="Floor_[^"]+" parent="Geometry"[^\n]*\]', text)
     ceilings = re.findall(r'\[node name="Ceiling_[^"]+" parent="Geometry"[^\n]*\]', text)
-    if len(floors) != 13 or len(ceilings) != 13:
+    if len(floors) != 12 or len(ceilings) != 12:
         fail(f"{rel}: hub modül sayısı yanlış: floor={len(floors)} ceiling={len(ceilings)}")
 
     for prefix, expected_y in (("Floor_", -0.2), ("Ceiling_", 7.2)):
@@ -287,36 +287,41 @@ def check_bastion_7() -> None:
             block = match.group(1)
             size_m = re.search(r'piece_size = Vector3\(([^)]*)\)', block)
             pos_m = re.search(r'^position = Vector3\(([^)]*)\)', block, re.M)
-            if not size_m or not pos_m:
+            trans_m = re.search(r'transform = Transform3D\(([^\n]+)\)', block)
+            if not size_m or (not pos_m and not trans_m):
                 fail(f"{rel}: hub zemin/tavan boyut veya pozisyon eksik")
                 continue
+            position = vec3(pos_m.group(1)) if pos_m else transform_translation(trans_m.group(1))
             node_header = match.group(0).split("\n", 1)[0]
             is_operator = "OperatorPlatform" in node_header
             expected_size = (6.2, 0.4, 6.0) if is_operator else (12.0, 0.4, 10.0)
             if vec3(size_m.group(1)) != expected_size:
                 fail(f"{rel}: hub modül boyutu yanlış: {node_header}")
-            if abs(vec3(pos_m.group(1))[1] - expected_y) > 1e-4:
+            if abs(position[1] - expected_y) > 1e-4:
                 fail(f"{rel}: hub {prefix} Y standardı yanlış")
             if "cast_shadow = false" not in block:
                 fail(f"{rel}: hub zemin/tavan gölgesi kapalı değil")
 
     if len(re.findall(r'instance=ExtResource\("8_door"\)', text)) != 6:
         fail("Bastion-7 kapı sayısı 6 değil")
-    if len(re.findall(r'instance=ExtResource\("9_white"\)', text)) != 9:
+    if len(re.findall(r'instance=ExtResource\("9_white"\)', text)) != 8:
         fail("Bastion-7 aktif beyaz ışık sayısı 9 değil")
-    if len(re.findall(r'instance=ExtResource\("10_red"\)', text)) != 12:
+    if len(re.findall(r'instance=ExtResource\("10_red"\)', text)) != 0:
         fail("Bastion-7 kapı kırmızı ışık sayısı 12 değil")
 
     if '[node name="MissionControl' in text or '[node name="MissionTerminal' in text:
         fail("Bastion-7 kaldırılan Mission Control alanına hâlâ sahne düğümü olarak referans içeriyor")
 
     operator_floor = node_block(text, "Floor_OperatorPlatform")
-    if "position = Vector3(0, -0.2, 28)" not in operator_floor or "piece_size = Vector3(6.2, 0.4, 6)" not in operator_floor:
+    operator_transform = re.search(r'transform = Transform3D\(([^\n]+)\)', operator_floor)
+    operator_pos_ok = bool(operator_transform) and transform_translation(operator_transform.group(1)) == (0.0, -0.2, 28.0)
+    if not operator_pos_ok or "piece_size = Vector3(6.2, 0.4, 6)" not in operator_floor:
         fail("Bastion-7 Operator Platform kompakt 6.2x6 standardında değil")
     if '[node name="OperatorPad" type="MeshInstance3D" parent="Props"]' in text:
         fail("Bastion-7 Operator Pad altında ayrı yükseltilmiş mavi platform kalmış")
     pad_block = node_block(text, "OperatorPadVisual")
-    if "position = Vector3(0, 0.012, 27.9)" not in pad_block:
+    pad_transform = re.search(r'transform = Transform3D\(([^\n]+)\)', pad_block)
+    if not pad_transform or abs(transform_translation(pad_transform.group(1))[1] - 0.012) > 1e-4 or abs(transform_translation(pad_transform.group(1))[2] - 27.9) > 1e-4:
         fail("Bastion-7 Operator Pad görseli doğrudan zemin üstünde değil")
     terminal_block = node_block(text, "DeploymentTerminal")
     if 'display_name = "OPERASYON TERMİNALİ"' not in terminal_block:

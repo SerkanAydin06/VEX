@@ -18,6 +18,9 @@ const MP90_VIEW_SCENE: PackedScene = preload("res://scenes/ui/weapons/mp90_view.
 @onready var armor_meter: ProgressBar = %ArmorMeter
 @onready var health_status: Label = %HealthStatus
 @onready var armor_status: Label = %ArmorStatus
+@onready var stamina_value: Label = %StaminaValue
+@onready var stamina_meter: ProgressBar = %StaminaMeter
+@onready var stamina_status: Label = %StaminaStatus
 @onready var ammo_value: Label = %AmmoValue
 @onready var reserve_value: Label = %ReserveValue
 @onready var weapon_name: Label = %WeaponName
@@ -93,6 +96,7 @@ func _ready() -> void:
 	_pickup_left_rest_position = pickup_feed_left.position
 	_pickup_right_rest_position = pickup_feed_right.position
 	GameState.player_stats_changed.connect(_on_player_stats_changed)
+	GameState.player_stamina_changed.connect(_on_player_stamina_changed)
 	GameState.weapon_changed.connect(_on_weapon_changed)
 	GameState.ammo_changed.connect(_on_ammo_changed)
 	GameState.key_inventory_changed.connect(_on_keys_changed)
@@ -146,17 +150,11 @@ func _input(event: InputEvent) -> void:
 	if _is_dead:
 		return
 
-	if event is InputEventKey:
-		var key_event := event as InputEventKey
-		if (
-			key_event.pressed
-			and not key_event.echo
-			and (key_event.keycode == KEY_TAB or key_event.physical_keycode == KEY_TAB)
-		):
-			if not pause_menu.visible and not get_tree().paused:
-				get_viewport().set_input_as_handled()
-				_set_map_open(not map_overlay.visible)
-			return
+	if event.is_action_pressed("automap"):
+		if not pause_menu.visible and not get_tree().paused:
+			get_viewport().set_input_as_handled()
+			_set_map_open(not map_overlay.visible)
+		return
 
 	if pause_menu.visible:
 		return
@@ -558,6 +556,21 @@ func _on_player_stats_changed(health: int, maximum_health: int, armor: int) -> v
 		health_value.modulate = Color.WHITE
 	armor_status.text = "DARBE EMİCİ AKTİF" if armor > 0 else "KORUMA PASİF"
 	armor_status.modulate = Color(0.34, 0.84, 1.0) if armor > 0 else Color(0.42, 0.52, 0.56)
+
+
+func _on_player_stamina_changed(current: float, maximum: float, sprinting: bool) -> void:
+	stamina_value.text = str(roundi(current)).pad_zeros(3)
+	stamina_meter.max_value = maximum
+	stamina_meter.value = current
+	if sprinting:
+		stamina_status.text = "KOŞUYOR"
+		stamina_status.modulate = Color(1.0, 0.68, 0.24)
+	elif current <= 0.0:
+		stamina_status.text = "TÜKENDİ"
+		stamina_status.modulate = Color(1.0, 0.34, 0.22)
+	else:
+		stamina_status.text = "HAZIR"
+		stamina_status.modulate = Color(0.42, 0.9, 0.68)
 	low_health_overlay.visible = _health_ratio < 0.5
 	critical_health_overlay.visible = _health_ratio < 0.3
 	if not low_health_overlay.visible:
