@@ -6,7 +6,9 @@ extends CharacterBody3D
 @export_range(1.0, 16.0, 0.1) var sprint_speed := 8.0
 @export_range(1.0, 40.0, 0.5) var acceleration := 18.0
 @export_range(1.0, 40.0, 0.5) var deceleration := 22.0
-@export_range(4.0, 12.0, 0.1) var jump_velocity := 7.0
+@export_category("Zıplama")
+@export_range(1.0, 15.0, 0.1) var jump_velocity := 7.0
+@export_range(0.0, 100.0, 1.0) var jump_stamina_cost := 15.0
 @export_category("Çömelme")
 @export_range(1.0, 12.0, 0.1) var crouch_speed := 2.9
 @export_range(0.7, 2.5, 0.01) var crouch_capsule_height := 1.10
@@ -137,10 +139,20 @@ func _physics_process(delta: float) -> void:
 	var rate := acceleration if world_direction != Vector3.ZERO else deceleration
 	velocity.x = move_toward(velocity.x, target_velocity.x, rate * delta)
 	velocity.z = move_toward(velocity.z, target_velocity.z, rate * delta)
-	if not is_on_floor():
+
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_crouching:
+		if stamina >= jump_stamina_cost:
+			stamina = maxf(0.0, stamina - jump_stamina_cost)
+			_stamina_recovery_delay_remaining = maxf(
+				_stamina_recovery_delay_remaining,
+				stamina_recovery_delay
+			)
+			velocity.y = jump_velocity
+			GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
+		else:
+			velocity.y = floor_stick_velocity
+	elif not is_on_floor():
 		velocity.y -= _gravity * delta
-	elif Input.is_action_just_pressed("jump") and not is_crouching:
-		velocity.y = jump_velocity
 	else:
 		velocity.y = floor_stick_velocity
 	move_and_slide()
