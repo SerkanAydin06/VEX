@@ -90,7 +90,7 @@ billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_projectile")
 autoplay = "default"
-pixel_size = 0.00235
+pixel_size = 0.001175
 texture_filter = 3
 alpha_cut = 1
 
@@ -99,7 +99,7 @@ visible = false
 billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_impact")
-pixel_size = 0.00245
+pixel_size = 0.001225
 texture_filter = 3
 alpha_cut = 1
 
