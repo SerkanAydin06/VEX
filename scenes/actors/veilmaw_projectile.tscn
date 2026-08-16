@@ -1,0 +1,121 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/ravager_projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/enemies/veilmaw/veilmaw_projectile_impact_sheet.png" id="2_projectile_sheet"]
+[ext_resource type="Texture2D" path="res://assets/enemies/veilmaw/veilmaw_projectile_impact_sheet.png" id="3_impact_sheet"]
+[ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="4_impact_audio"]
+
+[sub_resource type="SphereShape3D" id="SphereShape_veilmaw_projectile"]
+radius = 0.34
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_1"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_2"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_3"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(1024, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_projectile_4"]
+atlas = ExtResource("2_projectile_sheet")
+filter_clip = true
+region = Rect2(1536, 0, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_projectile"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("AtlasTexture_projectile_1")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_projectile_2")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_projectile_3")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_projectile_4")}],
+"loop": true,
+"name": &"default",
+"speed": 11.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_1"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_2"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_3"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(1024, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_impact_4"]
+atlas = ExtResource("3_impact_sheet")
+filter_clip = true
+region = Rect2(1536, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_impact"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("AtlasTexture_impact_1")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_impact_2")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_impact_3")}, {"duration": 1.0, "texture": SubResource("AtlasTexture_impact_4")}],
+"loop": false,
+"name": &"default",
+"speed": 17.0
+}]
+
+[node name="VeilmawProjectile" type="Area3D"]
+collision_layer = 0
+collision_mask = 11
+monitorable = false
+script = ExtResource("1_script")
+speed = 16.0
+lifetime = 4.0
+impact_surface_offset = 0.30
+light_pulse_amplitude = 0.40
+light_pulse_speed = 8.5
+impact_light_energy = 4.8
+impact_light_fade_duration = 0.26
+impact_start_scale_multiplier = 0.92
+impact_end_scale_multiplier = 1.08
+impact_scale_duration = 0.22
+impact_fade_delay = 0.14
+impact_fade_duration = 0.12
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape_veilmaw_projectile")
+
+[node name="Visual" type="AnimatedSprite3D" parent="."]
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_projectile")
+autoplay = "default"
+pixel_size = 0.00085
+texture_filter = 3
+alpha_cut = 1
+
+[node name="ImpactVisual" type="AnimatedSprite3D" parent="."]
+visible = false
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_impact")
+pixel_size = 0.00105
+texture_filter = 3
+alpha_cut = 1
+
+[node name="Light" type="OmniLight3D" parent="."]
+light_color = Color(0.66, 0.12, 0.95, 1)
+light_energy = 2.5
+omni_range = 3.8
+shadow_enabled = false
+shadow_bias = 0.02
+shadow_normal_bias = 0.35
+distance_fade_enabled = true
+distance_fade_begin = 18.0
+distance_fade_length = 5.0
+
+[node name="ImpactAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_impact_audio")
+volume_db = -2.0
+bus = &"SFX"
+max_distance = 18.0

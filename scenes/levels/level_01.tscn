@@ -26,6 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/hellmagma.tscn" id="25_hellmagma"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="26_room_light"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="27_voidweaver"]
+[ext_resource type="PackedScene" path="res://scenes/actors/veilmaw.tscn" id="28_veilmaw"]
 
 [sub_resource type="Environment" id="Environment_level"]
 background_mode = 1
@@ -1248,6 +1249,12 @@ waypoint_link_distance = 12.5
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08413887, 1, 22.2)
 enemy_id = &"voidweaver_test_start"
 patrol_offset = Vector3(2, 0, 0)
+waypoint_link_distance = 12.5
+
+[node name="Veilmaw_TestStartRoom" parent="Enemies" unique_id=966793363 instance=ExtResource("28_veilmaw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5354109, 1, 14.794571)
+enemy_id = &"veilmaw_test_start"
+patrol_offset = Vector3(2.5, 0, 0)
 waypoint_link_distance = 12.5
 
 [node name="Ravager_01_17" parent="Enemies" unique_id=1662530060 instance=ExtResource("7_ravager")]
