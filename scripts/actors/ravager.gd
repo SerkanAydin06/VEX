@@ -975,11 +975,21 @@ func _can_see_player() -> bool:
 		if _alerted
 		else _runtime_detection_range
 	)
-	if _horizontal_distance(global_position, _player.global_position) > active_range:
+	var player_distance := _horizontal_distance(global_position, _player.global_position)
+	if player_distance > active_range:
 		return false
 	if (not _alerted or state == State.SEARCH) and not _is_player_inside_initial_view():
 		return false
-	return _check_line_of_sight()
+	if not _check_line_of_sight():
+		return false
+
+	# Crouch only makes an unaware enemy less likely to notice the player.
+	# Once the enemy is already alerted, crouching must not cancel its target
+	# or cause an attack windup to play without actually firing.
+	if not _alerted and _player.get("is_crouching") == true:
+		if player_distance > crouch_guaranteed_detection_distance:
+			return randf() <= crouch_detection_chance
+	return true
 
 
 func _is_player_inside_initial_view() -> bool:
@@ -1022,10 +1032,9 @@ func _check_line_of_sight() -> bool:
 	if not _is_player_collider(collider):
 		return false
 
-	var player_distance := _horizontal_distance(global_position, _player.global_position)
-	if _player.get("is_crouching") == true and player_distance > crouch_guaranteed_detection_distance:
-		return randf() <= crouch_detection_chance
-
+	# This function is a pure line-of-sight test. Detection chance is handled
+	# by _can_see_player(), so an attack windup cannot randomly fail to spawn
+	# its projectile after the attack animation has already started.
 	return true
 
 
