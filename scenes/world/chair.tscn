@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://ci161ydnwbw2f"]
+
+[ext_resource type="Texture2D" uid="uid://bx60c3mrcanmr" path="res://assets/world/Dark-Metal-Texture.png" id="1_feqqa"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8mx28"]
+size = Vector3(0.5552149, 0.77282715, 0.56731415)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j26aw"]
+albedo_color = Color(0.0059665767, 0.010740712, 0.08358801, 1)
+albedo_texture = ExtResource("1_feqqa")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_feqqa"]
+albedo_color = Color(0.003136311, 0.12348557, 0.15034547, 1)
+albedo_texture = ExtResource("1_feqqa")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kgt02"]
+size = Vector3(0.50216675, 0.5311279, 0.04449463)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8mx28"]
+albedo_color = Color(0.0046489905, 0.024954107, 0.043180637, 1)
+albedo_texture = ExtResource("1_feqqa")
+
+[node name="Chair" type="Node3D" unique_id=439608583]
+
+[node name="Bottom" type="StaticBody3D" parent="." unique_id=1181089592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32968807, 1.2521238, -0.3396939)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bottom" unique_id=1990554330]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.36108267, -0.82817805, 0.4214363)
+shape = SubResource("BoxShape3D_8mx28")
+
+[node name="Seat" type="CSGBox3D" parent="Bottom" unique_id=1472289411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.36715376, -0.5112028, 0.41461253)
+size = Vector3(0.5, 0.045, 0.5)
+material = SubResource("StandardMaterial3D_j26aw")
+
+[node name="Leg1" type="CSGBox3D" parent="Bottom" unique_id=168377895]
+transform = Transform3D(0.99306595, -0.07925686, -0.08682408, 0.08682408, 0.9924039, 0.08715574, 0.07925686, -0.09408981, 0.9924039, -0.17075536, -0.868893, 0.6184508)
+size = Vector3(0.025, 0.7, 0.025)
+material = SubResource("StandardMaterial3D_feqqa")
+
+[node name="Leg2" type="CSGBox3D" parent="Bottom" unique_id=933093274]
+transform = Transform3D(0.9917419, 0.0943913, -0.08682408, -0.08682408, 0.9924039, 0.08715574, 0.0943913, -0.07889757, 0.9924039, -0.5748147, -0.868893, 0.61666775)
+size = Vector3(0.025, 0.7, 0.025)
+material = SubResource("StandardMaterial3D_feqqa")
+
+[node name="Leg3" type="CSGBox3D" parent="Bottom" unique_id=1979834573]
+transform = Transform3D(0.99306595, 0.07925686, -0.08682408, -0.08682408, 0.9924039, -0.08715574, 0.07925686, 0.09408981, 0.9924039, -0.5747876, -0.868893, 0.22322553)
+size = Vector3(0.025, 0.7, 0.025)
+material = SubResource("StandardMaterial3D_feqqa")
+
+[node name="Leg4" type="CSGBox3D" parent="Bottom" unique_id=605568732]
+transform = Transform3D(0.9917419, -0.0943913, -0.08682408, 0.08682408, 0.9924039, -0.08715574, 0.0943913, 0.07889757, 0.9924039, -0.16724908, -0.868893, 0.21782053)
+size = Vector3(0.025, 0.7, 0.025)
+material = SubResource("StandardMaterial3D_feqqa")
+
+[node name="Leg5" type="CSGBox3D" parent="Bottom" unique_id=1004531232]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.5635631, -0.77885735, 0.4209577)
+size = Vector3(0.02, 0.35098267, 0.02)
+material = SubResource("StandardMaterial3D_feqqa")
+
+[node name="Leg6" type="CSGBox3D" parent="Bottom" unique_id=670075029]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.18391624, -0.77885735, 0.4209577)
+size = Vector3(0.02, 0.35098267, 0.02)
+material = SubResource("StandardMaterial3D_feqqa")
+
+[node name="Leg7" type="CSGBox3D" parent="Bottom" unique_id=1496770675]
+transform = Transform3D(-4.371139e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -1, -4.371139e-08, 1.9106855e-15, -0.37296605, -0.77885735, 0.22873023)
+size = Vector3(0.02, 0.3585968, 0.02)
+material = SubResource("StandardMaterial3D_feqqa")
+
+[node name="Leg8" type="CSGBox3D" parent="Bottom" unique_id=1819312630]
+transform = Transform3D(-4.371139e-08, 1, -4.371139e-08, 0, -4.371139e-08, -1, -1, -4.371139e-08, 1.9106855e-15, -0.37296605, -0.77885735, 0.615582)
+size = Vector3(0.02, 0.3585968, 0.02)
+material = SubResource("StandardMaterial3D_feqqa")
+
+[node name="Back" type="StaticBody3D" parent="." unique_id=727111011]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33742684, 0, -0.3098672)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Back" unique_id=1664221937]
+transform = Transform3D(1, 0, 0, 0, 0.9958346, 0.09117767, 0, -0.09117767, 0.9958346, -0.36299133, 1.0257101, 0.16949195)
+shape = SubResource("BoxShape3D_kgt02")
+
+[node name="BackPlate" type="CSGBox3D" parent="Back" unique_id=2124179904]
+transform = Transform3D(1, 0, 0, 0, 0.99357367, 0.11318753, 0, -0.11318753, 0.99357367, -0.36387876, 1.1105556, 0.14253958)
+size = Vector3(0.47399902, 0.28179932, 0.02319336)
+material = SubResource("StandardMaterial3D_8mx28")
+
+[node name="BackLeg1" type="CSGBox3D" parent="Back" unique_id=322266603]
+transform = Transform3D(1, 0, 0, 0, 0.99357367, 0.11318753, 0, -0.11318753, 0.99357367, -0.55519426, 0.913861, 0.16039062)
+size = Vector3(0.025, 0.3, 0.025)
+material = SubResource("StandardMaterial3D_8mx28")
+
+[node name="BackLeg2" type="CSGBox3D" parent="Back" unique_id=1376886761]
+transform = Transform3D(1, 0, 0, 0, 0.99357367, 0.11318753, 0, -0.11318753, 0.99357367, -0.18235205, 0.913861, 0.16039062)
+size = Vector3(0.025, 0.3, 0.025)
+material = SubResource("StandardMaterial3D_8mx28")
