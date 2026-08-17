@@ -4,7 +4,7 @@ extends Node3D
 @export var map_revision := "VEX02-R47-MODULAR-STANDARD"
 @export var level_display_name := "VEX-02 // KIRIK OMURGA"
 @export_range(0, 100, 1) var campaign_completion_stage := 2
-@export var first_objective := "BATI KANADINDA MAVİ ERİŞİM KARTINI BUL"
+@export var first_objective := "BATI KANADINI ARA"
 @export_range(0, 20, 1) var total_secrets := 2
 @export_range(0.0, 5.0, 0.05) var intro_message_delay := 0.5
 

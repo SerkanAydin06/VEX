@@ -4,7 +4,7 @@ extends Node3D
 @export var map_revision := "VEX01-R26-PRO-AUTOMAP"
 @export var level_display_name := "VEX-01 // KARANTİNA TESİSİ"
 @export_range(0, 100, 1) var campaign_completion_stage := 1
-@export var first_objective := "İKİ ERİŞİM ANAHTARINI BUL"
+@export var first_objective := "TESİSTE İLERLE"
 @export_range(0, 20, 1) var total_secrets := 0
 @export_range(0.0, 5.0, 0.05) var intro_message_delay := 0.5
 

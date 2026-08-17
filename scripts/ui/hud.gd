@@ -28,6 +28,8 @@ const MP90_VIEW_SCENE: PackedScene = preload("res://scenes/ui/weapons/mp90_view.
 @onready var ammo_type: Label = %AmmoType
 @onready var kills_value: Label = %KillsValue
 @onready var key_icon: TextureRect = %KeyIcon
+@onready var red_key_icon: TextureRect = %RedKeyIcon
+@onready var yellow_key_icon: TextureRect = %YellowKeyIcon
 @onready var objective_label: Label = %ObjectiveLabel
 @onready var interaction_label: Label = %InteractionLabel
 @onready var notification_panel: PanelContainer = %NotificationPanel
@@ -626,7 +628,10 @@ func _on_ammo_changed(current: int, reserve: int) -> void:
 
 
 func _on_keys_changed(keys: Array[StringName]) -> void:
+	# Each access key has its own fixed HUD slot; collecting one never changes another icon.
 	key_icon.visible = keys.has(&"blue")
+	red_key_icon.visible = keys.has(&"red")
+	yellow_key_icon.visible = keys.has(&"yellow")
 
 
 func _on_objective_changed(text: String) -> void:

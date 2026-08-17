@@ -36,7 +36,6 @@ func interact(player: Node) -> void:
 		return
 	if not _player_has_all_keys(player):
 		GameState.notify("TAHLİYE KİLİTLİ — MAVİ VE KIRMIZI ANAHTAR GEREKLİ")
-		GameState.set_objective("İKİ ERİŞİM ANAHTARINI TOPLA")
 		return
 	if required_enemy_id != &"" and not GameState.was_enemy_defeated(required_enemy_id):
 		GameState.notify("TAHLİYE KİLİTLİ — NİHAİ MUHAFIZI İMHA ET")

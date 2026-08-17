@@ -4,7 +4,7 @@ extends Area3D
 
 @export_category("Toplanabilir Nesne")
 @export var pickup_id: StringName = &"pickup"
-@export_enum("health", "armor", "bullets", "shells", "shotgun", "ak47", "rifle_ammo", "mp90", "mp90_ammo", "night_vision", "key_blue", "key_red") var pickup_type: String = "health"
+@export_enum("health", "armor", "bullets", "shells", "shotgun", "ak47", "rifle_ammo", "mp90", "mp90_ammo", "night_vision", "key_blue", "key_red", "key_yellow") var pickup_type: String = "health"
 @export_range(1, 200, 1) var amount := 25
 @export var display_name := "NESNE"
 
@@ -18,7 +18,7 @@ extends Area3D
 	set(value):
 		visual_texture = value
 		_apply_visual()
-@export_range(0.001, 0.02, 0.0001) var visual_pixel_size := 0.00255:
+@export_range(0.0001, 0.02, 0.0001) var visual_pixel_size := 0.00055:
 	set(value):
 		visual_pixel_size = value
 		_apply_visual()
@@ -71,7 +71,7 @@ func _ready() -> void:
 func _get_runtime_amount() -> int:
 	if not scale_amount_with_difficulty:
 		return amount
-	if pickup_type in ["shotgun", "ak47", "mp90", "night_vision", "key_blue", "key_red"]:
+	if pickup_type in ["shotgun", "ak47", "mp90", "night_vision", "key_blue", "key_red", "key_yellow"]:
 		return amount
 	if difficulty_amount_multipliers.is_empty():
 		return amount
