@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://bar5ey7gbqorf"]
+
+[ext_resource type="Texture2D" uid="uid://bos5vrw84blnt" path="res://assets/world/laptop_screen.png" id="1_3cr3s"]
+[ext_resource type="Texture2D" uid="uid://dlu45f20af664" path="res://assets/world/keyboard.png" id="1_a5epx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8mx28"]
+size = Vector3(0.6572876, 0.33544922, 0.03427124)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tnlyv"]
+albedo_color = Color(0.078431375, 0.078431375, 0.078431375, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3cr3s"]
+albedo_texture = ExtResource("1_3cr3s")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8mx28"]
+albedo_color = Color(0.078431375, 0.078431375, 0.078431375, 1)
+albedo_texture = ExtResource("1_a5epx")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kgt02"]
+albedo_color = Color(0.07683582, 0.07683582, 0.07683582, 1)
+
+[node name="Laptop" type="Node3D" unique_id=1009974002]
+
+[node name="Screen" type="StaticBody3D" parent="." unique_id=1278729117]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Screen" unique_id=1925448577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21524048, 0.30126953, -0.38373905)
+shape = SubResource("BoxShape3D_8mx28")
+
+[node name="Frame" type="CSGBox3D" parent="Screen" unique_id=1358829178]
+transform = Transform3D(1, 0, 0, 0, 0.9961947, 0.08715574, 0, -0.08715574, 0.9961947, -0.21539307, 0.2985034, -0.38188526)
+size = Vector3(0.6, 0.325, 0.01)
+material = SubResource("StandardMaterial3D_tnlyv")
+
+[node name="Image" type="CSGBox3D" parent="Screen" unique_id=138443324]
+transform = Transform3D(1, 0, 0, 0, 0.9961947, 0.08715574, 0, -0.08715574, 0.9961947, -0.21309814, 0.2981464, -0.37697253)
+size = Vector3(0.571582, 0.29438478, 0.0068310546)
+material = SubResource("StandardMaterial3D_3cr3s")
+
+[node name="Keyboard" type="StaticBody3D" parent="." unique_id=1570527961]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Keyboard" unique_id=876666239]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.21524048, 0.14416191, -0.18651217)
+shape = SubResource("BoxShape3D_8mx28")
+
+[node name="Keys" type="CSGBox3D" parent="Keyboard" unique_id=897820924]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.21381837, 0.13579676, -0.15893066)
+size = Vector3(0.57150877, 0.1998047, 0.01)
+material = SubResource("StandardMaterial3D_8mx28")
+
+[node name="Frame" type="CSGBox3D" parent="Keyboard" unique_id=2029917380]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.21539307, 0.13385391, -0.20279007)
+size = Vector3(0.6, 0.325, 0.01)
+material = SubResource("StandardMaterial3D_kgt02")

@@ -9,16 +9,18 @@
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="7_cc6hi"]
 [ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="8_rwa84"]
 [ext_resource type="Texture2D" uid="uid://cxwpf6cn3ejr7" path="res://assets/world/bastion7/operator_pad.png" id="9_00fff"]
-[ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/table.tscn" id="10_cs0tf"]
+[ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/Table.tscn" id="10_cs0tf"]
 [ext_resource type="PackedScene" uid="uid://ckhtinn61g27l" path="res://scenes/hub/hub_terminal.tscn" id="11_u2ooc"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_i4t6o"]
 [ext_resource type="Texture2D" uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png" id="13_wj067"]
 [ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="14_m2rkv"]
 [ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="15_mkccu"]
-[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="16_d1ucx"]
+[ext_resource type="PackedScene" uid="uid://c026efgr2oia3" path="res://scenes/player/player.tscn" id="16_d1ucx"]
 [ext_resource type="PackedScene" uid="uid://c4gn8k6ogvf0n" path="res://scenes/ui/hud.tscn" id="17_74iqw"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="18_rr7l4"]
 [ext_resource type="PackedScene" uid="uid://88mtv7yws8dd" path="res://scenes/world/pc.tscn" id="19_6gkeq"]
+[ext_resource type="PackedScene" uid="uid://br4kbpposyhv5" path="res://scenes/world/stool.tscn" id="20_1gyty"]
+[ext_resource type="PackedScene" uid="uid://bar5ey7gbqorf" path="res://scenes/world/laptop.tscn" id="21_i7ssf"]
 
 [sub_resource type="Environment" id="Environment_hub"]
 background_mode = 1
@@ -561,8 +563,6 @@ floor_trim_position = Vector3(0, -3.33, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.24, -10)
 display_name = "ARMORY"
 required_key = &""
-opening_offset_left = Vector3(0, 0, -2.12)
-opening_offset_right = Vector3(0, 0, 2.12)
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -572,8 +572,6 @@ display_name = "FIRING RANGE"
 locked = true
 required_key = &""
 permanently_locked = true
-opening_offset_left = Vector3(0, 0, -2.12)
-opening_offset_right = Vector3(0, 0, 2.12)
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -584,8 +582,6 @@ locked = true
 required_key = &""
 permanently_locked = true
 permanent_lock_message = "ACCESS RESTRICTED // POWER OFFLINE"
-opening_offset_left = Vector3(0, 0, -2.12)
-opening_offset_right = Vector3(0, 0, 2.12)
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -595,8 +591,6 @@ display_name = "WEAPON WORKSHOP"
 locked = true
 required_key = &""
 permanently_locked = true
-opening_offset_left = Vector3(0, 0, -2.12)
-opening_offset_right = Vector3(0, 0, 2.12)
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -606,8 +600,6 @@ display_name = "ENGINEERING BAY"
 locked = true
 required_key = &""
 permanently_locked = true
-opening_offset_left = Vector3(0, 0, -2.12)
-opening_offset_right = Vector3(0, 0, 2.12)
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -615,8 +607,6 @@ automatic_open = true
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 2.24, 25)
 display_name = "OPERATOR PLATFORMU"
 required_key = &""
-opening_offset_left = Vector3(0, 0, -2.12)
-opening_offset_right = Vector3(0, 0, 2.12)
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -900,3 +890,18 @@ bus = &"Music"
 
 [node name="Pc" parent="." unique_id=1229393752 instance=ExtResource("19_6gkeq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3035835, 0)
+
+[node name="Stool" parent="." unique_id=1056008092 instance=ExtResource("20_1gyty")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6583444, 0, 25.993057)
+
+[node name="Pc2" parent="." unique_id=376517189 instance=ExtResource("19_6gkeq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33625695, 1.3112161, 26.425999)
+
+[node name="Table2" parent="." unique_id=2033304361 instance=ExtResource("10_cs0tf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7105596, 0, 26.575077)
+
+[node name="Table3" parent="." unique_id=511760054 instance=ExtResource("10_cs0tf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6662148, 0, 26.828897)
+
+[node name="Laptop" parent="." unique_id=1009974002 instance=ExtResource("21_i7ssf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6300093, 0.89595664, 27.137535)
