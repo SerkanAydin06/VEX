@@ -9,6 +9,7 @@ const REQUIRED_RESOURCES := [
 	"res://scenes/props/burn_remains.tscn",
 	"res://scenes/props/pickup.tscn",
 	"res://scenes/props/explosive_barrel.tscn",
+	"res://scripts/props/finish_switch.gd",
 	"res://scenes/player/player.tscn",
 	"res://resources/weapons/pistol.tres",
 	"res://resources/weapons/shotgun.tres",
@@ -25,6 +26,8 @@ const REQUIRED_RESOURCES := [
 	"res://scenes/actors/ravager.tscn",
 	"res://scenes/actors/hellmagma.tscn",
 	"res://scenes/actors/voidweaver.tscn",
+	"res://scenes/actors/veilmaw.tscn",
+	"res://scenes/actors/veilmaw_projectile.tscn",
 	"res://assets/enemies/redviper/redviper_spritesheet.png",
 	"res://assets/enemies/badredviper/badredviper_spritesheet.png",
 	"res://assets/enemies/ravager/ravager_spritesheet.png",
@@ -49,6 +52,9 @@ func _ready() -> void:
 	_check_enemy_visuals()
 	_check_scene_authority()
 	_check_door()
+	_check_input_map()
+	_check_key_progression()
+	_check_player_movement_contract()
 
 	if failures.is_empty():
 		print("VEX integrity test başarılı: Level 1/2, Bastion-7, kaynak bağlantıları ve sahne otoritesi temiz.")
@@ -155,7 +161,7 @@ func _check_bastion_7() -> void:
 
 
 func _check_enemy_visuals() -> void:
-	for enemy_name in ["redviper", "badredviper", "ravager", "hellmagma", "voidweaver"]:
+	for enemy_name in ["redviper", "badredviper", "ravager", "hellmagma", "voidweaver", "veilmaw"]:
 		var packed := load("res://scenes/actors/%s.tscn" % enemy_name) as PackedScene
 		if packed == null:
 			continue
@@ -191,7 +197,7 @@ func _check_scene_authority() -> void:
 		&"floor_snap_max_correction",
 		&"burn_remains_scene",
 	]
-	for enemy_name in ["redviper", "badredviper", "ravager", "hellmagma", "voidweaver"]:
+	for enemy_name in ["redviper", "badredviper", "ravager", "hellmagma", "voidweaver", "veilmaw"]:
 		var packed := load("res://scenes/actors/%s.tscn" % enemy_name) as PackedScene
 		if packed == null:
 			continue
@@ -221,7 +227,7 @@ func _check_scene_authority() -> void:
 		&"impact_end_scale_multiplier", &"impact_scale_duration",
 		&"impact_fade_delay", &"impact_fade_duration",
 	]
-	for projectile_name in ["ravager_projectile", "hellmagma_projectile", "voidweaver_projectile"]:
+	for projectile_name in ["ravager_projectile", "hellmagma_projectile", "voidweaver_projectile", "veilmaw_projectile"]:
 		var packed := load("res://scenes/actors/%s.tscn" % projectile_name) as PackedScene
 		if packed == null:
 			continue
@@ -332,3 +338,41 @@ func _check_door() -> void:
 	if not _has_property(door, &"automatic_open"):
 		failures.append("Kapı automatic_open Inspector ayarı eksik.")
 	door.queue_free()
+
+
+func _check_input_map() -> void:
+	for action_name in ["move_forward", "move_backward", "move_left", "move_right", "jump", "sprint", "crouch", "aim", "fire", "interact", "reload", "pause", "automap", "night_vision"]:
+		if not InputMap.has_action(action_name):
+			failures.append("InputMap eksik: %s" % action_name)
+
+
+func _check_key_progression() -> void:
+	for key_path in [
+		"res://assets/pickups/key_blue.png",
+		"res://assets/pickups/key_red.png",
+		"res://assets/pickups/key_yellow.png",
+	]:
+		if not ResourceLoader.exists(key_path):
+			failures.append("Anahtar görseli eksik: %s" % key_path)
+	var pickup_script := load("res://scripts/props/pickup.gd")
+	if pickup_script == null:
+		failures.append("Pickup script yüklenemedi.")
+	for scene_path in ["res://scenes/levels/level_01.tscn", "res://scenes/levels/level_02.tscn"]:
+		var text := FileAccess.get_file_as_string(scene_path)
+		if "key_blue" not in text or "key_red" not in text:
+			failures.append("%s mavi/kırmızı key progression eksik." % scene_path)
+	if "key_yellow" not in FileAccess.get_file_as_string("res://scenes/levels/level_02.tscn"):
+		failures.append("VEX-02 sarı key yerleşimi eksik.")
+
+
+func _check_player_movement_contract() -> void:
+	var script_text := FileAccess.get_file_as_string("res://scripts/player/player.gd")
+	for required in [
+		"Input.is_action_just_pressed(\"jump\")",
+		"Input.is_action_pressed(\"sprint\")",
+		"event.is_action_pressed(\"crouch\")",
+		"func _try_jump()",
+		"func _can_stand_up()",
+	]:
+		if required not in script_text:
+			failures.append("Player movement contract eksik: %s" % required)

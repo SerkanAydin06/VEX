@@ -122,10 +122,16 @@ func _physics_process(delta: float) -> void:
 	var local_direction := Vector3(input_vector.x, 0.0, input_vector.y)
 	var world_direction := (transform.basis * local_direction).normalized()
 	_update_aiming(delta)
+	# Sample jump in the physics loop so UI/event handling cannot swallow Space.
+	if Input.is_action_just_pressed("jump"):
+		_try_jump()
+	# Sprint is only active while actually moving on the ground. This prevents
+	# stamina from draining while standing still or airborne.
 	var wants_to_sprint := (
 		Input.is_action_pressed("sprint")
 		and input_vector.length() >= sprint_input_threshold
 		and stamina > 0.0
+		and is_on_floor()
 		and not is_crouching
 		and not is_aiming
 	)
@@ -159,17 +165,16 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_dead or get_tree().paused:
 		return
 
-	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_SPACE:
-		_try_jump()
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("crouch"):
+	if event.is_action_pressed("crouch"):
 		# C = toggle crouch. Basili tutma gerekmez. Ayağa kalkmak için
 		# yeterli alan yoksa mevcut çömelme korunur.
 		if is_crouching:
 			if _can_stand_up():
 				_set_crouching(false)
 		else:
-			_set_crouching(true)
+			# Do not enter crouch while airborne.
+			if is_on_floor():
+				_set_crouching(true)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mouse_event := event as InputEventMouseMotion
@@ -507,6 +512,8 @@ func _update_view_bob(delta: float, movement_amount: float, movement_speed: floa
 				if movement_speed > walk_speed + sprint_detection_margin
 				else walk_footstep_interval
 			)
+			var footstep_loudness := 0.18 if is_crouching else (0.95 if is_sprinting else 0.45)
+			GameState.emit_noise(global_position, footstep_loudness, self)
 	else:
 		camera.position = camera.position.lerp(
 			_camera_rest_position,

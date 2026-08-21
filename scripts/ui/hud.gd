@@ -7,6 +7,7 @@ const MP90_VIEW_SCENE: PackedScene = preload("res://scenes/ui/weapons/mp90_view.
 @export_category("Nişangah")
 @export var crosshair_default_color := Color(0.93, 0.96, 1.0, 0.78)
 @export var crosshair_hit_color := Color(1.0, 0.0, 0.0, 1.0)
+@export var crosshair_headshot_color := Color(1.0, 0.72, 0.10, 1.0)
 @export_range(0.05, 1.0, 0.01) var crosshair_hit_duration := 0.24
 
 @export_category("Performans")
@@ -107,6 +108,7 @@ func _ready() -> void:
 	GameState.pickup_notification_requested.connect(_on_pickup_notification_requested)
 	GameState.level_stats_changed.connect(_on_level_stats_changed)
 	GameState.hit_confirmed.connect(_on_hit_confirmed)
+	GameState.headshot_confirmed.connect(_on_headshot_confirmed)
 	GameState.damage_received.connect(_on_damage_received)
 	GameState.player_died.connect(_on_player_died)
 	pistol_sprite.animation_finished.connect(_on_weapon_animation_finished.bind(pistol_sprite))
@@ -720,6 +722,11 @@ func _animate_pickup_feed(feed: Control, rest_position: Vector2) -> Tween:
 func _on_hit_confirmed() -> void:
 	_crosshair_hit_timer = crosshair_hit_duration
 	crosshair.modulate = crosshair_hit_color
+
+
+func _on_headshot_confirmed() -> void:
+	_crosshair_hit_timer = crosshair_hit_duration * 1.25
+	crosshair.modulate = crosshair_headshot_color
 
 
 func _on_damage_received(amount: int) -> void:

@@ -6,6 +6,8 @@ extends Resource
 @export var ammo_type: StringName = &"bullets"
 @export_range(1, 100, 1) var magazine_size := 12
 @export_range(1, 100, 1) var damage_per_pellet := 18
+@export_category("Vuruş")
+@export_range(1.0, 3.0, 0.05) var headshot_multiplier := 1.75
 @export_range(1, 20, 1) var pellet_count := 1
 @export_range(0.05, 2.0, 0.01) var fire_interval := 0.28
 @export_range(0.1, 5.0, 0.05) var reload_duration := 1.1

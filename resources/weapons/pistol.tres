@@ -8,6 +8,7 @@ weapon_id = &"pistol"
 display_name = "V-9 TABANCA"
 ammo_type = &"bullets"
 magazine_size = 12
+headshot_multiplier = 1.75
 damage_per_pellet = 18
 pellet_count = 1
 fire_interval = 0.28

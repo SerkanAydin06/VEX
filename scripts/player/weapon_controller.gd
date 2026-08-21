@@ -242,6 +242,7 @@ func _try_fire() -> void:
 	_cooldown_remaining = weapon.fire_interval
 	_play_hud_action(&"fire")
 	_shoot_hitscan(weapon)
+	GameState.emit_noise(_player.global_position, 1.0 if weapon.weapon_id in [&"pistol", &"shotgun"] else 1.15, _player)
 	_apply_recoil(weapon)
 	broadcast_state()
 
@@ -342,10 +343,17 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 		var collider := result.get("collider") as Object
 		var damage_target := _resolve_damage_target(collider)
 		if damage_target != null:
-			pending_damage[damage_target] = (
-				int(pending_damage.get(damage_target, 0)) + weapon.damage_per_pellet
-			)
-			pending_hit_positions[damage_target] = result.get("position", Vector3.ZERO)
+			var hit_position: Vector3 = result.get("position", Vector3.ZERO)
+			var pellet_damage := weapon.damage_per_pellet
+			var was_headshot := false
+			if damage_target.has_method("get_weapon_hit_multiplier"):
+				var hit_multiplier := float(damage_target.call("get_weapon_hit_multiplier", hit_position, weapon.headshot_multiplier))
+				pellet_damage = maxi(1, int(round(float(pellet_damage) * hit_multiplier)))
+				was_headshot = hit_multiplier > 1.01
+			if was_headshot:
+				GameState.confirm_headshot()
+			pending_damage[damage_target] = int(pending_damage.get(damage_target, 0)) + pellet_damage
+			pending_hit_positions[damage_target] = hit_position
 			hit_something = true
 
 	for damage_target_variant: Variant in pending_damage:

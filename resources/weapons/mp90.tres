@@ -8,6 +8,7 @@ weapon_id = &"mp90"
 display_name = "MP90"
 ammo_type = &"mp90_ammo"
 magazine_size = 50
+headshot_multiplier = 1.70
 damage_per_pellet = 10
 pellet_count = 1
 fire_interval = 0.07

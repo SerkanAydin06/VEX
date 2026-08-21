@@ -5,6 +5,7 @@ extends Node3D
 @export var level_display_name := "VEX-02 // KIRIK OMURGA"
 @export_range(0, 100, 1) var campaign_completion_stage := 2
 @export var first_objective := "BATI KANADINI ARA"
+@export_multiline var story_intro_message := "VEX-01 kaydından sonra Bastion-7, VEX-02 içinde aktif bir güvenlik ağı tespit etti. Batı kanadını araştır; erişim zincirini tamamla ve tahliye odasına ulaş."
 @export_range(0, 20, 1) var total_secrets := 2
 @export_range(0.0, 5.0, 0.05) var intro_message_delay := 0.5
 
@@ -22,19 +23,28 @@ extends Node3D
 
 @onready var level_music: AudioStreamPlayer = $LevelMusic
 @onready var ambient_loop: AudioStreamPlayer = $AmbientLoop
+var _alarm_triggered := false
 
 func _ready() -> void:
 	SettingsManager.apply_brightness()
+	if not GameState.key_inventory_changed.is_connected(_on_key_inventory_changed):
+		GameState.key_inventory_changed.connect(_on_key_inventory_changed)
 	var enemy_count := get_tree().get_nodes_in_group("enemy").size()
 	GameState.begin_level(enemy_count, total_secrets, first_objective)
 	_start_audio_loop(level_music)
 	_start_audio_loop(ambient_loop)
 	_intro_message()
+	var noise_bus := get_node_or_null("/root/VexNoiseManager")
+	if noise_bus != null and not noise_bus.noise_emitted.is_connected(_on_noise_emitted):
+		noise_bus.noise_emitted.connect(_on_noise_emitted)
 
 func _intro_message() -> void:
 	await get_tree().create_timer(intro_message_delay).timeout
 	if is_inside_tree():
-		GameState.notify("%s // ZORLUK: %s" % [level_display_name, GameState.get_active_difficulty_name()])
+		GameState.notify(story_intro_message)
+		await get_tree().create_timer(1.8).timeout
+		if is_inside_tree():
+			GameState.notify("%s // ZORLUK: %s" % [level_display_name, GameState.get_active_difficulty_name()])
 
 func _start_audio_loop(audio_player: AudioStreamPlayer) -> void:
 	if audio_player.stream == null:
@@ -68,3 +78,19 @@ func get_automap_config() -> Dictionary:
 		"merge_adjacent_cells": automap_merge_adjacent_cells,
 		"show_room_numbers": automap_show_room_numbers,
 	}
+
+
+func _on_noise_emitted(_position: Vector3, _radius: float, noise_type: StringName, source: Node) -> void:
+	if _alarm_triggered or noise_type != &"gunshot" or source == null:
+		return
+	_alarm_triggered = true
+	GameState.notify("VEX-02 // GÜVENLİK ALARMI: SİLAH SESİ TESPİT EDİLDİ")
+	GameState.set_objective("GÜVENLİK AĞINI AŞ // SARI ERİŞİM KARTINI BUL")
+
+
+func _on_key_inventory_changed(keys: Array[StringName]) -> void:
+	if keys.has(&"yellow"):
+		GameState.set_objective("SARI ERİŞİM KARTI ALINDI // REAKTÖR BÖLME KAPISINA İLERLE")
+	elif keys.has(&"red"):
+		GameState.set_objective("KIRMIZI ERİŞİM KARTI ALINDI // TAHLİYE HAVA KİLİDİNE İLERLE")
+

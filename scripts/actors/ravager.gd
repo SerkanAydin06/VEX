@@ -53,6 +53,10 @@ enum State {
 @export var aggro_on_damage := true
 @export var alert_allies_on_damage := true
 @export var receive_ally_alerts := true
+@export_category("03B - İşitme / Stealth")
+@export_range(2.0, 40.0, 0.5) var hearing_radius := 14.0
+@export_range(0.1, 2.0, 0.05) var hearing_loudness_scale := 1.0
+@export_range(0.1, 1.0, 0.05) var headshot_height_ratio := 0.62
 @export var hurt_reaction_enabled := true
 
 @export_category("04 - Saldırı")
@@ -183,6 +187,8 @@ func _ready() -> void:
 		return
 	add_to_group("enemy")
 	add_to_group("damageable")
+	if not GameState.noise_emitted.is_connected(_on_noise_emitted):
+		GameState.noise_emitted.connect(_on_noise_emitted)
 	_configure_runtime_stats()
 	health = _runtime_maximum_health
 	_spawn_position = global_position
@@ -311,6 +317,34 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 			animated_sprite.play(&"hurt")
 			_apply_frame_ground_offset()
 			_resume_animation_after_hurt()
+
+
+func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -> void:
+	if state == State.DEAD or source == self:
+		return
+	var distance := _horizontal_distance(global_position, noise_position)
+	var effective_range := hearing_radius * maxf(loudness * hearing_loudness_scale, 0.1)
+	if distance > effective_range:
+		return
+	_exit_dormant_mode()
+	_alerted = true
+	_player_visible = false
+	_seconds_without_sight = 0.0
+	_search_remaining = search_duration
+	_last_seen_position = noise_position
+	_last_seen_position.y = global_position.y
+	_has_last_seen_position = true
+	state = State.CHASE
+	_clear_path()
+	_path_refresh_remaining = 0.0
+	if loudness >= 0.9:
+		_alert_nearby_allies(noise_position)
+
+
+func get_weapon_hit_multiplier(hit_position: Vector3, base_headshot_multiplier: float) -> float:
+	var local_y := hit_position.y - global_position.y
+	var head_threshold := 0.95 * headshot_height_ratio
+	return base_headshot_multiplier if local_y >= head_threshold else 1.0
 
 
 func receive_ally_alert(suspected_position: Vector3) -> void:

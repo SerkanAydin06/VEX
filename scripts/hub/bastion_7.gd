@@ -26,6 +26,7 @@ extends Node3D
 @export_category("04 - Campaign")
 @export var mission_paths: PackedStringArray = []
 @export var mission_labels: PackedStringArray = []
+@export var mission_definitions: Array[VexMissionDefinition] = []
 
 @onready var ambient_loop: AudioStreamPlayer = $AmbientLoop
 
@@ -51,8 +52,20 @@ func _apply_safe_zone_rules() -> void:
 
 func _intro_message() -> void:
 	await get_tree().create_timer(intro_message_delay).timeout
-	if is_inside_tree():
-		GameState.notify(arrival_message)
+	if not is_inside_tree():
+		return
+	GameState.notify(arrival_message)
+	await get_tree().create_timer(0.9).timeout
+	if not is_inside_tree():
+		return
+	if GameState.campaign_stage >= 2:
+		GameState.notify("OPERASYON TAMAMLANDI // VEX-02 KAYDI BASTION-7'YE AKTARILDI")
+		GameState.set_objective(first_objective)
+	elif GameState.campaign_stage >= 1:
+		GameState.notify("VEX-01 TAMAMLANDI // VEX-02 OPERASYONU HAZIR")
+		GameState.set_objective(first_objective)
+	else:
+		GameState.set_objective(first_objective)
 
 
 func _start_audio_loop(audio_player: AudioStreamPlayer) -> void:
@@ -88,7 +101,17 @@ func get_automap_config() -> Dictionary:
 	}
 
 
+func _get_active_mission_definition() -> VexMissionDefinition:
+	var index := GameState.campaign_stage
+	if index < 0 or index >= mission_definitions.size():
+		return null
+	return mission_definitions[index]
+
+
 func get_next_mission_path() -> String:
+	var definition := _get_active_mission_definition()
+	if definition != null and not definition.scene_path.is_empty():
+		return definition.scene_path
 	var index := GameState.campaign_stage
 	if index < 0 or index >= mission_paths.size():
 		return ""
@@ -96,7 +119,17 @@ func get_next_mission_path() -> String:
 
 
 func get_next_mission_label() -> String:
+	var definition := _get_active_mission_definition()
+	if definition != null and not definition.display_name.is_empty():
+		return definition.display_name
 	var index := GameState.campaign_stage
 	if index < 0 or index >= mission_labels.size():
 		return "YENİ OPERASYON BEKLENİYOR"
 	return mission_labels[index]
+
+
+func get_next_mission_briefing() -> String:
+	var definition := _get_active_mission_definition()
+	if definition != null:
+		return definition.briefing
+	return "OPERASYON BRİFİNGİ YÜKLENEMEDİ."

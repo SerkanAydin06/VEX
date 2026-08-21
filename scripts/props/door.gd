@@ -179,6 +179,8 @@ func _get_required_key_label() -> String:
 				labels.append("MAVİ ERİŞİM ANAHTARI")
 			&"red":
 				labels.append("KIRMIZI ERİŞİM ANAHTARI")
+			&"yellow":
+				labels.append("SARI ERİŞİM ANAHTARI")
 			_:
 				labels.append(String(key_id).to_upper())
 	return " + ".join(labels)

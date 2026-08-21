@@ -66,11 +66,13 @@ func interact(_player: Node) -> void:
 	match terminal_mode:
 		TerminalMode.MISSION_CONTROL:
 			GameState.select_hub_mission(_get_next_mission_path(), _get_next_mission_label())
+			GameState.notify(_get_next_mission_briefing())
 		TerminalMode.DEPLOYMENT:
 			if GameState.has_hub_selected_mission():
 				GameState.deploy_selected_hub_mission()
 				return
 			GameState.select_hub_mission(_get_next_mission_path(), _get_next_mission_label())
+			GameState.notify(_get_next_mission_briefing())
 		_:
 			GameState.notify(info_message)
 	if is_inside_tree():
@@ -106,6 +108,13 @@ func _get_next_mission_label() -> String:
 	if hub != null and hub.has_method("get_next_mission_label"):
 		return str(hub.call("get_next_mission_label"))
 	return mission_waiting_text
+
+
+func _get_next_mission_briefing() -> String:
+	var hub := _get_hub_scene()
+	if hub != null and hub.has_method("get_next_mission_briefing"):
+		return str(hub.call("get_next_mission_briefing"))
+	return "OPERASYON BRİFİNGİ YÜKLENEMEDİ."
 
 
 func _refresh_screen() -> void:

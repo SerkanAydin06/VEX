@@ -14,6 +14,8 @@ signal hit_confirmed
 signal damage_received(amount: int)
 signal player_died
 signal hub_mission_changed(path: String, label: String)
+signal noise_emitted(position: Vector3, loudness: float, source: Node)
+signal headshot_confirmed
 
 const MAIN_MENU_PATH := "res://scenes/ui/main_menu.tscn"
 const LEVEL_01_PATH := "res://scenes/levels/level_01.tscn"
@@ -22,7 +24,7 @@ const BASTION_7_PATH := "res://scenes/hub/bastion_7.tscn"
 const LEVEL_COMPLETE_PATH := "res://scenes/ui/level_complete.tscn"
 const SAVE_PATH := "user://vex_save.cfg"
 const SAVE_VERSION := 3
-const CHECKPOINTS_ENABLED := false
+const CHECKPOINTS_ENABLED := true
 
 var player: Node = null
 var hud: CanvasLayer = null
@@ -77,11 +79,14 @@ func continue_game() -> void:
 	get_tree().paused = false
 	loading_saved_state = true
 	run_started_msec = Time.get_ticks_msec() - int(saved_run_state.get("elapsed_msec", 0))
-	get_tree().change_scene_to_file(LEVEL_01_PATH)
+	current_level_path = str(saved_run_state.get("current_level_path", LEVEL_01_PATH))
+	if not ResourceLoader.exists(current_level_path):
+		current_level_path = LEVEL_01_PATH
+	get_tree().change_scene_to_file(current_level_path)
 
 
 func restart_level(_restore_full_health: bool = false) -> void:
-	# Kontrol noktaları yok. Oyuncu bulunduğu bölümün en başından başlar.
+	# Legacy restart: bölümü mevcut bölüm başlangıcından açar.
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	loading_saved_state = false
@@ -89,8 +94,25 @@ func restart_level(_restore_full_health: bool = false) -> void:
 	pending_next_level_path = ""
 	_reset_level_counters()
 	pending_player_restore_state = current_level_start_state.duplicate(true)
-	pending_player_restore_state["health"] = 100
+	pending_player_restore_state["health"] = 100 if _restore_full_health else int(pending_player_restore_state.get("health", 100))
 	run_started_msec = Time.get_ticks_msec()
+	get_tree().change_scene_to_file(current_level_path)
+
+
+func restart_checkpoint() -> void:
+	if not CHECKPOINTS_ENABLED or not has_save():
+		restart_level(false)
+		return
+	if not _load_run():
+		restart_level(false)
+		return
+	get_tree().paused = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	loading_saved_state = true
+	run_started_msec = Time.get_ticks_msec() - int(saved_run_state.get("elapsed_msec", 0))
+	current_level_path = str(saved_run_state.get("current_level_path", LEVEL_01_PATH))
+	if not ResourceLoader.exists(current_level_path):
+		current_level_path = LEVEL_01_PATH
 	get_tree().change_scene_to_file(current_level_path)
 
 
@@ -146,6 +168,10 @@ func begin_level(enemy_count: int, secret_count: int, first_objective: String) -
 		secrets = 0
 	objective_changed.emit(objective)
 	level_stats_changed.emit(kills, total_enemies, secrets, total_secrets)
+	# Her bölümün girişini güvenli checkpoint olarak kaydet. Oyuncu hazır olduktan
+	# sonra ertelenmiş çağrı ile save alınır; HUD/weapon state eksik kalmaz.
+	if CHECKPOINTS_ENABLED:
+		call_deferred("save_checkpoint")
 
 
 func set_objective(text: String) -> void:
@@ -227,6 +253,16 @@ func confirm_hit() -> void:
 	hit_confirmed.emit()
 
 
+func confirm_headshot() -> void:
+	headshot_confirmed.emit()
+
+
+func emit_noise(position: Vector3, loudness: float, source: Node = null) -> void:
+	if loudness <= 0.0:
+		return
+	noise_emitted.emit(position, loudness, source)
+
+
 func report_damage(amount: int) -> void:
 	damage_received.emit(amount)
 
@@ -250,6 +286,7 @@ func save_checkpoint() -> bool:
 	state["collected_pickup_ids"] = collected_pickup_ids.duplicate()
 	state["found_secret_ids"] = found_secret_ids.duplicate()
 	state["difficulty"] = active_difficulty
+	state["current_level_path"] = current_level_path
 	var config := ConfigFile.new()
 	for key: String in state.keys():
 		config.set_value("run", key, state[key])

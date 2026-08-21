@@ -47,6 +47,10 @@ extends CharacterBody3D
 @export var aggro_on_damage := true
 @export var alert_allies_on_detection := true
 @export var alert_allies_on_damage := true
+@export_category("03B - İşitme / Stealth")
+@export_range(2.0, 40.0, 0.5) var hearing_radius := 16.0
+@export_range(0.1, 2.0, 0.05) var hearing_loudness_scale := 1.0
+@export_range(0.1, 1.0, 0.05) var headshot_height_ratio := 0.62
 @export var receive_ally_alerts := true
 
 @export_category("04 - Saldırı")
@@ -132,6 +136,7 @@ var _runtime_attack_cooldown := 1.0
 var _runtime_attack_windup := 0.1
 var _runtime_attack_lunge_speed := 0.0
 var _sight_check_remaining := 0.0
+var _path_refresh_remaining := 0.0
 var _cached_player_visible := false
 var _dormant_active := false
 var _burn_remains: Node3D = null
@@ -156,6 +161,8 @@ func _ready() -> void:
 
 	add_to_group("enemy")
 	add_to_group("damageable")
+	if not GameState.noise_emitted.is_connected(_on_noise_emitted):
+		GameState.noise_emitted.connect(_on_noise_emitted)
 	_configure_runtime_stats()
 	health = _runtime_maximum_health
 	_spawn_position = global_position
@@ -1007,6 +1014,28 @@ func receive_ally_alert(suspected_position: Vector3) -> void:
 	_lost_sight_remaining = lost_sight_timeout
 	_search_remaining = search_duration
 	_detour_remaining = 0.0
+
+
+func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -> void:
+	if _dead or source == self:
+		return
+	var distance := _horizontal_distance(global_position, noise_position)
+	var effective_range := hearing_radius * maxf(loudness * hearing_loudness_scale, 0.1)
+	if distance > effective_range:
+		return
+	_exit_dormant_mode()
+	_aggro = true
+	_last_seen_position = noise_position
+	_lost_sight_remaining = lost_sight_timeout
+	_search_remaining = search_duration
+	_path_refresh_remaining = 0.0
+	if loudness >= 0.9:
+		_alert_nearby_allies(noise_position)
+
+
+func get_weapon_hit_multiplier(hit_position: Vector3, base_headshot_multiplier: float) -> float:
+	var local_y := hit_position.y - global_position.y
+	return base_headshot_multiplier if local_y >= 0.95 * headshot_height_ratio else 1.0
 
 
 func _alert_nearby_allies(suspected_position: Vector3) -> void:

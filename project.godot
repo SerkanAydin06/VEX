@@ -152,6 +152,9 @@ night_vision={
 3d_physics/layer_2="Oyuncu"
 3d_physics/layer_3="Düşman"
 3d_physics/layer_4="Etkileşimli Nesne"
+3d_physics/layer_5="Mermi / Projectile"
+3d_physics/layer_6="Pickup"
+3d_physics/layer_7="Sensör"
 
 [physics]
 

@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="7_cc6hi"]
 [ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="8_rwa84"]
 [ext_resource type="Texture2D" uid="uid://cxwpf6cn3ejr7" path="res://assets/world/bastion7/operator_pad.png" id="9_00fff"]
-[ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/Table.tscn" id="10_cs0tf"]
+[ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/table.tscn" id="10_cs0tf"]
 [ext_resource type="PackedScene" uid="uid://ckhtinn61g27l" path="res://scenes/hub/hub_terminal.tscn" id="11_u2ooc"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_i4t6o"]
 [ext_resource type="Texture2D" uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png" id="13_wj067"]

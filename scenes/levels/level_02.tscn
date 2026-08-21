@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" path="res://assets/pickups/key_blue.png" id="18_key_blue"]
 [ext_resource type="Texture2D" path="res://assets/pickups/key_red.png" id="19_key_red"]
 [ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_red.tscn" id="19_lamp_red"]
+[ext_resource type="Texture2D" path="res://assets/pickups/key_yellow.png" id="20_key_yellow"]
 [ext_resource type="AudioStream" uid="uid://bc6m2yvln3f84" path="res://assets/audio/game_music_pro.mp3" id="20_level_music"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="21_ambience"]
 [ext_resource type="PackedScene" path="res://scenes/world/exit_sign.tscn" id="22_exit_sign"]
@@ -1866,7 +1867,10 @@ objective_on_unlock = "DOĞU GÜVENLİK KAPISINA DÖN"
 [node name="D02_Door" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2.24, -20)
 display_name = "REAKTÖR BÖLME KAPISI"
-required_key = &""
+locked = true
+required_key = &"yellow"
+required_key_label = "SARI ERİŞİM KARTI"
+objective_on_unlock = "REAKTÖR BÖLMESİ AÇILDI // TAHLİYE HAVA KİLİDİNE İLERLE"
 
 [node name="D03_Door" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.24, 0)
@@ -2272,6 +2276,15 @@ waypoint_link_distance = 13.0
 
 [node name="Pickups" type="Node3D" parent="."]
 
+
+[node name="YellowKey" parent="Pickups" instance=ExtResource("9_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 5)
+pickup_id = &"v2_yellow_key"
+pickup_type = "key_yellow"
+amount = 1
+display_name = "SARI ERİŞİM KARTI"
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("20_key_yellow")
 [node name="BlueKey" parent="Pickups" instance=ExtResource("9_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7, -30)
 pickup_id = &"v2_blue_key"

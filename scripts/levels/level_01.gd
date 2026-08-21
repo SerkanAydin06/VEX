@@ -4,9 +4,13 @@ extends Node3D
 @export var map_revision := "VEX01-R26-PRO-AUTOMAP"
 @export var level_display_name := "VEX-01 // KARANTİNA TESİSİ"
 @export_range(0, 100, 1) var campaign_completion_stage := 1
-@export var first_objective := "TESİSTE İLERLE"
-@export_range(0, 20, 1) var total_secrets := 0
-@export_range(0.0, 5.0, 0.05) var intro_message_delay := 0.5
+@export var first_objective := "BASTION-7 ÜSSÜNE GERİ DÖN"
+@export_multiline var briefing_story := "Bir asker olarak gözlerini açıyorsun. VEX-01 karantina tesisindesin. Burada ne olduğunu ve diğerlerine ne olduğunu bilmiyorsun. Bildiğin tek şey, Bastion-7 üssüne geri dönmen gerektiği."
+@export var briefing_objective := "GÖREV: BASTION-7 ÜSSÜNE GERİ DÖN"
+@export_range(0, 20, 1) var total_secrets := 1
+@export_range(0.01, 0.1, 0.005) var briefing_character_delay := 0.028
+@export_range(0.1, 3.0, 0.05) var briefing_start_delay := 0.45
+@export_range(0.5, 5.0, 0.1) var briefing_hold_after_typing := 1.0
 
 @export_category("02 - Otomatik Harita")
 @export var automap_title := "TESİS HARİTASI // VEX-01"
@@ -29,25 +33,197 @@ extends Node3D
 
 @onready var level_music: AudioStreamPlayer = $LevelMusic
 @onready var ambient_loop: AudioStreamPlayer = $AmbientLoop
-
+var _opening_briefing_active := false
 
 func _ready() -> void:
 	SettingsManager.apply_brightness()
+	if not GameState.key_inventory_changed.is_connected(_on_key_inventory_changed):
+		GameState.key_inventory_changed.connect(_on_key_inventory_changed)
 	var enemy_count := get_tree().get_nodes_in_group("enemy").size()
 	GameState.begin_level(enemy_count, total_secrets, first_objective)
+	_clear_opening_projectiles()
 	_start_audio_loop(level_music)
 	_start_audio_loop(ambient_loop)
-	_intro_message()
+	_show_briefing()
+
+func _clear_opening_projectiles() -> void:
+	for projectile in get_tree().get_nodes_in_group("projectile"):
+		if is_instance_valid(projectile):
+			projectile.queue_free()
+
+func _show_briefing() -> void:
+	_opening_briefing_active = true
+	var briefing := CanvasLayer.new()
+	briefing.name = "LevelBriefing"
+	briefing.layer = 1000
+	briefing.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(briefing)
+
+	var root := Control.new()
+	root.name = "Root"
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.mouse_filter = Control.MOUSE_FILTER_STOP
+	briefing.add_child(root)
+
+	var blackout := ColorRect.new()
+	blackout.name = "Blackout"
+	blackout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	blackout.color = Color.BLACK
+	root.add_child(blackout)
+
+	var location := Label.new()
+	location.name = "MissionHeader"
+	location.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	location.offset_left = 100.0
+	location.offset_top = 90.0
+	location.offset_right = -100.0
+	location.offset_bottom = 150.0
+	location.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	location.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	location.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	location.add_theme_font_size_override("font_size", 30)
+	location.add_theme_color_override("font_color", Color(0.55, 0.82, 1.0, 1.0))
+	location.text = "VEX-01 // KARANTİNA TESİSİ"
+	location.visible_characters = -1
+	root.add_child(location)
+
+	var story := RichTextLabel.new()
+	story.name = "Story"
+	story.set_anchors_preset(Control.PRESET_CENTER)
+	story.offset_left = -520.0
+	story.offset_top = -135.0
+	story.offset_right = 520.0
+	story.offset_bottom = 95.0
+	story.bbcode_enabled = false
+	story.fit_content = false
+	story.scroll_active = false
+	story.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	story.add_theme_font_size_override("normal_font_size", 25)
+	story.add_theme_color_override("default_color", Color(0.93, 0.95, 0.98, 1.0))
+	story.text = briefing_story
+	story.visible_characters = 0
+	root.add_child(story)
+
+	var objective := Label.new()
+	objective.name = "Objective"
+	objective.set_anchors_preset(Control.PRESET_CENTER)
+	objective.offset_left = -520.0
+	objective.offset_top = 125.0
+	objective.offset_right = 520.0
+	objective.offset_bottom = 185.0
+	objective.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	objective.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	objective.add_theme_font_size_override("font_size", 24)
+	objective.add_theme_color_override("font_color", Color(0.78, 0.88, 0.96, 1.0))
+	objective.text = briefing_objective
+	objective.visible_characters = 0
+	root.add_child(objective)
+
+	var prompt := Label.new()
+	prompt.name = "ContinuePrompt"
+	prompt.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	prompt.offset_left = 100.0
+	prompt.offset_top = -115.0
+	prompt.offset_right = -100.0
+	prompt.offset_bottom = -55.0
+	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	prompt.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	prompt.add_theme_font_size_override("font_size", 20)
+	prompt.add_theme_color_override("font_color", Color(0.68, 0.74, 0.80, 1.0))
+	prompt.text = "HERHANGİ BİR TUŞA BAS — DEVAM ET"
+	prompt.modulate.a = 0.0
+	root.add_child(prompt)
+
+	var locked_nodes: Array[Dictionary] = []
+	for actor in get_tree().get_nodes_in_group("player") + get_tree().get_nodes_in_group("enemy"):
+		if actor is Node:
+			locked_nodes.append({
+				"node": actor,
+				"process": actor.is_processing(),
+				"physics": actor.is_physics_processing(),
+				"input": actor.is_processing_input(),
+				"unhandled": actor.is_processing_unhandled_input(),
+				"unhandled_key": actor.is_processing_unhandled_key_input(),
+				"process_mode": actor.process_mode,
+			})
+			actor.set_process(false)
+			actor.set_physics_process(false)
+			actor.set_process_input(false)
+			actor.set_process_unhandled_input(false)
+			actor.set_process_unhandled_key_input(false)
+			actor.process_mode = Node.PROCESS_MODE_DISABLED
+
+	await get_tree().create_timer(briefing_start_delay, true, false, true).timeout
+
+	# Mission/location header appears immediately; only the story uses the typewriter effect.
+	location.visible_characters = -1
+	await _type_text(story, briefing_character_delay)
+	objective.visible_characters = -1
 
 
-func _intro_message() -> void:
-	await get_tree().create_timer(intro_message_delay).timeout
-	if is_inside_tree():
-		GameState.notify(
-			"%s // ZORLUK: %s"
-			% [level_display_name, GameState.get_active_difficulty_name()]
-		)
+	var blink := create_tween()
+	blink.set_loops()
+	blink.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	blink.tween_property(prompt, "modulate:a", 1.0, 0.45)
+	blink.tween_property(prompt, "modulate:a", 0.25, 0.45)
 
+	await _wait_for_continue()
+	blink.kill()
+
+	# The continue press is consumed before gameplay is resumed. Hide all briefing text
+	# immediately, then reveal the world. If the mouse was used, wait for release so the
+	# same click can never become a weapon shot on the first gameplay frame.
+	prompt.visible = false
+	location.visible = false
+	story.visible = false
+	objective.visible = false
+	await _wait_for_continue_release()
+
+	var reveal := create_tween()
+	reveal.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	reveal.tween_property(blackout, "color:a", 0.0, 1.15)
+	await reveal.finished
+
+	_opening_briefing_active = false
+	for entry in locked_nodes:
+		var actor: Node = entry["node"]
+		if not is_instance_valid(actor):
+			continue
+		actor.process_mode = entry["process_mode"]
+		actor.set_process(entry["process"])
+		actor.set_physics_process(entry["physics"])
+		actor.set_process_input(entry["input"])
+		actor.set_process_unhandled_input(entry["unhandled"])
+		actor.set_process_unhandled_key_input(entry["unhandled_key"])
+
+	GameState.notify("%s // ZORLUK: %s" % [level_display_name, GameState.get_active_difficulty_name()])
+	briefing.queue_free()
+
+func _type_text(label: Variant, delay: float) -> void:
+	label.visible_characters = 0
+	var total: int = label.text.length()
+	for index in range(total):
+		if not is_instance_valid(label):
+			return
+		label.visible_characters = index + 1
+		await get_tree().create_timer(delay, true, false, true).timeout
+
+func _wait_for_continue() -> void:
+	while true:
+		if Input.is_key_pressed(KEY_ENTER) or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_ESCAPE) or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+			return
+		await get_tree().process_frame
+
+func _wait_for_continue_release() -> void:
+	while Input.is_key_pressed(KEY_ENTER) or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_ESCAPE) or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		await get_tree().process_frame
+
+func _on_key_inventory_changed(keys: Array[StringName]) -> void:
+	if keys.has(&"red"):
+		GameState.set_objective("KIRMIZI ERİŞİM KARTI ALINDI // FİNAL HAVA KİLİDİNE İLERLE")
+	elif keys.has(&"blue"):
+		GameState.set_objective("MAVİ ERİŞİM KARTI ALINDI // TESİSİN DERİNLİKLERİNE İLERLE")
 
 func _start_audio_loop(audio_player: AudioStreamPlayer) -> void:
 	if audio_player.stream == null:
@@ -57,19 +233,15 @@ func _start_audio_loop(audio_player: AudioStreamPlayer) -> void:
 		audio_player.finished.connect(restart_callable)
 	audio_player.play()
 
-
 func _restart_audio_loop(audio_player: AudioStreamPlayer) -> void:
 	if is_inside_tree() and is_instance_valid(audio_player) and audio_player.stream != null:
 		audio_player.play()
 
-
 func get_level_display_name() -> String:
 	return level_display_name
 
-
 func get_campaign_completion_stage() -> int:
 	return campaign_completion_stage
-
 
 func get_automap_config() -> Dictionary:
 	return {

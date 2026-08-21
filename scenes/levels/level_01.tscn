@@ -27,6 +27,8 @@
 [ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/hellmagma.tscn" id="25_hellmagma"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="26_room_light"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="27_voidweaver"]
+[ext_resource type="PackedScene" path="res://scenes/actors/veilmaw.tscn" id="28_veilmaw"]
+[ext_resource type="PackedScene" path="res://scenes/props/secret_trigger.tscn" id="29_secret_trigger"]
 
 [sub_resource type="Environment" id="Environment_level"]
 background_mode = 1
@@ -1240,35 +1242,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.6, 24)
 
 [node name="Enemies" type="Node3D" parent="." unique_id=2113265236]
 
-[node name="HellMagma_TestStartRoom" parent="Enemies" unique_id=911175851 instance=ExtResource("25_hellmagma")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.325261, 1.8, 12.986488)
-enemy_id = &"hellmagma_test_start"
-waypoint_link_distance = 12.5
-
-[node name="Voidweaver_TestStartRoom" parent="Enemies" unique_id=1509996575 instance=ExtResource("27_voidweaver")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08413887, 1, 22.2)
-enemy_id = &"voidweaver_test_start"
-patrol_offset = Vector3(2, 0, 0)
-waypoint_link_distance = 12.5
-
 [node name="Ravager_01_17" parent="Enemies" unique_id=1662530060 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 25)
 enemy_id = &"ravager_01"
 patrol_offset = Vector3(2.5, 0, 0)
 waypoint_link_distance = 12.5
-
+spawn_min_difficulty = 0
 [node name="Ravager_02_14" parent="Enemies" unique_id=481595330 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7, 1, 14.4)
 enemy_id = &"ravager_02"
 patrol_offset = Vector3(0, 0, 3.2)
 waypoint_link_distance = 12.5
-
+spawn_min_difficulty = 0
 [node name="Ravager_03_14" parent="Enemies" unique_id=84087321 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 15.8)
 enemy_id = &"ravager_03"
-spawn_min_difficulty = 1
 patrol_offset = Vector3(-2.8, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_04_11" parent="Enemies" unique_id=57729472 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 6.1777306)
@@ -1277,100 +1268,103 @@ patrol_offset = Vector3(0, 0, 2.8)
 attack_range = 10.0
 attack_cooldown = 1.0
 waypoint_link_distance = 12.5
-
+spawn_min_difficulty = 0
 [node name="Ravager_05_15" parent="Enemies" unique_id=1894428689 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.6, 1, 15.2)
 enemy_id = &"ravager_05"
 maximum_health = 95
 patrol_offset = Vector3(2.5, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 1
 
 [node name="Ravager_06_15" parent="Enemies" unique_id=1362299469 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.8, 1, 14.1)
 enemy_id = &"ravager_06"
 maximum_health = 95
-spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, -2.8)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_07_8" parent="Enemies" unique_id=1916648070 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -5)
 enemy_id = &"ravager_07"
 patrol_offset = Vector3(2.8, 0, 0)
 waypoint_link_distance = 12.5
-
+spawn_min_difficulty = 0
 [node name="Ravager_08_5" parent="Enemies" unique_id=216987114 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -15)
 enemy_id = &"ravager_08"
 patrol_offset = Vector3(-2.8, 0, 0)
 waypoint_link_distance = 12.5
-
+spawn_min_difficulty = 0
 [node name="Ravager_09_6" parent="Enemies" unique_id=810848944 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4, 1, -14.3)
 enemy_id = &"ravager_09"
 maximum_health = 95
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_10_6" parent="Enemies" unique_id=2114332936 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.7, 1, -15.7)
 enemy_id = &"ravager_10"
 maximum_health = 95
-spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, -3)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 3
 
 [node name="Ravager_11_7" parent="Enemies" unique_id=1682471873 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, -5)
 enemy_id = &"ravager_11"
-spawn_min_difficulty = 1
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_12_9" parent="Enemies" unique_id=2020786702 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, -5)
 enemy_id = &"ravager_12"
 patrol_offset = Vector3(0, 0, -3)
 waypoint_link_distance = 12.5
-
+spawn_min_difficulty = 0
 [node name="Ravager_13_4" parent="Enemies" unique_id=1980996077 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, -15)
 enemy_id = &"ravager_13"
 patrol_offset = Vector3(2.2, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_14_2" parent="Enemies" unique_id=878456029 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -25)
 enemy_id = &"ravager_14"
-spawn_min_difficulty = 1
 patrol_offset = Vector3(-2.2, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_15_10" parent="Enemies" unique_id=1308536328 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, 5)
 enemy_id = &"ravager_15"
-spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2.5)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_16_12" parent="Enemies" unique_id=690697050 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, 5)
 enemy_id = &"ravager_16"
-spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, -2.5)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_17_13" parent="Enemies" unique_id=271732523 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, 15)
 enemy_id = &"ravager_17"
-spawn_min_difficulty = 2
 patrol_offset = Vector3(2.4, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_18_18" parent="Enemies" unique_id=869926266 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, 25)
 enemy_id = &"ravager_18"
-spawn_min_difficulty = 2
 patrol_offset = Vector3(-2.4, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 3
 
 [node name="Ravager_19_3" parent="Enemies" unique_id=1716166352 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, -25)
@@ -1379,44 +1373,50 @@ maximum_health = 120
 patrol_offset = Vector3(0, 0, 0)
 attack_cooldown = 1.0
 waypoint_link_distance = 12.5
-
+spawn_min_difficulty = 0
 [node name="Ravager_20_1" parent="Enemies" unique_id=881403654 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, -25)
 enemy_id = &"ravager_20"
-spawn_min_difficulty = 1
 patrol_offset = Vector3(2.5, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_21_8" parent="Enemies" unique_id=35506696 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 1, -5.8)
 enemy_id = &"ravager_21"
 maximum_health = 90
-spawn_min_difficulty = 3
 patrol_offset = Vector3(-3, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 3
 
 [node name="Ravager_22_5" parent="Enemies" unique_id=1209801945 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 1, -14.2)
 enemy_id = &"ravager_22"
 maximum_health = 90
-spawn_min_difficulty = 3
 patrol_offset = Vector3(3, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
 
 [node name="Ravager_23_9" parent="Enemies" unique_id=1943313731 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1, -5.8)
 enemy_id = &"ravager_23"
 maximum_health = 95
-spawn_min_difficulty = 3
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 3
 
 [node name="Ravager_24_15" parent="Enemies" unique_id=1386056059 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.8, 1, 17.2)
 enemy_id = &"ravager_24"
 maximum_health = 100
-spawn_min_difficulty = 3
 patrol_offset = Vector3(-3, 0, 0)
 waypoint_link_distance = 12.5
+spawn_min_difficulty = 2
+
+[node name="Veilmaw_MidFacility" parent="Enemies" instance=ExtResource("28_veilmaw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2, 1, -7.2)
+enemy_id = &"veilmaw_mid_facility"
+spawn_min_difficulty = 0
+waypoint_link_distance = 10.0
 
 [node name="Pickups" type="Node3D" parent="." unique_id=1691697308]
 
@@ -1592,15 +1592,19 @@ display_name = "GECE GÖRÜŞÜ"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("24_night_vision")
 
-[node name="HellMagmaTestBullets" parent="Pickups" unique_id=500946731 instance=ExtResource("9_pickup")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.7, 22.5)
-pickup_id = &"hellmagma_test_bullets"
-pickup_type = "bullets"
-amount = 30
-display_name = "MERMİ"
-visual_texture = ExtResource("15_bullets")
-
 [node name="Triggers" type="Node3D" parent="." unique_id=1315848807]
+
+[node name="SecretMaintenanceTrigger" parent="Triggers" instance=ExtResource("29_secret_trigger")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2, 1.5, -7.6)
+secret_id = &"level01_maintenance_cache"
+
+[node name="SecretMaintenanceAmmo" parent="Pickups" instance=ExtResource("9_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2, 0.7, -7.6)
+pickup_id = &"secret_maintenance_ammo"
+pickup_type = "bullets"
+amount = 24
+display_name = "GİZLİ BAKIM STOĞU"
+visual_texture = ExtResource("15_bullets")
 
 [node name="FinishSwitch" parent="Triggers" unique_id=518012692 instance=ExtResource("11_finish")]
 transform = Transform3D(-3.6199901e-06, 0, -1, 0, 1, 0, 1, 0, -3.6199901e-06, 17.72, 1.6, -25)

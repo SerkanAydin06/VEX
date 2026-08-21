@@ -8,6 +8,7 @@ weapon_id = &"ak47"
 display_name = "AK-47"
 ammo_type = &"rifle_ammo"
 magazine_size = 30
+headshot_multiplier = 1.80
 damage_per_pellet = 14
 fire_interval = 0.1
 reload_duration = 1.2

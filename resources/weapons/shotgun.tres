@@ -8,6 +8,7 @@ weapon_id = &"shotgun"
 display_name = "KIRICI POMPALI"
 ammo_type = &"shells"
 magazine_size = 6
+headshot_multiplier = 1.60
 damage_per_pellet = 11
 pellet_count = 8
 fire_interval = 0.82

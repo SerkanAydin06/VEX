@@ -25,7 +25,7 @@ func get_interaction_text(player: Node) -> String:
 	if _used:
 		return ""
 	if not _player_has_all_keys(player):
-		return "[E] %s — %d ANAHTAR GEREKLİ" % [display_name, required_keys.size()]
+		return "[E] %s — %s GEREKLİ" % [display_name, _get_required_key_label()]
 	if required_enemy_id != &"" and not GameState.was_enemy_defeated(required_enemy_id):
 		return "[E] %s — NİHAİ MUHAFIZ AKTİF" % display_name
 	return "[E] BÖLÜM ÇIKIŞINI ETKİNLEŞTİR"
@@ -35,7 +35,7 @@ func interact(player: Node) -> void:
 	if _used:
 		return
 	if not _player_has_all_keys(player):
-		GameState.notify("TAHLİYE KİLİTLİ — MAVİ VE KIRMIZI ANAHTAR GEREKLİ")
+		GameState.notify("TAHLİYE KİLİTLİ — %s GEREKLİ" % _get_required_key_label())
 		return
 	if required_enemy_id != &"" and not GameState.was_enemy_defeated(required_enemy_id):
 		GameState.notify("TAHLİYE KİLİTLİ — NİHAİ MUHAFIZI İMHA ET")
@@ -44,6 +44,10 @@ func interact(player: Node) -> void:
 
 	_used = true
 	finish_switch_visual.modulate = activated_modulate
+	var activation_tween := create_tween().set_parallel(true)
+	activation_tween.tween_property(finish_switch_visual, "scale", Vector3(1.10, 1.10, 1.10), 0.10)
+	activation_tween.tween_property(finish_switch_visual, "rotation_degrees:y", 8.0, 0.14)
+	activation_tween.chain().tween_property(finish_switch_visual, "scale", Vector3.ONE, 0.16)
 	GameState.notify("BÖLÜM ÇIKIŞI ETKİNLEŞTİRİLDİ")
 	GameState.call_deferred("complete_level", next_level_path)
 
@@ -73,3 +77,18 @@ func _setup_finish_switch_visual() -> void:
 	var pixel_for_width := visual_world_size.x / texture_size.x
 	var pixel_for_height := visual_world_size.y / texture_size.y
 	finish_switch_visual.pixel_size = minf(pixel_for_width, pixel_for_height)
+
+
+func _get_required_key_label() -> String:
+	var labels: Array[String] = []
+	for key_id: StringName in required_keys:
+		match key_id:
+			&"blue":
+				labels.append("MAVİ ERİŞİM KARTI")
+			&"red":
+				labels.append("KIRMIZI ERİŞİM KARTI")
+			&"yellow":
+				labels.append("SARI ERİŞİM KARTI")
+			_:
+				labels.append(String(key_id).to_upper())
+	return " + ".join(labels)
