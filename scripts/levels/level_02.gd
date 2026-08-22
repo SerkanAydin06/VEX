@@ -34,9 +34,8 @@ func _ready() -> void:
 	_start_audio_loop(level_music)
 	_start_audio_loop(ambient_loop)
 	_intro_message()
-	var noise_bus := get_node_or_null("/root/VexNoiseManager")
-	if noise_bus != null and not noise_bus.noise_emitted.is_connected(_on_noise_emitted):
-		noise_bus.noise_emitted.connect(_on_noise_emitted)
+	if not GameState.gunshot_emitted.is_connected(_on_gunshot_emitted):
+		GameState.gunshot_emitted.connect(_on_gunshot_emitted)
 
 func _intro_message() -> void:
 	await get_tree().create_timer(intro_message_delay).timeout
@@ -80,8 +79,8 @@ func get_automap_config() -> Dictionary:
 	}
 
 
-func _on_noise_emitted(_position: Vector3, _radius: float, noise_type: StringName, source: Node) -> void:
-	if _alarm_triggered or noise_type != &"gunshot" or source == null:
+func _on_gunshot_emitted(_position: Vector3, _loudness: float, source: Node) -> void:
+	if _alarm_triggered or source == null:
 		return
 	_alarm_triggered = true
 	GameState.notify("VEX-02 // GÜVENLİK ALARMI: SİLAH SESİ TESPİT EDİLDİ")

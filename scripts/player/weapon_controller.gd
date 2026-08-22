@@ -142,6 +142,7 @@ func reload() -> void:
 	_play_hud_action(&"reload")
 	await get_tree().create_timer(weapon.reload_duration).timeout
 	if not is_inside_tree() or _player.is_dead:
+		is_reloading = false
 		return
 	var required: int = weapon.magazine_size - magazine
 	var loaded: int = mini(required, reserve)
@@ -242,7 +243,7 @@ func _try_fire() -> void:
 	_cooldown_remaining = weapon.fire_interval
 	_play_hud_action(&"fire")
 	_shoot_hitscan(weapon)
-	GameState.emit_noise(_player.global_position, 1.0 if weapon.weapon_id in [&"pistol", &"shotgun"] else 1.15, _player)
+	GameState.emit_gunshot(_player.global_position, 1.0 if weapon.weapon_id in [&"pistol", &"shotgun"] else 1.15, _player)
 	_apply_recoil(weapon)
 	broadcast_state()
 

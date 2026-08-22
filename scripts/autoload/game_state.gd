@@ -15,6 +15,7 @@ signal damage_received(amount: int)
 signal player_died
 signal hub_mission_changed(path: String, label: String)
 signal noise_emitted(position: Vector3, loudness: float, source: Node)
+signal gunshot_emitted(position: Vector3, loudness: float, source: Node)
 signal headshot_confirmed
 
 const MAIN_MENU_PATH := "res://scenes/ui/main_menu.tscn"
@@ -23,7 +24,9 @@ const LEVEL_02_PATH := "res://scenes/levels/level_02.tscn"
 const BASTION_7_PATH := "res://scenes/hub/bastion_7.tscn"
 const LEVEL_COMPLETE_PATH := "res://scenes/ui/level_complete.tscn"
 const SAVE_PATH := "user://vex_save.cfg"
-const SAVE_VERSION := 3
+const SAVE_TEMP_PATH := "user://vex_save.tmp"
+const SAVE_BACKUP_PATH := "user://vex_save.bak"
+const SAVE_VERSION := 4
 const CHECKPOINTS_ENABLED := true
 
 var player: Node = null
@@ -48,6 +51,7 @@ var current_level_start_state: Dictionary = {}
 var campaign_stage := 0
 var hub_selected_mission_path := ""
 var hub_selected_mission_label := ""
+var _save_request_pending := false
 
 
 func start_new_game() -> void:
@@ -76,12 +80,24 @@ func continue_game() -> void:
 	if not _load_run():
 		start_new_game()
 		return
+	pending_player_restore_state = {}
 	get_tree().paused = false
 	loading_saved_state = true
 	run_started_msec = Time.get_ticks_msec() - int(saved_run_state.get("elapsed_msec", 0))
 	current_level_path = str(saved_run_state.get("current_level_path", LEVEL_01_PATH))
 	if not ResourceLoader.exists(current_level_path):
-		current_level_path = LEVEL_01_PATH
+		start_new_game()
+		return
+	var resume_mode := str(saved_run_state.get("resume_mode", "level"))
+	if resume_mode == "transition":
+		loading_saved_state = false
+		pending_player_restore_state = (saved_run_state.get("resume_player_state", {}) as Dictionary).duplicate(true)
+		current_level_start_state = pending_player_restore_state.duplicate(true)
+		_reset_level_counters()
+		current_level_path = str(saved_run_state.get("current_level_path", LEVEL_01_PATH))
+		pending_player_restore_state = (saved_run_state.get("resume_player_state", {}) as Dictionary).duplicate(true)
+		get_tree().change_scene_to_file(current_level_path)
+		return
 	get_tree().change_scene_to_file(current_level_path)
 
 
@@ -92,6 +108,7 @@ func restart_level(_restore_full_health: bool = false) -> void:
 	loading_saved_state = false
 	saved_run_state = {}
 	pending_next_level_path = ""
+	pending_player_restore_state = {}
 	_reset_level_counters()
 	pending_player_restore_state = current_level_start_state.duplicate(true)
 	pending_player_restore_state["health"] = 100 if _restore_full_health else int(pending_player_restore_state.get("health", 100))
@@ -100,6 +117,7 @@ func restart_level(_restore_full_health: bool = false) -> void:
 
 
 func restart_checkpoint() -> void:
+	pending_player_restore_state = {}
 	if not CHECKPOINTS_ENABLED or not has_save():
 		restart_level(false)
 		return
@@ -112,7 +130,14 @@ func restart_checkpoint() -> void:
 	run_started_msec = Time.get_ticks_msec() - int(saved_run_state.get("elapsed_msec", 0))
 	current_level_path = str(saved_run_state.get("current_level_path", LEVEL_01_PATH))
 	if not ResourceLoader.exists(current_level_path):
-		current_level_path = LEVEL_01_PATH
+		restart_level(false)
+		return
+	var resume_mode := str(saved_run_state.get("resume_mode", "level"))
+	if resume_mode == "transition":
+		loading_saved_state = false
+		pending_player_restore_state = (saved_run_state.get("resume_player_state", {}) as Dictionary).duplicate(true)
+		get_tree().change_scene_to_file(current_level_path)
+		return
 	get_tree().change_scene_to_file(current_level_path)
 
 
@@ -129,7 +154,7 @@ func return_to_main_menu() -> void:
 
 
 func has_save() -> bool:
-	return CHECKPOINTS_ENABLED and FileAccess.file_exists(SAVE_PATH)
+	return CHECKPOINTS_ENABLED and (FileAccess.file_exists(SAVE_PATH) or FileAccess.file_exists(SAVE_BACKUP_PATH))
 
 
 func checkpoints_enabled() -> bool:
@@ -170,13 +195,22 @@ func begin_level(enemy_count: int, secret_count: int, first_objective: String) -
 	level_stats_changed.emit(kills, total_enemies, secrets, total_secrets)
 	# Her bölümün girişini güvenli checkpoint olarak kaydet. Oyuncu hazır olduktan
 	# sonra ertelenmiş çağrı ile save alınır; HUD/weapon state eksik kalmaz.
+	# Save the exact state at the level entry so Restart Level is deterministic.
+	call_deferred("_capture_level_start_state")
 	if CHECKPOINTS_ENABLED:
 		call_deferred("save_checkpoint")
+
+
+func _capture_level_start_state() -> void:
+	if player == null or not is_instance_valid(player) or not player.has_method("capture_run_state"):
+		return
+	current_level_start_state = player.call("capture_run_state").duplicate(true)
 
 
 func set_objective(text: String) -> void:
 	objective = text
 	objective_changed.emit(objective)
+	_request_checkpoint_save()
 
 
 func notify(text: String) -> void:
@@ -208,10 +242,13 @@ func publish_keys(keys: Array[StringName]) -> void:
 
 
 func register_enemy_defeated(enemy_id: StringName = &"") -> void:
-	if enemy_id != &"" and not defeated_enemy_ids.has(enemy_id):
+	if enemy_id != &"" and defeated_enemy_ids.has(enemy_id):
+		return
+	if enemy_id != &"":
 		defeated_enemy_ids.append(enemy_id)
 	kills += 1
 	level_stats_changed.emit(kills, total_enemies, secrets, total_secrets)
+	_request_checkpoint_save()
 
 
 func was_enemy_defeated(enemy_id: StringName) -> bool:
@@ -219,8 +256,10 @@ func was_enemy_defeated(enemy_id: StringName) -> bool:
 
 
 func register_pickup_collected(pickup_id: StringName) -> void:
-	if pickup_id != &"" and not collected_pickup_ids.has(pickup_id):
-		collected_pickup_ids.append(pickup_id)
+	if pickup_id == &"" or collected_pickup_ids.has(pickup_id):
+		return
+	collected_pickup_ids.append(pickup_id)
+	_request_checkpoint_save()
 
 
 func was_pickup_collected(pickup_id: StringName) -> bool:
@@ -235,6 +274,7 @@ func register_secret_found(secret_id: StringName = &"") -> void:
 	secrets = found_secret_ids.size() if not found_secret_ids.is_empty() else secrets + 1
 	level_stats_changed.emit(kills, total_enemies, secrets, total_secrets)
 	notify("GİZLİ ALAN BULUNDU")
+	_request_checkpoint_save()
 
 
 func was_secret_found(secret_id: StringName) -> bool:
@@ -263,6 +303,13 @@ func emit_noise(position: Vector3, loudness: float, source: Node = null) -> void
 	noise_emitted.emit(position, loudness, source)
 
 
+func emit_gunshot(position: Vector3, loudness: float, source: Node = null) -> void:
+	if loudness <= 0.0:
+		return
+	noise_emitted.emit(position, loudness, source)
+	gunshot_emitted.emit(position, loudness, source)
+
+
 func report_damage(amount: int) -> void:
 	damage_received.emit(amount)
 
@@ -271,30 +318,85 @@ func report_player_death() -> void:
 	player_died.emit()
 
 
-func save_checkpoint() -> bool:
+func save_checkpoint(reason: String = "checkpoint") -> bool:
 	if not CHECKPOINTS_ENABLED:
 		return false
 	if player == null or not is_instance_valid(player) or not player.has_method("capture_run_state"):
 		return false
-	var state: Dictionary = player.call("capture_run_state")
-	state["kills"] = kills
-	state["secrets"] = secrets
-	state["objective"] = objective
-	state["save_version"] = SAVE_VERSION
-	state["elapsed_msec"] = Time.get_ticks_msec() - run_started_msec
-	state["defeated_enemy_ids"] = defeated_enemy_ids.duplicate()
-	state["collected_pickup_ids"] = collected_pickup_ids.duplicate()
-	state["found_secret_ids"] = found_secret_ids.duplicate()
-	state["difficulty"] = active_difficulty
+	var player_state: Dictionary = player.call("capture_run_state")
+	var state := _build_save_state(player_state, reason, "level")
 	state["current_level_path"] = current_level_path
 	var config := ConfigFile.new()
 	for key: String in state.keys():
 		config.set_value("run", key, state[key])
-	var error := config.save(SAVE_PATH)
-	if error != OK:
-		push_error("VEX kayıt dosyası yazılamadı. Hata kodu: %s" % error)
+	return _write_save_config(config)
+
+
+func _build_save_state(player_state: Dictionary, reason: String, resume_mode: String) -> Dictionary:
+	var state := {
+		"save_version": SAVE_VERSION,
+		"save_reason": reason,
+		"saved_unix_time": Time.get_unix_time_from_system(),
+		"elapsed_msec": Time.get_ticks_msec() - run_started_msec,
+		"current_level_path": current_level_path,
+		"resume_mode": resume_mode,
+		"resume_player_state": player_state.duplicate(true),
+		"kills": kills,
+		"secrets": secrets,
+		"objective": objective,
+		"defeated_enemy_ids": defeated_enemy_ids.duplicate(),
+		"collected_pickup_ids": collected_pickup_ids.duplicate(),
+		"found_secret_ids": found_secret_ids.duplicate(),
+		"difficulty": active_difficulty,
+		"campaign_stage": campaign_stage,
+		"hub_selected_mission_path": hub_selected_mission_path,
+		"hub_selected_mission_label": hub_selected_mission_label,
+	}
+	# Eski save formatıyla uyumluluk için oyuncu alanlarını üst seviyede de tut.
+	for key: String in player_state.keys():
+		state[key] = player_state[key]
+	return state
+
+
+func _write_save_config(config: ConfigFile) -> bool:
+	var temp_error := config.save(SAVE_TEMP_PATH)
+	if temp_error != OK:
+		push_error("VEX geçici kayıt dosyası yazılamadı. Hata kodu: %s" % temp_error)
 		return false
+
+	# Önce mevcut sağlam kaydı yedeğe taşı. Yeni kayıt yarım kalırsa .bak kullanılabilir.
+	if FileAccess.file_exists(SAVE_BACKUP_PATH):
+		DirAccess.remove_absolute(SAVE_BACKUP_PATH)
+	if FileAccess.file_exists(SAVE_PATH):
+		var backup_error := DirAccess.rename_absolute(SAVE_PATH, SAVE_BACKUP_PATH)
+		if backup_error != OK:
+			push_warning("VEX eski kayıt yedeklenemedi. Hata kodu: %s" % backup_error)
+
+	var rename_error := DirAccess.rename_absolute(SAVE_TEMP_PATH, SAVE_PATH)
+	if rename_error != OK:
+		# Eski kayıt hâlâ duruyorsa mümkün olduğunca geri getir.
+		if not FileAccess.file_exists(SAVE_PATH) and FileAccess.file_exists(SAVE_BACKUP_PATH):
+			DirAccess.rename_absolute(SAVE_BACKUP_PATH, SAVE_PATH)
+		push_error("VEX kayıt dosyası etkinleştirilemedi. Hata kodu: %s" % rename_error)
+		return false
+
 	return true
+
+
+func _request_checkpoint_save() -> void:
+	if not CHECKPOINTS_ENABLED or _save_request_pending:
+		return
+	if player == null or not is_instance_valid(player):
+		return
+	_save_request_pending = true
+	call_deferred("_flush_checkpoint_save")
+
+
+func _flush_checkpoint_save() -> void:
+	_save_request_pending = false
+	if not is_inside_tree() or player == null or not is_instance_valid(player):
+		return
+	save_checkpoint("auto")
 
 
 func complete_level(next_level_path: String = "") -> void:
@@ -312,6 +414,15 @@ func complete_level(next_level_path: String = "") -> void:
 		carry_state.erase("rotation_y")
 		carry_state["keys"] = []
 		pending_player_restore_state = carry_state.duplicate(true)
+		# Bölüm geçişini de diske kaydet. Böylece level complete ekranında oyun kapanırsa
+		# oyuncu tamamladığı bölümü tekrar etmek zorunda kalmaz.
+		current_level_path = next_level_path
+		var transition_state := _build_save_state(carry_state, "level_complete", "transition")
+		transition_state["resume_player_state"] = carry_state.duplicate(true)
+		var config := ConfigFile.new()
+		for key: String in transition_state.keys():
+			config.set_value("run", key, transition_state[key])
+		_write_save_config(config)
 	else:
 		pending_player_restore_state = {}
 
@@ -324,8 +435,6 @@ func complete_level(next_level_path: String = "") -> void:
 		"difficulty": get_active_difficulty_name(),
 		"level_label": level_label,
 	}
-	if FileAccess.file_exists(SAVE_PATH):
-		DirAccess.remove_absolute(SAVE_PATH)
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().change_scene_to_file(LEVEL_COMPLETE_PATH)
@@ -417,44 +526,86 @@ func _register_campaign_completion(current_scene: Node) -> void:
 
 
 func _clear_saved_run() -> void:
-	if FileAccess.file_exists(SAVE_PATH):
-		var remove_error := DirAccess.remove_absolute(SAVE_PATH)
-		if remove_error != OK:
-			push_warning("Eski VEX kayıt dosyası silinemedi. Hata kodu: %s" % remove_error)
+	for path in [SAVE_PATH, SAVE_TEMP_PATH, SAVE_BACKUP_PATH]:
+		if FileAccess.file_exists(path):
+			var remove_error := DirAccess.remove_absolute(path)
+			if remove_error != OK:
+				push_warning("VEX kayıt dosyası silinemedi: %s (hata %s)" % [path, remove_error])
 
 
 func _load_run() -> bool:
+	saved_run_state = {}
 	var config := ConfigFile.new()
 	var error := config.load(SAVE_PATH)
 	if error != OK:
-		return false
-	saved_run_state = {}
+		# Ana kayıt bozulduysa son sağlam yedeği dene.
+		if not FileAccess.file_exists(SAVE_BACKUP_PATH):
+			return false
+		config = ConfigFile.new()
+		error = config.load(SAVE_BACKUP_PATH)
+		if error != OK:
+			return false
+
 	for key: String in config.get_section_keys("run"):
 		saved_run_state[key] = config.get_value("run", key)
-	if int(saved_run_state.get("save_version", 0)) != SAVE_VERSION:
+
+	var version := int(saved_run_state.get("save_version", 0))
+	if version < 3 or version > SAVE_VERSION:
 		saved_run_state = {}
 		return false
-	kills = int(saved_run_state.get("kills", 0))
-	secrets = int(saved_run_state.get("secrets", 0))
+	if version < SAVE_VERSION:
+		_migrate_save_state(version)
+
+	var level_path := str(saved_run_state.get("current_level_path", LEVEL_01_PATH))
+	if not ResourceLoader.exists(level_path):
+		saved_run_state = {}
+		return false
+
+	kills = maxi(0, int(saved_run_state.get("kills", 0)))
+	secrets = maxi(0, int(saved_run_state.get("secrets", 0)))
 	objective = str(saved_run_state.get("objective", "TESİSTEN ÇIKIŞ YOLUNU BUL"))
 	defeated_enemy_ids.clear()
 	var stored_enemies: Array = saved_run_state.get("defeated_enemy_ids", []) as Array
 	for stored_enemy: Variant in stored_enemies:
-		defeated_enemy_ids.append(StringName(str(stored_enemy)))
+		var enemy_id := StringName(str(stored_enemy))
+		if enemy_id != &"" and not defeated_enemy_ids.has(enemy_id):
+			defeated_enemy_ids.append(enemy_id)
 	collected_pickup_ids.clear()
 	var stored_pickups: Array = saved_run_state.get("collected_pickup_ids", []) as Array
 	for stored_pickup: Variant in stored_pickups:
-		collected_pickup_ids.append(StringName(str(stored_pickup)))
+		var pickup_id := StringName(str(stored_pickup))
+		if pickup_id != &"" and not collected_pickup_ids.has(pickup_id):
+			collected_pickup_ids.append(pickup_id)
 	found_secret_ids.clear()
 	var stored_secrets: Array = saved_run_state.get("found_secret_ids", []) as Array
 	for stored_secret: Variant in stored_secrets:
-		found_secret_ids.append(StringName(str(stored_secret)))
+		var secret_id := StringName(str(stored_secret))
+		if secret_id != &"" and not found_secret_ids.has(secret_id):
+			found_secret_ids.append(secret_id)
 	active_difficulty = clampi(
 		int(saved_run_state.get("difficulty", SettingsManager.difficulty)),
 		SettingsManager.Difficulty.EASY,
 		SettingsManager.Difficulty.NIGHTMARE
 	)
+	campaign_stage = maxi(0, int(saved_run_state.get("campaign_stage", campaign_stage)))
+	hub_selected_mission_path = str(saved_run_state.get("hub_selected_mission_path", ""))
+	hub_selected_mission_label = str(saved_run_state.get("hub_selected_mission_label", ""))
+	current_level_path = level_path
 	return true
+
+
+func _migrate_save_state(version: int) -> void:
+	# v3 zaten kullanılabilir flat player state tutuyordu. v4 yalnızca metadata ekler.
+	if version < 4:
+		var resume_player_state: Dictionary = {}
+		for key in ["health", "armor", "stamina", "keys", "position", "rotation_y", "weapon_state", "night_vision_owned", "night_vision_enabled", "is_crouching"]:
+			if saved_run_state.has(key):
+				resume_player_state[key] = saved_run_state[key]
+		saved_run_state["resume_player_state"] = resume_player_state
+		saved_run_state["resume_mode"] = "level"
+		saved_run_state["save_reason"] = "migrated_v3"
+		saved_run_state["saved_unix_time"] = Time.get_unix_time_from_system()
+		saved_run_state["save_version"] = SAVE_VERSION
 
 
 func _reset_level_counters() -> void:

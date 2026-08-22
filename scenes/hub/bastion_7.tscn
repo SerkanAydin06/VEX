@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://c4gn8k6ogvf0n" path="res://scenes/ui/hud.tscn" id="7_hud"]
 [ext_resource type="PackedScene" uid="uid://bk5dcdh1lk7nr" path="res://scenes/props/door_side_slide.tscn" id="8_door"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="9_white"]
-[ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/table.tscn" id="10_87vc6"]
+[ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/Table.tscn" id="10_87vc6"]
 [ext_resource type="PackedScene" uid="uid://ckhtinn61g27l" path="res://scenes/hub/hub_terminal.tscn" id="11_terminal"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_rack"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="13_ambient"]

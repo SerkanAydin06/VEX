@@ -86,8 +86,36 @@ def check_stale_files():
     todo=ROOT/'todo.md'
     if todo.exists() and 'TODO' in todo.read_text(encoding='utf-8').upper(): warn('todo.md hâlâ eski TODO maddeleri içeriyor; güncel yol haritası kullanın.')
 
+
+def check_runtime_signal_contracts():
+    game_state = (ROOT/'scripts/autoload/game_state.gd').read_text(encoding='utf-8')
+    level_02 = (ROOT/'scripts/levels/level_02.gd').read_text(encoding='utf-8')
+    weapon = (ROOT/'scripts/player/weapon_controller.gd').read_text(encoding='utf-8')
+    if 'signal gunshot_emitted(position: Vector3, loudness: float, source: Node)' not in game_state:
+        fail('GameState gunshot_emitted sinyali eksik')
+    if 'GameState.gunshot_emitted.connect(_on_gunshot_emitted)' not in level_02:
+        fail('VEX-02 gunshot sinyali bağlantısı eksik')
+    if 'VexNoiseManager' in level_02:
+        fail('VEX-02 eski VexNoiseManager referansını hâlâ kullanıyor')
+    if 'GameState.emit_gunshot(' not in weapon:
+        fail('WeaponController ateş sesi GameState.emit_gunshot() kullanmıyor')
+
+
+def check_unique_progression_ids():
+    for scene_name in ['level_01.tscn', 'level_02.tscn']:
+        scene = ROOT/'scenes/levels'/scene_name
+        text = scene.read_text(encoding='utf-8')
+        for key, label in [('enemy_id', 'enemy'), ('pickup_id', 'pickup'), ('secret_id', 'secret')]:
+            values = re.findall(rf'\b{re.escape(key)}\s*=\s*&"([^"]+)"', text)
+            seen = set()
+            for value in values:
+                if value in seen:
+                    fail(f'{scene_name}: duplicate {label} id: {value}')
+                seen.add(value)
+
+
 def main():
-    check_paths(); check_import_uids(); check_inputmap(); check_core_scenes(); check_keys_and_pickups(); check_enemies(); check_player_contract(); check_checkpoint_contract(); check_stale_files()
+    check_paths(); check_import_uids(); check_inputmap(); check_core_scenes(); check_keys_and_pickups(); check_enemies(); check_player_contract(); check_checkpoint_contract(); check_runtime_signal_contracts(); check_unique_progression_ids(); check_stale_files()
     for w in WARNINGS: print('WARNING:',w)
     for f in FAILURES: print('ERROR:',f)
     print(f'VEX VALIDATOR: {len(FAILURES)} gerçek hata, {len(WARNINGS)} uyarı')

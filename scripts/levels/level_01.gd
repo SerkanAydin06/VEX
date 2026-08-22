@@ -34,6 +34,7 @@ extends Node3D
 @onready var level_music: AudioStreamPlayer = $LevelMusic
 @onready var ambient_loop: AudioStreamPlayer = $AmbientLoop
 var _opening_briefing_active := false
+var _briefing_reveal_requested := false
 
 func _ready() -> void:
 	SettingsManager.apply_brightness()
@@ -156,10 +157,17 @@ func _show_briefing() -> void:
 
 	await get_tree().create_timer(briefing_start_delay, true, false, true).timeout
 
-	# Mission/location header appears immediately; only the story uses the typewriter effect.
+	# Tüm briefing metinleri typewriter ile gelir. Herhangi bir devam tuşuna basılırsa
+	# mevcut yazım anında tamamlanır; başka tuşa basmadan briefing kapanmaz.
 	location.visible_characters = -1
 	await _type_text(story, briefing_character_delay)
-	objective.visible_characters = -1
+	if not _briefing_reveal_requested:
+		await _type_text(objective, briefing_character_delay)
+	else:
+		objective.visible_characters = -1
+
+	if _briefing_reveal_requested:
+		await _wait_for_continue_release()
 
 
 	var blink := create_tween()
@@ -206,17 +214,29 @@ func _type_text(label: Variant, delay: float) -> void:
 	for index in range(total):
 		if not is_instance_valid(label):
 			return
+		if _is_briefing_continue_pressed():
+			_briefing_reveal_requested = true
+			label.visible_characters = -1
+			return
 		label.visible_characters = index + 1
 		await get_tree().create_timer(delay, true, false, true).timeout
 
+func _is_briefing_continue_pressed() -> bool:
+	return Input.is_key_pressed(KEY_ENTER) \
+		or Input.is_key_pressed(KEY_SPACE) \
+		or Input.is_key_pressed(KEY_ESCAPE) \
+		or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) \
+		or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) \
+		or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)
+
 func _wait_for_continue() -> void:
 	while true:
-		if Input.is_key_pressed(KEY_ENTER) or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_ESCAPE) or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		if _is_briefing_continue_pressed():
 			return
 		await get_tree().process_frame
 
 func _wait_for_continue_release() -> void:
-	while Input.is_key_pressed(KEY_ENTER) or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_ESCAPE) or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+	while _is_briefing_continue_pressed():
 		await get_tree().process_frame
 
 func _on_key_inventory_changed(keys: Array[StringName]) -> void:
