@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dcjn4lehfpt6g" path="res://scripts/ui/hud.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" uid="uid://dk2rx77u2jg88" path="res://assets/ui/hud_frame.png" id="3_frame"]
 [ext_resource type="Texture2D" uid="uid://drjnb7q64xjwu" path="res://assets/ui/crosshair_doom3_circle.png" id="4_crosshair"]
 [ext_resource type="Texture2D" uid="uid://bn1ug716sunu0" path="res://assets/ui/automap_console_frame.png" id="6_map_frame"]
 [ext_resource type="Script" uid="uid://ct0slkur86ywi" path="res://scripts/ui/automap_view.gd" id="7_automap"]
@@ -16,8 +15,6 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="13_pause"]
 [ext_resource type="Texture2D" uid="uid://dwv6dgosxheen" path="res://assets/ui/blood_vignette.png" id="14_blood"]
 [ext_resource type="Texture2D" uid="uid://b6iwopfobi8ob" path="res://assets/ui/blood_vignette_critical.png" id="15_blood_critical"]
-[ext_resource type="Texture2D" uid="uid://7te3y5qk5ekc" path="res://assets/ui/hud_bottom_panel.png" id="16_bottom_panel"]
-[ext_resource type="Texture2D" uid="uid://dat1se0hmkvxa" path="res://assets/ui/hud_objective_panel.png" id="17_objective_panel"]
 [ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="18_mono_font"]
 [ext_resource type="Texture2D" uid="uid://lbgatekppr8w" path="res://assets/weapons/pistol_reload_1.png" id="19_pistol_reload_1"]
 [ext_resource type="Texture2D" uid="uid://cwx47xhvrc8nl" path="res://assets/weapons/pistol_reload_2.png" id="20_pistol_reload_2"]
@@ -125,7 +122,33 @@ animations = [{
 "speed": 2.8
 }]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBox_bottom_clear"]
+[sub_resource type="StyleBoxFlat" id="StyleBox_modern_objective"]
+bg_color = Color(0.008, 0.022, 0.03, 0.92)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.23, 0.79, 0.94, 0.7)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.36)
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_modern_panel"]
+bg_color = Color(0.008, 0.018, 0.024, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22, 0.64, 0.76, 0.34)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_meter_background"]
 bg_color = Color(0.015, 0.035, 0.043, 0.92)
@@ -148,6 +171,13 @@ corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_armor_fill"]
 bg_color = Color(0.12, 0.68, 0.92, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_stamina_fill"]
+bg_color = Color(0.42, 0.65, 0.68, 1)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -180,7 +210,7 @@ mouse_filter = 2
 [node name="PistolSprite" type="AnimatedSprite2D" parent="Root/WeaponLayer" unique_id=1600221760]
 unique_name_in_owner = true
 texture_filter = 2
-position = Vector2(992, 706)
+position = Vector2(992, 820)
 sprite_frames = SubResource("SpriteFrames_pistol")
 animation = &"idle"
 autoplay = "idle"
@@ -247,16 +277,8 @@ stream = ExtResource("28_game_over_audio")
 bus = &"Music"
 
 [node name="HUDFrame" type="TextureRect" parent="Root" unique_id=939175155]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("3_frame")
-expand_mode = 1
-stretch_mode = 6
+visible = false
+layout_mode = 0
 
 [node name="LowHealthOverlay" type="TextureRect" parent="Root" unique_id=1203046058]
 unique_name_in_owner = true
@@ -291,44 +313,40 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="ObjectivePanelArtwork" type="TextureRect" parent="Root" unique_id=2020335886]
+visible = false
 layout_mode = 0
-offset_left = 470.0
-offset_top = 26.0
-offset_right = 1450.0
-offset_bottom = 88.0
-mouse_filter = 2
-texture = ExtResource("17_objective_panel")
-expand_mode = 1
 
 [node name="ObjectivePanel" type="PanelContainer" parent="Root" unique_id=571007821]
+unique_name_in_owner = true
 layout_mode = 0
-offset_left = 470.0
-offset_top = 26.0
-offset_right = 1450.0
-offset_bottom = 88.0
+offset_left = 30.0
+offset_top = 28.0
+offset_right = 470.0
+offset_bottom = 102.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_bottom_clear")
+theme_override_styles/panel = SubResource("StyleBox_modern_objective")
 
 [node name="ObjectiveLabel" type="Label" parent="Root/ObjectivePanel" unique_id=2061030227]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.47, 0.9, 1, 1)
+theme_override_colors/font_color = Color(0.82, 0.94, 0.98, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
-theme_override_colors/font_outline_color = Color(0.005, 0.015, 0.02, 1)
+theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 20
-text = "GÖREV: MAVİ ERİŞİM ANAHTARINI BUL"
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 17
+text = "OBJECTIVE
+—"
 vertical_alignment = 1
+text_overrun_behavior = 3
 
 [node name="Crosshair" type="TextureRect" parent="Root" unique_id=1323792274]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 916.0
-offset_top = 436.0
-offset_right = 964.0
-offset_bottom = 484.0
+offset_left = 936.0
+offset_top = 496.0
+offset_right = 984.0
+offset_bottom = 544.0
 mouse_filter = 2
 texture = ExtResource("4_crosshair")
 expand_mode = 1
@@ -337,389 +355,394 @@ stretch_mode = 5
 [node name="InteractionLabel" type="Label" parent="Root" unique_id=1086321890]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 570.0
-offset_top = 592.0
-offset_right = 1350.0
-offset_bottom = 646.0
-theme_override_colors/font_color = Color(0.89, 0.98, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -122.0
+offset_right = 260.0
+offset_bottom = -84.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.82, 0.92, 0.95, 0.96)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="NotificationPanel" type="PanelContainer" parent="Root" unique_id=1048370112]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 560.0
-offset_top = 126.0
-offset_right = 1360.0
-offset_bottom = 196.0
+anchor_right = 1.0
+offset_left = 640.0
+offset_top = 28.0
+offset_right = 1280.0
+offset_bottom = 70.0
+grow_horizontal = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_bottom_clear")
+theme_override_styles/panel = SubResource("StyleBox_modern_panel")
 
 [node name="NotificationLabel" type="Label" parent="Root/NotificationPanel" unique_id=1488073792]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.65, 0.3, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
-theme_override_colors/font_outline_color = Color(0.003, 0.01, 0.014, 1)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 3
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.92, 0.97, 0.99, 1)
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PickupFeedLeft" type="Control" parent="Root" unique_id=1399563771]
 unique_name_in_owner = true
-visible = false
+modulate = Color(1, 1, 1, 0)
 anchors_preset = 0
-offset_left = 58.0
-offset_top = 672.0
-offset_right = 650.0
-offset_bottom = 792.0
+offset_left = 30.0
+offset_top = 130.0
+offset_right = 320.0
+offset_bottom = 164.0
 mouse_filter = 2
 
 [node name="PickupLeftAccent" type="ColorRect" parent="Root/PickupFeedLeft" unique_id=1605750662]
 unique_name_in_owner = true
 layout_mode = 0
-offset_top = 4.0
-offset_right = 5.0
-offset_bottom = 108.0
+offset_right = 3.0
+offset_bottom = 34.0
 mouse_filter = 2
-color = Color(1, 0.31, 0.18, 1)
+color = Color(0.28, 0.78, 0.94, 1)
 
 [node name="PickupLeftCategory" type="Label" parent="Root/PickupFeedLeft" unique_id=2124599154]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 20.0
-offset_right = 570.0
-offset_bottom = 29.0
-theme_override_colors/font_color = Color(1, 0.42, 0.25, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 15
-text = "// YAŞAMSAL DESTEK"
+offset_left = 14.0
+offset_right = 290.0
+offset_bottom = 16.0
+theme_override_colors/font_color = Color(0.48, 0.72, 0.78, 1)
+theme_override_font_sizes/font_size = 11
+text = "PICKUP"
 
 [node name="PickupLeftValue" type="Label" parent="Root/PickupFeedLeft" unique_id=2083093514]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 20.0
-offset_top = 28.0
-offset_right = 580.0
-offset_bottom = 92.0
-theme_override_colors/font_color = Color(0.93, 0.98, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.002, 0.008, 0.012, 1)
-theme_override_constants/shadow_offset_x = 3
-theme_override_constants/shadow_offset_y = 3
-theme_override_constants/outline_size = 5
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 29
-text = "SAĞLIK +25"
-vertical_alignment = 1
+offset_left = 14.0
+offset_top = 12.0
+offset_right = 290.0
+offset_bottom = 34.0
+theme_override_colors/font_color = Color(0.9, 0.96, 0.98, 1)
+theme_override_font_sizes/font_size = 17
 
 [node name="PickupFeedRight" type="Control" parent="Root" unique_id=1157410164]
 unique_name_in_owner = true
-visible = false
+modulate = Color(1, 1, 1, 0)
 anchors_preset = 0
-offset_left = 1270.0
-offset_top = 672.0
-offset_right = 1862.0
-offset_bottom = 792.0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -320.0
+offset_top = 130.0
+offset_right = -30.0
+offset_bottom = 164.0
+grow_horizontal = 0
 mouse_filter = 2
 
 [node name="PickupRightAccent" type="ColorRect" parent="Root/PickupFeedRight" unique_id=547196876]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 587.0
-offset_top = 4.0
-offset_right = 592.0
-offset_bottom = 108.0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -3.0
+offset_bottom = 34.0
+grow_horizontal = 0
 mouse_filter = 2
-color = Color(1, 0.61, 0.24, 1)
+color = Color(0.94, 0.42, 0.16, 1)
 
 [node name="PickupRightCategory" type="Label" parent="Root/PickupFeedRight" unique_id=616473428]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 12.0
-offset_right = 572.0
-offset_bottom = 29.0
-theme_override_colors/font_color = Color(1, 0.61, 0.24, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 15
-text = "// MÜHİMMAT"
+offset_right = 276.0
+offset_bottom = 16.0
+theme_override_colors/font_color = Color(0.74, 0.54, 0.46, 1)
+theme_override_font_sizes/font_size = 11
+text = "PICKUP"
 horizontal_alignment = 2
 
 [node name="PickupRightValue" type="Label" parent="Root/PickupFeedRight" unique_id=19044273]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 12.0
-offset_top = 28.0
-offset_right = 572.0
-offset_bottom = 92.0
-theme_override_colors/font_color = Color(0.93, 0.98, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.002, 0.008, 0.012, 1)
-theme_override_constants/shadow_offset_x = 3
-theme_override_constants/shadow_offset_y = 3
-theme_override_constants/outline_size = 5
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 29
-text = "9×19 MERMİ +30"
+offset_top = 12.0
+offset_right = 276.0
+offset_bottom = 34.0
+theme_override_colors/font_color = Color(0.96, 0.93, 0.9, 1)
+theme_override_font_sizes/font_size = 17
 horizontal_alignment = 2
-vertical_alignment = 1
 
-[node name="BottomBarArtwork" type="TextureRect" parent="Root" unique_id=1704422968]
-layout_mode = 0
-offset_top = 953.0
-offset_right = 1919.0
-offset_bottom = 1080.0
+[node name="VitalsGroup" type="Control" parent="Root" unique_id=712098400]
+anchors_preset = 0
+offset_left = 30.0
+offset_top = 780.0
+offset_right = 440.0
+offset_bottom = 1018.0
 mouse_filter = 2
-texture = ExtResource("16_bottom_panel")
-expand_mode = 1
 
-[node name="BottomBar" type="PanelContainer" parent="Root" unique_id=543367913]
+[node name="HealthBox" type="VBoxContainer" parent="Root/VitalsGroup" unique_id=1958174740]
+unique_name_in_owner = true
 layout_mode = 0
-offset_left = 3.0
-offset_top = 960.0
-offset_right = 1868.0
-offset_bottom = 1080.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_bottom_clear")
-
-[node name="Margin" type="MarginContainer" parent="Root/BottomBar" unique_id=1939492063]
-layout_mode = 2
-theme_override_constants/margin_left = 72
-theme_override_constants/margin_top = 11
-theme_override_constants/margin_right = 72
-theme_override_constants/margin_bottom = 11
-
-[node name="HBox" type="HBoxContainer" parent="Root/BottomBar/Margin" unique_id=2142793308]
-layout_mode = 2
-theme_override_constants/separation = 28
-
-[node name="HealthBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=1958174740]
-custom_minimum_size = Vector2(190, 0)
-layout_mode = 2
+offset_right = 178.0
+offset_bottom = 92.0
 theme_override_constants/separation = 1
 
-[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox" unique_id=886028440]
+[node name="Label" type="Label" parent="Root/VitalsGroup/HealthBox" unique_id=886028440]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.35, 0.24, 1)
-theme_override_font_sizes/font_size = 14
-text = "YAŞAMSAL"
+theme_override_colors/font_color = Color(0.64, 0.72, 0.74, 1)
+theme_override_font_sizes/font_size = 11
+text = "HEALTH"
 
-[node name="HealthValue" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox" unique_id=211198935]
+[node name="HealthValue" type="Label" parent="Root/VitalsGroup/HealthBox" unique_id=211198935]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 39
+theme_override_colors/font_color = Color(0.95, 0.96, 0.94, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 42
 text = "100"
 
-[node name="HealthMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/HealthBox" unique_id=1904337075]
+[node name="HealthMeter" type="ProgressBar" parent="Root/VitalsGroup/HealthBox" unique_id=1904337075]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 6)
+custom_minimum_size = Vector2(178, 6)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/background = SubResource("StyleBox_meter_background")
 theme_override_styles/fill = SubResource("StyleBox_health_fill")
-value = 100.0
 show_percentage = false
 
-[node name="HealthStatus" type="Label" parent="Root/BottomBar/Margin/HBox/HealthBox" unique_id=1997389689]
+[node name="HealthStatus" type="Label" parent="Root/VitalsGroup/HealthBox" unique_id=1997389689]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.45, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 12
-text = "SİSTEM NORMAL"
+theme_override_colors/font_color = Color(0.48, 0.58, 0.6, 1)
+theme_override_font_sizes/font_size = 10
+text = "STABLE"
 
-[node name="ArmorBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=1565230011]
-custom_minimum_size = Vector2(190, 0)
-layout_mode = 2
+[node name="ArmorBox" type="VBoxContainer" parent="Root/VitalsGroup" unique_id=1565230011]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 196.0
+offset_right = 374.0
+offset_bottom = 92.0
 theme_override_constants/separation = 1
 
-[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox" unique_id=1409654448]
+[node name="Label" type="Label" parent="Root/VitalsGroup/ArmorBox" unique_id=1409654448]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.3, 0.84, 1, 1)
-theme_override_font_sizes/font_size = 14
-text = "ZIRH PLAKASI"
+theme_override_colors/font_color = Color(0.48, 0.67, 0.72, 1)
+theme_override_font_sizes/font_size = 11
+text = "ARMOR"
 
-[node name="ArmorValue" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox" unique_id=1670384165]
+[node name="ArmorValue" type="Label" parent="Root/VitalsGroup/ArmorBox" unique_id=1670384165]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 39
-text = "000"
+theme_override_colors/font_color = Color(0.82, 0.94, 0.98, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 42
+text = "0"
 
-[node name="ArmorMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/ArmorBox" unique_id=2057743221]
+[node name="ArmorMeter" type="ProgressBar" parent="Root/VitalsGroup/ArmorBox" unique_id=2057743221]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 6)
+custom_minimum_size = Vector2(178, 6)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/background = SubResource("StyleBox_meter_background")
 theme_override_styles/fill = SubResource("StyleBox_armor_fill")
 show_percentage = false
 
-[node name="ArmorStatus" type="Label" parent="Root/BottomBar/Margin/HBox/ArmorBox" unique_id=669131206]
+[node name="ArmorStatus" type="Label" parent="Root/VitalsGroup/ArmorBox" unique_id=669131206]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.52, 0.56, 1)
-theme_override_font_sizes/font_size = 12
-text = "KORUMA PASİF"
+theme_override_colors/font_color = Color(0.42, 0.58, 0.62, 1)
+theme_override_font_sizes/font_size = 10
+text = "NO PLATING"
 
-[node name="Separator1" type="VSeparator" parent="Root/BottomBar/Margin/HBox" unique_id=1841201007]
+[node name="StaminaBox" type="VBoxContainer" parent="Root/VitalsGroup" unique_id=1539297605]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 104.0
+offset_right = 374.0
+offset_bottom = 154.0
+theme_override_constants/separation = 2
+
+[node name="Label" type="Label" parent="Root/VitalsGroup/StaminaBox" unique_id=1928237795]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.52, 0.62, 0.64, 1)
+theme_override_font_sizes/font_size = 10
+text = "STAMINA"
 
-[node name="StaminaBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=1539297605]
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-theme_override_constants/separation = 1
-
-[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox" unique_id=1928237795]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.9, 0.68, 1)
-theme_override_font_sizes/font_size = 14
-text = "DAYANIKLILIK"
-
-[node name="StaminaValue" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox" unique_id=700610787]
+[node name="StaminaValue" type="Label" parent="Root/VitalsGroup/StaminaBox" unique_id=700610787]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 39
+theme_override_colors/font_color = Color(0.76, 0.84, 0.84, 1)
+theme_override_font_sizes/font_size = 13
 text = "100"
 
-[node name="StaminaMeter" type="ProgressBar" parent="Root/BottomBar/Margin/HBox/StaminaBox" unique_id=1803680561]
+[node name="StaminaMeter" type="ProgressBar" parent="Root/VitalsGroup/StaminaBox" unique_id=1803680561]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 6)
+custom_minimum_size = Vector2(374, 4)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/background = SubResource("StyleBox_meter_background")
-theme_override_styles/fill = SubResource("StyleBox_armor_fill")
-value = 100.0
+theme_override_styles/fill = SubResource("StyleBox_stamina_fill")
 show_percentage = false
 
-[node name="StaminaStatus" type="Label" parent="Root/BottomBar/Margin/HBox/StaminaBox" unique_id=991646754]
+[node name="StaminaStatus" type="Label" parent="Root/VitalsGroup/StaminaBox" unique_id=991646754]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.9, 0.68, 1)
-theme_override_font_sizes/font_size = 12
-text = "HAZIR"
 
-[node name="WeaponBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=200914943]
-custom_minimum_size = Vector2(340, 0)
-layout_mode = 2
-size_flags_horizontal = 3
+[node name="WeaponGroup" type="Control" parent="Root" unique_id=360112087]
+anchors_preset = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -440.0
+offset_top = 760.0
+offset_right = -30.0
+offset_bottom = 1018.0
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="WeaponBox" type="VBoxContainer" parent="Root/WeaponGroup" unique_id=200914943]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 0.1
+anchor_right = 1.0
+offset_top = 20.0
+offset_bottom = 188.0
+grow_horizontal = 2
 theme_override_constants/separation = 0
+alignment = 2
 
-[node name="Header" type="HBoxContainer" parent="Root/BottomBar/Margin/HBox/WeaponBox" unique_id=1673729839]
+[node name="Header" type="HBoxContainer" parent="Root/WeaponGroup/WeaponBox" unique_id=1673729839]
 layout_mode = 2
+alignment = 2
 
-[node name="WeaponName" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/Header" unique_id=1308200709]
+[node name="WeaponName" type="Label" parent="Root/WeaponGroup/WeaponBox/Header" unique_id=1308200709]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.57, 0.82, 0.9, 1)
-theme_override_font_sizes/font_size = 15
-text = "V-9 TABANCA"
-
-[node name="WeaponSlot" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/Header" unique_id=995191833]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.4, 0.23, 1)
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 13
-text = "SLOT 01"
+theme_override_colors/font_color = Color(0.56, 0.7, 0.74, 1)
+theme_override_font_sizes/font_size = 14
+text = "SIDEARM"
 horizontal_alignment = 2
 
-[node name="AmmoRow" type="HBoxContainer" parent="Root/BottomBar/Margin/HBox/WeaponBox" unique_id=378556146]
+[node name="WeaponSlot" type="Label" parent="Root/WeaponGroup/WeaponBox/Header" unique_id=995191833]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(34, 0)
 layout_mode = 2
-theme_override_constants/separation = 7
+theme_override_colors/font_color = Color(0.34, 0.44, 0.46, 1)
+theme_override_font_sizes/font_size = 12
+text = "01"
+horizontal_alignment = 2
 
-[node name="AmmoValue" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/AmmoRow" unique_id=390681858]
+[node name="AmmoRow" type="HBoxContainer" parent="Root/WeaponGroup/WeaponBox" unique_id=378556146]
+layout_mode = 2
+alignment = 2
+
+[node name="AmmoValue" type="Label" parent="Root/WeaponGroup/WeaponBox/AmmoRow" unique_id=390681858]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 39
+theme_override_colors/font_color = Color(0.95, 0.97, 0.96, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 58
 text = "12"
 
-[node name="ReserveValue" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox/AmmoRow" unique_id=728369011]
+[node name="ReserveValue" type="Label" parent="Root/WeaponGroup/WeaponBox/AmmoRow" unique_id=728369011]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.47, 0.62, 0.67, 1)
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_color = Color(0.45, 0.54, 0.56, 1)
+theme_override_font_sizes/font_size = 22
 text = "/ 048"
 vertical_alignment = 2
 
-[node name="AmmoType" type="Label" parent="Root/BottomBar/Margin/HBox/WeaponBox" unique_id=1677673825]
+[node name="AmmoType" type="Label" parent="Root/WeaponGroup/WeaponBox" unique_id=1677673825]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.39, 0.58, 0.64, 1)
-theme_override_font_sizes/font_size = 12
-text = "9×19 MM // YARI OTOMATİK"
+theme_override_colors/font_color = Color(0.46, 0.62, 0.65, 1)
+theme_override_font_sizes/font_size = 11
+text = "9MM // BALLISTIC"
+horizontal_alignment = 2
 
-[node name="Separator2" type="VSeparator" parent="Root/BottomBar/Margin/HBox" unique_id=543160902]
-layout_mode = 2
+[node name="WeaponReady" type="Label" parent="Root/WeaponGroup" unique_id=1918185530]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 194.0
+offset_right = 380.0
+offset_bottom = 214.0
+theme_override_colors/font_color = Color(0.34, 0.5, 0.54, 1)
+theme_override_font_sizes/font_size = 10
+text = "VEX / WEAPON SYSTEM ONLINE"
+horizontal_alignment = 2
 
-[node name="MissionBox" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=234073710]
-custom_minimum_size = Vector2(480, 0)
+[node name="MissionBox" type="VBoxContainer" parent="Root" unique_id=234073710]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 30.0
+offset_top = 178.0
+offset_right = 360.0
+offset_bottom = 242.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Root/MissionBox" unique_id=2137551346]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.38, 0.48, 0.5, 1)
+theme_override_font_sizes/font_size = 10
+text = "HOSTILE CASUALTIES"
+
+[node name="KillsValue" type="Label" parent="Root/MissionBox" unique_id=1155440397]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.84, 0.85, 1)
+theme_override_font_sizes/font_size = 18
+text = "0"
+
+[node name="LevelId" type="Label" parent="Root/MissionBox" unique_id=2067109904]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.4, 0.42, 1)
+theme_override_font_sizes/font_size = 9
+text = "VEX / OPERATIONS"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root" unique_id=1545655328]
+layout_mode = 0
+offset_left = 296.0
+offset_top = 178.0
+offset_right = 360.0
+offset_bottom = 246.0
 theme_override_constants/separation = 3
 
-[node name="Label" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox" unique_id=2137551346]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.63, 0.35, 1)
-theme_override_font_sizes/font_size = 14
-text = "İMHA / GİZLİ"
-
-[node name="KillsValue" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox" unique_id=1155440397]
+[node name="KeyIcon" type="TextureRect" parent="Root/VBoxContainer" unique_id=1902846092]
 unique_name_in_owner = true
+modulate = Color(0.65, 0.88, 0.96, 0.85)
+custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("18_mono_font")
-theme_override_font_sizes/font_size = 24
-text = "00 / 26     GİZLİ: 0 / 2"
-
-[node name="LevelId" type="Label" parent="Root/BottomBar/Margin/HBox/MissionBox" unique_id=2067109904]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.38, 0.58, 0.64, 1)
-theme_override_font_sizes/font_size = 12
-text = "SEKTÖR 01 // KARANTİNA TESİSİ"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Root/BottomBar/Margin/HBox" unique_id=1545655328]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-
-[node name="KeyIcon" type="TextureRect" parent="Root/BottomBar/Margin/HBox/VBoxContainer" unique_id=1902846092]
-unique_name_in_owner = true
-texture_filter = 3
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-size_flags_horizontal = 0
 texture = ExtResource("8_key_blue")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RedKeyIcon" type="TextureRect" parent="Root/BottomBar/Margin/HBox/VBoxContainer" unique_id=1836058944]
+[node name="RedKeyIcon" type="TextureRect" parent="Root/VBoxContainer" unique_id=1836058944]
 unique_name_in_owner = true
-texture_filter = 3
-custom_minimum_size = Vector2(30, 30)
+modulate = Color(0.98, 0.5, 0.42, 0.85)
+custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
-size_flags_horizontal = 0
 texture = ExtResource("9_key_red")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="YellowKeyIcon" type="TextureRect" parent="Root/BottomBar/Margin/HBox/VBoxContainer" unique_id=1836058945]
+[node name="YellowKeyIcon" type="TextureRect" parent="Root/VBoxContainer" unique_id=1836058945]
 unique_name_in_owner = true
-texture_filter = 3
-custom_minimum_size = Vector2(30, 30)
+modulate = Color(0.96, 0.84, 0.38, 0.85)
+custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
-size_flags_horizontal = 0
 texture = ExtResource("10_key_yellow")
 expand_mode = 1
 stretch_mode = 5
