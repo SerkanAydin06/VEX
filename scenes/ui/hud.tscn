@@ -209,6 +209,7 @@ mouse_filter = 2
 
 [node name="PistolSprite" type="AnimatedSprite2D" parent="Root/WeaponLayer" unique_id=1600221760]
 unique_name_in_owner = true
+visible = false
 texture_filter = 2
 position = Vector2(992, 820)
 sprite_frames = SubResource("SpriteFrames_pistol")
@@ -219,7 +220,7 @@ autoplay = "idle"
 unique_name_in_owner = true
 visible = false
 texture_filter = 2
-position = Vector2(996, 690)
+position = Vector2(996, 800)
 sprite_frames = SubResource("SpriteFrames_shotgun")
 animation = &"idle"
 autoplay = "idle"
@@ -337,6 +338,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 17
 text = "OBJECTIVE
 —"
+horizontal_alignment = 1
 vertical_alignment = 1
 text_overrun_behavior = 3
 
@@ -376,11 +378,12 @@ vertical_alignment = 1
 [node name="NotificationPanel" type="PanelContainer" parent="Root" unique_id=1048370112]
 unique_name_in_owner = true
 visible = false
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
 offset_left = 640.0
 offset_top = 28.0
-offset_right = 1280.0
+offset_right = -51.0
 offset_bottom = 70.0
 grow_horizontal = 2
 mouse_filter = 2
@@ -390,7 +393,7 @@ theme_override_styles/panel = SubResource("StyleBox_modern_panel")
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.97, 0.99, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 12
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -478,10 +481,10 @@ horizontal_alignment = 2
 
 [node name="VitalsGroup" type="Control" parent="Root" unique_id=712098400]
 anchors_preset = 0
-offset_left = 30.0
-offset_top = 780.0
-offset_right = 440.0
-offset_bottom = 1018.0
+offset_left = 20.0
+offset_top = 905.0
+offset_right = 430.0
+offset_bottom = 1062.0
 mouse_filter = 2
 
 [node name="HealthBox" type="VBoxContainer" parent="Root/VitalsGroup" unique_id=1958174740]
@@ -599,13 +602,14 @@ visible = false
 layout_mode = 2
 
 [node name="WeaponGroup" type="Control" parent="Root" unique_id=360112087]
-anchors_preset = 0
+layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -440.0
-offset_top = 760.0
-offset_right = -30.0
-offset_bottom = 1018.0
+offset_left = -395.0
+offset_top = 855.0
+offset_right = -16.0
+offset_bottom = 1065.0
 grow_horizontal = 0
 mouse_filter = 2
 
@@ -713,6 +717,7 @@ theme_override_font_sizes/font_size = 9
 text = "VEX / OPERATIONS"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root" unique_id=1545655328]
+texture_filter = 3
 layout_mode = 0
 offset_left = 296.0
 offset_top = 178.0
