@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "VEX Industrial Stair Safety Strip"
+albedo_color = Color(0.92, 0.48, 0.035, 1)
+metallic = 0.22
+roughness = 0.56
+emission_enabled = true
+emission = Color(0.34, 0.105, 0.008, 1)
+emission_energy_multiplier = 0.7

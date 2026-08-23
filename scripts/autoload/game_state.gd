@@ -27,7 +27,7 @@ const SAVE_PATH := "user://vex_save.cfg"
 const SAVE_TEMP_PATH := "user://vex_save.tmp"
 const SAVE_BACKUP_PATH := "user://vex_save.bak"
 const SAVE_VERSION := 4
-const CHECKPOINTS_ENABLED := true
+const CHECKPOINTS_ENABLED := false
 
 var player: Node = null
 var hud: CanvasLayer = null
@@ -74,6 +74,8 @@ func start_new_game() -> void:
 
 
 func continue_game() -> void:
+	# VEX is intentionally a no-checkpoint campaign. Continue is kept only for
+	# backwards API compatibility and always starts a clean run.
 	if not CHECKPOINTS_ENABLED:
 		start_new_game()
 		return
@@ -193,12 +195,9 @@ func begin_level(enemy_count: int, secret_count: int, first_objective: String) -
 		secrets = 0
 	objective_changed.emit(objective)
 	level_stats_changed.emit(kills, total_enemies, secrets, total_secrets)
-	# Her bölümün girişini güvenli checkpoint olarak kaydet. Oyuncu hazır olduktan
-	# sonra ertelenmiş çağrı ile save alınır; HUD/weapon state eksik kalmaz.
-	# Save the exact state at the level entry so Restart Level is deterministic.
+	# Restart state lives only in memory. Death always restarts this level from
+	# its entrance; no mid-level state is written to disk.
 	call_deferred("_capture_level_start_state")
-	if CHECKPOINTS_ENABLED:
-		call_deferred("save_checkpoint")
 
 
 func _capture_level_start_state() -> void:
@@ -414,15 +413,7 @@ func complete_level(next_level_path: String = "") -> void:
 		carry_state.erase("rotation_y")
 		carry_state["keys"] = []
 		pending_player_restore_state = carry_state.duplicate(true)
-		# Bölüm geçişini de diske kaydet. Böylece level complete ekranında oyun kapanırsa
-		# oyuncu tamamladığı bölümü tekrar etmek zorunda kalmaz.
 		current_level_path = next_level_path
-		var transition_state := _build_save_state(carry_state, "level_complete", "transition")
-		transition_state["resume_player_state"] = carry_state.duplicate(true)
-		var config := ConfigFile.new()
-		for key: String in transition_state.keys():
-			config.set_value("run", key, transition_state[key])
-		_write_save_config(config)
 	else:
 		pending_player_restore_state = {}
 

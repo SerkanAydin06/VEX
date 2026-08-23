@@ -5,8 +5,8 @@ extends Node3D
 @export var level_display_name := "VEX-01 // KARANTİNA TESİSİ"
 @export_range(0, 100, 1) var campaign_completion_stage := 1
 @export var first_objective := "BASTION-7 ÜSSÜNE GERİ DÖN"
-@export_multiline var briefing_story := "Bir asker olarak gözlerini açıyorsun. VEX-01 karantina tesisindesin. Burada ne olduğunu ve diğerlerine ne olduğunu bilmiyorsun. Bildiğin tek şey, Bastion-7 üssüne geri dönmen gerektiği."
-@export var briefing_objective := "GÖREV: BASTION-7 ÜSSÜNE GERİ DÖN"
+@export_multiline var briefing_story := "VEX-01 güvenlik sığınağında gözlerini açıyorsun. Sıfır Kaynak deneyi tesisi parçaladı; haberleşme kesik ve koridorlarda bilinmeyen yaşam biçimleri var. Güvenlik kayıtlarını bul, tahliye hattını aç ve Bastion-7'ye ulaş."
+@export var briefing_objective := "GÖREV: VEX-01'DEN ÇIK VE BASTION-7'YE ULAŞ"
 @export_range(0, 20, 1) var total_secrets := 1
 @export_range(0.01, 0.1, 0.005) var briefing_character_delay := 0.028
 @export_range(0.1, 3.0, 0.05) var briefing_start_delay := 0.45
@@ -222,9 +222,7 @@ func _type_text(label: Variant, delay: float) -> void:
 		await get_tree().create_timer(delay, true, false, true).timeout
 
 func _is_briefing_continue_pressed() -> bool:
-	return Input.is_key_pressed(KEY_ENTER) \
-		or Input.is_key_pressed(KEY_SPACE) \
-		or Input.is_key_pressed(KEY_ESCAPE) \
+	return Input.is_anything_pressed() \
 		or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) \
 		or Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) \
 		or Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE)

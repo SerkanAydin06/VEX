@@ -29,6 +29,7 @@ extends Node
 var unlocked_weapons: Array[StringName] = []
 var magazines: Dictionary = {}
 var reserve_ammo: Dictionary = {}
+var upgrade_levels: Dictionary = {}
 var current_weapon_id: StringName = &""
 var is_reloading := false
 var _cooldown_remaining := 0.0
@@ -44,6 +45,7 @@ func _ready() -> void:
 		if definition == null:
 			continue
 		_definitions_by_id[definition.weapon_id] = definition
+		upgrade_levels[definition.weapon_id] = 0
 		magazines[definition.weapon_id] = 0
 		if not reserve_ammo.has(definition.ammo_type):
 			reserve_ammo[definition.ammo_type] = 0
@@ -111,6 +113,39 @@ func get_current_weapon() -> WeaponDefinition:
 	return _definitions_by_id.get(current_weapon_id) as WeaponDefinition
 
 
+func get_weapon_upgrade_track(weapon_id: StringName) -> Array:
+	return VexWeaponUpgradeCatalog.get_track(weapon_id)
+
+
+func get_weapon_upgrade_level(weapon_id: StringName) -> int:
+	return maxi(0, int(upgrade_levels.get(weapon_id, 0)))
+
+
+func install_next_upgrade(weapon_id: StringName) -> bool:
+	if not unlocked_weapons.has(weapon_id):
+		return false
+	var track := get_weapon_upgrade_track(weapon_id)
+	var level := get_weapon_upgrade_level(weapon_id)
+	if level >= track.size():
+		return false
+	upgrade_levels[weapon_id] = level + 1
+	var definition := _definitions_by_id.get(weapon_id) as WeaponDefinition
+	if definition != null:
+		magazines[weapon_id] = mini(int(magazines.get(weapon_id, 0)), _effective_magazine_size(definition))
+	var tier: Dictionary = track[level]
+	GameState.notify("SİLAH GELİŞTİRMESİ // %s" % str(tier.get("name", "YÜKSELTME")))
+	broadcast_state()
+	return true
+
+
+func _modifiers(weapon: WeaponDefinition) -> Dictionary:
+	return VexWeaponUpgradeCatalog.get_modifiers(weapon.weapon_id, get_weapon_upgrade_level(weapon.weapon_id))
+
+
+func _effective_magazine_size(weapon: WeaponDefinition) -> int:
+	return weapon.magazine_size + int(_modifiers(weapon).magazine)
+
+
 func switch_to(weapon_id: StringName) -> void:
 	if is_reloading or not unlocked_weapons.has(weapon_id) or not _definitions_by_id.has(weapon_id):
 		return
@@ -136,15 +171,16 @@ func reload() -> void:
 		return
 	var magazine := int(magazines.get(current_weapon_id, 0))
 	var reserve := int(reserve_ammo.get(weapon.ammo_type, 0))
-	if magazine >= weapon.magazine_size or reserve <= 0:
+	var magazine_size := _effective_magazine_size(weapon)
+	if magazine >= magazine_size or reserve <= 0:
 		return
 	is_reloading = true
 	_play_hud_action(&"reload")
-	await get_tree().create_timer(weapon.reload_duration).timeout
+	await get_tree().create_timer(weapon.reload_duration * float(_modifiers(weapon).reload)).timeout
 	if not is_inside_tree() or _player.is_dead:
 		is_reloading = false
 		return
-	var required: int = weapon.magazine_size - magazine
+	var required: int = magazine_size - magazine
 	var loaded: int = mini(required, reserve)
 	magazines[current_weapon_id] = magazine + loaded
 	reserve_ammo[weapon.ammo_type] = reserve - loaded
@@ -201,6 +237,7 @@ func capture_state() -> Dictionary:
 		"magazines": magazines.duplicate(true),
 		"reserve_ammo": reserve_ammo.duplicate(true),
 		"current_weapon_id": current_weapon_id,
+		"upgrade_levels": upgrade_levels.duplicate(true),
 	}
 
 
@@ -220,6 +257,7 @@ func restore_state(state: Dictionary) -> void:
 	magazines = (state.get("magazines", magazines) as Dictionary).duplicate(true)
 	reserve_ammo = (state.get("reserve_ammo", reserve_ammo) as Dictionary).duplicate(true)
 	current_weapon_id = StringName(str(state.get("current_weapon_id", initial_weapon_id)))
+	upgrade_levels = (state.get("upgrade_levels", upgrade_levels) as Dictionary).duplicate(true)
 	if not unlocked_weapons.has(current_weapon_id):
 		current_weapon_id = (
 			unlocked_weapons[0]
@@ -240,7 +278,7 @@ func _try_fire() -> void:
 		_cooldown_remaining = empty_trigger_cooldown
 		return
 	magazines[current_weapon_id] = magazine - 1
-	_cooldown_remaining = weapon.fire_interval
+	_cooldown_remaining = weapon.fire_interval * float(_modifiers(weapon).fire_rate)
 	_play_hud_action(&"fire")
 	_shoot_hitscan(weapon)
 	GameState.emit_gunshot(_player.global_position, 1.0 if weapon.weapon_id in [&"pistol", &"shotgun"] else 1.15, _player)
@@ -255,7 +293,7 @@ func _apply_recoil(weapon: WeaponDefinition) -> void:
 	_burst_shots += 1
 	_burst_reset_remaining = maxf(
 		burst_reset_min_time,
-		weapon.fire_interval * burst_reset_fire_interval_multiplier
+		weapon.fire_interval * float(_modifiers(weapon).fire_rate) * burst_reset_fire_interval_multiplier
 	)
 
 	var vertical_multiplier := 1.0
@@ -273,15 +311,15 @@ func _apply_recoil(weapon: WeaponDefinition) -> void:
 		)
 
 	var vertical_kick: float = (
-		float(weapon.recoil_vertical_degrees)
+		float(weapon.recoil_vertical_degrees) * float(_modifiers(weapon).recoil)
 		* vertical_multiplier
 		* _player.get_weapon_recoil_multiplier()
 	)
 	var horizontal_kick: float = randf_range(
-		-float(weapon.recoil_horizontal_degrees)
+		-float(weapon.recoil_horizontal_degrees) * float(_modifiers(weapon).recoil)
 		* horizontal_multiplier
 		* _player.get_weapon_recoil_multiplier(),
-		float(weapon.recoil_horizontal_degrees)
+		float(weapon.recoil_horizontal_degrees) * float(_modifiers(weapon).recoil)
 		* horizontal_multiplier
 		* _player.get_weapon_recoil_multiplier()
 	)
@@ -317,7 +355,7 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 	var right: Vector3 = camera.global_transform.basis.x
 	var up: Vector3 = camera.global_transform.basis.y
 	var spread_tangent: float = tan(
-		deg_to_rad(weapon.spread_degrees * _player.get_weapon_spread_multiplier())
+		deg_to_rad(weapon.spread_degrees * float(_modifiers(weapon).spread) * _player.get_weapon_spread_multiplier())
 	)
 	var hit_something := false
 	# Aynı tetik çekişinde bir hedefe isabet eden saçmaları tek hasar çağrısında
@@ -345,10 +383,11 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 		var damage_target := _resolve_damage_target(collider)
 		if damage_target != null:
 			var hit_position: Vector3 = result.get("position", Vector3.ZERO)
-			var pellet_damage := weapon.damage_per_pellet
+			var pellet_damage := maxi(1, roundi(float(weapon.damage_per_pellet) * float(_modifiers(weapon).damage)))
 			var was_headshot := false
 			if damage_target.has_method("get_weapon_hit_multiplier"):
-				var hit_multiplier := float(damage_target.call("get_weapon_hit_multiplier", hit_position, weapon.headshot_multiplier))
+				var upgraded_headshot := weapon.headshot_multiplier * float(_modifiers(weapon).headshot)
+				var hit_multiplier := float(damage_target.call("get_weapon_hit_multiplier", hit_position, upgraded_headshot))
 				pellet_damage = maxi(1, int(round(float(pellet_damage) * hit_multiplier)))
 				was_headshot = hit_multiplier > 1.01
 			if was_headshot:

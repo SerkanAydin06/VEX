@@ -96,10 +96,24 @@ func _apply_damage_to_target(target: Node3D, damaged_ids: Dictionary) -> void:
 	var distance := global_position.distance_to(target.global_position)
 	if distance > explosion_radius:
 		return
+	if not _has_explosion_line_of_sight(target):
+		return
 	damaged_ids[target_id] = true
 	var strength := 1.0 - clampf(distance / explosion_radius, 0.0, 1.0)
 	var damage := maxi(1, int(round(maximum_damage * strength)))
 	target.call("take_damage", damage, target.global_position, self)
+
+
+func _has_explosion_line_of_sight(target: Node3D) -> bool:
+	var origin := global_position + Vector3.UP * 0.35
+	var destination := target.global_position + Vector3.UP * 0.55
+	var query := PhysicsRayQueryParameters3D.create(origin, destination, 1 | 8, [get_rid()])
+	query.collide_with_areas = false
+	var result := get_world_3d().direct_space_state.intersect_ray(query)
+	if result.is_empty():
+		return true
+	var collider := result.get("collider") as Object
+	return collider == target or (collider is Node and target.is_ancestor_of(collider as Node))
 
 
 func _resolve_damage_target(collider: Object) -> Node3D:

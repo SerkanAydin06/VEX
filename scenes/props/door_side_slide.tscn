@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bk5dcdh1lk7nr"]
+[gd_scene load_steps=17 format=3 uid="uid://bk5dcdh1lk7nr"]
 
 [ext_resource type="Script" uid="uid://ukc236nu1fj2" path="res://scripts/props/door.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://b1tmwqfgnvwft" path="res://assets/world/door_side_slide.png" id="2_texture"]
@@ -41,6 +41,12 @@ size = Vector3(0.03, 4.48, 2.18)
 
 [sub_resource type="BoxShape3D" id="BoxShape_proximity"]
 size = Vector3(3.8, 3.6, 5.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_frame_jamb"]
+size = Vector3(0.42, 4.56, 0.24)
+
+[sub_resource type="BoxMesh" id="BoxMesh_frame_header"]
+size = Vector3(0.42, 0.24, 4.68)
 
 [node name="DoorSideSlide" type="Node3D" unique_id=311081800]
 script = ExtResource("1_script")
@@ -137,6 +143,21 @@ position = Vector3(0, -2.237, 0)
 cast_shadow = 0
 material_override = ExtResource("6_threshold_material")
 mesh = SubResource("PlaneMesh_door_threshold")
+
+[node name="FrameJambLeft" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, -2.22)
+material_override = ExtResource("3_frame_material")
+mesh = SubResource("BoxMesh_frame_jamb")
+
+[node name="FrameJambRight" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, 2.22)
+material_override = ExtResource("3_frame_material")
+mesh = SubResource("BoxMesh_frame_jamb")
+
+[node name="FrameHeader" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.22, 0)
+material_override = ExtResource("3_frame_material")
+mesh = SubResource("BoxMesh_frame_header")
 
 [node name="PocketFloorLeft" type="MeshInstance3D" parent="."]
 position = Vector3(0, -2.225, -3.34)

@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/lore_terminal.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/world/level03/elevator_console.png" id="2_console"]
+
+[sub_resource type="BoxShape3D" id="Shape_terminal"]
+size = Vector3(1.25, 1.75, 0.18)
+
+[node name="LoreTerminal" type="StaticBody3D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_script")
+log_id = &"lore_log"
+display_name = "VEX SAHA KAYDI"
+log_title = "KAYIT"
+log_body = "Kayıt verisi bulunamadı."
+
+[node name="Visual" type="Sprite3D" parent="."]
+position = Vector3(0, 0, 0.1)
+pixel_size = 0.00135
+texture_filter = 1
+texture = ExtResource("2_console")
+alpha_cut = 1
+shaded = true
+visibility_range_end = 12.0
+visibility_range_end_margin = 2.0
+visibility_range_fade_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_terminal")

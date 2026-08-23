@@ -6,7 +6,7 @@
 script = ExtResource("1")
 mission_id = &"vex02"
 display_name = "VEX-02 // KIRIK OMURGA"
-briefing = "BASTION-7: Aktif güvenlik ağını araştır. Sarı erişim kartını kullan ve tahliye odasına ulaş."
+briefing = "VEX-02: Enerji kayıtlarını ele geçir. Dr. Selin Erdem'i bul ve boyutsal yarıkların kaynağını ortaya çıkar."
 completion_message = "VEX-02 TAMAMLANDI. KIRIK OMURGA KAYDI BASTION-7'YE AKTARILDI."
 scene_path = "res://scenes/levels/level_02.tscn"
 campaign_stage = 2

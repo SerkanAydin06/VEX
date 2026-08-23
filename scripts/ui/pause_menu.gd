@@ -12,7 +12,8 @@ extends Control
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	resume_button.pressed.connect(close_menu)
-	checkpoint_button.pressed.connect(GameState.restart_checkpoint)
+	checkpoint_button.text = "BÖLÜMÜ BAŞTAN BAŞLAT"
+	checkpoint_button.pressed.connect(GameState.restart_level)
 	settings_button.pressed.connect(_open_settings)
 	main_menu_button.pressed.connect(GameState.return_to_main_menu)
 	settings_panel.close_requested.connect(_on_settings_closed)

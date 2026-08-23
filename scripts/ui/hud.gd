@@ -196,8 +196,12 @@ func _set_map_open(open: bool) -> void:
 
 	var weapon_controller := player.get_node_or_null("WeaponController")
 	if weapon_controller != null:
-		weapon_controller.set_process(not open)
-		weapon_controller.set_process_unhandled_input(not open)
+		var weapon_fire_allowed := true
+		var current_scene := get_tree().current_scene
+		if current_scene != null and current_scene.has_method("is_weapon_fire_allowed"):
+			weapon_fire_allowed = bool(current_scene.call("is_weapon_fire_allowed"))
+		weapon_controller.set_process(not open and weapon_fire_allowed)
+		weapon_controller.set_process_unhandled_input(not open and weapon_fire_allowed)
 
 
 
@@ -730,6 +734,8 @@ func _on_headshot_confirmed() -> void:
 
 
 func _on_damage_received(amount: int) -> void:
+	if amount <= 0:
+		return
 	if _damage_tween != null and _damage_tween.is_valid():
 		_damage_tween.kill()
 	damage_flash.visible = true

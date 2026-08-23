@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_weapon")
 weapon_id = &"ak47"
-display_name = "AK-47"
+display_name = "VX-47 TAARRUZ TÜFEĞİ"
 ammo_type = &"rifle_ammo"
 magazine_size = 30
 headshot_multiplier = 1.80

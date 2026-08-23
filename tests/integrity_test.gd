@@ -17,6 +17,9 @@ const REQUIRED_RESOURCES := [
 	"res://resources/weapons/mp90.tres",
 	"res://scenes/world/ceiling_light_white_horror.tscn",
 	"res://scenes/world/world_piece.tscn",
+	"res://scenes/world/korvath_rift.tscn",
+	"res://scenes/world/lore_terminal.tscn",
+	"res://assets/world/level03/korvath_rift.png",
 	"res://scenes/ui/hud.tscn",
 	"res://scenes/hub/bastion_7.tscn",
 	"res://scenes/hub/hub_terminal.tscn",
@@ -28,6 +31,8 @@ const REQUIRED_RESOURCES := [
 	"res://scenes/actors/voidweaver.tscn",
 	"res://scenes/actors/veilmaw.tscn",
 	"res://scenes/actors/veilmaw_projectile.tscn",
+	"res://scenes/levels/level_03.tscn",
+	"res://resources/missions/vex03.tres",
 	"res://assets/enemies/redviper/redviper_spritesheet.png",
 	"res://assets/enemies/badredviper/badredviper_spritesheet.png",
 	"res://assets/enemies/ravager/ravager_spritesheet.png",
@@ -48,6 +53,7 @@ func _ready() -> void:
 	_check_required_resources()
 	_check_level("res://scenes/levels/level_01.tscn", 18, 18, 38, 19)
 	_check_level("res://scenes/levels/level_02.tscn", 33, 33, 10, 5)
+	_check_level_03()
 	_check_bastion_7()
 	_check_enemy_visuals()
 	_check_scene_authority()
@@ -57,7 +63,7 @@ func _ready() -> void:
 	_check_player_movement_contract()
 
 	if failures.is_empty():
-		print("VEX integrity test başarılı: Level 1/2, Bastion-7, kaynak bağlantıları ve sahne otoritesi temiz.")
+		print("VEX integrity test başarılı: Level 1/2/3, Bastion-7, kaynak bağlantıları ve sahne otoritesi temiz.")
 	else:
 		for message in failures:
 			push_error(message)
@@ -157,7 +163,93 @@ func _check_bastion_7() -> void:
 	var operations_terminal := hub.get_node_or_null("Systems/DeploymentTerminal")
 	if operations_terminal == null or str(operations_terminal.get("display_name")) != "OPERASYON TERMİNALİ":
 		failures.append("Bastion-7 tek Operasyon Terminali standardı eksik.")
+	var mission_paths: PackedStringArray = hub.get("mission_paths")
+	if mission_paths.size() < 3 or mission_paths[2] != "res://scenes/levels/level_03.tscn":
+		failures.append("Bastion-7 VEX-03 görev bağlantısı eksik.")
 	hub.queue_free()
+
+
+func _check_level_03() -> void:
+	var packed := load("res://scenes/levels/level_03.tscn") as PackedScene
+	if packed == null:
+		failures.append("VEX-03 sahnesi yüklenemedi.")
+		return
+	var level := packed.instantiate()
+	if level == null:
+		failures.append("VEX-03 instantiate edilemedi.")
+		return
+	add_child(level)
+	for node_path in [
+		"Geometry/LowerLevel/Floor_L01_Start",
+		"Geometry/LowerLevel/Ceiling_L06_MaintenanceHall",
+		"Geometry/UpperLevel/UpperDeck",
+		"Geometry/Stairs/StairRamp",
+		"Geometry/Stairs/StairRampUpper",
+		"Geometry/Stairs/StairLanding",
+		"Geometry/Stairs/StairTread_L10",
+		"Geometry/Stairs/StairRiser_U10",
+		"Geometry/Stairs/RailUpperRight",
+		"Gameplay/Doors/Door_UpperLanding/FrameJambLeft",
+		"Gameplay/Objectives/KorvathRiftCore",
+		"Gameplay/Objectives/RiftIsolationSwitch",
+		"Gameplay/Enemies/KorvathWarden",
+		"Gameplay/Pickups/BluePowerCard",
+		"Gameplay/LoreTerminals/EceTanEmergencySignal",
+	]:
+		if level.get_node_or_null(node_path) == null:
+			failures.append("VEX-03 bileşeni eksik: %s" % node_path)
+	var upper_deck := level.get_node_or_null("Geometry/UpperLevel/UpperDeck") as Node3D
+	if upper_deck == null or not is_equal_approx(upper_deck.position.y, 7.6):
+		failures.append("VEX-03 üst kat bağımsız döşeme kotunda değil.")
+	var lower_viper := level.get_node_or_null("Gameplay/Enemies/LowerRedViperA") as Node3D
+	if lower_viper == null or not is_equal_approx(lower_viper.position.y, 0.48):
+		failures.append("VEX-03 RedViper zemin hizası yanlış.")
+	var finish_switch := level.get_node_or_null("Gameplay/Objectives/RiftIsolationSwitch") as VexFinishSwitch
+	if finish_switch == null:
+		failures.append("VEX-03 yarık izolasyon şalteri yüklenemedi.")
+	elif finish_switch.required_keys != [&"blue", &"red"]:
+		failures.append("VEX-03 yarık izolasyon şalterinin typed anahtar dizisi yanlış.")
+	var script_text := FileAccess.get_file_as_string("res://scripts/levels/level_03.gd")
+	for forbidden_builder in ["_build_level_geometry", "_spawn_gameplay", "_spawn_enemy(", "_spawn_pickup("]:
+		if forbidden_builder in script_text:
+			failures.append("VEX-03 runtime sahne üretimi kaldırılmamış: %s" % forbidden_builder)
+	var scene_text := FileAccess.get_file_as_string("res://scenes/levels/level_03.tscn")
+	for contract in ["vex03_secret_maintenance_cache", "vex03_secret_upper_archive", "vex03_korvath_warden"]:
+		if contract not in scene_text:
+			failures.append("VEX-03 progression ID eksik: %s" % contract)
+	var enemies := level.get_node_or_null("Gameplay/Enemies")
+	if enemies == null or enemies.get_child_count() != 16:
+		failures.append("VEX-03 sahne düşman yerleşimi 16 düğüm değil.")
+	var pickups := level.get_node_or_null("Gameplay/Pickups")
+	if pickups == null or pickups.get_child_count() != 12:
+		failures.append("VEX-03 sahne pickup yerleşimi 12 düğüm değil.")
+	var lower_level := level.get_node_or_null("Geometry/LowerLevel")
+	var upper_level := level.get_node_or_null("Geometry/UpperLevel")
+	var lower_room_count := 0
+	var upper_room_count := 0
+	if lower_level != null:
+		for child in lower_level.get_children():
+			if child.name.begins_with("Room_L"):
+				lower_room_count += 1
+	if upper_level != null:
+		for child in upper_level.get_children():
+			if child.name.begins_with("Room_U"):
+				upper_room_count += 1
+	if lower_room_count != 10 or upper_room_count != 8:
+		failures.append("VEX-03 modüler oda standardı yanlış: %d alt / %d üst." % [lower_room_count, upper_room_count])
+	var room_lights := level.get_node_or_null("Gameplay/Lighting/RoomLights")
+	if room_lights == null or room_lights.get_child_count() != 18:
+		failures.append("VEX-03 her oda için 18 beyaz ışık kullanmıyor.")
+	var alarm_lights := level.get_node_or_null("Gameplay/Lighting/AlarmLights")
+	if alarm_lights == null or alarm_lights.get_child_count() != 28:
+		failures.append("VEX-03 her kapının iki yüzünde toplam 28 kırmızı lamba kullanmıyor.")
+	var doors := level.get_node_or_null("Gameplay/Doors")
+	if doors == null or doors.get_child_count() != 14:
+		failures.append("VEX-03 oda-koridor kapı sayısı 14 değil.")
+	for removed_contract in ["CargoElevator_Main", "VentLowCeiling", "UpperServiceCeiling", "CrouchInstructionLabel"]:
+		if removed_contract in scene_text:
+			failures.append("VEX-03 kaldırılan sistem hâlâ sahnede: %s" % removed_contract)
+	level.queue_free()
 
 
 func _check_enemy_visuals() -> void:

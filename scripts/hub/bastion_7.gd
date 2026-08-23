@@ -58,7 +58,10 @@ func _intro_message() -> void:
 	await get_tree().create_timer(0.9).timeout
 	if not is_inside_tree():
 		return
-	if GameState.campaign_stage >= 2:
+	if GameState.campaign_stage >= 3:
+		GameState.notify("VEX-03 TAMAMLANDI // KORVATH DÜĞÜMÜ KAPATILDI")
+		GameState.set_objective(first_objective)
+	elif GameState.campaign_stage >= 2:
 		GameState.notify("OPERASYON TAMAMLANDI // VEX-02 KAYDI BASTION-7'YE AKTARILDI")
 		GameState.set_objective(first_objective)
 	elif GameState.campaign_stage >= 1:
@@ -84,6 +87,10 @@ func _restart_audio_loop(audio_player: AudioStreamPlayer) -> void:
 
 func get_level_display_name() -> String:
 	return hub_display_name
+
+
+func is_weapon_fire_allowed() -> bool:
+	return allow_weapon_fire
 
 
 func get_automap_config() -> Dictionary:

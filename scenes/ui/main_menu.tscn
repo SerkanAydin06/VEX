@@ -351,7 +351,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.86, 1, 1)
 theme_override_font_sizes/font_size = 15
-text = "2 BÖLÜM  •  2 GİZLİ ALAN  •  ZORLUK: NORMAL"
+text = "2 BÖLÜM  •  3 GİZLİ ALAN  •  ZORLUK: NORMAL"
 
 [node name="BottomRail" type="ColorRect" parent="."]
 layout_mode = 0

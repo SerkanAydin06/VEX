@@ -177,7 +177,7 @@ func _update_clock(force: bool) -> void:
 
 
 func _update_mission_data(_difficulty: int) -> void:
-	mission_data.text = "2 BÖLÜM  •  2 GİZLİ ALAN  •  ZORLUK: %s" % SettingsManager.get_difficulty_display_name()
+	mission_data.text = "2 BÖLÜM  •  3 GİZLİ ALAN  •  ZORLUK: %s" % SettingsManager.get_difficulty_display_name()
 
 
 func _start_menu_music() -> void:

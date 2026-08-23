@@ -5,7 +5,7 @@ Net iç yükseklik : 7.0 m
 Zemin kalınlığı  : 0.40 m
 Tavan kalınlığı  : 0.40 m
 Duvar kalınlığı  : 0.40 m
-Kapı açıklığı    : 4.60 m
+Kapı açıklığı    : 4.44 m
 Kapı merkez Y    : 2.24 m
 Kırmızı ışık Y   : 5.50 m
 Beyaz ışık Y     : 6.82 m
@@ -90,7 +90,7 @@ SAHNE OTORİTESİ — GEOMETRİ / KAPI
 TERMINAL / KAPI SAHNE OTORİTESİ
 - Hub terminal durum metinleri hub_terminal.tscn Inspector export alanlarından düzenlenir; kod metin hard-code etmez.
 - Deployment sırasında terminal sahneden çıkarken ekran refresh çağrısı yapılmaz.
-- DoorSideSlide görsel PanelBody kalınlığı 0.30 m; collision kalınlığı 0.38 m ve 0.40 m duvar içinde açık durumda gizlenir.
+- DoorSideSlide görsel PanelBody ve collision kalınlığı 0.20 m'dir; 0.40 m duvar içinde açık durumda gizlenir.
 - Kapı görsel yüzleri PanelBody yüzeyinde ±0.15 m konumundadır.
 
 
@@ -98,10 +98,18 @@ KAPI / DUVAR AÇIKLIK STANDARDI
 - Referans kapı: scenes/props/door_side_slide.tscn.
 - Net kapı açıklığı: 4.44 m; yan duvar parçaları kapı gövdesinin dış kenarında tam biter.
 - Kapı panel gövdesi/collision: 0.20 x 4.48 x 2.20 m.
+- Kapı modülünün iki yanında 0.24 m bindirme çerçevesi ve üstünde 0.24 m lento bulunur; bu parçalar duvar/kapı sınırını örter ve açıklığın arkasını göstermez.
 - Kapı üst dolgusu: 4.44 x 2.52 m; alt kot 4.48 m, tavan 7.00 m.
 - DoorThreshold kapı sahnesinin içindedir: 0.72 x 0.035 x 4.44 m, koyu güçlendirilmiş standart zemin materyali.
 - Level 1/2 kapıları E ile açılır ve otomatik kapanır; Bastion-7 kapıları automatic_open=true + auto_close=true ile yaklaşınca açılır ve uzaklaşınca kapanır.
 - Tüm kapı hareket/auto-close değerleri sahne Inspector ayarlarıdır; kod sabit ölçü üretmez.
+
+
+ÇOK KATLI DÖŞEME STANDARDI
+- Alt kat tavan merkezi Y=7.20 m, tavan üst yüzeyi Y=7.40 m'dir.
+- Üst kat ayrı zemin döşemesi merkezi Y=7.60 m, alt yüzeyi Y=7.40 m ve yürünebilir üst yüzeyi Y=7.80 m'dir.
+- Üst kat duvarları Y=7.80 m'den başlar; 7.00 m net yükseklik için üst tavan alt yüzeyi Y=14.80 m'dir.
+- Alt kat tavan materyali üst katta zemin olarak kullanılmaz; iki yüz için ayrı ceiling_standard ve floor_standard döşemeleri zorunludur.
 
 
 BASTION-7 OTOMATİK KAPI / EŞİK STANDARDI

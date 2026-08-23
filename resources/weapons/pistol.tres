@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_weapon")
 weapon_id = &"pistol"
-display_name = "V-9 TABANCA"
+display_name = "P-01 TAKTİK TABANCA"
 ammo_type = &"bullets"
 magazine_size = 12
 headshot_multiplier = 1.75

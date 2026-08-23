@@ -65,7 +65,7 @@ text = "OYUNA DÖN"
 [node name="CheckpointButton" type="Button" parent="MenuPanel/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 68)
-text = "SON KONTROL NOKTASINDAN BAŞLAT"
+text = "BÖLÜMÜ BAŞTAN BAŞLAT"
 
 [node name="SettingsButton" type="Button" parent="MenuPanel/Margin/VBox"]
 unique_name_in_owner = true

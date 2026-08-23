@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/korvath_rift.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/world/level03/korvath_rift.png" id="2_rift"]
+
+[sub_resource type="CapsuleShape3D" id="Shape_heat"]
+radius = 3.1
+height = 6.2
+
+[sub_resource type="StandardMaterial3D" id="Material_scorch"]
+albedo_color = Color(0.08, 0.012, 0.006, 1)
+roughness = 0.88
+emission_enabled = true
+emission = Color(0.35, 0.018, 0.003, 1)
+emission_energy_multiplier = 0.45
+
+[sub_resource type="CylinderMesh" id="Mesh_scorch"]
+top_radius = 3.0
+bottom_radius = 3.6
+height = 0.1
+radial_segments = 32
+
+[node name="KorvathRift" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="ScorchBase" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.03, 0)
+mesh = SubResource("Mesh_scorch")
+material_override = SubResource("Material_scorch")
+
+[node name="Visual" type="Sprite3D" parent="."]
+position = Vector3(0, 3.0, 0)
+pixel_size = 0.0047
+texture_filter = 1
+texture = ExtResource("2_rift")
+alpha_cut = 1
+shaded = true
+
+[node name="RiftLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 2.4, 0.6)
+light_color = Color(1, 0.16, 0.025, 1)
+light_energy = 4.2
+omni_range = 13.0
+shadow_enabled = true
+
+[node name="HeatZone" type="Area3D" parent="."]
+position = Vector3(0, 2.7, 0)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HeatZone"]
+shape = SubResource("Shape_heat")
