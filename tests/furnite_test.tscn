@@ -11,16 +11,13 @@
 [ext_resource type="Texture2D" uid="uid://cxwpf6cn3ejr7" path="res://assets/world/bastion7/operator_pad.png" id="9_00fff"]
 [ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/Table.tscn" id="10_cs0tf"]
 [ext_resource type="PackedScene" uid="uid://ckhtinn61g27l" path="res://scenes/hub/hub_terminal.tscn" id="11_u2ooc"]
-[ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_i4t6o"]
-[ext_resource type="Texture2D" uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png" id="13_wj067"]
-[ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="14_m2rkv"]
-[ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="15_mkccu"]
 [ext_resource type="PackedScene" uid="uid://c026efgr2oia3" path="res://scenes/player/player.tscn" id="16_d1ucx"]
 [ext_resource type="PackedScene" uid="uid://c4gn8k6ogvf0n" path="res://scenes/ui/hud.tscn" id="17_74iqw"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="18_rr7l4"]
 [ext_resource type="PackedScene" uid="uid://88mtv7yws8dd" path="res://scenes/world/pc.tscn" id="19_6gkeq"]
 [ext_resource type="PackedScene" uid="uid://br4kbpposyhv5" path="res://scenes/world/stool.tscn" id="20_1gyty"]
 [ext_resource type="PackedScene" uid="uid://bar5ey7gbqorf" path="res://scenes/world/laptop.tscn" id="21_i7ssf"]
+[ext_resource type="PackedScene" uid="uid://uqj4ntddc2t8" path="res://scenes/world/weapon_rack.tscn" id="25_gmyhx"]
 
 [sub_resource type="Environment" id="Environment_hub"]
 background_mode = 1
@@ -99,7 +96,7 @@ emission_energy_multiplier = 1.1
 [sub_resource type="BoxMesh" id="BoxMesh_target"]
 size = Vector3(0.18, 1.8, 1.1)
 
-[node name="Bastion7" type="Node3D" unique_id=289567743]
+[node name="FurnutureTest" type="Node3D" unique_id=289567743]
 script = ExtResource("1_xb0w8")
 automap_rows = 6
 automap_world_min = Vector2(-30, -25)
@@ -585,6 +582,8 @@ permanent_lock_message = "ACCESS RESTRICTED // POWER OFFLINE"
 auto_close_delay = 1.5
 automatic_open = true
 
+[node name="Player" parent="Doors/ResearchDoor" unique_id=180461347 instance=ExtResource("16_d1ucx")]
+
 [node name="WorkshopDoor" parent="Doors" unique_id=920972897 instance=ExtResource("6_ie01u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.24, 10)
 display_name = "WEAPON WORKSHOP"
@@ -813,18 +812,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.8, 1.15, -6.9)
 material_override = SubResource("Material_hub_red")
 mesh = SubResource("BoxMesh_target")
 
-[node name="Table" parent="Props" unique_id=1255500891 instance=ExtResource("10_cs0tf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.79492, 0, -14.311826)
-
-[node name="Table2" parent="Props" unique_id=727001995 instance=ExtResource("10_cs0tf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.778278, 0, -14.3107395)
-
-[node name="Table3" parent="Props" unique_id=1792448412 instance=ExtResource("10_cs0tf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.741977, 0, -14.280577)
-
-[node name="Table4" parent="Props" unique_id=1242447751 instance=ExtResource("10_cs0tf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.712398, 0, -14.286835)
-
 [node name="Systems" type="Node3D" parent="." unique_id=1808239608]
 
 [node name="DeploymentTerminal" parent="Systems" unique_id=560238758 instance=ExtResource("11_u2ooc")]
@@ -844,37 +831,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.65, -7.2)
 display_name = "CEPHANELİK DURUMU"
 info_message = "SAHİP OLDUĞUN SİLAHI RAFTAN SEÇ"
 screen_header = "VEX // ARMORY"
-
-[node name="ArmoryRacks" type="Node3D" parent="Systems" unique_id=117252377]
-
-[node name="PistolRack" parent="Systems/ArmoryRacks" unique_id=1097700967 instance=ExtResource("12_i4t6o")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -16.106022, 1.9903786, -13.049632)
-visible = false
-locked_message = "P9 SIDEARM KAYDI BULUNAMADI"
-
-[node name="ShotgunRack" parent="Systems/ArmoryRacks" unique_id=1644928597 instance=ExtResource("12_i4t6o")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -13.978129, 1.55, -13.279044)
-visible = false
-weapon_id = &"shotgun"
-display_name = "KIRICI POMPALI"
-weapon_texture = ExtResource("13_wj067")
-locked_message = "SHOTGUN GÖREVDE HENÜZ BULUNMADI"
-
-[node name="AK47Rack" parent="Systems/ArmoryRacks" unique_id=1339347110 instance=ExtResource("12_i4t6o")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -11.930443, 1.55, -13.222887)
-visible = false
-weapon_id = &"ak47"
-display_name = "AK-47"
-weapon_texture = ExtResource("14_m2rkv")
-locked_message = "AK-47 GÖREVDE HENÜZ BULUNMADI"
-
-[node name="MP90Rack" parent="Systems/ArmoryRacks" unique_id=815121853 instance=ExtResource("12_i4t6o")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.6, 1.55, -13.7)
-visible = false
-weapon_id = &"mp90"
-display_name = "MP90"
-weapon_texture = ExtResource("15_mkccu")
-locked_message = "MP90 GÖREVDE HENÜZ BULUNMADI"
 
 [node name="Player" parent="." unique_id=1205297111 instance=ExtResource("16_d1ucx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 27.35)
@@ -905,3 +861,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6662148, 0, 26.828897)
 
 [node name="Laptop" parent="." unique_id=1009974002 instance=ExtResource("21_i7ssf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6300093, 0.89595664, 27.137535)
+
+[node name="WeaponRackPistol" parent="." unique_id=358537788 instance=ExtResource("25_gmyhx")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -16.083096, 1.5377462, -14.09593)
+
+[node name="WeaponRackShotgun" parent="." unique_id=1710853191 instance=ExtResource("25_gmyhx")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -14.518848, 1.5377462, -14.09593)
+weapon_type = "Shotgun"
+
+[node name="WeaponRackAk47" parent="." unique_id=441827191 instance=ExtResource("25_gmyhx")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -12.998034, 1.5377462, -14.09593)
+weapon_type = "Ak47"
+
+[node name="WeaponRackMp90" parent="." unique_id=1090392841 instance=ExtResource("25_gmyhx")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -11.462847, 1.5377462, -14.09593)
+weapon_type = "Mp90"
