@@ -1,6 +1,6 @@
 VEX — CANONICAL PROJE STANDARDI
 ================================
-Belge sürümü: R33 / advanced-3d-vex-hub-terminal + screen-only-interaction
+Belge sürümü: R34 / compact-scene-authoritative-main-menu-buttons
 
 Bu dosya yeni level, kapı, silah, HUD, save, Bastion ve localization işleri için tek teknik referanstır.
 Eski BaseTrim/süpürgelik kuralları GEÇERSİZDİR ve projeden kaldırılmıştır.
@@ -154,6 +154,9 @@ Tekrar kullanılabilir U-merdiven:
 ------------------
 - Görsel ve oynanış tuning değerlerinin ana kaynağı sahne/Inspector veya ilgili Resource'dur.
 - Script runtime state'i yönetir; editör tuning değerlerini keyfi şekilde yeniden yazmaz.
+- Ana menü ana buton sütununun genişlik kaynağı `res://scenes/ui/main_menu.tscn` içindeki `MenuButtons.custom_minimum_size.x` değeridir; canonical değer 292 px'dir.
+- `MenuButtons.size_flags_horizontal = SIZE_SHRINK_BEGIN (0)` korunur. Aksi halde VBox parent genişliği çocuk butonlara zorla yayar ve editörde verilen dar ölçüler görünmez.
+- `main_menu.gd` ana butonların `size`, `offset` veya `custom_minimum_size` değerlerini runtime'da yazmaz.
 - Enemy health/damage/speed/detection/cooldown/windup çarpanları enemy sahnelerindedir.
 - Ortak saf enemy hesapları VexEnemyRuntimeUtils üzerinden paylaşılır; yeni enemy türlerinde kopya utility fonksiyonu yazılmaz.
 - Pickup, varil, kapı, projectile ve ışık davranış değerleri ilgili sahne/resource üzerinde tutulur.

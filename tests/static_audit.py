@@ -131,6 +131,12 @@ def check_no_checkpoint_contract():
     main_menu_scene=(ROOT/'scenes/ui/main_menu.tscn').read_text(encoding='utf-8')
     if main_menu_scene.count('custom_minimum_size = Vector2(0, 60)') < 5:
         fail('Ana menü buton kompakt boyut standardı eksik')
+    menu_buttons_block=main_menu_scene.split('[node name="MenuButtons"', 1)[-1].split('\n[node ', 1)[0]
+    if 'custom_minimum_size = Vector2(292, 0)' not in menu_buttons_block or 'size_flags_horizontal = 0' not in menu_buttons_block:
+        fail('Ana menü buton sütunu sahne otoriteli kompakt genişlik/shrink standardını kullanmıyor')
+    for runtime_layout_write in ['menu_buttons.custom_minimum_size =', 'menu_buttons.size =', 'new_game_button.custom_minimum_size =']:
+        if runtime_layout_write in main_menu:
+            fail(f'Ana menü scripti sahne buton genişliğini runtime eziliyor: {runtime_layout_write}')
     if 'anchors_preset = 8' not in main_menu_scene or 'offset_bottom = -104.0' not in main_menu_scene:
         fail('Ana menü aktif operasyon paneli bottom-right anchor standardı eksik')
     pause=(ROOT/'scripts/ui/pause_menu.gd').read_text(encoding='utf-8')

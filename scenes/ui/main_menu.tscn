@@ -224,9 +224,11 @@ layout_mode = 2
 
 [node name="MenuButtons" type="VBoxContainer" parent="MainShell/Margin/VBox" unique_id=848617551]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(292, 0)
 layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 3
-theme_override_constants/separation = 11
+theme_override_constants/separation = 10
 
 [node name="NewGameButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=368567398]
 unique_name_in_owner = true
