@@ -88,9 +88,6 @@ size = Vector3(0.04, 0.22, 2.2)
 [sub_resource type="BoxMesh" id="BoxMesh_stair_upper_strip"]
 size = Vector3(0.06, 0.022, 2.08)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8mx28"]
-albedo_color = Color(0, 0, 0, 1)
-
 [node name="Level03_AshMine" type="Node3D" unique_id=1017420345]
 script = ExtResource("1_script")
 map_revision = "VEX03-R10-LEFT-ENTRY-U-STAIR"
@@ -230,30 +227,6 @@ occlusion_enabled = false
 
 [node name="Ceiling_L04_Operations" parent="Geometry/LowerLevel" unique_id=1270933803 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 7.2, 15)
-piece_size = Vector3(12, 0.4, 10)
-surface_material = ExtResource("5_ceiling")
-occlusion_enabled = false
-
-[node name="Ceiling_L04_Operations2" parent="Geometry/LowerLevel" unique_id=614928355 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.17887461, 18, 7.2, 1.0945554)
-piece_size = Vector3(12, 0.4, 10)
-surface_material = ExtResource("5_ceiling")
-occlusion_enabled = false
-
-[node name="Ceiling_L04_Operations3" parent="Geometry/LowerLevel" unique_id=2062247184 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.17887461, 18, 7.2, 8.934002)
-piece_size = Vector3(12, 0.4, 10)
-surface_material = ExtResource("5_ceiling")
-occlusion_enabled = false
-
-[node name="Ceiling_L04_Operations4" parent="Geometry/LowerLevel" unique_id=1526359205 instance=ExtResource("2_piece")]
-transform = Transform3D(-2.8062123e-08, 0, 0.1788746, 0, 1, 0, -0.64198655, 0, -7.818857e-09, 22.909954, 7.2, 5.096361)
-piece_size = Vector3(12, 0.4, 10)
-surface_material = ExtResource("5_ceiling")
-occlusion_enabled = false
-
-[node name="Ceiling_L04_Operations5" parent="Geometry/LowerLevel" unique_id=1117081114 instance=ExtResource("2_piece")]
-transform = Transform3D(-2.8062123e-08, 0, 0.1788746, 0, 1, 0, -0.64198655, 0, -7.818857e-09, 13.084489, 7.2, 5.096361)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
@@ -1285,7 +1258,7 @@ surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
 
 [node name="RailLowerRight" parent="Geometry/Stairs/Visual" unique_id=1753729174 instance=ExtResource("2_piece")]
-transform = Transform3D(0.8681723, -0.48837733, 0, 0.4836964, 0.876574, 0, 0, 0, 1, 17.1, 2.87, 4.27)
+transform = Transform3D(0.8735678, -0.48670247, 0, 0.48670247, 0.8735678, 0, 0, 0, 1, 17.1, 2.87, 4.27)
 piece_size = Vector3(8.013114, 0.07, 0.07)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
@@ -1303,7 +1276,7 @@ surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
 
 [node name="PostLowerLeft_0" parent="Geometry/Stairs/Visual" unique_id=1459772834 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.65594935, 0, 0, 0, 1, 13.640059, 0.58895624, 2.23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.6, 0.46, 2.23)
 piece_size = Vector3(0.07, 0.92, 0.07)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
@@ -1333,7 +1306,7 @@ surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
 
 [node name="PostLowerRight_0" parent="Geometry/Stairs/Visual" unique_id=781895336 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.65107626, 0, 0, 0, 1, 13.6406, 0.6011753, 4.27)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.6, 0.46, 4.27)
 piece_size = Vector3(0.07, 0.92, 0.07)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
@@ -1357,19 +1330,13 @@ surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
 
 [node name="PostLowerRight_4" parent="Geometry/Stairs/Visual" unique_id=1763995762 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.558548, 4.36, 4.27)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 4.36, 4.27)
 piece_size = Vector3(0.07, 0.92, 0.07)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
 
 [node name="PostUpperLeft_0" parent="Geometry/Stairs/Visual" unique_id=939925667 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.69295925, 0, 0, 0, 1, 20.567133, 4.519573, 5.73)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_5" parent="Geometry/Stairs/Visual" unique_id=1581335639 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, -6.740507e-08, 1, 0, -1.5420483, -4.371139e-08, 20.570219, 4.774959, 4.992714)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 4.36, 5.73)
 piece_size = Vector3(0.07, 0.92, 0.07)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
@@ -1398,14 +1365,8 @@ piece_size = Vector3(0.07, 0.92, 0.07)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
 
-[node name="PostUpperLeft_6" parent="Geometry/Stairs/Visual" unique_id=1899838879 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 8.26, 2.0454323)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
 [node name="PostUpperRight_0" parent="Geometry/Stairs/Visual" unique_id=484358285 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.6522789, 0, 0, 0, 1, 20.559935, 4.500702, 7.77)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 4.36, 7.77)
 piece_size = Vector3(0.07, 0.92, 0.07)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
@@ -1452,12 +1413,6 @@ piece_size = Vector3(0.07, 0.07, 5.54)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
 
-[node name="LandingRailEast2" parent="Geometry/Stairs/Visual" unique_id=1579226137 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.65486234, 13.963765, 8.686927, 3.8940206)
-piece_size = Vector3(0.07, 0.07, 5.54)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
 [node name="LandingPostEast_0" parent="Geometry/Stairs/Visual" unique_id=1482591075 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9, 4.36, 2.23)
 piece_size = Vector3(0.07, 0.92, 0.07)
@@ -1475,72 +1430,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9, 4.36, 7.77)
 piece_size = Vector3(0.07, 0.92, 0.07)
 surface_material = ExtResource("33_stair_metal")
 occlusion_enabled = false
-
-[node name="CSGSphere3D" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=291485609]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.541824, 4.801419, 4.2724757)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D3" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=942760945]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.60337, 4.8079576, 2.235393)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D7" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=972484]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.649173, 0.9380743, 2.235393)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D8" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=894505770]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.649173, 0.9380743, 4.2761445)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D4" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=1302970207]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.883417, 4.8264923, 2.2274313)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D5" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=588188967]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.883417, 4.8264923, 7.768144)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D6" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=68194950]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.591816, 4.8264923, 7.768144)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D2" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=1149604803]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.559168, 4.8455114, 5.741044)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D9" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=171587474]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.000655, 8.710447, 5.741044)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D11" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=1955260996]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.000655, 8.710447, 2.065158)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D10" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=430352822]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.000655, 8.710447, 7.7585115)
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
 
 [node name="Signage" type="Node3D" parent="Geometry" unique_id=26947022]
 
