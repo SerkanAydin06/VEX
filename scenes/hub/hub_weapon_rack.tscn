@@ -1,53 +1,93 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/hub/hub_weapon_rack.gd" id="1_script"]
 
-[sub_resource type="StandardMaterial3D" id="Material_rack"]
-albedo_color = Color(0.07, 0.075, 0.085, 1)
-metallic = 0.78
-roughness = 0.31
-
-[sub_resource type="BoxMesh" id="BoxMesh_rack"]
-size = Vector3(2.25, 1.7, 0.18)
-
 [sub_resource type="BoxShape3D" id="BoxShape_rack"]
-size = Vector3(2.25, 1.7, 0.26)
+size = Vector3(1.62, 0.72, 0.44)
 
 [node name="HubWeaponRack" type="StaticBody3D"]
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_script")
-weapon_id = &"pistol"
-display_name = "P9 SIDEARM"
+weapon_id = &"p01"
+display_name = "WEAPON_P01_NAME"
+group_label = "ARMORY_GROUP_SIDEARM"
 weapon_texture = null
+fallback_visual_text = "P-01"
 locked_message = "GÖREVDE HENÜZ BULUNMADI"
-visual_world_width = 1.55
+visual_world_width = 1.2
+visual_local_position = Vector3(0, 0, 0.14)
+visual_rotation_degrees = Vector3(0, 0, 0)
+visual_flip_h = false
+auto_center_visible_pixels = true
+visual_pixel_offset = Vector2(0, 0)
 unlocked_color = Color(1, 1, 1, 1)
-locked_color = Color(0.18, 0.2, 0.22, 0.45)
-active_label_color = Color(0.3, 1, 0.68, 1)
+locked_color = Color(0, 0, 0, 1)
+empty_slot_color = Color(0, 0, 0, 1)
+stored_label_color = Color(0.3, 1, 0.68, 1)
+carried_label_color = Color(1, 0.68, 0.24, 1)
 locked_label_color = Color(0.65, 0.22, 0.18, 1)
 
-[node name="RackPanel" type="MeshInstance3D" parent="."]
-material_override = SubResource("Material_rack")
-mesh = SubResource("BoxMesh_rack")
-
 [node name="WeaponVisual" type="Sprite3D" parent="."]
-position = Vector3(0, 0.16, -0.12)
-billboard = 1
+position = Vector3(0, 0, 0.14)
+centered = true
+billboard = 0
 cast_shadow = 0
-texture_filter = 3
+texture_filter = 2
 alpha_cut = 1
 shaded = false
 
-[node name="NameLabel" type="Label3D" parent="."]
-position = Vector3(0, -0.58, -0.16)
-billboard = 1
+[node name="EmptySlotVisual" type="Sprite3D" parent="."]
+position = Vector3(0, 0, 0.1)
+centered = true
+billboard = 0
+cast_shadow = 0
+texture_filter = 2
+alpha_cut = 0
+shaded = false
+modulate = Color(0, 0, 0, 1)
+
+[node name="FallbackVisual" type="Label3D" parent="."]
+position = Vector3(0, 0, 0.14)
+visible = false
+billboard = 0
+pixel_size = 0.003
+modulate = Color(0.3, 0.87, 1, 0.82)
+text = "P-01"
+font_size = 56
+outline_size = 10
+horizontal_alignment = 1
+
+[node name="EmptySlotLabel" type="Label3D" parent="."]
+position = Vector3(0, 0, 0.1)
+billboard = 0
 pixel_size = 0.0024
-font_size = 26
+modulate = Color(0, 0, 0, 1)
+text = "[ P-01 ]"
+font_size = 42
+outline_size = 8
+horizontal_alignment = 1
+
+[node name="NameLabel" type="Label3D" parent="."]
+position = Vector3(0, -0.27, 0.17)
+billboard = 0
+pixel_size = 0.00135
+font_size = 18
 outline_size = 6
-text = "P9 SIDEARM\nREADY"
+text = "P-01 TAKTİK TABANCA\nTAŞINIYOR"
 horizontal_alignment = 1
 modulate = Color(0.3, 1, 0.68, 1)
+
+[node name="GroupLabel" type="Label3D" parent="."]
+visible = false
+position = Vector3(0, 0.27, 0.17)
+billboard = 0
+pixel_size = 0.0013
+font_size = 17
+outline_size = 6
+text = "SIDEARM"
+horizontal_alignment = 1
+modulate = Color(0.3, 0.87, 1, 1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape_rack")

@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/autoload/settings_manager.gd" id="1_script"]
+
+[node name="SettingsManager" type="Node"]
+script = ExtResource("1_script")
+settings_path = "user://vex_settings.cfg"
+default_language = "tr"
+supported_locales = PackedStringArray("tr", "en")
+language_label_keys = Array[StringName]([&"LANGUAGE_TURKISH", &"LANGUAGE_ENGLISH"])
+default_resolution = Vector2i(1920, 1080)
+supported_resolutions = Array[Vector2i]([Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)])
+default_fullscreen = true
+default_vsync = true
+default_graphics_quality = 2
+graphics_quality_label_keys = Array[StringName]([&"QUALITY_PERFORMANCE", &"QUALITY_BALANCED", &"QUALITY_HIGH"])
+performance_render_scale = 0.75
+balanced_render_scale = 0.85
+high_render_scale = 1.0
+brightness_min = 0.35
+brightness_max = 2.0
+default_brightness = 1.15
+post_brightness_min = 0.42
+post_brightness_max = 2.15
+exposure_min = 0.52
+exposure_max = 1.55
+ambient_energy_min = 0.24
+ambient_energy_max = 1.42
+fog_energy_min = 0.2
+fog_energy_max = 0.58
+default_master_volume = 0.85
+default_music_volume = 0.65
+default_sfx_volume = 0.85
+mouse_sensitivity_min = 0.03
+mouse_sensitivity_max = 0.3
+default_mouse_sensitivity = 0.11
+default_screen_shake = true
+default_difficulty = 1
+difficulty_label_keys = Array[StringName]([&"DIFFICULTY_EASY", &"DIFFICULTY_NORMAL", &"DIFFICULTY_HARD", &"DIFFICULTY_NIGHTMARE"])
+difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
+difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
+difficulty_speed_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.15)
+difficulty_detection_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.2)
+difficulty_cooldown_multipliers = PackedFloat32Array(1.25, 1, 0.85, 0.7)
+difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
+difficulty_resource_multipliers = PackedFloat32Array(1.35, 1, 0.8, 0.6)

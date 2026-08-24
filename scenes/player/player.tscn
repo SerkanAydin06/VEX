@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://8rnsjmnfa0dn" path="res://scripts/player/player.gd" id="1_player"]
 [ext_resource type="Script" uid="uid://chtweeovuy46q" path="res://scripts/player/weapon_controller.gd" id="2_weapon_controller"]
-[ext_resource type="Resource" path="res://resources/weapons/pistol.tres" id="3_pistol"]
+[ext_resource type="Resource" path="res://resources/weapons/p01.tres" id="3_pistol"]
 [ext_resource type="Script" uid="uid://bld4sc8fopa04" path="res://scripts/player/weapon_definition.gd" id="4_h17s1"]
-[ext_resource type="Resource" path="res://resources/weapons/shotgun.tres" id="4_shotgun"]
+[ext_resource type="Resource" path="res://resources/weapons/sg04.tres" id="4_shotgun"]
 [ext_resource type="AudioStream" uid="uid://dy727qbjov6r7" path="res://assets/audio/footstep_pro.wav" id="5_footstep_audio"]
 [ext_resource type="AudioStream" uid="uid://k8ycpgqn64hb" path="res://assets/audio/player_hurt_pro.wav" id="6_hurt_audio"]
-[ext_resource type="Resource" uid="uid://cqxwolkagivyx" path="res://resources/weapons/ak47.tres" id="7_ak47"]
+[ext_resource type="Resource" uid="uid://cqxwolkagivyx" path="res://resources/weapons/vx47.tres" id="7_ak47"]
 [ext_resource type="Resource" path="res://resources/weapons/mp90.tres" id="8_mp90"]
 [ext_resource type="Shader" uid="uid://diwveryjsl587" path="res://shaders/night_vision.gdshader" id="9_night_vision_shader"]
 
@@ -19,7 +19,7 @@ height = 1.8
 collision_layer = 2
 collision_mask = 13
 floor_max_angle = 0.872665
-floor_snap_length = 0.35
+floor_snap_length = 0.4
 script = ExtResource("1_player")
 night_vision_shader = ExtResource("9_night_vision_shader")
 
@@ -34,13 +34,14 @@ current = true
 fov = 78.0
 
 [node name="InteractionRay" type="RayCast3D" parent="ViewPivot/Camera3D" unique_id=1102246330]
-target_position = Vector3(0, 0, -2.8)
+target_position = Vector3(0, 0, -3.4)
 collision_mask = 9
 collide_with_areas = true
 
 [node name="WeaponController" type="Node" parent="." unique_id=1571382257]
 script = ExtResource("2_weapon_controller")
 weapon_definitions = Array[ExtResource("4_h17s1")]([ExtResource("3_pistol"), ExtResource("4_shotgun"), ExtResource("7_ak47"), ExtResource("8_mp90")])
+weapons_per_loadout_group = 1
 
 [node name="FootstepAudio" type="AudioStreamPlayer3D" parent="." unique_id=578205698]
 stream = ExtResource("5_footstep_audio")

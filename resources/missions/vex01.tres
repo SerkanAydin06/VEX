@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 mission_id = &"vex01"
-display_name = "VEX-01 // KARANTİNA TESİSİ"
-briefing = "VEX-01: Sıfır Kaynak kazasından sağ çık. Güvenlik erişimini yeniden kur ve Bastion-7 tahliye hattına ulaş."
-completion_message = "VEX-01 TAMAMLANDI. GÜVENLİK KAYDI BASTION-7'YE AKTARILDI."
+display_name = "LEVEL01_NAME"
+briefing = "LEVEL01_MISSION_BRIEF"
+completion_message = "LEVEL01_COMPLETE"
 scene_path = "res://scenes/levels/level_01.tscn"
 campaign_stage = 1

@@ -1,119 +1,302 @@
-YENİ STANDART
--------------
+VEX — CANONICAL PROJE STANDARDI
+================================
+Belge sürümü: R27 / campaign-save + canonical-door + scalable-weapons refactor
+
+Bu dosya yeni level, kapı, silah, HUD, save, Bastion ve localization işleri için tek teknik referanstır.
+Eski BaseTrim/süpürgelik kuralları GEÇERSİZDİR ve projeden kaldırılmıştır.
+
+
+1) MODÜLER DÜNYA ÖLÇÜLERİ
+-------------------------
 Oda modülü       : 12 x 10 m
-Net iç yükseklik : 7.0 m
+Net iç yükseklik : 7.00 m
 Zemin kalınlığı  : 0.40 m
 Tavan kalınlığı  : 0.40 m
 Duvar kalınlığı  : 0.40 m
-Kapı açıklığı    : 4.44 m
-Kapı merkez Y    : 2.24 m
-Kırmızı ışık Y   : 5.50 m
 Beyaz ışık Y     : 6.82 m
-Beyaz ışık gölge : Kapalı (performans + shadow-acne/çizgi artefaktını önlemek için)
-Spawn tam ışık   : 3 ışık, energy 3.8, range 9.2 m, cone 42°, attenuation 0.3
+Beyaz ışık gölge : Kapalı
+Spawn tam ışık   : energy 3.8 / range 9.2 m / cone 42° / attenuation 0.3
 EXIT tabela Y    : 4.85 m
-Zemin/tavan grid : 5 x 5 m dünya ölçeği
-Texture standard : sürüm eki yok; klasör/dosya adları lowercase snake_case
+Texture standard : lowercase snake_case; sürüm eki kullanılmaz
 Enemy filtre     : Linear Mipmap; Fixed-Y billboard
 
-Hellmagma	 : Position Y = -0.1
-Ravager		 : Position Y = -0.25
-Voidweaver       : Position Y = -0.02
+Enemy taban Y örnekleri:
+- Hellmagma  : -0.10
+- Ravager    : -0.25
+- Voidweaver : -0.02
 
 
-SAHNE OTORİTESİ
----------------
-- Oynanış ve görsel tuning değerlerinin tek kaynağı sahne/Inspector ayarlarıdır.
-- Scriptler @export konfigürasyon değişkenlerini runtime sırasında değiştirmez.
-- Can gibi oyun sırasında değişmesi gereken değerler ayrı runtime değişkenlerinde tutulur.
-- Zorluk seçimini GameState yapar; can, hasar, hız, algılama, cooldown ve windup çarpanları enemy sahnesindedir.
-- RedViper, BadRedViper, Ravager, HellMagma ve Voidweaver'ın tüm export ayarları kendi .tscn dosyalarında açıkça saklanır.
-- Enemy zemin snap, aggro/ally davranışı, ölüm izi renk/ölçek/smoke ve frame Y offsetleri Inspector'dan düzenlenir.
-- Ravager/HellMagma/Voidweaver projectile uçuş, ışık ve impact zaman/ölçek ayarları projectile sahnelerindedir.
-- Pickup miktarı/zorluk çarpanları, patlayıcı varil can/hasar/efekt değerleri ve kapı kilit/otomatik kapanma ayarları sahne tarafından belirlenir.
-- Player hareket/can-zırh/hasar emme/kamera bob/adım/night vision ayarları player.tscn Inspector'ındadır.
-- WeaponController başlangıç mühimmatı, geçiş cooldown'u, hitscan maskesi ve otomatik recoil birikimi player.tscn içindeki WeaponController node'undadır.
-- Silah hasar, şarjör, atış hızı, reload, spread, menzil, recoil ve reserve ammo kapasitesi resources/weapons/*.tres Inspector'ındadır.
-- Kod yalnız runtime state'i (mevcut can, AI state, animasyon, geçici kilit, görünürlük vb.) yönetir; sahne konfigürasyonunu geri yazmaz.
-
-- Level 1 / Level 2 bölüm adı, ilk hedef, secret sayısı, intro gecikmesi ve automap grid/bounds/cell ayarları level sahnelerindeki Inspector değerlerinden gelir; level scriptinde harita tuning sabiti tutulmaz.
-- HUD ve Automap görünüm/renk/zoom ayarları `hud.tscn` içindeki ilgili node üzerinde saklanır. Automap kodu mouse/focus/clip gibi sahne ayarlarını `_ready()` içinde tekrar ezmez.
-- `world_piece.tscn` geometri boyutu/materyal/gölge/occlusion/trim ayarlarının; `ceiling_light_white_horror.tscn` ise beyaz ışık ve armatür ayarlarının tek kaynağıdır.
+2) SÜPÜRGELİK / BASETRIM KURALI
+-------------------------------
+- VEX'te BaseTrim, floor_trim veya süpürgelik sistemi YOKTUR.
+- world_piece.gd / world_piece.tscn trim üretmez ve trim export alanı taşımaz.
+- Level veya hub sahnelerine floor_trim_* / BaseTrim özelliği eklenmez.
+- wall_floor_trim görselleri ve materyalleri canonical asset değildir.
+- Duvar-zemin birleşimi doğrudan wall/floor materyalleriyle çözülür.
 
 
-BASTION-7 HUB STANDARDI
------------------------
-- Bastion-7 sahnesi: res://scenes/hub/bastion_7.tscn
-- Hub da 12 x 10 m modüler zemin/tavan ve 7.0 m net yükseklik standardını kullanır.
-- Aktif alanlar: Command Hall, Mission Control, Armory, Operator Platform.
-- Başlangıçta kilitli alanlar: Weapon Workshop, Engineering Bay, Research Lab, Firing Range.
-- Kilitli üs kapıları `permanently_locked` + `permanent_lock_message` Inspector ayarlarıyla yönetilir; kod kapı ayarını değiştirmez.
-- Level 1 ve Level 2 tamamlanınca önce bölüm sonuç ekranı, ardından Bastion-7 gelir.
-- Mission Control görev seçer; Operator Platform seçilen göreve deployment yapar. Görev yolları/isimleri Bastion-7 sahnesindeki `mission_paths` / `mission_labels` Inspector ayarlarıdır.
-- Bölümün campaign ilerleme değeri level sahnesindeki `campaign_completion_stage` Inspector ayarıdır; GameState yalnız runtime stage değerini tutar.
-- Armory rafları yalnız görevlerde daha önce açılmış silahları kuşandırır; kilitli silahı kod açmaz.
-- Hub terminal, silah rafı, automap, ambience ve ışık ayarları Inspector'dan düzenlenir.
-- Bastion-7 güvenli bölge olduğundan `allow_weapon_fire = false`; silah değiştirme serbest, ateş etme kapalıdır.
+3) DUVAR BİRLEŞİM STANDARDI
+---------------------------
+- 0.40 m duvarlar köşelerde gereksiz hacim bindirmesi oluşturmaz.
+- Biten parça, devam eden duvarın yüzünde biter (butt-joint).
+- T birleşimlerinde sona eren duvar devam eden duvarın yüzüne kadar gelir.
+- Level 1, Level 2, Level 3 ve Bastion-7 aynı geometri mantığını kullanır.
 
 
-BASE TRIM STANDARDI
-- BaseTrim materyali sade, tileable, triplanar metal strip kullanır.
-- BaseTrim yatay izdüşümde duvar gövdesinden taşmaz.
-- BaseTrim kalınlığı duvar kalınlığı ile aynıdır.
-- Trim ana eksende 0.04 m teknik iç pay ile kısaltılır; köşelerde üst üste binme azaltılır.
-- Varsayılan: yükseklik 0.28 m, depth extra 0.0, vertical offset 0.03.
+4) CANONICAL KAPI STANDARDI
+---------------------------
+Tek referans prefab:
+  res://scenes/props/door_side_slide.tscn
+
+Ayrı Bastion kapı prefabı YOKTUR. Bütün level/hub kapıları aynı sahneyi kullanır.
+
+Canonical kapı geometrisi:
+- Sol/sağ PanelBody / collision : 0.20 x 4.48 x 2.20 m
+- İki yana açılma offsetleri     : Z -2.10 / +2.10 m
+- Frame jamb                     : 0.42 x 4.48 x 0.24 m
+- Jamb merkezleri                : Z -2.34 / +2.34 m
+- Frame header                   : 0.42 x 0.24 x 4.92 m
+- Header merkez Y                : 2.36 m
+- Pocket floor                   : 0.37 x 0.03 x 1.96 m
+- Pocket merkezleri              : Z -3.44 / +3.44 m
+- Threshold                      : 0.18 x 4.44 m plane; kapı sahnesinin içindedir
+
+Canonical duvar açıklığı çevresi:
+- Dikey yan duvar parçası : 0.40 x 7.00 x 2.54 m
+- Dikey top-fill          : 0.40 x 2.28 x 4.92 m
+- Yatay top-fill          : 4.92 x 2.28 x 0.40 m
+- Alt kat top-fill merkez Y: 5.86 m
+- Çok katlı üst seviye top-fill Y, ilgili kat tabanına göre aynı 4.48 m kapı yüksekliğini korur.
+
+Kapı davranışları prefab çoğaltılarak değil Inspector ile ayrılır:
+- automatic_open
+- auto_close / auto_close_delay
+- locked
+- required_key / required_keys
+- permanently_locked
+- campaign_unlock_stage
+
+Kapı durum ışığı:
+- Anahtar/erişim isteyen kapı: KIRMIZI
+- Normal kullanılabilir kapı : YEŞİL
+- Işıklar kapının üstünde, mevcut level standardındaki Y hizasında kalır.
+
+Bastion campaign kapıları:
+- campaign_unlock_stage >= 0 ise kapı, GameState.campaign_stage yeterli olduğunda runtime'da açılır.
+- Bu değer sahne/Inspector verisidir; bölüm scriptine kapı adı hard-code edilmez.
 
 
-DUVAR BİRLEŞİM STANDARDI
-- 0.40 m duvarlar köşelerde hacim olarak üst üste binmez.
-- Yatay ve dikey duvar birleşiminde biten parça diğer duvarın yüzünde tam biter.
-- T birleşiminde sona eren duvar devam eden duvarın yüzünde biter.
-- Level 1, Level 2 ve Bastion-7 bu butt-joint standardındadır.
-
-KAPI GİZLENME STANDARDI
-- Yana açılan kapının görsel PanelBody kalınlığı 0.30 m'dir; fizik/collision gövdesi 0.38 m kalır.
-- Kapı görselleri 0.40 m duvar yüzeyinin içinde kalır; tam açıkken yan duvarın dışından görünmez.
-
-BASE TRIM GÜNCEL STANDARDI
-- BaseTrim ana eksende duvardan toplam 0.04 m kısa tutulur.
-- Duvar kalınlığından toplam yalnız 0.02 m daha kalındır; her yüzde yaklaşık 0.01 m çıkıntı yapar.
-- Varsayılan floor_trim_depth = 0.02 m.
+5) ÇOK KATLI DÖŞEME STANDARDI
+-----------------------------
+- Alt kat tavan merkezi Y = 7.20 m; üst yüzey Y = 7.40 m.
+- Üst kat zemin merkezi Y = 7.60 m; yürünebilir üst yüzey Y = 7.80 m.
+- Üst kat duvarları Y = 7.80 m'den başlar.
+- 7.00 m net yükseklik için üst tavan alt yüzeyi Y = 14.80 m'dir.
+- Ceiling ve floor materyalleri ayrı tutulur.
 
 
-SAHNE OTORİTESİ — GEOMETRİ / KAPI
-- WorldPiece kodu BaseTrim ölçüsü hesaplamaz. Her duvarın floor_trim_size ve floor_trim_position değeri ilgili .tscn sahnesinde açıkça saklanır.
-- floor_trim_enabled ve occlusion_enabled her geometry instance için sahneden belirlenir.
-- BaseTrim standart çıkıntısı duvar kalınlığından toplam 0.02 m fazladır (her yüzde yaklaşık 0.01 m).
-- Kapı açık hedefleri opening_offset_left / opening_offset_right / opening_offset_up olarak door_side_slide.tscn Inspector ayarıdır. Kod hedef mesafe üretmez; yalnız sahnedeki offset'e tween uygular.
-- Runtime kodu sahne tuning değerlerini değiştirmez.
-
-TERMINAL / KAPI SAHNE OTORİTESİ
-- Hub terminal durum metinleri hub_terminal.tscn Inspector export alanlarından düzenlenir; kod metin hard-code etmez.
-- Deployment sırasında terminal sahneden çıkarken ekran refresh çağrısı yapılmaz.
-- DoorSideSlide görsel PanelBody ve collision kalınlığı 0.20 m'dir; 0.40 m duvar içinde açık durumda gizlenir.
-- Kapı görsel yüzleri PanelBody yüzeyinde ±0.15 m konumundadır.
+6) SAHNE OTORİTESİ
+------------------
+- Görsel ve oynanış tuning değerlerinin ana kaynağı sahne/Inspector veya ilgili Resource'dur.
+- Script runtime state'i yönetir; editör tuning değerlerini keyfi şekilde yeniden yazmaz.
+- Enemy health/damage/speed/detection/cooldown/windup çarpanları enemy sahnelerindedir.
+- Ortak saf enemy hesapları VexEnemyRuntimeUtils üzerinden paylaşılır; yeni enemy türlerinde kopya utility fonksiyonu yazılmaz.
+- Pickup, varil, kapı, projectile ve ışık davranış değerleri ilgili sahne/resource üzerinde tutulur.
 
 
-KAPI / DUVAR AÇIKLIK STANDARDI
-- Referans kapı: scenes/props/door_side_slide.tscn.
-- Net kapı açıklığı: 4.44 m; yan duvar parçaları kapı gövdesinin dış kenarında tam biter.
-- Kapı panel gövdesi/collision: 0.20 x 4.48 x 2.20 m.
-- Kapı modülünün iki yanında 0.24 m bindirme çerçevesi ve üstünde 0.24 m lento bulunur; bu parçalar duvar/kapı sınırını örter ve açıklığın arkasını göstermez.
-- Kapı üst dolgusu: 4.44 x 2.52 m; alt kot 4.48 m, tavan 7.00 m.
-- DoorThreshold kapı sahnesinin içindedir: 0.72 x 0.035 x 4.44 m, koyu güçlendirilmiş standart zemin materyali.
-- Level 1/2 kapıları E ile açılır ve otomatik kapanır; Bastion-7 kapıları automatic_open=true + auto_close=true ile yaklaşınca açılır ve uzaklaşınca kapanır.
-- Tüm kapı hareket/auto-close değerleri sahne Inspector ayarlarıdır; kod sabit ölçü üretmez.
+7) LEVEL MİMARİSİ
+-----------------
+Ortak level sınıfı:
+  res://scripts/levels/base_level.gd (VexBaseLevel)
+
+VexBaseLevel şunları tek yerde yönetir:
+- brightness uygulama
+- GameState.begin_level
+- açılış projectile temizliği
+- level/ambient audio loop
+- key ve gunshot signal bağlantıları
+- tam ekran briefing
+- get_level_display_name
+- get_campaign_completion_stage
+- get_automap_config
+
+level_01.gd / level_02.gd / level_03.gd yalnız bölüme özel progression/alarm mantığını taşır.
+Yeni VEX-04+ level scriptleri VexBaseLevel'den türetilir; briefing veya automap kodu kopyalanmaz.
+
+Level ayarları root Inspector'dan gelir:
+- map_revision
+- level_display_name
+- campaign_completion_stage
+- first_objective
+- briefing_story / briefing_objective
+- total_secrets
+- briefing timing
+- automap grid/bounds/cells/start/exit/merge/room-number
 
 
-ÇOK KATLI DÖŞEME STANDARDI
-- Alt kat tavan merkezi Y=7.20 m, tavan üst yüzeyi Y=7.40 m'dir.
-- Üst kat ayrı zemin döşemesi merkezi Y=7.60 m, alt yüzeyi Y=7.40 m ve yürünebilir üst yüzeyi Y=7.80 m'dir.
-- Üst kat duvarları Y=7.80 m'den başlar; 7.00 m net yükseklik için üst tavan alt yüzeyi Y=14.80 m'dir.
-- Alt kat tavan materyali üst katta zemin olarak kullanılmaz; iki yüz için ayrı ceiling_standard ve floor_standard döşemeleri zorunludur.
+8) AUTOMAP STANDARDI
+--------------------
+- Level automap konfigürasyonu VexBaseLevel üzerinden Dictionary olarak sağlanır.
+- AutomapView yalnız çizim, keşif, pan/zoom ve kapı gösterimini yönetir.
+- Her yeni level için ayrı automap kodu yazılmaz.
+- Görsel/zoom ayarları hud.tscn / ilgili UI Inspector değerlerinde kalır.
 
 
-BASTION-7 OTOMATİK KAPI / EŞİK STANDARDI
-- automatic_open=true olan kapılar manuel [E] etkileşim yazısı göstermez ve E ile tetiklenmez.
-- DoorThreshold kapalı kapının 0.20 m gövdesinin altında gizlenecek şekilde 0.18 m derinliktedir.
-- Threshold görseli: res://assets/world/door_threshold_strip.png.
-- Operator Pad altında ayrı mavi yükselti yoktur; OperatorPadVisual doğrudan zemin üstünde Y=0.012 bulunur.
+9) CAMPAIGN SAVE — CHECKPOINT YOK
+--------------------------------
+- Mid-level checkpoint YOKTUR.
+- CHECKPOINTS_ENABLED = false kalır.
+- Campaign persistence AÇIKTIR (CAMPAIGN_SAVE_ENABLED = true).
+- Oyuncu ölünce bölüm başlangıcına döner.
+- Continue, son güvenli campaign sınırından devam eder; öldüğü koordinattan devam ettirmez.
+
+Kalıcı save noktaları:
+- Bastion-7'ye varış
+- görev deploy edilirken görev GİRİŞİ
+- level tamamlanırken bir sonraki güvenli sahne
+- Bastion'da loadout değişimi
+- Bastion'da weapon upgrade kurulumu
+
+Campaign save şunları saklayabilir:
+- campaign_stage
+- difficulty
+- güvenli resume scene path
+- kalıcı silah sahipliği/loadout
+- magazine/reserve/progression state
+- weapon upgrade seviyeleri
+- kalıcı night-vision sahipliği gibi campaign state
+
+Campaign save şunları SAKLAMAZ:
+- oyuncu world position / rotation
+- level içi key kartları
+- öldürülen düşman listesi
+- toplanan level pickup listesi
+- bulunan level secret state'i
+- kapıların level içi açık/kapalı durumu
+- mid-level can/mühimmat değişimini checkpoint haline getiren world snapshot
+
+Save version: 5.
+Legacy weapon ID migration:
+- pistol  -> p01
+- shotgun -> sg04
+- ak47    -> vx47
+- mp90    -> mp90
+
+
+10) SİLAH KİMLİĞİ VE DATA-DRIVEN MİMARİ
+----------------------------------------
+Canonical oynanabilir ID'ler:
+- p01
+- sg04
+- vx47
+- mp90
+
+Eski pistol/shotgun/ak47 ID'leri yalnız save migration uyumluluğu için kodda bulunabilir.
+Yeni gameplay/resource/sahne içeriğinde kullanılmaz.
+
+WeaponDefinition kaynakları:
+- resources/weapons/p01.tres
+- resources/weapons/sg04.tres
+- resources/weapons/vx47.tres
+- resources/weapons/mp90.tres
+
+WeaponDefinition temel gameplay değerlerine ek olarak presentation/capability verisi taşır:
+- hud_slot_label_key
+- hud_ammo_label_key
+- hud_view_scene
+- supports_ads_pose
+- supports_lowered_pose
+- supports_flashlight
+- supports_alt_fire
+- uses_heat
+- uses_charge
+- penetration_power
+
+Yeni silah eklerken HUD'a weapon_id match bloğu yazmak yerine WeaponDefinition doldurulur.
+Özel davranış gerçekten modele özgüyse küçük capability/component ile uygulanır.
+
+
+11) HUD / WEAPON PRESENTATION
+-----------------------------
+- HUD silah ID'sine göre ayrı sprite kurulum fonksiyonları üretmez.
+- Her oynanabilir silah kendi hud_view_scene presentation sahnesiyle instantiate edilir.
+- P-01 presentation : scenes/ui/weapons/p01_view.tscn
+- SG-04 presentation: scenes/ui/weapons/sg04_view.tscn
+- VX-47 presentation: scenes/ui/weapons/vx47_view.tscn
+- MP90 presentation : scenes/ui/weapons/mp90_view.tscn
+- ADS/lowered pose davranışı WeaponDefinition capability alanları ve presentation offsetleri üzerinden yönetilir.
+- Silah sesleri şu refactor kapsamının DIŞINDADIR; VX-47/MP90 için özgün sesler daha sonra hazırlanacaktır.
+
+
+12) 5. SİLAH YUVASI
+-------------------
+- InputMap weapon_1 ... weapon_5 içerir.
+- WeaponController switch_to_loadout_slot(5) destekler.
+- weapons_per_loadout_group export aralığı 1..5'tir.
+- HUD_SLOT_05 localization anahtarı hazırdır.
+- 5. yuva hedef sınıfı: laser.
+- Laser silah resource'u henüz oynanabilir olmadığı için boş slot normaldir.
+
+
+13) BASTION-7 HUB PROGRESSION
+-----------------------------
+- Bastion yalnız görev menüsü değildir; campaign_stage'e göre fiziksel olarak değişir.
+- VEX-02 / stage 2 sonrası Weapon Workshop ve Engineering Bay açılır.
+- Dr. Selin Erdem stage 2 sonrası Bastion'da görünür/etkileşilebilir personel presence olarak aktif olur.
+- Stage 3 sonrası Selin diyaloğu Kül Madeni sonucuna göre değişir.
+- Gelecek NPC/oda açılımları aynı campaign-stage yaklaşımını kullanır; Bastion scriptine tek tek hard-code edilmiş sahne üretimi eklenmez.
+- Bastion güvenli bölgedir: allow_weapon_fire = false.
+
+
+14) YERELLEŞTİRME
+-----------------
+- Desteklenen diller SettingsManager.supported_locales üzerinden yönetilir.
+- Kaynak tablo: translations/vex.csv; mevcut diller tr/en.
+- Yeniden kullanılan UI/system/weapon isimleri semantic key kullanır (örn. WEAPON_P01_NAME, HUD_SLOT_05).
+- Uzun, tek sahneye özgü briefing/lore metni Inspector Türkçe kaynak metni olabilir; runtime tr() ile çözülür ve CSV'de karşılığı bulunur.
+- Yeni oyuncu metni doğrudan hard-code UI label'a yazılmaz.
+- Format placeholder (%s vb.) TR/EN satırlarında aynı sayıda ve sırada tutulur.
+
+
+15) AYARLAR / PC UX
+-------------------
+SettingsManager kalıcı olarak yönetir:
+- language
+- resolution / fullscreen / vsync
+- graphics quality / render scale
+- master/music/sfx
+- brightness
+- mouse sensitivity
+- FOV
+- screen shake
+- head bob
+- difficulty
+- controller look sensitivity
+- rebindable keyboard mappings
+
+FOV aralığı: 60–110; varsayılan 78.
+Key bindings user://vex_settings.cfg içindeki [keybindings] bölümünde saklanır.
+Klavye rebind yalnız keyboard eventini değiştirir; gamepad bindinglerini silmez.
+Temel gamepad desteği sol stick hareket, sağ stick bakış, trigger aim/fire ve standart action button eşlemelerini içerir.
+
+
+16) ASSET TEMİZLİĞİ
+-------------------
+- Referansı kalmamış eski pistol frame'leri, eski HUD panelleri, eski desktop/laptop ekran görüntüleri ve trim assetleri canonical projede tutulmaz.
+- Korunması gereken lisans dosyaları silinmez.
+- Laptop/PC ekranları VEX evrenine ait operator display texture kullanır.
+- Eski içerik saklanacaksa Godot proje ağacının dışında arşivlenir.
+
+
+17) TEST / VALIDATION
+---------------------
+- tests/static_audit.py her büyük refactor sonrası 0 hata / 0 uyarı hedefler.
+- tests/integrity_test.gd canonical resource/path/InputMap sözleşmesini kapsar.
+- Static test, canlı combat feel/FPS/physics/door tween sonucunun yerine geçmez.
+- Release öncesi Godot runtime testinde özellikle şunlar kontrol edilir:
+  * Continue güvenli campaign sınırından dönüyor mu?
+  * Ölüm gerçekten level başına dönüyor mu?
+  * Level 1/2/3 bütün kapılar duvar ceplerinde Bastion gibi gizleniyor mu?
+  * Stage 2 Bastion Workshop/Engineering + Selin presence doğru açılıyor mu?
+  * 1–5 weapon slot input ve rebind/gamepad çakışmasız mı?
+  * Nightmare encounter baskısı gerçek playtestte dengeli mi?

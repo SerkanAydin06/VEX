@@ -3,7 +3,7 @@ extends Control
 
 @onready var menu_panel: PanelContainer = %MenuPanel
 @onready var resume_button: Button = %ResumeButton
-@onready var checkpoint_button: Button = %CheckpointButton
+@onready var restart_level_button: Button = %RestartLevelButton
 @onready var settings_button: Button = %SettingsButton
 @onready var main_menu_button: Button = %MainMenuButton
 @onready var settings_panel: VexSettingsPanel = %SettingsPanel
@@ -12,8 +12,7 @@ extends Control
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	resume_button.pressed.connect(close_menu)
-	checkpoint_button.text = "BÖLÜMÜ BAŞTAN BAŞLAT"
-	checkpoint_button.pressed.connect(GameState.restart_level)
+	restart_level_button.pressed.connect(GameState.restart_level)
 	settings_button.pressed.connect(_open_settings)
 	main_menu_button.pressed.connect(GameState.return_to_main_menu)
 	settings_panel.close_requested.connect(_on_settings_closed)

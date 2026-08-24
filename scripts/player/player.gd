@@ -35,6 +35,7 @@ extends CharacterBody3D
 
 @export_category("Kamera ve Fizik")
 @export_range(-5.0, 0.0, 0.01) var floor_stick_velocity := -0.10
+@export_range(0.0, 0.5, 0.01) var max_stair_step_height := 0.30
 @export_range(30.0, 89.0, 1.0) var pitch_limit_degrees := 82.0
 @export_range(0.0, 1.0, 0.01) var recoil_yaw_recovery_multiplier := 0.85
 
@@ -99,7 +100,8 @@ var _recoil_recovery_degrees_per_second := 7.0
 func _ready() -> void:
 	add_to_group("player")
 	_camera_rest_position = camera.position
-	_default_fov = camera.fov
+	_default_fov = SettingsManager.field_of_view
+	camera.fov = _default_fov
 	_setup_crouch_dimensions()
 	_gravity = float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 	health = maximum_health
@@ -121,6 +123,7 @@ func _physics_process(delta: float) -> void:
 	var input_vector := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var local_direction := Vector3(input_vector.x, 0.0, input_vector.y)
 	var world_direction := (transform.basis * local_direction).normalized()
+	_update_controller_look(delta)
 	_update_aiming(delta)
 	# Sample jump in the physics loop so UI/event handling cannot swallow Space.
 	if Input.is_action_just_pressed("jump"):
@@ -146,6 +149,9 @@ func _physics_process(delta: float) -> void:
 	var rate := acceleration if world_direction != Vector3.ZERO else deceleration
 	velocity.x = move_toward(velocity.x, target_velocity.x, rate * delta)
 	velocity.z = move_toward(velocity.z, target_velocity.z, rate * delta)
+	var stepped_up := false
+	if is_on_floor() and not _jump_requested and not is_crouching:
+		stepped_up = _try_step_up(Vector3(velocity.x, 0.0, velocity.z) * delta)
 	if _jump_requested:
 		# Consume the jump request before floor/gravity handling so the
 		# floor-stick velocity cannot overwrite the jump impulse.
@@ -156,9 +162,29 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.y = floor_stick_velocity
 	move_and_slide()
+	if stepped_up and not is_on_floor():
+		apply_floor_snap()
 	_update_crouch_view(delta)
 	_update_recoil(delta)
 	_update_view_bob(delta, input_vector.length(), target_speed)
+
+
+func _try_step_up(horizontal_motion: Vector3) -> bool:
+	if max_stair_step_height <= 0.0 or horizontal_motion.length_squared() <= 0.000001:
+		return false
+	# Only intervene when the normal horizontal move is blocked by a low obstacle.
+	if not test_move(global_transform, horizontal_motion):
+		return false
+	var step_up := Vector3.UP * max_stair_step_height
+	# Never step into a ceiling or another obstacle above the player.
+	if test_move(global_transform, step_up):
+		return false
+	var raised_transform := global_transform.translated(step_up)
+	# At step height the forward path must be clear. High walls therefore stay walls.
+	if test_move(raised_transform, horizontal_motion):
+		return false
+	global_position += step_up
+	return true
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -230,41 +256,41 @@ func collect_pickup(pickup_type: StringName, amount: int) -> bool:
 				return false
 			var collected_health := mini(amount, maximum_health - health)
 			health = mini(maximum_health, health + amount)
-			GameState.notify_pickup("SAĞLIK +%d" % collected_health, &"health")
+			GameState.notify_pickup(tr("PICKUP_HEALTH_FORMAT") % collected_health, &"health")
 		&"armor":
 			if armor >= maximum_armor:
 				return false
 			var collected_armor := mini(amount, maximum_armor - armor)
 			armor = mini(maximum_armor, armor + amount)
-			GameState.notify_pickup("ZIRH +%d" % collected_armor, &"armor")
+			GameState.notify_pickup(tr("PICKUP_ARMOR_FORMAT") % collected_armor, &"armor")
 		&"bullets", &"shells", &"rifle_ammo", &"mp90_ammo":
 			var collected_ammo := int(weapon_controller.call("add_ammo", pickup_type, amount))
 			if collected_ammo <= 0:
 				return false
-			var ammo_name := "9×19 MERMİ"
+			var ammo_name := tr("AMMO_9X19")
 			if pickup_type == &"shells":
-				ammo_name = "12 GA FİŞEK"
+				ammo_name = tr("AMMO_12GA")
 			elif pickup_type == &"rifle_ammo":
-				ammo_name = "7.62×39 MERMİ"
+				ammo_name = tr("AMMO_762")
 			elif pickup_type == &"mp90_ammo":
-				ammo_name = "5.7×28 MERMİ"
-			GameState.notify_pickup("%s +%d" % [ammo_name, collected_ammo], &"ammo")
-		&"shotgun":
-			weapon_controller.call("unlock_weapon", &"shotgun", amount)
-			GameState.notify_pickup("KIRICI POMPALI AKTİF", &"weapon")
-		&"ak47":
-			weapon_controller.call("unlock_weapon", &"ak47", amount)
-			GameState.notify_pickup("AK-47 AKTİF", &"weapon")
+				ammo_name = tr("AMMO_57")
+			GameState.notify_pickup(tr("PICKUP_AMMO_FORMAT") % [ammo_name, collected_ammo], &"ammo")
+		&"sg04":
+			weapon_controller.call("unlock_weapon", &"sg04", amount)
+			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
+		&"vx47":
+			weapon_controller.call("unlock_weapon", &"vx47", amount)
+			GameState.notify_pickup(tr("PICKUP_RIFLE_ACTIVE"), &"weapon")
 		&"mp90":
 			weapon_controller.call("unlock_weapon", &"mp90", amount)
-			GameState.notify_pickup("MP90 AKTİF", &"weapon")
+			GameState.notify_pickup(tr("PICKUP_MP90_ACTIVE"), &"weapon")
 		&"night_vision":
 			if _has_night_vision:
 				return false
 			_has_night_vision = true
 			_set_night_vision_enabled(false, false)
 			GameState.notify_pickup(
-				"NIGHT VISION ALINDI — N İLE AÇ/KAPAT",
+				tr("PICKUP_NIGHT_VISION"),
 				&"equipment"
 			)
 		&"key_blue":
@@ -272,20 +298,20 @@ func collect_pickup(pickup_type: StringName, amount: int) -> bool:
 				return false
 			keys.append(&"blue")
 			GameState.publish_keys(keys)
-			GameState.notify_pickup("MAVİ ERİŞİM ANAHTARI", &"key")
+			GameState.notify_pickup(tr("KEY_BLUE"), &"key")
 		&"key_red":
 			if has_key(&"red"):
 				return false
 			keys.append(&"red")
 			GameState.publish_keys(keys)
-			GameState.notify_pickup("KIRMIZI ERİŞİM ANAHTARI", &"key")
+			GameState.notify_pickup(tr("KEY_RED"), &"key")
 			# Anahtar toplama artık görev metnini değiştirmez; ilerleme kapı/oyun akışı üzerinden gösterilir.
 		&"key_yellow":
 			if has_key(&"yellow"):
 				return false
 			keys.append(&"yellow")
 			GameState.publish_keys(keys)
-			GameState.notify_pickup("SARI ERİŞİM ANAHTARI", &"key")
+			GameState.notify_pickup(tr("KEY_YELLOW"), &"key")
 		_:
 			return false
 	broadcast_state()
@@ -485,21 +511,39 @@ func _set_night_vision_enabled(enabled: bool, show_message := true) -> void:
 
 	if show_message:
 		GameState.notify(
-			"NIGHT VISION AKTİF"
+			tr("NIGHT_VISION_ACTIVE")
 			if enabled
-			else "NIGHT VISION PASİF"
+			else tr("NIGHT_VISION_INACTIVE")
 		)
+
+
+func _update_controller_look(delta: float) -> void:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+	var pads := Input.get_connected_joypads()
+	if pads.is_empty():
+		return
+	var device: int = pads[0]
+	var look := Vector2(Input.get_joy_axis(device, JOY_AXIS_RIGHT_X), Input.get_joy_axis(device, JOY_AXIS_RIGHT_Y))
+	if look.length() < 0.16:
+		return
+	var sensitivity := SettingsManager.controller_look_sensitivity * delta
+	rotate_y(-look.x * sensitivity)
+	_pitch = clampf(_pitch - look.y * sensitivity, deg_to_rad(-pitch_limit_degrees), deg_to_rad(pitch_limit_degrees))
+	_apply_view_rotation()
 
 
 func _update_view_bob(delta: float, movement_amount: float, movement_speed: float) -> void:
 	_footstep_remaining = maxf(0.0, _footstep_remaining - delta)
 	if is_on_floor() and movement_amount > bob_activation_threshold:
 		_bob_time += delta * movement_speed * bob_speed_multiplier
-		var bob_offset := Vector3(
-			cos(_bob_time * bob_horizontal_frequency_multiplier) * bob_horizontal_amplitude,
-			sin(_bob_time) * bob_vertical_amplitude,
-			0.0
-		)
+		var bob_offset := Vector3.ZERO
+		if SettingsManager.head_bob:
+			bob_offset = Vector3(
+				cos(_bob_time * bob_horizontal_frequency_multiplier) * bob_horizontal_amplitude,
+				sin(_bob_time) * bob_vertical_amplitude,
+				0.0
+			)
 		camera.position = camera.position.lerp(
 			_camera_rest_position + bob_offset,
 			delta * bob_lerp_speed
@@ -622,6 +666,7 @@ func _update_crouch_view(delta: float) -> void:
 
 func _update_aiming(delta: float) -> void:
 	is_aiming = Input.is_action_pressed("aim")
+	_default_fov = SettingsManager.field_of_view
 	var target_fov := ads_fov if is_aiming else _default_fov
 	camera.fov = move_toward(camera.fov, target_fov, ads_transition_speed * delta)
 

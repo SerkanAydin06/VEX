@@ -1,5 +1,10 @@
 extends Control
 
+@export_category("Rating Thresholds")
+@export_range(0.0, 1.0, 0.01) var rating_s_threshold := 0.999
+@export_range(0.0, 1.0, 0.01) var rating_a_threshold := 0.75
+@export_range(0.0, 1.0, 0.01) var rating_b_threshold := 0.50
+
 @onready var time_value: Label = %TimeValue
 @onready var kills_value: Label = %KillsValue
 @onready var secrets_value: Label = %SecretsValue
@@ -23,21 +28,21 @@ func _ready() -> void:
 	time_value.text = _format_time(elapsed_msec)
 	kills_value.text = "%d / %d" % [kills, total_enemies]
 	secrets_value.text = "%d / %d" % [secrets, total_secrets]
-	difficulty_value.text = str(summary.get("difficulty", "NORMAL"))
-	subtitle_label.text = str(summary.get("level_label", "VEX"))
+	difficulty_value.text = tr(str(summary.get("difficulty", "DIFFICULTY_NORMAL")))
+	subtitle_label.text = tr(str(summary.get("level_label", "VEX")))
 	var completion := float(kills) / float(total_enemies)
 	if total_secrets > 0:
 		completion = (completion + float(secrets) / float(total_secrets)) * 0.5
 	rating_value.text = _get_rating(completion)
 	if GameState.has_pending_next_level():
 		replay_button.text = (
-			"BASTION-7'YE DÖN"
+			tr("COMPLETE_RETURN_BASTION")
 			if GameState.pending_next_is_hub()
-			else "SONRAKİ BÖLÜM"
+			else tr("COMPLETE_NEXT_LEVEL")
 		)
 		replay_button.pressed.connect(GameState.continue_to_next_level)
 	else:
-		replay_button.text = "BÖLÜMÜ TEKRAR OYNA"
+		replay_button.text = tr("COMPLETE_REPLAY_LEVEL")
 		replay_button.pressed.connect(GameState.restart_level)
 	main_menu_button.pressed.connect(GameState.return_to_main_menu)
 	quit_button.pressed.connect(get_tree().quit)
@@ -52,10 +57,10 @@ func _format_time(milliseconds: int) -> String:
 
 
 func _get_rating(completion: float) -> String:
-	if completion >= 0.999:
-		return "S // TAM TEMİZLİK"
-	if completion >= 0.75:
-		return "A // ÜSTÜN BAŞARI"
-	if completion >= 0.5:
-		return "B // GÖREV TAMAMLANDI"
-	return "C // HAYATTA KALDI"
+	if completion >= rating_s_threshold:
+		return tr("RATING_S")
+	if completion >= rating_a_threshold:
+		return tr("RATING_A")
+	if completion >= rating_b_threshold:
+		return tr("RATING_B")
+	return tr("RATING_C")

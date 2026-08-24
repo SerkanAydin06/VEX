@@ -2,7 +2,6 @@ class_name VexHUD
 extends CanvasLayer
 
 const DOOM3_CROSSHAIR: Texture2D = preload("res://assets/ui/crosshair_doom3_circle.png")
-const MP90_VIEW_SCENE: PackedScene = preload("res://scenes/ui/weapons/mp90_view.tscn")
 
 @export_category("Nişangah")
 @export var crosshair_default_color := Color(0.93, 0.96, 1.0, 0.78)
@@ -12,6 +11,18 @@ const MP90_VIEW_SCENE: PackedScene = preload("res://scenes/ui/weapons/mp90_view.
 
 @export_category("Performans")
 @export_range(0.02, 0.25, 0.01) var world_ui_sample_interval := 0.05
+
+@export_category("HUD Eşikleri ve Zamanlama")
+@export_range(1, 99, 1) var critical_health_threshold := 25
+@export_range(1, 99, 1) var warning_health_threshold := 50
+@export_range(0.1, 0.9, 0.05) var low_health_overlay_ratio := 0.50
+@export_range(0.05, 0.8, 0.05) var critical_overlay_ratio := 0.30
+@export_range(0.1, 10.0, 0.1) var notification_hold_time := 2.5
+@export_range(0.05, 2.0, 0.05) var notification_fade_time := 0.35
+@export_range(0.05, 1.0, 0.01) var pickup_slide_time := 0.18
+@export_range(0.1, 10.0, 0.05) var pickup_hold_time := 1.85
+@export_range(0.05, 2.0, 0.05) var pickup_fade_time := 0.30
+@export_range(0.05, 2.0, 0.05) var damage_feedback_time := 0.60
 
 @onready var health_value: Label = %HealthValue
 @onready var armor_value: Label = %ArmorValue
@@ -49,10 +60,6 @@ const MP90_VIEW_SCENE: PackedScene = preload("res://scenes/ui/weapons/mp90_view.
 @onready var damage_flash: ColorRect = %DamageFlash
 @onready var damage_amount: Label = %DamageAmount
 @onready var weapon_layer: Control = %WeaponLayer
-@onready var pistol_sprite: AnimatedSprite2D = %PistolSprite
-@onready var shotgun_sprite: AnimatedSprite2D = %ShotgunSprite
-@onready var ak47_sprite: AnimatedSprite2D = %AK47Sprite
-var mp90_sprite: AnimatedSprite2D = null
 @onready var pistol_audio: AudioStreamPlayer = %PistolAudio
 @onready var shotgun_audio: AudioStreamPlayer = %ShotgunAudio
 @onready var pistol_reload_audio: AudioStreamPlayer = %PistolReloadAudio
@@ -69,7 +76,7 @@ var mp90_sprite: AnimatedSprite2D = null
 @onready var restart_button: Button = %RestartButton
 @onready var death_main_menu_button: Button = %DeathMainMenuButton
 
-var _current_weapon_id: StringName = &"pistol"
+var _current_weapon_id: StringName = &"p01"
 var _notification_tween: Tween = null
 var _pickup_left_tween: Tween = null
 var _pickup_right_tween: Tween = null
@@ -84,9 +91,8 @@ var _health_ratio := 1.0
 var _danger_pulse_time := 0.0
 var _crosshair_hit_timer := 0.0
 var _crosshair_rest_position := Vector2.ZERO
-var _ak47_ready := false
-var _mp90_ready := false
 var _world_ui_sample_remaining := 0.0
+var _weapon_presenter: VexHudWeaponPresenter = null
 
 
 func _ready() -> void:
@@ -111,10 +117,10 @@ func _ready() -> void:
 	GameState.headshot_confirmed.connect(_on_headshot_confirmed)
 	GameState.damage_received.connect(_on_damage_received)
 	GameState.player_died.connect(_on_player_died)
-	pistol_sprite.animation_finished.connect(_on_weapon_animation_finished.bind(pistol_sprite))
-	shotgun_sprite.animation_finished.connect(_on_weapon_animation_finished.bind(shotgun_sprite))
-	_configure_weapon_frame_alignment(pistol_sprite)
-	_configure_weapon_frame_alignment(shotgun_sprite)
+	SettingsManager.language_changed.connect(_on_language_changed)
+	_weapon_presenter = VexHudWeaponPresenter.new()
+	add_child(_weapon_presenter)
+	_weapon_presenter.setup(weapon_layer)
 	restart_button.pressed.connect(_restart_from_beginning)
 	death_main_menu_button.pressed.connect(GameState.return_to_main_menu)
 	automap_view.discovery_changed.connect(_on_automap_discovery_changed)
@@ -128,6 +134,8 @@ func _process(delta: float) -> void:
 		_world_ui_sample_remaining = world_ui_sample_interval
 		_update_world_ui_sample()
 	_update_low_health_overlay(delta)
+	if _weapon_presenter != null:
+		_weapon_presenter.update(delta, get_tree().paused or _is_dead or map_overlay.visible)
 	if _crosshair_hit_timer > 0.0:
 		_crosshair_hit_timer = maxf(_crosshair_hit_timer - delta, 0.0)
 		if _crosshair_hit_timer <= 0.0:
@@ -223,26 +231,17 @@ func set_weapon_recoil_offset(recoil_degrees: Vector2) -> void:
 
 func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 	_current_weapon_id = weapon_id
-	_ensure_weapon_sprite_ready(weapon_id)
-	var sprite := _get_weapon_sprite(weapon_id)
-	_set_weapon_sprite_visibility(weapon_id)
-	if sprite != null:
-		if sprite.sprite_frames != null and sprite.sprite_frames.has_animation(action):
-			if weapon_id in [&"ak47", &"mp90"] and action == &"fire":
-				# Her mermide üç karelik ateş animasyonunu baştan oynat.
-				sprite.stop()
-				sprite.play(&"fire")
-			else:
-				sprite.play(action)
-		else:
-			sprite.play(&"idle")
+	if _weapon_presenter != null:
+		_weapon_presenter.play_action(weapon_id, action)
 	if action == &"fire" and SettingsManager.screen_shake:
 		_kick_weapon_layer()
+	# Weapon audio stays on the current placeholder routing until dedicated VX-47/MP90
+	# recordings are added. Visual routing is fully data-driven now.
 	if action == &"fire":
-		var fire_audio := shotgun_audio if weapon_id == &"shotgun" else pistol_audio
+		var fire_audio := shotgun_audio if weapon_id == &"sg04" else pistol_audio
 		if fire_audio.stream != null:
 			match weapon_id:
-				&"ak47":
+				&"vx47":
 					fire_audio.pitch_scale = 0.82
 				&"mp90":
 					fire_audio.pitch_scale = 1.18
@@ -250,10 +249,10 @@ func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 					fire_audio.pitch_scale = 1.0
 			fire_audio.play()
 	elif action == &"reload":
-		var reload_player := shotgun_reload_audio if weapon_id == &"shotgun" else pistol_reload_audio
+		var reload_player := shotgun_reload_audio if weapon_id == &"sg04" else pistol_reload_audio
 		if reload_player.stream != null:
 			match weapon_id:
-				&"ak47":
+				&"vx47":
 					reload_player.pitch_scale = 0.88
 				&"mp90":
 					reload_player.pitch_scale = 1.12
@@ -267,292 +266,17 @@ func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 			empty_gun_audio.play()
 
 
-func _get_weapon_sprite(weapon_id: StringName) -> AnimatedSprite2D:
-	match weapon_id:
-		&"pistol":
-			return pistol_sprite
-		&"shotgun":
-			return shotgun_sprite
-		&"ak47":
-			return ak47_sprite
-		&"mp90":
-			return mp90_sprite
-	return pistol_sprite
+func _get_weapon_controller() -> VexWeaponController:
+	if GameState.player == null or not is_instance_valid(GameState.player):
+		return null
+	return GameState.player.get_node_or_null("WeaponController") as VexWeaponController
 
 
-func _set_weapon_sprite_visibility(weapon_id: StringName) -> void:
-	pistol_sprite.visible = weapon_id == &"pistol"
-	shotgun_sprite.visible = weapon_id == &"shotgun"
-	ak47_sprite.visible = weapon_id == &"ak47"
-	if mp90_sprite != null:
-		mp90_sprite.visible = weapon_id == &"mp90"
-
-
-func _ensure_weapon_sprite_ready(weapon_id: StringName) -> void:
-	match weapon_id:
-		&"ak47":
-			if _ak47_ready:
-				return
-			_setup_ak47_sprite_frames()
-			ak47_sprite.animation_finished.connect(
-				_on_weapon_animation_finished.bind(ak47_sprite)
-			)
-			_configure_weapon_frame_alignment(ak47_sprite)
-		&"mp90":
-			if _mp90_ready:
-				return
-			_ensure_mp90_sprite()
-			_setup_mp90_sprite_frames()
-			if mp90_sprite != null:
-				mp90_sprite.animation_finished.connect(
-					_on_weapon_animation_finished.bind(mp90_sprite)
-				)
-				_configure_weapon_frame_alignment(mp90_sprite)
-
-
-func _configure_weapon_frame_alignment(sprite: AnimatedSprite2D) -> void:
-	if sprite == null or sprite.sprite_frames == null:
-		return
-	var idle_texture := sprite.sprite_frames.get_frame_texture(&"idle", 0)
-	if idle_texture == null:
-		return
-	var reference_anchor := _get_texture_visual_anchor(idle_texture)
-	var offsets: Dictionary = {}
-	for animation_name: StringName in sprite.sprite_frames.get_animation_names():
-		var frame_count := sprite.sprite_frames.get_frame_count(animation_name)
-		for frame_index: int in range(frame_count):
-			var texture := sprite.sprite_frames.get_frame_texture(animation_name, frame_index)
-			if texture == null:
-				continue
-			offsets[_weapon_frame_key(animation_name, frame_index)] = (
-				reference_anchor - _get_texture_visual_anchor(texture)
-			)
-	sprite.set_meta("vex_frame_offsets", offsets)
-	sprite.frame_changed.connect(_apply_weapon_frame_alignment.bind(sprite))
-	_apply_weapon_frame_alignment(sprite)
-
-
-func _get_texture_visual_anchor(texture: Texture2D) -> Vector2:
-	var texture_size := texture.get_size()
-	var image := texture.get_image()
-	if image == null or image.is_empty():
-		return Vector2.ZERO
-	var used_rect := image.get_used_rect()
-	if used_rect.size == Vector2i.ZERO:
-		return Vector2.ZERO
-	return Vector2(
-		float(used_rect.position.x) + float(used_rect.size.x) * 0.5 - texture_size.x * 0.5,
-		float(used_rect.position.y + used_rect.size.y) - texture_size.y * 0.5
-	)
-
-
-func _apply_weapon_frame_alignment(sprite: AnimatedSprite2D) -> void:
-	if sprite == null or not sprite.has_meta("vex_frame_offsets"):
-		return
-	var offsets := sprite.get_meta("vex_frame_offsets") as Dictionary
-	sprite.offset = offsets.get(_weapon_frame_key(sprite.animation, sprite.frame), Vector2.ZERO)
-
-
-func _weapon_frame_key(animation_name: StringName, frame_index: int) -> String:
-	return "%s:%d" % [String(animation_name), frame_index]
-
-
-func _load_first_weapon_texture(candidates: Array[String]) -> Texture2D:
-	for candidate: String in candidates:
-		if ResourceLoader.exists(candidate):
-			return load(candidate) as Texture2D
-	return null
-
-
-func _setup_ak47_sprite_frames() -> void:
-	var idle := _load_first_weapon_texture([
-		"res://assets/weapons/ak47_idle.png",
-	])
-	var fire_1 := _load_first_weapon_texture([
-		"res://assets/weapons/ak47_fire_1.png",
-	])
-	var fire_2 := _load_first_weapon_texture([
-		"res://assets/weapons/ak47_fire_2.png",
-	])
-	var fire_3 := _load_first_weapon_texture([
-		"res://assets/weapons/ak47_fire_3.png",
-	])
-	var reload_1 := _load_first_weapon_texture([
-		"res://assets/weapons/ak47_reload_1.png",
-	])
-	var reload_2 := _load_first_weapon_texture([
-		"res://assets/weapons/ak47_reload_2.png",
-	])
-	var reload_3 := _load_first_weapon_texture([
-		"res://assets/weapons/ak47_reload_3.png",
-	])
-	var reload_4 := _load_first_weapon_texture([
-		"res://assets/weapons/ak47_reload_4.png",
-	])
-
-	if idle == null:
-		push_warning("AK-47 HUD görseli bulunamadı: assets/weapons/ak47_idle.png")
-		idle = pistol_sprite.sprite_frames.get_frame_texture(&"idle", 0)
-	if fire_1 == null:
-		push_warning("AK-47 fire_1 görseli bulunamadı.")
-		fire_1 = idle
-	if fire_2 == null:
-		push_warning("AK-47 fire_2 görseli bulunamadı.")
-		fire_2 = fire_1
-	if fire_3 == null:
-		push_warning("AK-47 fire_3 görseli bulunamadı.")
-		fire_3 = fire_2
-	if reload_1 == null:
-		reload_1 = idle
-	if reload_2 == null:
-		reload_2 = reload_1
-	if reload_3 == null:
-		reload_3 = reload_2
-	if reload_4 == null:
-		reload_4 = reload_3
-
-	var frames := SpriteFrames.new()
-	if frames.has_animation(&"default"):
-		frames.remove_animation(&"default")
-
-	frames.add_animation(&"idle")
-	frames.set_animation_loop(&"idle", true)
-	frames.set_animation_speed(&"idle", 1.0)
-	frames.add_frame(&"idle", idle)
-
-	frames.add_animation(&"fire")
-	frames.set_animation_loop(&"fire", false)
-	# 3 kare / 0.10 sn: tam otomatik AK-47 atış aralığıyla senkron.
-	frames.set_animation_speed(&"fire", 30.0)
-	frames.add_frame(&"fire", fire_1)
-	frames.add_frame(&"fire", fire_2)
-	frames.add_frame(&"fire", fire_3)
-
-	frames.add_animation(&"reload")
-	frames.set_animation_loop(&"reload", false)
-	# 4 kare / 1.2 saniye: AK-47'nin gerçek reload süresiyle senkron.
-	frames.set_animation_speed(&"reload", 4.0 / 1.2)
-	frames.add_frame(&"reload", reload_1)
-	frames.add_frame(&"reload", reload_2)
-	frames.add_frame(&"reload", reload_3)
-	frames.add_frame(&"reload", reload_4)
-
-	frames.add_animation(&"equip")
-	frames.set_animation_loop(&"equip", false)
-	frames.set_animation_speed(&"equip", 1.0)
-	frames.add_frame(&"equip", idle)
-
-	ak47_sprite.sprite_frames = frames
-	ak47_sprite.animation = &"idle"
-	ak47_sprite.play(&"idle")
-
-	var texture_size := idle.get_size()
-	if texture_size.x > 0.0 and texture_size.y > 0.0:
-		var fit_scale := minf(1.0, minf(1120.0 / texture_size.x, 680.0 / texture_size.y))
-		ak47_sprite.scale = Vector2.ONE * fit_scale
-	_ak47_ready = true
-
-
-func _ensure_mp90_sprite() -> void:
-	var existing := weapon_layer.get_node_or_null("MP90Sprite") as AnimatedSprite2D
-	if existing != null:
-		mp90_sprite = existing
-		return
-	mp90_sprite = MP90_VIEW_SCENE.instantiate() as AnimatedSprite2D
-	if mp90_sprite == null:
-		push_error("MP90 HUD sahnesi oluşturulamadı.")
-		return
-	weapon_layer.add_child(mp90_sprite)
-
-
-func _setup_mp90_sprite_frames() -> void:
-	if mp90_sprite == null:
-		return
-
-	var idle := _load_first_weapon_texture([
-		"res://assets/weapons/mp90_idle.png",
-	])
-	var fire_1 := _load_first_weapon_texture([
-		"res://assets/weapons/mp90_fire_1.png",
-	])
-	var fire_2 := _load_first_weapon_texture([
-		"res://assets/weapons/mp90_fire_2.png",
-	])
-	var fire_3 := _load_first_weapon_texture([
-		"res://assets/weapons/mp90_fire_3.png",
-	])
-	var reload_1 := _load_first_weapon_texture([
-		"res://assets/weapons/mp90_reload_1.png",
-	])
-	var reload_2 := _load_first_weapon_texture([
-		"res://assets/weapons/mp90_reload_2.png",
-	])
-	var reload_3 := _load_first_weapon_texture([
-		"res://assets/weapons/mp90_reload_3.png",
-	])
-	var reload_4 := _load_first_weapon_texture([
-		"res://assets/weapons/mp90_reload_4.png",
-	])
-
-	if idle == null:
-		push_warning("MP90 HUD görseli bulunamadı: assets/weapons/mp90_idle.png")
-		idle = pistol_sprite.sprite_frames.get_frame_texture(&"idle", 0)
-	if fire_1 == null:
-		fire_1 = idle
-	if fire_2 == null:
-		fire_2 = fire_1
-	if fire_3 == null:
-		fire_3 = fire_2
-	if reload_1 == null:
-		reload_1 = idle
-	if reload_2 == null:
-		reload_2 = reload_1
-	if reload_3 == null:
-		reload_3 = reload_2
-	if reload_4 == null:
-		reload_4 = reload_3
-
-	var frames := SpriteFrames.new()
-	if frames.has_animation(&"default"):
-		frames.remove_animation(&"default")
-
-	frames.add_animation(&"idle")
-	frames.set_animation_loop(&"idle", true)
-	frames.set_animation_speed(&"idle", 1.0)
-	frames.add_frame(&"idle", idle)
-
-	frames.add_animation(&"fire")
-	frames.set_animation_loop(&"fire", false)
-	# 3 kare / 0.07 sn: MP90'un 857 RPM civarı atış hızıyla senkron.
-	frames.set_animation_speed(&"fire", 3.0 / 0.07)
-	frames.add_frame(&"fire", fire_1)
-	frames.add_frame(&"fire", fire_2)
-	frames.add_frame(&"fire", fire_3)
-
-	frames.add_animation(&"reload")
-	frames.set_animation_loop(&"reload", false)
-	# 4 kare / 1.35 sn: gerçek reload süresiyle aynı anda biter.
-	frames.set_animation_speed(&"reload", 4.0 / 1.35)
-	frames.add_frame(&"reload", reload_1)
-	frames.add_frame(&"reload", reload_2)
-	frames.add_frame(&"reload", reload_3)
-	frames.add_frame(&"reload", reload_4)
-
-	frames.add_animation(&"equip")
-	frames.set_animation_loop(&"equip", false)
-	frames.set_animation_speed(&"equip", 1.0)
-	frames.add_frame(&"equip", idle)
-
-	mp90_sprite.sprite_frames = frames
-	mp90_sprite.animation = &"idle"
-	mp90_sprite.play(&"idle")
-
-	var texture_size := idle.get_size()
-	if texture_size.x > 0.0 and texture_size.y > 0.0:
-		# MP90 ekranda gereğinden büyük görünmesin.
-		var fit_scale := minf(0.82, minf(920.0 / texture_size.x, 560.0 / texture_size.y))
-		mp90_sprite.scale = Vector2.ONE * fit_scale
-	_mp90_ready = true
+func _get_weapon_definition(weapon_id: StringName) -> WeaponDefinition:
+	var controller := _get_weapon_controller()
+	if controller == null:
+		return null
+	return controller.get_weapon_definition(weapon_id)
 
 
 func _on_player_stats_changed(health: int, maximum_health: int, armor: int) -> void:
@@ -562,19 +286,19 @@ func _on_player_stats_changed(health: int, maximum_health: int, armor: int) -> v
 	health_meter.value = health
 	armor_meter.value = armor
 	_health_ratio = clampf(float(health) / maxf(float(maximum_health), 1.0), 0.0, 1.0)
-	if health <= 25:
-		health_status.text = "KRİTİK"
+	if health <= critical_health_threshold:
+		health_status.text = tr("HUD_STATUS_CRITICAL")
 		health_status.modulate = Color(1.0, 0.24, 0.14)
 		health_value.modulate = Color(1.0, 0.28, 0.18)
-	elif health < 50:
-		health_status.text = "SİSTEM UYARI"
+	elif health < warning_health_threshold:
+		health_status.text = tr("HUD_STATUS_WARNING")
 		health_status.modulate = Color(1.0, 0.62, 0.24)
 		health_value.modulate = Color(1.0, 0.72, 0.46)
 	else:
-		health_status.text = "SİSTEM NORMAL"
+		health_status.text = tr("HUD_STATUS_NORMAL")
 		health_status.modulate = Color(0.45, 0.9, 1.0)
 		health_value.modulate = Color.WHITE
-	armor_status.text = "DARBE EMİCİ AKTİF" if armor > 0 else "KORUMA PASİF"
+	armor_status.text = tr("HUD_ARMOR_ACTIVE") if armor > 0 else tr("HUD_ARMOR_INACTIVE")
 	armor_status.modulate = Color(0.34, 0.84, 1.0) if armor > 0 else Color(0.42, 0.52, 0.56)
 
 
@@ -583,16 +307,16 @@ func _on_player_stamina_changed(current: float, maximum: float, sprinting: bool)
 	stamina_meter.max_value = maximum
 	stamina_meter.value = current
 	if sprinting:
-		stamina_status.text = "KOŞUYOR"
+		stamina_status.text = tr("HUD_STAMINA_SPRINTING")
 		stamina_status.modulate = Color(1.0, 0.68, 0.24)
 	elif current <= 0.0:
-		stamina_status.text = "TÜKENDİ"
+		stamina_status.text = tr("HUD_STAMINA_EMPTY")
 		stamina_status.modulate = Color(1.0, 0.34, 0.22)
 	else:
-		stamina_status.text = "HAZIR"
+		stamina_status.text = tr("HUD_STAMINA_READY")
 		stamina_status.modulate = Color(0.42, 0.9, 0.68)
-	low_health_overlay.visible = _health_ratio < 0.5
-	critical_health_overlay.visible = _health_ratio < 0.3
+	low_health_overlay.visible = _health_ratio < low_health_overlay_ratio
+	critical_health_overlay.visible = _health_ratio < critical_overlay_ratio
 	if not low_health_overlay.visible:
 		low_health_overlay.modulate.a = 0.0
 		critical_health_overlay.modulate.a = 0.0
@@ -603,28 +327,16 @@ func _on_player_stamina_changed(current: float, maximum: float, sprinting: bool)
 
 func _on_weapon_changed(weapon_id: StringName, display_name: String) -> void:
 	_current_weapon_id = weapon_id
-	_ensure_weapon_sprite_ready(weapon_id)
-	weapon_name.text = display_name
-	match weapon_id:
-		&"pistol":
-			weapon_slot.text = "SLOT 01"
-			ammo_type.text = "9×19 MM // YARI OTOMATİK"
-		&"shotgun":
-			weapon_slot.text = "SLOT 02"
-			ammo_type.text = "12 GA // POMPALI"
-		&"ak47":
-			weapon_slot.text = "SLOT 03"
-			ammo_type.text = "7.62×39 MM // TAM OTOMATİK"
-		&"mp90":
-			weapon_slot.text = "SLOT 04"
-			ammo_type.text = "5.7×28 MM // TAM OTOMATİK"
-		_:
-			weapon_slot.text = "SLOT --"
-			ammo_type.text = "MÜHİMMAT"
-	_set_weapon_sprite_visibility(weapon_id)
-	var sprite := _get_weapon_sprite(weapon_id)
-	if sprite != null and sprite.animation != &"fire" and sprite.animation != &"reload":
-		sprite.play(&"idle")
+	var definition := _get_weapon_definition(weapon_id)
+	weapon_name.text = tr(display_name)
+	if definition != null:
+		weapon_slot.text = tr(definition.hud_slot_label_key)
+		ammo_type.text = tr(definition.hud_ammo_label_key)
+	else:
+		weapon_slot.text = tr("HUD_SLOT_UNKNOWN")
+		ammo_type.text = tr("HUD_AMMUNITION")
+	if _weapon_presenter != null:
+		_weapon_presenter.set_current_weapon(weapon_id)
 
 
 func _on_ammo_changed(current: int, reserve: int) -> void:
@@ -641,46 +353,46 @@ func _on_keys_changed(keys: Array[StringName]) -> void:
 
 
 func _on_objective_changed(text: String) -> void:
-	objective_label.text = "GÖREV:  " + text
+	objective_label.text = tr("HUD_OBJECTIVE_FORMAT") % tr(text)
 
 
 func _on_level_stats_changed(kills: int, total_enemies: int, secrets: int, total_secrets: int) -> void:
-	kills_value.text = "%02d / %02d     GİZLİ: %d / %d" % [kills, total_enemies, secrets, total_secrets]
+	kills_value.text = tr("HUD_STATS_FORMAT") % [kills, total_enemies, secrets, total_secrets]
 
 
 func _on_notification_requested(text: String) -> void:
 	if _notification_tween != null and _notification_tween.is_valid():
 		_notification_tween.kill()
-	notification_label.text = text
+	notification_label.text = tr(text)
 	notification_panel.visible = true
 	notification_panel.modulate.a = 1.0
 	_notification_tween = create_tween()
-	_notification_tween.tween_interval(2.5)
-	_notification_tween.tween_property(notification_panel, "modulate:a", 0.0, 0.35)
+	_notification_tween.tween_interval(notification_hold_time)
+	_notification_tween.tween_property(notification_panel, "modulate:a", 0.0, notification_fade_time)
 	_notification_tween.tween_callback(func() -> void: notification_panel.visible = false)
 
 
 func _on_pickup_notification_requested(text: String, category: StringName) -> void:
-	var category_text := "// ENVANTER"
+	var category_text := tr("HUD_CATEGORY_INVENTORY")
 	var accent_color := Color(0.35, 0.88, 1.0)
 	var use_left := false
 	match category:
 		&"health":
-			category_text = "// YAŞAMSAL DESTEK"
+			category_text = tr("HUD_CATEGORY_HEALTH")
 			accent_color = Color(1.0, 0.31, 0.18)
 			use_left = true
 		&"armor":
-			category_text = "// ZIRH SİSTEMİ"
+			category_text = tr("HUD_CATEGORY_ARMOR")
 			accent_color = Color(0.26, 0.82, 1.0)
 			use_left = true
 		&"ammo":
-			category_text = "// MÜHİMMAT"
+			category_text = tr("HUD_CATEGORY_AMMO")
 			accent_color = Color(1.0, 0.61, 0.24)
 		&"weapon":
-			category_text = "// SİLAH AĞI"
+			category_text = tr("HUD_CATEGORY_WEAPON")
 			accent_color = Color(1.0, 0.35, 0.2)
 		&"key":
-			category_text = "// ERİŞİM YETKİSİ"
+			category_text = tr("HUD_CATEGORY_ACCESS")
 			accent_color = Color(0.22, 0.82, 1.0)
 
 	if use_left:
@@ -688,7 +400,7 @@ func _on_pickup_notification_requested(text: String, category: StringName) -> vo
 			_pickup_left_tween.kill()
 		pickup_left_category.text = category_text
 		pickup_left_category.modulate = accent_color
-		pickup_left_value.text = text
+		pickup_left_value.text = tr(text)
 		pickup_left_accent.color = accent_color
 		pickup_feed_left.position = _pickup_left_rest_position + Vector2(-28.0, 0.0)
 		pickup_feed_left.modulate.a = 0.0
@@ -702,7 +414,7 @@ func _on_pickup_notification_requested(text: String, category: StringName) -> vo
 			_pickup_right_tween.kill()
 		pickup_right_category.text = category_text
 		pickup_right_category.modulate = accent_color
-		pickup_right_value.text = text
+		pickup_right_value.text = tr(text)
 		pickup_right_accent.color = accent_color
 		pickup_feed_right.position = _pickup_right_rest_position + Vector2(28.0, 0.0)
 		pickup_feed_right.modulate.a = 0.0
@@ -715,10 +427,10 @@ func _on_pickup_notification_requested(text: String, category: StringName) -> vo
 
 func _animate_pickup_feed(feed: Control, rest_position: Vector2) -> Tween:
 	var tween := create_tween()
-	tween.tween_property(feed, "position", rest_position, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(feed, "position", rest_position, pickup_slide_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(feed, "modulate:a", 1.0, 0.12)
-	tween.tween_interval(1.85)
-	tween.tween_property(feed, "modulate:a", 0.0, 0.3)
+	tween.tween_interval(pickup_hold_time)
+	tween.tween_property(feed, "modulate:a", 0.0, pickup_fade_time)
 	tween.tween_callback(func() -> void: feed.visible = false)
 	return tween
 
@@ -746,8 +458,8 @@ func _on_damage_received(amount: int) -> void:
 	damage_amount.position = _damage_amount_rest_position
 	_damage_tween = create_tween().set_parallel(true)
 	_damage_tween.tween_property(damage_flash, "color:a", 0.0, 0.42)
-	_damage_tween.tween_property(damage_amount, "position:y", _damage_amount_rest_position.y - 70.0, 0.6)
-	_damage_tween.tween_property(damage_amount, "modulate:a", 0.0, 0.6)
+	_damage_tween.tween_property(damage_amount, "position:y", _damage_amount_rest_position.y - 70.0, damage_feedback_time)
+	_damage_tween.tween_property(damage_amount, "modulate:a", 0.0, damage_feedback_time)
 	_damage_tween.chain().tween_callback(_hide_damage_effects)
 
 
@@ -761,7 +473,7 @@ func _update_low_health_overlay(delta: float) -> void:
 		return
 
 	_danger_pulse_time += delta
-	var danger := clampf(inverse_lerp(0.5, 0.0, _health_ratio), 0.0, 1.0)
+	var danger := clampf(inverse_lerp(low_health_overlay_ratio, 0.0, _health_ratio), 0.0, 1.0)
 	var pulse_speed := lerpf(2.2, 6.4, danger)
 	var pulse := (sin(_danger_pulse_time * pulse_speed) + 1.0) * 0.5
 	var base_alpha := lerpf(0.05, 0.38, danger)
@@ -769,7 +481,7 @@ func _update_low_health_overlay(delta: float) -> void:
 	low_health_overlay.modulate.a = clampf(base_alpha + pulse_alpha, 0.0, 0.65)
 
 	if critical_health_overlay.visible:
-		var critical := clampf(inverse_lerp(0.3, 0.0, _health_ratio), 0.0, 1.0)
+		var critical := clampf(inverse_lerp(critical_overlay_ratio, 0.0, _health_ratio), 0.0, 1.0)
 		var critical_pulse := (sin(_danger_pulse_time * (pulse_speed + 0.85)) + 1.0) * 0.5
 		var critical_alpha := lerpf(0.03, 0.42, critical)
 		critical_alpha += lerpf(0.02, 0.2, critical) * critical_pulse
@@ -818,11 +530,6 @@ func _restart_from_beginning() -> void:
 	GameState.restart_level()
 
 
-func _on_weapon_animation_finished(sprite: AnimatedSprite2D) -> void:
-	if sprite.animation != &"idle":
-		sprite.play(&"idle")
-
-
 func _kick_weapon_layer() -> void:
 	if _weapon_tween != null and _weapon_tween.is_valid():
 		_weapon_tween.kill()
@@ -836,20 +543,20 @@ func _configure_automap() -> void:
 	var current_scene := get_tree().current_scene
 	if current_scene == null or not current_scene.has_method("get_automap_config"):
 		automap_view.configure({}, current_scene)
-		map_title.text = "TESİS HARİTASI"
-		map_status.text = "HARİTA VERİSİ YOK"
+		map_title.text = tr("HUD_MAP_TITLE")
+		map_status.text = tr("HUD_MAP_NO_DATA")
 		return
 
 	var config_value: Variant = current_scene.call("get_automap_config")
 	if not (config_value is Dictionary):
 		automap_view.configure({}, current_scene)
-		map_title.text = "TESİS HARİTASI"
-		map_status.text = "HARİTA VERİSİ GEÇERSİZ"
+		map_title.text = tr("HUD_MAP_TITLE")
+		map_status.text = tr("HUD_MAP_INVALID_DATA")
 		return
 
 	var config := config_value as Dictionary
 	automap_view.configure(config, current_scene)
-	map_title.text = automap_view.get_map_title()
+	map_title.text = tr(automap_view.get_map_title())
 	var counts := automap_view.get_discovery_counts()
 	_on_automap_discovery_changed(counts.x, counts.y)
 	if GameState.player != null and is_instance_valid(GameState.player):
@@ -858,15 +565,22 @@ func _configure_automap() -> void:
 
 func _on_automap_discovery_changed(visited_count: int, total_count: int) -> void:
 	if total_count <= 0:
-		map_status.text = "HARİTA VERİSİ YOK"
+		map_status.text = tr("HUD_MAP_NO_DATA")
 		return
 	var discovery_percent := clampi(
 		int(round(float(visited_count) / float(total_count) * 100.0)),
 		0,
 		100
 	)
-	map_status.text = "KEŞİF %02d/%02d  //  %03d%%" % [
+	map_status.text = tr("HUD_MAP_DISCOVERY_FORMAT") % [
 		visited_count,
 		total_count,
 		discovery_percent,
 	]
+
+
+func _on_language_changed(_locale: String) -> void:
+	_on_objective_changed(GameState.objective)
+	_configure_automap()
+	if GameState.player != null and is_instance_valid(GameState.player):
+		GameState.player.call_deferred("broadcast_state")

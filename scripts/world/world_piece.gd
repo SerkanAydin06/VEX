@@ -8,11 +8,6 @@ extends StaticBody3D
 @export var cast_shadow := true
 @export var occlusion_enabled := true
 
-@export_category("BaseTrim — Tamamen Sahne Ayarı")
-@export var floor_trim_enabled := false
-@export var floor_trim_size := Vector3(3.96, 0.28, 0.32)
-@export var floor_trim_position := Vector3(0.0, -1.33, 0.0)
-
 var _last_configuration: Array = []
 
 
@@ -35,9 +30,6 @@ func _configuration_snapshot() -> Array:
         surface_material,
         cast_shadow,
         occlusion_enabled,
-        floor_trim_enabled,
-        floor_trim_size,
-        floor_trim_position,
     ]
 
 
@@ -64,29 +56,8 @@ func _apply_configuration() -> void:
         if box_shape != null:
             box_shape.size = piece_size
 
-    _apply_floor_trim()
     _apply_occluder()
     _last_configuration = _configuration_snapshot()
-
-
-func _apply_floor_trim() -> void:
-    var target_trim := get_node_or_null("BaseTrim") as MeshInstance3D
-    if target_trim == null:
-        return
-
-    target_trim.visible = floor_trim_enabled
-    if not floor_trim_enabled:
-        return
-
-    var trim_mesh := target_trim.mesh as BoxMesh
-    if trim_mesh != null:
-        trim_mesh.size = floor_trim_size
-    target_trim.position = floor_trim_position
-    target_trim.cast_shadow = (
-        GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-        if cast_shadow
-        else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-    )
 
 
 func _apply_occluder() -> void:

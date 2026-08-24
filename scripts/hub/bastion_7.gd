@@ -2,14 +2,14 @@ class_name VexBastion7
 extends Node3D
 
 @export_category("01 - Üs")
-@export var hub_display_name := "BASTION-7 // VEX ANA ÜSSÜ"
-@export var first_objective := "OPERASYON TERMİNALİNİ KULLAN"
+@export var hub_display_name := "HUB_DISPLAY_NAME"
+@export var first_objective := "HUB_OBJECTIVE_USE_TERMINAL"
 @export_range(0.0, 5.0, 0.05) var intro_message_delay := 0.45
-@export var arrival_message := "BASTION-7 // GÜVENLİ BÖLGE"
+@export var arrival_message := "HUB_ARRIVAL_SAFE_ZONE"
 @export var allow_weapon_fire := false
 
 @export_category("02 - Otomatik Harita")
-@export var automap_title := "BASTION-7 // ÜS HARİTASI"
+@export var automap_title := "HUB_MAP_TITLE"
 @export_range(1, 32, 1) var automap_columns := 5
 @export_range(1, 32, 1) var automap_rows := 7
 @export var automap_world_min := Vector2(-30.0, -35.0)
@@ -38,6 +38,15 @@ func _ready() -> void:
 	ambient_loop.volume_db = ambience_volume_db
 	_start_audio_loop(ambient_loop)
 	_intro_message()
+	call_deferred("_save_hub_safe_point")
+
+
+func _save_hub_safe_point() -> void:
+	# Player restore is deferred by GameState; one extra frame guarantees the
+	# campaign save captures the restored persistent loadout/progression.
+	await get_tree().process_frame
+	if is_inside_tree():
+		GameState.save_current_safe_progress("bastion_arrival")
 
 
 func _apply_safe_zone_rules() -> void:
@@ -54,18 +63,18 @@ func _intro_message() -> void:
 	await get_tree().create_timer(intro_message_delay).timeout
 	if not is_inside_tree():
 		return
-	GameState.notify(arrival_message)
+	GameState.notify(tr(arrival_message))
 	await get_tree().create_timer(0.9).timeout
 	if not is_inside_tree():
 		return
 	if GameState.campaign_stage >= 3:
-		GameState.notify("VEX-03 TAMAMLANDI // KORVATH DÜĞÜMÜ KAPATILDI")
+		GameState.notify(tr("HUB_VEX03_COMPLETE"))
 		GameState.set_objective(first_objective)
 	elif GameState.campaign_stage >= 2:
-		GameState.notify("OPERASYON TAMAMLANDI // VEX-02 KAYDI BASTION-7'YE AKTARILDI")
+		GameState.notify(tr("HUB_VEX02_COMPLETE"))
 		GameState.set_objective(first_objective)
 	elif GameState.campaign_stage >= 1:
-		GameState.notify("VEX-01 TAMAMLANDI // VEX-02 OPERASYONU HAZIR")
+		GameState.notify(tr("HUB_VEX01_COMPLETE"))
 		GameState.set_objective(first_objective)
 	else:
 		GameState.set_objective(first_objective)
@@ -86,7 +95,7 @@ func _restart_audio_loop(audio_player: AudioStreamPlayer) -> void:
 
 
 func get_level_display_name() -> String:
-	return hub_display_name
+	return tr(hub_display_name)
 
 
 func is_weapon_fire_allowed() -> bool:
@@ -128,15 +137,15 @@ func get_next_mission_path() -> String:
 func get_next_mission_label() -> String:
 	var definition := _get_active_mission_definition()
 	if definition != null and not definition.display_name.is_empty():
-		return definition.display_name
+		return tr(definition.display_name)
 	var index := GameState.campaign_stage
 	if index < 0 or index >= mission_labels.size():
-		return "YENİ OPERASYON BEKLENİYOR"
-	return mission_labels[index]
+		return tr("MISSION_WAITING")
+	return tr(mission_labels[index])
 
 
 func get_next_mission_briefing() -> String:
 	var definition := _get_active_mission_definition()
 	if definition != null:
-		return definition.briefing
-	return "OPERASYON BRİFİNGİ YÜKLENEMEDİ."
+		return tr(definition.briefing)
+	return tr("MISSION_BRIEFING_UNAVAILABLE")

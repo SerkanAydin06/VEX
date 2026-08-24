@@ -35,33 +35,35 @@ func _ready() -> void:
 	add_to_group("interactable")
 	if not GameState.hub_mission_changed.is_connected(_on_hub_mission_changed):
 		GameState.hub_mission_changed.connect(_on_hub_mission_changed)
+	if not SettingsManager.language_changed.is_connected(_on_language_changed):
+		SettingsManager.language_changed.connect(_on_language_changed)
 	call_deferred("_refresh_screen")
 
 
 func get_interaction_text(_player: Node) -> String:
 	if offline:
-		return "[E] %s — %s" % [display_name, offline_message]
+		return tr("INTERACT_LOCKED") % [tr(display_name), tr(offline_message)]
 	match terminal_mode:
 		TerminalMode.MISSION_CONTROL:
 			var mission_path := _get_next_mission_path()
 			var mission_label := _get_next_mission_label()
 			if mission_path.is_empty():
-				return "[E] %s — %s" % [display_name, no_mission_text]
-			return "[E] %s // %s" % [display_name, mission_label]
+				return tr("TERMINAL_INTERACT_STATUS") % [tr(display_name), tr(no_mission_text)]
+			return tr("TERMINAL_INTERACT_STATUS") % [tr(display_name), mission_label]
 		TerminalMode.DEPLOYMENT:
 			if not GameState.has_hub_selected_mission():
 				var mission_path := _get_next_mission_path()
 				if mission_path.is_empty():
-					return "[E] %s — %s" % [display_name, no_mission_text]
-				return "[E] %s // %s" % [select_operation_text, _get_next_mission_label()]
-			return "[E] %s // %s" % [deploy_text, GameState.get_hub_selected_mission_label()]
+					return tr("TERMINAL_INTERACT_STATUS") % [tr(display_name), tr(no_mission_text)]
+				return tr("TERMINAL_INTERACT_STATUS") % [tr(select_operation_text), _get_next_mission_label()]
+			return tr("TERMINAL_INTERACT_STATUS") % [tr(deploy_text), tr(GameState.get_hub_selected_mission_label())]
 		_:
-			return "[E] %s" % display_name
+			return tr("TERMINAL_INTERACT") % tr(display_name)
 
 
 func interact(_player: Node) -> void:
 	if offline:
-		GameState.notify("%s — %s" % [display_name, offline_message])
+		GameState.notify(tr("DOOR_LOCKED_MESSAGE") % [tr(display_name), tr(offline_message)])
 		return
 	match terminal_mode:
 		TerminalMode.MISSION_CONTROL:
@@ -74,7 +76,7 @@ func interact(_player: Node) -> void:
 			GameState.select_hub_mission(_get_next_mission_path(), _get_next_mission_label())
 			GameState.notify(_get_next_mission_briefing())
 		_:
-			GameState.notify(info_message)
+			GameState.notify(tr(info_message))
 	if is_inside_tree():
 		_refresh_screen()
 
@@ -82,6 +84,10 @@ func interact(_player: Node) -> void:
 func _on_hub_mission_changed(_path: String, _label: String) -> void:
 	if not is_inside_tree():
 		return
+	_refresh_screen()
+
+
+func _on_language_changed(_locale: String) -> void:
 	_refresh_screen()
 
 
@@ -107,14 +113,14 @@ func _get_next_mission_label() -> String:
 	var hub := _get_hub_scene()
 	if hub != null and hub.has_method("get_next_mission_label"):
 		return str(hub.call("get_next_mission_label"))
-	return mission_waiting_text
+	return tr(mission_waiting_text)
 
 
 func _get_next_mission_briefing() -> String:
 	var hub := _get_hub_scene()
 	if hub != null and hub.has_method("get_next_mission_briefing"):
 		return str(hub.call("get_next_mission_briefing"))
-	return "OPERASYON BRİFİNGİ YÜKLENEMEDİ."
+	return tr("MISSION_BRIEFING_UNAVAILABLE")
 
 
 func _refresh_screen() -> void:
@@ -122,29 +128,29 @@ func _refresh_screen() -> void:
 		return
 	if offline:
 		screen_label.modulate = offline_color
-		screen_label.text = "%s\n%s" % [screen_header, offline_message]
+		screen_label.text = "%s\n%s" % [tr(screen_header), tr(offline_message)]
 		return
 	screen_label.modulate = active_color
 	match terminal_mode:
 		TerminalMode.MISSION_CONTROL:
 			screen_label.text = "%s\n%s\n%s" % [
-				screen_header,
-				mission_control_text,
+				tr(screen_header),
+				tr(mission_control_text),
 				_get_next_mission_label(),
 			]
 		TerminalMode.DEPLOYMENT:
 			if GameState.has_hub_selected_mission():
 				screen_label.text = "%s\n%s\n%s" % [
-					screen_header,
-					deployment_ready_text,
-					GameState.get_hub_selected_mission_label(),
+					tr(screen_header),
+					tr(deployment_ready_text),
+					tr(GameState.get_hub_selected_mission_label()),
 				]
 			else:
 				screen_label.text = "%s\n%s\n%s" % [
-					screen_header,
-					operation_text,
+					tr(screen_header),
+					tr(operation_text),
 					_get_next_mission_label(),
 				]
 
 		_:
-			screen_label.text = "%s\n%s" % [screen_header, info_message]
+			screen_label.text = "%s\n%s" % [tr(screen_header), tr(info_message)]

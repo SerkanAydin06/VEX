@@ -1,9 +1,42 @@
-[gd_scene load_steps=2 format=3 uid="uid://ks2g4wpiv1jf"]
+[gd_scene load_steps=9 format=3 uid="uid://ks2g4wpiv1jf"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_mp90_empty"]
+[ext_resource type="Texture2D" path="res://assets/weapons/mp90_idle.png" id="1_idle"]
+[ext_resource type="Texture2D" path="res://assets/weapons/mp90_fire_1.png" id="2_fire1"]
+[ext_resource type="Texture2D" path="res://assets/weapons/mp90_fire_2.png" id="3_fire2"]
+[ext_resource type="Texture2D" path="res://assets/weapons/mp90_fire_3.png" id="4_fire3"]
+[ext_resource type="Texture2D" path="res://assets/weapons/mp90_reload_1.png" id="5_reload1"]
+[ext_resource type="Texture2D" path="res://assets/weapons/mp90_reload_2.png" id="6_reload2"]
+[ext_resource type="Texture2D" path="res://assets/weapons/mp90_reload_3.png" id="7_reload3"]
+[ext_resource type="Texture2D" path="res://assets/weapons/mp90_reload_4.png" id="8_reload4"]
 
-[node name="MP90Sprite" type="AnimatedSprite2D"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_mp90"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": ExtResource("1_idle")}],
+"loop": 0,
+"name": &"equip",
+"speed": 1.0
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("2_fire1")}, {"duration": 1.0, "texture": ExtResource("3_fire2")}, {"duration": 1.0, "texture": ExtResource("4_fire3")}],
+"loop": 0,
+"name": &"fire",
+"speed": 42.857143
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("1_idle")}],
+"loop": 1,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("5_reload1")}, {"duration": 1.0, "texture": ExtResource("6_reload2")}, {"duration": 1.0, "texture": ExtResource("7_reload3")}, {"duration": 1.0, "texture": ExtResource("8_reload4")}],
+"loop": 0,
+"name": &"reload",
+"speed": 2.962963
+}]
+
+[node name="WeaponView" type="AnimatedSprite2D"]
 visible = false
 texture_filter = 2
 position = Vector2(982, 790)
-sprite_frames = SubResource("SpriteFrames_mp90_empty")
+scale = Vector2(0.78, 0.78)
+sprite_frames = SubResource("SpriteFrames_mp90")
+animation = &"idle"
+autoplay = "idle"

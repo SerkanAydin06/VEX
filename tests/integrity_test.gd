@@ -11,16 +11,40 @@ const REQUIRED_RESOURCES := [
 	"res://scenes/props/explosive_barrel.tscn",
 	"res://scripts/props/finish_switch.gd",
 	"res://scenes/player/player.tscn",
-	"res://resources/weapons/pistol.tres",
-	"res://resources/weapons/shotgun.tres",
-	"res://resources/weapons/ak47.tres",
+	"res://resources/weapons/p01.tres",
+	"res://resources/weapons/sg04.tres",
+	"res://resources/weapons/vx47.tres",
 	"res://resources/weapons/mp90.tres",
 	"res://scenes/world/ceiling_light_white_horror.tscn",
 	"res://scenes/world/world_piece.tscn",
 	"res://scenes/world/korvath_rift.tscn",
 	"res://scenes/world/lore_terminal.tscn",
 	"res://assets/world/level03/korvath_rift.png",
+	"res://assets/weapons/p01/p01_idle.png",
+	"res://assets/weapons/p01/p01_side.png",
+	"res://assets/weapons/p01/p01_fire_1.png",
+	"res://assets/weapons/p01/p01_fire_2.png",
+	"res://assets/weapons/p01/p01_fire_3.png",
+	"res://assets/weapons/p01/p01_fire_4.png",
+	"res://assets/weapons/p01/p01_aim_fire_1.png",
+	"res://assets/weapons/p01/p01_aim_fire_2.png",
+	"res://assets/weapons/p01/p01_aim_fire_3.png",
+	"res://assets/weapons/p01/p01_aim_fire_4.png",
+	"res://assets/weapons/p01/p01_reload_1.png",
+	"res://assets/weapons/p01/p01_reload_2.png",
+	"res://assets/weapons/p01/p01_reload_3.png",
+	"res://assets/weapons/p01/p01_reload_4.png",
+	"res://assets/weapons/p01/p01_zoom.png",
+	"res://assets/weapons/p01/p01_lowered.png",
 	"res://scenes/ui/hud.tscn",
+	"res://scripts/ui/hud_weapon_presenter.gd",
+	"res://scenes/ui/weapons/p01_view.tscn",
+	"res://scenes/ui/weapons/sg04_view.tscn",
+	"res://scenes/ui/weapons/vx47_view.tscn",
+	"res://scenes/ui/weapons/mp90_view.tscn",
+	"res://scripts/levels/base_level.gd",
+	"res://scripts/actors/enemy_runtime_utils.gd",
+	"res://scenes/hub/hub_survivor_presence.tscn",
 	"res://scenes/hub/bastion_7.tscn",
 	"res://scenes/hub/hub_terminal.tscn",
 	"res://scenes/hub/hub_weapon_rack.tscn",
@@ -33,6 +57,10 @@ const REQUIRED_RESOURCES := [
 	"res://scenes/actors/veilmaw_projectile.tscn",
 	"res://scenes/levels/level_03.tscn",
 	"res://resources/missions/vex03.tres",
+	"res://scenes/autoload/settings_manager.tscn",
+	"res://scenes/ui/keybind_panel.tscn",
+	"res://scripts/ui/keybind_panel.gd",
+	"res://translations/vex.csv",
 	"res://assets/enemies/redviper/redviper_spritesheet.png",
 	"res://assets/enemies/badredviper/badredviper_spritesheet.png",
 	"res://assets/enemies/ravager/ravager_spritesheet.png",
@@ -61,6 +89,8 @@ func _ready() -> void:
 	_check_input_map()
 	_check_key_progression()
 	_check_player_movement_contract()
+	_check_p01_visuals()
+	_check_localization_contract()
 
 	if failures.is_empty():
 		print("VEX integrity test başarılı: Level 1/2/3, Bastion-7, kaynak bağlantıları ve sahne otoritesi temiz.")
@@ -163,9 +193,63 @@ func _check_bastion_7() -> void:
 	var operations_terminal := hub.get_node_or_null("Systems/DeploymentTerminal")
 	if operations_terminal == null or str(operations_terminal.get("display_name")) != "OPERASYON TERMİNALİ":
 		failures.append("Bastion-7 tek Operasyon Terminali standardı eksik.")
-	var mission_paths: PackedStringArray = hub.get("mission_paths")
-	if mission_paths.size() < 3 or mission_paths[2] != "res://scenes/levels/level_03.tscn":
+	var mission_definitions: Array = hub.get("mission_definitions") as Array
+	if mission_definitions.size() < 3 or str(mission_definitions[2].get("scene_path")) != "res://scenes/levels/level_03.tscn":
 		failures.append("Bastion-7 VEX-03 görev bağlantısı eksik.")
+	for armory_path in [
+		"Props/ArmoryCategoryVisuals/PistolCategoryRack",
+		"Props/ArmoryCategoryVisuals/ShotgunCategoryRack",
+		"Props/ArmoryCategoryVisuals/RifleCategoryRack",
+		"Props/ArmoryCategoryVisuals/SmgCategoryRack",
+		"Props/ArmoryCategoryVisuals/LaserCategoryRack",
+	]:
+		if hub.get_node_or_null(armory_path) == null:
+			failures.append("Bastion-7 profesyonel cephanelik bileşeni eksik: %s" % armory_path)
+	var armory_racks := hub.get_node_or_null("Systems/ArmoryRacks")
+	if armory_racks == null or armory_racks.get_child_count() != 5:
+		failures.append("Bastion-7 cephanelik kategori rafı sayısı 5 değil.")
+	else:
+		var slot_count := 0
+		for category_rack in armory_racks.get_children():
+			if not category_rack.visible or category_rack.get_child_count() != 4:
+				failures.append("Bastion-7 kategori rafı 2x2 dört yuvalı değil: %s" % category_rack.name)
+			for rack_slot in category_rack.get_children():
+				slot_count += 1
+				var weapon_visual := rack_slot.get_node_or_null("WeaponVisual") as Sprite3D
+				if weapon_visual == null or int(weapon_visual.billboard) != 0:
+					failures.append("Bastion-7 raf silahı kameraya dönüyor: %s" % rack_slot.name)
+				if rack_slot.get_node_or_null("EmptySlotVisual") == null or rack_slot.get_node_or_null("EmptySlotLabel") == null:
+					failures.append("Bastion-7 raf boş-yuva izi eksik: %s" % rack_slot.name)
+		if slot_count != 20:
+			failures.append("Bastion-7 toplam silah yuvası sayısı 20 değil.")
+	var pistol_rack := hub.get_node_or_null("Systems/ArmoryRacks/PistolRack") as Node3D
+	var shotgun_rack := hub.get_node_or_null("Systems/ArmoryRacks/ShotgunRack") as Node3D
+	var rifle_rack := hub.get_node_or_null("Systems/ArmoryRacks/RifleRack") as Node3D
+	var smg_rack := hub.get_node_or_null("Systems/ArmoryRacks/SmgRack") as Node3D
+	var laser_rack := hub.get_node_or_null("Systems/ArmoryRacks/LaserRack") as Node3D
+	if pistol_rack == null or pistol_rack.position != Vector3(-16, 1.1, -14.35):
+		failures.append("Bastion-7 tabanca kategori rafı yanlış konumda.")
+	if shotgun_rack == null or shotgun_rack.position != Vector3(-12, 1.1, -14.35):
+		failures.append("Bastion-7 pompalı kategori rafı yanlış konumda.")
+	if rifle_rack == null or rifle_rack.position != Vector3(-8, 1.1, -14.35):
+		failures.append("Bastion-7 tüfek kategori rafı yanlış konumda.")
+	if smg_rack == null or smg_rack.position != Vector3(-15.5, 1.1, -5.65):
+		failures.append("Bastion-7 SMG kategori rafı yanlış konumda.")
+	if laser_rack == null or laser_rack.position != Vector3(-8.5, 1.1, -5.65):
+		failures.append("Bastion-7 lazer kategori rafı yanlış konumda.")
+	var interaction_ray := hub.get_node_or_null("Player/ViewPivot/Camera3D/InteractionRay") as RayCast3D
+	if interaction_ray == null or interaction_ray.target_position != Vector3(0.0, 0.0, -3.4):
+		failures.append("Bastion-7 üst cephanelik yuvaları için etkileşim mesafesi yanlış.")
+	var armory_controller := hub.get_node_or_null("Player/WeaponController") as VexWeaponController
+	if armory_controller == null:
+		failures.append("Bastion-7 cephanelik oyuncu silah kontrolcüsüne ulaşamıyor.")
+	else:
+		var stored_result: Dictionary = armory_controller.toggle_armory_weapon(&"p01")
+		if not bool(stored_result.get("success", false)) or armory_controller.is_weapon_carried(&"p01"):
+			failures.append("Bastion-7 tabancayı rafa bırakma işlemi çalışmıyor.")
+		var equipped_result: Dictionary = armory_controller.toggle_armory_weapon(&"p01")
+		if not bool(equipped_result.get("success", false)) or not armory_controller.is_weapon_carried(&"p01"):
+			failures.append("Bastion-7 tabancayı raftan geri alma işlemi çalışmıyor.")
 	hub.queue_free()
 
 
@@ -204,6 +288,15 @@ func _check_level_03() -> void:
 	var lower_viper := level.get_node_or_null("Gameplay/Enemies/LowerRedViperA") as Node3D
 	if lower_viper == null or not is_equal_approx(lower_viper.position.y, 0.48):
 		failures.append("VEX-03 RedViper zemin hizası yanlış.")
+	var upper_korvath := level.get_node_or_null("Gameplay/Enemies/UpperKorvathA") as Node3D
+	if upper_korvath == null or not is_equal_approx(upper_korvath.position.y, 1.9):
+		failures.append("VEX-03 merdiven Korvath'ı alt kat zemin hizasında değil.")
+	var lower_stair_ramp := level.get_node_or_null("Geometry/Stairs/StairRamp") as Node3D
+	if lower_stair_ramp == null or lower_stair_ramp.transform.basis.z.y <= 0.0:
+		failures.append("VEX-03 alt merdiven yürüyüş rampası görünen basamaklarla aynı yönde yükselmiyor.")
+	var upper_stair_ramp := level.get_node_or_null("Geometry/Stairs/StairRampUpper") as Node3D
+	if upper_stair_ramp == null or upper_stair_ramp.transform.basis.z.y >= 0.0:
+		failures.append("VEX-03 üst merdiven yürüyüş rampası görünen basamaklarla aynı yönde yükselmiyor.")
 	var finish_switch := level.get_node_or_null("Gameplay/Objectives/RiftIsolationSwitch") as VexFinishSwitch
 	if finish_switch == null:
 		failures.append("VEX-03 yarık izolasyon şalteri yüklenemedi.")
@@ -238,11 +331,11 @@ func _check_level_03() -> void:
 	if lower_room_count != 10 or upper_room_count != 8:
 		failures.append("VEX-03 modüler oda standardı yanlış: %d alt / %d üst." % [lower_room_count, upper_room_count])
 	var room_lights := level.get_node_or_null("Gameplay/Lighting/RoomLights")
-	if room_lights == null or room_lights.get_child_count() != 18:
-		failures.append("VEX-03 her oda için 18 beyaz ışık kullanmıyor.")
-	var alarm_lights := level.get_node_or_null("Gameplay/Lighting/AlarmLights")
-	if alarm_lights == null or alarm_lights.get_child_count() != 28:
-		failures.append("VEX-03 her kapının iki yüzünde toplam 28 kırmızı lamba kullanmıyor.")
+	if room_lights == null or room_lights.get_child_count() != 17:
+		failures.append("VEX-03 bilinçli 17 beyaz ışık standardını kullanmıyor.")
+	var door_status_lights := level.get_node_or_null("Gameplay/Lighting/DoorStatusLights")
+	if door_status_lights == null or door_status_lights.get_child_count() != 28:
+		failures.append("VEX-03 her kapının iki yüzünde toplam 28 durum lambası kullanmıyor.")
 	var doors := level.get_node_or_null("Gameplay/Doors")
 	if doors == null or doors.get_child_count() != 14:
 		failures.append("VEX-03 oda-koridor kapı sayısı 14 değil.")
@@ -350,13 +443,14 @@ func _check_scene_authority() -> void:
 					failures.append("WeaponController sahne ayarı Inspector'da eksik: %s" % property_name)
 		player.queue_free()
 
-	for level_path in ["res://scenes/levels/level_01.tscn", "res://scenes/levels/level_02.tscn"]:
+	for level_path in ["res://scenes/levels/level_01.tscn", "res://scenes/levels/level_02.tscn", "res://scenes/levels/level_03.tscn"]:
 		var level_packed := load(level_path) as PackedScene
 		if level_packed != null:
 			var level := level_packed.instantiate()
 			for property_name in [
 				&"map_revision", &"level_display_name", &"campaign_completion_stage", &"first_objective", &"total_secrets",
-				&"intro_message_delay", &"automap_title", &"automap_columns", &"automap_rows",
+				&"briefing_story", &"briefing_objective", &"briefing_character_delay", &"briefing_start_delay",
+				&"automap_title", &"automap_columns", &"automap_rows",
 				&"automap_world_min", &"automap_world_max", &"automap_walkable_cells",
 				&"automap_start_cell", &"automap_exit_cell", &"automap_merge_adjacent_cells",
 				&"automap_show_room_numbers",
@@ -382,6 +476,9 @@ func _check_scene_authority() -> void:
 	var hud_packed := load("res://scenes/ui/hud.tscn") as PackedScene
 	if hud_packed != null:
 		var hud := hud_packed.instantiate()
+		for property_name in [&"critical_health_threshold", &"notification_hold_time", &"pickup_hold_time", &"damage_feedback_time"]:
+			if not _has_property(hud, property_name):
+				failures.append("HUD sahne ayarı Inspector'da eksik: %s" % property_name)
 		var automap := hud.get_node_or_null("Root/MapOverlay/AutomapView")
 		if automap != null:
 			for property_name in [&"map_padding", &"default_zoom", &"redraw_interval", &"player_color", &"exit_color"]:
@@ -394,7 +491,7 @@ func _check_scene_authority() -> void:
 		if packed_scene != null:
 			var instance := packed_scene.instantiate()
 			if scene_path.ends_with("world_piece.tscn"):
-				for property_name in [&"piece_size", &"surface_material", &"cast_shadow", &"occlusion_enabled", &"floor_trim_enabled"]:
+				for property_name in [&"piece_size", &"surface_material", &"cast_shadow", &"occlusion_enabled"]:
 					if not _has_property(instance, property_name):
 						failures.append("WorldPiece sahne ayarı Inspector'da eksik: %s" % property_name)
 			else:
@@ -404,9 +501,9 @@ func _check_scene_authority() -> void:
 			instance.queue_free()
 
 	for weapon_path in [
-		"res://resources/weapons/pistol.tres",
-		"res://resources/weapons/shotgun.tres",
-		"res://resources/weapons/ak47.tres",
+		"res://resources/weapons/p01.tres",
+		"res://resources/weapons/sg04.tres",
+		"res://resources/weapons/vx47.tres",
 		"res://resources/weapons/mp90.tres",
 	]:
 		var weapon = load(weapon_path)
@@ -414,6 +511,21 @@ func _check_scene_authority() -> void:
 			continue
 		if not _has_property(weapon, &"reserve_ammo_capacity"):
 			failures.append("Weapon resource ammo kapasitesi Inspector'da eksik: %s" % weapon_path)
+
+	var settings_packed := load("res://scenes/autoload/settings_manager.tscn") as PackedScene
+	if settings_packed == null:
+		failures.append("Sahne tabanlı SettingsManager yüklenemedi.")
+	else:
+		var settings := settings_packed.instantiate()
+		for property_name in [
+			&"supported_locales", &"language_label_keys", &"supported_resolutions",
+			&"brightness_min", &"brightness_max", &"mouse_sensitivity_min",
+			&"mouse_sensitivity_max", &"difficulty_health_multipliers",
+			&"difficulty_resource_multipliers",
+		]:
+			if not _has_property(settings, property_name):
+				failures.append("SettingsManager sahne ayarı Inspector'da eksik: %s" % property_name)
+		settings.queue_free()
 
 
 func _check_door() -> void:
@@ -433,7 +545,7 @@ func _check_door() -> void:
 
 
 func _check_input_map() -> void:
-	for action_name in ["move_forward", "move_backward", "move_left", "move_right", "jump", "sprint", "crouch", "aim", "fire", "interact", "reload", "pause", "automap", "night_vision"]:
+	for action_name in ["move_forward", "move_backward", "move_left", "move_right", "jump", "sprint", "crouch", "aim", "fire", "interact", "reload", "pause", "automap", "night_vision", "weapon_1", "weapon_2", "weapon_3", "weapon_4", "weapon_5"]:
 		if not InputMap.has_action(action_name):
 			failures.append("InputMap eksik: %s" % action_name)
 
@@ -468,3 +580,65 @@ func _check_player_movement_contract() -> void:
 	]:
 		if required not in script_text:
 			failures.append("Player movement contract eksik: %s" % required)
+
+
+func _check_p01_visuals() -> void:
+	var packed := load("res://scenes/ui/hud.tscn") as PackedScene
+	if packed == null:
+		failures.append("P-01 HUD sahnesi yüklenemedi.")
+		return
+	var hud := packed.instantiate()
+	var pistol_sprite := hud.get_node_or_null("Root/WeaponLayer/PistolSprite") as AnimatedSprite2D
+	if pistol_sprite == null or pistol_sprite.sprite_frames == null:
+		failures.append("P-01 AnimatedSprite2D/SpriteFrames eksik.")
+	else:
+		var frames := pistol_sprite.sprite_frames
+		for animation_name in [&"idle", &"fire", &"aim_fire", &"reload", &"zoom", &"lowered"]:
+			if not frames.has_animation(animation_name):
+				failures.append("P-01 animasyonu eksik: %s" % animation_name)
+		if frames.get_frame_count(&"fire") != 4:
+			failures.append("P-01 ateş animasyonu dört kare değil.")
+		if frames.get_frame_count(&"aim_fire") != 4:
+			failures.append("P-01 zoom ateş animasyonu dört kare değil.")
+		if frames.get_frame_count(&"reload") != 4:
+			failures.append("P-01 reload animasyonu dört kare değil.")
+		if pistol_sprite.position != Vector2(1060.0, 772.0):
+			failures.append("P-01 FPS görünümü ekranın alt-sağ bölgesine hizalı değil.")
+		if pistol_sprite.scale != Vector2(0.6, 0.6):
+			failures.append("P-01 HUD ölçeği 0.6 değil.")
+	for property_name in [
+		&"p01_auto_lower_enabled",
+		&"p01_lower_after_seconds",
+		&"p01_fire_animation_seconds",
+		&"p01_aim_fire_animation_seconds",
+		&"p01_reload_animation_seconds",
+		&"p01_zoom_offset",
+		&"p01_aim_fire_offset",
+		&"p01_lowered_offset",
+	]:
+		if not _has_property(hud, property_name):
+			failures.append("P-01 Inspector görsel ayarı eksik: %s" % property_name)
+	if bool(hud.get("p01_auto_lower_enabled")):
+		failures.append("P-01 otomatik aşağı indirme geçici olarak kapalı değil.")
+	hud.queue_free()
+
+
+func _check_localization_contract() -> void:
+	var project_text := FileAccess.get_file_as_string("res://project.godot")
+	for required in [
+		"[internationalization]",
+		"locale/fallback=\"tr\"",
+		"res://translations/vex.en.translation",
+		"res://translations/vex.tr.translation",
+	]:
+		if required not in project_text:
+			failures.append("Yerelleştirme project ayarı eksik: %s" % required)
+	var csv_text := FileAccess.get_file_as_string("res://translations/vex.csv")
+	if not csv_text.begins_with("keys,tr,en"):
+		failures.append("Çeviri CSV başlığı keys,tr,en değil.")
+	for required_key in [
+		"LANGUAGE_TURKISH", "LANGUAGE_ENGLISH", "SETTINGS_LANGUAGE",
+		"LEVEL_01_NAME", "BRIEFING_CONTINUE", "HUD_DEATH_BODY",
+	]:
+		if required_key not in csv_text:
+			failures.append("Çeviri anahtarı eksik: %s" % required_key)

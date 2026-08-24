@@ -1,9 +1,35 @@
 class_name WeaponDefinition
 extends Resource
 
-@export var weapon_id: StringName = &"pistol"
+@export var weapon_id: StringName = &"p01"
 @export var display_name := "TABANCA"
 @export var ammo_type: StringName = &"bullets"
+
+@export_category("Cephanelik ve Teçhizat")
+@export var loadout_group: StringName = &"sidearm"
+@export_range(1, 8, 1) var loadout_slot := 1
+@export var loadout_group_label := "ARMORY_GROUP_SIDEARM"
+
+@export_category("HUD ve Sunum")
+@export var hud_slot_label_key := "HUD_SLOT_UNKNOWN"
+@export var hud_ammo_label_key := "HUD_AMMUNITION"
+@export var hud_view_scene: PackedScene
+@export var supports_ads_pose := false
+@export var supports_lowered_pose := false
+@export var hud_auto_lower_enabled := false
+@export_range(1.0, 30.0, 0.5) var hud_lower_after_seconds := 6.0
+@export var hud_zoom_offset := Vector2.ZERO
+@export var hud_aim_fire_offset := Vector2.ZERO
+@export var hud_lowered_offset := Vector2.ZERO
+
+@export_category("Gelecek Silah Yetenekleri")
+@export var supports_flashlight := false
+@export var supports_alt_fire := false
+@export var uses_heat := false
+@export var uses_charge := false
+@export_range(0.0, 10.0, 0.05) var penetration_power := 0.0
+
+@export_category("Şarjör ve Atış")
 @export_range(1, 100, 1) var magazine_size := 12
 @export_range(1, 100, 1) var damage_per_pellet := 18
 @export_category("Vuruş")

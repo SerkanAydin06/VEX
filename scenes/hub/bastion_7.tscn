@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://c4gn8k6ogvf0n" path="res://scenes/ui/hud.tscn" id="7_hud"]
 [ext_resource type="PackedScene" uid="uid://bk5dcdh1lk7nr" path="res://scenes/props/door_side_slide.tscn" id="8_door"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="9_white"]
-[ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/Table.tscn" id="10_87vc6"]
 [ext_resource type="PackedScene" uid="uid://ckhtinn61g27l" path="res://scenes/hub/hub_terminal.tscn" id="11_terminal"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_rack"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="13_ambient"]
@@ -22,6 +21,9 @@
 [ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="16_ak47"]
 [ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="17_mp90"]
 [ext_resource type="Texture2D" uid="uid://cxwpf6cn3ejr7" path="res://assets/world/bastion7/operator_pad.png" id="18_operator_pad"]
+[ext_resource type="Texture2D" uid="uid://c6x022128ot1i" path="res://assets/weapons/p01/p01_side.png" id="19_p01_side"]
+[ext_resource type="PackedScene" path="res://scenes/hub/armory_category_rack.tscn" id="21_category_rack"]
+[ext_resource type="PackedScene" path="res://scenes/hub/hub_survivor_presence.tscn" id="22_survivor"]
 
 [sub_resource type="Environment" id="Environment_hub"]
 background_mode = 1
@@ -126,7 +128,7 @@ surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
 
 [node name="Floor_Armory" parent="Geometry" unique_id=2011248365 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.996028, -0.19999988, -9.9977665)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
@@ -258,306 +260,204 @@ surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
 
 [node name="Wall_NorthCorridor_N" parent="Geometry" unique_id=940749401 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -15.076047)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -15)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_FiringRange_W" parent="Geometry" unique_id=1462864554 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 3.5, -10)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 9.96)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="FiringRangeDoor_WallSegA" parent="Geometry" unique_id=1730225107 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, -13.61)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, -13.73)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="FiringRangeDoor_WallSegB" parent="Geometry" unique_id=128411715 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, -6.39)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, -6.27)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="FiringRangeDoor_TopFill" parent="Geometry" unique_id=288787134 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 5.74, -10)
-piece_size = Vector3(0.4, 2.52, 4.44)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 5.86, -10)
+piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_FiringRange_N" parent="Geometry" unique_id=264655206 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.5, -15)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_FiringRange_S" parent="Geometry" unique_id=1382324997 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.5, -5)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ArmoryDoor_WallSegA" parent="Geometry" unique_id=22593978 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -13.61)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -13.73)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ArmoryDoor_WallSegB" parent="Geometry" unique_id=671670996 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -6.39)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -6.27)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ArmoryDoor_TopFill" parent="Geometry" unique_id=1709737089 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.74, -10)
-piece_size = Vector3(0.4, 2.52, 4.44)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.86, -10)
+piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_Armory_N" parent="Geometry" unique_id=174834652 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -15)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ResearchDoor_WallSegA" parent="Geometry" unique_id=1516606416 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -13.61)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -13.73)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ResearchDoor_WallSegB" parent="Geometry" unique_id=2124731912 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -6.39)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -6.27)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="ResearchDoor_TopFill" parent="Geometry" unique_id=1408529331 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.74, -10)
-piece_size = Vector3(0.4, 2.52, 4.44)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.86, -10)
+piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_ResearchLab_E" parent="Geometry" unique_id=1545696775 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, -10)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 9.96)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_ResearchLab_N" parent="Geometry" unique_id=993055923 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, -15)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_CommandWest_W" parent="Geometry" unique_id=1999488889 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, 0)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 9.96)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_CommandEast_E" parent="Geometry" unique_id=2097777330 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, 0)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 9.96)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_WeaponWorkshop_W" parent="Geometry" unique_id=1097818181 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.5, 10)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 9.96)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WorkshopDoor_WallSegA" parent="Geometry" unique_id=766550770 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 6.39)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 6.27)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WorkshopDoor_WallSegB" parent="Geometry" unique_id=780442183 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 13.61)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 13.73)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="WorkshopDoor_TopFill" parent="Geometry" unique_id=215504807 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.74, 10)
-piece_size = Vector3(0.4, 2.52, 4.44)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.86, 10)
+piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_WeaponWorkshop_S" parent="Geometry" unique_id=1807636765 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 15)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EngineeringDoor_WallSegA" parent="Geometry" unique_id=1176425826 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 6.39)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 6.27)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EngineeringDoor_WallSegB" parent="Geometry" unique_id=648797463 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 13.61)
-piece_size = Vector3(0.4, 7, 2.78)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 13.73)
+piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 2.74)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="EngineeringDoor_TopFill" parent="Geometry" unique_id=1703791896 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.74, 10)
-piece_size = Vector3(0.4, 2.52, 4.44)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.86, 10)
+piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_EngineeringBay_E" parent="Geometry" unique_id=1782066628 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, 10)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 9.96)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_EngineeringBay_S" parent="Geometry" unique_id=906663109 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 15)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_Armory_S" parent="Geometry" unique_id=46752277 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -5)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_ResearchLab_S" parent="Geometry" unique_id=746399133 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, -5)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_WeaponWorkshop_N" parent="Geometry" unique_id=681058139 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 5)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_EngineeringBay_N" parent="Geometry" unique_id=1178465383 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 5)
 piece_size = Vector3(11.6, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(11.56, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_SouthCorridor_W" parent="Geometry" unique_id=2123238387 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 20)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 9.96)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_SouthCorridor_E" parent="Geometry" unique_id=943361207 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, 20)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 9.96)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="OperatorDoor_WallSegA" parent="Geometry" unique_id=1776935949 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.01, 3.5, 25)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.13, 3.5, 25)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(3.54, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="OperatorDoor_WallSegB" parent="Geometry" unique_id=1708448553 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.01, 3.5, 25)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.13, 3.5, 25)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(3.54, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="OperatorDoor_TopFill" parent="Geometry" unique_id=1568105921 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.74, 25)
-piece_size = Vector3(4.44, 2.52, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.86, 25)
+piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="Wall_OperatorPlatform_W" parent="Geometry" unique_id=1362921638 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1, 3.5, 28.1)
 piece_size = Vector3(0.4, 7, 5.8)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 5.76)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_OperatorPlatform_E" parent="Geometry" unique_id=1712092078 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 3.5, 28.1)
 piece_size = Vector3(0.4, 7, 5.8)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(0.42, 0.28, 5.76)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Wall_OperatorPlatform_S" parent="Geometry" unique_id=1550033882 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 31.19991)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 31.2)
 piece_size = Vector3(5.8, 7, 0.4)
 surface_material = ExtResource("3_wall")
-floor_trim_enabled = true
-floor_trim_size = Vector3(5.76, 0.28, 0.42)
-floor_trim_position = Vector3(0, -3.33, 0)
 
 [node name="Doors" type="Node3D" parent="." unique_id=1631987771]
 
@@ -593,6 +493,7 @@ display_name = "WEAPON WORKSHOP"
 locked = true
 required_key = &""
 permanently_locked = true
+campaign_unlock_stage = 2
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -602,6 +503,7 @@ display_name = "ENGINEERING BAY"
 locked = true
 required_key = &""
 permanently_locked = true
+campaign_unlock_stage = 2
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -616,6 +518,11 @@ automatic_open = true
 
 [node name="CeilingWhite_Armory" parent="RoomLights" unique_id=941774806 instance=ExtResource("9_white")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, -10)
+light_energy = 7.85
+light_range = 20.0
+cone_angle = 80.0
+cone_attenuation = 0.1
+distance_attenuation = 0.0
 
 [node name="CeilingWhite_CommandWest" parent="RoomLights" unique_id=1673422956 instance=ExtResource("9_white")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, 0)
@@ -641,7 +548,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 6.82, 0)
 [node name="Signage" type="Node3D" parent="." unique_id=48472396]
 
 [node name="Panel_ArmoryDoor" type="MeshInstance3D" parent="Signage" unique_id=2055563553]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.7568493, 5.0017567, -9.986581)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.757, 5.25, -9.987)
 material_override = SubResource("StandardMaterial3D_87vc6")
 mesh = SubResource("BoxMesh_door_sign_x")
 
@@ -654,7 +561,7 @@ font_size = 150
 outline_size = 8
 
 [node name="Panel_FiringRangeDoor" type="MeshInstance3D" parent="Signage" unique_id=703614250]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.76, 4.95, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.76, 5.25, -10)
 material_override = SubResource("StandardMaterial3D_65i0f")
 mesh = SubResource("BoxMesh_door_sign_x")
 
@@ -667,7 +574,7 @@ font_size = 150
 outline_size = 8
 
 [node name="Panel_ResearchDoor" type="MeshInstance3D" parent="Signage" unique_id=1662605379]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.76, 4.95, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.76, 5.25, -10)
 material_override = SubResource("Material_sign_cyan")
 mesh = SubResource("BoxMesh_door_sign_x")
 
@@ -680,7 +587,7 @@ font_size = 150
 outline_size = 8
 
 [node name="Panel_WorkshopDoor" type="MeshInstance3D" parent="Signage" unique_id=1973486179]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.76, 4.9669895, 10.018061)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.76, 5.25, 10.018)
 material_override = SubResource("Material_sign_cyan")
 mesh = SubResource("BoxMesh_door_sign_x")
 
@@ -693,7 +600,7 @@ font_size = 150
 outline_size = 8
 
 [node name="Panel_EngineeringDoor" type="MeshInstance3D" parent="Signage" unique_id=1961757903]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.76, 4.95, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.76, 5.25, 10)
 material_override = SubResource("Material_sign_cyan")
 mesh = SubResource("BoxMesh_door_sign_x")
 
@@ -706,7 +613,7 @@ font_size = 150
 outline_size = 8
 
 [node name="Panel_OperatorDoor" type="MeshInstance3D" parent="Signage" unique_id=1364846794]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.011828601, 4.8507285, 24.76)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.012, 5.25, 24.76)
 material_override = SubResource("StandardMaterial3D_tj80c")
 mesh = SubResource("BoxMesh_door_sign_z")
 
@@ -721,7 +628,7 @@ outline_size = 8
 [node name="Props" type="Node3D" parent="." unique_id=166057194]
 
 [node name="CommandLogo" type="Sprite3D" parent="Props" unique_id=828872505]
-transform = Transform3D(-2, 0, -3.019916e-07, 0, 2, 0, 3.019916e-07, 0, -2, 0, 6.029582, 24.795883)
+transform = Transform3D(-2, 0, -3.019916e-07, 0, 2, 0, 3.019916e-07, 0, -2, 0, 6.3249593, 24.785154)
 cast_shadow = 0
 modulate = Color(0.28, 0.95, 1, 0.82)
 pixel_size = 0.0022
@@ -753,6 +660,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.45, -10)
 material_override = SubResource("Material_hub_metal")
 mesh = SubResource("BoxMesh_bench")
 
+[node name="ArmoryCategoryVisuals" type="Node3D" parent="Props" unique_id=1304204354]
+
+[node name="PistolCategoryRack" parent="Props/ArmoryCategoryVisuals" unique_id=14845777 instance=ExtResource("21_category_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.872962, 1.1, -14.4)
+
+[node name="ShotgunCategoryRack" parent="Props/ArmoryCategoryVisuals" unique_id=912415212 instance=ExtResource("21_category_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.1, -14.4)
+category_label_key = "ARMORY_GROUP_SHOTGUN"
+
+[node name="RifleCategoryRack" parent="Props/ArmoryCategoryVisuals" unique_id=1676115330 instance=ExtResource("21_category_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.147469, 1.1, -14.4)
+category_label_key = "ARMORY_GROUP_RIFLE"
+
+[node name="SmgCategoryRack" parent="Props/ArmoryCategoryVisuals" unique_id=713579173 instance=ExtResource("21_category_rack")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -15.5, 1.1, -5.6)
+category_label_key = "ARMORY_GROUP_SMG"
+
+[node name="LaserCategoryRack" parent="Props/ArmoryCategoryVisuals" unique_id=1849150245 instance=ExtResource("21_category_rack")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -8.5, 1.1, -5.6)
+category_label_key = "ARMORY_GROUP_LASER"
+
 [node name="WorkshopBench" type="MeshInstance3D" parent="Props" unique_id=464994820]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.45, 10)
 material_override = SubResource("Material_hub_metal")
@@ -778,18 +706,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.8, 1.15, -6.9)
 material_override = SubResource("Material_hub_red")
 mesh = SubResource("BoxMesh_target")
 
-[node name="Table" parent="Props" unique_id=1255500891 instance=ExtResource("10_87vc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.79492, 0, -14.311826)
-
-[node name="Table2" parent="Props" unique_id=727001995 instance=ExtResource("10_87vc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.778278, 0, -14.3107395)
-
-[node name="Table3" parent="Props" unique_id=1792448412 instance=ExtResource("10_87vc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.741977, 0, -14.280577)
-
-[node name="Table4" parent="Props" unique_id=1242447751 instance=ExtResource("10_87vc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.712398, 0, -14.286835)
-
 [node name="Systems" type="Node3D" parent="." unique_id=1808239608]
 
 [node name="DeploymentTerminal" parent="Systems" unique_id=560238758 instance=ExtResource("11_terminal")]
@@ -804,42 +720,210 @@ display_name = "BASTION DURUMU"
 info_message = "BASTION-7 // SAVUNMA ÇEVRİMİÇİ // VEX-02 İÇ HAT ALARMI HAZIR"
 screen_header = "VEX // COMMAND"
 
-[node name="ArmoryStatusTerminal" parent="Systems" unique_id=142806560 instance=ExtResource("11_terminal")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.65, -7.2)
-display_name = "CEPHANELİK DURUMU"
-info_message = "SAHİP OLDUĞUN SİLAHI RAFTAN SEÇ"
-screen_header = "VEX // ARMORY"
-
 [node name="ArmoryRacks" type="Node3D" parent="Systems" unique_id=117252377]
 
-[node name="PistolRack" parent="Systems/ArmoryRacks" unique_id=1097700967 instance=ExtResource("12_rack")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -16.106022, 1.9903786, -13.049632)
-visible = false
-locked_message = "P9 SIDEARM KAYDI BULUNAMADI"
+[node name="PistolRack" type="Node3D" parent="Systems/ArmoryRacks" unique_id=1381145609]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 1.1, -14.35)
 
-[node name="ShotgunRack" parent="Systems/ArmoryRacks" unique_id=1644928597 instance=ExtResource("12_rack")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -13.978129, 1.55, -13.279044)
-visible = false
-weapon_id = &"shotgun"
-display_name = "KIRICI POMPALI"
+[node name="P01Slot" parent="Systems/ArmoryRacks/PistolRack" unique_id=1097700967 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, 0.42, -0.15)
+weapon_texture = ExtResource("19_p01_side")
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 0.78
+
+[node name="P07Slot" parent="Systems/ArmoryRacks/PistolRack" unique_id=2075988995 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0.42, -0.15)
+weapon_id = &"p07"
+display_name = "WEAPON_P07_NAME"
+fallback_visual_text = "P-07"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 0.8
+
+[node name="P14Slot" parent="Systems/ArmoryRacks/PistolRack" unique_id=244889121 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, -0.42, -0.15)
+weapon_id = &"p14"
+display_name = "WEAPON_P14_NAME"
+fallback_visual_text = "P-14"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 0.82
+
+[node name="P20Slot" parent="Systems/ArmoryRacks/PistolRack" unique_id=765709784 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, -0.42, -0.15)
+weapon_id = &"p20"
+display_name = "WEAPON_P20_NAME"
+fallback_visual_text = "P-20"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 0.86
+
+[node name="ShotgunRack" type="Node3D" parent="Systems/ArmoryRacks" unique_id=1620920224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.1, -14.35)
+
+[node name="SG04Slot" parent="Systems/ArmoryRacks/ShotgunRack" unique_id=1644928597 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, 0.42, -0.15)
+weapon_id = &"sg04"
+display_name = "WEAPON_SG04_NAME"
+group_label = "ARMORY_GROUP_SHOTGUN"
 weapon_texture = ExtResource("15_shotgun")
-locked_message = "SHOTGUN GÖREVDE HENÜZ BULUNMADI"
+fallback_visual_text = "SG-04"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.18
 
-[node name="AK47Rack" parent="Systems/ArmoryRacks" unique_id=1339347110 instance=ExtResource("12_rack")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -11.930443, 1.55, -13.222887)
-visible = false
-weapon_id = &"ak47"
-display_name = "AK-47"
+[node name="SG09Slot" parent="Systems/ArmoryRacks/ShotgunRack" unique_id=1819619474 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0.42, -0.15)
+weapon_id = &"sg09"
+display_name = "WEAPON_SG09_NAME"
+group_label = "ARMORY_GROUP_SHOTGUN"
+fallback_visual_text = "SG-09"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.18
+
+[node name="SG15Slot" parent="Systems/ArmoryRacks/ShotgunRack" unique_id=1704756649 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, -0.42, -0.15)
+weapon_id = &"sg15"
+display_name = "WEAPON_SG15_NAME"
+group_label = "ARMORY_GROUP_SHOTGUN"
+fallback_visual_text = "SG-15"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.18
+
+[node name="SG21Slot" parent="Systems/ArmoryRacks/ShotgunRack" unique_id=1071570185 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, -0.42, -0.15)
+weapon_id = &"sg21"
+display_name = "WEAPON_SG21_NAME"
+group_label = "ARMORY_GROUP_SHOTGUN"
+fallback_visual_text = "SG-21"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.18
+
+[node name="RifleRack" type="Node3D" parent="Systems/ArmoryRacks" unique_id=1194133011]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.1, -14.35)
+
+[node name="VX47Slot" parent="Systems/ArmoryRacks/RifleRack" unique_id=1339347110 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, 0.42, -0.15)
+weapon_id = &"vx47"
+display_name = "WEAPON_VX47_NAME"
+group_label = "ARMORY_GROUP_RIFLE"
 weapon_texture = ExtResource("16_ak47")
-locked_message = "AK-47 GÖREVDE HENÜZ BULUNMADI"
+fallback_visual_text = "VX-47"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.18
 
-[node name="MP90Rack" parent="Systems/ArmoryRacks" unique_id=815121853 instance=ExtResource("12_rack")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.6, 1.55, -13.7)
-visible = false
+[node name="VX58Slot" parent="Systems/ArmoryRacks/RifleRack" unique_id=1144718901 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0.42, -0.15)
+weapon_id = &"vx58"
+display_name = "WEAPON_VX58_NAME"
+group_label = "ARMORY_GROUP_RIFLE"
+fallback_visual_text = "VX-58"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.18
+
+[node name="VX72Slot" parent="Systems/ArmoryRacks/RifleRack" unique_id=846597963 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, -0.42, -0.15)
+weapon_id = &"vx72"
+display_name = "WEAPON_VX72_NAME"
+group_label = "ARMORY_GROUP_RIFLE"
+fallback_visual_text = "VX-72"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.18
+
+[node name="VX90Slot" parent="Systems/ArmoryRacks/RifleRack" unique_id=1556620642 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, -0.42, -0.15)
+weapon_id = &"vx90"
+display_name = "WEAPON_VX90_NAME"
+group_label = "ARMORY_GROUP_RIFLE"
+fallback_visual_text = "VX-90"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.18
+
+[node name="SmgRack" type="Node3D" parent="Systems/ArmoryRacks" unique_id=363504245]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -15.5, 1.1, -5.65)
+
+[node name="MP90Slot" parent="Systems/ArmoryRacks/SmgRack" unique_id=815121853 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, 0.42, -0.15)
 weapon_id = &"mp90"
-display_name = "MP90"
+display_name = "WEAPON_MP90_NAME"
+group_label = "ARMORY_GROUP_SMG"
 weapon_texture = ExtResource("17_mp90")
-locked_message = "MP90 GÖREVDE HENÜZ BULUNMADI"
+fallback_visual_text = "MP-90"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.08
+
+[node name="MP96Slot" parent="Systems/ArmoryRacks/SmgRack" unique_id=1292593486 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0.42, -0.15)
+weapon_id = &"mp96"
+display_name = "WEAPON_MP96_NAME"
+group_label = "ARMORY_GROUP_SMG"
+fallback_visual_text = "MP-96"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.08
+
+[node name="MP110Slot" parent="Systems/ArmoryRacks/SmgRack" unique_id=252057569 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, -0.42, -0.15)
+weapon_id = &"mp110"
+display_name = "WEAPON_MP110_NAME"
+group_label = "ARMORY_GROUP_SMG"
+fallback_visual_text = "MP-110"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.08
+
+[node name="MP120Slot" parent="Systems/ArmoryRacks/SmgRack" unique_id=1398221982 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, -0.42, -0.15)
+weapon_id = &"mp120"
+display_name = "WEAPON_MP120_NAME"
+group_label = "ARMORY_GROUP_SMG"
+fallback_visual_text = "MP-120"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.08
+
+[node name="LaserRack" type="Node3D" parent="Systems/ArmoryRacks" unique_id=1086539171]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -8.5, 1.1, -5.65)
+
+[node name="LX01Slot" parent="Systems/ArmoryRacks/LaserRack" unique_id=795009342 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, 0.42, -0.15)
+weapon_id = &"lx01"
+display_name = "WEAPON_LX01_NAME"
+group_label = "ARMORY_GROUP_LASER"
+fallback_visual_text = "LX-01"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.16
+
+[node name="LX07Slot" parent="Systems/ArmoryRacks/LaserRack" unique_id=1975995752 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0.42, -0.15)
+weapon_id = &"lx07"
+display_name = "WEAPON_LX07_NAME"
+group_label = "ARMORY_GROUP_LASER"
+fallback_visual_text = "LX-07"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.16
+
+[node name="LX13Slot" parent="Systems/ArmoryRacks/LaserRack" unique_id=2020304177 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, -0.42, -0.15)
+weapon_id = &"lx13"
+display_name = "WEAPON_LX13_NAME"
+group_label = "ARMORY_GROUP_LASER"
+fallback_visual_text = "LX-13"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.16
+
+[node name="LX20Slot" parent="Systems/ArmoryRacks/LaserRack" unique_id=371226954 instance=ExtResource("12_rack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, -0.42, -0.15)
+weapon_id = &"lx20"
+display_name = "WEAPON_LX20_NAME"
+group_label = "ARMORY_GROUP_LASER"
+fallback_visual_text = "LX-20"
+locked_message = "ARMORY_RESEARCH_LOCKED"
+visual_world_width = 1.16
+
+[node name="Survivors" type="Node3D" parent="Systems" unique_id=839443234]
+
+[node name="DrSelinErdem" parent="Systems/Survivors" unique_id=1970753788 instance=ExtResource("22_survivor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 12.3)
+required_campaign_stage = 2
+display_name_key = "SURVIVOR_SELIN_NAME"
+role_key = "SURVIVOR_SELIN_ROLE"
+dialogue_key = "SURVIVOR_SELIN_DIALOGUE_STAGE2"
+advanced_dialogue_stage = 3
+advanced_dialogue_key = "SURVIVOR_SELIN_DIALOGUE_STAGE3"
 
 [node name="Player" parent="." unique_id=1205297111 instance=ExtResource("6_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 27.35)

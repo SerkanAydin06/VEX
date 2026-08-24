@@ -35,7 +35,7 @@ func _process(delta: float) -> void:
 			continue
 		if body.has_method("take_damage"):
 			body.call("take_damage", pulse_damage)
-			GameState.notify("BOYUTSAL ISI DALGASI // -%d" % pulse_damage)
+			GameState.notify(tr("RIFT_HEAT_DAMAGE") % pulse_damage)
 
 
 func _on_body_entered(body: Node3D) -> void:

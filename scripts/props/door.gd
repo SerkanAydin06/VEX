@@ -22,12 +22,13 @@ enum DoorOpeningMode {
 @export var objective_on_unlock := ""
 @export var permanently_locked := false
 @export var permanent_lock_message := "POWER OFFLINE"
+@export var campaign_unlock_stage := -1
 
 @export_category("Açılma Hareketi")
 @export_enum("Yukarı", "İki Yana") var opening_mode: int = DoorOpeningMode.UP
 @export var opening_offset_up := Vector3(0.0, 4.2, 0.0)
-@export var opening_offset_left := Vector3(0.0, 0.0, -2.47)
-@export var opening_offset_right := Vector3(0.0, 0.0, 2.47)
+@export var opening_offset_left := Vector3(0.0, 0.0, -2.1)
+@export var opening_offset_right := Vector3(0.0, 0.0, 2.1)
 @export_range(0.1, 3.0, 0.05) var opening_time := 0.75
 @export var auto_close := true
 @export_range(1.0, 15.0, 0.5) var auto_close_delay := 4.0
@@ -44,6 +45,8 @@ var door_panel_right: AnimatableBody3D
 var safety_sensor: Area3D
 var proximity_sensor: Area3D
 var door_occluder: OccluderInstance3D
+var perception_blocker: StaticBody3D
+var shadow_blocker: MeshInstance3D
 var is_open := false
 var is_moving := false
 
@@ -61,6 +64,9 @@ var _denied_audio: AudioStreamPlayer3D
 
 func _ready() -> void:
 	add_to_group("interactable")
+	if campaign_unlock_stage >= 0 and GameState.campaign_stage >= campaign_unlock_stage:
+		permanently_locked = false
+		locked = false
 	_runtime_locked = locked
 	_auto_close_available = auto_close
 	door_panel = get_node_or_null("DoorPanel") as AnimatableBody3D
@@ -68,6 +74,8 @@ func _ready() -> void:
 	safety_sensor = get_node_or_null("SafetySensor") as Area3D
 	proximity_sensor = get_node_or_null("ProximitySensor") as Area3D
 	door_occluder = get_node_or_null("DoorOccluder") as OccluderInstance3D
+	perception_blocker = get_node_or_null("PerceptionBlocker") as StaticBody3D
+	shadow_blocker = get_node_or_null("DoorShadowBlocker") as MeshInstance3D
 	_open_audio = get_node_or_null("OpenAudio") as AudioStreamPlayer3D
 	_denied_audio = get_node_or_null("DeniedAudio") as AudioStreamPlayer3D
 
@@ -122,10 +130,10 @@ func get_interaction_text(player: Node) -> String:
 	if door_panel == null or _state != DoorState.CLOSED:
 		return ""
 	if permanently_locked:
-		return "[E] %s — %s" % [display_name, permanent_lock_message]
+		return tr("INTERACT_LOCKED") % [tr(display_name), tr(permanent_lock_message)]
 	if _runtime_locked and not _player_has_required_keys(player):
-		return "[E] %s — %s GEREKLİ" % [display_name, _get_required_key_label()]
-	return "[E] %s AÇ" % display_name
+		return tr("INTERACT_REQUIRED") % [tr(display_name), _get_required_key_label()]
+	return tr("INTERACT_OPEN") % tr(display_name)
 
 
 func interact(player: Node) -> void:
@@ -136,16 +144,16 @@ func interact(player: Node) -> void:
 	if permanently_locked:
 		if _denied_audio != null and _denied_audio.stream != null:
 			_denied_audio.play()
-		GameState.notify("%s — %s" % [display_name, permanent_lock_message])
+		GameState.notify(tr("DOOR_LOCKED_MESSAGE") % [tr(display_name), tr(permanent_lock_message)])
 		return
 	if _runtime_locked:
 		if not _player_has_required_keys(player):
 			if _denied_audio != null and _denied_audio.stream != null:
 				_denied_audio.play()
-			GameState.notify("KAPI KİLİTLİ — %s GEREKLİ" % _get_required_key_label())
+			GameState.notify(tr("DOOR_LOCKED_REQUIRED") % _get_required_key_label())
 			return
 		_runtime_locked = false
-		GameState.notify("%s AÇILDI" % display_name)
+		GameState.notify(tr("DOOR_OPENED") % tr(display_name))
 		if not objective_on_unlock.is_empty():
 			GameState.set_objective(objective_on_unlock)
 	_begin_opening()
@@ -171,19 +179,31 @@ func _get_required_keys() -> Array[StringName]:
 
 func _get_required_key_label() -> String:
 	if not required_key_label.is_empty():
-		return required_key_label
+		return tr(required_key_label)
 	var labels: Array[String] = []
 	for key_id: StringName in _get_required_keys():
 		match key_id:
 			&"blue":
-				labels.append("MAVİ ERİŞİM ANAHTARI")
+				labels.append(tr("KEY_BLUE"))
 			&"red":
-				labels.append("KIRMIZI ERİŞİM ANAHTARI")
+				labels.append(tr("KEY_RED"))
 			&"yellow":
-				labels.append("SARI ERİŞİM ANAHTARI")
+				labels.append(tr("KEY_YELLOW"))
 			_:
 				labels.append(String(key_id).to_upper())
 	return " + ".join(labels)
+
+
+func set_campaign_unlocked(unlocked: bool) -> void:
+	if campaign_unlock_stage < 0:
+		return
+	permanently_locked = not unlocked
+	_runtime_locked = false if unlocked else locked
+	if unlocked and automatic_open and proximity_sensor != null and proximity_sensor.is_inside_tree():
+		for body: Node3D in proximity_sensor.get_overlapping_bodies():
+			if body == GameState.player:
+				force_open()
+				break
 
 
 func force_open() -> void:
@@ -359,10 +379,19 @@ func _set_state(new_state: DoorState) -> void:
 
 
 func _sync_occluder_visibility() -> void:
+	var fully_closed := _state == DoorState.CLOSED
 	if door_occluder != null:
 		# Hareketli oklüder kullanılmaz: açılma başlar başlamaz devre dışı kalır,
 		# kapı tam kapanınca sabit konumunda yeniden etkinleşir.
-		door_occluder.visible = _state == DoorState.CLOSED
+		door_occluder.visible = fully_closed
+	if perception_blocker != null:
+		# İki hareketli panelin birleşim çizgisinde mikroskobik bir fizik boşluğu
+		# kalabilirdi. Kapı tam kapalıyken tek parça world-layer blocker, AI
+		# görüş raylarının ve oyuncu fiziğinin bu aralıktan geçmesini kesin keser.
+		perception_blocker.collision_layer = 1 if fully_closed else 0
+	if shadow_blocker != null:
+		# SHADOWS_ONLY mesh; yalnız kapı tam kapalıyken direkt ışığı keser.
+		shadow_blocker.visible = fully_closed
 
 
 func _is_split_side_door() -> bool:

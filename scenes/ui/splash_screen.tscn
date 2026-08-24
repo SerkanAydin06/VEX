@@ -93,7 +93,7 @@ theme_override_colors/font_color = Color(0.3, 0.72, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 20
-text = "PRESENTS"
+text = "SPLASH_PRESENTS"
 horizontal_alignment = 1
 
 [node name="CreatorCenter" type="CenterContainer" parent="." unique_id=557104235]
@@ -117,7 +117,7 @@ theme_override_colors/font_color = Color(0.33, 0.78, 0.9, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 20
-text = "A GAME BY"
+text = "SPLASH_A_GAME_BY"
 horizontal_alignment = 1
 
 [node name="CreatorName" type="Label" parent="CreatorCenter/CreatorGroup" unique_id=1398080252]
@@ -141,7 +141,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.18, 0.33, 0.38, 0.72)
 theme_override_font_sizes/font_size = 13
-text = "VEX // STARTUP SEQUENCE"
+text = "SPLASH_STARTUP"
 horizontal_alignment = 1
 
 [node name="IntroMusic" type="AudioStreamPlayer" parent="." unique_id=411794519]

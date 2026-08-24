@@ -25,21 +25,21 @@ func get_interaction_text(player: Node) -> String:
 	if _used:
 		return ""
 	if not _player_has_all_keys(player):
-		return "[E] %s — %s GEREKLİ" % [display_name, _get_required_key_label()]
+		return tr("INTERACT_REQUIRED") % [tr(display_name), _get_required_key_label()]
 	if required_enemy_id != &"" and not GameState.was_enemy_defeated(required_enemy_id):
-		return "[E] %s — NİHAİ MUHAFIZ AKTİF" % display_name
-	return "[E] BÖLÜM ÇIKIŞINI ETKİNLEŞTİR"
+		return tr("FINISH_GUARD_ACTIVE") % tr(display_name)
+	return tr("FINISH_ACTIVATE")
 
 
 func interact(player: Node) -> void:
 	if _used:
 		return
 	if not _player_has_all_keys(player):
-		GameState.notify("TAHLİYE KİLİTLİ — %s GEREKLİ" % _get_required_key_label())
+		GameState.notify(tr("FINISH_LOCKED_REQUIRED") % _get_required_key_label())
 		return
 	if required_enemy_id != &"" and not GameState.was_enemy_defeated(required_enemy_id):
-		GameState.notify("TAHLİYE KİLİTLİ — NİHAİ MUHAFIZI İMHA ET")
-		GameState.set_objective("NİHAİ MUHAFIZI İMHA ET VE ŞALTERE DÖN")
+		GameState.notify(tr("FINISH_LOCKED_GUARD"))
+		GameState.set_objective("FINISH_OBJECTIVE_GUARD")
 		return
 
 	_used = true
@@ -48,7 +48,7 @@ func interact(player: Node) -> void:
 	activation_tween.tween_property(finish_switch_visual, "scale", Vector3(1.10, 1.10, 1.10), 0.10)
 	activation_tween.tween_property(finish_switch_visual, "rotation_degrees:y", 8.0, 0.14)
 	activation_tween.chain().tween_property(finish_switch_visual, "scale", Vector3.ONE, 0.16)
-	GameState.notify("BÖLÜM ÇIKIŞI ETKİNLEŞTİRİLDİ")
+	GameState.notify(tr("FINISH_ACTIVATED"))
 	GameState.call_deferred("complete_level", next_level_path)
 
 
@@ -84,11 +84,11 @@ func _get_required_key_label() -> String:
 	for key_id: StringName in required_keys:
 		match key_id:
 			&"blue":
-				labels.append("MAVİ ERİŞİM KARTI")
+				labels.append(tr("KEY_BLUE"))
 			&"red":
-				labels.append("KIRMIZI ERİŞİM KARTI")
+				labels.append(tr("KEY_RED"))
 			&"yellow":
-				labels.append("SARI ERİŞİM KARTI")
+				labels.append(tr("KEY_YELLOW"))
 			_:
 				labels.append(String(key_id).to_upper())
 	return " + ".join(labels)

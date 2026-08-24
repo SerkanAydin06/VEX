@@ -1,5 +1,9 @@
 extends Control
 
+@export_category("Campaign Summary")
+@export_range(1, 99, 1) var campaign_level_count := 3
+@export_range(0, 99, 1) var campaign_secret_count := 5
+
 @onready var background: TextureRect = %Background
 @onready var logo: TextureRect = %Logo
 @onready var main_shell: PanelContainer = %MainShell
@@ -16,6 +20,7 @@ extends Control
 @onready var modal_shade: ColorRect = %ModalShade
 @onready var settings_panel: VexSettingsPanel = %SettingsPanel
 @onready var credits_panel: PanelContainer = %CreditsPanel
+@onready var credits_body: Label = $CreditsPanel/Margin/VBox/Body
 @onready var credits_close_button: Button = %CreditsCloseButton
 @onready var confirm_panel: PanelContainer = %ConfirmPanel
 @onready var confirm_yes_button: Button = %ConfirmYesButton
@@ -39,17 +44,21 @@ func _ready() -> void:
 	confirm_no_button.pressed.connect(_close_confirmation)
 	settings_panel.close_requested.connect(_on_settings_closed)
 	SettingsManager.difficulty_changed.connect(_update_mission_data)
-	continue_button.visible = GameState.checkpoints_enabled()
+	SettingsManager.language_changed.connect(_on_language_changed)
+	continue_button.visible = true
 	continue_button.disabled = not GameState.has_save()
 	background.position = Vector2.ZERO
 	background.scale = Vector2.ONE
 	_update_clock(true)
 	_update_mission_data(SettingsManager.difficulty)
+	_refresh_localized_dynamic_text()
 	_start_menu_music()
 	_play_intro()
 	new_game_button.grab_focus()
 
 func _input(event: InputEvent) -> void:
+	if settings_panel.visible and settings_panel.is_capturing_key_input():
+		return
 	if event is InputEventKey:
 		var key_event := event as InputEventKey
 
@@ -177,7 +186,20 @@ func _update_clock(force: bool) -> void:
 
 
 func _update_mission_data(_difficulty: int) -> void:
-	mission_data.text = "2 BÖLÜM  •  3 GİZLİ ALAN  •  ZORLUK: %s" % SettingsManager.get_difficulty_display_name()
+	mission_data.text = tr("MAIN_MISSION_DATA") % [
+		campaign_level_count,
+		campaign_secret_count,
+		SettingsManager.get_difficulty_display_name(),
+	]
+
+
+func _on_language_changed(_locale: String) -> void:
+	_update_mission_data(SettingsManager.difficulty)
+	_refresh_localized_dynamic_text()
+
+
+func _refresh_localized_dynamic_text() -> void:
+	credits_body.text = tr("MAIN_CREDITS_BODY").replace("\\n", "\n")
 
 
 func _start_menu_music() -> void:

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://b3pxg2e5mqbxb"
+
+[deps]
+
+files=["res://translations/vex.tr.translation", "res://translations/vex.en.translation"]
+
+source_file="res://translations/vex.csv"
+dest_files=["res://translations/vex.tr.translation", "res://translations/vex.en.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

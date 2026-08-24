@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 mission_id = &"vex03"
-display_name = "VEX-03 // KÜL MADENİ"
-briefing = "Kül Madeni'nin altında çalışan boyutsal emiş düğümüne sız. Mavi güç kartını bul, güvenlik merdiveninden üst kata çık ve Korvath yarık çekirdeğini izole et."
-completion_message = "VEX-03 TAMAMLANDI. KORVATH DÜĞÜMÜ KAPATILDI; BASTION-7 YENİ BOYUTSAL İZLERİ TARIYOR."
+display_name = "LEVEL03_NAME"
+briefing = "LEVEL03_MISSION_BRIEF"
+completion_message = "LEVEL03_COMPLETE"
 scene_path = "res://scenes/levels/level_03.tscn"
 campaign_stage = 3

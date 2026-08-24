@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
+[ext_resource type="PackedScene" path="res://scenes/ui/weapons/sg04_view.tscn" id="2_view"]
+
+[resource]
+script = ExtResource("1_weapon")
+weapon_id = &"sg04"
+display_name = "WEAPON_SG04_NAME"
+ammo_type = &"shells"
+loadout_group = &"sg04"
+loadout_slot = 2
+loadout_group_label = "ARMORY_GROUP_SHOTGUN"
+hud_slot_label_key = "HUD_SLOT_02"
+hud_ammo_label_key = "HUD_AMMO_SHOTGUN"
+hud_view_scene = ExtResource("2_view")
+magazine_size = 6
+headshot_multiplier = 1.60
+damage_per_pellet = 11
+pellet_count = 8
+fire_interval = 0.82
+reload_duration = 1.45
+spread_degrees = 5.5
+maximum_range = 48.0
+reserve_ammo_capacity = 60
+automatic = false
+recoil_vertical_degrees = 3.8
+recoil_horizontal_degrees = 0.45
+recoil_max_vertical_degrees = 5.6
+recoil_max_horizontal_degrees = 1.0
+recoil_recovery_degrees_per_second = 6.0
+

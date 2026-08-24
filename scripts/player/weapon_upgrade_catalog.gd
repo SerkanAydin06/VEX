@@ -4,25 +4,25 @@ extends RefCounted
 # Three deterministic tiers per weapon. Visual assets are deliberately not
 # referenced here, so final weapon art can be replaced without touching logic.
 const TRACKS := {
-	&"pistol": [
-		{"id": &"match_barrel", "name": "EŞLEŞTİRİLMİŞ NAMLU", "damage": 1.12},
-		{"id": &"quick_mag", "name": "HIZLI ŞARJÖR", "reload": 0.82, "magazine": 3},
-		{"id": &"ghost_trigger", "name": "HAYALET TETİK", "spread": 0.55, "headshot": 1.15},
+	&"p01": [
+		{"id": &"match_barrel", "name": "UPGRADE_MATCH_BARREL", "damage": 1.12},
+		{"id": &"quick_mag", "name": "UPGRADE_QUICK_MAG", "reload": 0.82, "magazine": 3},
+		{"id": &"ghost_trigger", "name": "UPGRADE_GHOST_TRIGGER", "spread": 0.55, "headshot": 1.15},
 	],
-	&"shotgun": [
-		{"id": &"choke", "name": "DAR ŞOK", "spread": 0.72},
-		{"id": &"drum_extension", "name": "TÜP UZATMA", "magazine": 2, "reload": 0.90},
-		{"id": &"breacher", "name": "YARICI YÜK", "damage": 1.18, "recoil": 1.12},
+	&"sg04": [
+		{"id": &"choke", "name": "UPGRADE_CHOKE", "spread": 0.72},
+		{"id": &"drum_extension", "name": "UPGRADE_DRUM_EXTENSION", "magazine": 2, "reload": 0.90},
+		{"id": &"breacher", "name": "UPGRADE_BREACHER", "damage": 1.18, "recoil": 1.12},
 	],
-	&"ak47": [
-		{"id": &"gas_regulator", "name": "GAZ REGÜLATÖRÜ", "recoil": 0.82},
-		{"id": &"smart_feed", "name": "AKILLI BESLEME", "reload": 0.80},
-		{"id": &"overpressure", "name": "YÜKSEK BASINÇ", "damage": 1.16, "spread": 1.10},
+	&"vx47": [
+		{"id": &"gas_regulator", "name": "UPGRADE_GAS_REGULATOR", "recoil": 0.82},
+		{"id": &"smart_feed", "name": "UPGRADE_SMART_FEED", "reload": 0.80},
+		{"id": &"overpressure", "name": "UPGRADE_OVERPRESSURE", "damage": 1.16, "spread": 1.10},
 	],
 	&"mp90": [
-		{"id": &"vector_grip", "name": "VEKTÖR KABZA", "recoil": 0.76},
-		{"id": &"helical_feed", "name": "HELİSEL BESLEME", "magazine": 10},
-		{"id": &"phase_cycler", "name": "FAZ ÇEVRİCİ", "fire_rate": 0.84, "spread": 1.12},
+		{"id": &"vector_grip", "name": "UPGRADE_VECTOR_GRIP", "recoil": 0.76},
+		{"id": &"helical_feed", "name": "UPGRADE_HELICAL_FEED", "magazine": 10},
+		{"id": &"phase_cycler", "name": "UPGRADE_PHASE_CYCLER", "fire_rate": 0.84, "spread": 1.12},
 	],
 }
 

@@ -21,7 +21,7 @@ func _ready() -> void:
 func get_interaction_text(_player: Node) -> String:
 	if _overlay_open:
 		return ""
-	return "[E] %s %s" % [display_name, "TEKRAR OKU" if _read else "OKU"]
+	return tr("LORE_INTERACT") % [tr(display_name), tr("UI_READ_AGAIN") if _read else tr("UI_READ")]
 
 
 func interact(_player: Node) -> void:
@@ -68,7 +68,7 @@ func _show_log() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 29)
 	title.add_theme_color_override("font_color", accent_color)
-	title.text = log_title
+	title.text = tr(log_title)
 	panel.add_child(title)
 
 	var divider := ColorRect.new()
@@ -85,7 +85,7 @@ func _show_log() -> void:
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_theme_font_size_override("normal_font_size", 23)
 	body.add_theme_color_override("default_color", Color(0.9, 0.93, 0.96, 1.0))
-	body.text = log_body
+	body.text = tr(log_body)
 	panel.add_child(body)
 
 	var prompt := Label.new()
@@ -94,7 +94,7 @@ func _show_log() -> void:
 	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	prompt.add_theme_font_size_override("font_size", 18)
 	prompt.add_theme_color_override("font_color", Color(0.62, 0.68, 0.74, 1.0))
-	prompt.text = "HERHANGİ BİR TUŞA BAS — KAYDI KAPAT"
+	prompt.text = tr("LORE_CLOSE_PROMPT")
 	panel.add_child(prompt)
 
 	await _wait_for_input_release()

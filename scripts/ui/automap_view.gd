@@ -242,7 +242,7 @@ func _draw_unavailable_message() -> void:
 	draw_string(
 		font,
 		Vector2(0.0, size.y * 0.5),
-		"HARİTA VERİSİ BULUNAMADI",
+		tr("HUD_MAP_NO_DATA"),
 		HORIZONTAL_ALIGNMENT_CENTER,
 		size.x,
 		20,

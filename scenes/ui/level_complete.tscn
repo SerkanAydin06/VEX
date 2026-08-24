@@ -15,6 +15,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
+rating_s_threshold = 0.999
+rating_a_threshold = 0.75
+rating_b_threshold = 0.5
 
 [node name="CompleteAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_complete_audio")
@@ -75,19 +78,19 @@ theme_override_constants/separation = 14
 [node name="Eyebrow" type="Label" parent="ResultPanel/Margin/VBox"]
 theme_override_colors/font_color = Color(0.3, 1, 0.66, 1)
 theme_override_font_sizes/font_size = 19
-text = "// KARANTİNA SINIRI AŞILDI"
+text = "COMPLETE_EYEBROW"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="ResultPanel/Margin/VBox"]
 theme_override_colors/font_color = Color(0.72, 1, 0.88, 1)
 theme_override_font_sizes/font_size = 48
-text = "BÖLÜM TAMAMLANDI"
+text = "COMPLETE_TITLE"
 horizontal_alignment = 1
 
 [node name="Subtitle" type="Label" parent="ResultPanel/Margin/VBox"]
 theme_override_colors/font_color = Color(0.5, 0.67, 0.72, 1)
 theme_override_font_sizes/font_size = 19
-text = "VEX-01 // KARANTİNA TESİSİ"
+text = "LEVEL_01_NAME"
 horizontal_alignment = 1
 
 [node name="Divider" type="HSeparator" parent="ResultPanel/Margin/VBox"]
@@ -101,7 +104,7 @@ columns = 2
 [node name="TimeLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
 theme_override_font_sizes/font_size = 22
-text = "SÜRE"
+text = "COMPLETE_TIME"
 
 [node name="TimeValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 unique_name_in_owner = true
@@ -112,7 +115,7 @@ horizontal_alignment = 2
 [node name="KillsLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
 theme_override_font_sizes/font_size = 22
-text = "İMHA"
+text = "COMPLETE_KILLS"
 
 [node name="KillsValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 unique_name_in_owner = true
@@ -123,7 +126,7 @@ horizontal_alignment = 2
 [node name="SecretsLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
 theme_override_font_sizes/font_size = 22
-text = "GİZLİ ALAN"
+text = "COMPLETE_SECRETS"
 
 [node name="SecretsValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 unique_name_in_owner = true
@@ -134,25 +137,25 @@ horizontal_alignment = 2
 [node name="DifficultyLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
 theme_override_font_sizes/font_size = 22
-text = "ZORLUK"
+text = "SETTINGS_DIFFICULTY"
 
 [node name="DifficultyValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 unique_name_in_owner = true
 theme_override_colors/font_color = Color(0.34, 0.86, 1, 1)
 theme_override_font_sizes/font_size = 30
-text = "NORMAL"
+text = "DIFFICULTY_NORMAL"
 horizontal_alignment = 2
 
 [node name="RatingLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 theme_override_colors/font_color = Color(1, 0.52, 0.27, 1)
 theme_override_font_sizes/font_size = 22
-text = "DERECE"
+text = "COMPLETE_RATING"
 
 [node name="RatingValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
 unique_name_in_owner = true
 theme_override_colors/font_color = Color(1, 0.72, 0.42, 1)
 theme_override_font_sizes/font_size = 28
-text = "B // GÖREV TAMAMLANDI"
+text = "RATING_B"
 horizontal_alignment = 2
 
 [node name="Divider2" type="HSeparator" parent="ResultPanel/Margin/VBox"]
@@ -160,14 +163,14 @@ horizontal_alignment = 2
 [node name="ReplayButton" type="Button" parent="ResultPanel/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
-text = "TEKRAR OYNA"
+text = "COMPLETE_REPLAY"
 
 [node name="MainMenuButton" type="Button" parent="ResultPanel/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
-text = "ANA MENÜ"
+text = "UI_MAIN_MENU"
 
 [node name="QuitButton" type="Button" parent="ResultPanel/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
-text = "ÇIKIŞ"
+text = "UI_QUIT"

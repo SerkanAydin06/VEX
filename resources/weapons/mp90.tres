@@ -1,12 +1,19 @@
-[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
+[ext_resource type="PackedScene" path="res://scenes/ui/weapons/mp90_view.tscn" id="2_view"]
 
 [resource]
 script = ExtResource("1_weapon")
 weapon_id = &"mp90"
-display_name = "MP90"
+display_name = "WEAPON_MP90_NAME"
 ammo_type = &"mp90_ammo"
+loadout_group = &"smg"
+loadout_slot = 4
+loadout_group_label = "ARMORY_GROUP_SMG"
+hud_slot_label_key = "HUD_SLOT_04"
+hud_ammo_label_key = "HUD_AMMO_MP90"
+hud_view_scene = ExtResource("2_view")
 magazine_size = 50
 headshot_multiplier = 1.70
 damage_per_pellet = 10

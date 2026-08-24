@@ -240,10 +240,7 @@ func _configure_runtime_stats() -> void:
 
 
 func _scene_difficulty_multiplier(values: PackedFloat32Array) -> float:
-	if values.is_empty():
-		return 1.0
-	var difficulty_index := clampi(GameState.active_difficulty, 0, values.size() - 1)
-	return maxf(0.0, values[difficulty_index])
+	return VexEnemyRuntimeUtils.difficulty_multiplier(values, GameState.active_difficulty)
 
 
 func _physics_process(delta: float) -> void:
@@ -326,6 +323,12 @@ func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -
 	var effective_range := hearing_radius * maxf(loudness * hearing_loudness_scale, 0.1)
 	if distance > effective_range:
 		return
+	var hearing_origin := global_position + Vector3.UP * 0.8
+	var hearing_target := noise_position + Vector3.UP * 0.8
+	if not VexEnemyRuntimeUtils.has_clear_acoustic_path(
+		get_world_3d(), hearing_origin, hearing_target
+	):
+		return
 	_exit_dormant_mode()
 	_alerted = true
 	_player_visible = false
@@ -377,8 +380,15 @@ func _alert_nearby_allies(suspected_position: Vector3) -> void:
 			continue
 
 		var ally := node as Node3D
-		if _horizontal_distance(global_position, ally.global_position) <= ally_alert_radius:
-			ally.call("receive_ally_alert", suspected_position)
+		if _horizontal_distance(global_position, ally.global_position) > ally_alert_radius:
+			continue
+		if not VexEnemyRuntimeUtils.has_clear_acoustic_path(
+			get_world_3d(),
+			global_position + Vector3.UP * 0.8,
+			ally.global_position + Vector3.UP * 0.8
+		):
+			continue
+		ally.call("receive_ally_alert", suspected_position)
 
 
 func _update_perception(delta: float) -> void:
@@ -1230,9 +1240,7 @@ func _resume_animation_after_hurt() -> void:
 
 
 func _horizontal_distance(first: Vector3, second: Vector3) -> float:
-	var difference := first - second
-	difference.y = 0.0
-	return difference.length()
+	return VexEnemyRuntimeUtils.horizontal_distance(first, second)
 
 
 func _clear_path() -> void:
@@ -1242,10 +1250,7 @@ func _clear_path() -> void:
 
 
 func _collision_floor_local_y() -> float:
-	var capsule := collision_shape.shape as CapsuleShape3D
-	if capsule == null:
-		return collision_shape.position.y
-	return collision_shape.position.y - capsule.height * 0.5
+	return VexEnemyRuntimeUtils.collision_floor_local_y(collision_shape)
 
 
 func _snap_body_to_floor(max_correction: float) -> void:

@@ -1,15 +1,20 @@
 class_name VexWeaponController
 extends Node
 
+signal loadout_changed
+
 @export_category("Başlangıç")
 @export var weapon_definitions: Array[WeaponDefinition] = []
-@export var initial_unlocked_weapons: Array[StringName] = [&"pistol"]
-@export var initial_weapon_id: StringName = &"pistol"
+@export var initial_unlocked_weapons: Array[StringName] = [&"p01"]
+@export var initial_weapon_id: StringName = &"p01"
 @export var fill_initial_magazines := true
 @export var initial_bullets := 48
 @export var initial_shells := 0
 @export var initial_rifle_ammo := 0
 @export var initial_mp90_ammo := 0
+
+@export_category("Cephanelik Taşıma Kuralı")
+@export_range(1, 5, 1) var weapons_per_loadout_group := 1
 
 @export_category("Ateş ve Geçiş")
 @export_range(0.0, 2.0, 0.01) var equip_cooldown := 0.15
@@ -26,7 +31,10 @@ extends Node
 @export_range(0.0, 1.0, 0.01) var automatic_horizontal_per_shot := 0.09
 @export_range(0.0, 3.0, 0.01) var automatic_horizontal_max_multiplier := 1.45
 
+## Göreve taşınan silahlar. Eski sahne/save uyumluluğu için ad korunmuştur.
 var unlocked_weapons: Array[StringName] = []
+## Oyuncunun şimdiye kadar bulduğu bütün silahlar; raftakiler de buna dahildir.
+var acquired_weapons: Array[StringName] = []
 var magazines: Dictionary = {}
 var reserve_ammo: Dictionary = {}
 var upgrade_levels: Dictionary = {}
@@ -51,13 +59,16 @@ func _ready() -> void:
 			reserve_ammo[definition.ammo_type] = 0
 
 	unlocked_weapons.clear()
+	acquired_weapons.clear()
 	for weapon_id in initial_unlocked_weapons:
 		if _definitions_by_id.has(weapon_id) and not unlocked_weapons.has(weapon_id):
 			unlocked_weapons.append(weapon_id)
+			acquired_weapons.append(weapon_id)
 	if unlocked_weapons.is_empty() and not weapon_definitions.is_empty():
 		var fallback_definition := weapon_definitions[0]
 		if fallback_definition != null:
 			unlocked_weapons.append(fallback_definition.weapon_id)
+			acquired_weapons.append(fallback_definition.weapon_id)
 
 	if fill_initial_magazines:
 		for weapon_id in unlocked_weapons:
@@ -96,21 +107,66 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("reload"):
 		reload()
 	elif event.is_action_pressed("weapon_1"):
-		switch_to(&"pistol")
+		switch_to_loadout_slot(1)
 	elif event.is_action_pressed("weapon_2"):
-		switch_to(&"shotgun")
+		switch_to_loadout_slot(2)
 	elif event.is_action_pressed("weapon_3"):
-		switch_to(&"ak47")
+		switch_to_loadout_slot(3)
 	elif event.is_action_pressed("weapon_4"):
-		switch_to(&"mp90")
+		switch_to_loadout_slot(4)
+	elif event.is_action_pressed("weapon_5"):
+		switch_to_loadout_slot(5)
 	elif event.is_action_pressed("weapon_next"):
 		cycle_weapon(1)
 	elif event.is_action_pressed("weapon_previous"):
 		cycle_weapon(-1)
 
 
+func canonical_weapon_id(weapon_id: StringName) -> StringName:
+	match str(weapon_id):
+		"pistol":
+			return &"p01"
+		"shotgun":
+			return &"sg04"
+		"ak47":
+			return &"vx47"
+	return weapon_id
+
+
+func _canonicalize_weapon_dictionary(source: Dictionary) -> Dictionary:
+	var output: Dictionary = {}
+	for key: Variant in source.keys():
+		var canonical := canonical_weapon_id(StringName(str(key)))
+		output[canonical] = source[key]
+	return output
+
+
 func get_current_weapon() -> WeaponDefinition:
 	return _definitions_by_id.get(current_weapon_id) as WeaponDefinition
+
+
+func get_weapon_definition(weapon_id: StringName) -> WeaponDefinition:
+	return _definitions_by_id.get(canonical_weapon_id(weapon_id)) as WeaponDefinition
+
+
+func owns_weapon(weapon_id: StringName) -> bool:
+	return acquired_weapons.has(canonical_weapon_id(weapon_id))
+
+
+func is_weapon_carried(weapon_id: StringName) -> bool:
+	return unlocked_weapons.has(canonical_weapon_id(weapon_id))
+
+
+func has_carried_weapon() -> bool:
+	return not unlocked_weapons.is_empty()
+
+
+func switch_to_loadout_slot(slot: int) -> void:
+	for weapon_id in unlocked_weapons:
+		var definition := get_weapon_definition(weapon_id)
+		if definition != null and definition.loadout_slot == slot:
+			switch_to(weapon_id)
+			return
 
 
 func get_weapon_upgrade_track(weapon_id: StringName) -> Array:
@@ -133,8 +189,9 @@ func install_next_upgrade(weapon_id: StringName) -> bool:
 	if definition != null:
 		magazines[weapon_id] = mini(int(magazines.get(weapon_id, 0)), _effective_magazine_size(definition))
 	var tier: Dictionary = track[level]
-	GameState.notify("SİLAH GELİŞTİRMESİ // %s" % str(tier.get("name", "YÜKSELTME")))
+	GameState.notify(tr("WEAPON_UPGRADE_FORMAT") % tr(str(tier.get("name", "UPGRADE_GENERIC"))))
 	broadcast_state()
+	GameState.call_deferred("save_current_safe_progress", "weapon_upgrade")
 	return true
 
 
@@ -163,6 +220,84 @@ func cycle_weapon(direction: int) -> void:
 	var current_index := unlocked_weapons.find(current_weapon_id)
 	var next_index := wrapi(current_index + direction, 0, unlocked_weapons.size())
 	switch_to(unlocked_weapons[next_index])
+
+
+func toggle_armory_weapon(weapon_id: StringName) -> Dictionary:
+	if is_reloading or not owns_weapon(weapon_id) or not _definitions_by_id.has(weapon_id):
+		return {"success": false}
+	if is_weapon_carried(weapon_id):
+		unlocked_weapons.erase(weapon_id)
+		_select_fallback_after_loadout_change()
+		loadout_changed.emit()
+		GameState.call_deferred("save_current_safe_progress", "armory_loadout")
+		return {
+			"success": true,
+			"action": &"stored",
+			"weapon_id": weapon_id,
+		}
+
+	var definition := get_weapon_definition(weapon_id)
+	var displaced_weapon_id := _make_room_for_loadout_group(weapon_id, definition)
+	unlocked_weapons.append(weapon_id)
+	current_weapon_id = weapon_id
+	_cooldown_remaining = equip_cooldown
+	_burst_shots = 0
+	_burst_reset_remaining = 0.0
+	broadcast_state()
+	_play_hud_action(&"equip")
+	loadout_changed.emit()
+	GameState.call_deferred("save_current_safe_progress", "armory_loadout")
+	return {
+		"success": true,
+		"action": &"equipped",
+		"weapon_id": weapon_id,
+		"displaced_weapon_id": displaced_weapon_id,
+	}
+
+
+func _select_fallback_after_loadout_change() -> void:
+	if unlocked_weapons.is_empty():
+		current_weapon_id = &""
+		broadcast_state()
+		return
+	if not unlocked_weapons.has(current_weapon_id):
+		current_weapon_id = unlocked_weapons[0]
+	broadcast_state()
+
+
+func _loadout_group_for(definition: WeaponDefinition) -> StringName:
+	if definition == null or definition.loadout_group == &"":
+		return definition.weapon_id if definition != null else &""
+	return definition.loadout_group
+
+
+func _make_room_for_loadout_group(
+	target_weapon_id: StringName,
+	target_definition: WeaponDefinition
+) -> StringName:
+	var matching_carried: Array[StringName] = []
+	for carried_id: StringName in unlocked_weapons:
+		if carried_id == target_weapon_id:
+			continue
+		var carried_definition := get_weapon_definition(carried_id)
+		if (
+			carried_definition != null
+			and _loadout_group_for(carried_definition) == _loadout_group_for(target_definition)
+		):
+			matching_carried.append(carried_id)
+	var first_displaced: StringName = &""
+	var group_limit := maxi(1, weapons_per_loadout_group)
+	while matching_carried.size() >= group_limit:
+		var displaced_id: StringName = (
+			current_weapon_id
+			if matching_carried.has(current_weapon_id)
+			else matching_carried[0]
+		)
+		if first_displaced == &"":
+			first_displaced = displaced_id
+		unlocked_weapons.erase(displaced_id)
+		matching_carried.erase(displaced_id)
+	return first_displaced
 
 
 func reload() -> void:
@@ -210,19 +345,26 @@ func _get_reserve_ammo_capacity(ammo_type: StringName) -> int:
 
 
 func unlock_weapon(weapon_id: StringName, bonus_ammo: int) -> void:
+	var definition := _definitions_by_id.get(weapon_id) as WeaponDefinition
+	if definition == null:
+		return
+	if not acquired_weapons.has(weapon_id):
+		acquired_weapons.append(weapon_id)
+	_make_room_for_loadout_group(weapon_id, definition)
 	if not unlocked_weapons.has(weapon_id):
 		unlocked_weapons.append(weapon_id)
-	var definition := _definitions_by_id.get(weapon_id) as WeaponDefinition
-	if definition != null:
-		if int(magazines.get(weapon_id, 0)) <= 0:
-			magazines[weapon_id] = definition.magazine_size
-		add_ammo(definition.ammo_type, bonus_ammo)
+	if int(magazines.get(weapon_id, 0)) <= 0:
+		magazines[weapon_id] = definition.magazine_size
+	add_ammo(definition.ammo_type, bonus_ammo)
 	switch_to(weapon_id)
+	loadout_changed.emit()
 
 
 func broadcast_state() -> void:
 	var weapon := get_current_weapon()
 	if weapon == null:
+		GameState.publish_weapon(&"", "UI_UNARMED")
+		GameState.publish_ammo(0, 0)
 		return
 	GameState.publish_weapon(weapon.weapon_id, weapon.display_name)
 	GameState.publish_ammo(
@@ -234,6 +376,7 @@ func broadcast_state() -> void:
 func capture_state() -> Dictionary:
 	return {
 		"unlocked_weapons": unlocked_weapons.duplicate(),
+		"acquired_weapons": acquired_weapons.duplicate(),
 		"magazines": magazines.duplicate(true),
 		"reserve_ammo": reserve_ammo.duplicate(true),
 		"current_weapon_id": current_weapon_id,
@@ -248,16 +391,26 @@ func restore_state(state: Dictionary) -> void:
 	unlocked_weapons.clear()
 	var stored_weapons: Array = state.get("unlocked_weapons", initial_unlocked_weapons) as Array
 	for stored_weapon: Variant in stored_weapons:
-		unlocked_weapons.append(StringName(str(stored_weapon)))
-	if unlocked_weapons.is_empty():
+		var stored_weapon_id := canonical_weapon_id(StringName(str(stored_weapon)))
+		if _definitions_by_id.has(stored_weapon_id) and not unlocked_weapons.has(stored_weapon_id):
+			unlocked_weapons.append(stored_weapon_id)
+	acquired_weapons.clear()
+	var stored_acquired: Array = state.get("acquired_weapons", stored_weapons) as Array
+	for stored_weapon: Variant in stored_acquired:
+		var stored_weapon_id := canonical_weapon_id(StringName(str(stored_weapon)))
+		if _definitions_by_id.has(stored_weapon_id) and not acquired_weapons.has(stored_weapon_id):
+			acquired_weapons.append(stored_weapon_id)
+	if acquired_weapons.is_empty():
 		for weapon_id in initial_unlocked_weapons:
 			if _definitions_by_id.has(weapon_id):
-				unlocked_weapons.append(weapon_id)
+				acquired_weapons.append(weapon_id)
+				if unlocked_weapons.is_empty():
+					unlocked_weapons.append(weapon_id)
 				break
-	magazines = (state.get("magazines", magazines) as Dictionary).duplicate(true)
+	magazines = _canonicalize_weapon_dictionary((state.get("magazines", magazines) as Dictionary).duplicate(true))
 	reserve_ammo = (state.get("reserve_ammo", reserve_ammo) as Dictionary).duplicate(true)
-	current_weapon_id = StringName(str(state.get("current_weapon_id", initial_weapon_id)))
-	upgrade_levels = (state.get("upgrade_levels", upgrade_levels) as Dictionary).duplicate(true)
+	current_weapon_id = canonical_weapon_id(StringName(str(state.get("current_weapon_id", initial_weapon_id))))
+	upgrade_levels = _canonicalize_weapon_dictionary((state.get("upgrade_levels", upgrade_levels) as Dictionary).duplicate(true))
 	if not unlocked_weapons.has(current_weapon_id):
 		current_weapon_id = (
 			unlocked_weapons[0]
@@ -265,6 +418,7 @@ func restore_state(state: Dictionary) -> void:
 			else &""
 		)
 	broadcast_state()
+	loadout_changed.emit()
 
 
 func _try_fire() -> void:
@@ -274,14 +428,14 @@ func _try_fire() -> void:
 	var magazine := int(magazines.get(current_weapon_id, 0))
 	if magazine <= 0:
 		_play_hud_action(&"empty")
-		GameState.notify("ŞARJÖR BOŞ — R İLE DOLDUR")
+		GameState.notify(tr("WEAPON_EMPTY_RELOAD"))
 		_cooldown_remaining = empty_trigger_cooldown
 		return
 	magazines[current_weapon_id] = magazine - 1
 	_cooldown_remaining = weapon.fire_interval * float(_modifiers(weapon).fire_rate)
 	_play_hud_action(&"fire")
 	_shoot_hitscan(weapon)
-	GameState.emit_gunshot(_player.global_position, 1.0 if weapon.weapon_id in [&"pistol", &"shotgun"] else 1.15, _player)
+	GameState.emit_gunshot(_player.global_position, 1.0 if weapon.weapon_id in [&"p01", &"sg04"] else 1.15, _player)
 	_apply_recoil(weapon)
 	broadcast_state()
 

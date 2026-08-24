@@ -7,19 +7,11 @@
 [ext_resource type="Script" uid="uid://ct0slkur86ywi" path="res://scripts/ui/automap_view.gd" id="7_automap"]
 [ext_resource type="Texture2D" uid="uid://bjeurg4ipxvmu" path="res://assets/pickups/key_blue.png" id="8_key_blue"]
 [ext_resource type="Texture2D" uid="uid://clp5g0eqcky2c" path="res://assets/pickups/key_red.png" id="9_key_red"]
-[ext_resource type="Texture2D" uid="uid://c5wwjhxd32t8d" path="res://assets/weapons/pistol_idle.png" id="9_pistol_idle"]
 [ext_resource type="Texture2D" uid="uid://blwigqvrkpxbe" path="res://assets/pickups/key_yellow.png" id="10_key_yellow"]
-[ext_resource type="Texture2D" uid="uid://bnrec1nktim3e" path="res://assets/weapons/pistol_fire.png" id="10_pistol_fire"]
-[ext_resource type="Texture2D" uid="uid://c5rugkiy6ngcn" path="res://assets/weapons/shotgun_idle.png" id="11_shotgun_idle"]
-[ext_resource type="Texture2D" uid="uid://unrvo2i62rpv" path="res://assets/weapons/shotgun_fire.png" id="12_shotgun_fire"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="13_pause"]
 [ext_resource type="Texture2D" uid="uid://dwv6dgosxheen" path="res://assets/ui/blood_vignette.png" id="14_blood"]
 [ext_resource type="Texture2D" uid="uid://b6iwopfobi8ob" path="res://assets/ui/blood_vignette_critical.png" id="15_blood_critical"]
 [ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="18_mono_font"]
-[ext_resource type="Texture2D" uid="uid://lbgatekppr8w" path="res://assets/weapons/pistol_reload_1.png" id="19_pistol_reload_1"]
-[ext_resource type="Texture2D" uid="uid://cwx47xhvrc8nl" path="res://assets/weapons/pistol_reload_2.png" id="20_pistol_reload_2"]
-[ext_resource type="Texture2D" uid="uid://cd6fjch1kktsm" path="res://assets/weapons/shotgun_reload_1.png" id="21_shotgun_reload_1"]
-[ext_resource type="Texture2D" uid="uid://n15fw2fj0a6a" path="res://assets/weapons/shotgun_reload_2.png" id="22_shotgun_reload_2"]
 [ext_resource type="AudioStream" uid="uid://6r2ekfh65cg2" path="res://assets/audio/pistol_fire_pro.wav" id="23_pistol_audio"]
 [ext_resource type="AudioStream" uid="uid://km5n3iai504p" path="res://assets/audio/shotgun_fire_pro.wav" id="24_shotgun_audio"]
 [ext_resource type="AudioStream" uid="uid://dfiiq8d0261ko" path="res://assets/audio/pistol_reload_pro.wav" id="25_pistol_reload_audio"]
@@ -27,100 +19,6 @@
 [ext_resource type="AudioStream" uid="uid://c2jv4ucc4qgg2" path="res://assets/audio/player_death_pro.wav" id="27_player_death_audio"]
 [ext_resource type="AudioStream" uid="uid://d0lpi6dofstyy" path="res://assets/audio/game_over_pro.wav" id="28_game_over_audio"]
 [ext_resource type="AudioStream" uid="uid://dnig8inl0eshv" path="res://assets/audio/empty_gun.wav" id="29_empty_gun_audio"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_pistol"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("9_pistol_idle")
-}],
-"loop": 0,
-"name": &"equip",
-"speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("10_pistol_fire")
-}, {
-"duration": 1.0,
-"texture": ExtResource("9_pistol_idle")
-}],
-"loop": 0,
-"name": &"fire",
-"speed": 12.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("9_pistol_idle")
-}],
-"loop": 1,
-"name": &"idle",
-"speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("9_pistol_idle")
-}, {
-"duration": 1.0,
-"texture": ExtResource("19_pistol_reload_1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("20_pistol_reload_2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("9_pistol_idle")
-}],
-"loop": 0,
-"name": &"reload",
-"speed": 3.6
-}]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_shotgun"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("11_shotgun_idle")
-}],
-"loop": 0,
-"name": &"equip",
-"speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("12_shotgun_fire")
-}, {
-"duration": 1.0,
-"texture": ExtResource("11_shotgun_idle")
-}],
-"loop": 0,
-"name": &"fire",
-"speed": 7.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("11_shotgun_idle")
-}],
-"loop": 1,
-"name": &"idle",
-"speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("11_shotgun_idle")
-}, {
-"duration": 1.0,
-"texture": ExtResource("21_shotgun_reload_1")
-}, {
-"duration": 1.0,
-"texture": ExtResource("22_shotgun_reload_2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("11_shotgun_idle")
-}],
-"loop": 0,
-"name": &"reload",
-"speed": 2.8
-}]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_modern_objective"]
 bg_color = Color(0.008, 0.022, 0.03, 0.92)
@@ -186,6 +84,16 @@ corner_radius_bottom_left = 2
 [node name="HUD" type="CanvasLayer" unique_id=1189378943]
 process_mode = 3
 script = ExtResource("1_script")
+critical_health_threshold = 25
+warning_health_threshold = 50
+low_health_overlay_ratio = 0.5
+critical_overlay_ratio = 0.3
+notification_hold_time = 2.5
+notification_fade_time = 0.35
+pickup_slide_time = 0.18
+pickup_hold_time = 1.85
+pickup_fade_time = 0.3
+damage_feedback_time = 0.6
 
 [node name="Root" type="Control" parent="." unique_id=190228756]
 layout_mode = 3
@@ -206,31 +114,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="PistolSprite" type="AnimatedSprite2D" parent="Root/WeaponLayer" unique_id=1600221760]
-unique_name_in_owner = true
-visible = false
-texture_filter = 2
-position = Vector2(992, 820)
-sprite_frames = SubResource("SpriteFrames_pistol")
-animation = &"idle"
-autoplay = "idle"
-
-[node name="ShotgunSprite" type="AnimatedSprite2D" parent="Root/WeaponLayer" unique_id=1615587853]
-unique_name_in_owner = true
-visible = false
-texture_filter = 2
-position = Vector2(996, 800)
-sprite_frames = SubResource("SpriteFrames_shotgun")
-animation = &"idle"
-autoplay = "idle"
-
-[node name="AK47Sprite" type="AnimatedSprite2D" parent="Root/WeaponLayer" unique_id=2049858700]
-unique_name_in_owner = true
-visible = false
-texture_filter = 2
-position = Vector2(990, 790)
-rotation = 0.0698132
 
 [node name="PistolAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1631838649]
 unique_name_in_owner = true
@@ -336,8 +219,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 17
-text = "OBJECTIVE
-—"
+text = "HUD_OBJECTIVE_EMPTY"
 horizontal_alignment = 1
 vertical_alignment = 1
 text_overrun_behavior = 3
@@ -423,7 +305,7 @@ offset_right = 290.0
 offset_bottom = 16.0
 theme_override_colors/font_color = Color(0.48, 0.72, 0.78, 1)
 theme_override_font_sizes/font_size = 11
-text = "PICKUP"
+text = "HUD_PICKUP"
 
 [node name="PickupLeftValue" type="Label" parent="Root/PickupFeedLeft" unique_id=2083093514]
 unique_name_in_owner = true
@@ -466,7 +348,7 @@ offset_right = 276.0
 offset_bottom = 16.0
 theme_override_colors/font_color = Color(0.74, 0.54, 0.46, 1)
 theme_override_font_sizes/font_size = 11
-text = "PICKUP"
+text = "HUD_PICKUP"
 horizontal_alignment = 2
 
 [node name="PickupRightValue" type="Label" parent="Root/PickupFeedRight" unique_id=19044273]
@@ -498,7 +380,7 @@ theme_override_constants/separation = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.64, 0.72, 0.74, 1)
 theme_override_font_sizes/font_size = 11
-text = "HEALTH"
+text = "HUD_HEALTH"
 
 [node name="HealthValue" type="Label" parent="Root/VitalsGroup/HealthBox" unique_id=211198935]
 unique_name_in_owner = true
@@ -524,7 +406,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48, 0.58, 0.6, 1)
 theme_override_font_sizes/font_size = 10
-text = "STABLE"
+text = "HUD_STABLE"
 
 [node name="ArmorBox" type="VBoxContainer" parent="Root/VitalsGroup" unique_id=1565230011]
 unique_name_in_owner = true
@@ -538,7 +420,7 @@ theme_override_constants/separation = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48, 0.67, 0.72, 1)
 theme_override_font_sizes/font_size = 11
-text = "ARMOR"
+text = "HUD_ARMOR"
 
 [node name="ArmorValue" type="Label" parent="Root/VitalsGroup/ArmorBox" unique_id=1670384165]
 unique_name_in_owner = true
@@ -564,7 +446,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.58, 0.62, 1)
 theme_override_font_sizes/font_size = 10
-text = "NO PLATING"
+text = "HUD_NO_PLATING"
 
 [node name="StaminaBox" type="VBoxContainer" parent="Root/VitalsGroup" unique_id=1539297605]
 unique_name_in_owner = true
@@ -578,7 +460,7 @@ theme_override_constants/separation = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.52, 0.62, 0.64, 1)
 theme_override_font_sizes/font_size = 10
-text = "STAMINA"
+text = "HUD_STAMINA"
 
 [node name="StaminaValue" type="Label" parent="Root/VitalsGroup/StaminaBox" unique_id=700610787]
 unique_name_in_owner = true
@@ -634,7 +516,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.56, 0.7, 0.74, 1)
 theme_override_font_sizes/font_size = 14
-text = "SIDEARM"
+text = "HUD_SIDEARM"
 horizontal_alignment = 2
 
 [node name="WeaponSlot" type="Label" parent="Root/WeaponGroup/WeaponBox/Header" unique_id=995191833]
@@ -674,7 +556,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.46, 0.62, 0.65, 1)
 theme_override_font_sizes/font_size = 11
-text = "9MM // BALLISTIC"
+text = "HUD_AMMO_BALLISTIC"
 horizontal_alignment = 2
 
 [node name="WeaponReady" type="Label" parent="Root/WeaponGroup" unique_id=1918185530]
@@ -685,7 +567,7 @@ offset_right = 380.0
 offset_bottom = 214.0
 theme_override_colors/font_color = Color(0.34, 0.5, 0.54, 1)
 theme_override_font_sizes/font_size = 10
-text = "VEX / WEAPON SYSTEM ONLINE"
+text = "HUD_WEAPON_SYSTEM_ONLINE"
 horizontal_alignment = 2
 
 [node name="MissionBox" type="VBoxContainer" parent="Root" unique_id=234073710]
@@ -701,7 +583,7 @@ mouse_filter = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.38, 0.48, 0.5, 1)
 theme_override_font_sizes/font_size = 10
-text = "HOSTILE CASUALTIES"
+text = "HUD_HOSTILE_CASUALTIES"
 
 [node name="KillsValue" type="Label" parent="Root/MissionBox" unique_id=1155440397]
 unique_name_in_owner = true
@@ -714,7 +596,7 @@ text = "0"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.4, 0.42, 1)
 theme_override_font_sizes/font_size = 9
-text = "VEX / OPERATIONS"
+text = "HUD_OPERATIONS"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Root" unique_id=1545655328]
 texture_filter = 3
@@ -835,7 +717,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 34
-text = "TESİS HARİTASI // VEX-01"
+text = "LEVEL_01_MAP"
 horizontal_alignment = 1
 
 [node name="MapStatus" type="Label" parent="Root/MapOverlay" unique_id=1012992375]
@@ -851,7 +733,7 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = ExtResource("18_mono_font")
 theme_override_font_sizes/font_size = 17
-text = "KEŞİF 00/18  //  000%"
+text = "HUD_MAP_DISCOVERY_DEFAULT"
 horizontal_alignment = 1
 
 [node name="Legend" type="Label" parent="Root/MapOverlay" unique_id=294879161]
@@ -866,7 +748,7 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = ExtResource("18_mono_font")
 theme_override_font_sizes/font_size = 14
-text = "▲ KONUM   ◆ TAHLİYE   ━ KAPI   MAVİ/KIRMIZI: KİLİTLİ   YEŞİL: AÇIK"
+text = "HUD_MAP_LEGEND"
 horizontal_alignment = 1
 
 [node name="Hint" type="Label" parent="Root/MapOverlay" unique_id=1299318952]
@@ -880,7 +762,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 16
-text = "TAB KAPAT  •  TEKERLEK YAKINLAŞTIR  •  SÜRÜKLE KAYDIR  •  SAĞ TIK MERKEZLE"
+text = "HUD_MAP_CONTROLS"
 horizontal_alignment = 1
 
 [node name="PauseMenu" parent="Root" unique_id=446453292 instance=ExtResource("13_pause")]
@@ -911,20 +793,20 @@ theme_override_constants/separation = 24
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.3, 0.18, 1)
 theme_override_font_sizes/font_size = 19
-text = "// YAŞAMSAL SİNYAL KESİLDİ"
+text = "HUD_DEATH_EYEBROW"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="Root/DeathPanel/Margin/VBox" unique_id=1815380996]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.42, 0.28, 1)
 theme_override_font_sizes/font_size = 54
-text = "ÖLDÜN"
+text = "HUD_DEATH_TITLE"
 horizontal_alignment = 1
 
 [node name="Description" type="Label" parent="Root/DeathPanel/Margin/VBox" unique_id=1623829947]
 layout_mode = 2
 size_flags_vertical = 3
-text = "Karantina tesisi seni yuttu. Oyun sona erdi. Yeniden başladığında bölümün en başından başlayacaksın."
+text = "HUD_DEATH_BODY"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
@@ -933,10 +815,10 @@ autowrap_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
-text = "EN BAŞTAN BAŞLA"
+text = "HUD_DEATH_RESTART"
 
 [node name="DeathMainMenuButton" type="Button" parent="Root/DeathPanel/Margin/VBox" unique_id=260336087]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
-text = "ANA MENÜ"
+text = "UI_MAIN_MENU"

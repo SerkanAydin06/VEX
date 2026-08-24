@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bar5ey7gbqorf"]
 
-[ext_resource type="Texture2D" uid="uid://bos5vrw84blnt" path="res://assets/world/laptop_screen.png" id="1_3cr3s"]
+[ext_resource type="Texture2D" path="res://assets/world/bastion7/operator_pad.png" id="1_3cr3s"]
 [ext_resource type="Texture2D" uid="uid://dlu45f20af664" path="res://assets/world/keyboard.png" id="1_a5epx"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8mx28"]

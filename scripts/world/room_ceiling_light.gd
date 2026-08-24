@@ -27,7 +27,7 @@ extends Node3D
 	set(value):
 		distance_attenuation = value
 		_apply_configuration()
-@export var shadow_enabled := false:
+@export var shadow_enabled := true:
 	set(value):
 		shadow_enabled = value
 		_apply_configuration()

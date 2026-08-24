@@ -1,9 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://k3qh14epw3y"]
+[gd_scene format=3 uid="uid://k3qh14epw3y"]
 
 [ext_resource type="Script" uid="uid://dtqyd0obhroa6" path="res://scripts/ui/main_menu.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://assets/ui/main_menu_background.png" id="3_background"]
-[ext_resource type="Texture2D" path="res://assets/ui/vex_logo.png" id="4_logo"]
+[ext_resource type="Texture2D" uid="uid://cbe34a0jhjqhu" path="res://assets/ui/main_menu_background.png" id="3_background"]
+[ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="4_logo"]
 [ext_resource type="PackedScene" path="res://scenes/ui/settings_panel.tscn" id="5_settings"]
 [ext_resource type="AudioStream" uid="uid://dfc8ful0dedx2" path="res://assets/audio/menu_background_pro.mp3" id="6_menu_music"]
 
@@ -59,7 +59,7 @@ corner_radius_bottom_left = 3
 shadow_color = Color(0, 0, 0, 0.8)
 shadow_size = 20
 
-[node name="MainMenu" type="Control"]
+[node name="MainMenu" type="Control" unique_id=55908172]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,7 +69,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1257683523]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -79,7 +79,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.001, 0.004, 0.007, 1)
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=357379047]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -92,7 +92,7 @@ texture = ExtResource("3_background")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="CinemaShade" type="ColorRect" parent="."]
+[node name="CinemaShade" type="ColorRect" parent="." unique_id=1937106271]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,14 +102,14 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.002, 0.007, 0.011, 0.2)
 
-[node name="LeftShade" type="ColorRect" parent="."]
+[node name="LeftShade" type="ColorRect" parent="." unique_id=1353869886]
 layout_mode = 0
 offset_right = 760.0
 offset_bottom = 1080.0
 mouse_filter = 2
 color = Color(0.001, 0.008, 0.012, 0.73)
 
-[node name="LeftShadeSoft" type="ColorRect" parent="."]
+[node name="LeftShadeSoft" type="ColorRect" parent="." unique_id=1154218124]
 layout_mode = 0
 offset_left = 760.0
 offset_right = 980.0
@@ -117,7 +117,7 @@ offset_bottom = 1080.0
 mouse_filter = 2
 color = Color(0.001, 0.008, 0.012, 0.24)
 
-[node name="TopRail" type="ColorRect" parent="."]
+[node name="TopRail" type="ColorRect" parent="." unique_id=1770837964]
 layout_mode = 0
 offset_left = 52.0
 offset_top = 25.0
@@ -126,7 +126,7 @@ offset_bottom = 28.0
 mouse_filter = 2
 color = Color(0.12, 0.73, 0.96, 0.9)
 
-[node name="PulseLine" type="ColorRect" parent="."]
+[node name="PulseLine" type="ColorRect" parent="." unique_id=1925139991]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 52.0
@@ -136,7 +136,7 @@ offset_bottom = 28.0
 mouse_filter = 2
 color = Color(0.64, 0.95, 1, 1)
 
-[node name="SystemHeader" type="HBoxContainer" parent="."]
+[node name="SystemHeader" type="HBoxContainer" parent="." unique_id=1390594702]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 40.0
@@ -144,21 +144,21 @@ offset_right = 670.0
 offset_bottom = 67.0
 theme_override_constants/separation = 18
 
-[node name="SystemName" type="Label" parent="SystemHeader"]
+[node name="SystemName" type="Label" parent="SystemHeader" unique_id=166594741]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.3, 0.76, 0.88, 1)
 theme_override_font_sizes/font_size = 15
-text = "VEX SYSTEMS // ERİŞİM DÜĞÜMÜ 01"
+text = "MAIN_SYSTEM_NAME"
 
-[node name="Online" type="Label" parent="SystemHeader"]
+[node name="Online" type="Label" parent="SystemHeader" unique_id=900502964]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.46, 1, 0.68, 1)
 theme_override_font_sizes/font_size = 15
-text = "● ÇEVRİMİÇİ"
+text = "MAIN_ONLINE"
 horizontal_alignment = 2
 
-[node name="Logo" type="TextureRect" parent="."]
+[node name="Logo" type="TextureRect" parent="." unique_id=2085060629]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 48.0
@@ -170,7 +170,7 @@ texture = ExtResource("4_logo")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Tagline" type="Label" parent="."]
+[node name="Tagline" type="Label" parent="." unique_id=2130219234]
 layout_mode = 0
 offset_left = 89.0
 offset_top = 304.0
@@ -178,102 +178,102 @@ offset_right = 639.0
 offset_bottom = 329.0
 theme_override_colors/font_color = Color(0.49, 0.63, 0.68, 1)
 theme_override_font_sizes/font_size = 16
-text = "KARANTİNA AĞI // ÖLÜM PROTOKOLÜ ETKİN"
+text = "MAIN_TAGLINE"
 horizontal_alignment = 1
 
-[node name="MainShell" type="PanelContainer" parent="."]
+[node name="MainShell" type="PanelContainer" parent="." unique_id=1708686842]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 62.0
+offset_left = 92.0
 offset_top = 344.0
-offset_right = 642.0
+offset_right = 612.0
 offset_bottom = 887.0
 theme_override_styles/panel = SubResource("StyleBox_menu_shell")
 
-[node name="Margin" type="MarginContainer" parent="MainShell"]
+[node name="Margin" type="MarginContainer" parent="MainShell" unique_id=704014621]
 layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 24
 
-[node name="VBox" type="VBoxContainer" parent="MainShell/Margin"]
+[node name="VBox" type="VBoxContainer" parent="MainShell/Margin" unique_id=1668311319]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Header" type="HBoxContainer" parent="MainShell/Margin/VBox"]
+[node name="Header" type="HBoxContainer" parent="MainShell/Margin/VBox" unique_id=228388606]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="SectionLabel" type="Label" parent="MainShell/Margin/VBox/Header"]
+[node name="SectionLabel" type="Label" parent="MainShell/Margin/VBox/Header" unique_id=171791461]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.39, 0.88, 1, 1)
 theme_override_font_sizes/font_size = 18
-text = "// ANA TERMİNAL"
+text = "MAIN_TERMINAL"
 
-[node name="AccessLabel" type="Label" parent="MainShell/Margin/VBox/Header"]
+[node name="AccessLabel" type="Label" parent="MainShell/Margin/VBox/Header" unique_id=1440388975]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.36, 0.24, 1)
 theme_override_font_sizes/font_size = 15
-text = "YETKİ: EX-01"
+text = "MAIN_AUTHORITY"
 horizontal_alignment = 2
 
-[node name="Divider" type="HSeparator" parent="MainShell/Margin/VBox"]
+[node name="Divider" type="HSeparator" parent="MainShell/Margin/VBox" unique_id=125499149]
 layout_mode = 2
 
-[node name="MenuButtons" type="VBoxContainer" parent="MainShell/Margin/VBox"]
+[node name="MenuButtons" type="VBoxContainer" parent="MainShell/Margin/VBox" unique_id=848617551]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 11
 
-[node name="NewGameButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons"]
+[node name="NewGameButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=368567398]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-text = "01     YENİ OYUN"
+text = "MAIN_NEW_GAME"
 alignment = 0
 
-[node name="ContinueButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons"]
+[node name="ContinueButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=1170215118]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-text = "02     DEVAM ET"
+text = "MAIN_CONTINUE"
 alignment = 0
 
-[node name="SettingsButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons"]
+[node name="SettingsButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=1732601213]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-text = "02     AYARLAR"
+text = "MAIN_SETTINGS"
 alignment = 0
 
-[node name="CreditsButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons"]
+[node name="CreditsButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=1043123445]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-text = "03     KÜNYE"
+text = "MAIN_CREDITS"
 alignment = 0
 
-[node name="QuitButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons"]
+[node name="QuitButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=1800610792]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-text = "04     ÇIKIŞ"
+text = "MAIN_QUIT"
 alignment = 0
 
-[node name="BuildLine" type="HBoxContainer" parent="MainShell/Margin/VBox"]
+[node name="BuildLine" type="HBoxContainer" parent="MainShell/Margin/VBox" unique_id=1465132363]
 layout_mode = 2
 
-[node name="Build" type="Label" parent="MainShell/Margin/VBox/BuildLine"]
+[node name="Build" type="Label" parent="MainShell/Margin/VBox/BuildLine" unique_id=601703819]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.32, 0.48, 0.54, 1)
 theme_override_font_sizes/font_size = 14
-text = "VEX v3.1.1 // COMPLETE BUILD"
+text = "VEX v4.1.0 // BILINGUAL BUILD"
 
-[node name="SystemClock" type="Label" parent="MainShell/Margin/VBox/BuildLine"]
+[node name="SystemClock" type="Label" parent="MainShell/Margin/VBox/BuildLine" unique_id=1558230596]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.44, 0.66, 0.72, 1)
@@ -281,7 +281,7 @@ theme_override_font_sizes/font_size = 14
 text = "00:00:00"
 horizontal_alignment = 2
 
-[node name="FacilityStatus" type="PanelContainer" parent="."]
+[node name="FacilityStatus" type="PanelContainer" parent="." unique_id=919805616]
 layout_mode = 0
 offset_left = 1444.0
 offset_top = 54.0
@@ -289,71 +289,78 @@ offset_right = 1848.0
 offset_bottom = 126.0
 theme_override_styles/panel = SubResource("StyleBox_status")
 
-[node name="VBox" type="VBoxContainer" parent="FacilityStatus"]
+[node name="VBox" type="VBoxContainer" parent="FacilityStatus" unique_id=1273823685]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Label" type="Label" parent="FacilityStatus/VBox"]
+[node name="Label" type="Label" parent="FacilityStatus/VBox" unique_id=1294651239]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.39, 0.82, 0.92, 1)
 theme_override_font_sizes/font_size = 15
-text = "VEX-01 // KARANTİNA TESİSİ"
+text = "LEVEL_01_NAME"
 horizontal_alignment = 1
 
-[node name="Alert" type="Label" parent="FacilityStatus/VBox"]
+[node name="Alert" type="Label" parent="FacilityStatus/VBox" unique_id=1616500106]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.22, 1)
 theme_override_font_sizes/font_size = 19
-text = "TEHDİT SEVİYESİ: KRİTİK"
+text = "MAIN_THREAT_CRITICAL"
 horizontal_alignment = 1
 
-[node name="MissionPanel" type="PanelContainer" parent="."]
+[node name="MissionPanel" type="PanelContainer" parent="." unique_id=271192973]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 1332.0
-offset_top = 751.0
-offset_right = 1848.0
-offset_bottom = 996.0
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -588.0
+offset_top = -349.0
+offset_right = -72.0
+offset_bottom = -104.0
+grow_horizontal = 0
+grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBox_mission")
 
-[node name="Margin" type="MarginContainer" parent="MissionPanel"]
+[node name="Margin" type="MarginContainer" parent="MissionPanel" unique_id=552209278]
 layout_mode = 2
 theme_override_constants/margin_left = 28
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 20
 
-[node name="VBox" type="VBoxContainer" parent="MissionPanel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="MissionPanel/Margin" unique_id=2026204257]
 layout_mode = 2
 theme_override_constants/separation = 9
 
-[node name="Header" type="Label" parent="MissionPanel/Margin/VBox"]
+[node name="Header" type="Label" parent="MissionPanel/Margin/VBox" unique_id=132228881]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.38, 0.24, 1)
 theme_override_font_sizes/font_size = 16
-text = "AKTİF OPERASYON // VEX-01"
+text = "MAIN_ACTIVE_OPERATION"
 
-[node name="Title" type="Label" parent="MissionPanel/Margin/VBox"]
+[node name="Title" type="Label" parent="MissionPanel/Margin/VBox" unique_id=1082169920]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.83, 0.95, 0.98, 1)
 theme_override_font_sizes/font_size = 29
-text = "KARANTİNA İHLALİ"
+text = "MAIN_MISSION_TITLE"
 
-[node name="Description" type="Label" parent="MissionPanel/Margin/VBox"]
+[node name="Description" type="Label" parent="MissionPanel/Margin/VBox" unique_id=1414539382]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.5, 0.68, 0.73, 1)
 theme_override_font_sizes/font_size = 16
-text = "Tesise gir. Mavi erişim anahtarını ele geçir. Altı ileri sektörü aş ve tahliye omurgasından canlı çık."
+text = "MAIN_MISSION_DESCRIPTION"
 autowrap_mode = 2
 
-[node name="MissionData" type="Label" parent="MissionPanel/Margin/VBox"]
+[node name="MissionData" type="Label" parent="MissionPanel/Margin/VBox" unique_id=2037313429]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.86, 1, 1)
 theme_override_font_sizes/font_size = 15
-text = "2 BÖLÜM  •  3 GİZLİ ALAN  •  ZORLUK: NORMAL"
+text = "MAIN_MISSION_DATA_DEFAULT"
 
-[node name="BottomRail" type="ColorRect" parent="."]
+[node name="BottomRail" type="ColorRect" parent="." unique_id=1008174948]
 layout_mode = 0
 offset_left = 52.0
 offset_top = 1010.0
@@ -362,7 +369,7 @@ offset_bottom = 1012.0
 mouse_filter = 2
 color = Color(0.16, 0.49, 0.59, 0.55)
 
-[node name="BottomInfo" type="Label" parent="."]
+[node name="BottomInfo" type="Label" parent="." unique_id=2004259718]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 1024.0
@@ -370,9 +377,9 @@ offset_right = 1848.0
 offset_bottom = 1054.0
 theme_override_colors/font_color = Color(0.38, 0.55, 0.6, 1)
 theme_override_font_sizes/font_size = 15
-text = "W A S D  HAREKET     FARE  BAKIŞ / ATEŞ     E  ETKİLEŞİM     R  DOLDUR     TAB  TESİS HARİTASI     ESC  DURAKLAT"
+text = "MAIN_CONTROLS"
 
-[node name="ModalShade" type="ColorRect" parent="."]
+[node name="ModalShade" type="ColorRect" parent="." unique_id=713026022]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -383,7 +390,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.001, 0.006, 0.009, 0.84)
 
-[node name="SettingsPanel" parent="." instance=ExtResource("5_settings")]
+[node name="SettingsPanel" parent="." unique_id=1429591347 instance=ExtResource("5_settings")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 550.0
@@ -391,7 +398,7 @@ offset_top = 105.0
 offset_right = 1370.0
 offset_bottom = 925.0
 
-[node name="CreditsPanel" type="PanelContainer" parent="."]
+[node name="CreditsPanel" type="PanelContainer" parent="." unique_id=1863433786]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -400,49 +407,46 @@ offset_top = 205.0
 offset_right = 1310.0
 offset_bottom = 875.0
 
-[node name="Margin" type="MarginContainer" parent="CreditsPanel"]
+[node name="Margin" type="MarginContainer" parent="CreditsPanel" unique_id=697387718]
 layout_mode = 2
 theme_override_constants/margin_left = 48
 theme_override_constants/margin_top = 38
 theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 38
 
-[node name="VBox" type="VBoxContainer" parent="CreditsPanel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="CreditsPanel/Margin" unique_id=2118762129]
 layout_mode = 2
 theme_override_constants/separation = 22
 
-[node name="Eyebrow" type="Label" parent="CreditsPanel/Margin/VBox"]
+[node name="Eyebrow" type="Label" parent="CreditsPanel/Margin/VBox" unique_id=391135393]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.2, 1)
 theme_override_font_sizes/font_size = 17
-text = "// VEX SYSTEMS ARŞİVİ"
+text = "MAIN_ARCHIVE"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="CreditsPanel/Margin/VBox"]
+[node name="Title" type="Label" parent="CreditsPanel/Margin/VBox" unique_id=1204212337]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.31, 0.86, 1, 1)
 theme_override_font_sizes/font_size = 42
 text = "VOID EXTERMINATION"
 horizontal_alignment = 1
 
-[node name="Body" type="Label" parent="CreditsPanel/Margin/VBox"]
+[node name="Body" type="Label" parent="CreditsPanel/Margin/VBox" unique_id=678899086]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 20
-text = "Özgün 2.5D bilimkurgu-korku FPS.
-
-VEX-01: Karantina Tesisi
-"
+text = "MAIN_CREDITS_BODY"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="CreditsCloseButton" type="Button" parent="CreditsPanel/Margin/VBox"]
+[node name="CreditsCloseButton" type="Button" parent="CreditsPanel/Margin/VBox" unique_id=1427809980]
 unique_name_in_owner = true
 layout_mode = 2
-text = "TERMİNALE DÖN"
+text = "MAIN_RETURN_TERMINAL"
 
-[node name="ConfirmPanel" type="PanelContainer" parent="."]
+[node name="ConfirmPanel" type="PanelContainer" parent="." unique_id=1743735158]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -451,57 +455,57 @@ offset_top = 350.0
 offset_right = 1260.0
 offset_bottom = 700.0
 
-[node name="Margin" type="MarginContainer" parent="ConfirmPanel"]
+[node name="Margin" type="MarginContainer" parent="ConfirmPanel" unique_id=2017339367]
 layout_mode = 2
 theme_override_constants/margin_left = 44
 theme_override_constants/margin_top = 34
 theme_override_constants/margin_right = 44
 theme_override_constants/margin_bottom = 34
 
-[node name="VBox" type="VBoxContainer" parent="ConfirmPanel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="ConfirmPanel/Margin" unique_id=1197600604]
 layout_mode = 2
 theme_override_constants/separation = 22
 
-[node name="Eyebrow" type="Label" parent="ConfirmPanel/Margin/VBox"]
+[node name="Eyebrow" type="Label" parent="ConfirmPanel/Margin/VBox" unique_id=893317503]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.2, 1)
 theme_override_font_sizes/font_size = 16
-text = "// PROTOKOL ONAYI GEREKLİ"
+text = "MAIN_CONFIRM_EYEBROW"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="ConfirmPanel/Margin/VBox"]
+[node name="Title" type="Label" parent="ConfirmPanel/Margin/VBox" unique_id=513028345]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.78, 0.94, 0.98, 1)
 theme_override_font_sizes/font_size = 34
-text = "YENİ OPERASYON?"
+text = "MAIN_CONFIRM_TITLE"
 horizontal_alignment = 1
 
-[node name="Body" type="Label" parent="ConfirmPanel/Margin/VBox"]
+[node name="Body" type="Label" parent="ConfirmPanel/Margin/VBox" unique_id=1472915168]
 layout_mode = 2
 size_flags_vertical = 3
-text = "Mevcut kontrol noktası silinecek. VEX-01 görevini baştan başlatmak istiyor musun?"
+text = "MAIN_CONFIRM_BODY"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="Buttons" type="HBoxContainer" parent="ConfirmPanel/Margin/VBox"]
+[node name="Buttons" type="HBoxContainer" parent="ConfirmPanel/Margin/VBox" unique_id=40147016]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="ConfirmYesButton" type="Button" parent="ConfirmPanel/Margin/VBox/Buttons"]
+[node name="ConfirmYesButton" type="Button" parent="ConfirmPanel/Margin/VBox/Buttons" unique_id=1625848650]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 64)
 layout_mode = 2
-text = "BAŞLAT"
+text = "UI_START"
 
-[node name="ConfirmNoButton" type="Button" parent="ConfirmPanel/Margin/VBox/Buttons"]
+[node name="ConfirmNoButton" type="Button" parent="ConfirmPanel/Margin/VBox/Buttons" unique_id=1699458400]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 64)
 layout_mode = 2
-text = "VAZGEÇ"
+text = "UI_CANCEL"
 
-[node name="MenuMusic" type="AudioStreamPlayer" parent="."]
+[node name="MenuMusic" type="AudioStreamPlayer" parent="." unique_id=1236350402]
 stream = ExtResource("6_menu_music")
 volume_db = -6.0
 bus = &"Music"
