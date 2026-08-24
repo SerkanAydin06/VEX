@@ -367,6 +367,59 @@ def check_world_visual_standard():
     ceiling_script=(ROOT/'scripts/world/room_ceiling_light.gd').read_text(encoding='utf-8')
     if '@export var shadow_enabled := true:' not in ceiling_script:
         fail('Tavan ışığı runtime varsayılanında gölge kapalı')
+    fill_path=ROOT/'scenes/world/ceiling_light_white_fill.tscn'
+    large_path=ROOT/'scenes/world/ceiling_light_white_large.tscn'
+    if not fill_path.exists() or not large_path.exists():
+        fail('Canonical beyaz ışık profil sahneleri eksik: fill/large')
+    else:
+        fill_scene=fill_path.read_text(encoding='utf-8')
+        large_scene=large_path.read_text(encoding='utf-8')
+        for contract in ['ceiling_light_white_horror.tscn', 'light_energy = 3.8', 'light_range = 9.2', 'cone_angle = 42.0', 'cone_attenuation = 1.6', 'distance_attenuation = 0.3', 'shadow_enabled = true']:
+            if contract not in fill_scene:
+                fail(f'FULL/SPAWN beyaz ışık profili bozuk: {contract}')
+        for contract in ['ceiling_light_white_horror.tscn', 'light_energy = 8.0', 'light_range = 20.0', 'cone_angle = 80.0', 'cone_attenuation = 4.0', 'distance_attenuation = 0.0', 'shadow_enabled = true']:
+            if contract not in large_scene:
+                fail(f'LARGE VOLUME beyaz ışık profili bozuk: {contract}')
+    world_piece_scene=(ROOT/'scenes/world/world_piece.tscn').read_text(encoding='utf-8')
+    world_piece_script=(ROOT/'scripts/world/world_piece.gd').read_text(encoding='utf-8')
+    if 'cast_shadow = true' not in world_piece_scene or 'cast_shadow = 1' not in world_piece_scene or '@export var cast_shadow := true' not in world_piece_script:
+        fail('Canonical world_piece gölge standardı açık değil')
+    standard=(ROOT/'STANDART.txt').read_text(encoding='utf-8')
+    for contract in [
+        'Beyaz ışık gölge : AÇIK',
+        'SHADOW CONTRACT:',
+        'Kapı durum ışıkları (kırmızı/yeşil) de shadow AÇIK',
+        'Canonical world_piece cast_shadow AÇIK',
+        "Level 1/2/3 instance'ları shadow_enabled=false veya cast_shadow=false/0 ile bu standardı EZEMEZ",
+    ]:
+        if contract not in standard:
+            fail(f'STANDART.txt shadow contract eksik: {contract}')
+
+    light_profile_contracts={
+        'level_01.tscn': ('26_room_light', 17, '36_room_fill', 3, None, 0),
+        'level_02.tscn': ('26_room_light', 32, '36_room_fill', 3, None, 0),
+        'level_03.tscn': ('15_room_light', 16, None, 0, '36_room_large', 1),
+    }
+    forbidden_instance_keys=['light_energy', 'light_range', 'cone_angle', 'cone_attenuation', 'distance_attenuation', 'shadow_enabled']
+    for filename, (normal_id, normal_count, fill_id, fill_count, large_id, large_count) in light_profile_contracts.items():
+        level_scene=(ROOT/'scenes/levels'/filename).read_text(encoding='utf-8')
+        if re.search(r'^shadow_enabled\s*=\s*false$', level_scene, re.M):
+            fail(f'{filename} canonical shadow standardını shadow_enabled=false ile eziyor')
+        if re.search(r'^cast_shadow\s*=\s*(?:false|0)$', level_scene, re.M):
+            fail(f'{filename} canonical world_piece shadow standardını cast_shadow=false/0 ile eziyor')
+        if level_scene.count(f'instance=ExtResource("{normal_id}")') != normal_count:
+            fail(f'{filename} NORMAL ROOM ışık sayısı standardı bozuk')
+        if fill_id is not None and level_scene.count(f'instance=ExtResource("{fill_id}")') != fill_count:
+            fail(f'{filename} FULL/SPAWN ışık sayısı standardı bozuk')
+        if large_id is not None and level_scene.count(f'instance=ExtResource("{large_id}")') != large_count:
+            fail(f'{filename} LARGE VOLUME ışık sayısı standardı bozuk')
+        profile_ids=[profile_id for profile_id in [normal_id, fill_id, large_id] if profile_id is not None]
+        for profile_id in profile_ids:
+            for match in re.finditer(rf'\[node name="([^"]+)"[^\n]*instance=ExtResource\("{re.escape(profile_id)}"\)\]\n(.*?)(?=\n\[node |\Z)', level_scene, re.S):
+                node_name, body=match.groups()
+                for key in forbidden_instance_keys:
+                    if re.search(rf'^{key} = ', body, re.M):
+                        fail(f'{filename}:{node_name} canonical ışık profilini instance override ile eziyor: {key}')
     png=green_texture_path.read_bytes()
     if len(png) < 26 or png[:8] != b'\x89PNG\r\n\x1a\n' or int.from_bytes(png[16:20], 'big') != 768 or int.from_bytes(png[20:24], 'big') != 320 or png[25] not in (4, 6):
         fail('Yeşil kapı lambası 768x320 gerçek alfa kanallı PNG değil')
@@ -567,7 +620,7 @@ def check_level_03_contract():
     upper_door_lamps=sum(1 for _x, y, _z in lamp_positions if y == '13.3')
     if lower_door_lamps != 18 or upper_door_lamps != 10:
         fail(f'VEX-03 durum lambaları kapı üstünde değil: {lower_door_lamps} alt / {upper_door_lamps} üst')
-    for standard_contract in ['piece_size = Vector3(12, 0.4, 10)', 'piece_size = Vector3(0.4, 7, 2.54)', 'piece_size = Vector3(0.4, 2.28, 4.92)', 'piece_size = Vector3(4.92, 2.28, 0.4)', '-18, 6.82, 15)', 'light_energy = 3.8']:
+    for standard_contract in ['piece_size = Vector3(12, 0.4, 10)', 'piece_size = Vector3(0.4, 7, 2.54)', 'piece_size = Vector3(0.4, 2.28, 4.92)', 'piece_size = Vector3(4.92, 2.28, 0.4)', '-18, 6.82, 15)']:
         if standard_contract not in scene:
             fail(f'VEX-03 Level 1/2 ölçü standardı eksik: {standard_contract}')
     for revision_contract in [
@@ -707,8 +760,56 @@ def check_localization_contract():
                 fail(f'Çeviri tablosunda Inspector oyuncu metni eksik: {resource.relative_to(ROOT)} -> {source}')
 
 
+
+def check_brightness_scene_authority():
+    settings_script=(ROOT/'scripts/autoload/settings_manager.gd').read_text(encoding='utf-8')
+    settings_scene=(ROOT/'scenes/autoload/settings_manager.tscn').read_text(encoding='utf-8')
+    standard=(ROOT/'STANDART.txt').read_text(encoding='utf-8')
+    for contract in [
+        'brightness_multiplier_min', 'brightness_multiplier_max',
+        'func _get_brightness_multiplier()', 'func _capture_scene_brightness_baseline(environment: Environment)',
+        'vex_scene_brightness_baseline', 'vex_scene_adjustment_enabled',
+        'environment.adjustment_brightness = scene_brightness * multiplier',
+    ]:
+        if contract not in settings_script:
+            fail(f'Brightness scene-authority sözleşmesi eksik: {contract}')
+    for forbidden in [
+        'environment.tonemap_exposure =',
+        'environment.ambient_light_energy =',
+        'environment.fog_light_energy =',
+        'post_brightness_min', 'post_brightness_max',
+        'exposure_min', 'exposure_max',
+        'ambient_energy_min', 'ambient_energy_max',
+        'fog_energy_min', 'fog_energy_max',
+    ]:
+        if forbidden in settings_script:
+            fail(f'Brightness sistemi scene atmosferini ezmemeli / eski mapping kaldı: {forbidden}')
+    for contract in ['brightness_multiplier_min = 0.42', 'brightness_multiplier_max = 2.15']:
+        if contract not in settings_scene:
+            fail(f'SettingsManager scene brightness multiplier ayarı eksik: {contract}')
+    for forbidden in ['post_brightness_min =', 'exposure_min =', 'ambient_energy_min =', 'fog_energy_min =']:
+        if forbidden in settings_scene:
+            fail(f'SettingsManager scene içinde eski absolute brightness mapping kaldı: {forbidden}')
+    for relative in [
+        'scenes/levels/level_01.tscn', 'scenes/levels/level_02.tscn', 'scenes/levels/level_03.tscn', 'scenes/hub/bastion_7.tscn'
+    ]:
+        scene=(ROOT/relative).read_text(encoding='utf-8')
+        if 'groups=["brightness_environment"]' not in scene:
+            fail(f'{relative}: brightness_environment grubu eksik')
+        for contract in ['ambient_light_energy =', 'fog_light_energy =', 'adjustment_brightness =']:
+            if contract not in scene:
+                fail(f'{relative}: scene brightness baseline değeri eksik: {contract}')
+    for contract in [
+        'ambient_light_energy, fog_light_energy ve tonemap_exposure',
+        'adjustment_brightness sahnedeki değer baseline kabul edilir',
+        'default_brightness değerinde kullanıcı çarpanı tam 1.0',
+    ]:
+        if contract not in standard:
+            fail(f'STANDART brightness scene-authority kuralı eksik: {contract}')
+
+
 def main():
-    check_paths(); check_import_uids(); check_inputmap(); check_core_scenes(); check_keys_and_pickups(); check_enemies(); check_player_contract(); check_no_checkpoint_contract(); check_weapon_upgrades(); check_armory_loadout_contract(); check_p01_visual_contract(); check_bastion_door_wall_contract(); check_world_visual_standard(); check_runtime_signal_contracts(); check_level_briefings(); check_level_02_progression(); check_level_03_contract(); check_unique_progression_ids(); check_localization_contract(); check_stale_files()
+    check_paths(); check_import_uids(); check_inputmap(); check_core_scenes(); check_keys_and_pickups(); check_enemies(); check_player_contract(); check_no_checkpoint_contract(); check_weapon_upgrades(); check_armory_loadout_contract(); check_p01_visual_contract(); check_bastion_door_wall_contract(); check_world_visual_standard(); check_runtime_signal_contracts(); check_level_briefings(); check_level_02_progression(); check_level_03_contract(); check_unique_progression_ids(); check_localization_contract(); check_brightness_scene_authority(); check_stale_files()
     for w in WARNINGS: print('WARNING:',w)
     for f in FAILURES: print('ERROR:',f)
     print(f'VEX VALIDATOR: {len(FAILURES)} gerçek hata, {len(WARNINGS)} uyarı')

@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/secret_trigger.tscn" id="13_secret"]
 [ext_resource type="PackedScene" uid="uid://bbawohf60emqi" path="res://scenes/props/explosive_barrel.tscn" id="14_barrel"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="15_room_light"]
+[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_large.tscn" id="36_room_large"]
 [ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_red.tscn" id="16_red_lamp"]
 [ext_resource type="PackedScene" path="res://scenes/world/lore_terminal.tscn" id="17_lore"]
 [ext_resource type="PackedScene" uid="uid://cpdi2qa0vdcq5" path="res://scenes/actors/ravager.tscn" id="18_ravager"]
@@ -1703,141 +1704,38 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5, 8.372559, -7)
 
 [node name="Light_L01_Start" parent="Gameplay/Lighting/RoomLights" unique_id=2073391699 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 6.82, 15)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_L02_OreIntake" parent="Gameplay/Lighting/RoomLights" unique_id=447548943 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 6.82, 15)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_L03_MainControl" parent="Gameplay/Lighting/RoomLights" unique_id=949796778 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, 15)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_L04_Operations" parent="Gameplay/Lighting/RoomLights" unique_id=1876548154 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 6.82, 15)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_L05_MaintenanceEntry" parent="Gameplay/Lighting/RoomLights" unique_id=2024396256 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 6.82, 5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_L06_MaintenanceHall" parent="Gameplay/Lighting/RoomLights" unique_id=1924314518 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 6.82, -5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_L07_Generator" parent="Gameplay/Lighting/RoomLights" unique_id=822846146 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 6.82, -5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_L08_Junction" parent="Gameplay/Lighting/RoomLights" unique_id=12072878 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, 5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_L10_ServiceCorridor" parent="Gameplay/Lighting/RoomLights" unique_id=1177192585 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, -5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
-[node name="Light_U01_StairLanding" parent="Gameplay/Lighting/RoomLights" unique_id=2042038400 instance=ExtResource("15_room_light")]
+[node name="Light_U01_StairLanding" parent="Gameplay/Lighting/RoomLights" unique_id=2042038400 instance=ExtResource("36_room_large")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, 5)
-light_energy = 8.0
-light_range = 20.0
-cone_angle = 80.0
-cone_attenuation = 4.0
-distance_attenuation = 0.0
-shadow_enabled = false
-
 [node name="Light_U02_Control" parent="Gameplay/Lighting/RoomLights" unique_id=2133108973 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, 5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_U03_StairHall" parent="Gameplay/Lighting/RoomLights" unique_id=1496213484 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 14.62, 5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_U04_Security" parent="Gameplay/Lighting/RoomLights" unique_id=1550322205 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 14.62, -5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_U05_CoreApproach" parent="Gameplay/Lighting/RoomLights" unique_id=105809732 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, -5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_U06_CoreControl" parent="Gameplay/Lighting/RoomLights" unique_id=751178022 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, -5)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_U07_ArchiveCache" parent="Gameplay/Lighting/RoomLights" unique_id=1716952255 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, -15)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="Light_U08_RiftChamber" parent="Gameplay/Lighting/RoomLights" unique_id=184915250 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, -15)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = false
-
 [node name="DoorStatusLights" type="Node3D" parent="Gameplay/Lighting" unique_id=1991645503]
 
 [node name="Door01_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1146007954 instance=ExtResource("35_green_lamp")]

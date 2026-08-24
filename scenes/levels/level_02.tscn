@@ -33,6 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/redviper.tscn" id="24_redviper"]
 [ext_resource type="PackedScene" path="res://scenes/actors/badredviper.tscn" id="25_badredviper"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="26_room_light"]
+[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_fill.tscn" id="36_room_fill"]
 [ext_resource type="PackedScene" path="res://scenes/actors/hellmagma.tscn" id="27_hellmagma"]
 [ext_resource type="PackedScene" path="res://scenes/actors/voidweaver.tscn" id="28_voidweaver"]
 
@@ -84,462 +85,396 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, -0.2, -30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C1_R0" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 7.2, -30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C2_R0" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -0.2, -30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C2_R0" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.2, -30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C7_R0" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, -0.2, -30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C7_R0" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 7.2, -30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C1_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, -0.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C1_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 7.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C2_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -0.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C2_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C3_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C3_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C6_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -0.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C6_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C7_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, -0.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C7_R1" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 7.2, -20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C0_R2" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, -0.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C0_R2" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, 7.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C1_R2" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, -0.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C1_R2" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 7.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C3_R2" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C3_R2" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C6_R2" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -0.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C6_R2" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.2, -10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C0_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C0_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C2_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C2_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C3_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C3_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C4_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C4_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C5_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C5_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C6_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C6_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C7_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C7_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C8_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, -0.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C8_R3" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 7.2, 0)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C0_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, -0.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C0_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, 7.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C1_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, -0.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C1_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 7.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C2_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, -0.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C2_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C7_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, -0.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C7_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 7.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C8_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, -0.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C8_R4" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 7.2, 10)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C0_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, -0.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C0_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, 7.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C1_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, -0.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C1_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 7.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C6_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -0.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C6_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C7_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, -0.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C7_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 7.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C8_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, -0.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C8_R5" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 7.2, 20)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C6_R6" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -0.2, 30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C6_R6" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 7.2, 30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C7_R6" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, -0.2, 30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C7_R6" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 7.2, 30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Floor_C8_R6" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, -0.2, 30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Ceiling_C8_R6" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 7.2, 30)
 piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
-cast_shadow = false
 
 [node name="Outer_1_0_N" parent="Geometry" instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 3.5, -35)
@@ -1500,30 +1435,12 @@ position = Vector3(-24, 6.82, 0)
 [node name="CeilingWhite_C3_R3" parent="RoomLights" instance=ExtResource("26_room_light")]
 position = Vector3(-12, 6.82, 0)
 
-[node name="CeilingWhite_C4_R3" parent="RoomLights" instance=ExtResource("26_room_light")]
+[node name="CeilingWhite_C4_R3" parent="RoomLights" instance=ExtResource("36_room_fill")]
 position = Vector3(0, 6.82, 0)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = true
-
-[node name="CeilingWhite_SpawnFill_A" parent="RoomLights" instance=ExtResource("26_room_light")]
+[node name="CeilingWhite_SpawnFill_A" parent="RoomLights" instance=ExtResource("36_room_fill")]
 position = Vector3(-3, 6.82, 0)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = true
-
-[node name="CeilingWhite_SpawnFill_B" parent="RoomLights" instance=ExtResource("26_room_light")]
+[node name="CeilingWhite_SpawnFill_B" parent="RoomLights" instance=ExtResource("36_room_fill")]
 position = Vector3(3, 6.82, 0)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-shadow_enabled = true
-
 [node name="CeilingWhite_C5_R3" parent="RoomLights" instance=ExtResource("26_room_light")]
 position = Vector3(12, 6.82, 0)
 

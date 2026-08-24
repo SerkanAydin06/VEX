@@ -18,11 +18,11 @@ collision_mask = 0
 script = ExtResource("1_script")
 piece_size = Vector3(4, 3, 0.3)
 surface_material = null
-cast_shadow = false
+cast_shadow = true
 occlusion_enabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1116505730]
-cast_shadow = 0
+cast_shadow = 1
 mesh = SubResource("BoxMesh_piece")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=629371637]

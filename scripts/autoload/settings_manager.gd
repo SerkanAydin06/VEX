@@ -49,14 +49,8 @@ enum GraphicsQuality {
 @export_range(0.1, 1.0, 0.01) var brightness_min := 0.35
 @export_range(1.0, 3.0, 0.01) var brightness_max := 2.0
 @export_range(0.1, 3.0, 0.01) var default_brightness := 1.15
-@export_range(0.1, 1.0, 0.01) var post_brightness_min := 0.42
-@export_range(1.0, 3.0, 0.01) var post_brightness_max := 2.15
-@export_range(0.1, 1.0, 0.01) var exposure_min := 0.52
-@export_range(1.0, 3.0, 0.01) var exposure_max := 1.55
-@export_range(0.0, 1.0, 0.01) var ambient_energy_min := 0.24
-@export_range(1.0, 3.0, 0.01) var ambient_energy_max := 1.42
-@export_range(0.0, 1.0, 0.01) var fog_energy_min := 0.20
-@export_range(0.0, 2.0, 0.01) var fog_energy_max := 0.58
+@export_range(0.1, 1.0, 0.01) var brightness_multiplier_min := 0.42
+@export_range(1.0, 3.0, 0.01) var brightness_multiplier_max := 2.15
 
 @export_category("04 - Audio Defaults")
 @export_range(0.0, 1.0, 0.01) var default_master_volume := 0.85
@@ -357,24 +351,42 @@ func set_brightness(value: float) -> void:
 	save_settings()
 
 
+func _get_brightness_multiplier() -> float:
+	var neutral := clampf(default_brightness, brightness_min, brightness_max)
+	if brightness <= neutral:
+		if is_equal_approx(neutral, brightness_min):
+			return 1.0
+		var low_t := inverse_lerp(brightness_min, neutral, brightness)
+		return lerpf(brightness_multiplier_min, 1.0, low_t)
+	if is_equal_approx(brightness_max, neutral):
+		return 1.0
+	var high_t := inverse_lerp(neutral, brightness_max, brightness)
+	return lerpf(1.0, brightness_multiplier_max, high_t)
+
+
+func _capture_scene_brightness_baseline(environment: Environment) -> void:
+	if environment.has_meta(&"vex_scene_brightness_baseline"):
+		return
+	environment.set_meta(&"vex_scene_brightness_baseline", environment.adjustment_brightness)
+	environment.set_meta(&"vex_scene_adjustment_enabled", environment.adjustment_enabled)
+
+
 func apply_brightness() -> void:
 	if not is_inside_tree():
 		return
-	var normalized := inverse_lerp(brightness_min, brightness_max, brightness)
-	var post_brightness := lerpf(post_brightness_min, post_brightness_max, normalized)
-	var exposure := lerpf(exposure_min, exposure_max, normalized)
-	var ambient_energy := lerpf(ambient_energy_min, ambient_energy_max, normalized)
-	var fog_energy := lerpf(fog_energy_min, fog_energy_max, normalized)
+	var multiplier := _get_brightness_multiplier()
 	for node: Node in get_tree().get_nodes_in_group("brightness_environment"):
-		if node is WorldEnvironment:
-			var world_environment := node as WorldEnvironment
-			if world_environment.environment != null:
-				var environment := world_environment.environment
-				environment.adjustment_enabled = true
-				environment.adjustment_brightness = post_brightness
-				environment.tonemap_exposure = exposure
-				environment.ambient_light_energy = ambient_energy
-				environment.fog_light_energy = fog_energy
+		if node is not WorldEnvironment:
+			continue
+		var world_environment := node as WorldEnvironment
+		if world_environment.environment == null:
+			continue
+		var environment := world_environment.environment
+		_capture_scene_brightness_baseline(environment)
+		var scene_brightness := float(environment.get_meta(&"vex_scene_brightness_baseline", 1.0))
+		var scene_adjustment_enabled := bool(environment.get_meta(&"vex_scene_adjustment_enabled", false))
+		environment.adjustment_enabled = scene_adjustment_enabled or not is_equal_approx(multiplier, 1.0)
+		environment.adjustment_brightness = scene_brightness * multiplier
 
 
 func set_mouse_sensitivity(value: float) -> void:

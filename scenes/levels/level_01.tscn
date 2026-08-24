@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://dv6d7oxfovseb" path="res://assets/pickups/night_vision.png" id="24_night_vision"]
 [ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/hellmagma.tscn" id="25_hellmagma"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="26_room_light"]
+[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_fill.tscn" id="36_room_fill"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="27_voidweaver"]
 [ext_resource type="PackedScene" path="res://scenes/actors/veilmaw.tscn" id="28_veilmaw"]
 [ext_resource type="PackedScene" path="res://scenes/props/secret_trigger.tscn" id="29_secret_trigger"]
@@ -911,27 +912,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, 15)
 [node name="CeilingWhite_Room_15" parent="RoomLights" unique_id=48972619 instance=ExtResource("26_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 6.82, 15)
 
-[node name="CeilingWhite_Room_16" parent="RoomLights" unique_id=387090899 instance=ExtResource("26_room_light")]
+[node name="CeilingWhite_Room_16" parent="RoomLights" unique_id=387090899 instance=ExtResource("36_room_fill")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, 25)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-
-[node name="CeilingWhite_SpawnFill_A" parent="RoomLights" unique_id=1007670915 instance=ExtResource("26_room_light")]
+[node name="CeilingWhite_SpawnFill_A" parent="RoomLights" unique_id=1007670915 instance=ExtResource("36_room_fill")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 6.82, 25)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-
-[node name="CeilingWhite_SpawnFill_B" parent="RoomLights" unique_id=1832544296 instance=ExtResource("26_room_light")]
+[node name="CeilingWhite_SpawnFill_B" parent="RoomLights" unique_id=1832544296 instance=ExtResource("36_room_fill")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 6.82, 25)
-light_energy = 3.8
-light_range = 9.2
-cone_angle = 42.0
-distance_attenuation = 0.3
-
 [node name="CeilingWhite_Room_17" parent="RoomLights" unique_id=233266927 instance=ExtResource("26_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, 25)
 

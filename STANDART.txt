@@ -1,6 +1,6 @@
 VEX — CANONICAL PROJE STANDARDI
 ================================
-Belge sürümü: R27 / campaign-save + canonical-door + scalable-weapons refactor
+Belge sürümü: R29 / scene-authority + canonical-lighting + shadow-contract
 
 Bu dosya yeni level, kapı, silah, HUD, save, Bastion ve localization işleri için tek teknik referanstır.
 Eski BaseTrim/süpürgelik kuralları GEÇERSİZDİR ve projeden kaldırılmıştır.
@@ -13,9 +13,29 @@ Net iç yükseklik : 7.00 m
 Zemin kalınlığı  : 0.40 m
 Tavan kalınlığı  : 0.40 m
 Duvar kalınlığı  : 0.40 m
-Beyaz ışık Y     : 6.82 m
-Beyaz ışık gölge : Kapalı
-Spawn tam ışık   : energy 3.8 / range 9.2 m / cone 42° / attenuation 0.3
+Beyaz ışık alt kat Y : 6.82 m
+Beyaz ışık üst kat Y : kat tabanı + 6.82 m (VEX-03 için 14.62 m)
+Beyaz ışık gölge : AÇIK
+
+Canonical beyaz ışık profilleri (değerler KODDA değil SAHNE PREFABINDA tutulur):
+- NORMAL ROOM  : res://scenes/world/ceiling_light_white_horror.tscn
+  energy 2.6 / range 7.4 m / cone 18° / cone attenuation 1.6 / distance attenuation 0.35 / shadow AÇIK
+- FULL / SPAWN : res://scenes/world/ceiling_light_white_fill.tscn
+  energy 3.8 / range 9.2 m / cone 42° / cone attenuation 1.6 / distance attenuation 0.3 / shadow AÇIK
+- LARGE VOLUME : res://scenes/world/ceiling_light_white_large.tscn
+  energy 8.0 / range 20.0 m / cone 80° / cone attenuation 4.0 / distance attenuation 0.0 / shadow AÇIK
+
+Kurallar:
+- Level 1, Level 2 ve Level 3 normal odalarda NORMAL ROOM profilini kullanır.
+- Spawn/özellikle aydınlatılması gereken küçük alanlarda FULL / SPAWN profili seçilir.
+- LARGE VOLUME yalnız iki kat yüksekliğindeki özel hacim gibi açıkça gerekçeli alanlarda kullanılır.
+- Level sahnelerinde bu profil sayılarını kopyalayan light_energy/light_range/cone override blokları tutulmaz; doğru prefab seçilir.
+- room_ceiling_light.gd yalnız Inspector/prefab değerlerini child SpotLight3D üzerine uygular; profil seçmez ve level ayarlarını ezmez.
+- world_piece canonical olarak gölge üretir; duvar/tavan/zemin ve kapı shadow blocker yapıları beyaz ışık sızıntısını fiziksel olarak keser.
+- SHADOW CONTRACT: NORMAL ROOM, FULL / SPAWN ve LARGE VOLUME beyaz ışık profillerinde shadow AÇIK olmak zorundadır.
+- Kapı durum ışıkları (kırmızı/yeşil) de shadow AÇIK kullanır. Kapalı kapıda DoorShadowBlocker yalnız gölge üreten (shadows-only) görünmez engelleyici olarak aktif olur.
+- Canonical world_piece cast_shadow AÇIK'tır. Level 1/2/3 instance'ları shadow_enabled=false veya cast_shadow=false/0 ile bu standardı EZEMEZ.
+- Gölge istemeyen özel dekor/efekt gerekiyorsa level instance override yapılmaz; gerekçeli AYRI prefab/material oluşturulur. Böylece level sahnesi canonical shadow standardını sessizce bozamaz.
 EXIT tabela Y    : 4.85 m
 Texture standard : lowercase snake_case; sürüm eki kullanılmaz
 Enemy filtre     : Linear Mipmap; Fixed-Y billboard
@@ -110,7 +130,7 @@ Ortak level sınıfı:
   res://scripts/levels/base_level.gd (VexBaseLevel)
 
 VexBaseLevel şunları tek yerde yönetir:
-- brightness uygulama
+- scene baseline korunarak kullanıcı brightness çarpanı uygulama
 - GameState.begin_level
 - açılış projectile temizliği
 - level/ambient audio loop
@@ -266,6 +286,13 @@ SettingsManager kalıcı olarak yönetir:
 - graphics quality / render scale
 - master/music/sfx
 - brightness
+
+Brightness scene-authority standardı:
+- WorldEnvironment içindeki ambient_light_energy, fog_light_energy ve tonemap_exposure level/hub sahnesinin atmosfer verisidir; SettingsManager bunları değiştirmez.
+- adjustment_brightness sahnedeki değer baseline kabul edilir.
+- default_brightness değerinde kullanıcı çarpanı tam 1.0'dır; sahnedeki brightness birebir korunur.
+- Kullanıcı brightness ayarı yalnız scene adjustment_brightness baseline değerinin üstüne göreli çarpan uygular.
+- Runtime slider değişimlerinde baseline ilk sahne değerinden tutulur; üst üste apply çağrıları baseline'ı kaydırmaz.
 - mouse sensitivity
 - FOV
 - screen shake

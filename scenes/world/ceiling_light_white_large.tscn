@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="1_base"]
+
+[node name="CeilingLightWhiteLarge" instance=ExtResource("1_base")]
+light_energy = 8.0
+light_range = 20.0
+cone_angle = 80.0
+cone_attenuation = 4.0
+distance_attenuation = 0.0
+shadow_enabled = true
