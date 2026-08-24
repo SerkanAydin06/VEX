@@ -13,10 +13,10 @@
 [ext_resource type="PackedScene" uid="uid://ckhtinn61g27l" path="res://scenes/hub/hub_terminal.tscn" id="11_terminal"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_rack"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="13_ambient"]
-[ext_resource type="Resource" path="res://resources/missions/vex01.tres" id="13_mission01"]
+[ext_resource type="Resource" uid="uid://37peeksg02yp" path="res://resources/missions/vex01.tres" id="13_mission01"]
 [ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="14_logo"]
-[ext_resource type="Resource" path="res://resources/missions/vex02.tres" id="14_mission02"]
-[ext_resource type="Resource" path="res://resources/missions/vex03.tres" id="15_mission03"]
+[ext_resource type="Resource" uid="uid://066urx6litqr" path="res://resources/missions/vex02.tres" id="14_mission02"]
+[ext_resource type="Resource" uid="uid://bqurnj2kaajwv" path="res://resources/missions/vex03.tres" id="15_mission03"]
 [ext_resource type="Texture2D" uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png" id="15_shotgun"]
 [ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="16_ak47"]
 [ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="17_mp90"]
@@ -24,6 +24,9 @@
 [ext_resource type="Texture2D" uid="uid://c6x022128ot1i" path="res://assets/weapons/p01/p01_side.png" id="19_p01_side"]
 [ext_resource type="PackedScene" path="res://scenes/hub/armory_category_rack.tscn" id="21_category_rack"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_survivor_presence.tscn" id="22_survivor"]
+[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_large.tscn" id="23_white_large"]
+[ext_resource type="PackedScene" path="res://scenes/world/door_status_light.tscn" id="24_door_status"]
+[ext_resource type="PackedScene" path="res://scenes/world/room_name_display.tscn" id="25_room_display"]
 
 [sub_resource type="Environment" id="Environment_hub"]
 background_mode = 1
@@ -40,28 +43,6 @@ fog_density = 0.0015
 fog_aerial_perspective = 0.08
 adjustment_enabled = true
 adjustment_brightness = 1.18
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_87vc6"]
-albedo_color = Color(0, 0.007843138, 1, 1)
-emission_enabled = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_door_sign_x"]
-size = Vector3(0.08, 0.60920286, 4.3861375)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_65i0f"]
-albedo_color = Color(1, 0, 0.19215687, 1)
-
-[sub_resource type="StandardMaterial3D" id="Material_sign_cyan"]
-albedo_color = Color(1, 0, 0.19215687, 1)
-metallic = 0.12
-roughness = 0.28
-emission = Color(0.34, 0.94, 1, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tj80c"]
-albedo_color = Color(0, 0.007843138, 1, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_door_sign_z"]
-size = Vector3(4.3468995, 0.47939208, 0.08)
 
 [sub_resource type="StandardMaterial3D" id="Material_hub_metal"]
 albedo_color = Color(0.055, 0.065, 0.075, 1)
@@ -516,13 +497,11 @@ automatic_open = true
 
 [node name="RoomLights" type="Node3D" parent="." unique_id=586659580]
 
-[node name="CeilingWhite_Armory" parent="RoomLights" unique_id=941774806 instance=ExtResource("9_white")]
+[node name="CeilingWhite_Armory" parent="RoomLights" unique_id=941774806 instance=ExtResource("23_white_large")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, -10)
-light_energy = 7.85
-light_range = 20.0
-cone_angle = 80.0
-cone_attenuation = 0.1
-distance_attenuation = 0.0
+
+[node name="CeilingWhite_FiringRange" parent="RoomLights" unique_id=902375434 instance=ExtResource("9_white")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 6.82, -10)
 
 [node name="CeilingWhite_CommandWest" parent="RoomLights" unique_id=1673422956 instance=ExtResource("9_white")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, 0)
@@ -541,89 +520,94 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, 20)
 
 [node name="CeilingWhite_OperatorPlatform" parent="RoomLights" unique_id=1709697908 instance=ExtResource("9_white")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, 28)
+light_energy = 7.4
+light_range = 20.0
+cone_angle = 80.0
+cone_attenuation = 0.1
+distance_attenuation = 0.0
 
 [node name="CeilingWhite_CommandEast" parent="RoomLights" unique_id=136198587 instance=ExtResource("9_white")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 6.82, 0)
 
-[node name="Signage" type="Node3D" parent="." unique_id=48472396]
+[node name="DoorLights" type="Node3D" parent="." unique_id=1853953974]
 
-[node name="Panel_ArmoryDoor" type="MeshInstance3D" parent="Signage" unique_id=2055563553]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.757, 5.25, -9.987)
-material_override = SubResource("StandardMaterial3D_87vc6")
-mesh = SubResource("BoxMesh_door_sign_x")
+[node name="ArmoryLampA" parent="DoorLights" unique_id=289534749 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.32, 6.05, -10)
+door_path = NodePath("../../Doors/ArmoryDoor")
+locked_preview = false
 
-[node name="Sign_ArmoryDoor" type="Label3D" parent="Signage/Panel_ArmoryDoor" unique_id=749522026]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.04354906, 0.012055397, -0.06646156)
-pixel_size = 0.00225
-modulate = Color(0, 0, 0, 1)
-text = "ARMORY"
-font_size = 150
-outline_size = 8
+[node name="ArmoryLampB" parent="DoorLights" unique_id=196090352 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.68, 6.05, -10)
+door_path = NodePath("../../Doors/ArmoryDoor")
+locked_preview = false
 
-[node name="Panel_FiringRangeDoor" type="MeshInstance3D" parent="Signage" unique_id=703614250]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.76, 5.25, -10)
-material_override = SubResource("StandardMaterial3D_65i0f")
-mesh = SubResource("BoxMesh_door_sign_x")
+[node name="FiringRangeLampA" parent="DoorLights" unique_id=1258005273 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -18.32, 6.05, -10)
+door_path = NodePath("../../Doors/FiringRangeDoor")
 
-[node name="Sign_FiringRangeDoor" type="Label3D" parent="Signage/Panel_FiringRangeDoor" unique_id=1225476609]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.07999992, 0, 0)
-pixel_size = 0.00195
-modulate = Color(0, 0, 0, 1)
-text = "FIRING RANGE"
-font_size = 150
-outline_size = 8
+[node name="FiringRangeLampB" parent="DoorLights" unique_id=1948862303 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -17.68, 6.05, -10)
+door_path = NodePath("../../Doors/FiringRangeDoor")
 
-[node name="Panel_ResearchDoor" type="MeshInstance3D" parent="Signage" unique_id=1662605379]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.76, 5.25, -10)
-material_override = SubResource("Material_sign_cyan")
-mesh = SubResource("BoxMesh_door_sign_x")
+[node name="ResearchLampA" parent="DoorLights" unique_id=185352231 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.68, 6.05, -10)
+door_path = NodePath("../../Doors/ResearchDoor")
 
-[node name="Sign_ResearchDoor" type="Label3D" parent="Signage/Panel_ResearchDoor" unique_id=30842997]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.0800004, 0, 0)
-pixel_size = 0.00195
-modulate = Color(0, 0, 0, 1)
-text = "RESEARCH LAB"
-font_size = 150
-outline_size = 8
+[node name="ResearchLampB" parent="DoorLights" unique_id=1719198709 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.32, 6.05, -10)
+door_path = NodePath("../../Doors/ResearchDoor")
 
-[node name="Panel_WorkshopDoor" type="MeshInstance3D" parent="Signage" unique_id=1973486179]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.76, 5.25, 10.018)
-material_override = SubResource("Material_sign_cyan")
-mesh = SubResource("BoxMesh_door_sign_x")
+[node name="WorkshopLampA" parent="DoorLights" unique_id=1673456765 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.32, 6.05, 10)
+door_path = NodePath("../../Doors/WorkshopDoor")
 
-[node name="Sign_WorkshopDoor" type="Label3D" parent="Signage/Panel_WorkshopDoor" unique_id=837122850]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.051992416, -0.016989708, -0.018060684)
-pixel_size = 0.0018
-modulate = Color(0, 0, 0, 1)
-text = "WEAPON WORKSHOP"
-font_size = 150
-outline_size = 8
+[node name="WorkshopLampB" parent="DoorLights" unique_id=1065590863 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.68, 6.05, 10)
+door_path = NodePath("../../Doors/WorkshopDoor")
 
-[node name="Panel_EngineeringDoor" type="MeshInstance3D" parent="Signage" unique_id=1961757903]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.76, 5.25, 10)
-material_override = SubResource("Material_sign_cyan")
-mesh = SubResource("BoxMesh_door_sign_x")
+[node name="EngineeringLampA" parent="DoorLights" unique_id=406532208 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.68, 6.05, 10)
+door_path = NodePath("../../Doors/EngineeringDoor")
 
-[node name="Sign_EngineeringDoor" type="Label3D" parent="Signage/Panel_EngineeringDoor" unique_id=659765915]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.0800004, 0, 0)
-pixel_size = 0.00188
-modulate = Color(0, 0, 0, 1)
-text = "ENGINEERING BAY"
-font_size = 150
-outline_size = 8
+[node name="EngineeringLampB" parent="DoorLights" unique_id=679501970 instance=ExtResource("24_door_status")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.32, 6.05, 10)
+door_path = NodePath("../../Doors/EngineeringDoor")
 
-[node name="Panel_OperatorDoor" type="MeshInstance3D" parent="Signage" unique_id=1364846794]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.012, 5.25, 24.76)
-material_override = SubResource("StandardMaterial3D_tj80c")
-mesh = SubResource("BoxMesh_door_sign_z")
+[node name="OperatorLampA" parent="DoorLights" unique_id=417123545 instance=ExtResource("24_door_status")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 6.05, 24.68)
+door_path = NodePath("../../Doors/OperatorDoor")
+locked_preview = false
 
-[node name="Sign_OperatorDoor" type="Label3D" parent="Signage/Panel_OperatorDoor" unique_id=196345779]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.011828601, 0.014748573, -0.07999992)
-pixel_size = 0.00182
-modulate = Color(0, 0, 0, 1)
-text = "OPERATOR PLATFORM"
-font_size = 150
-outline_size = 8
+[node name="OperatorLampB" parent="DoorLights" unique_id=677276221 instance=ExtResource("24_door_status")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.05, 25.32)
+door_path = NodePath("../../Doors/OperatorDoor")
+locked_preview = false
+
+[node name="RoomDisplays" type="Node3D" parent="." unique_id=48472396]
+
+[node name="ArmoryDisplay" parent="RoomDisplays" unique_id=1541046739 instance=ExtResource("25_room_display")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.75, 5.25, -10)
+room_name = "ARMORY"
+
+[node name="FiringRangeDisplay" parent="RoomDisplays" unique_id=308502551 instance=ExtResource("25_room_display")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -17.75, 5.25, -10)
+room_name = "FIRING RANGE"
+
+[node name="ResearchDisplay" parent="RoomDisplays" unique_id=1864618439 instance=ExtResource("25_room_display")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.75, 5.25, -10)
+room_name = "RESEARCH LAB"
+
+[node name="WorkshopDisplay" parent="RoomDisplays" unique_id=269709031 instance=ExtResource("25_room_display")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.75, 5.25, 10)
+room_name = "WEAPON WORKSHOP"
+
+[node name="EngineeringDisplay" parent="RoomDisplays" unique_id=2144975230 instance=ExtResource("25_room_display")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.75, 5.25, 10)
+room_name = "ENGINEERING BAY"
+
+[node name="OperatorDisplay" parent="RoomDisplays" unique_id=457984931 instance=ExtResource("25_room_display")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 5.25, 24.75)
+room_name = "OPERATOR PLATFORM"
 
 [node name="Props" type="Node3D" parent="." unique_id=166057194]
 
@@ -712,13 +696,10 @@ mesh = SubResource("BoxMesh_target")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 30.25)
 terminal_mode = 1
 display_name = "OPERASYON TERMİNALİ"
-info_message = "VEX-01 KARANTİNA TESİSİ // GÖREV SEÇ / DEPLOY"
 
 [node name="CommandStatusTerminal" parent="Systems" unique_id=975524091 instance=ExtResource("11_terminal")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.7276541, -1.8)
 display_name = "BASTION DURUMU"
-info_message = "BASTION-7 // SAVUNMA ÇEVRİMİÇİ // VEX-02 İÇ HAT ALARMI HAZIR"
-screen_header = "VEX // COMMAND"
 
 [node name="ArmoryRacks" type="Node3D" parent="Systems" unique_id=117252377]
 

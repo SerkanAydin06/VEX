@@ -1,6 +1,8 @@
 class_name VexDoor
 extends Node3D
 
+signal lock_state_changed(is_locked: bool)
+
 enum DoorState {
 	CLOSED,
 	OPENING,
@@ -68,6 +70,7 @@ func _ready() -> void:
 		permanently_locked = false
 		locked = false
 	_runtime_locked = locked
+	_emit_lock_state()
 	_auto_close_available = auto_close
 	door_panel = get_node_or_null("DoorPanel") as AnimatableBody3D
 	door_panel_right = get_node_or_null("DoorPanelRight") as AnimatableBody3D
@@ -153,6 +156,7 @@ func interact(player: Node) -> void:
 			GameState.notify(tr("DOOR_LOCKED_REQUIRED") % _get_required_key_label())
 			return
 		_runtime_locked = false
+		_emit_lock_state()
 		GameState.notify(tr("DOOR_OPENED") % tr(display_name))
 		if not objective_on_unlock.is_empty():
 			GameState.set_objective(objective_on_unlock)
@@ -199,6 +203,7 @@ func set_campaign_unlocked(unlocked: bool) -> void:
 		return
 	permanently_locked = not unlocked
 	_runtime_locked = false if unlocked else locked
+	_emit_lock_state()
 	if unlocked and automatic_open and proximity_sensor != null and proximity_sensor.is_inside_tree():
 		for body: Node3D in proximity_sensor.get_overlapping_bodies():
 			if body == GameState.player:
@@ -208,8 +213,17 @@ func set_campaign_unlocked(unlocked: bool) -> void:
 
 func force_open() -> void:
 	_runtime_locked = false
+	_emit_lock_state()
 	if door_panel != null and _state != DoorState.OPEN and _state != DoorState.OPENING:
 		_begin_opening()
+
+
+func is_access_locked() -> bool:
+	return permanently_locked or _runtime_locked
+
+
+func _emit_lock_state() -> void:
+	lock_state_changed.emit(is_access_locked())
 
 
 func _begin_opening() -> void:

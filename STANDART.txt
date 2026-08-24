@@ -1,6 +1,6 @@
 VEX — CANONICAL PROJE STANDARDI
 ================================
-Belge sürümü: R29 / scene-authority + canonical-lighting + shadow-contract
+Belge sürümü: R33 / advanced-3d-vex-hub-terminal + screen-only-interaction
 
 Bu dosya yeni level, kapı, silah, HUD, save, Bastion ve localization işleri için tek teknik referanstır.
 Eski BaseTrim/süpürgelik kuralları GEÇERSİZDİR ve projeden kaldırılmıştır.
@@ -99,11 +99,38 @@ Kapı davranışları prefab çoğaltılarak değil Inspector ile ayrılır:
 Kapı durum ışığı:
 - Anahtar/erişim isteyen kapı: KIRMIZI
 - Normal kullanılabilir kapı : YEŞİL
-- Işıklar kapının üstünde, mevcut level standardındaki Y hizasında kalır.
+- Bastion kapı durum ışığı root merkezi Y = 6.05 m'dir; oda ekranının üstünde ve ondan fiziksel olarak ayrı kalır.
+- Runtime'da campaign stage ile kilidi değişen kapılar res://scenes/world/door_status_light.tscn kullanır.
+- DoorStatusLight kırmızı ve yeşil görselleri sahnede tutar; kod yalnız kapının gerçek kilit durumuna göre görünürlüğü değiştirir.
+
+Kapı oda adı ekranı:
+- Canonical sahne: res://scenes/world/room_name_display.tscn
+- Oda adı eski serbest panel + Label3D düğümleriyle hub içine kopyalanmaz; bu prefab instance edilir.
+- Koyu gunmetal çerçeve, cam ekran, dijital mono font, ekran ışıması ve kırmızı vurgu prefab sahnesinde tutulur.
+- `room_name` ve `header_text` instance Inspector alanlarıdır; script yalnız bu sahne verisini Label3D metnine uygular.
+- Bastion ekran root merkezi Y = 5.25 m'dir. 0.72 m ekran yüksekliği ile Y=6.05 m durum lambası arasında görünür boşluk korunur.
+- Yeni oda tabelalarında metin boyutu/renk/panel malzemesi hub sahnesinde override edilmez; görsel standart prefabdan değiştirilir.
 
 Bastion campaign kapıları:
 - campaign_unlock_stage >= 0 ise kapı, GameState.campaign_stage yeterli olduğunda runtime'da açılır.
 - Bu değer sahne/Inspector verisidir; bölüm scriptine kapı adı hard-code edilmez.
+
+Bastion operasyon terminali:
+- Canonical fiziksel prefab: res://scenes/hub/hub_terminal.tscn
+- Sabit VEX ekran dokusu: res://assets/ui/bastion_terminal_screen_idle.png
+- Eğimli kumanda yüzeyi: res://assets/world/bastion7/bastion_terminal_controls.png
+- Tam ekran görev/tesis arayüzü: res://scenes/ui/terminal_menu.tscn
+- Tesis güvenlik görseli: res://assets/ui/bastion_facility_network.png
+- Terminal tek parça kutu veya gövdenin tamamını örten düz decal değildir; plinth, arka kabuk, yan modüller, ekran kasası/çerçevesi, destekler, eğimli deck ve koruma kolları canonical sahnede ayrı 3B mesh düğümleridir.
+- Sabit VEX ekranı yükseltilmiş fiziksel ekran kasasının içindedir; kumanda dokusu yalnız eğimli `ControlSurface` PlaneMesh üzerinde kullanılır.
+- Fiziksel gövde `PhysicalBody/SolidCollider` altında layer 1'dir. Doğrudan terminal root'una bağlı `ScreenInteraction` layer 8'dir; menüyü yalnız ekran yüzeyine bakıp etkileşim kurmak açar.
+- `ScreenInteraction` dışındaki fiziksel çarpışma gövdesi terminal scriptinin doğrudan çocuğu yapılmaz; böylece oyuncu ray'i konsolun yanından/altından menüyü açmaz.
+- Terminal etkileşimi tek basışta görev seçip anında sahne değiştirmez; önce terminal menüsünü açar.
+- Menü campaign_stage üzerinden TEMİZLENDİ / SIRADAKİ HEDEF / KİLİTLİ durumlarını gösterir.
+- Deployment terminali aktif operasyonu seçme ve göreve çıkma yetkisine sahiptir; bilgi terminali aynı kayıtları salt okunur açar.
+- Her VexMissionDefinition `terminal_code`, `facility_type` ve `terminal_preview` alanlarını taşır.
+- Görev görseli/tesis tipi terminal UI scriptinde mission ID ile hard-code edilmez; mission .tres verisinden okunur.
+- Fiziksel gövde, mesh ölçüleri, malzemeler, ekran/kumanda yüzeyleri, ekran ışığı ve çarpışmalar sahne/Inspector değerleridir; kod geometri üretmez, yalnız menü açma ile offline overlay görünürlüğünü yönetir.
 
 
 5) ÇOK KATLI DÖŞEME STANDARDI
@@ -114,6 +141,14 @@ Bastion campaign kapıları:
 - 7.00 m net yükseklik için üst tavan alt yüzeyi Y = 14.80 m'dir.
 - Ceiling ve floor materyalleri ayrı tutulur.
 
+Tekrar kullanılabilir U-merdiven:
+- Canonical sahne: res://scenes/world/u_staircase.tscn
+- Root ankrajı alt merdiven giriş merkezidir; level yalnız root transformunu konumlandırır/döndürür.
+- Görsel basamaklar, sahanlık, güvenlik şeritleri, korkuluklar ve smooth ramp collision aynı prefab içindedir.
+- Yapısal merdiven parçaları cast_shadow AÇIK kullanır.
+- SmoothRampCollision collision_layer 1 kullanır; ayrı basamak collider dizisi oluşturulmaz.
+- Merdiven ölçüsü değiştirilmek istenirse prefab sahnesi açılır; level scripti geometri üretmez veya değerleri ezmez.
+
 
 6) SAHNE OTORİTESİ
 ------------------
@@ -122,6 +157,7 @@ Bastion campaign kapıları:
 - Enemy health/damage/speed/detection/cooldown/windup çarpanları enemy sahnelerindedir.
 - Ortak saf enemy hesapları VexEnemyRuntimeUtils üzerinden paylaşılır; yeni enemy türlerinde kopya utility fonksiyonu yazılmaz.
 - Pickup, varil, kapı, projectile ve ışık davranış değerleri ilgili sahne/resource üzerinde tutulur.
+- Player maksimum can temel tuning değeri player.tscn Inspector'ında tutulur; canonical başlangıç değeri 100'dür.
 
 
 7) LEVEL MİMARİSİ
@@ -142,6 +178,17 @@ VexBaseLevel şunları tek yerde yönetir:
 
 level_01.gd / level_02.gd / level_03.gd yalnız bölüme özel progression/alarm mantığını taşır.
 Yeni VEX-04+ level scriptleri VexBaseLevel'den türetilir; briefing veya automap kodu kopyalanmaz.
+
+Level 1/2/3 ortak root kategorileri:
+- Geometry
+- Doors
+- RoomLights
+- Lights (kapı durum ışıkları)
+- Props
+- Enemies
+- Pickups
+
+Ek Objectives, Secrets ve LoreTerminals kategorileri gereken levelde root altında bulunabilir; ortak kategoriler Gameplay gibi level-özel bir ara düğüm altına taşınmaz.
 
 Level ayarları root Inspector'dan gelir:
 - map_revision

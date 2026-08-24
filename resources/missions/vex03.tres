@@ -1,6 +1,12 @@
-[gd_resource type="Resource" script_class="VexMissionDefinition" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="VexMissionDefinition" format=3 uid="uid://bqurnj2kaajwv"]
 
-[ext_resource type="Script" path="res://scripts/data/mission_definition.gd" id="1"]
+[ext_resource type="Script" uid="uid://y20v4t0lvcl" path="res://scripts/data/mission_definition.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b8gj74ryetkfv" path="res://assets/ui/bastion_facility_network.png" id="2_network"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_terminal_preview"]
+atlas = ExtResource("2_network")
+region = Rect2(1128, 8, 530, 925)
+filter_clip = true
 
 [resource]
 script = ExtResource("1")
@@ -10,3 +16,6 @@ briefing = "LEVEL03_MISSION_BRIEF"
 completion_message = "LEVEL03_COMPLETE"
 scene_path = "res://scenes/levels/level_03.tscn"
 campaign_stage = 3
+terminal_code = "VEX-03"
+facility_type = "TERMINAL_FACILITY_ASH_MINE"
+terminal_preview = SubResource("AtlasTexture_terminal_preview")

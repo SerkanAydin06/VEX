@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/door_status_light.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_red.tscn" id="2_red"]
+[ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_green.tscn" id="3_green"]
+
+[node name="DoorStatusLight" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Locked" parent="." instance=ExtResource("2_red")]
+
+[node name="Unlocked" parent="." instance=ExtResource("3_green")]
+visible = false

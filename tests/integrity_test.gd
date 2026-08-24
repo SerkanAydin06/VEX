@@ -17,6 +17,10 @@ const REQUIRED_RESOURCES := [
 	"res://resources/weapons/mp90.tres",
 	"res://scenes/world/ceiling_light_white_horror.tscn",
 	"res://scenes/world/world_piece.tscn",
+	"res://scenes/world/u_staircase.tscn",
+	"res://scenes/world/door_status_light.tscn",
+	"res://scenes/world/room_name_display.tscn",
+	"res://scripts/world/room_name_display.gd",
 	"res://scenes/world/korvath_rift.tscn",
 	"res://scenes/world/lore_terminal.tscn",
 	"res://assets/world/level03/korvath_rift.png",
@@ -47,6 +51,11 @@ const REQUIRED_RESOURCES := [
 	"res://scenes/hub/hub_survivor_presence.tscn",
 	"res://scenes/hub/bastion_7.tscn",
 	"res://scenes/hub/hub_terminal.tscn",
+	"res://scenes/ui/terminal_menu.tscn",
+	"res://scripts/ui/terminal_menu.gd",
+	"res://assets/ui/bastion_terminal_screen_idle.png",
+	"res://assets/world/bastion7/bastion_terminal_controls.png",
+	"res://assets/ui/bastion_facility_network.png",
 	"res://scenes/hub/hub_weapon_rack.tscn",
 	"res://scenes/actors/redviper.tscn",
 	"res://scenes/actors/badredviper.tscn",
@@ -79,8 +88,8 @@ var failures: Array[String] = []
 
 func _ready() -> void:
 	_check_required_resources()
-	_check_level("res://scenes/levels/level_01.tscn", 18, 18, 38, 19)
-	_check_level("res://scenes/levels/level_02.tscn", 33, 33, 10, 5)
+	_check_level("res://scenes/levels/level_01.tscn", 18, 20, 38, 19)
+	_check_level("res://scenes/levels/level_02.tscn", 33, 35, 10, 5)
 	_check_level_03()
 	_check_bastion_7()
 	_check_enemy_visuals()
@@ -184,18 +193,67 @@ func _check_bastion_7() -> void:
 	var door_lights := hub.get_node_or_null("DoorLights")
 	if door_lights == null or door_lights.get_child_count() != 12:
 		failures.append("Bastion-7 kırmızı kapı ışığı sayısı yanlış.")
-	for door_name in ["FiringRangeDoor", "ResearchDoor", "WorkshopDoor", "EngineeringDoor"]:
+	elif door_lights.get_children().any(func(light: Node3D) -> bool: return not is_equal_approx(light.position.y, 6.05)):
+		failures.append("Bastion-7 kapı durum ışıkları oda ekranından ayrı Y=6.05 hizasında değil.")
+	var room_displays := hub.get_node_or_null("RoomDisplays")
+	if room_displays == null or room_displays.get_child_count() != 6:
+		failures.append("Bastion-7 dijital oda ekranı sayısı yanlış.")
+	else:
+		var expected_room_names := [
+			"ARMORY", "FIRING RANGE", "RESEARCH LAB",
+			"WEAPON WORKSHOP", "ENGINEERING BAY", "OPERATOR PLATFORM",
+		]
+		for index in room_displays.get_child_count():
+			var display := room_displays.get_child(index) as Node3D
+			if display == null or not is_equal_approx(display.position.y, 5.25):
+				failures.append("Bastion-7 oda ekranı canonical Y=5.25 hizasında değil.")
+				continue
+			if str(display.get("room_name")) != expected_room_names[index]:
+				failures.append("Bastion-7 oda ekranı metni yanlış: %s" % display.name)
+	for door_name in ["FiringRangeDoor", "ResearchDoor"]:
 		var door := hub.get_node_or_null("Doors/%s" % door_name)
 		if door == null or not bool(door.get("permanently_locked")):
 			failures.append("Bastion-7 kilitli alan standardı eksik: %s" % door_name)
+	for door_name in ["WorkshopDoor", "EngineeringDoor"]:
+		var door := hub.get_node_or_null("Doors/%s" % door_name)
+		if door == null or int(door.get("campaign_unlock_stage")) != 2:
+			failures.append("Bastion-7 stage 2 kapı standardı eksik: %s" % door_name)
 	if hub.get_node_or_null("Systems/MissionTerminal") != null:
 		failures.append("Bastion-7 MissionTerminal kaldırılmamış.")
 	var operations_terminal := hub.get_node_or_null("Systems/DeploymentTerminal")
 	if operations_terminal == null or str(operations_terminal.get("display_name")) != "OPERASYON TERMİNALİ":
 		failures.append("Bastion-7 tek Operasyon Terminali standardı eksik.")
+	elif operations_terminal.get_node_or_null("TerminalMenu") == null:
+		failures.append("Bastion-7 Operasyon Terminali tam ekran görev/tesis menüsüne bağlı değil.")
+	elif operations_terminal.get_node_or_null("Visuals/ScreenAssembly/ScreenSurface") == null:
+		failures.append("Bastion-7 Operasyon Terminali sabit VEX ekranına bağlı değil.")
+	elif operations_terminal.get_node_or_null("Visuals/DeckAssembly/ControlSurface") == null:
+		failures.append("Bastion-7 Operasyon Terminali 3B kumanda deck yüzeyine bağlı değil.")
+	elif operations_terminal.get_node_or_null("PhysicalBody/SolidCollider") == null:
+		failures.append("Bastion-7 Operasyon Terminali fiziksel gövde çarpışmasına bağlı değil.")
+	elif operations_terminal.get_node_or_null("ScreenInteraction") == null:
+		failures.append("Bastion-7 Operasyon Terminali ekran-özel etkileşim alanına bağlı değil.")
+	else:
+		var solid_collider := operations_terminal.get_node("PhysicalBody/SolidCollider") as StaticBody3D
+		var screen_interaction := operations_terminal.get_node("ScreenInteraction") as StaticBody3D
+		if solid_collider.collision_layer != 1:
+			failures.append("Bastion-7 Operasyon Terminali fiziksel gövdesi layer 1 üzerinde değil.")
+		if screen_interaction.collision_layer != 8:
+			failures.append("Bastion-7 Operasyon Terminali ekran etkileşimi layer 8 üzerinde değil.")
+	var command_terminal := hub.get_node_or_null("Systems/CommandStatusTerminal")
+	if command_terminal == null or command_terminal.get_node_or_null("TerminalMenu") == null:
+		failures.append("Bastion-7 durum terminali tesis kayıt menüsüne bağlı değil.")
 	var mission_definitions: Array = hub.get("mission_definitions") as Array
 	if mission_definitions.size() < 3 or str(mission_definitions[2].get("scene_path")) != "res://scenes/levels/level_03.tscn":
 		failures.append("Bastion-7 VEX-03 görev bağlantısı eksik.")
+	else:
+		for definition in mission_definitions:
+			if str(definition.get("terminal_code")).is_empty():
+				failures.append("Bastion-7 görevinde terminal kodu eksik.")
+			if str(definition.get("facility_type")).is_empty():
+				failures.append("Bastion-7 görevinde tesis türü eksik.")
+			if definition.get("terminal_preview") == null:
+				failures.append("Bastion-7 görevinde terminal tesis görseli eksik.")
 	for armory_path in [
 		"Props/ArmoryCategoryVisuals/PistolCategoryRack",
 		"Props/ArmoryCategoryVisuals/ShotgunCategoryRack",
@@ -267,37 +325,38 @@ func _check_level_03() -> void:
 		"Geometry/LowerLevel/Floor_L01_Start",
 		"Geometry/LowerLevel/Ceiling_L06_MaintenanceHall",
 		"Geometry/UpperLevel/UpperDeck",
-		"Geometry/Stairs/StairRamp",
-		"Geometry/Stairs/StairRampUpper",
-		"Geometry/Stairs/StairLanding",
-		"Geometry/Stairs/StairTread_L10",
-		"Geometry/Stairs/StairRiser_U10",
-		"Geometry/Stairs/RailUpperRight",
-		"Gameplay/Doors/Door_UpperLanding/FrameJambLeft",
-		"Gameplay/Objectives/KorvathRiftCore",
-		"Gameplay/Objectives/RiftIsolationSwitch",
-		"Gameplay/Enemies/KorvathWarden",
-		"Gameplay/Pickups/BluePowerCard",
-		"Gameplay/LoreTerminals/EceTanEmergencySignal",
+		"Geometry/Stairs/Collision/SmoothRampCollision/LowerRamp",
+		"Geometry/Stairs/Collision/SmoothRampCollision/Landing",
+		"Geometry/Stairs/Collision/SmoothRampCollision/UpperRamp",
+		"Geometry/Stairs/Visual/StairLanding",
+		"Geometry/Stairs/Visual/StairTread_L10",
+		"Geometry/Stairs/Visual/StairRiser_U10",
+		"Geometry/Stairs/Visual/RailUpperRight",
+		"Doors/Door_UpperLanding/FrameJambLeft",
+		"Objectives/KorvathRiftCore",
+		"Objectives/RiftIsolationSwitch",
+		"Enemies/KorvathWarden",
+		"Pickups/BluePowerCard",
+		"LoreTerminals/EceTanEmergencySignal",
 	]:
 		if level.get_node_or_null(node_path) == null:
 			failures.append("VEX-03 bileşeni eksik: %s" % node_path)
 	var upper_deck := level.get_node_or_null("Geometry/UpperLevel/UpperDeck") as Node3D
 	if upper_deck == null or not is_equal_approx(upper_deck.position.y, 7.6):
 		failures.append("VEX-03 üst kat bağımsız döşeme kotunda değil.")
-	var lower_viper := level.get_node_or_null("Gameplay/Enemies/LowerRedViperA") as Node3D
+	var lower_viper := level.get_node_or_null("Enemies/LowerRedViperA") as Node3D
 	if lower_viper == null or not is_equal_approx(lower_viper.position.y, 0.48):
 		failures.append("VEX-03 RedViper zemin hizası yanlış.")
-	var upper_korvath := level.get_node_or_null("Gameplay/Enemies/UpperKorvathA") as Node3D
+	var upper_korvath := level.get_node_or_null("Enemies/UpperKorvathA") as Node3D
 	if upper_korvath == null or not is_equal_approx(upper_korvath.position.y, 1.9):
 		failures.append("VEX-03 merdiven Korvath'ı alt kat zemin hizasında değil.")
-	var lower_stair_ramp := level.get_node_or_null("Geometry/Stairs/StairRamp") as Node3D
-	if lower_stair_ramp == null or lower_stair_ramp.transform.basis.z.y <= 0.0:
-		failures.append("VEX-03 alt merdiven yürüyüş rampası görünen basamaklarla aynı yönde yükselmiyor.")
-	var upper_stair_ramp := level.get_node_or_null("Geometry/Stairs/StairRampUpper") as Node3D
-	if upper_stair_ramp == null or upper_stair_ramp.transform.basis.z.y >= 0.0:
-		failures.append("VEX-03 üst merdiven yürüyüş rampası görünen basamaklarla aynı yönde yükselmiyor.")
-	var finish_switch := level.get_node_or_null("Gameplay/Objectives/RiftIsolationSwitch") as VexFinishSwitch
+	var lower_stair_ramp := level.get_node_or_null("Geometry/Stairs/Collision/SmoothRampCollision/LowerRamp") as Node3D
+	if lower_stair_ramp == null or not lower_stair_ramp.global_position.is_equal_approx(Vector3(17.108667, 1.849965, 3.25)):
+		failures.append("VEX-03 alt merdiven yürüyüş rampası görünen basamaklarla hizalı değil.")
+	var upper_stair_ramp := level.get_node_or_null("Geometry/Stairs/Collision/SmoothRampCollision/UpperRamp") as Node3D
+	if upper_stair_ramp == null or not upper_stair_ramp.global_position.is_equal_approx(Vector3(17.209728, 5.770875, 6.75)):
+		failures.append("VEX-03 üst merdiven yürüyüş rampası görünen basamaklarla hizalı değil.")
+	var finish_switch := level.get_node_or_null("Objectives/RiftIsolationSwitch") as VexFinishSwitch
 	if finish_switch == null:
 		failures.append("VEX-03 yarık izolasyon şalteri yüklenemedi.")
 	elif finish_switch.required_keys != [&"blue", &"red"]:
@@ -310,10 +369,10 @@ func _check_level_03() -> void:
 	for contract in ["vex03_secret_maintenance_cache", "vex03_secret_upper_archive", "vex03_korvath_warden"]:
 		if contract not in scene_text:
 			failures.append("VEX-03 progression ID eksik: %s" % contract)
-	var enemies := level.get_node_or_null("Gameplay/Enemies")
+	var enemies := level.get_node_or_null("Enemies")
 	if enemies == null or enemies.get_child_count() != 16:
 		failures.append("VEX-03 sahne düşman yerleşimi 16 düğüm değil.")
-	var pickups := level.get_node_or_null("Gameplay/Pickups")
+	var pickups := level.get_node_or_null("Pickups")
 	if pickups == null or pickups.get_child_count() != 12:
 		failures.append("VEX-03 sahne pickup yerleşimi 12 düğüm değil.")
 	var lower_level := level.get_node_or_null("Geometry/LowerLevel")
@@ -330,13 +389,13 @@ func _check_level_03() -> void:
 				upper_room_count += 1
 	if lower_room_count != 10 or upper_room_count != 8:
 		failures.append("VEX-03 modüler oda standardı yanlış: %d alt / %d üst." % [lower_room_count, upper_room_count])
-	var room_lights := level.get_node_or_null("Gameplay/Lighting/RoomLights")
+	var room_lights := level.get_node_or_null("RoomLights")
 	if room_lights == null or room_lights.get_child_count() != 17:
 		failures.append("VEX-03 bilinçli 17 beyaz ışık standardını kullanmıyor.")
-	var door_status_lights := level.get_node_or_null("Gameplay/Lighting/DoorStatusLights")
+	var door_status_lights := level.get_node_or_null("Lights")
 	if door_status_lights == null or door_status_lights.get_child_count() != 28:
 		failures.append("VEX-03 her kapının iki yüzünde toplam 28 durum lambası kullanmıyor.")
-	var doors := level.get_node_or_null("Gameplay/Doors")
+	var doors := level.get_node_or_null("Doors")
 	if doors == null or doors.get_child_count() != 14:
 		failures.append("VEX-03 oda-koridor kapı sayısı 14 değil.")
 	for removed_contract in ["CargoElevator_Main", "VentLowCeiling", "UpperServiceCeiling", "CrouchInstructionLabel"]:
@@ -425,6 +484,8 @@ func _check_scene_authority() -> void:
 	var player_packed := load("res://scenes/player/player.tscn") as PackedScene
 	if player_packed != null:
 		var player := player_packed.instantiate()
+		if int(player.get(&"maximum_health")) != 100:
+			failures.append("Player maksimum can temel tuning değeri 100 değil.")
 		for property_name in [
 			&"maximum_health", &"maximum_armor", &"armor_absorption_ratio",
 			&"hurt_audio_cooldown", &"floor_stick_velocity", &"pitch_limit_degrees",

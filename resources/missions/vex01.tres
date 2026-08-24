@@ -1,12 +1,16 @@
-[gd_resource type="Resource" script_class="VexMissionDefinition" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="VexMissionDefinition" format=3 uid="uid://37peeksg02yp"]
 
-[ext_resource type="Script" path="res://scripts/data/mission_definition.gd" id="1"]
+[ext_resource type="Script" uid="uid://y20v4t0lvcl" path="res://scripts/data/mission_definition.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b8gj74ryetkfv" path="res://assets/ui/bastion_facility_network.png" id="2_network"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_terminal_preview"]
+atlas = ExtResource("2_network")
+region = Rect2(14, 8, 530, 925)
+filter_clip = true
 
 [resource]
 script = ExtResource("1")
-mission_id = &"vex01"
 display_name = "LEVEL01_NAME"
 briefing = "LEVEL01_MISSION_BRIEF"
 completion_message = "LEVEL01_COMPLETE"
-scene_path = "res://scenes/levels/level_01.tscn"
-campaign_stage = 1
+terminal_preview = SubResource("AtlasTexture_terminal_preview")

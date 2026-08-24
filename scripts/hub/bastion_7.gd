@@ -117,6 +117,10 @@ func get_automap_config() -> Dictionary:
 	}
 
 
+func get_mission_definitions() -> Array[VexMissionDefinition]:
+	return mission_definitions
+
+
 func _get_active_mission_definition() -> VexMissionDefinition:
 	var index := GameState.campaign_stage
 	if index < 0 or index >= mission_definitions.size():

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 from pathlib import Path
-import csv, re, sys
+import csv, math, re, sys
 
 ROOT = Path(__file__).resolve().parents[1]
 FAILURES: list[str] = []
@@ -9,6 +9,28 @@ WARNINGS: list[str] = []
 
 def fail(msg: str): FAILURES.append(msg)
 def warn(msg: str): WARNINGS.append(msg)
+
+
+def node_origin(scene_text: str, node_name: str):
+    match = re.search(
+        rf'^\[node name="{re.escape(node_name)}"[^\n]*\]\n(.*?)(?=\n\[node |\Z)',
+        scene_text,
+        re.M | re.S,
+    )
+    if match is None:
+        return None
+    transform = re.search(r'^transform = Transform3D\(([^\n]+)\)$', match.group(1), re.M)
+    if transform is None:
+        return (0.0, 0.0, 0.0)
+    values = [float(value.strip()) for value in transform.group(1).split(',')]
+    return tuple(values[-3:]) if len(values) == 12 else None
+
+
+def approximately_equal_vector(actual, expected, tolerance: float = 0.00001) -> bool:
+    return actual is not None and all(
+        math.isclose(value, target, abs_tol=tolerance)
+        for value, target in zip(actual, expected)
+    )
 
 def exists(rel: str):
     p=ROOT/rel
@@ -49,7 +71,7 @@ def check_inputmap():
         if re.search(r'^'+re.escape(name)+r'=\{',t,re.M) is None: fail(f"InputMap eksik: {name}")
 
 def check_core_scenes():
-    required=['scenes/player/player.tscn','scenes/ui/hud.tscn','scenes/ui/main_menu.tscn','scenes/ui/pause_menu.tscn','scenes/levels/level_01.tscn','scenes/levels/level_02.tscn','scenes/levels/level_03.tscn','scenes/hub/bastion_7.tscn','scenes/hub/armory_category_rack.tscn','scenes/hub/hub_weapon_rack.tscn','scripts/hub/armory_category_rack.gd','scenes/world/korvath_rift.tscn','scenes/world/lore_terminal.tscn','resources/missions/vex03.tres','scenes/actors/veilmaw.tscn','scenes/actors/veilmaw_projectile.tscn']
+    required=['scenes/player/player.tscn','scenes/ui/hud.tscn','scenes/ui/main_menu.tscn','scenes/ui/pause_menu.tscn','scenes/ui/terminal_menu.tscn','scripts/ui/terminal_menu.gd','scenes/levels/level_01.tscn','scenes/levels/level_02.tscn','scenes/levels/level_03.tscn','scenes/hub/bastion_7.tscn','scenes/hub/hub_terminal.tscn','scenes/hub/armory_category_rack.tscn','scenes/hub/hub_weapon_rack.tscn','scripts/hub/hub_terminal.gd','scripts/hub/armory_category_rack.gd','scenes/world/korvath_rift.tscn','scenes/world/lore_terminal.tscn','scenes/world/u_staircase.tscn','scenes/world/door_status_light.tscn','scripts/world/door_status_light.gd','scenes/world/room_name_display.tscn','scripts/world/room_name_display.gd','assets/ui/bastion_terminal_screen_idle.png','assets/world/bastion7/bastion_terminal_controls.png','assets/ui/bastion_facility_network.png','resources/missions/vex03.tres','scenes/actors/veilmaw.tscn','scenes/actors/veilmaw_projectile.tscn']
     for r in required: exists(r)
 
 def check_keys_and_pickups():
@@ -87,6 +109,11 @@ def check_player_contract():
     required=['Input.is_action_just_pressed("jump")','Input.is_action_pressed("sprint")','event.is_action_pressed("crouch")','func _try_jump()','jump_stamina_cost','_can_stand_up']
     for s in required:
         if s not in t: fail(f'Player movement sözleşmesi eksik: {s}')
+    if '@export_range(1, 500, 1) var maximum_health := 100' not in t:
+        fail('Player maksimum can varsayılanı 100 değil veya export aralığı dışında')
+    player_scene=(ROOT/'scenes/player/player.tscn').read_text(encoding='utf-8')
+    if 'maximum_health = 100' not in player_scene:
+        fail('Player maksimum can temel tuning değeri sahnede 100 olarak tanımlı değil')
 
 def check_no_checkpoint_contract():
     t=(ROOT/'scripts/autoload/game_state.gd').read_text(encoding='utf-8')
@@ -333,6 +360,176 @@ def check_bastion_door_wall_contract():
         if obsolete in geometry:
             fail(f'Bastion geometrisinde bindirme yapan eski ölçü kaldı: {obsolete}')
 
+
+def check_bastion_room_display_contract():
+    hub=(ROOT/'scenes/hub/bastion_7.tscn').read_text(encoding='utf-8')
+    display=(ROOT/'scenes/world/room_name_display.tscn').read_text(encoding='utf-8')
+    display_script=(ROOT/'scripts/world/room_name_display.gd').read_text(encoding='utf-8')
+    standard=(ROOT/'STANDART.txt').read_text(encoding='utf-8')
+    if hub.count('instance=ExtResource("25_room_display")') != 6:
+        fail('Bastion-7 oda adı ekranı sayısı 6 değil')
+    if '[node name="RoomDisplays" type="Node3D" parent="."' not in hub:
+        fail('Bastion-7 RoomDisplays root kategorisi eksik')
+    for obsolete in ['[node name="Signage"', 'Panel_ArmoryDoor', 'Sign_ArmoryDoor', 'BoxMesh_door_sign_']:
+        if obsolete in hub:
+            fail(f'Bastion-7 eski çakışan oda tabelası yapısı kaldı: {obsolete}')
+    for room_name in ['ARMORY', 'FIRING RANGE', 'RESEARCH LAB', 'WEAPON WORKSHOP', 'ENGINEERING BAY', 'OPERATOR PLATFORM']:
+        if f'room_name = "{room_name}"' not in hub:
+            fail(f'Bastion-7 dijital oda ekranı metni eksik: {room_name}')
+    lamp_transforms=re.findall(r'^transform = Transform3D\(([^\n]+)\)$', hub.split('[node name="DoorLights"', 1)[-1].split('[node name="RoomDisplays"', 1)[0], re.M)
+    lamp_positions=[tuple(float(value.strip()) for value in transform.split(',')[-3:]) for transform in lamp_transforms]
+    if len(lamp_positions) != 12 or any(not math.isclose(y, 6.05, abs_tol=0.00001) for _x, y, _z in lamp_positions):
+        fail('Bastion-7 kapı durum lambaları oda ekranından ayrı Y=6.05 hizasında değil')
+    display_positions=[]
+    room_block=hub.split('[node name="RoomDisplays"', 1)[-1].split('[node name="Props"', 1)[0]
+    for match in re.finditer(r'^transform = Transform3D\(([^\n]+)\)$', room_block, re.M):
+        values=[float(value.strip()) for value in match.group(1).split(',')]
+        if len(values) == 12:
+            display_positions.append(values[-2])
+    if len(display_positions) != 6 or any(not math.isclose(y, 5.25, abs_tol=0.00001) for y in display_positions):
+        fail('Bastion-7 oda ekranları canonical Y=5.25 hizasında değil')
+    for contract in [
+        'size = Vector3(4.2, 0.72, 0.12)', 'name="Screen" type="MeshInstance3D"',
+        'font = ExtResource("2_font")', 'name="RoomName" type="Label3D"',
+        'emission_enabled = true', 'Material_accent',
+    ]:
+        if contract not in display:
+            fail(f'Canonical dijital oda ekranı görsel sözleşmesi eksik: {contract}')
+    for contract in ['@tool', '@export var room_name', '@export var header_text', 'room_label.text = room_name']:
+        if contract not in display_script:
+            fail(f'Canonical dijital oda ekranı Inspector sözleşmesi eksik: {contract}')
+    for contract in ['res://scenes/world/room_name_display.tscn', 'Bastion ekran root merkezi Y = 5.25 m', 'durum ışığı root merkezi Y = 6.05 m']:
+        if contract not in standard:
+            fail(f'STANDART dijital oda ekranı kuralı eksik: {contract}')
+
+
+def check_professional_terminal_contract():
+    terminal_scene=(ROOT/'scenes/hub/hub_terminal.tscn').read_text(encoding='utf-8')
+    terminal_script=(ROOT/'scripts/hub/hub_terminal.gd').read_text(encoding='utf-8')
+    menu_scene=(ROOT/'scenes/ui/terminal_menu.tscn').read_text(encoding='utf-8')
+    menu_script=(ROOT/'scripts/ui/terminal_menu.gd').read_text(encoding='utf-8')
+    mission_script=(ROOT/'scripts/data/mission_definition.gd').read_text(encoding='utf-8')
+    hub_script=(ROOT/'scripts/hub/bastion_7.gd').read_text(encoding='utf-8')
+    translations=(ROOT/'translations/vex.csv').read_text(encoding='utf-8')
+    standard=(ROOT/'STANDART.txt').read_text(encoding='utf-8')
+    screen_path=ROOT/'assets/ui/bastion_terminal_screen_idle.png'
+    controls_path=ROOT/'assets/world/bastion7/bastion_terminal_controls.png'
+    network_path=ROOT/'assets/ui/bastion_facility_network.png'
+
+    for contract in [
+        '[node name="HubTerminal" type="Node3D"',
+        'res://assets/ui/bastion_terminal_screen_idle.png',
+        'res://assets/world/bastion7/bastion_terminal_controls.png',
+        '[node name="ScreenSurface" type="Sprite3D" parent="Visuals/ScreenAssembly"]',
+        '[node name="DeckAssembly" type="Node3D" parent="Visuals"]',
+        '[node name="ControlSurface" type="MeshInstance3D" parent="Visuals/DeckAssembly"]',
+        '[node name="ScreenGlow" type="SpotLight3D" parent="Visuals"]',
+        '[node name="PhysicalBody" type="Node3D" parent="."]',
+        '[node name="SolidCollider" type="StaticBody3D" parent="PhysicalBody"]',
+        '[node name="ScreenInteraction" type="StaticBody3D" parent="."]',
+        '[node name="ScreenInteractionShape" type="CollisionShape3D" parent="ScreenInteraction"]',
+        'res://scenes/ui/terminal_menu.tscn',
+        '[node name="TerminalMenu" parent="." instance=ExtResource("5_menu")]',
+    ]:
+        if contract not in terminal_scene:
+            fail(f'Gelişmiş 3B Bastion terminali fiziksel/görsel sözleşmesi eksik: {contract}')
+
+    solid_block=terminal_scene.split('[node name="SolidCollider"', 1)[-1].split('\n[node ', 1)[0]
+    screen_interaction_block=terminal_scene.split('[node name="ScreenInteraction"', 1)[-1].split('\n[node ', 1)[0]
+    if 'collision_layer = 1' not in solid_block:
+        fail('Bastion terminal fiziksel gövdesi world layer 1 üzerinde değil')
+    if 'collision_layer = 8' not in screen_interaction_block:
+        fail('Bastion terminal ekran etkileşimi layer 8 üzerinde değil')
+    if 'rotation = Vector3(-0.20944, 0, 0)' not in terminal_scene:
+        fail('Bastion terminal kumanda deck eğimi sahnede tanımlı değil')
+    for generated_node in ['MeshInstance3D.new(', 'BoxMesh.new(', 'CollisionShape3D.new(']:
+        if generated_node in terminal_script:
+            fail(f'Bastion terminal scripti runtime geometri üretiyor: {generated_node}')
+    for retired_contract in ['FrontVisual', '_refresh_screen', 'screen_label']:
+        if retired_contract in terminal_scene or retired_contract in terminal_script:
+            fail(f'Bastion terminalinde eski düz/dinamik ekran sözleşmesi kalmış: {retired_contract}')
+
+    interact_block=terminal_script.split('func interact(', 1)[-1].split('\nfunc ', 1)[0]
+    if 'terminal_menu.open_terminal(' not in interact_block:
+        fail('Bastion terminal etkileşimi tam ekran terminal menüsünü açmıyor')
+    if 'deploy_selected_hub_mission' in interact_block or 'select_hub_mission' in interact_block:
+        fail('Bastion terminali hâlâ tek etkileşimde görev seçiyor/deploy ediyor')
+    for contract in ['@onready var terminal_menu: VexTerminalMenu', 'TERMINAL_INTERACT_OPEN', 'func _get_mission_definitions() -> Array:']:
+        if contract not in terminal_script:
+            fail(f'Bastion terminal menü bağlantısı eksik: {contract}')
+    if 'func get_mission_definitions() -> Array[VexMissionDefinition]:' not in hub_script:
+        fail('Bastion sahnesi görev resource listesini terminale veri odaklı sunmuyor')
+
+    for contract in [
+        '[node name="TerminalRoot" type="Control" parent="."]',
+        '[node name="Mission01Button" type="Button"',
+        '[node name="Mission02Button" type="Button"',
+        '[node name="Mission03Button" type="Button"',
+        '[node name="FacilityPreview" type="TextureRect"',
+        '[node name="SelectButton" type="Button"',
+        '[node name="DeployButton" type="Button"',
+        'res://assets/ui/automap_console_frame.png',
+    ]:
+        if contract not in menu_scene:
+            fail(f'Terminal görev/tesis menüsü sahne sözleşmesi eksik: {contract}')
+    for contract in [
+        'enum FacilityStatus', 'GameState.campaign_stage >= definition.campaign_stage',
+        'definition.campaign_stage == GameState.campaign_stage + 1',
+        'definition.terminal_preview', 'GameState.select_hub_mission(',
+        'GameState.deploy_selected_hub_mission()', 'get_tree().paused = true',
+    ]:
+        if contract not in menu_script:
+            fail(f'Terminal görev/tesis menüsü ilerleme sözleşmesi eksik: {contract}')
+
+    for contract in ['@export var terminal_code', '@export var facility_type', '@export var terminal_preview: Texture2D']:
+        if contract not in mission_script:
+            fail(f'MissionDefinition terminal sunum verisi eksik: {contract}')
+    preview_regions=['Rect2(14, 8, 530, 925)', 'Rect2(571, 8, 530, 925)', 'Rect2(1128, 8, 530, 925)']
+    for index, mission_name in enumerate(['vex01.tres', 'vex02.tres', 'vex03.tres']):
+        mission=(ROOT/'resources/missions'/mission_name).read_text(encoding='utf-8')
+        for contract in ['res://assets/ui/bastion_facility_network.png', 'terminal_preview = SubResource("AtlasTexture_terminal_preview")', preview_regions[index]]:
+            if contract not in mission:
+                fail(f'{mission_name}: terminal tesis görseli/data sözleşmesi eksik: {contract}')
+
+    for key in [
+        'TERMINAL_INTERACT_OPEN', 'TERMINAL_MENU_TITLE', 'TERMINAL_MENU_CLEARED_COUNT',
+        'TERMINAL_STATUS_CLEARED', 'TERMINAL_STATUS_ACTIVE', 'TERMINAL_STATUS_LOCKED',
+        'TERMINAL_MENU_SELECT', 'TERMINAL_MENU_DEPLOY', 'TERMINAL_FACILITY_ASH_MINE',
+    ]:
+        if re.search(rf'^{re.escape(key)},', translations, re.M) is None:
+            fail(f'Terminal menü localization anahtarı eksik: {key}')
+
+    for label, path in [('sabit ekran', screen_path), ('kumanda yüzeyi', controls_path)]:
+        if path.exists():
+            png=path.read_bytes()
+            if len(png) < 26 or png[:8] != b'\x89PNG\r\n\x1a\n':
+                fail(f'Bastion terminal {label} görseli geçerli PNG değil')
+                continue
+            width=int.from_bytes(png[16:20], 'big')
+            height=int.from_bytes(png[20:24], 'big')
+            if width < 1600 or height < 900:
+                fail(f'Bastion terminal {label} çözünürlüğü yetersiz: {width}x{height}')
+            if not math.isclose(width / height, 16 / 9, abs_tol=0.03):
+                fail(f'Bastion terminal {label} 16:9 oranından fazla sapıyor: {width}x{height}')
+    if network_path.exists():
+        png=network_path.read_bytes()
+        if len(png) < 26 or png[:8] != b'\x89PNG\r\n\x1a\n':
+            fail('Bastion tesis ağı görseli geçerli PNG değil')
+        else:
+            width=int.from_bytes(png[16:20], 'big')
+            height=int.from_bytes(png[20:24], 'big')
+            if width < 1500 or height < 800:
+                fail(f'Bastion tesis ağı görsel çözünürlüğü yetersiz: {width}x{height}')
+
+    for contract in [
+        'res://scenes/ui/terminal_menu.tscn', 'res://assets/ui/bastion_terminal_screen_idle.png',
+        'res://assets/world/bastion7/bastion_terminal_controls.png',
+        '`ScreenInteraction` layer 8', 'TEMİZLENDİ / SIRADAKİ HEDEF / KİLİTLİ',
+        '`terminal_code`, `facility_type` ve `terminal_preview`',
+    ]:
+        if contract not in standard:
+            fail(f'STANDART profesyonel terminal kuralı eksik: {contract}')
+
 def check_stale_files():
     tmp=list(ROOT.rglob('*.import*.tmp'))
     for p in tmp: warn(f'Temporary import dosyası: {p.relative_to(ROOT)}')
@@ -341,7 +538,7 @@ def check_stale_files():
 
 
 def check_world_visual_standard():
-    scanned=[ROOT/'scripts/world/world_piece.gd', ROOT/'scenes/world/world_piece.tscn']
+    scanned=[ROOT/'scripts/world/world_piece.gd', ROOT/'scenes/world/world_piece.tscn', ROOT/'scenes/world/u_staircase.tscn']
     scanned.extend(ROOT.glob('scenes/levels/level_0[123].tscn'))
     scanned.append(ROOT/'scenes/hub/bastion_7.tscn')
     for path in scanned:
@@ -398,7 +595,7 @@ def check_world_visual_standard():
     light_profile_contracts={
         'level_01.tscn': ('26_room_light', 17, '36_room_fill', 3, None, 0),
         'level_02.tscn': ('26_room_light', 32, '36_room_fill', 3, None, 0),
-        'level_03.tscn': ('15_room_light', 16, None, 0, '36_room_large', 1),
+        'level_03.tscn': ('15_room_light', 17, None, 0, None, 0),
     }
     forbidden_instance_keys=['light_energy', 'light_range', 'cone_angle', 'cone_attenuation', 'distance_attenuation', 'shadow_enabled']
     for filename, (normal_id, normal_count, fill_id, fill_count, large_id, large_count) in light_profile_contracts.items():
@@ -420,6 +617,15 @@ def check_world_visual_standard():
                 for key in forbidden_instance_keys:
                     if re.search(rf'^{key} = ', body, re.M):
                         fail(f'{filename}:{node_name} canonical ışık profilini instance override ile eziyor: {key}')
+    hub_scene=(ROOT/'scenes/hub/bastion_7.tscn').read_text(encoding='utf-8')
+    if hub_scene.count('instance=ExtResource("9_white")') != 8 or hub_scene.count('instance=ExtResource("23_white_large")') != 1:
+        fail('Bastion-7 beyaz ışık profilleri 8 NORMAL + 1 LARGE standardında değil')
+    for profile_id in ['9_white', '23_white_large']:
+        for match in re.finditer(rf'\[node name="([^"]+)"[^\n]*instance=ExtResource\("{profile_id}"\)\]\n(.*?)(?=\n\[node |\Z)', hub_scene, re.S):
+            node_name, body=match.groups()
+            for key in forbidden_instance_keys:
+                if re.search(rf'^{key} = ', body, re.M):
+                    fail(f'bastion_7.tscn:{node_name} canonical ışık profilini instance override ile eziyor: {key}')
     png=green_texture_path.read_bytes()
     if len(png) < 26 or png[:8] != b'\x89PNG\r\n\x1a\n' or int.from_bytes(png[16:20], 'big') != 768 or int.from_bytes(png[20:24], 'big') != 320 or png[25] not in (4, 6):
         fail('Yeşil kapı lambası 768x320 gerçek alfa kanallı PNG değil')
@@ -498,16 +704,18 @@ def check_unique_progression_ids():
 def check_level_03_contract():
     script=(ROOT/'scripts/levels/level_03.gd').read_text(encoding='utf-8')
     scene=(ROOT/'scenes/levels/level_03.tscn').read_text(encoding='utf-8')
+    stair_path=ROOT/'scenes/world/u_staircase.tscn'
+    stair=stair_path.read_text(encoding='utf-8') if stair_path.exists() else ''
     hub=(ROOT/'scenes/hub/bastion_7.tscn').read_text(encoding='utf-8')
-    story_path=ROOT/'HIKAYE_VEX.md'
+    story_path=ROOT/'Story_VEX.md'
     if not story_path.exists():
-        fail('Kampanya hikâye dosyası eksik: HIKAYE_VEX.md')
+        fail('Kampanya hikâye dosyası eksik: Story_VEX.md')
         story=''
     else:
         story=story_path.read_text(encoding='utf-8')
     required_scene=[
         'LEVEL03_NAME', 'Ceiling_L06_MaintenanceHall',
-        'Stairs', 'StairLanding', 'UpperDeck',
+        'Stairs', 'res://scenes/world/u_staircase.tscn', 'UpperDeck',
         'vex03_secret_maintenance_cache', 'vex03_secret_upper_archive',
         'vex03_korvath_warden', 'res://scenes/world/korvath_rift.tscn',
         'vex03_log_transfer_41', 'vex03_log_korvath', 'vex03_log_ece_signal',
@@ -521,25 +729,27 @@ def check_level_03_contract():
         'StairSafety_L01', 'StairSafety_L13', 'StairSafety_U01', 'StairSafety_U13',
         'RailLowerLeft', 'RailLowerRight', 'RailUpperLeft', 'RailUpperRight',
         'LandingRailNorthConnector', 'LandingRailSouthConnector', 'LandingRailEast',
-        'material_override = ExtResource("34_stair_safety")',
+        'material_override = ExtResource("3_stair_safety")',
     ]:
-        if contract not in scene:
+        if contract not in stair:
             fail(f'VEX-03 yeni U-merdiven fizik/görsel sözleşmesi eksik: {contract}')
-    if scene.count('collision_layer = 1') < 1:
+    if stair.count('collision_layer = 1') != 1:
         fail('VEX-03 smooth merdiven collision gövdesi layer 1 üzerinde değil')
-    if scene.count('parent="Geometry/Stairs/Collision/SmoothRampCollision"') != 3:
+    if stair.count('parent="Collision/SmoothRampCollision"') != 3:
         fail('VEX-03 merdiven collision alt rampa + sahanlık + üst rampa olarak 3 yüzey kullanmıyor')
-    if scene.count('name="StairTread_L') != 13 or scene.count('name="StairTread_U') != 13:
+    if stair.count('name="StairTread_L') != 13 or stair.count('name="StairTread_U') != 13:
         fail('VEX-03 merdiven 13 + 13 temiz görsel basamak kullanmıyor')
-    if scene.count('material_override = ExtResource("34_stair_safety")') < 26:
+    if stair.count('material_override = ExtResource("3_stair_safety")') != 26:
         fail('VEX-03 sarı/turuncu basamak güvenlik şeritleri eksik')
     for rail_name in ['RailLowerLeft', 'RailLowerRight', 'RailUpperLeft', 'RailUpperRight']:
-        if scene.count(f'name="{rail_name}"') != 1:
+        if stair.count(f'name="{rail_name}"') != 1:
             fail(f'VEX-03 {rail_name} tek parça sürekli korkuluk değil')
-    if re.search(r'name="Rail(?:Lower|Upper)(?:Left|Right)_\d+', scene):
+    if re.search(r'name="Rail(?:Lower|Upper)(?:Left|Right)_\d+', stair):
         fail('VEX-03 segment segment merdiven korkuluğu geri gelmiş')
-    if 'level03_stair_module.tscn' in scene:
-        fail('VEX-03 merdiven sahne üzerinden düzenlenebilir olmalı; ayrı scene instance kaldı')
+    if scene.count('instance=ExtResource("33_staircase")') != 1 or '[node name="Collision" type="Node3D" parent="Geometry/Stairs"' in scene:
+        fail('VEX-03 tekrar kullanılabilir U-merdiven sahnesini tek instance olarak kullanmıyor')
+    if re.search(r'^cast_shadow\s*=\s*(?:false|0)$', stair, re.M):
+        fail('Tekrar kullanılabilir U-merdiven sahnesinde gölgesi kapalı parça kaldı')
     for forbidden_stair_contract in ['LowerShape_00', 'UpperShape_00', 'StairSolidL00', 'StairSolidU00', 'StepCollisionLower', 'StepCollisionUpper']:
         if forbidden_stair_contract in scene:
             fail(f'VEX-03 eski basamak collision sistemi geri gelmiş: {forbidden_stair_contract}')
@@ -559,15 +769,19 @@ def check_level_03_contract():
         fail('Bastion-7 VEX-03 görevini sunmuyor')
     if '## Bölüm 4 — VEX-03: Kül Madeni' not in story:
         fail('Kampanya hikâyesinde VEX-03 Kül Madeni bölümü eksik')
-    if 'required_keys = Array[StringName]([&"blue", &"red"])' not in scene:
-        fail('VEX-03 finish switch typed anahtar dizisi sahnede eksik')
+    finish_switch_scene=(ROOT/'scenes/props/finish_switch.tscn').read_text(encoding='utf-8')
+    if 'required_keys = Array[StringName]([&"blue", &"red"])' not in finish_switch_scene:
+        fail('VEX-03 finish switch prefab typed anahtar dizisi eksik')
     forbidden_runtime_builders=['_build_level_geometry', '_spawn_gameplay', '_spawn_enemy(', '_spawn_pickup(', 'WORLD_PIECE_SCENE']
     for contract in forbidden_runtime_builders:
         if contract in script:
             fail(f'VEX-03 editör görünürlüğünü bozan runtime üretim kaldı: {contract}')
-    for node_group in ['Geometry/LowerLevel', 'Geometry/UpperLevel', 'Geometry/Stairs', 'Gameplay/Enemies', 'Gameplay/Pickups', 'Gameplay/Lighting']:
+    for node_group in ['Geometry/LowerLevel', 'Geometry/UpperLevel']:
         if f'parent="{node_group}"' not in scene and f'name="{node_group.split("/")[-1]}" type="Node3D" parent="{node_group.rsplit("/", 1)[0]}"' not in scene:
             fail(f'VEX-03 editör sahne grubu eksik: {node_group}')
+    for root_group in ['Doors', 'Enemies', 'Pickups', 'Props', 'RoomLights', 'Lights']:
+        if re.search(rf'^\[node name="{root_group}" type="Node3D" parent="\."', scene, re.M) is None:
+            fail(f'VEX-03 Level 1/2 root sahne standardı eksik: {root_group}')
     counts={
         'enemy_id': len(re.findall(r'\benemy_id\s*=\s*&"', scene)),
         'pickup_id': len(re.findall(r'\bpickup_id\s*=\s*&"', scene)),
@@ -579,10 +793,10 @@ def check_level_03_contract():
     lower_rooms=len(re.findall(r'name="Room_L\d\d_', scene))
     upper_rooms=len(re.findall(r'name="Room_U\d\d_', scene))
     room_lights=len(re.findall(r'name="Light_[LU]\d\d_', scene))
-    status_lights=len(re.findall(r'parent="Gameplay/Lighting/DoorStatusLights"[^\n]*instance=ExtResource\("(?:16_red_lamp|35_green_lamp)"\)', scene))
-    red_lights=len(re.findall(r'parent="Gameplay/Lighting/DoorStatusLights"[^\n]*instance=ExtResource\("16_red_lamp"\)', scene))
-    green_lights=len(re.findall(r'parent="Gameplay/Lighting/DoorStatusLights"[^\n]*instance=ExtResource\("35_green_lamp"\)', scene))
-    doors=len(re.findall(r'name="Door_[^"]+" parent="Gameplay/Doors"', scene))
+    status_lights=len(re.findall(r'parent="Lights"[^\n]*instance=ExtResource\("(?:16_red_lamp|35_green_lamp)"\)', scene))
+    red_lights=len(re.findall(r'parent="Lights"[^\n]*instance=ExtResource\("16_red_lamp"\)', scene))
+    green_lights=len(re.findall(r'parent="Lights"[^\n]*instance=ExtResource\("35_green_lamp"\)', scene))
+    doors=len(re.findall(r'name="Door_[^"]+" parent="Doors"', scene))
     wall_pieces=len(re.findall(r'parent="Geometry/(?:LowerLevel|UpperLevel)/(?:LowerOuterWalls|LowerDoorFrames|UpperOuterWalls|UpperDoorFrames)', scene))
     if lower_rooms != 10: fail(f'VEX-03 alt kat modüler oda sayısı 10 değil: {lower_rooms}')
     if upper_rooms != 8: fail(f'VEX-03 üst kat modüler oda sayısı 8 değil: {upper_rooms}')
@@ -614,7 +828,7 @@ def check_level_03_contract():
         pattern=rf'\[node name="{re.escape(header_name)}"[^\n]*\]\ntransform = Transform3D\([^\n]*, {re.escape(coordinates)}\)'
         if re.search(pattern, scene) is None:
             fail(f'VEX-03 kapı üstü duvarı konum standardı bozuk: {header_name}')
-    lamp_transforms=re.findall(r'\[node name="Door\d+_Lamp[AB]" parent="Gameplay/Lighting/DoorStatusLights"[^\n]*\]\ntransform = Transform3D\(([^\n]+)\)', scene)
+    lamp_transforms=re.findall(r'\[node name="Door\d+_Lamp[AB]" parent="Lights"[^\n]*\]\ntransform = Transform3D\(([^\n]+)\)', scene)
     lamp_positions=[tuple(value.strip() for value in transform.split(',')[-3:]) for transform in lamp_transforms]
     lower_door_lamps=sum(1 for _x, y, _z in lamp_positions if y == '5.5')
     upper_door_lamps=sum(1 for _x, y, _z in lamp_positions if y == '13.3')
@@ -623,25 +837,28 @@ def check_level_03_contract():
     for standard_contract in ['piece_size = Vector3(12, 0.4, 10)', 'piece_size = Vector3(0.4, 7, 2.54)', 'piece_size = Vector3(0.4, 2.28, 4.92)', 'piece_size = Vector3(4.92, 2.28, 0.4)', '-18, 6.82, 15)']:
         if standard_contract not in scene:
             fail(f'VEX-03 Level 1/2 ölçü standardı eksik: {standard_contract}')
-    for revision_contract in [
-        'map_revision = "VEX03-R10-LEFT-ENTRY-U-STAIR"',
-        'position = Vector3(13.869231, 0.260000, 3.250)',
-        'position = Vector3(20.330769, 3.860000, 3.250)',
-        'position = Vector3(20.346154, 4.160000, 6.750)',
-        'position = Vector3(14.253846, 7.760000, 6.750)',
-        'position = Vector3(17.108667, 1.849965, 3.25)',
-        'rotation = Vector3(0, 0, 0.504464)',
-        'position = Vector3(17.209729, 5.770875, 6.75)',
-        'rotation = Vector3(0, 0, -0.527514)',
-        'position = Vector3(17.10, 2.87, 2.230)',
-        'position = Vector3(17.10, 2.87, 4.270)',
-        'position = Vector3(17.30, 6.77, 5.730)',
-        'position = Vector3(17.30, 6.77, 7.770)',
-        'piece_size = Vector3(0.07, 0.92, 0.07)',
-        'piece_size = Vector3(0.07, 0.07, 5.54)',
-    ]:
-        if revision_contract not in scene:
-            fail(f'VEX-03 yeni yön/flush/korkuluk sözleşmesi eksik: {revision_contract}')
+    if 'map_revision = "VEX03-R11-REUSABLE-U-STAIR"' not in scene:
+        fail('VEX-03 tekrar kullanılabilir merdiven revizyonu güncel değil')
+    if not approximately_equal_vector(node_origin(scene, 'Stairs'), (13.6, 0.0, 3.25)):
+        fail('VEX-03 U-merdiven instance yerleşim ankrajı bozuk')
+    expected_stair_origins={
+        'StairTread_L01': (0.269231, 0.26, 0.0),
+        'StairTread_L13': (6.730769, 3.86, 0.0),
+        'StairTread_U01': (6.746153, 4.16, 3.5),
+        'StairTread_U13': (0.653846, 7.76, 3.5),
+        'LowerRamp': (3.508667, 1.849965, 0.0),
+        'UpperRamp': (3.609728, 5.770875, 3.5),
+        'RailLowerLeft': (3.5, 2.87, -1.02),
+        'RailLowerRight': (3.5, 2.87, 1.02),
+        'RailUpperLeft': (3.7, 6.77, 2.48),
+        'RailUpperRight': (3.7, 6.77, 4.52),
+    }
+    for node_name, expected_origin in expected_stair_origins.items():
+        if not approximately_equal_vector(node_origin(stair, node_name), expected_origin):
+            fail(f'VEX-03 tekrar kullanılabilir merdiven hizası bozuk: {node_name}')
+    for size_contract in ['piece_size = Vector3(0.07, 0.92, 0.07)', 'piece_size = Vector3(0.07, 0.07, 5.54)']:
+        if size_contract not in stair:
+            fail(f'VEX-03 U-merdiven korkuluk ölçüsü eksik: {size_contract}')
     door_scene=(ROOT/'scenes/props/door_side_slide.tscn').read_text(encoding='utf-8')
     for frame_contract in ['FrameJambLeft', 'FrameJambRight', 'FrameHeader']:
         if frame_contract not in door_scene:
@@ -809,7 +1026,7 @@ def check_brightness_scene_authority():
 
 
 def main():
-    check_paths(); check_import_uids(); check_inputmap(); check_core_scenes(); check_keys_and_pickups(); check_enemies(); check_player_contract(); check_no_checkpoint_contract(); check_weapon_upgrades(); check_armory_loadout_contract(); check_p01_visual_contract(); check_bastion_door_wall_contract(); check_world_visual_standard(); check_runtime_signal_contracts(); check_level_briefings(); check_level_02_progression(); check_level_03_contract(); check_unique_progression_ids(); check_localization_contract(); check_brightness_scene_authority(); check_stale_files()
+    check_paths(); check_import_uids(); check_inputmap(); check_core_scenes(); check_keys_and_pickups(); check_enemies(); check_player_contract(); check_no_checkpoint_contract(); check_weapon_upgrades(); check_armory_loadout_contract(); check_p01_visual_contract(); check_bastion_door_wall_contract(); check_bastion_room_display_contract(); check_professional_terminal_contract(); check_world_visual_standard(); check_runtime_signal_contracts(); check_level_briefings(); check_level_02_progression(); check_level_03_contract(); check_unique_progression_ids(); check_localization_contract(); check_brightness_scene_authority(); check_stale_files()
     for w in WARNINGS: print('WARNING:',w)
     for f in FAILURES: print('ERROR:',f)
     print(f'VEX VALIDATOR: {len(FAILURES)} gerçek hata, {len(WARNINGS)} uyarı')

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://uqj4ntddc2t8"]
 
 [ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="1_6ndmo"]
-[ext_resource type="Script" uid="uid://qymn1g4umlef" path="res://scenes/world/weapon_rack.gd" id="1_hba6d"]
+[ext_resource type="Script" uid="uid://qymn1g4umlef" path="res://scripts/world/weapon_rack.gd" id="1_hba6d"]
 [ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="2_d3clc"]
 [ext_resource type="Texture2D" uid="uid://c7ydjkw1nps4n" path="res://assets/world/metal_board.png" id="2_hba6d"]
 [ext_resource type="Texture2D" uid="uid://teit1q3ovub2" path="res://assets/pickups/pistol.png" id="2_pr36e"]

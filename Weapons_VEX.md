@@ -733,4 +733,3 @@ Bu kararlar yeni bir ana tasarım kararı alınmadıkça sabittir:
 10. Silahların yandan raf görsellerinde namlu sağa bakar.
 11. Otomatik silahı aşağı indirme sistemi şimdilik kapalıdır.
 12. Yeni silahlar kod içindeki sabit `match` bloklarıyla değil, veri kaynaklarıyla tanımlanır.
-

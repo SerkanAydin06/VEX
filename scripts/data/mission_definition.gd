@@ -7,3 +7,8 @@ extends Resource
 @export_multiline var completion_message := "OPERASYON TAMAMLANDI. KAYIT BASTION-7'YE AKTARILDI."
 @export var scene_path := "res://scenes/levels/level_01.tscn"
 @export var campaign_stage := 1
+
+@export_category("Terminal Presentation")
+@export var terminal_code := "VEX-01"
+@export var facility_type := "TERMINAL_FACILITY_QUARANTINE"
+@export var terminal_preview: Texture2D

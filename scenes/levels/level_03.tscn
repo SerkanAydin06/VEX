@@ -14,7 +14,6 @@
 [ext_resource type="PackedScene" path="res://scenes/props/secret_trigger.tscn" id="13_secret"]
 [ext_resource type="PackedScene" uid="uid://bbawohf60emqi" path="res://scenes/props/explosive_barrel.tscn" id="14_barrel"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="15_room_light"]
-[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_large.tscn" id="36_room_large"]
 [ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_red.tscn" id="16_red_lamp"]
 [ext_resource type="PackedScene" path="res://scenes/world/lore_terminal.tscn" id="17_lore"]
 [ext_resource type="PackedScene" uid="uid://cpdi2qa0vdcq5" path="res://scenes/actors/ravager.tscn" id="18_ravager"]
@@ -32,8 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://clp5g0eqcky2c" path="res://assets/pickups/key_red.png" id="30_key_red"]
 [ext_resource type="AudioStream" uid="uid://bc6m2yvln3f84" path="res://assets/audio/game_music_pro.mp3" id="31_music"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="32_ambient"]
-[ext_resource type="Material" uid="uid://ca32nvot0hmo7" path="res://resources/materials/door_frame.tres" id="33_stair_metal"]
-[ext_resource type="Material" path="res://resources/materials/stair_safety_strip.tres" id="34_stair_safety"]
+[ext_resource type="PackedScene" path="res://scenes/world/u_staircase.tscn" id="33_staircase"]
 [ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_green.tscn" id="35_green_lamp"]
 
 [sub_resource type="Environment" id="Environment_level03"]
@@ -53,48 +51,9 @@ fog_height_density = 0.008
 adjustment_enabled = true
 adjustment_brightness = 1.32
 
-[sub_resource type="BoxShape3D" id="StairLowerSmoothRamp"]
-size = Vector3(8.110265, 0.16, 2.08)
-
-[sub_resource type="BoxShape3D" id="StairLandingCollision"]
-size = Vector3(1.42, 0.16, 5.62)
-
-[sub_resource type="BoxShape3D" id="StairUpperSmoothRamp"]
-size = Vector3(7.707788, 0.16, 2.08)
-
-[sub_resource type="StandardMaterial3D" id="StairStepMetal"]
-resource_name = "VEX Level03 Clean Stair Metal"
-albedo_color = Color(0.29, 0.31, 0.34, 1)
-metallic = 0.74
-roughness = 0.38
-
-[sub_resource type="BoxMesh" id="BoxMesh_stair_landing"]
-size = Vector3(1.4, 0.1, 5.7)
-
-[sub_resource type="BoxMesh" id="BoxMesh_stair_lower_tread"]
-size = Vector3(0.538462, 0.08, 2.2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_stair_lower_riser"]
-size = Vector3(0.04, 0.22, 2.2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_stair_lower_strip"]
-size = Vector3(0.06, 0.022, 2.08)
-
-[sub_resource type="BoxMesh" id="BoxMesh_stair_upper_tread"]
-size = Vector3(0.507692, 0.08, 2.2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_stair_upper_riser"]
-size = Vector3(0.04, 0.22, 2.2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_stair_upper_strip"]
-size = Vector3(0.06, 0.022, 2.08)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8mx28"]
-albedo_color = Color(0, 0, 0, 1)
-
 [node name="Level03_AshMine" type="Node3D" unique_id=1017420345]
 script = ExtResource("1_script")
-map_revision = "VEX03-R10-LEFT-ENTRY-U-STAIR"
+map_revision = "VEX03-R11-REUSABLE-U-STAIR"
 level_display_name = "LEVEL03_NAME"
 campaign_completion_stage = 3
 first_objective = "LEVEL03_OBJECTIVE_START"
@@ -293,61 +252,51 @@ occlusion_enabled = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 20)
 piece_size = Vector3(48, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="WestBoundary" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=1210582151 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.5, 5)
 piece_size = Vector3(0.4, 7, 30)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="EastBoundary" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=2128168836 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.5, 10)
 piece_size = Vector3(0.4, 7, 20)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="NorthBoundaryWest" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=1467129732 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, -10)
 piece_size = Vector3(36, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="NorthBoundaryStairwell" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=761305252 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, 0)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="EastServiceBoundary" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=55374081 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, -5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="MaintenanceEastBoundary" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=345479774 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="VoidWestBoundary" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=1149318503 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 5)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="OreSouthBoundary" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=1210490477 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 10)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="GeneratorNorthBoundary" parent="Geometry/LowerLevel/LowerOuterWalls" unique_id=376887946 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.5, 0)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="LowerDoorFrames" type="Node3D" parent="Geometry/LowerLevel" unique_id=136742030]
 
@@ -355,199 +304,166 @@ occlusion_enabled = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 18.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="AB_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=974112227 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, 11.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="BC_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=186948620 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 18.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="BC_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=882645319 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 11.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="CD_FullWall" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=349044605 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 15)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="AE_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=311704801 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.01, 3.5, 10)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="AE_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=110371559 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.99, 3.5, 10)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="CH_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1851584977 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.99, 3.5, 10)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="CH_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1194527807 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.01, 3.5, 10)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="DI_FullWall" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=849025626 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.5, 10)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="DI_FullWall2" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1589646727 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 0.113176756, 0, 0, 0, 1, 18, 7.3883033, 8.182663)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="DI_FullWall3" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=2134462387 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 0.113176756, 0, 0, 0, 1, 18, 7.3883033, 1.8228836)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="DI_FullWall4" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1268702999 instance=ExtResource("2_piece")]
 transform = Transform3D(-2.1837675e-08, 0, 1, 0, 0.113176756, 0, -0.49958777, 0, -4.371139e-08, 22.165604, 7.3883033, 4.9614706)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="DI_FullWall5" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=294742880 instance=ExtResource("2_piece")]
 transform = Transform3D(-2.1837675e-08, 0, 1, 0, 0.113176756, 0, -0.49958777, 0, -4.371139e-08, 13.812858, 7.3883033, 4.9614706)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="GJ_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=954517805 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -8.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="GJ_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=129976560 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -1.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="HJ_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1998323574 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.99, 3.5, 0)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="HJ_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=2820735 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.01, 3.5, 0)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="HI_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=443072563 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 8.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="HI_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=116582970 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 3.5, 1.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="AB_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1377249330 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5.86, 15)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="BC_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1566898381 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.86, 15)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="AE_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1930200669 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 5.86, 10)
 piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="CH_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=822537444 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.86, 10)
 piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="GJ_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1641518173 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.86, -5)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="HJ_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=924930831 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.86, 0)
 piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="HI_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=127729519 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5.86, 5)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="EF_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=2110760990 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.01, 3.5, 0)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="EF_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1441082558 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.99, 3.5, 0)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="EF_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1180753333 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 5.86, 0)
 piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="FG_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=421227468 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -8.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="FG_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=863634469 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 3.5, -1.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="FG_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=582492972 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 5.86, -5)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="UpperLevel" type="Node3D" parent="Geometry" unique_id=1214601826]
 
@@ -600,12 +516,6 @@ surface_material = ExtResource("4_floor")
 occlusion_enabled = false
 
 [node name="UpperDeckNorth" parent="Geometry/UpperLevel" unique_id=945923705 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 7.6, 9)
-piece_size = Vector3(8, 0.4, 2)
-surface_material = ExtResource("4_floor")
-occlusion_enabled = false
-
-[node name="UpperDeckNorth2" parent="Geometry/UpperLevel" unique_id=1601619269 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 7.6, 9)
 piece_size = Vector3(8, 0.4, 2)
 surface_material = ExtResource("4_floor")
@@ -701,37 +611,31 @@ occlusion_enabled = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 11.3, 10)
 piece_size = Vector3(36, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="UpperWestBoundary" parent="Geometry/UpperLevel/UpperOuterWalls" unique_id=1711596242 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 11.3, 0)
 piece_size = Vector3(0.4, 7, 20)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="UpperEastBoundary" parent="Geometry/UpperLevel/UpperOuterWalls" unique_id=798182451 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 11.3, -5)
 piece_size = Vector3(0.4, 7, 30)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="UpperNorthBoundary" parent="Geometry/UpperLevel/UpperOuterWalls" unique_id=1490973329 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.007395, 11.29249, -19.998688)
 piece_size = Vector3(24, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="SecurityNorthBoundary" parent="Geometry/UpperLevel/UpperOuterWalls" unique_id=483344194 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 11.3, -10)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="ArchiveWestBoundary" parent="Geometry/UpperLevel/UpperOuterWalls" unique_id=1624788352 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.3, -15)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="UpperDoorFrames" type="Node3D" parent="Geometry/UpperLevel" unique_id=2095710634]
 
@@ -739,1022 +643,171 @@ occlusion_enabled = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.3, 8.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U32_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=542104650 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.3, 1.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U21_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=145471514 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 11.3, 8.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U21_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=289737300 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 11.3, 1.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U34_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=486569490 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.01, 11.3, 0)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U34_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1226984904 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.99, 11.3, 0)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U25_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=864920357 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.99, 11.3, 0)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U25_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=99540219 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.01, 11.3, 0)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="UpperStairwellNorthWall" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1954868300 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 11.3, 0)
 piece_size = Vector3(12, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U45_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1923470800 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.3, -1.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U45_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=486813853 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.3, -8.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U56_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=344243491 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 11.3, -1.27)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U56_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1897901519 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 11.3, -8.73)
 piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U57_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=252870648 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.99, 11.3, -10)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U57_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1469002664 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.01, 11.3, -10)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U68_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=604342734 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.99, 11.3, -10)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U68_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1211459139 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.01, 11.3, -10)
 piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="UpperSecretIsolationWall" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=414404433 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 11.3, -15)
 piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U32_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=660431190 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.66, 5)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U21_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=2005684535 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 13.66, 5)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U34_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=408826394 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 13.66, 0)
 piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U25_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=315745408 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 13.66, 0)
 piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U45_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1987732083 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.66, -5)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U56_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1894045588 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 13.66, -5)
 piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U57_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=965182397 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 13.66, -10)
 piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
 [node name="U68_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=121989213 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 13.66, -10)
 piece_size = Vector3(4.92, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
-occlusion_enabled = false
 
-[node name="Stairs" type="Node3D" parent="Geometry" unique_id=1713951284]
-
-[node name="Collision" type="Node3D" parent="Geometry/Stairs" unique_id=1335852126]
-
-[node name="SmoothRampCollision" type="StaticBody3D" parent="Geometry/Stairs/Collision" unique_id=1169653324]
-collision_mask = 0
-
-[node name="LowerRamp" type="CollisionShape3D" parent="Geometry/Stairs/Collision/SmoothRampCollision" unique_id=1646606080]
-transform = Transform3D(0.8754337, -0.48333824, 0, 0.48333824, 0.8754337, 0, 0, 0, 1, 17.108667, 1.849965, 3.25)
-shape = SubResource("StairLowerSmoothRamp")
-
-[node name="Landing" type="CollisionShape3D" parent="Geometry/Stairs/Collision/SmoothRampCollision" unique_id=1084305033]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.3, 3.82, 5)
-shape = SubResource("StairLandingCollision")
-
-[node name="UpperRamp" type="CollisionShape3D" parent="Geometry/Stairs/Collision/SmoothRampCollision" unique_id=179640884]
-transform = Transform3D(0.8640612, 0.50338686, 0, -0.50338686, 0.8640612, 0, 0, 0, 1, 17.209728, 5.770875, 6.75)
-shape = SubResource("StairUpperSmoothRamp")
-
-[node name="Visual" type="Node3D" parent="Geometry/Stairs" unique_id=1873535334]
-
-[node name="StairLanding" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=194030710]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.3, 3.85, 5)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_landing")
-
-[node name="StairTread_L01" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=44948019]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.869231, 0.26, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L01" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=831563986]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.62, 0.11, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L01" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1443907812]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.645, 0.312, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L02" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1663193469]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.407692, 0.56, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L02" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1405663298]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.158462, 0.41, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L02" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1122197093]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.183462, 0.612, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L03" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1888021269]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.946154, 0.86, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L03" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=543970143]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.696923, 0.71, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L03" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=146109462]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.721923, 0.912, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L04" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1394746636]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.484615, 1.16, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L04" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1283155593]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.235385, 1.01, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L04" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=2042845363]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.260385, 1.212, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L05" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=30759107]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.023077, 1.46, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L05" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=139032077]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.773846, 1.31, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L05" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=804776049]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.798846, 1.512, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L06" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1970127749]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.561539, 1.76, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L06" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1799260840]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.312307, 1.61, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L06" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1287933251]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.337309, 1.812, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L07" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=130471082]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.1, 2.06, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L07" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=150045150]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.850769, 1.91, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L07" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1852755170]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.875769, 2.112, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L08" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=965176322]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.638462, 2.36, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L08" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=2089032373]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.38923, 2.21, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L08" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=846545156]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.41423, 2.412, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L09" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=222405734]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.176924, 2.66, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L09" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=2015857478]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.927692, 2.51, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L09" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1269400858]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.952692, 2.712, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L10" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=2021960303]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.715385, 2.96, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L10" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=982242815]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.466154, 2.81, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L10" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1835963959]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.491154, 3.012, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L11" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=262150118]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.253845, 3.26, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L11" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=214434003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.004616, 3.11, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L11" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1846613685]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.029615, 3.312, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L12" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1543923213]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.792309, 3.56, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L12" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1800214471]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.543077, 3.41, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L12" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1941037249]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.568077, 3.612, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_L13" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1990199849]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.330769, 3.86, 3.25)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_tread")
-
-[node name="StairRiser_L13" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=664090019]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.081537, 3.71, 3.25)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_riser")
-
-[node name="StairSafety_L13" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=375612329]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.106539, 3.912, 3.25)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_lower_strip")
-
-[node name="StairTread_U01" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=2078629099]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.346153, 4.16, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U01" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=948953792]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.58, 4.01, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U01" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1946657503]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.555, 4.212, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U02" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=2050137818]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.838463, 4.46, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U02" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1525075917]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.072308, 4.31, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U02" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1440353587]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.047308, 4.512, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U03" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1023473827]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.330769, 4.76, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U03" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=307334660]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.564615, 4.61, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U03" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=128810233]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.539616, 4.812, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U04" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=888942084]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.823076, 5.06, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U04" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1536078226]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.056923, 4.91, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U04" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1773429793]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.031923, 5.112, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U05" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1937987357]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.315386, 5.36, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U05" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=131886333]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.54923, 5.21, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U05" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=687758141]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.524231, 5.412, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U06" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1538855331]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.807692, 5.66, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U06" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=166547650]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.041538, 5.51, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U06" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=163292040]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.016539, 5.712, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U07" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=499869795]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3, 5.96, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U07" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1687322296]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.533846, 5.81, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U07" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1643994659]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.508846, 6.012, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U08" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1691867315]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.792309, 6.26, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U08" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=703740904]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.026154, 6.11, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U08" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=669678263]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.001154, 6.312, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U09" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1145002608]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.284615, 6.56, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U09" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=573154240]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.518461, 6.41, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U09" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=934651071]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.493462, 6.612, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U10" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1654397415]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.776923, 6.86, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U10" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=629340727]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.010769, 6.71, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U10" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=2077318846]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.985769, 6.912, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U11" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1583699559]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.269231, 7.16, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U11" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1573843023]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.503077, 7.01, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U11" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1682889146]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.478077, 7.212, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U12" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1722937996]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.761538, 7.46, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U12" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=917646753]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.995385, 7.31, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U12" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1643059622]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.970385, 7.512, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="StairTread_U13" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1839987039]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.253846, 7.76, 6.75)
-material_override = SubResource("StairStepMetal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_tread")
-
-[node name="StairRiser_U13" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1030063662]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.487692, 7.61, 6.75)
-material_override = ExtResource("33_stair_metal")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_riser")
-
-[node name="StairSafety_U13" type="MeshInstance3D" parent="Geometry/Stairs/Visual" unique_id=1273573737]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.462692, 7.812, 6.75)
-material_override = ExtResource("34_stair_safety")
-cast_shadow = 0
-mesh = SubResource("BoxMesh_stair_upper_strip")
-
-[node name="RailLowerLeft" parent="Geometry/Stairs/Visual" unique_id=12507472 instance=ExtResource("2_piece")]
-transform = Transform3D(0.8735678, -0.48670247, 0, 0.48670247, 0.8735678, 0, 0, 0, 1, 17.1, 2.87, 2.23)
-piece_size = Vector3(8.013114, 0.07, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="RailLowerRight" parent="Geometry/Stairs/Visual" unique_id=1753729174 instance=ExtResource("2_piece")]
-transform = Transform3D(0.8681723, -0.48837733, 0, 0.4836964, 0.876574, 0, 0, 0, 1, 17.1, 2.87, 4.27)
-piece_size = Vector3(8.013114, 0.07, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="RailUpperLeft" parent="Geometry/Stairs/Visual" unique_id=1700176494 instance=ExtResource("2_piece")]
-transform = Transform3D(0.8609266, 0.5087291, 0, -0.5087291, 0.8609266, 0, 0, 0, 1, 17.3, 6.77, 5.73)
-piece_size = Vector3(7.666159, 0.07, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="RailUpperRight" parent="Geometry/Stairs/Visual" unique_id=438920716 instance=ExtResource("2_piece")]
-transform = Transform3D(0.8609266, 0.5087291, 0, -0.5087291, 0.8609266, 0, 0, 0, 1, 17.3, 6.77, 7.77)
-piece_size = Vector3(7.666159, 0.07, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerLeft_0" parent="Geometry/Stairs/Visual" unique_id=1459772834 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.65594935, 0, 0, 0, 1, 13.640059, 0.58895624, 2.23)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerLeft_1" parent="Geometry/Stairs/Visual" unique_id=36631507 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.77768123, 0, 0, 0, 1, 15.35, 1.5201492, 2.23)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerLeft_2" parent="Geometry/Stairs/Visual" unique_id=1084067234 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.8810809, 0, 0, 0, 1, 17.1, 2.438912, 2.23)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerLeft_3" parent="Geometry/Stairs/Visual" unique_id=996044590 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.85, 3.385, 2.23)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerLeft_4" parent="Geometry/Stairs/Visual" unique_id=169138494 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 4.36, 2.23)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerRight_0" parent="Geometry/Stairs/Visual" unique_id=781895336 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.65107626, 0, 0, 0, 1, 13.6406, 0.6011753, 4.27)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerRight_1" parent="Geometry/Stairs/Visual" unique_id=584433043 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.8245703, 0, 0, 0, 1, 15.35, 1.5007217, 4.27)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerRight_2" parent="Geometry/Stairs/Visual" unique_id=43948893 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.912614, 0, 0, 0, 1, 17.1, 2.4424078, 4.27)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerRight_3" parent="Geometry/Stairs/Visual" unique_id=1157191573 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.85, 3.385, 4.27)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostLowerRight_4" parent="Geometry/Stairs/Visual" unique_id=1763995762 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.558548, 4.36, 4.27)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_0" parent="Geometry/Stairs/Visual" unique_id=939925667 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.69295925, 0, 0, 0, 1, 20.567133, 4.519573, 5.73)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_5" parent="Geometry/Stairs/Visual" unique_id=1581335639 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, -6.740507e-08, 1, 0, -1.5420483, -4.371139e-08, 20.570219, 4.774959, 4.992714)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_1" parent="Geometry/Stairs/Visual" unique_id=1381425062 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.7723335, 0, 0, 0, 1, 18.95, 5.41196, 5.73)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_2" parent="Geometry/Stairs/Visual" unique_id=920254144 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.8625622, 0, 0, 0, 1, 17.3, 6.3545537, 5.73)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_3" parent="Geometry/Stairs/Visual" unique_id=1994433953 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.65, 7.285, 5.73)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_4" parent="Geometry/Stairs/Visual" unique_id=314151724 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.044468, 8.26, 5.73)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_6" parent="Geometry/Stairs/Visual" unique_id=1899838879 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.028817, 8.26, 2.0454323)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperLeft_7" parent="Geometry/Stairs/Visual" unique_id=862716171 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.937445, 8.26, 2.0454323)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperRight_0" parent="Geometry/Stairs/Visual" unique_id=484358285 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.6522789, 0, 0, 0, 1, 20.559935, 4.500702, 7.77)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperRight_1" parent="Geometry/Stairs/Visual" unique_id=743016654 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.7541847, 0, 0, 0, 1, 18.95, 5.4338293, 7.77)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperRight_2" parent="Geometry/Stairs/Visual" unique_id=1216132115 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 0.8382311, 0, 0, 0, 1, 17.3, 6.3696475, 7.77)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperRight_3" parent="Geometry/Stairs/Visual" unique_id=1173355765 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.65, 7.285, 7.77)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperRight_4" parent="Geometry/Stairs/Visual" unique_id=1919218486 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.058574, 8.26, 7.77)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperRight_5" parent="Geometry/Stairs/Visual" unique_id=1343994690 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.072233, 8.26, 7.77)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperRight_7" parent="Geometry/Stairs/Visual" unique_id=850817029 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.072233, 8.26, 4.750369)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="PostUpperRight_6" parent="Geometry/Stairs/Visual" unique_id=237100161 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.072233, 8.26, 2.0702574)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingRailNorthConnector" parent="Geometry/Stairs/Visual" unique_id=1498858475 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.25, 4.82, 2.23)
-piece_size = Vector3(1.3, 0.07, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingRailSouthConnector" parent="Geometry/Stairs/Visual" unique_id=394711085 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.25, 4.82, 7.77)
-piece_size = Vector3(1.3, 0.07, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingRailEast" parent="Geometry/Stairs/Visual" unique_id=1187206581 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9, 4.82, 5)
-piece_size = Vector3(0.07, 0.07, 5.54)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingRailEast3" parent="Geometry/Stairs/Visual" unique_id=1184231226 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0274731, 22.071617, 8.708525, 4.897943)
-piece_size = Vector3(0.07, 0.07, 5.54)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingRailEast4" parent="Geometry/Stairs/Visual" unique_id=1983206484 instance=ExtResource("2_piece")]
-transform = Transform3D(-4.371139e-08, 0, 1.4396951, 0, 1, 0, -1, 0, -6.293108e-08, 18.039165, 8.708525, 7.782778)
-piece_size = Vector3(0.07, 0.07, 5.54)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingRailEast5" parent="Geometry/Stairs/Visual" unique_id=1726862669 instance=ExtResource("2_piece")]
-transform = Transform3D(-4.371139e-08, 0, 1.4396951, 0, 1, 0, -1, 0, -6.293108e-08, 18.039165, 8.708525, 2.058426)
-piece_size = Vector3(0.07, 0.07, 5.54)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingRailEast2" parent="Geometry/Stairs/Visual" unique_id=1579226137 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.65486234, 14.034987, 8.686927, 3.8940206)
-piece_size = Vector3(0.07, 0.07, 5.54)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingPostEast_0" parent="Geometry/Stairs/Visual" unique_id=1482591075 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9, 4.36, 2.23)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingPostEast_1" parent="Geometry/Stairs/Visual" unique_id=531854186 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9, 4.36, 5)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="LandingPostEast_2" parent="Geometry/Stairs/Visual" unique_id=1211780435 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.9, 4.36, 7.77)
-piece_size = Vector3(0.07, 0.92, 0.07)
-surface_material = ExtResource("33_stair_metal")
-occlusion_enabled = false
-
-[node name="CSGSphere3D" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=291485609]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.541824, 4.801419, 4.2724757)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D3" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=942760945]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.60337, 4.8079576, 2.235393)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D7" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=972484]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.649173, 0.9380743, 2.235393)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D8" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=894505770]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.649173, 0.9380743, 4.2761445)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D4" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=1302970207]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.883417, 4.8264923, 2.2274313)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D5" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=588188967]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.883417, 4.8264923, 7.768144)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D6" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=68194950]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.591816, 4.8264923, 7.768144)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D2" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=1149604803]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.559168, 4.8455114, 5.741044)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D9" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=171587474]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.047935, 8.710447, 5.741044)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D11" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=1955260996]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.027121, 8.710447, 2.0540164)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D10" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=430352822]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0476675, 8.710447, 7.7585115)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D12" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=1983823593]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.062761, 8.710447, 7.7663336)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
-
-[node name="CSGSphere3D13" type="CSGSphere3D" parent="Geometry/Stairs/Visual" unique_id=1068998139]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.062761, 8.710447, 2.0676513)
-cast_shadow = 0
-radius = 0.076049246
-rings = 32
-material = SubResource("StandardMaterial3D_8mx28")
+[node name="Stairs" parent="Geometry" unique_id=1713951284 instance=ExtResource("33_staircase")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.6, 0, 3.25)
 
 [node name="Signage" type="Node3D" parent="Geometry" unique_id=26947022]
 
-[node name="Gameplay" type="Node3D" parent="." unique_id=1381983275]
+[node name="Doors" type="Node3D" parent="." unique_id=477280404]
 
-[node name="Doors" type="Node3D" parent="Gameplay" unique_id=477280404]
-
-[node name="Door_StartToIntake" parent="Gameplay/Doors" unique_id=423609009 instance=ExtResource("9_door")]
+[node name="Door_StartToIntake" parent="Doors" unique_id=423609009 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.24, 15)
 
-[node name="Door_IntakeToControl" parent="Gameplay/Doors" unique_id=823850188 instance=ExtResource("9_door")]
+[node name="Door_IntakeToControl" parent="Doors" unique_id=823850188 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.24, 15)
 
-[node name="Door_MaintenanceAccess" parent="Gameplay/Doors" unique_id=274631560 instance=ExtResource("9_door")]
+[node name="Door_MaintenanceAccess" parent="Doors" unique_id=274631560 instance=ExtResource("9_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 2.24, 10)
 
-[node name="Door_ControlToJunction" parent="Gameplay/Doors" unique_id=1344972763 instance=ExtResource("9_door")]
+[node name="Door_ControlToJunction" parent="Doors" unique_id=1344972763 instance=ExtResource("9_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6, 2.24, 10)
 
-[node name="Door_GeneratorToService" parent="Gameplay/Doors" unique_id=283550907 instance=ExtResource("9_door")]
+[node name="Door_GeneratorToService" parent="Doors" unique_id=283550907 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.24, -5)
 
-[node name="Door_StairAccess" parent="Gameplay/Doors" unique_id=378520089 instance=ExtResource("9_door")]
+[node name="Door_StairAccess" parent="Doors" unique_id=378520089 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.24, 5)
 display_name = "ÜST KAT GÜVENLİK MERDİVENİ"
 locked = true
 required_key_label = "MAVİ GÜÇ KARTI"
 objective_on_unlock = "MERDİVENİ KULLAN // ÜST KATTA KIRMIZI YETKİYİ BUL"
 
-[node name="Door_UpperLanding" parent="Gameplay/Doors" unique_id=1511030468 instance=ExtResource("9_door")]
+[node name="Door_UpperLanding" parent="Doors" unique_id=1511030468 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 10.04, 5)
 
-[node name="Door_UpperControl" parent="Gameplay/Doors" unique_id=1905945525 instance=ExtResource("9_door")]
+[node name="Door_UpperControl" parent="Doors" unique_id=1905945525 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.04, 5)
 
-[node name="Door_StairSecurity" parent="Gameplay/Doors" unique_id=2032572060 instance=ExtResource("9_door")]
+[node name="Door_StairSecurity" parent="Doors" unique_id=2032572060 instance=ExtResource("9_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -6, 10.04, 0)
 
-[node name="Door_CoreAuthorization" parent="Gameplay/Doors" unique_id=2054669832 instance=ExtResource("9_door")]
+[node name="Door_CoreAuthorization" parent="Doors" unique_id=2054669832 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 10.04, -5)
 display_name = "KORVATH ÇEKİRDEK KAPISI"
 locked = true
@@ -1763,42 +816,42 @@ required_key_label = "KIRMIZI ÇEKİRDEK YETKİSİ"
 objective_on_unlock = "YARIK ODASINA GİR // KORVATH MUHAFIZINI İMHA ET"
 auto_close = false
 
-[node name="Door_RiftChamber" parent="Gameplay/Doors" unique_id=1752995174 instance=ExtResource("9_door")]
+[node name="Door_RiftChamber" parent="Doors" unique_id=1752995174 instance=ExtResource("9_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 18, 10.04, -10)
 
-[node name="Door_MaintenanceHall" parent="Gameplay/Doors" unique_id=184511711 instance=ExtResource("9_door")]
+[node name="Door_MaintenanceHall" parent="Doors" unique_id=184511711 instance=ExtResource("9_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18, 2.24, 0)
 
-[node name="Door_GeneratorAccess" parent="Gameplay/Doors" unique_id=1110587092 instance=ExtResource("9_door")]
+[node name="Door_GeneratorAccess" parent="Doors" unique_id=1110587092 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.24, -5)
 
-[node name="Door_ServiceJunction" parent="Gameplay/Doors" unique_id=1646114952 instance=ExtResource("9_door")]
+[node name="Door_ServiceJunction" parent="Doors" unique_id=1646114952 instance=ExtResource("9_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6, 2.24, 0)
 
-[node name="Objectives" type="Node3D" parent="Gameplay" unique_id=167452954]
+[node name="Objectives" type="Node3D" parent="." unique_id=167452954]
 
-[node name="KorvathRiftCore" parent="Gameplay/Objectives" unique_id=124696178 instance=ExtResource("10_rift")]
+[node name="KorvathRiftCore" parent="Objectives" unique_id=124696178 instance=ExtResource("10_rift")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 7.85, -16)
 
-[node name="RiftIsolationSwitch" parent="Gameplay/Objectives" unique_id=1011628597 instance=ExtResource("11_finish")]
+[node name="RiftIsolationSwitch" parent="Objectives" unique_id=1011628597 instance=ExtResource("11_finish")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 23.874836, 8.95, -17)
 display_name = "YARIK İZOLASYON ŞALTERİ"
 required_enemy_id = &"vex03_korvath_warden"
 next_level_path = "res://scenes/hub/bastion_7.tscn"
 
-[node name="Secrets" type="Node3D" parent="Gameplay" unique_id=319469409]
+[node name="Secrets" type="Node3D" parent="." unique_id=319469409]
 
-[node name="SecretMaintenanceCache" parent="Gameplay/Secrets" unique_id=1126951718 instance=ExtResource("13_secret")]
+[node name="SecretMaintenanceCache" parent="Secrets" unique_id=1126951718 instance=ExtResource("13_secret")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.5, 0.9, -7.5)
 secret_id = &"vex03_secret_maintenance_cache"
 
-[node name="SecretUpperArchive" parent="Gameplay/Secrets" unique_id=1264102265 instance=ExtResource("13_secret")]
+[node name="SecretUpperArchive" parent="Secrets" unique_id=1264102265 instance=ExtResource("13_secret")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 8.55, -17)
 secret_id = &"vex03_secret_upper_archive"
 
-[node name="Pickups" type="Node3D" parent="Gameplay" unique_id=513651656]
+[node name="Pickups" type="Node3D" parent="." unique_id=513651656]
 
-[node name="BluePowerCard" parent="Gameplay/Pickups" unique_id=612311360 instance=ExtResource("12_pickup")]
+[node name="BluePowerCard" parent="Pickups" unique_id=612311360 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.75, -5)
 pickup_id = &"vex03_key_blue"
 pickup_type = "key_blue"
@@ -1807,7 +860,7 @@ display_name = "MAVİ GÜÇ KARTI"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("29_key_blue")
 
-[node name="RedCoreAuthorization" parent="Gameplay/Pickups" unique_id=1572788793 instance=ExtResource("12_pickup")]
+[node name="RedCoreAuthorization" parent="Pickups" unique_id=1572788793 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 8.55, -5)
 pickup_id = &"vex03_key_red"
 pickup_type = "key_red"
@@ -1816,7 +869,7 @@ display_name = "KIRMIZI ÇEKİRDEK YETKİSİ"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("30_key_red")
 
-[node name="BulletsStart" parent="Gameplay/Pickups" unique_id=133939914 instance=ExtResource("12_pickup")]
+[node name="BulletsStart" parent="Pickups" unique_id=133939914 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5, 0.8, 16)
 pickup_id = &"vex03_bullets_start"
 pickup_type = "bullets"
@@ -1824,7 +877,7 @@ amount = 30
 display_name = "TABANCA MERMİSİ"
 visual_texture = ExtResource("25_bullets")
 
-[node name="ShellsVent" parent="Gameplay/Pickups" unique_id=2128190425 instance=ExtResource("12_pickup")]
+[node name="ShellsVent" parent="Pickups" unique_id=2128190425 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 0.75, -5)
 pickup_id = &"vex03_shells_vent"
 pickup_type = "shells"
@@ -1832,14 +885,14 @@ amount = 12
 display_name = "POMPALI FİŞEĞİ"
 visual_texture = ExtResource("26_shells")
 
-[node name="HealthLobby" parent="Gameplay/Pickups" unique_id=11731456 instance=ExtResource("12_pickup")]
+[node name="HealthLobby" parent="Pickups" unique_id=11731456 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.8, 5)
 pickup_id = &"vex03_health_lobby"
 amount = 30
 display_name = "SAĞLIK KİTİ"
 visual_texture = ExtResource("23_health")
 
-[node name="RifleAmmoUpper" parent="Gameplay/Pickups" unique_id=497553181 instance=ExtResource("12_pickup")]
+[node name="RifleAmmoUpper" parent="Pickups" unique_id=497553181 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 8.6, 6)
 pickup_id = &"vex03_rifle_upper"
 pickup_type = "rifle_ammo"
@@ -1847,7 +900,7 @@ amount = 45
 display_name = "TÜFEK MÜHİMMATI"
 visual_texture = ExtResource("27_rifle")
 
-[node name="MP90AmmoUpper" parent="Gameplay/Pickups" unique_id=406967725 instance=ExtResource("12_pickup")]
+[node name="MP90AmmoUpper" parent="Pickups" unique_id=406967725 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 8.6, -5)
 pickup_id = &"vex03_mp90_upper"
 pickup_type = "mp90_ammo"
@@ -1855,7 +908,7 @@ amount = 54
 display_name = "MP90 MÜHİMMATI"
 visual_texture = ExtResource("28_mp90")
 
-[node name="ArmorSecret" parent="Gameplay/Pickups" unique_id=129310730 instance=ExtResource("12_pickup")]
+[node name="ArmorSecret" parent="Pickups" unique_id=129310730 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.5, 0.75, -8.2)
 pickup_id = &"vex03_armor_secret"
 pickup_type = "armor"
@@ -1863,7 +916,7 @@ amount = 45
 display_name = "GİZLİ ZIRH PLAKASI"
 visual_texture = ExtResource("24_armor")
 
-[node name="BulletsSecret" parent="Gameplay/Pickups" unique_id=1647313589 instance=ExtResource("12_pickup")]
+[node name="BulletsSecret" parent="Pickups" unique_id=1647313589 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 8.55, -17.8)
 pickup_id = &"vex03_bullets_secret"
 pickup_type = "bullets"
@@ -1871,14 +924,14 @@ amount = 42
 display_name = "GİZLİ MERMİ KUTUSU"
 visual_texture = ExtResource("25_bullets")
 
-[node name="HealthCore" parent="Gameplay/Pickups" unique_id=1733946816 instance=ExtResource("12_pickup")]
+[node name="HealthCore" parent="Pickups" unique_id=1733946816 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5, 8.6, -6.5)
 pickup_id = &"vex03_health_core"
 amount = 35
 display_name = "ACİL SAĞLIK KİTİ"
 visual_texture = ExtResource("23_health")
 
-[node name="ShellsCore" parent="Gameplay/Pickups" unique_id=249787223 instance=ExtResource("12_pickup")]
+[node name="ShellsCore" parent="Pickups" unique_id=249787223 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8.6, -13)
 pickup_id = &"vex03_shells_core"
 pickup_type = "shells"
@@ -1886,7 +939,7 @@ amount = 16
 display_name = "KORVATH FİŞEK KASASI"
 visual_texture = ExtResource("26_shells")
 
-[node name="ArmorCore" parent="Gameplay/Pickups" unique_id=110743360 instance=ExtResource("12_pickup")]
+[node name="ArmorCore" parent="Pickups" unique_id=110743360 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 8.6, -18)
 pickup_id = &"vex03_armor_core"
 pickup_type = "armor"
@@ -1895,235 +948,250 @@ display_name = "ÇEKİRDEK ZIRHI"
 spawn_max_difficulty = 2
 visual_texture = ExtResource("24_armor")
 
-[node name="Enemies" type="Node3D" parent="Gameplay" unique_id=437508810]
+[node name="Enemies" type="Node3D" parent="." unique_id=437508810]
 
-[node name="LowerRavagerA" parent="Gameplay/Enemies" unique_id=1493397904 instance=ExtResource("18_ravager")]
+[node name="LowerRavagerA" parent="Enemies" unique_id=1493397904 instance=ExtResource("18_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.98, 15)
 enemy_id = &"vex03_lower_ravager_a"
 
-[node name="LowerRedViperA" parent="Gameplay/Enemies" unique_id=2052871264 instance=ExtResource("19_redviper")]
+[node name="LowerRedViperA" parent="Enemies" unique_id=2052871264 instance=ExtResource("19_redviper")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.48, 15)
 enemy_id = &"vex03_lower_redviper_a"
 
-[node name="VentGuard" parent="Gameplay/Enemies" unique_id=653908192 instance=ExtResource("18_ravager")]
+[node name="VentGuard" parent="Enemies" unique_id=653908192 instance=ExtResource("18_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0.98, 5)
 enemy_id = &"vex03_vent_guard"
 
-[node name="PowerGuard" parent="Gameplay/Enemies" unique_id=352127629 instance=ExtResource("20_badredviper")]
+[node name="PowerGuard" parent="Enemies" unique_id=352127629 instance=ExtResource("20_badredviper")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.48, -5)
 enemy_id = &"vex03_power_guard"
 
-[node name="ServiceRavager" parent="Gameplay/Enemies" unique_id=850210814 instance=ExtResource("18_ravager")]
+[node name="ServiceRavager" parent="Enemies" unique_id=850210814 instance=ExtResource("18_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.98, -5)
 enemy_id = &"vex03_service_ravager"
 
-[node name="OperationsRavager" parent="Gameplay/Enemies" unique_id=689003711 instance=ExtResource("18_ravager")]
+[node name="OperationsRavager" parent="Enemies" unique_id=689003711 instance=ExtResource("18_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.98, 14)
 enemy_id = &"vex03_operations_ravager"
 spawn_min_difficulty = 1
 
-[node name="UpperVoidweaver" parent="Gameplay/Enemies" unique_id=920675830 instance=ExtResource("21_voidweaver")]
+[node name="UpperVoidweaver" parent="Enemies" unique_id=920675830 instance=ExtResource("21_voidweaver")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7189465, 8.78, -4.2377453)
 enemy_id = &"vex03_upper_voidweaver"
 
-[node name="UpperRedViper" parent="Gameplay/Enemies" unique_id=1431709095 instance=ExtResource("19_redviper")]
+[node name="UpperRedViper" parent="Enemies" unique_id=1431709095 instance=ExtResource("19_redviper")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 8.28, -7)
 enemy_id = &"vex03_upper_redviper"
 
-[node name="UpperKorvathA" parent="Gameplay/Enemies" unique_id=645050818 instance=ExtResource("22_hellmagma")]
+[node name="UpperKorvathA" parent="Enemies" unique_id=645050818 instance=ExtResource("22_hellmagma")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.849896, 1.9331654, 6.5563035)
 enemy_id = &"vex03_upper_korvath_a"
 
-[node name="UpperSecurityRavager" parent="Gameplay/Enemies" unique_id=1099299572 instance=ExtResource("18_ravager")]
+[node name="UpperSecurityRavager" parent="Enemies" unique_id=1099299572 instance=ExtResource("18_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 8.78, 5)
 enemy_id = &"vex03_mezzanine_ravager"
 
-[node name="UpperAuthorizationViper" parent="Gameplay/Enemies" unique_id=351538582 instance=ExtResource("20_badredviper")]
+[node name="UpperAuthorizationViper" parent="Enemies" unique_id=351538582 instance=ExtResource("20_badredviper")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 8.28864, -3)
 enemy_id = &"vex03_mezzanine_viper"
 spawn_min_difficulty = 1
 
-[node name="ServiceVoidweaver" parent="Gameplay/Enemies" unique_id=2065339335 instance=ExtResource("21_voidweaver")]
+[node name="ServiceVoidweaver" parent="Enemies" unique_id=2065339335 instance=ExtResource("21_voidweaver")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 8.78, -15)
 enemy_id = &"vex03_service_voidweaver"
 spawn_min_difficulty = 2
 
-[node name="CoreKorvathA" parent="Gameplay/Enemies" unique_id=1161054754 instance=ExtResource("22_hellmagma")]
+[node name="CoreKorvathA" parent="Enemies" unique_id=1161054754 instance=ExtResource("22_hellmagma")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9.699403, -5)
 enemy_id = &"vex03_core_korvath_a"
 
-[node name="CoreRedViper" parent="Gameplay/Enemies" unique_id=1498020884 instance=ExtResource("19_redviper")]
+[node name="CoreRedViper" parent="Enemies" unique_id=1498020884 instance=ExtResource("19_redviper")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.634976, 8.28, -14)
 enemy_id = &"vex03_core_redviper"
 spawn_min_difficulty = 1
 
-[node name="KorvathWarden" parent="Gameplay/Enemies" unique_id=1257904597 instance=ExtResource("22_hellmagma")]
+[node name="KorvathWarden" parent="Enemies" unique_id=1257904597 instance=ExtResource("22_hellmagma")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9.786312, -17.235924)
 enemy_id = &"vex03_korvath_warden"
 maximum_health = 520
 move_speed = 2.7
 attack_damage = 26
 
-[node name="NightmareFlanker" parent="Gameplay/Enemies" unique_id=216817365 instance=ExtResource("18_ravager")]
+[node name="NightmareFlanker" parent="Enemies" unique_id=216817365 instance=ExtResource("18_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 8.78, -13)
 enemy_id = &"vex03_nightmare_flanker"
 spawn_min_difficulty = 3
 
-[node name="Props" type="Node3D" parent="Gameplay" unique_id=2021812513]
+[node name="Props" type="Node3D" parent="." unique_id=2021812513]
 
-[node name="BarrelIntake" parent="Gameplay/Props" unique_id=1547343567 instance=ExtResource("14_barrel")]
+[node name="BarrelIntake" parent="Props" unique_id=1547343567 instance=ExtResource("14_barrel")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.565105, 17)
 
-[node name="BarrelService" parent="Gameplay/Props" unique_id=1521568854 instance=ExtResource("14_barrel")]
+[node name="BarrelService" parent="Props" unique_id=1521568854 instance=ExtResource("14_barrel")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0.57812744, -7)
 
-[node name="BarrelUpperA" parent="Gameplay/Props" unique_id=520276866 instance=ExtResource("14_barrel")]
+[node name="BarrelUpperA" parent="Props" unique_id=520276866 instance=ExtResource("14_barrel")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 8.370288, -3)
 
-[node name="BarrelUpperB" parent="Gameplay/Props" unique_id=1630284993 instance=ExtResource("14_barrel")]
+[node name="BarrelUpperB" parent="Props" unique_id=1630284993 instance=ExtResource("14_barrel")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5, 8.372559, -7)
 
-[node name="Lighting" type="Node3D" parent="Gameplay" unique_id=163951818]
+[node name="RoomLights" type="Node3D" parent="." unique_id=376639655]
 
-[node name="RoomLights" type="Node3D" parent="Gameplay/Lighting" unique_id=376639655]
-
-[node name="Light_L01_Start" parent="Gameplay/Lighting/RoomLights" unique_id=2073391699 instance=ExtResource("15_room_light")]
+[node name="Light_L01_Start" parent="RoomLights" unique_id=2073391699 instance=ExtResource("15_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 6.82, 15)
-[node name="Light_L02_OreIntake" parent="Gameplay/Lighting/RoomLights" unique_id=447548943 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 6.82, 15)
-[node name="Light_L03_MainControl" parent="Gameplay/Lighting/RoomLights" unique_id=949796778 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, 15)
-[node name="Light_L04_Operations" parent="Gameplay/Lighting/RoomLights" unique_id=1876548154 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 6.82, 15)
-[node name="Light_L05_MaintenanceEntry" parent="Gameplay/Lighting/RoomLights" unique_id=2024396256 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 6.82, 5)
-[node name="Light_L06_MaintenanceHall" parent="Gameplay/Lighting/RoomLights" unique_id=1924314518 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 6.82, -5)
-[node name="Light_L07_Generator" parent="Gameplay/Lighting/RoomLights" unique_id=822846146 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 6.82, -5)
-[node name="Light_L08_Junction" parent="Gameplay/Lighting/RoomLights" unique_id=12072878 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, 5)
-[node name="Light_L10_ServiceCorridor" parent="Gameplay/Lighting/RoomLights" unique_id=1177192585 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, -5)
-[node name="Light_U01_StairLanding" parent="Gameplay/Lighting/RoomLights" unique_id=2042038400 instance=ExtResource("36_room_large")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, 5)
-[node name="Light_U02_Control" parent="Gameplay/Lighting/RoomLights" unique_id=2133108973 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, 5)
-[node name="Light_U03_StairHall" parent="Gameplay/Lighting/RoomLights" unique_id=1496213484 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 14.62, 5)
-[node name="Light_U04_Security" parent="Gameplay/Lighting/RoomLights" unique_id=1550322205 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 14.62, -5)
-[node name="Light_U05_CoreApproach" parent="Gameplay/Lighting/RoomLights" unique_id=105809732 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, -5)
-[node name="Light_U06_CoreControl" parent="Gameplay/Lighting/RoomLights" unique_id=751178022 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, -5)
-[node name="Light_U07_ArchiveCache" parent="Gameplay/Lighting/RoomLights" unique_id=1716952255 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, -15)
-[node name="Light_U08_RiftChamber" parent="Gameplay/Lighting/RoomLights" unique_id=184915250 instance=ExtResource("15_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, -15)
-[node name="DoorStatusLights" type="Node3D" parent="Gameplay/Lighting" unique_id=1991645503]
 
-[node name="Door01_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1146007954 instance=ExtResource("35_green_lamp")]
+[node name="Light_L02_OreIntake" parent="RoomLights" unique_id=447548943 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 6.82, 15)
+
+[node name="Light_L03_MainControl" parent="RoomLights" unique_id=949796778 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, 15)
+
+[node name="Light_L04_Operations" parent="RoomLights" unique_id=1876548154 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 6.82, 15)
+
+[node name="Light_L05_MaintenanceEntry" parent="RoomLights" unique_id=2024396256 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 6.82, 5)
+
+[node name="Light_L06_MaintenanceHall" parent="RoomLights" unique_id=1924314518 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 6.82, -5)
+
+[node name="Light_L07_Generator" parent="RoomLights" unique_id=822846146 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 6.82, -5)
+
+[node name="Light_L08_Junction" parent="RoomLights" unique_id=12072878 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, 5)
+
+[node name="Light_L10_ServiceCorridor" parent="RoomLights" unique_id=1177192585 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 6.82, -5)
+
+[node name="Light_U01_StairLanding" parent="RoomLights" unique_id=2042038400 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, 5)
+
+[node name="Light_U02_Control" parent="RoomLights" unique_id=2133108973 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, 5)
+
+[node name="Light_U03_StairHall" parent="RoomLights" unique_id=1496213484 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 14.62, 5)
+
+[node name="Light_U04_Security" parent="RoomLights" unique_id=1550322205 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 14.62, -5)
+
+[node name="Light_U05_CoreApproach" parent="RoomLights" unique_id=105809732 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, -5)
+
+[node name="Light_U06_CoreControl" parent="RoomLights" unique_id=751178022 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, -5)
+
+[node name="Light_U07_ArchiveCache" parent="RoomLights" unique_id=1716952255 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 14.62, -15)
+
+[node name="Light_U08_RiftChamber" parent="RoomLights" unique_id=184915250 instance=ExtResource("15_room_light")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 14.62, -15)
+
+[node name="Lights" type="Node3D" parent="." unique_id=1991645503]
+
+[node name="Door01_LampA" parent="Lights" unique_id=1146007954 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -12.32, 5.5, 15)
 
-[node name="Door01_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=479537055 instance=ExtResource("35_green_lamp")]
+[node name="Door01_LampB" parent="Lights" unique_id=479537055 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -11.68, 5.5, 15)
 
-[node name="Door02_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=432262223 instance=ExtResource("35_green_lamp")]
+[node name="Door02_LampA" parent="Lights" unique_id=432262223 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.32, 5.5, 15)
 
-[node name="Door02_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1456140637 instance=ExtResource("35_green_lamp")]
+[node name="Door02_LampB" parent="Lights" unique_id=1456140637 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.32, 5.5, 15)
 
-[node name="Door03_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=119470644 instance=ExtResource("35_green_lamp")]
+[node name="Door03_LampA" parent="Lights" unique_id=119470644 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -18, 5.5, 9.68)
 
-[node name="Door03_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=740345346 instance=ExtResource("35_green_lamp")]
+[node name="Door03_LampB" parent="Lights" unique_id=740345346 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 5.5, 10.32)
 
-[node name="Door04_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1134807584 instance=ExtResource("35_green_lamp")]
+[node name="Door04_LampA" parent="Lights" unique_id=1134807584 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6, 5.5, 9.68)
 
-[node name="Door04_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1385178931 instance=ExtResource("35_green_lamp")]
+[node name="Door04_LampB" parent="Lights" unique_id=1385178931 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.5, 10.32)
 
-[node name="Door05_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=761588208 instance=ExtResource("35_green_lamp")]
+[node name="Door05_LampA" parent="Lights" unique_id=761588208 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.32, 5.5, -5)
 
-[node name="Door05_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=71001753 instance=ExtResource("35_green_lamp")]
+[node name="Door05_LampB" parent="Lights" unique_id=71001753 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.32, 5.5, -5)
 
-[node name="Door06_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=401023671 instance=ExtResource("16_red_lamp")]
+[node name="Door06_LampA" parent="Lights" unique_id=401023671 instance=ExtResource("16_red_lamp")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 11.68, 5.5, 5)
 
-[node name="Door06_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=666717387 instance=ExtResource("16_red_lamp")]
+[node name="Door06_LampB" parent="Lights" unique_id=666717387 instance=ExtResource("16_red_lamp")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.32, 5.5, 5)
 
-[node name="Door07_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1910913530 instance=ExtResource("35_green_lamp")]
+[node name="Door07_LampA" parent="Lights" unique_id=1910913530 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -18, 5.5, -0.32)
 
-[node name="Door07_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=400039719 instance=ExtResource("35_green_lamp")]
+[node name="Door07_LampB" parent="Lights" unique_id=400039719 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 5.5, 0.32)
 
-[node name="Door08_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=731079304 instance=ExtResource("35_green_lamp")]
+[node name="Door08_LampA" parent="Lights" unique_id=731079304 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -12.32, 5.5, -5)
 
-[node name="Door08_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1881507451 instance=ExtResource("35_green_lamp")]
+[node name="Door08_LampB" parent="Lights" unique_id=1881507451 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -11.68, 5.5, -5)
 
-[node name="Door09_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=2055622214 instance=ExtResource("35_green_lamp")]
+[node name="Door09_LampA" parent="Lights" unique_id=2055622214 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6, 5.5, -0.32)
 
-[node name="Door09_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=833398315 instance=ExtResource("35_green_lamp")]
+[node name="Door09_LampB" parent="Lights" unique_id=833398315 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5.5, 0.32)
 
-[node name="Door10_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=2030287024 instance=ExtResource("16_red_lamp")]
+[node name="Door10_LampA" parent="Lights" unique_id=2030287024 instance=ExtResource("16_red_lamp")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 11.68, 13.3, 5)
 
-[node name="Door10_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=18381053 instance=ExtResource("16_red_lamp")]
+[node name="Door10_LampB" parent="Lights" unique_id=18381053 instance=ExtResource("16_red_lamp")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.32, 13.3, 5)
 
-[node name="Door11_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=128081171 instance=ExtResource("35_green_lamp")]
+[node name="Door11_LampA" parent="Lights" unique_id=128081171 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.32, 13.3, 5)
 
-[node name="Door11_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=428602153 instance=ExtResource("35_green_lamp")]
+[node name="Door11_LampB" parent="Lights" unique_id=428602153 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.32, 13.3, 5)
 
-[node name="Door12_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1695991416 instance=ExtResource("35_green_lamp")]
+[node name="Door12_LampA" parent="Lights" unique_id=1695991416 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6, 13.3, -0.32)
 
-[node name="Door12_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=2110659444 instance=ExtResource("35_green_lamp")]
+[node name="Door12_LampB" parent="Lights" unique_id=2110659444 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 13.3, 0.32)
 
-[node name="Door13_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=624751217 instance=ExtResource("35_green_lamp")]
+[node name="Door13_LampA" parent="Lights" unique_id=624751217 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 11.68, 13.3, -5)
 
-[node name="Door13_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=328415780 instance=ExtResource("35_green_lamp")]
+[node name="Door13_LampB" parent="Lights" unique_id=328415780 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12.32, 13.3, -5)
 
-[node name="Door14_LampA" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1873535775 instance=ExtResource("35_green_lamp")]
+[node name="Door14_LampA" parent="Lights" unique_id=1873535775 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 18, 13.3, -10.32)
 
-[node name="Door14_LampB" parent="Gameplay/Lighting/DoorStatusLights" unique_id=1680527810 instance=ExtResource("35_green_lamp")]
+[node name="Door14_LampB" parent="Lights" unique_id=1680527810 instance=ExtResource("35_green_lamp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 13.3, -9.68)
 
-[node name="LoreTerminals" type="Node3D" parent="Gameplay" unique_id=815620391]
+[node name="LoreTerminals" type="Node3D" parent="." unique_id=815620391]
 
-[node name="TransferExperiment41" parent="Gameplay/LoreTerminals" unique_id=388259864 instance=ExtResource("17_lore")]
+[node name="TransferExperiment41" parent="LoreTerminals" unique_id=388259864 instance=ExtResource("17_lore")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.678209, 0.9, -9.8717)
 log_id = &"vex03_log_transfer_41"
 log_title = "TRANSFER DENEYİ 41 // TERMAL KAYIP"
 log_body = "Sıfır Kaynak çıkışı yüzde on iki arttı. Eşzamanlı uzaksal ölçümde karşı taraftaki jeotermal damar sıcaklığı 318 derece düştü. Bu üretim değil; iki sistem arasında zorlanmış enerji aktarımı. Yönetim, ölçümün rapordan çıkarılmasını emretti."
 accent_color = Color(0.22, 0.78, 1, 1)
 
-[node name="KorvathBiologyReport" parent="Gameplay/LoreTerminals" unique_id=429040327 instance=ExtResource("17_lore")]
+[node name="KorvathBiologyReport" parent="LoreTerminals" unique_id=429040327 instance=ExtResource("17_lore")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6, 8.7, 9.87374)
 log_id = &"vex03_log_korvath"
 log_title = "BİYOLOJİ RAPORU // KORVATH İŞÇİ KASTI"
 log_body = "HellMagma örneğinin uzuv aşınması savaş kullanımına değil, yüksek basınçta kaya kırmaya uyuyor. Zırh sandığımız tabaka doğal ısı kalkanı. Bunlar asker değil. Açtığımız kapıdan geçen, ocağı ve yön duygusu yok edilmiş canlı işçiler."
 accent_color = Color(1, 0.34, 0.08, 1)
 
-[node name="EceTanEmergencySignal" parent="Gameplay/LoreTerminals" unique_id=1127023259 instance=ExtResource("17_lore")]
+[node name="EceTanEmergencySignal" parent="LoreTerminals" unique_id=1127023259 instance=ExtResource("17_lore")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 23.68, 8.7, -6.8)
 log_id = &"vex03_log_ece_signal"
 log_title = "ACİL TIP SİNYALİ // DR. ECE TAN"

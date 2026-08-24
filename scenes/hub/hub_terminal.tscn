@@ -1,66 +1,201 @@
 [gd_scene format=3 uid="uid://ckhtinn61g27l"]
 
 [ext_resource type="Script" uid="uid://tpypwuiq1mur" path="res://scripts/hub/hub_terminal.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://2vfvkrcyjdwy" path="res://assets/ui/bastion_terminal_screen_idle.png" id="2_screen"]
+[ext_resource type="Texture2D" uid="uid://cem37psjtbs5a" path="res://assets/world/bastion7/bastion_terminal_controls.png" id="3_controls"]
+[ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="4_font"]
+[ext_resource type="PackedScene" path="res://scenes/ui/terminal_menu.tscn" id="5_menu"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
-albedo_color = Color(0.055, 0.065, 0.075, 1)
-metallic = 0.72
-roughness = 0.34
+albedo_color = Color(0.028, 0.034, 0.041, 1)
+metallic = 0.86
+roughness = 0.3
 
-[sub_resource type="BoxMesh" id="BoxMesh_body"]
-size = Vector3(1.8, 1.3, 0.8)
+[sub_resource type="BoxMesh" id="BoxMesh_plinth"]
+size = Vector3(2.55, 0.7, 0.28451172)
 
-[sub_resource type="StandardMaterial3D" id="Material_screen"]
-albedo_color = Color(0.025, 0.075, 0.09, 1)
-metallic = 0.18
+[sub_resource type="StandardMaterial3D" id="Material_black"]
+albedo_color = Color(0.008, 0.011, 0.014, 1)
+metallic = 0.48
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_toe"]
+size = Vector3(2.7207642, 0.14, 0.41827393)
+
+[sub_resource type="StandardMaterial3D" id="Material_edge"]
+albedo_color = Color(0.13, 0.145, 0.15, 1)
+metallic = 0.92
 roughness = 0.24
-emission_enabled = true
-emission = Color(0.05, 0.56, 0.68, 1)
-emission_energy_multiplier = 1.25
 
-[sub_resource type="BoxMesh" id="BoxMesh_screen"]
-size = Vector3(1.52, 0.62, 0.05)
+[sub_resource type="BoxMesh" id="BoxMesh_support"]
+size = Vector3(0.18, 0.72, 0.22)
 
-[sub_resource type="BoxShape3D" id="BoxShape_terminal"]
-size = Vector3(1.8, 1.3, 0.8)
+[sub_resource type="BoxMesh" id="BoxMesh_screen_back"]
+size = Vector3(1.7964258, 1.18, 0.12496582)
 
-[node name="HubTerminal" type="StaticBody3D" unique_id=136024667]
+[sub_resource type="BoxMesh" id="BoxMesh_screen_rail_h"]
+size = Vector3(1.9327404, 0.07, 0.08)
+
+[sub_resource type="BoxMesh" id="BoxMesh_screen_rail_v"]
+size = Vector3(0.07, 1.05, 0.08)
+
+[sub_resource type="BoxMesh" id="BoxMesh_deck"]
+size = Vector3(2.0236816, 0.18, 1.15)
+
+[sub_resource type="StandardMaterial3D" id="Material_controls"]
+albedo_texture = ExtResource("3_controls")
+metallic = 0.35
+roughness = 0.4
+emission = Color(0.16, 0.48, 0.55, 1)
+emission_energy_multiplier = 0.32
+emission_texture = ExtResource("3_controls")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_controls"]
+material = SubResource("Material_controls")
+size = Vector2(2, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape_back_shell"]
+size = Vector3(2.5732179, 1.2168555, 0.8508569)
+
+[sub_resource type="BoxShape3D" id="BoxShape_plinth"]
+size = Vector3(2.55, 0.7, 0.82)
+
+[sub_resource type="BoxShape3D" id="BoxShape_deck"]
+size = Vector3(2.067871, 0.22, 1.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape_screen_housing"]
+size = Vector3(2.34, 1.18, 0.28)
+
+[sub_resource type="BoxShape3D" id="BoxShape_screen_interaction"]
+size = Vector3(1.92, 0.96, 0.08)
+
+[node name="HubTerminal" type="Node3D" unique_id=136024667]
+script = ExtResource("1_script")
+
+[node name="Visuals" type="Node3D" parent="." unique_id=2013399447]
+
+[node name="Plinth" type="MeshInstance3D" parent="Visuals" unique_id=1639863487]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.28, -0.23402074)
+material_override = SubResource("Material_body")
+mesh = SubResource("BoxMesh_plinth")
+
+[node name="GroundToe" type="MeshInstance3D" parent="Visuals" unique_id=2018772488]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03189087, -0.58, -0.23899537)
+material_override = SubResource("Material_black")
+mesh = SubResource("BoxMesh_toe")
+
+[node name="LeftSupport" type="MeshInstance3D" parent="Visuals" unique_id=1360286396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82, 0.43, -0.24)
+material_override = SubResource("Material_edge")
+mesh = SubResource("BoxMesh_support")
+
+[node name="RightSupport" type="MeshInstance3D" parent="Visuals" unique_id=407448523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.82, 0.43, -0.24)
+material_override = SubResource("Material_edge")
+mesh = SubResource("BoxMesh_support")
+
+[node name="ScreenAssembly" type="Node3D" parent="Visuals" unique_id=740003082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, -0.23896761)
+
+[node name="Housing" type="MeshInstance3D" parent="Visuals/ScreenAssembly" unique_id=1481111332]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04054126, 0, -0.06844477)
+material_override = SubResource("Material_black")
+mesh = SubResource("BoxMesh_screen_back")
+
+[node name="ScreenSurface" type="Sprite3D" parent="Visuals/ScreenAssembly" unique_id=1416720742]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -0.151)
+cast_shadow = 0
+pixel_size = 0.001064
+double_sided = false
+alpha_cut = 1
+texture_filter = 5
+texture = ExtResource("2_screen")
+
+[node name="TopRail" type="MeshInstance3D" parent="Visuals/ScreenAssembly" unique_id=186147078]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.555, -0.17)
+material_override = SubResource("Material_edge")
+mesh = SubResource("BoxMesh_screen_rail_h")
+
+[node name="BottomRail" type="MeshInstance3D" parent="Visuals/ScreenAssembly" unique_id=1349319383]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004186183, -0.555, -0.17000002)
+material_override = SubResource("Material_edge")
+mesh = SubResource("BoxMesh_screen_rail_h")
+
+[node name="LeftRail" type="MeshInstance3D" parent="Visuals/ScreenAssembly" unique_id=1138124641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9255855, 0, -0.17000002)
+material_override = SubResource("Material_edge")
+mesh = SubResource("BoxMesh_screen_rail_v")
+
+[node name="RightRail" type="MeshInstance3D" parent="Visuals/ScreenAssembly" unique_id=853276231]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9347805, 0, -0.17000002)
+material_override = SubResource("Material_edge")
+mesh = SubResource("BoxMesh_screen_rail_v")
+
+[node name="OfflineOverlay" type="Label3D" parent="Visuals/ScreenAssembly" unique_id=1198459006]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.01, -0.178)
+visible = false
+pixel_size = 0.0018
+alpha_cut = 1
+render_priority = 3
+modulate = Color(1, 0.12, 0.025, 1)
+text = "POWER OFFLINE"
+font = ExtResource("4_font")
+font_size = 34
+outline_size = 8
+
+[node name="DeckAssembly" type="Node3D" parent="Visuals" unique_id=115621227]
+transform = Transform3D(1, 0, 0, 0, 0.9781475, 0.20791216, 0, -0.20791216, 0.9781475, 0, -0.05, -0.63)
+
+[node name="DeckShell" type="MeshInstance3D" parent="Visuals/DeckAssembly" unique_id=252786236]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.020141602, 0, 0)
+material_override = SubResource("Material_body")
+mesh = SubResource("BoxMesh_deck")
+
+[node name="ControlSurface" type="MeshInstance3D" parent="Visuals/DeckAssembly" unique_id=145346480]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13892251, -0.20193422)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_controls")
+
+[node name="ScreenGlow" type="SpotLight3D" parent="Visuals" unique_id=105627478]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, -0.64)
+light_color = Color(0.08, 0.72, 1, 1)
+light_energy = 0.44
+light_indirect_energy = 0.0
+distance_fade_enabled = true
+distance_fade_begin = 9.0
+distance_fade_length = 3.0
+spot_range = 2.6
+spot_attenuation = 1.9
+spot_angle = 58.0
+spot_angle_attenuation = 1.5
+
+[node name="PhysicalBody" type="Node3D" parent="." unique_id=118103369]
+
+[node name="SolidCollider" type="StaticBody3D" parent="PhysicalBody" unique_id=1053555862]
+collision_mask = 0
+
+[node name="BackShellShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=3828291]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0029175282, -0.01842776, 0.1029651)
+shape = SubResource("BoxShape_back_shell")
+
+[node name="PlinthShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=2138009183]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.28, 0.1)
+shape = SubResource("BoxShape_plinth")
+
+[node name="DeckShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=1434179026]
+transform = Transform3D(1, 0, 0, 0, 0.9781475, 0.20791216, 0, -0.20791216, 0.9781475, -0.0036621094, -0.05, -0.63)
+shape = SubResource("BoxShape_deck")
+
+[node name="ScreenHousingShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=962541716]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, -0.38)
+shape = SubResource("BoxShape_screen_housing")
+
+[node name="ScreenInteraction" type="StaticBody3D" parent="." unique_id=1662092751]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, -0.575)
 collision_layer = 8
 collision_mask = 0
-script = ExtResource("1_script")
-terminal_mode = 2
-display_name = "BASTION TERMİNALİ"
-info_message = "BASTION-7 SİSTEMİ ÇEVRİMİÇİ"
-offline = false
-offline_message = "POWER OFFLINE"
-screen_header = "VEX // BASTION-7"
-mission_control_text = "MISSION CONTROL"
-deployment_ready_text = "DEPLOYMENT HAZIR"
-operation_text = "OPERASYON"
-no_mission_text = "YENİ GÖREV YOK"
-mission_waiting_text = "YENİ OPERASYON BEKLENİYOR"
-select_operation_text = "OPERASYON SEÇ"
-deploy_text = "GÖREVE ÇIK"
-active_color = Color(0.32, 0.95, 1, 1)
-offline_color = Color(1, 0.2, 0.08, 1)
 
-[node name="Body" type="MeshInstance3D" parent="." unique_id=416764584]
-material_override = SubResource("Material_body")
-mesh = SubResource("BoxMesh_body")
+[node name="ScreenInteractionShape" type="CollisionShape3D" parent="ScreenInteraction" unique_id=1793298523]
+shape = SubResource("BoxShape_screen_interaction")
 
-[node name="Screen" type="MeshInstance3D" parent="." unique_id=1952041922]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, -0.425)
-material_override = SubResource("Material_screen")
-mesh = SubResource("BoxMesh_screen")
-
-[node name="ScreenLabel" type="Label3D" parent="." unique_id=1041580166]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.2, -0.47)
-pixel_size = 0.0023
-modulate = Color(0.32, 0.95, 1, 1)
-text = "VEX // BASTION-7
-SYSTEM ONLINE"
-font_size = 24
-outline_size = 6
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1927294892]
-shape = SubResource("BoxShape_terminal")
+[node name="TerminalMenu" parent="." unique_id=241743877 instance=ExtResource("5_menu")]
