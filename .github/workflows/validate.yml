@@ -30,3 +30,5 @@ jobs:
         run: python tests/weapon_ads_audit.py
       - name: Probe ADS sprite geometry
         run: python tools/ads_sprite_probe.py
+      - name: Probe ADS fire-frame geometry
+        run: python tools/ads_aim_frame_probe.py
