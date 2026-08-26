@@ -2,6 +2,7 @@ class_name VexHudWeaponPresenter
 extends Node
 
 const ADS_RETICLE_SCENE := preload("res://scenes/ui/ads_reticle.tscn")
+const ADS_SCREEN_PIVOT := Vector2(960.0, 540.0)
 
 var _weapon_layer: Control = null
 var _weapon_sprites: Dictionary = {}
@@ -138,6 +139,9 @@ func _configure_weapon_frame_alignment(sprite: AnimatedSprite2D, definition: Wea
 	var idle_texture := sprite.sprite_frames.get_frame_texture(&"idle", 0)
 	if idle_texture == null:
 		return
+	sprite.set_meta("vex_base_position", sprite.position)
+	sprite.set_meta("vex_base_scale", sprite.scale)
+	sprite.set_meta("vex_ads_scale_multiplier", definition.hud_ads_scale_multiplier)
 	var reference_anchor := _get_texture_visual_anchor(idle_texture)
 	var zoom_visual_anchor := reference_anchor
 	if definition.supports_ads_pose and sprite.sprite_frames.has_animation(&"zoom"):
@@ -190,6 +194,24 @@ func _apply_weapon_frame_alignment(sprite: AnimatedSprite2D) -> void:
 	var offsets := sprite.get_meta("vex_frame_offsets") as Dictionary
 	var frame_offset: Vector2 = offsets.get(_weapon_frame_key(sprite.animation, sprite.frame), Vector2.ZERO)
 	sprite.offset = frame_offset
+	_apply_weapon_pose_transform(sprite)
+
+
+func _apply_weapon_pose_transform(sprite: AnimatedSprite2D) -> void:
+	if sprite == null or not sprite.has_meta("vex_base_position") or not sprite.has_meta("vex_base_scale"):
+		return
+	var base_position: Vector2 = sprite.get_meta("vex_base_position", sprite.position)
+	var base_scale: Vector2 = sprite.get_meta("vex_base_scale", sprite.scale)
+	var ads_scale_multiplier := float(sprite.get_meta("vex_ads_scale_multiplier", 1.0))
+	var uses_ads_transform := sprite.animation in [&"zoom", &"aim_fire"] and ads_scale_multiplier > 1.0
+	if not uses_ads_transform:
+		sprite.position = base_position
+		sprite.scale = base_scale
+		return
+	# Sprite'ı ekran merkezindeki gerçek ADS hedef noktası etrafında büyüt.
+	# Böylece + / arpacık / optik merkezi sabit kalırken silah gövdesi alta doğru büyür.
+	sprite.position = ADS_SCREEN_PIVOT + (base_position - ADS_SCREEN_PIVOT) * ads_scale_multiplier
+	sprite.scale = base_scale * ads_scale_multiplier
 
 
 func _weapon_frame_key(animation_name: StringName, frame_index: int) -> String:
