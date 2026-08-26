@@ -34,6 +34,11 @@ def main() -> int:
         '@export_range(0.35, 0.95, 0.01) var ads_fov_multiplier := 0.70',
         "WeaponDefinition silah-bazlı göreli ADS FOV çarpanı taşımıyor",
     )
+    require(
+        definition,
+        '@export_range(1.0, 1.5, 0.01) var hud_ads_scale_multiplier := 1.0',
+        "WeaponDefinition ADS HUD scale tuning alanını taşımıyor",
+    )
     if 'var ads_fov := ' in definition:
         ERRORS.append("WeaponDefinition hâlâ mutlak ads_fov otoritesi taşıyor")
 
@@ -62,6 +67,15 @@ def main() -> int:
         ('ADS_RETICLE_SCENE := preload("res://scenes/ui/ads_reticle.tscn")', "HUD presenter ADS reticle sahnesini yüklemiyor"),
         ("_ensure_ads_reticle()", "HUD presenter ADS reticle kurulumunu çağırmıyor"),
         ("hud_root.add_child(_ads_reticle)", "ADS reticle HUD Root altına eklenmiyor"),
+        ("const ADS_SCREEN_PIVOT := Vector2(960.0, 540.0)", "ADS HUD scale pivot'i ekran merkezinde değil"),
+        ('sprite.set_meta("vex_base_position", sprite.position)', "HUD presenter silahın baz pozisyonunu saklamıyor"),
+        ('sprite.set_meta("vex_base_scale", sprite.scale)', "HUD presenter silahın baz scale değerini saklamıyor"),
+        ('sprite.set_meta("vex_ads_scale_multiplier", definition.hud_ads_scale_multiplier)', "HUD presenter silah-bazlı ADS scale değerini saklamıyor"),
+        ('sprite.animation in [&"zoom", &"aim_fire"]', "ADS scale yalnız zoom/aim_fire pozlarına bağlı değil"),
+        ('sprite.position = ADS_SCREEN_PIVOT + (base_position - ADS_SCREEN_PIVOT) * ads_scale_multiplier', "ADS silah görseli hedef pivot etrafında ölçeklenmiyor"),
+        ('sprite.scale = base_scale * ads_scale_multiplier', "ADS silah görseli baz scale üzerinden büyütülmüyor"),
+        ('sprite.position = base_position', "ADS dışı animasyonlarda baz pozisyona dönüş eksik"),
+        ('sprite.scale = base_scale', "ADS dışı animasyonlarda baz scale'e dönüş eksik"),
     ]:
         require(presenter, contract, message)
     if 'or Input.is_action_pressed("aim")' in presenter:
@@ -102,6 +116,12 @@ def main() -> int:
         "p14": "Vector2(-162, -194)",
         "p20": "Vector2(-165, -181)",
     }
+    expected_ads_scale = {
+        "p01": 1.34,
+        "p07": 1.34,
+        "p14": 1.29,
+        "p20": 1.27,
+    }
     observed: list[float] = []
     for weapon_id, multiplier in expected_multiplier.items():
         weapon = read(f"resources/weapons/{weapon_id}.tres")
@@ -115,6 +135,11 @@ def main() -> int:
             weapon,
             f"hud_zoom_offset = {expected_zoom_offset[weapon_id]}",
             f"{weapon_id} ADS zoom görseli ölçülmüş nişan merkezi kalibrasyonunu kullanmıyor",
+        )
+        require(
+            weapon,
+            f"hud_ads_scale_multiplier = {expected_ads_scale[weapon_id]:.2f}",
+            f"{weapon_id} ADS HUD scale değeri ekran altını dolduran kalibrasyonda değil",
         )
         require(
             weapon,
