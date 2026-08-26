@@ -1,45 +1,34 @@
-[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="WeaponDefinition" format=3 uid="uid://dpypx2bv8eeab"]
 
-[ext_resource type="Script" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
+[ext_resource type="Script" uid="uid://bld4sc8fopa04" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
 [ext_resource type="PackedScene" path="res://scenes/ui/weapons/p07_view.tscn" id="2_view"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p07/p07_side.png" id="3_side"]
+[ext_resource type="Texture2D" uid="uid://b47e110pgvcky" path="res://assets/weapons/p07/p07_side.png" id="3_side"]
 
 [resource]
 script = ExtResource("1_weapon")
 weapon_id = &"p07"
 display_name = "WEAPON_P07_NAME"
-ammo_type = &"bullets"
-loadout_group = &"sidearm"
-loadout_slot = 1
-loadout_group_label = "ARMORY_GROUP_SIDEARM"
 hud_slot_label_key = "HUD_SLOT_01"
 hud_ammo_label_key = "HUD_AMMO_PISTOL"
 hud_view_scene = ExtResource("2_view")
 world_pickup_texture = ExtResource("3_side")
 supports_ads_pose = true
 ads_fov_multiplier = 0.64
-hud_zoom_offset = Vector2(-175, -220)
+hud_zoom_offset = Vector2(-165, -200)
 hud_ads_scale_multiplier = 1.34
-hud_ads_reticle_style = "small_cross"
-hud_aim_fire_offset = Vector2(0, 0)
 supports_flashlight = true
 flashlight_color = Color(0.72, 0.86, 1, 1)
 flashlight_energy = 4.2
-flashlight_range = 18.0
 flashlight_angle_degrees = 27.0
 gunshot_noise_multiplier = 1.0
 magazine_size = 16
-headshot_multiplier = 1.80
 damage_per_pellet = 17
-pellet_count = 1
+headshot_multiplier = 1.8
 fire_interval = 0.22
 reload_duration = 1.0
 spread_degrees = 0.9
 maximum_range = 75.0
-reserve_ammo_capacity = 180
-automatic = false
 recoil_vertical_degrees = 1.05
-recoil_horizontal_degrees = 0.20
 recoil_max_vertical_degrees = 3.4
 recoil_max_horizontal_degrees = 0.72
 recoil_recovery_degrees_per_second = 8.2
