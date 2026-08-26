@@ -117,7 +117,11 @@ def main() -> int:
         ('next_style = definition.hud_ads_reticle_style', "ADS reticle stili mevcut silahın WeaponDefinition verisinden gelmiyor"),
         ("var _fire_animation_suppressed := false", "ADS reticle recoil suppression durumu taşımıyor"),
         ("func set_fire_animation_suppressed(suppressed: bool) -> void:", "ADS reticle recoil suppression API'si eksik"),
-        ("or _fire_animation_suppressed", "ADS reticle aim_fire sırasında görünürlüğü kapatmıyor"),
+        ("or _fire_animation_suppressed", "ADS reticle presenter suppression durumunu dikkate almıyor"),
+        ("or _is_weapon_fire_animation_active()", "ADS reticle canlı aim_fire animasyonunu doğrudan kontrol etmiyor"),
+        ('get_node_or_null("WeaponLayer")', "ADS reticle HUD WeaponLayer içindeki gerçek silah sprite'ını bulmuyor"),
+        ('sprite.animation == &"aim_fire"', "ADS reticle gerçek aim_fire animasyon adını kontrol etmiyor"),
+        ("sprite.is_playing()", "ADS reticle aim_fire'ın gerçekten oynadığını doğrulamıyor"),
     ]:
         require(reticle_script, contract, message)
 
