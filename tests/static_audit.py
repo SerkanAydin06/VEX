@@ -274,8 +274,10 @@ def check_door_contract() -> None:
     scene = read("scenes/props/door_side_slide.tscn")
     script = read("scripts/props/door.gd")
     for contract in [
-        "size = Vector3(0.2, 4.48, 2.22)", "position = Vector3(0, 0, -1.11)",
-        "position = Vector3(0, 0, 1.11)", "size = Vector3(0.24, 4.48, 4.44)",
+        "size = Vector3(0.2, 4.48, 2.22)",
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.11)",
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.11)",
+        "size = Vector3(0.24, 4.48, 4.44)",
         '[node name="SafetySensor"', '[node name="PerceptionBlocker"',
         '[node name="DoorShadowBlocker"',
     ]:
