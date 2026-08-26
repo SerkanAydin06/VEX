@@ -517,10 +517,12 @@ func _apply_view_rotation() -> void:
 
 func _publish_recoil_to_hud() -> void:
 	if GameState.hud != null and is_instance_valid(GameState.hud) and GameState.hud.has_method("set_weapon_recoil_offset"):
-		GameState.hud.call(
-			"set_weapon_recoil_offset",
-			Vector2(_recoil_yaw_degrees, _recoil_pitch_degrees)
+		var hud_recoil := (
+			Vector2.ZERO
+			if is_aiming
+			else Vector2(_recoil_yaw_degrees, _recoil_pitch_degrees)
 		)
+		GameState.hud.call("set_weapon_recoil_offset", hud_recoil)
 
 
 func broadcast_state() -> void:
