@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d3hv0gr27g6kr"]
 
 [ext_resource type="Script" uid="uid://ceaxa6s7v5v5y" path="res://scripts/actors/hellmagma.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://blk6m6w5p84d2" path="res://assets/enemies/hellmagma/hellmagma_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://blk6m6w5p84d2" path="res://assets/enemies/hellmagma/HellMagma_spritesheet.png" id="2_sheet"]
 [ext_resource type="PackedScene" path="res://scenes/actors/hellmagma_projectile.tscn" id="26_projectile"]
 [ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
 [ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
