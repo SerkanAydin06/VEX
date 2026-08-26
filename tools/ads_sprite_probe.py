@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import statistics
 import struct
 import zlib
 
@@ -98,29 +99,77 @@ def runs(values: list[bool]) -> list[tuple[int, int]]:
     return out
 
 
-def ascii_crop(width: int, height: int, pixels, cols: int = 96, rows: int = 44) -> list[str]:
-    x0, x1 = int(width * 0.25), int(width * 0.75)
-    y0, y1 = 0, int(height * 0.56)
-    chars = " .:-=+*#%@"
-    result: list[str] = []
-    for ry in range(rows):
-        sy0 = y0 + (y1 - y0) * ry // rows
-        sy1 = y0 + (y1 - y0) * (ry + 1) // rows
-        line = []
-        for rx in range(cols):
-            sx0 = x0 + (x1 - x0) * rx // cols
-            sx1 = x0 + (x1 - x0) * (rx + 1) // cols
-            total = max(1, (sx1 - sx0) * (sy1 - sy0))
-            alpha_sum = 0
-            for y in range(sy0, sy1):
-                base = y * width
-                for x in range(sx0, sx1):
-                    alpha_sum += pixels[base + x][3]
-            density = alpha_sum / (255.0 * total)
-            idx = min(len(chars) - 1, int(density * len(chars)))
-            line.append(chars[idx])
-        result.append("".join(line))
-    return result
+def _row_runs(width: int, pixels, y: int, threshold: int = 64) -> list[tuple[int, int]]:
+    values = [rgba_at(pixels, width, x, y)[3] >= threshold for x in range(width)]
+    return runs(values)
+
+
+def detect_sight(width: int, height: int, pixels) -> tuple[str, float, float, str]:
+    cx = width // 2
+    candidate_rows: list[tuple[int, int, int]] = []
+    upper_limit = int(height * 0.48)
+    for y in range(upper_limit):
+        if any(rgba_at(pixels, width, x, y)[3] >= 64 for x in range(cx - 5, cx + 6)):
+            continue
+        left = None
+        right = None
+        for x in range(cx - 6, max(-1, cx - 280), -1):
+            if rgba_at(pixels, width, x, y)[3] >= 64:
+                left = x
+                break
+        for x in range(cx + 6, min(width, cx + 281)):
+            if rgba_at(pixels, width, x, y)[3] >= 64:
+                right = x
+                break
+        if left is not None and right is not None and 50 <= right - left <= 360:
+            candidate_rows.append((y, left, right))
+
+    groups: list[list[tuple[int, int, int]]] = []
+    for item in candidate_rows:
+        if not groups or item[0] != groups[-1][-1][0] + 1:
+            groups.append([item])
+        else:
+            groups[-1].append(item)
+    groups = [g for g in groups if len(g) >= 18]
+    if groups:
+        optic = max(groups, key=len)
+        ys = [v[0] for v in optic]
+        lefts = [v[1] for v in optic]
+        rights = [v[2] for v in optic]
+        sight_x = (statistics.median(lefts) + statistics.median(rights)) * 0.5
+        sight_y = (ys[0] + ys[-1]) * 0.5
+        detail = f"optic_window y={ys[0]}..{ys[-1]} inner_x~{statistics.median(lefts):.1f}..{statistics.median(rights):.1f}"
+        return "optic", sight_x, sight_y, detail
+
+    top_y = None
+    top_run = None
+    for y in range(upper_limit):
+        row = _row_runs(width, pixels, y)
+        nearby = [r for r in row if r[1] >= cx - 180 and r[0] <= cx + 180]
+        if not nearby:
+            continue
+        chosen = min(nearby, key=lambda r: abs(((r[0] + r[1]) * 0.5) - cx))
+        if chosen[1] - chosen[0] + 1 >= 2:
+            top_y = y
+            top_run = chosen
+            break
+    if top_y is None or top_run is None:
+        return "unknown", float(cx), float(height // 2), "no central sight candidate"
+    sight_x = (top_run[0] + top_run[1]) * 0.5
+    detail = f"front_sight_top y={top_y} x_run={top_run[0]}..{top_run[1]}"
+    return "iron", sight_x, float(top_y), detail
+
+
+def alignment_offset(width: int, height: int, sight_x: float, sight_y: float) -> tuple[float, float]:
+    # WeaponView sahnelerinin ortak tasarım koordinatları: pos=(1060,772), scale=0.6.
+    target_x, target_y = 960.0, 540.0
+    sprite_x, sprite_y = 1060.0, 772.0
+    scale = 0.6
+    local_target_x = (target_x - sprite_x) / scale
+    local_target_y = (target_y - sprite_y) / scale
+    texture_local_x = sight_x - width * 0.5
+    texture_local_y = sight_y - height * 0.5
+    return local_target_x - texture_local_x, local_target_y - texture_local_y
 
 
 def analyze(weapon_id: str) -> None:
@@ -130,41 +179,18 @@ def analyze(weapon_id: str) -> None:
     xs = [p[0] for p in opaque]
     ys = [p[1] for p in opaque]
     bbox = (min(xs), min(ys), max(xs), max(ys)) if opaque else None
-
     cx = width // 2
-    central_rows: list[bool] = []
-    for y in range(height // 2):
-        central_rows.append(any(rgba_at(pixels, width, x, y)[3] >= 64 for x in range(cx - 6, cx + 7)))
-
-    colored: dict[str, list[tuple[int, int]]] = {"red": [], "green": [], "blue": [], "bright": []}
-    for y in range(int(height * 0.45)):
-        for x in range(int(width * 0.35), int(width * 0.65)):
-            r, g, b, a = rgba_at(pixels, width, x, y)
-            if a < 96:
-                continue
-            if r > 160 and r > g * 1.35 and r > b * 1.35:
-                colored["red"].append((x, y))
-            if g > 160 and g > r * 1.25 and g > b * 1.20:
-                colored["green"].append((x, y))
-            if b > 160 and b > r * 1.25 and b > g * 1.15:
-                colored["blue"].append((x, y))
-            if min(r, g, b) > 210:
-                colored["bright"].append((x, y))
-
+    central_rows = [
+        any(rgba_at(pixels, width, x, y)[3] >= 64 for x in range(cx - 6, cx + 7))
+        for y in range(height // 2)
+    ]
+    kind, sight_x, sight_y, detail = detect_sight(width, height, pixels)
+    off_x, off_y = alignment_offset(width, height, sight_x, sight_y)
     print(f"=== {weapon_id.upper()} ZOOM ===")
     print(f"size={width}x{height} alpha_bbox={bbox} center=({cx},{height // 2})")
     print(f"center-column opaque runs (upper half): {runs(central_rows)}")
-    for name, points in colored.items():
-        if not points:
-            continue
-        avg_x = sum(p[0] for p in points) / len(points)
-        avg_y = sum(p[1] for p in points) / len(points)
-        min_x = min(p[0] for p in points); max_x = max(p[0] for p in points)
-        min_y = min(p[1] for p in points); max_y = max(p[1] for p in points)
-        print(f"{name}: n={len(points)} centroid=({avg_x:.1f},{avg_y:.1f}) bbox=({min_x},{min_y})-({max_x},{max_y})")
-    print("ASCII alpha crop: x=25%-75%, y=0%-56%")
-    for line in ascii_crop(width, height, pixels):
-        print(line)
+    print(f"AUTO_SIGHT kind={kind} point=({sight_x:.1f},{sight_y:.1f}) {detail}")
+    print(f"AUTO_OFFSET hud_zoom_offset=Vector2({round(off_x)}, {round(off_y)}) raw=({off_x:.2f},{off_y:.2f})")
     print()
 
 
