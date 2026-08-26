@@ -1,0 +1,112 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ads_reticle.gd" id="1_reticle"]
+
+[node name="AdsReticle" type="Control"]
+process_mode = 3
+z_index = 100
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 12.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_reticle")
+
+[node name="ShadowCenter" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 9.0
+offset_right = 15.0
+offset_bottom = 15.0
+mouse_filter = 2
+color = Color(0.015, 0.02, 0.025, 0.9)
+
+[node name="ShadowLeft" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 10.0
+offset_right = 9.0
+offset_bottom = 14.0
+mouse_filter = 2
+color = Color(0.015, 0.02, 0.025, 0.9)
+
+[node name="ShadowRight" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 10.0
+offset_right = 23.0
+offset_bottom = 14.0
+mouse_filter = 2
+color = Color(0.015, 0.02, 0.025, 0.9)
+
+[node name="ShadowTop" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 1.0
+offset_right = 14.0
+offset_bottom = 9.0
+mouse_filter = 2
+color = Color(0.015, 0.02, 0.025, 0.9)
+
+[node name="ShadowBottom" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 15.0
+offset_right = 14.0
+offset_bottom = 23.0
+mouse_filter = 2
+color = Color(0.015, 0.02, 0.025, 0.9)
+
+[node name="LeftArm" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 11.0
+offset_right = 9.0
+offset_bottom = 13.0
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
+
+[node name="RightArm" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 11.0
+offset_right = 22.0
+offset_bottom = 13.0
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
+
+[node name="TopArm" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 2.0
+offset_right = 13.0
+offset_bottom = 9.0
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
+
+[node name="BottomArm" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 15.0
+offset_right = 13.0
+offset_bottom = 22.0
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
+
+[node name="CenterDot" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 11.0
+offset_right = 13.0
+offset_bottom = 13.0
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
