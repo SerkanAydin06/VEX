@@ -126,8 +126,11 @@ func _physics_process(delta: float) -> void:
 	var world_direction := (transform.basis * local_direction).normalized()
 	_update_controller_look(delta)
 	_update_aiming(delta)
+	# Sample jump in the physics loop so UI/event handling cannot swallow Space.
 	if Input.is_action_just_pressed("jump"):
 		_try_jump()
+	# Sprint is only active while actually moving on the ground. This prevents
+	# stamina from draining while standing still or airborne.
 	var wants_to_sprint := (
 		Input.is_action_pressed("sprint")
 		and input_vector.length() >= sprint_input_threshold
@@ -151,6 +154,8 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor() and not _jump_requested and not is_crouching:
 		stepped_up = _try_step_up(Vector3(velocity.x, 0.0, velocity.z) * delta)
 	if _jump_requested:
+		# Consume the jump request before floor/gravity handling so the
+		# floor-stick velocity cannot overwrite the jump impulse.
 		_jump_requested = false
 		velocity.y = jump_velocity
 	elif not is_on_floor():
@@ -168,12 +173,15 @@ func _physics_process(delta: float) -> void:
 func _try_step_up(horizontal_motion: Vector3) -> bool:
 	if max_stair_step_height <= 0.0 or horizontal_motion.length_squared() <= 0.000001:
 		return false
+	# Only intervene when the normal horizontal move is blocked by a low obstacle.
 	if not test_move(global_transform, horizontal_motion):
 		return false
 	var step_up := Vector3.UP * max_stair_step_height
+	# Never step into a ceiling or another obstacle above the player.
 	if test_move(global_transform, step_up):
 		return false
 	var raised_transform := global_transform.translated(step_up)
+	# At step height the forward path must be clear. High walls therefore stay walls.
 	if test_move(raised_transform, horizontal_motion):
 		return false
 	global_position += step_up
@@ -183,11 +191,15 @@ func _try_step_up(horizontal_motion: Vector3) -> bool:
 func _unhandled_input(event: InputEvent) -> void:
 	if is_dead or get_tree().paused:
 		return
+
 	if event.is_action_pressed("crouch"):
+		# C = toggle crouch. Basili tutma gerekmez. Ayağa kalkmak için
+		# yeterli alan yoksa mevcut çömelme korunur.
 		if is_crouching:
 			if _can_stand_up():
 				_set_crouching(false)
 		else:
+			# Do not enter crouch while airborne.
 			if is_on_floor():
 				_set_crouching(true)
 		get_viewport().set_input_as_handled()
@@ -218,7 +230,6 @@ func _try_jump() -> void:
 	stamina -= jump_stamina_cost
 	_stamina_recovery_delay_remaining = stamina_recovery_delay
 	_jump_requested = true
-
 
 func try_interact() -> void:
 	interaction_ray.force_raycast_update()
@@ -286,7 +297,10 @@ func collect_pickup(
 				return false
 			_has_night_vision = true
 			_set_night_vision_enabled(false, false)
-			GameState.notify_pickup(tr("PICKUP_NIGHT_VISION"), &"equipment")
+			GameState.notify_pickup(
+				tr("PICKUP_NIGHT_VISION"),
+				&"equipment"
+			)
 		&"key_blue":
 			if has_key(&"blue"):
 				return false
@@ -299,6 +313,7 @@ func collect_pickup(
 			keys.append(&"red")
 			GameState.publish_keys(keys)
 			GameState.notify_pickup(tr("KEY_RED"), &"key")
+			# Anahtar toplama artık görev metnini değiştirmez; ilerleme kapı/oyun akışı üzerinden gösterilir.
 		&"key_yellow":
 			if has_key(&"yellow"):
 				return false
@@ -316,18 +331,34 @@ func _collect_sidearm_pickup(
 	bonus_ammo: int,
 	source_pickup: Node3D
 ) -> bool:
-	var result := weapon_controller.call("equip_world_weapon", weapon_id, bonus_ammo) as Dictionary
+	var result := weapon_controller.call(
+		"equip_world_weapon",
+		weapon_id,
+		bonus_ammo
+	) as Dictionary
 	if not bool(result.get("success", false)):
 		return false
+
 	var displaced_weapon_id := StringName(str(result.get("displaced_weapon_id", "")))
-	var selected_definition := weapon_controller.call("get_weapon_definition", weapon_id) as WeaponDefinition
+	var selected_definition := weapon_controller.call(
+		"get_weapon_definition",
+		weapon_id
+	) as WeaponDefinition
 	var selected_name := str(weapon_id)
 	if selected_definition != null:
 		selected_name = tr(selected_definition.display_name)
+
 	if displaced_weapon_id != &"":
 		var drop_position := _get_sidearm_drop_position(source_pickup)
-		call_deferred("_spawn_dropped_sidearm_pickup", displaced_weapon_id, drop_position)
-		var displaced_definition := weapon_controller.call("get_weapon_definition", displaced_weapon_id) as WeaponDefinition
+		call_deferred(
+			"_spawn_dropped_sidearm_pickup",
+			displaced_weapon_id,
+			drop_position
+		)
+		var displaced_definition := weapon_controller.call(
+			"get_weapon_definition",
+			displaced_weapon_id
+		) as WeaponDefinition
 		var displaced_name := str(displaced_weapon_id)
 		if displaced_definition != null:
 			displaced_name = tr(displaced_definition.display_name)
@@ -336,6 +367,7 @@ func _collect_sidearm_pickup(
 			&"weapon"
 		)
 		return true
+
 	match weapon_id:
 		&"p01":
 			GameState.notify_pickup(tr("PICKUP_P01_ACTIVE"), &"weapon")
@@ -353,14 +385,16 @@ func _get_sidearm_drop_position(source_pickup: Node3D) -> Vector3:
 		return source_pickup.global_position
 	return global_position
 
-
 func _spawn_dropped_sidearm_pickup(
 	weapon_id: StringName,
 	drop_position: Vector3
 ) -> void:
 	if not is_inside_tree():
 		return
-	var definition := weapon_controller.call("get_weapon_definition", weapon_id) as WeaponDefinition
+	var definition := weapon_controller.call(
+		"get_weapon_definition",
+		weapon_id
+	) as WeaponDefinition
 	if definition == null or definition.world_pickup_texture == null:
 		push_warning("Yere bırakılan silah için pickup görseli eksik: %s" % str(weapon_id))
 		return
@@ -371,7 +405,9 @@ func _spawn_dropped_sidearm_pickup(
 	if pickup == null:
 		return
 	pickup.name = "Dropped_%s" % str(weapon_id).to_upper()
-	pickup.pickup_id = StringName("runtime_drop_%s_%d" % [str(weapon_id), Time.get_ticks_msec()])
+	pickup.pickup_id = StringName(
+		"runtime_drop_%s_%d" % [str(weapon_id), Time.get_ticks_msec()]
+	)
 	pickup.pickup_type = str(weapon_id)
 	pickup.amount = 0
 	pickup.display_name = definition.display_name
@@ -382,7 +418,6 @@ func _spawn_dropped_sidearm_pickup(
 	pickup.global_position = drop_position
 	pickup.block_pickup_for(0.5)
 
-
 func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = null) -> void:
 	if is_dead or amount <= 0:
 		return
@@ -391,6 +426,9 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 	var health_damage := amount - absorbed
 	health = maxi(0, health - health_damage)
 	GameState.report_damage(health_damage)
+
+	# Oyuncu gerçekten can kaybettiğinde hurt sesi çal.
+	# Sürekli hasarda sesin üst üste binmesini engellemek için 0.9 sn cooldown.
 	if (
 		health_damage > 0
 		and _hurt_audio_cooldown_remaining <= 0.0
@@ -400,6 +438,7 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 			hurt_audio.stop()
 		hurt_audio.play()
 		_hurt_audio_cooldown_remaining = hurt_audio_cooldown
+
 	broadcast_state()
 	if health <= 0:
 		_die()
@@ -527,17 +566,25 @@ func restore_run_state(state: Dictionary) -> void:
 	var weapon_state: Dictionary = state.get("weapon_state", {}) as Dictionary
 	weapon_controller.call("restore_state", weapon_state)
 	_has_night_vision = bool(state.get("night_vision_owned", false))
-	_set_night_vision_enabled(bool(state.get("night_vision_enabled", false)), false)
+	_set_night_vision_enabled(
+		bool(state.get("night_vision_enabled", false)),
+		false
+	)
 	broadcast_state()
 
 
 func _setup_night_vision_overlay() -> void:
 	if _night_vision_layer != null and is_instance_valid(_night_vision_layer):
 		return
+
 	_night_vision_layer = CanvasLayer.new()
 	_night_vision_layer.name = "NightVisionLayer"
+
+	# HUD layer 0'da kalır. -1 layer, efekti 3D dünya görüntüsüne uygular
+	# fakat HUD/harita/menü yazılarını yeşile boyamaz.
 	_night_vision_layer.layer = night_vision_canvas_layer
 	add_child(_night_vision_layer)
+
 	_night_vision_rect = ColorRect.new()
 	_night_vision_rect.name = "NightVisionScreenEffect"
 	_night_vision_layer.add_child(_night_vision_rect)
@@ -545,20 +592,25 @@ func _setup_night_vision_overlay() -> void:
 	_night_vision_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_night_vision_rect.color = Color.WHITE
 	_night_vision_rect.visible = false
+
 	if night_vision_shader != null:
 		var material := ShaderMaterial.new()
 		material.shader = night_vision_shader
 		_night_vision_rect.material = material
 	else:
+		# Shader bulunamazsa tamamen bozulmak yerine basit yeşil filtre kalır.
 		_night_vision_rect.color = night_vision_fallback_color
 
 
 func _set_night_vision_enabled(enabled: bool, show_message := true) -> void:
 	if enabled and not _has_night_vision:
 		enabled = false
+
 	_night_vision_enabled = enabled
+
 	if _night_vision_rect != null and is_instance_valid(_night_vision_rect):
 		_night_vision_rect.visible = enabled
+
 	if show_message:
 		GameState.notify(
 			tr("NIGHT_VISION_ACTIVE")
@@ -574,19 +626,12 @@ func _update_controller_look(delta: float) -> void:
 	if pads.is_empty():
 		return
 	var device: int = pads[0]
-	var look := Vector2(
-		Input.get_joy_axis(device, JOY_AXIS_RIGHT_X),
-		Input.get_joy_axis(device, JOY_AXIS_RIGHT_Y)
-	)
+	var look := Vector2(Input.get_joy_axis(device, JOY_AXIS_RIGHT_X), Input.get_joy_axis(device, JOY_AXIS_RIGHT_Y))
 	if look.length() < 0.16:
 		return
 	var sensitivity := SettingsManager.controller_look_sensitivity * delta
 	rotate_y(-look.x * sensitivity)
-	_pitch = clampf(
-		_pitch - look.y * sensitivity,
-		deg_to_rad(-pitch_limit_degrees),
-		deg_to_rad(pitch_limit_degrees)
-	)
+	_pitch = clampf(_pitch - look.y * sensitivity, deg_to_rad(-pitch_limit_degrees), deg_to_rad(pitch_limit_degrees))
 	_apply_view_rotation()
 
 
@@ -630,9 +675,16 @@ func _update_stamina(delta: float) -> void:
 			is_sprinting = false
 		GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
 		return
-	_stamina_recovery_delay_remaining = maxf(0.0, _stamina_recovery_delay_remaining - delta)
+
+	_stamina_recovery_delay_remaining = maxf(
+		0.0,
+		_stamina_recovery_delay_remaining - delta
+	)
 	if _stamina_recovery_delay_remaining <= 0.0:
-		stamina = minf(maximum_stamina, stamina + stamina_recovery_per_second * delta)
+		stamina = minf(
+			maximum_stamina,
+			stamina + stamina_recovery_per_second * delta
+		)
 	GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
 
 
@@ -671,6 +723,9 @@ func _can_stand_up() -> bool:
 	var current_capsule := collision_shape.shape as CapsuleShape3D
 	if current_capsule == null:
 		return true
+
+	# Tam ayakta kapsülü taramak zemini de çakışma olarak görebilir. Yalnızca
+	# çömelmiş kapsülün üstüne eklenecek baş/omuz hacmini kontrol ediyoruz.
 	var added_height := _standing_capsule_height - crouch_capsule_height
 	if added_height <= 0.0:
 		return true
