@@ -17,6 +17,7 @@ hud_ammo_label_key = "HUD_AMMO_PISTOL"
 hud_view_scene = ExtResource("2_view")
 world_pickup_texture = ExtResource("3_side")
 supports_ads_pose = true
+ads_fov = 53.0
 hud_zoom_offset = Vector2(-176, 0)
 hud_aim_fire_offset = Vector2(0, 0)
 supports_flashlight = true
