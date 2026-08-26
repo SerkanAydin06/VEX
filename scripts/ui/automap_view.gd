@@ -268,7 +268,9 @@ func _draw_room_cell(cell: Vector2i, source_rect: Rect2, discovered: bool) -> vo
 	draw_rect(cell_rect, fill, true)
 	draw_rect(cell_rect, edge, false, wall_width)
 	if discovered and _show_room_numbers and cell_rect.size.x >= 34.0 and cell_rect.size.y >= 28.0:
-		var room_number := cell.y * _columns + cell.x + 1
+		var room_number := _walkable_order.find(cell) + 1
+		if room_number <= 0:
+			return
 		var font := ThemeDB.fallback_font
 		draw_string(
 			font,
@@ -405,15 +407,24 @@ func _cache_doors(level_root: Node) -> void:
 
 
 func _get_door_color(door: Node3D) -> Color:
-	if bool(door.get("locked")):
+	var access_locked := bool(door.call("is_access_locked")) if door.has_method("is_access_locked") else bool(door.get("locked"))
+	if access_locked:
 		var required_keys_value: Variant = door.get("required_keys")
+		var has_explicit_key := false
 		if required_keys_value is Array:
 			for key_value: Variant in required_keys_value as Array:
-				if StringName(str(key_value)) == &"red":
+				var key_id := StringName(str(key_value))
+				if key_id == &"red":
 					return red_lock_color
-		if StringName(str(door.get("required_key"))) == &"red":
+				if key_id != &"":
+					has_explicit_key = true
+		var required_key := StringName(str(door.get("required_key")))
+		if required_key == &"red":
 			return red_lock_color
-		return blue_lock_color
+		if required_key != &"" or has_explicit_key:
+			return blue_lock_color
+		# Combat/campaign locks have no key color; threat red makes their state clear.
+		return red_lock_color
 	if bool(door.get("is_open")):
 		return open_door_color
 	return normal_door_color
