@@ -55,7 +55,7 @@ adjustment_brightness = 1.15
 
 [node name="LevelTest_5x5Arena" type="Node3D"]
 script = ExtResource("1_script")
-map_revision = "VEX-TEST-R01-5X5-25ROOM"
+map_revision = "VEX-TEST-R02-5X5-25ROOM"
 level_display_name = "LEVEL TEST"
 campaign_completion_stage = 0
 first_objective = "TEST ALL WEAPONS AND ENEMIES"
@@ -153,35 +153,11 @@ position = Vector3(12, 0, 20)
 [node name="Room_C4_R4" parent="Geometry" instance=ExtResource("2_room")]
 position = Vector3(24, 0, 20)
 
-[node name="Outer_West_R0" parent="Geometry" instance=ExtResource("7_outer_v")]
-position = Vector3(-30, 0, -20)
-
-[node name="Outer_East_R0" parent="Geometry" instance=ExtResource("7_outer_v")]
-position = Vector3(30, 0, -20)
-
-[node name="Outer_West_R1" parent="Geometry" instance=ExtResource("7_outer_v")]
-position = Vector3(-30, 0, -10)
-
-[node name="Outer_East_R1" parent="Geometry" instance=ExtResource("7_outer_v")]
-position = Vector3(30, 0, -10)
-
-[node name="Outer_West_R2" parent="Geometry" instance=ExtResource("7_outer_v")]
+[node name="Outer_West" parent="Geometry" instance=ExtResource("7_outer_v")]
 position = Vector3(-30, 0, 0)
 
-[node name="Outer_East_R2" parent="Geometry" instance=ExtResource("7_outer_v")]
+[node name="Outer_East" parent="Geometry" instance=ExtResource("7_outer_v")]
 position = Vector3(30, 0, 0)
-
-[node name="Outer_West_R3" parent="Geometry" instance=ExtResource("7_outer_v")]
-position = Vector3(-30, 0, 10)
-
-[node name="Outer_East_R3" parent="Geometry" instance=ExtResource("7_outer_v")]
-position = Vector3(30, 0, 10)
-
-[node name="Outer_West_R4" parent="Geometry" instance=ExtResource("7_outer_v")]
-position = Vector3(-30, 0, 20)
-
-[node name="Outer_East_R4" parent="Geometry" instance=ExtResource("7_outer_v")]
-position = Vector3(30, 0, 20)
 
 [node name="Outer_North" parent="Geometry" instance=ExtResource("8_outer_h")]
 position = Vector3(0, 0, -25)
