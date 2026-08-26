@@ -82,6 +82,10 @@ def main() -> int:
         ('sprite.scale = base_scale * ads_scale_multiplier', "ADS silah görseli baz scale üzerinden büyütülmüyor"),
         ('sprite.position = base_position', "ADS dışı animasyonlarda baz pozisyona dönüş eksik"),
         ('sprite.scale = base_scale', "ADS dışı animasyonlarda baz scale'e dönüş eksik"),
+        ('_set_ads_reticle_fire_suppressed(requested_animation == &"aim_fire")', "ADS reticle aim_fire başında gizlenmiyor"),
+        ('if sprite.animation == &"aim_fire":', "ADS presenter aim_fire bitişini ayırt etmiyor"),
+        ('_set_ads_reticle_fire_suppressed(false)', "ADS reticle aim_fire sonrasında geri açılmıyor"),
+        ('has_method("set_fire_animation_suppressed")', "Presenter reticle recoil-suppression API'sini kullanmıyor"),
     ]:
         require(presenter, contract, message)
     if 'or Input.is_action_pressed("aim")' in presenter:
@@ -111,6 +115,9 @@ def main() -> int:
         ("draw_line(horizontal_from, horizontal_to", "Ironsight ADS küçük + yatay kolu çizilmiyor"),
         ("draw_line(vertical_from, vertical_to", "Ironsight ADS küçük + dikey kolu çizilmiyor"),
         ('next_style = definition.hud_ads_reticle_style', "ADS reticle stili mevcut silahın WeaponDefinition verisinden gelmiyor"),
+        ("var _fire_animation_suppressed := false", "ADS reticle recoil suppression durumu taşımıyor"),
+        ("func set_fire_animation_suppressed(suppressed: bool) -> void:", "ADS reticle recoil suppression API'si eksik"),
+        ("or _fire_animation_suppressed", "ADS reticle aim_fire sırasında görünürlüğü kapatmıyor"),
     ]:
         require(reticle_script, contract, message)
 
@@ -119,12 +126,6 @@ def main() -> int:
         "p07": 0.64,
         "p14": 0.50,
         "p20": 0.58,
-    }
-    expected_zoom_offset = {
-        "p01": "Vector2(-156, -221)",
-        "p07": "Vector2(-175, -220)",
-        "p14": "Vector2(-162, -194)",
-        "p20": "Vector2(-165, -181)",
     }
     expected_ads_scale = {
         "p01": 1.34,
@@ -149,24 +150,23 @@ def main() -> int:
         )
         require(
             weapon,
-            f"hud_zoom_offset = {expected_zoom_offset[weapon_id]}",
-            f"{weapon_id} ADS zoom görseli ölçülmüş nişan merkezi kalibrasyonunu kullanmıyor",
+            "hud_zoom_offset = Vector2(",
+            f"{weapon_id} ADS zoom görseli mikro-kalibrasyon alanını taşımıyor",
         )
         require(
             weapon,
             f"hud_ads_scale_multiplier = {expected_ads_scale[weapon_id]:.2f}",
             f"{weapon_id} ADS HUD scale değeri ekran altını dolduran kalibrasyonda değil",
         )
-        require(
-            weapon,
-            f'hud_ads_reticle_style = "{expected_reticle_style[weapon_id]}"',
-            f"{weapon_id} beklenen ADS reticle stilini kullanmıyor",
-        )
-        require(
-            weapon,
-            "hud_aim_fire_offset = Vector2(0, 0)",
-            f"{weapon_id} ADS ateş animasyonu zoom baz hizasına ek ofset taşıyor",
-        )
+        style_key = "hud_ads_reticle_style ="
+        expected_style = f'hud_ads_reticle_style = "{expected_reticle_style[weapon_id]}"'
+        if expected_reticle_style[weapon_id] == "small_cross":
+            if style_key in weapon and expected_style not in weapon:
+                ERRORS.append(f"{weapon_id} beklenen small_cross ADS reticle stilini kullanmıyor")
+        else:
+            require(weapon, expected_style, f"{weapon_id} beklenen ADS reticle stilini kullanmıyor")
+        if "hud_aim_fire_offset =" in weapon and "hud_aim_fire_offset = Vector2(0, 0)" not in weapon:
+            ERRORS.append(f"{weapon_id} ADS ateş animasyonu zoom baz hizasına ek ofset taşıyor")
         if "ads_fov =" in weapon:
             ERRORS.append(f"{weapon_id} hâlâ eski mutlak ads_fov değerini taşıyor")
         observed.append(multiplier)
