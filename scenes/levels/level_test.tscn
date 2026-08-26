@@ -1,0 +1,587 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/levels/level_test.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/levels/test_support/test_room.tscn" id="2_room"]
+[ext_resource type="PackedScene" path="res://scenes/levels/test_support/test_open_wall_vertical.tscn" id="3_open_v"]
+[ext_resource type="PackedScene" path="res://scenes/levels/test_support/test_open_wall_horizontal.tscn" id="4_open_h"]
+[ext_resource type="PackedScene" path="res://scenes/levels/test_support/test_door_wall_vertical.tscn" id="5_door_wall"]
+[ext_resource type="PackedScene" path="res://scenes/levels/test_support/test_solid_wall_horizontal.tscn" id="6_solid_h"]
+[ext_resource type="PackedScene" path="res://scenes/levels/test_support/test_outer_wall_vertical.tscn" id="7_outer_v"]
+[ext_resource type="PackedScene" path="res://scenes/levels/test_support/test_outer_wall_horizontal.tscn" id="8_outer_h"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="9_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="10_hud"]
+[ext_resource type="PackedScene" path="res://scenes/props/door_side_slide.tscn" id="11_door"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickup.tscn" id="12_pickup"]
+[ext_resource type="PackedScene" path="res://scenes/actors/ravager.tscn" id="13_ravager"]
+[ext_resource type="PackedScene" path="res://scenes/actors/redviper.tscn" id="14_redviper"]
+[ext_resource type="PackedScene" path="res://scenes/actors/badredviper.tscn" id="15_badredviper"]
+[ext_resource type="PackedScene" path="res://scenes/actors/hellmagma.tscn" id="16_hellmagma"]
+[ext_resource type="PackedScene" path="res://scenes/actors/veilmaw.tscn" id="17_veilmaw"]
+[ext_resource type="PackedScene" path="res://scenes/actors/voidweaver.tscn" id="18_voidweaver"]
+[ext_resource type="PackedScene" path="res://scenes/actors/cinderhound.tscn" id="19_cinderhound"]
+[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="20_room_light"]
+[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_fill.tscn" id="21_spawn_light"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_side.png" id="22_p01"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p07/p07_side.png" id="23_p07"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p14/p14_side.png" id="24_p14"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p20/p20_side.png" id="25_p20"]
+[ext_resource type="Texture2D" path="res://assets/pickups/shotgun.png" id="26_sg04"]
+[ext_resource type="Texture2D" path="res://assets/pickups/ak47.png" id="27_vx47"]
+[ext_resource type="Texture2D" path="res://assets/pickups/mp90.png" id="28_mp90"]
+[ext_resource type="Texture2D" path="res://assets/pickups/ammo_bullets.png" id="29_bullets"]
+[ext_resource type="Texture2D" path="res://assets/pickups/ammo_shells.png" id="30_shells"]
+[ext_resource type="Texture2D" path="res://assets/pickups/ak47_ammo.png" id="31_rifle_ammo"]
+[ext_resource type="Texture2D" path="res://assets/pickups/mp90_ammo.png" id="32_mp90_ammo"]
+[ext_resource type="Texture2D" path="res://assets/pickups/health.png" id="33_health"]
+[ext_resource type="Texture2D" path="res://assets/pickups/armor.png" id="34_armor"]
+[ext_resource type="AudioStream" path="res://assets/audio/game_music_pro.mp3" id="35_music"]
+[ext_resource type="AudioStream" path="res://assets/audio/facility_ambient_pro.mp3" id="36_ambience"]
+
+[sub_resource type="Environment" id="Environment_test"]
+background_mode = 1
+background_color = Color(0.008, 0.01, 0.015, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.36, 0.38, 0.42, 1)
+ambient_light_energy = 1.0
+reflected_light_source = 2
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.04, 0.045, 0.055, 1)
+fog_light_energy = 0.28
+fog_density = 0.0016
+fog_aerial_perspective = 0.08
+adjustment_enabled = true
+adjustment_brightness = 1.15
+
+[node name="LevelTest_5x5Arena" type="Node3D"]
+script = ExtResource("1_script")
+map_revision = "VEX-TEST-R01-5X5-25ROOM"
+level_display_name = "LEVEL TEST"
+campaign_completion_stage = 0
+first_objective = "TEST ALL WEAPONS AND ENEMIES"
+briefing_story = "VEX TEST ARENA"
+briefing_objective = "TEST ALL WEAPONS AND ENEMIES"
+total_secrets = 0
+automap_title = "LEVEL TEST 5x5"
+automap_columns = 5
+automap_rows = 5
+automap_world_min = Vector2(-30, -25)
+automap_world_max = Vector2(30, 25)
+automap_walkable_cells = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(3, 2), Vector2i(4, 2), Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 3), Vector2i(3, 3), Vector2i(4, 3), Vector2i(0, 4), Vector2i(1, 4), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4)])
+automap_start_cell = Vector2i(0, 4)
+automap_exit_cell = Vector2i(0, 4)
+automap_merge_adjacent_cells = false
+automap_show_room_numbers = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." groups=["brightness_environment"]]
+environment = SubResource("Environment_test")
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Room_C0_R0" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-24, 0, -20)
+
+[node name="Room_C1_R0" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-12, 0, -20)
+
+[node name="Room_C2_R0" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(0, 0, -20)
+
+[node name="Room_C3_R0" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(12, 0, -20)
+
+[node name="Room_C4_R0" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(24, 0, -20)
+
+[node name="Room_C0_R1" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-24, 0, -10)
+
+[node name="Room_C1_R1" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-12, 0, -10)
+
+[node name="Room_C2_R1" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(0, 0, -10)
+
+[node name="Room_C3_R1" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(12, 0, -10)
+
+[node name="Room_C4_R1" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(24, 0, -10)
+
+[node name="Room_C0_R2" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-24, 0, 0)
+
+[node name="Room_C1_R2" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-12, 0, 0)
+
+[node name="Room_C2_R2" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(0, 0, 0)
+
+[node name="Room_C3_R2" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(12, 0, 0)
+
+[node name="Room_C4_R2" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(24, 0, 0)
+
+[node name="Room_C0_R3" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-24, 0, 10)
+
+[node name="Room_C1_R3" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-12, 0, 10)
+
+[node name="Room_C2_R3" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(0, 0, 10)
+
+[node name="Room_C3_R3" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(12, 0, 10)
+
+[node name="Room_C4_R3" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(24, 0, 10)
+
+[node name="Room_C0_R4" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-24, 0, 20)
+
+[node name="Room_C1_R4" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(-12, 0, 20)
+
+[node name="Room_C2_R4" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(0, 0, 20)
+
+[node name="Room_C3_R4" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(12, 0, 20)
+
+[node name="Room_C4_R4" parent="Geometry" instance=ExtResource("2_room")]
+position = Vector3(24, 0, 20)
+
+[node name="Outer_West_R0" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(-30, 0, -20)
+
+[node name="Outer_East_R0" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(30, 0, -20)
+
+[node name="Outer_West_R1" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(-30, 0, -10)
+
+[node name="Outer_East_R1" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(30, 0, -10)
+
+[node name="Outer_West_R2" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(-30, 0, 0)
+
+[node name="Outer_East_R2" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(30, 0, 0)
+
+[node name="Outer_West_R3" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(-30, 0, 10)
+
+[node name="Outer_East_R3" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(30, 0, 10)
+
+[node name="Outer_West_R4" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(-30, 0, 20)
+
+[node name="Outer_East_R4" parent="Geometry" instance=ExtResource("7_outer_v")]
+position = Vector3(30, 0, 20)
+
+[node name="Outer_North" parent="Geometry" instance=ExtResource("8_outer_h")]
+position = Vector3(0, 0, -25)
+
+[node name="Outer_South" parent="Geometry" instance=ExtResource("8_outer_h")]
+position = Vector3(0, 0, 25)
+
+[node name="OpenV_B0_R0" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-18, 0, -20)
+
+[node name="OpenV_B0_R1" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-18, 0, -10)
+
+[node name="OpenV_B0_R2" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-18, 0, 0)
+
+[node name="OpenV_B0_R3" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-18, 0, 10)
+
+[node name="StartDoorWall" parent="Geometry" instance=ExtResource("5_door_wall")]
+position = Vector3(-18, 0, 20)
+
+[node name="OpenV_B1_R0" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-6, 0, -20)
+
+[node name="OpenV_B1_R1" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-6, 0, -10)
+
+[node name="OpenV_B1_R2" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-6, 0, 0)
+
+[node name="OpenV_B1_R3" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-6, 0, 10)
+
+[node name="OpenV_B1_R4" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(-6, 0, 20)
+
+[node name="OpenV_B2_R0" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(6, 0, -20)
+
+[node name="OpenV_B2_R1" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(6, 0, -10)
+
+[node name="OpenV_B2_R2" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(6, 0, 0)
+
+[node name="OpenV_B2_R3" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(6, 0, 10)
+
+[node name="OpenV_B2_R4" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(6, 0, 20)
+
+[node name="OpenV_B3_R0" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(18, 0, -20)
+
+[node name="OpenV_B3_R1" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(18, 0, -10)
+
+[node name="OpenV_B3_R2" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(18, 0, 0)
+
+[node name="OpenV_B3_R3" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(18, 0, 10)
+
+[node name="OpenV_B3_R4" parent="Geometry" instance=ExtResource("3_open_v")]
+position = Vector3(18, 0, 20)
+
+[node name="OpenH_B0_C0" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(-24, 0, -15)
+
+[node name="OpenH_B0_C1" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(-12, 0, -15)
+
+[node name="OpenH_B0_C2" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(0, 0, -15)
+
+[node name="OpenH_B0_C3" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(12, 0, -15)
+
+[node name="OpenH_B0_C4" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(24, 0, -15)
+
+[node name="OpenH_B1_C0" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(-24, 0, -5)
+
+[node name="OpenH_B1_C1" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(-12, 0, -5)
+
+[node name="OpenH_B1_C2" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(0, 0, -5)
+
+[node name="OpenH_B1_C3" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(12, 0, -5)
+
+[node name="OpenH_B1_C4" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(24, 0, -5)
+
+[node name="OpenH_B2_C0" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(-24, 0, 5)
+
+[node name="OpenH_B2_C1" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(-12, 0, 5)
+
+[node name="OpenH_B2_C2" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(0, 0, 5)
+
+[node name="OpenH_B2_C3" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(12, 0, 5)
+
+[node name="OpenH_B2_C4" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(24, 0, 5)
+
+[node name="StartRoom_NorthSolid" parent="Geometry" instance=ExtResource("6_solid_h")]
+position = Vector3(-24, 0, 15)
+
+[node name="OpenH_B3_C1" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(-12, 0, 15)
+
+[node name="OpenH_B3_C2" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(0, 0, 15)
+
+[node name="OpenH_B3_C3" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(12, 0, 15)
+
+[node name="OpenH_B3_C4" parent="Geometry" instance=ExtResource("4_open_h")]
+position = Vector3(24, 0, 15)
+
+[node name="Doors" type="Node3D" parent="."]
+
+[node name="StartRoomDoor" parent="Doors" instance=ExtResource("11_door")]
+position = Vector3(-18, 2.24, 20)
+display_name = "TEST ALANI KAPISI"
+locked = false
+automatic_open = false
+auto_close = false
+
+[node name="RoomLights" type="Node3D" parent="."]
+
+[node name="CeilingWhite_C0_R0" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-24, 6.82, -20)
+
+[node name="CeilingWhite_C1_R0" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-12, 6.82, -20)
+
+[node name="CeilingWhite_C2_R0" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(0, 6.82, -20)
+
+[node name="CeilingWhite_C3_R0" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(12, 6.82, -20)
+
+[node name="CeilingWhite_C4_R0" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(24, 6.82, -20)
+
+[node name="CeilingWhite_C0_R1" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-24, 6.82, -10)
+
+[node name="CeilingWhite_C1_R1" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-12, 6.82, -10)
+
+[node name="CeilingWhite_C2_R1" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(0, 6.82, -10)
+
+[node name="CeilingWhite_C3_R1" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(12, 6.82, -10)
+
+[node name="CeilingWhite_C4_R1" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(24, 6.82, -10)
+
+[node name="CeilingWhite_C0_R2" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-24, 6.82, 0)
+
+[node name="CeilingWhite_C1_R2" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-12, 6.82, 0)
+
+[node name="CeilingWhite_C2_R2" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(0, 6.82, 0)
+
+[node name="CeilingWhite_C3_R2" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(12, 6.82, 0)
+
+[node name="CeilingWhite_C4_R2" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(24, 6.82, 0)
+
+[node name="CeilingWhite_C0_R3" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-24, 6.82, 10)
+
+[node name="CeilingWhite_C1_R3" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-12, 6.82, 10)
+
+[node name="CeilingWhite_C2_R3" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(0, 6.82, 10)
+
+[node name="CeilingWhite_C3_R3" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(12, 6.82, 10)
+
+[node name="CeilingWhite_C4_R3" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(24, 6.82, 10)
+
+[node name="CeilingWhite_C0_R4" parent="RoomLights" instance=ExtResource("21_spawn_light")]
+position = Vector3(-24, 6.82, 20)
+
+[node name="CeilingWhite_C1_R4" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(-12, 6.82, 20)
+
+[node name="CeilingWhite_C2_R4" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(0, 6.82, 20)
+
+[node name="CeilingWhite_C3_R4" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(12, 6.82, 20)
+
+[node name="CeilingWhite_C4_R4" parent="RoomLights" instance=ExtResource("20_room_light")]
+position = Vector3(24, 6.82, 20)
+
+[node name="Player" parent="." instance=ExtResource("9_player")]
+position = Vector3(-24, 1, 20)
+rotation = Vector3(0, -1.5707963, 0)
+
+[node name="HUD" parent="." instance=ExtResource("10_hud")]
+
+[node name="Pickups" type="Node3D" parent="."]
+
+[node name="Weapon_P01" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-16.2, 0.9, 18.2)
+pickup_id = &"level_test_weapon_p01"
+pickup_type = "p01"
+amount = 1
+display_name = "WEAPON_P01_NAME"
+persist_collection = false
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("22_p01")
+
+[node name="Weapon_P07" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-13.4, 0.9, 18.2)
+pickup_id = &"level_test_weapon_p07"
+pickup_type = "p07"
+amount = 1
+display_name = "WEAPON_P07_NAME"
+persist_collection = false
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("23_p07")
+
+[node name="Weapon_P14" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-10.6, 0.9, 18.2)
+pickup_id = &"level_test_weapon_p14"
+pickup_type = "p14"
+amount = 1
+display_name = "WEAPON_P14_NAME"
+persist_collection = false
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("24_p14")
+
+[node name="Weapon_P20" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-7.8, 0.9, 18.2)
+pickup_id = &"level_test_weapon_p20"
+pickup_type = "p20"
+amount = 1
+display_name = "WEAPON_P20_NAME"
+persist_collection = false
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("25_p20")
+
+[node name="Weapon_SG04" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-14.8, 0.9, 22.0)
+pickup_id = &"level_test_weapon_sg04"
+pickup_type = "sg04"
+amount = 1
+display_name = "WEAPON_SG04_NAME"
+persist_collection = false
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("26_sg04")
+
+[node name="Weapon_VX47" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-11.4, 0.9, 22.0)
+pickup_id = &"level_test_weapon_vx47"
+pickup_type = "vx47"
+amount = 1
+display_name = "WEAPON_VX47_NAME"
+persist_collection = false
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("27_vx47")
+
+[node name="Weapon_MP90" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-8.0, 0.9, 22.0)
+pickup_id = &"level_test_weapon_mp90"
+pickup_type = "mp90"
+amount = 1
+display_name = "WEAPON_MP90_NAME"
+persist_collection = false
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("28_mp90")
+
+[node name="Supply_Bullets" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-3.8, 0.9, 18.3)
+pickup_id = &"level_test_supply_bullets"
+pickup_type = "bullets"
+amount = 180
+display_name = "MERMİ"
+persist_collection = false
+spawn_max_difficulty = 3
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("29_bullets")
+
+[node name="Supply_Shells" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(0, 0.9, 18.3)
+pickup_id = &"level_test_supply_shells"
+pickup_type = "shells"
+amount = 60
+display_name = "POMPALI FİŞEĞİ"
+persist_collection = false
+spawn_max_difficulty = 3
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("30_shells")
+
+[node name="Supply_RifleAmmo" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(3.8, 0.9, 18.3)
+pickup_id = &"level_test_supply_rifle_ammo"
+pickup_type = "rifle_ammo"
+amount = 180
+display_name = "TÜFEK MÜHİMMATI"
+persist_collection = false
+spawn_max_difficulty = 3
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("31_rifle_ammo")
+
+[node name="Supply_MP90Ammo" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(-2.8, 0.9, 22.1)
+pickup_id = &"level_test_supply_mp90_ammo"
+pickup_type = "mp90_ammo"
+amount = 180
+display_name = "MP90 MÜHİMMATI"
+persist_collection = false
+spawn_max_difficulty = 3
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("32_mp90_ammo")
+
+[node name="Supply_Health" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(0.7, 0.9, 22.1)
+pickup_id = &"level_test_supply_health"
+pickup_type = "health"
+amount = 100
+display_name = "SAĞLIK"
+persist_collection = false
+spawn_max_difficulty = 3
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("33_health")
+
+[node name="Supply_Armor" parent="Pickups" instance=ExtResource("12_pickup")]
+position = Vector3(4.2, 0.9, 22.1)
+pickup_id = &"level_test_supply_armor"
+pickup_type = "armor"
+amount = 100
+display_name = "ZIRH"
+persist_collection = false
+spawn_max_difficulty = 3
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("34_armor")
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="Ravager" parent="Enemies" instance=ExtResource("13_ravager")]
+position = Vector3(12, 1.2, 20)
+enemy_id = &"level_test_ravager"
+spawn_min_difficulty = 0
+
+[node name="CinderHound" parent="Enemies" instance=ExtResource("19_cinderhound")]
+position = Vector3(24, 1.2, 20)
+enemy_id = &"level_test_cinderhound"
+spawn_min_difficulty = 0
+
+[node name="RedViper" parent="Enemies" instance=ExtResource("14_redviper")]
+position = Vector3(24, 1.2, 10)
+enemy_id = &"level_test_redviper"
+spawn_min_difficulty = 0
+
+[node name="BadRedViper" parent="Enemies" instance=ExtResource("15_badredviper")]
+position = Vector3(24, 1.2, 0)
+enemy_id = &"level_test_badredviper"
+spawn_min_difficulty = 0
+
+[node name="Veilmaw" parent="Enemies" instance=ExtResource("17_veilmaw")]
+position = Vector3(0, 1.2, 0)
+enemy_id = &"level_test_veilmaw"
+spawn_min_difficulty = 0
+
+[node name="Voidweaver" parent="Enemies" instance=ExtResource("18_voidweaver")]
+position = Vector3(0, 1.2, -20)
+enemy_id = &"level_test_voidweaver"
+spawn_min_difficulty = 0
+
+[node name="HellMagma" parent="Enemies" instance=ExtResource("16_hellmagma")]
+position = Vector3(24, 1.4, -20)
+enemy_id = &"level_test_hellmagma"
+spawn_min_difficulty = 0
+
+[node name="LevelMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("35_music")
+volume_db = -13.0
+bus = &"Music"
+
+[node name="AmbientLoop" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("36_ambience")
+volume_db = -10.0
+bus = &"Ambient"
