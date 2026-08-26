@@ -26,6 +26,8 @@ def main() -> int:
     player = read("scripts/player/player.gd")
     controller = read("scripts/player/weapon_controller.gd")
     presenter = read("scripts/ui/hud_weapon_presenter.gd")
+    reticle_script = read("scripts/ui/ads_reticle.gd")
+    reticle_scene = read("scenes/ui/ads_reticle.tscn")
 
     require(
         definition,
@@ -57,10 +59,36 @@ def main() -> int:
     for contract, message in [
         ("return player != null and is_instance_valid(player) and player.is_aiming", "HUD zoom pozu gerçek player.is_aiming durumuna bağlı değil"),
         ("crosshair_node.visible = not _is_weapon_ads_active()", "ADS sırasında normal crosshair gizlenmiyor"),
+        ('ADS_RETICLE_SCENE := preload("res://scenes/ui/ads_reticle.tscn")', "HUD presenter ADS reticle sahnesini yüklemiyor"),
+        ("_ensure_ads_reticle()", "HUD presenter ADS reticle kurulumunu çağırmıyor"),
+        ("hud_root.add_child(_ads_reticle)", "ADS reticle HUD Root altına eklenmiyor"),
     ]:
         require(presenter, contract, message)
     if 'or Input.is_action_pressed("aim")' in presenter:
         ERRORS.append("HUD presenter hâlâ raw aim input ile sahte ADS gösterebiliyor")
+
+    for contract, message in [
+        ('anchors_preset = 8', "ADS reticle ekran merkezine anchor'lı değil"),
+        ('anchor_left = 0.5', "ADS reticle yatay merkez anchor'ı eksik"),
+        ('anchor_top = 0.5', "ADS reticle dikey merkez anchor'ı eksik"),
+        ('offset_left = -12.0', "ADS reticle sol offset sözleşmesi bozuk"),
+        ('offset_right = 12.0', "ADS reticle sağ offset sözleşmesi bozuk"),
+        ('[node name="CenterDot" type="ColorRect" parent="."]', "ADS reticle merkez noktası eksik"),
+        ('[node name="LeftArm" type="ColorRect" parent="."]', "ADS reticle sol kolu eksik"),
+        ('[node name="RightArm" type="ColorRect" parent="."]', "ADS reticle sağ kolu eksik"),
+        ('[node name="TopArm" type="ColorRect" parent="."]', "ADS reticle üst kolu eksik"),
+        ('[node name="BottomArm" type="ColorRect" parent="."]', "ADS reticle alt kolu eksik"),
+    ]:
+        require(reticle_scene, contract, message)
+
+    for contract, message in [
+        ("or not player.is_aiming", "ADS reticle gerçek player.is_aiming durumuna bağlı değil"),
+        ('get_node_or_null("MapOverlay")', "ADS reticle automap sırasında gizlenmiyor"),
+        ('get_node_or_null("PauseMenu")', "ADS reticle pause menüsünde gizlenmiyor"),
+        ("GameState.hit_confirmed.connect(_on_hit_confirmed)", "ADS reticle hit feedback almıyor"),
+        ("GameState.headshot_confirmed.connect(_on_headshot_confirmed)", "ADS reticle headshot feedback almıyor"),
+    ]:
+        require(reticle_script, contract, message)
 
     expected_multiplier = {
         "p01": 0.80,
