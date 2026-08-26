@@ -1,14 +1,18 @@
 class_name VexHudWeaponPresenter
 extends Node
 
+const ADS_RETICLE_SCENE := preload("res://scenes/ui/ads_reticle.tscn")
+
 var _weapon_layer: Control = null
 var _weapon_sprites: Dictionary = {}
 var _current_weapon_id: StringName = &""
 var _inactive_seconds := 0.0
+var _ads_reticle: Control = null
 
 
 func setup(weapon_layer: Control) -> void:
 	_weapon_layer = weapon_layer
+	_ensure_ads_reticle()
 
 
 func set_current_weapon(weapon_id: StringName) -> void:
@@ -80,6 +84,21 @@ func update(delta: float, blocked: bool) -> void:
 	if sprite.animation in [&"fire", &"aim_fire", &"reload", &"equip"] and sprite.is_playing():
 		return
 	_apply_rest_pose(sprite, definition)
+
+
+func _ensure_ads_reticle() -> void:
+	if _ads_reticle != null and is_instance_valid(_ads_reticle):
+		return
+	if _weapon_layer == null:
+		return
+	var hud_root := _weapon_layer.get_parent() as Control
+	if hud_root == null:
+		return
+	_ads_reticle = ADS_RETICLE_SCENE.instantiate() as Control
+	if _ads_reticle == null:
+		push_warning("ADS reticle sahnesinin kökü Control olmalı")
+		return
+	hud_root.add_child(_ads_reticle)
 
 
 func _ensure_weapon_sprite_ready(weapon_id: StringName) -> void:
