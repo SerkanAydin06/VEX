@@ -39,6 +39,12 @@ def main() -> int:
         '@export_range(1.0, 1.5, 0.01) var hud_ads_scale_multiplier := 1.0',
         "WeaponDefinition ADS HUD scale tuning alanını taşımıyor",
     )
+    require(
+        definition,
+        '@export_enum("small_cross", "red_dot") var hud_ads_reticle_style := "small_cross"',
+        "WeaponDefinition silah-bazlı ADS reticle stilini taşımıyor",
+    )
+    require(definition, "+X silah/arpacığı sağa", "hud_zoom_offset mikro-kalibrasyon yönü belgelenmemiş")
     if 'var ads_fov := ' in definition:
         ERRORS.append("WeaponDefinition hâlâ mutlak ads_fov otoritesi taşıyor")
 
@@ -87,11 +93,10 @@ def main() -> int:
         ('anchor_top = 0.5', "ADS reticle dikey merkez anchor'ı eksik"),
         ('offset_left = -12.0', "ADS reticle sol offset sözleşmesi bozuk"),
         ('offset_right = 12.0', "ADS reticle sağ offset sözleşmesi bozuk"),
-        ('[node name="CenterDot" type="ColorRect" parent="."]', "ADS reticle merkez noktası eksik"),
-        ('[node name="LeftArm" type="ColorRect" parent="."]', "ADS reticle sol kolu eksik"),
-        ('[node name="RightArm" type="ColorRect" parent="."]', "ADS reticle sağ kolu eksik"),
-        ('[node name="TopArm" type="ColorRect" parent="."]', "ADS reticle üst kolu eksik"),
-        ('[node name="BottomArm" type="ColorRect" parent="."]', "ADS reticle alt kolu eksik"),
+        ('cross_half_length = 4.0', "Ironsight ADS + işareti küçük kalibrasyonda değil"),
+        ('cross_thickness = 1.25', "Ironsight ADS + işareti ince kalibrasyonda değil"),
+        ('dot_radius = 1.8', "Optik ADS kırmızı nokta boyutu kalibrasyonda değil"),
+        ('dot_outline_radius = 3.0', "Optik ADS nokta konturu kalibrasyonda değil"),
     ]:
         require(reticle_scene, contract, message)
 
@@ -101,6 +106,11 @@ def main() -> int:
         ('get_node_or_null("PauseMenu")', "ADS reticle pause menüsünde gizlenmiyor"),
         ("GameState.hit_confirmed.connect(_on_hit_confirmed)", "ADS reticle hit feedback almıyor"),
         ("GameState.headshot_confirmed.connect(_on_headshot_confirmed)", "ADS reticle headshot feedback almıyor"),
+        ('if _reticle_style == "red_dot"', "ADS reticle optik red-dot stilini çizmiyor"),
+        ("draw_circle(center, dot_radius, _display_color)", "Optik ADS hedef noktası gerçek küçük nokta olarak çizilmiyor"),
+        ("draw_line(horizontal_from, horizontal_to", "Ironsight ADS küçük + yatay kolu çizilmiyor"),
+        ("draw_line(vertical_from, vertical_to", "Ironsight ADS küçük + dikey kolu çizilmiyor"),
+        ('next_style = definition.hud_ads_reticle_style', "ADS reticle stili mevcut silahın WeaponDefinition verisinden gelmiyor"),
     ]:
         require(reticle_script, contract, message)
 
@@ -122,6 +132,12 @@ def main() -> int:
         "p14": 1.29,
         "p20": 1.27,
     }
+    expected_reticle_style = {
+        "p01": "small_cross",
+        "p07": "small_cross",
+        "p14": "red_dot",
+        "p20": "red_dot",
+    }
     observed: list[float] = []
     for weapon_id, multiplier in expected_multiplier.items():
         weapon = read(f"resources/weapons/{weapon_id}.tres")
@@ -140,6 +156,11 @@ def main() -> int:
             weapon,
             f"hud_ads_scale_multiplier = {expected_ads_scale[weapon_id]:.2f}",
             f"{weapon_id} ADS HUD scale değeri ekran altını dolduran kalibrasyonda değil",
+        )
+        require(
+            weapon,
+            f'hud_ads_reticle_style = "{expected_reticle_style[weapon_id]}"',
+            f"{weapon_id} beklenen ADS reticle stilini kullanmıyor",
         )
         require(
             weapon,
