@@ -601,12 +601,14 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 	var camera: Camera3D = _player.get_view_camera()
 	var space_state: PhysicsDirectSpaceState3D = camera.get_world_3d().direct_space_state
 
-	# Atış yönünü artık ekran merkezinden değil, HUD'daki gerçek nişangah
-	# konumundan hesapla. Nişangah sahnede sola/yukarı taşınsa bile mermi
-	# tam onun gösterdiği noktaya gider.
+	# ADS sırasında optik/arpacık ekran merkezini temsil eder; hitscan da tam
+	# bu merkezden hesaplanır. Hip-fire sırasında ise hareketli HUD crosshair'i
+	# atış otoritesi olmaya devam eder.
 	var aim_screen_position: Vector2 = camera.get_viewport().get_visible_rect().size * 0.5
+	var uses_ads_optical_center := _player.is_aiming and weapon.supports_ads_pose
 	if (
-		GameState.hud != null
+		not uses_ads_optical_center
+		and GameState.hud != null
 		and is_instance_valid(GameState.hud)
 		and GameState.hud.has_method("get_crosshair_screen_position")
 	):
