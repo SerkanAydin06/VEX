@@ -49,7 +49,7 @@ def main() -> int:
         check_res_paths(path, text)
 
     for contract in [
-        'map_revision = "VEX-TEST-R01-5X5-25ROOM"',
+        'map_revision = "VEX-TEST-R02-5X5-25ROOM"',
         "automap_columns = 5",
         "automap_rows = 5",
         "automap_world_min = Vector2(-30, -25)",
@@ -68,6 +68,35 @@ def main() -> int:
     expected_rooms = {f"Room_C{x}_R{z}" for z in range(5) for x in range(5)}
     if len(room_names) != 25 or set(room_names) != expected_rooms:
         fail(f"Level Test oda grid'i 5x5 / 25 oda değil: {len(room_names)}")
+
+    exterior_nodes = re.findall(
+        r'^\[node name="(Outer_[^"]+)" parent="Geometry" instance=ExtResource\("(7_outer_v|8_outer_h)"\)\]$',
+        scene,
+        re.M,
+    )
+    expected_exterior = {
+        ("Outer_West", "7_outer_v"),
+        ("Outer_East", "7_outer_v"),
+        ("Outer_North", "8_outer_h"),
+        ("Outer_South", "8_outer_h"),
+    }
+    if set(exterior_nodes) != expected_exterior or len(exterior_nodes) != 4:
+        fail(f"Level Test dış kabuğu dört tek-parça cephe değil: {exterior_nodes}")
+    for obsolete in ["Outer_West_R", "Outer_East_R"]:
+        if obsolete in scene:
+            fail(f"Level Test eski segmentli dış cepheyi hâlâ içeriyor: {obsolete}")
+    for contract in [
+        '[node name="Outer_West" parent="Geometry" instance=ExtResource("7_outer_v")]',
+        'position = Vector3(-30, 0, 0)',
+        '[node name="Outer_East" parent="Geometry" instance=ExtResource("7_outer_v")]',
+        'position = Vector3(30, 0, 0)',
+        '[node name="Outer_North" parent="Geometry" instance=ExtResource("8_outer_h")]',
+        'position = Vector3(0, 0, -25)',
+        '[node name="Outer_South" parent="Geometry" instance=ExtResource("8_outer_h")]',
+        'position = Vector3(0, 0, 25)',
+    ]:
+        if contract not in scene:
+            fail(f"Level Test dış cephe konumu eksik: {contract}")
 
     door_nodes = re.findall(
         r'^\[node name="([^"]+)" parent="Doors" instance=ExtResource\("11_door"\)\]$',
@@ -166,6 +195,36 @@ def main() -> int:
     ]:
         if contract not in door_wall:
             fail(f"Level Test canonical kapı duvarı ölçüsü bozuk: {contract}")
+
+    solid_h = support[support_paths[4]]
+    for contract in [
+        '[node name="TestSolidWallHorizontal" type="Node3D"]',
+        '[node name="Wall" parent="." instance=ExtResource("1_piece")]',
+        "position = Vector3(0, 3.5, 0)",
+        "piece_size = Vector3(11.6, 7, 0.4)",
+    ]:
+        if contract not in solid_h:
+            fail(f"Level Test solid duvar standardı bozuk: {contract}")
+
+    outer_v = support[support_paths[5]]
+    for contract in [
+        '[node name="TestOuterWallVertical" type="Node3D"]',
+        '[node name="Wall" parent="." instance=ExtResource("1_piece")]',
+        "position = Vector3(0, 3.5, 0)",
+        "piece_size = Vector3(0.4, 7, 50)",
+    ]:
+        if contract not in outer_v:
+            fail(f"Level Test batı/doğu dış duvar standardı bozuk: {contract}")
+
+    outer_h = support[support_paths[6]]
+    for contract in [
+        '[node name="TestOuterWallHorizontal" type="Node3D"]',
+        '[node name="Wall" parent="." instance=ExtResource("1_piece")]',
+        "position = Vector3(0, 3.5, 0)",
+        "piece_size = Vector3(59.6, 7, 0.4)",
+    ]:
+        if contract not in outer_h:
+            fail(f"Level Test kuzey/güney dış duvar standardı bozuk: {contract}")
 
     if "extends VexBaseLevel" not in controller:
         fail("Level Test VexBaseLevel standardını kullanmıyor")
