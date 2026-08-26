@@ -23,6 +23,9 @@ extends Resource
 @export var hud_auto_lower_enabled := false
 @export_range(1.0, 30.0, 0.5) var hud_lower_after_seconds := 6.0
 @export var hud_zoom_offset := Vector2.ZERO
+## ADS pozu, ölçülmüş nişan noktasını ekran merkezinde sabit tutarak bu oranla büyütülür.
+## 1.0 = normal HUD ölçeği; 1.30 = ADS görselini yaklaşık %30 büyütür.
+@export_range(1.0, 1.5, 0.01) var hud_ads_scale_multiplier := 1.0
 @export var hud_aim_fire_offset := Vector2.ZERO
 @export var hud_lowered_offset := Vector2.ZERO
 
