@@ -6,26 +6,14 @@ extends Node3D
 @export var gate_enemy_ids: Array[StringName] = []
 @export var gate_display_name_keys: PackedStringArray = []
 @export var gate_clear_objective_keys: PackedStringArray = []
-@export var gate_indicator_paths: Array[NodePath] = []
 
-@export_category("02 - Durum Işığı Değişimi")
+@export_category("02 - Değiştirilen Statik Işıklar")
 @export var replaced_static_light_paths: Array[NodePath] = []
-
-@export_category("03 - Protokol Tamamlama")
-@export_range(-1, 16, 1) var protocol_completion_gate_index := -1
-@export var protocol_complete_notification_key := "LEVEL01_TUTORIAL_COMPLETE_HINT"
 
 
 func _ready() -> void:
 	_hide_replaced_static_lights()
 	_configure_combat_gates()
-	if not GameState.enemy_defeated.is_connected(_on_enemy_defeated):
-		GameState.enemy_defeated.connect(_on_enemy_defeated)
-
-
-func _exit_tree() -> void:
-	if GameState.enemy_defeated.is_connected(_on_enemy_defeated):
-		GameState.enemy_defeated.disconnect(_on_enemy_defeated)
 
 
 func _configure_combat_gates() -> void:
@@ -44,12 +32,15 @@ func _configure_combat_gates() -> void:
 
 		if index < gate_display_name_keys.size() and not gate_display_name_keys[index].is_empty():
 			door.display_name = gate_display_name_keys[index]
+		if index < gate_clear_objective_keys.size():
+			door.objective_on_combat_clear = gate_clear_objective_keys[index]
 
-		# Kapı _ready() aşamasını daha önce tamamlamış olabilir. Combat kilidinin
-		# gerçek otoritesi required_enemy_ids + GameState olduğundan burada yalnız
-		# sahne verisini bağlarız; açılma bildirimi/indikasyonu bu akış tarafından
-		# enemy_defeated sinyalinden deterministik olarak güncellenir.
-		_set_gate_indicator(index, not GameState.was_enemy_defeated(enemy_id))
+		# Overlay child sahnesi ana Level 1 ağacına _ready sonrasında eklenir.
+		# Bu nedenle kapının mevcut combat-lock cache'ini sahne verisi bağlandıktan
+		# sonra bir kez yenileriz. Bundan sonraki tüm açılma ve sinyal davranışı
+		# canonical VexDoor içinde kalır.
+		door._combat_lock_was_active = door._has_active_combat_lock()
+		door._emit_lock_state()
 
 
 func _hide_replaced_static_lights() -> void:
@@ -59,35 +50,3 @@ func _hide_replaced_static_lights() -> void:
 			push_warning("VEX-01 değiştirilecek statik kapı ışığı bulunamadı: %s" % light_path)
 			continue
 		light.visible = false
-
-
-func _on_enemy_defeated(enemy_id: StringName) -> void:
-	for index in gate_enemy_ids.size():
-		if gate_enemy_ids[index] != enemy_id:
-			continue
-		_set_gate_indicator(index, false)
-		GameState.notify("DOOR_COMBAT_CLEARED")
-		if index < gate_clear_objective_keys.size():
-			var objective_key := gate_clear_objective_keys[index]
-			if not objective_key.is_empty():
-				GameState.set_objective(objective_key)
-		if index == protocol_completion_gate_index and not protocol_complete_notification_key.is_empty():
-			GameState.notify(protocol_complete_notification_key)
-		return
-
-
-func _set_gate_indicator(index: int, locked: bool) -> void:
-	if index < 0 or index >= gate_indicator_paths.size():
-		return
-	var indicator_root := get_node_or_null(gate_indicator_paths[index]) as Node3D
-	if indicator_root == null:
-		push_warning("VEX-01 eğitim kapısı durum ışığı bulunamadı: %s" % gate_indicator_paths[index])
-		return
-	for child: Node in indicator_root.get_children():
-		if not (child is Node3D):
-			continue
-		var indicator := child as Node3D
-		if indicator.name.begins_with("Locked"):
-			indicator.visible = locked
-		elif indicator.name.begins_with("Unlocked"):
-			indicator.visible = not locked
