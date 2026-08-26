@@ -18,6 +18,7 @@ func setup(weapon_layer: Control) -> void:
 
 func set_current_weapon(weapon_id: StringName) -> void:
 	_current_weapon_id = weapon_id
+	_set_ads_reticle_fire_suppressed(false)
 	if weapon_id == &"":
 		_set_weapon_sprite_visibility(weapon_id)
 		return
@@ -34,6 +35,7 @@ func set_current_weapon(weapon_id: StringName) -> void:
 func play_action(weapon_id: StringName, action: StringName) -> void:
 	_current_weapon_id = weapon_id
 	if weapon_id == &"":
+		_set_ads_reticle_fire_suppressed(false)
 		_set_weapon_sprite_visibility(weapon_id)
 		return
 	var definition := _get_weapon_definition(weapon_id)
@@ -43,6 +45,7 @@ func play_action(weapon_id: StringName, action: StringName) -> void:
 	var sprite := _get_weapon_sprite(weapon_id)
 	_set_weapon_sprite_visibility(weapon_id)
 	if sprite == null:
+		_set_ads_reticle_fire_suppressed(false)
 		return
 	var requested_animation := action
 	if (
@@ -54,6 +57,7 @@ func play_action(weapon_id: StringName, action: StringName) -> void:
 		and sprite.sprite_frames.has_animation(&"aim_fire")
 	):
 		requested_animation = &"aim_fire"
+	_set_ads_reticle_fire_suppressed(requested_animation == &"aim_fire")
 	if sprite.sprite_frames != null and sprite.sprite_frames.has_animation(requested_animation):
 		if action == &"fire":
 			sprite.stop()
@@ -100,6 +104,13 @@ func _ensure_ads_reticle() -> void:
 		push_warning("ADS reticle sahnesinin kökü Control olmalı")
 		return
 	hud_root.add_child(_ads_reticle)
+
+
+func _set_ads_reticle_fire_suppressed(suppressed: bool) -> void:
+	if _ads_reticle == null or not is_instance_valid(_ads_reticle):
+		return
+	if _ads_reticle.has_method("set_fire_animation_suppressed"):
+		_ads_reticle.call("set_fire_animation_suppressed", suppressed)
 
 
 func _ensure_weapon_sprite_ready(weapon_id: StringName) -> void:
@@ -221,6 +232,8 @@ func _weapon_frame_key(animation_name: StringName, frame_index: int) -> String:
 func _on_weapon_animation_finished(sprite: AnimatedSprite2D, weapon_id: StringName) -> void:
 	if weapon_id != _current_weapon_id or sprite != _get_weapon_sprite(_current_weapon_id):
 		return
+	if sprite.animation == &"aim_fire":
+		_set_ads_reticle_fire_suppressed(false)
 	var definition := _get_weapon_definition(weapon_id)
 	if definition != null and (definition.supports_ads_pose or definition.supports_lowered_pose):
 		_apply_rest_pose(sprite, definition)
