@@ -86,13 +86,21 @@ func get_campaign_completion_stage() -> int:
 
 
 func get_automap_config() -> Dictionary:
+	var ordered_cells: Array[Vector2i] = automap_walkable_cells.duplicate()
+	var start_index := ordered_cells.find(automap_start_cell)
+	var exit_index := ordered_cells.find(automap_exit_cell)
+	# Oda numarası harita dosyasındaki fiziksel grid indeksinden değil görev
+	# başlangıcından çıkışa doğru okunur. Eski sahnelerde hücre listesi ters yönde
+	# tutulmuş olsa bile Inspector verisini değiştirmeden doğru 01..N sırası sağlanır.
+	if start_index >= 0 and exit_index >= 0 and start_index > exit_index:
+		ordered_cells.reverse()
 	return {
 		"title": automap_title,
 		"columns": automap_columns,
 		"rows": automap_rows,
 		"world_min": automap_world_min,
 		"world_max": automap_world_max,
-		"walkable_cells": automap_walkable_cells,
+		"walkable_cells": ordered_cells,
 		"start_cell": automap_start_cell,
 		"exit_cell": automap_exit_cell,
 		"merge_adjacent_cells": automap_merge_adjacent_cells,
