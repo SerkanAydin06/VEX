@@ -39,6 +39,9 @@ def main() -> int:
         ("current_weapon != null and current_weapon.supports_ads_pose", "Player ADS desteğini silah verisinden doğrulamıyor"),
         ('is_aiming = supports_ads and Input.is_action_pressed("aim")', "ADS durumu desteklemeyen silahlarda engellenmiyor"),
         ("current_weapon.ads_fov if is_aiming else _default_fov", "Kamera FOV'u mevcut silahın ads_fov değerini kullanmıyor"),
+        ("Vector2.ZERO", "ADS sırasında HUD nişangahı optik merkezde sabitlenmiyor"),
+        ("if is_aiming", "ADS HUD recoil ayrımı eksik"),
+        ('GameState.hud.call("set_weapon_recoil_offset", hud_recoil)', "HUD recoil/optik merkez senkronu eksik"),
     ]:
         require(player, contract, message)
 
