@@ -28,3 +28,5 @@ jobs:
         run: python tests/level_test_audit.py
       - name: Validate weapon ADS targeting
         run: python tests/weapon_ads_audit.py
+      - name: Probe ADS sprite geometry
+        run: python tools/ads_sprite_probe.py
