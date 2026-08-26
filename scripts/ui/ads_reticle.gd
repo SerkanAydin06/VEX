@@ -17,6 +17,7 @@ var _feedback_remaining := 0.0
 var _headshot_feedback := false
 var _reticle_style := "small_cross"
 var _display_color := Color(0.93, 0.98, 1.0, 0.96)
+var _fire_animation_suppressed := false
 
 
 func _ready() -> void:
@@ -55,6 +56,13 @@ func _draw() -> void:
 	draw_line(vertical_from, vertical_to, _display_color, cross_thickness, true)
 
 
+func set_fire_animation_suppressed(suppressed: bool) -> void:
+	if _fire_animation_suppressed == suppressed:
+		return
+	_fire_animation_suppressed = suppressed
+	_sync_visibility()
+
+
 func _sync_visibility() -> void:
 	var player := GameState.player as VexPlayer
 	if player != null and is_instance_valid(player):
@@ -64,6 +72,7 @@ func _sync_visibility() -> void:
 		or not is_instance_valid(player)
 		or player.is_dead
 		or not player.is_aiming
+		or _fire_animation_suppressed
 		or get_tree().paused
 	):
 		visible = false
