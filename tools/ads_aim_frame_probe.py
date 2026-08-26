@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 from pathlib import Path
+import sys
 
-from tools.ads_sprite_probe import ROOT, WEAPONS, alignment_offset, detect_sight, load_png
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ads_sprite_probe import ROOT, WEAPONS, alignment_offset, detect_sight, load_png
 
 
 for weapon_id in WEAPONS:
