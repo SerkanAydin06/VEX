@@ -91,10 +91,10 @@ def main() -> int:
         require(reticle_script, contract, message)
 
     expected_multiplier = {
-        "p01": 0.80,
-        "p07": 0.72,
-        "p14": 0.58,
-        "p20": 0.65,
+        "p01": 0.72,
+        "p07": 0.64,
+        "p14": 0.50,
+        "p20": 0.58,
     }
     observed: list[float] = []
     for weapon_id, multiplier in expected_multiplier.items():
