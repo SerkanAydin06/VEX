@@ -69,7 +69,6 @@ def check_res_paths() -> None:
             if any(character in resource for character in "%{}"):
                 continue
             relative = resource.removeprefix("res://")
-            # Godot generates .translation imports from the CSV during import.
             if relative.startswith("translations/vex.") and relative.endswith(".translation"):
                 if (ROOT / "translations/vex.csv").exists():
                     continue
@@ -79,29 +78,18 @@ def check_res_paths() -> None:
 
 def check_core_files() -> None:
     required = [
-        "project.godot",
-        "STANDART.txt",
-        "Story_VEX.md",
-        "scenes/player/player.tscn",
-        "scripts/player/player.gd",
-        "scripts/player/weapon_controller.gd",
-        "scripts/autoload/game_state.gd",
-        "scripts/autoload/settings_manager.gd",
-        "scripts/levels/base_level.gd",
-        "scripts/levels/level_01.gd",
-        "scenes/levels/level_01.tscn",
-        "scenes/levels/level_02.tscn",
-        "scenes/levels/level_03.tscn",
-        "scenes/levels/tutorial_trigger.tscn",
-        "scripts/levels/tutorial_trigger.gd",
+        "project.godot", "STANDART.txt", "Story_VEX.md",
+        "scenes/player/player.tscn", "scripts/player/player.gd",
+        "scripts/player/weapon_controller.gd", "scripts/autoload/game_state.gd",
+        "scripts/autoload/settings_manager.gd", "scripts/levels/base_level.gd",
+        "scripts/levels/level_01.gd", "scenes/levels/level_01.tscn",
+        "scenes/levels/level_02.tscn", "scenes/levels/level_03.tscn",
+        "scenes/levels/tutorial_trigger.tscn", "scripts/levels/tutorial_trigger.gd",
         "scenes/levels/level_01_training_overlay.tscn",
         "scripts/levels/level_01_training_flow.gd",
-        "scenes/props/door_side_slide.tscn",
-        "scripts/props/door.gd",
-        "scenes/world/door_status_light.tscn",
-        "scripts/world/door_status_light.gd",
-        "scenes/hub/bastion_7.tscn",
-        "translations/vex.csv",
+        "scenes/props/door_side_slide.tscn", "scripts/props/door.gd",
+        "scenes/world/door_status_light.tscn", "scripts/world/door_status_light.gd",
+        "scenes/hub/bastion_7.tscn", "translations/vex.csv",
     ]
     for relative in required:
         exists(relative)
@@ -125,17 +113,13 @@ def check_level_01() -> None:
     script = read("scripts/levels/level_01.gd")
     overlay = read("scenes/levels/level_01_training_overlay.tscn")
     flow = read("scripts/levels/level_01_training_flow.gd")
-
     for contract in [
-        'map_revision = "VEX01-R28-37ROOM-13STEP"',
-        "automap_columns = 5",
-        "automap_rows = 13",
-        "automap_start_cell = Vector2i(2, 12)",
+        'map_revision = "VEX01-R28-37ROOM-13STEP"', "automap_columns = 5",
+        "automap_rows = 13", "automap_start_cell = Vector2i(2, 12)",
         "automap_exit_cell = Vector2i(2, 0)",
     ]:
         if contract not in scene:
             fail(f"VEX-01 harita sözleşmesi eksik: {contract}")
-
     floors = top_level_named_count(scene, "Floor_R")
     ceilings = top_level_named_count(scene, "Ceiling_R")
     room_lights = node_count(scene, "RoomLights", "CeilingWhite_Room_")
@@ -149,7 +133,6 @@ def check_level_01() -> None:
         fail(f"VEX-01 seçici bağlantı kapısı 36 değil: {doors}")
     if static_lights != 24:
         fail(f"VEX-01 statik kapı ışığı sayısı 24 değil: {static_lights}")
-
     expected_edges = {
         (1, 3), (2, 3), (2, 6), (3, 4), (3, 7), (4, 8), (5, 6), (6, 10),
         (7, 11), (8, 9), (8, 12), (11, 13), (13, 15), (14, 15), (14, 18),
@@ -161,7 +144,6 @@ def check_level_01() -> None:
     expected_names = {f"Door_{left:02d}_{right:02d}" for left, right in expected_edges}
     if actual_names != expected_names:
         fail(f"VEX-01 bağlantı grafiği bozuk: {len(actual_names)}/{len(expected_names)} kapı")
-
     for contract in [
         'locked = true\nrequired_key = &"blue"',
         'required_keys = Array[StringName]([&"blue", &"red"])',
@@ -169,12 +151,10 @@ def check_level_01() -> None:
     ]:
         if contract not in scene:
             fail(f"VEX-01 progression sözleşmesi eksik: {contract}")
-
     if 'TRAINING_OVERLAY_SCENE := preload("res://scenes/levels/level_01_training_overlay.tscn")' not in script:
         fail("VEX-01 eğitim overlay sahnesini yüklemiyor")
     if "add_child(_training_overlay)" not in script:
         fail("VEX-01 eğitim overlay sahnesini oyun ağacına eklemiyor")
-
     tutorial_nodes = re.findall(r'^\[node name="Tutorial[^\"]*"[^\n]*instance=ExtResource\("2_tutorial"\)', overlay, re.M)
     if len(tutorial_nodes) != 9:
         fail(f"VEX-01 eğitim tetikleyici sayısı 9 değil: {len(tutorial_nodes)}")
@@ -187,7 +167,6 @@ def check_level_01() -> None:
     ]:
         if key not in overlay:
             fail(f"VEX-01 tutorial overlay eksik mesaj: {key}")
-
     if 'gate_enemy_ids = Array[StringName]([&"ravager_01", &"ravager_07"])' not in overlay:
         fail("VEX-01 Easy-safe combat gate düşmanları yanlış")
     for gate in ["Door_03_07", "Door_13_15"]:
@@ -197,19 +176,11 @@ def check_level_01() -> None:
         fail("VEX-01 iki combat gate için dört dinamik durum ışığı kullanmıyor")
     if 'instance=ExtResource("4_barrel")' not in overlay:
         fail("VEX-01 çevresel eğitim için sahne-authored patlayıcı varil eksik")
-
-    # Combat gate düşmanlarının Easy'de mutlaka bulunması gerekir.
+    blocks = re.findall(
+        r'^\[node name="[^\"]+"[^\n]*parent="Enemies"[^\n]*\]\n(.*?)(?=\n\[node |\Z)',
+        scene, re.M | re.S,
+    )
     for enemy_id in ["ravager_01", "ravager_07"]:
-        match = re.search(
-            rf'^\[node name="[^\"]+"[^\n]*parent="Enemies"[^\n]*\]\n(.*?)(?=\n\[node |\Z)',
-            scene,
-            re.M | re.S,
-        )
-        blocks = re.findall(
-            r'^\[node name="[^\"]+"[^\n]*parent="Enemies"[^\n]*\]\n(.*?)(?=\n\[node |\Z)',
-            scene,
-            re.M | re.S,
-        )
         target = next((block for block in blocks if f'enemy_id = &"{enemy_id}"' in block), None)
         if target is None:
             fail(f"VEX-01 combat gate düşmanı yok: {enemy_id}")
@@ -218,7 +189,6 @@ def check_level_01() -> None:
         spawn_min = int(spawn_match.group(1)) if spawn_match else 0
         if spawn_min != 0:
             fail(f"VEX-01 combat gate düşmanı Easy'de spawn olmuyor: {enemy_id} / min={spawn_min}")
-
     if "door._combat_lock_was_active = door._has_active_combat_lock()" not in flow:
         fail("VEX-01 training flow kapı combat cache'ini bağlandıktan sonra yenilemiyor")
 
@@ -228,16 +198,14 @@ def check_automap() -> None:
     base = read("scripts/levels/base_level.gd")
     for contract in [
         "var room_number := _walkable_order.find(cell) + 1",
-        'door.has_method("is_access_locked")',
-        'door.call("is_access_locked")',
+        'door.has_method("is_access_locked")', 'door.call("is_access_locked")',
     ]:
         if contract not in automap:
             fail(f"Automap güncel runtime sözleşmesi eksik: {contract}")
     for contract in [
         "var ordered_cells: Array[Vector2i] = automap_walkable_cells.duplicate()",
         "if start_index >= 0 and exit_index >= 0 and start_index > exit_index:",
-        "ordered_cells.reverse()",
-        '"walkable_cells": ordered_cells',
+        "ordered_cells.reverse()", '"walkable_cells": ordered_cells',
     ]:
         if contract not in base:
             fail(f"BaseLevel automap sıralama sözleşmesi eksik: {contract}")
@@ -262,7 +230,7 @@ def check_level_03() -> None:
     scene = read("scenes/levels/level_03.tscn")
     script = read("scripts/levels/level_03.gd")
     for contract in [
-        "Geometry/Stairs", "UpperDeck", "KorvathWarden", "RiftIsolationSwitch",
+        "Stairs", "UpperDeck", "KorvathWarden", "RiftIsolationSwitch",
         "BluePowerCard", "EceTanEmergencySignal", "vex03_secret_maintenance_cache",
         "vex03_secret_upper_archive", "vex03_korvath_warden",
     ]:
@@ -306,12 +274,9 @@ def check_door_contract() -> None:
     scene = read("scenes/props/door_side_slide.tscn")
     script = read("scripts/props/door.gd")
     for contract in [
-        "size = Vector3(0.2, 4.48, 2.22)",
-        "position = Vector3(0, 0, -1.11)",
-        "position = Vector3(0, 0, 1.11)",
-        "size = Vector3(0.24, 4.48, 4.44)",
-        '[node name="SafetySensor"',
-        '[node name="PerceptionBlocker"',
+        "size = Vector3(0.2, 4.48, 2.22)", "position = Vector3(0, 0, -1.11)",
+        "position = Vector3(0, 0, 1.11)", "size = Vector3(0.24, 4.48, 4.44)",
+        '[node name="SafetySensor"', '[node name="PerceptionBlocker"',
         '[node name="DoorShadowBlocker"',
     ]:
         if contract not in scene:
@@ -329,20 +294,17 @@ def check_weapons() -> None:
     for weapon_id in weapon_ids:
         exists(f"resources/weapons/{weapon_id}.tres")
         exists(f"scenes/ui/weapons/{weapon_id}_view.tscn")
-
     p20 = read("resources/weapons/p20.tres")
     for contract in [
         'weapon_id = &"p20"', 'ammo_type = &"bullets"',
-        'hud_ammo_label_key = "HUD_AMMO_PISTOL"',
-        "penetration_power = 0.5", "magazine_size = 8",
-        "damage_per_pellet = 42", "reserve_ammo_capacity = 180",
+        'hud_ammo_label_key = "HUD_AMMO_PISTOL"', "penetration_power = 0.5",
+        "magazine_size = 8", "damage_per_pellet = 42", "reserve_ammo_capacity = 180",
     ]:
         if contract not in p20:
             fail(f"P-20 güncel silah sözleşmesi eksik: {contract}")
     for obsolete in ['ammo_type = &"magnum_ammo"', "reserve_ammo_capacity = 40"]:
         if obsolete in p20:
             fail(f"P-20 eski Magnum mühimmat sözleşmesini kullanıyor: {obsolete}")
-
     controller = read("scripts/player/weapon_controller.gd")
     for contract in ["penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count"]:
         if contract not in controller:
@@ -406,35 +368,20 @@ def check_scene_authority() -> None:
 
 def check_stale_contracts() -> None:
     project_text = "\n".join(text for _path, text in text_files())
-    forbidden = [
-        "door_side_slide_bastion.tscn",
-        "CargoElevator_Main",
-    ]
-    for token in forbidden:
+    for token in ["door_side_slide_bastion.tscn", "CargoElevator_Main"]:
         if token in project_text:
             fail(f"Kaldırılmış sözleşme/dosya referansı hâlâ mevcut: {token}")
 
 
 def main() -> int:
     checks = [
-        check_core_files,
-        check_res_paths,
-        check_input_map,
-        check_level_01,
-        check_automap,
-        check_level_02,
-        check_level_03,
-        check_bastion,
-        check_door_contract,
-        check_weapons,
-        check_unique_progression_ids,
-        check_localization,
-        check_scene_authority,
-        check_stale_contracts,
+        check_core_files, check_res_paths, check_input_map, check_level_01,
+        check_automap, check_level_02, check_level_03, check_bastion,
+        check_door_contract, check_weapons, check_unique_progression_ids,
+        check_localization, check_scene_authority, check_stale_contracts,
     ]
     for check in checks:
         check()
-
     for message in WARNINGS:
         print("WARNING:", message)
     for message in FAILURES:
