@@ -16,7 +16,9 @@ extends Resource
 @export var hud_view_scene: PackedScene
 @export var world_pickup_texture: Texture2D
 @export var supports_ads_pose := false
-@export_range(20.0, 100.0, 1.0) var ads_fov := 50.0
+## ADS FOV'u oyuncunun normal FOV'una oranlıdır. 0.80 = hafif zoom,
+## 0.58 = daha güçlü precision zoom. Böylece kullanıcı FOV ayarı zoom miktarını bozmaz.
+@export_range(0.35, 0.95, 0.01) var ads_fov_multiplier := 0.70
 @export var supports_lowered_pose := false
 @export var hud_auto_lower_enabled := false
 @export_range(1.0, 30.0, 0.5) var hud_lower_after_seconds := 6.0
