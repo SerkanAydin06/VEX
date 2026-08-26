@@ -61,6 +61,10 @@ func play_action(weapon_id: StringName, action: StringName) -> void:
 
 
 func update(delta: float, blocked: bool) -> void:
+	# ADS görseli, kamera ve hitscan aynı tek gameplay durumunu kullanır.
+	# Harita/ölüm gibi bloklu durumlarda crosshair görünürlüğünü HUD yönetir.
+	if not blocked:
+		_sync_ads_crosshair_visibility()
 	if blocked or _current_weapon_id == &"":
 		return
 	var definition := _get_weapon_definition(_current_weapon_id)
@@ -202,10 +206,15 @@ func _apply_rest_pose(sprite: AnimatedSprite2D, definition: WeaponDefinition) ->
 
 func _is_weapon_ads_active() -> bool:
 	var player := GameState.player as VexPlayer
-	return (
-		(player != null and is_instance_valid(player) and player.is_aiming)
-		or Input.is_action_pressed("aim")
-	)
+	return player != null and is_instance_valid(player) and player.is_aiming
+
+
+func _sync_ads_crosshair_visibility() -> void:
+	if GameState.hud == null or not is_instance_valid(GameState.hud):
+		return
+	var crosshair_node := GameState.hud.get("crosshair") as TextureRect
+	if crosshair_node != null:
+		crosshair_node.visible = not _is_weapon_ads_active()
 
 
 func _get_weapon_definition(weapon_id: StringName) -> WeaponDefinition:
