@@ -18,7 +18,6 @@ const DROPPED_WEAPON_PICKUP_SCENE := preload("res://scenes/props/pickup.tscn")
 @export_range(1.0, 30.0, 0.5) var crouch_transition_speed := 12.0
 @export_range(0.0, 0.1, 0.005) var stand_clearance_margin := 0.02
 @export_category("Nişan Alma / ADS")
-@export_range(20.0, 100.0, 1.0) var ads_fov := 50.0
 @export_range(1.0, 500.0, 0.5) var ads_transition_speed := 200.0
 @export_range(0.05, 1.0, 0.01) var ads_spread_multiplier := 0.45
 @export_range(0.05, 1.0, 0.01) var ads_recoil_multiplier := 0.72
@@ -30,7 +29,7 @@ const DROPPED_WEAPON_PICKUP_SCENE := preload("res://scenes/props/pickup.tscn")
 @export_range(0.0, 1.0, 0.01) var sprint_input_threshold := 0.10
 @export_category("Dayanıklılık")
 @export_range(1, 500, 1) var maximum_health := 100
-@export_range(0, 500, 1) var maximum_armor := 100
+@export_range(1, 500, 1) var maximum_armor := 100
 @export_range(0, 500, 1) var initial_armor := 0
 @export_range(0.0, 1.0, 0.01) var armor_absorption_ratio := 0.60
 @export_range(0.0, 5.0, 0.05) var hurt_audio_cooldown := 0.90
@@ -766,9 +765,13 @@ func _update_crouch_view(delta: float) -> void:
 
 
 func _update_aiming(delta: float) -> void:
-	is_aiming = Input.is_action_pressed("aim")
 	_default_fov = SettingsManager.field_of_view
-	var target_fov := ads_fov if is_aiming else _default_fov
+	var current_weapon: WeaponDefinition = null
+	if weapon_controller != null and weapon_controller.has_method("get_current_weapon"):
+		current_weapon = weapon_controller.call("get_current_weapon") as WeaponDefinition
+	var supports_ads := current_weapon != null and current_weapon.supports_ads_pose
+	is_aiming = supports_ads and Input.is_action_pressed("aim")
+	var target_fov := current_weapon.ads_fov if is_aiming else _default_fov
 	camera.fov = move_toward(camera.fov, target_fov, ads_transition_speed * delta)
 
 
