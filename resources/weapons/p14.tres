@@ -20,6 +20,7 @@ supports_ads_pose = true
 ads_fov_multiplier = 0.50
 hud_zoom_offset = Vector2(-162, -194)
 hud_ads_scale_multiplier = 1.29
+hud_ads_reticle_style = "red_dot"
 hud_aim_fire_offset = Vector2(0, 0)
 supports_flashlight = true
 flashlight_color = Color(0.58, 0.76, 0.88, 1)
