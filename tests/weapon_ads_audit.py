@@ -96,6 +96,12 @@ def main() -> int:
         "p14": 0.50,
         "p20": 0.58,
     }
+    expected_zoom_offset = {
+        "p01": "Vector2(-156, -221)",
+        "p07": "Vector2(-175, -220)",
+        "p14": "Vector2(-162, -194)",
+        "p20": "Vector2(-165, -181)",
+    }
     observed: list[float] = []
     for weapon_id, multiplier in expected_multiplier.items():
         weapon = read(f"resources/weapons/{weapon_id}.tres")
@@ -107,13 +113,13 @@ def main() -> int:
         )
         require(
             weapon,
-            "hud_zoom_offset = Vector2(-176, 0)",
-            f"{weapon_id} ADS zoom görseli ortak optik merkez kalibrasyonunu kullanmıyor",
+            f"hud_zoom_offset = {expected_zoom_offset[weapon_id]}",
+            f"{weapon_id} ADS zoom görseli ölçülmüş nişan merkezi kalibrasyonunu kullanmıyor",
         )
         require(
             weapon,
             "hud_aim_fire_offset = Vector2(0, 0)",
-            f"{weapon_id} ADS ateş animasyonu zoom optik merkezinden sapıyor",
+            f"{weapon_id} ADS ateş animasyonu zoom baz hizasına ek ofset taşıyor",
         )
         if "ads_fov =" in weapon:
             ERRORS.append(f"{weapon_id} hâlâ eski mutlak ads_fov değerini taşıyor")
