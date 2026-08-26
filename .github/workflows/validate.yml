@@ -22,5 +22,7 @@ jobs:
           python-version: "3.12"
       - name: Run VEX static audit
         run: python tests/static_audit.py
+      - name: Validate scene root syntax
+        run: python tests/scene_syntax_audit.py
       - name: Validate Level Test arena
         run: python tests/level_test_audit.py
