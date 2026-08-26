@@ -105,6 +105,16 @@ def main() -> int:
             f"ads_fov_multiplier = {multiplier:.2f}",
             f"{weapon_id} ads_fov_multiplier beklenen {multiplier:.2f} değil",
         )
+        require(
+            weapon,
+            "hud_zoom_offset = Vector2(-176, 0)",
+            f"{weapon_id} ADS zoom görseli ortak optik merkez kalibrasyonunu kullanmıyor",
+        )
+        require(
+            weapon,
+            "hud_aim_fire_offset = Vector2(0, 0)",
+            f"{weapon_id} ADS ateş animasyonu zoom optik merkezinden sapıyor",
+        )
         if "ads_fov =" in weapon:
             ERRORS.append(f"{weapon_id} hâlâ eski mutlak ads_fov değerini taşıyor")
         observed.append(multiplier)
