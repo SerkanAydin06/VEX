@@ -9,3 +9,7 @@ cone_angle = 80.0
 cone_attenuation = 4.0
 distance_attenuation = 0.0
 shadow_enabled = true
+light_specular = 0.08
+shadow_bias = 0.04
+shadow_normal_bias = 0.55
+shadow_opacity = 0.85

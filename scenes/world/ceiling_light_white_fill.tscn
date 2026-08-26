@@ -8,4 +8,5 @@ light_range = 9.2
 cone_angle = 42.0
 cone_attenuation = 1.6
 distance_attenuation = 0.3
-shadow_enabled = true
+shadow_enabled = false
+light_specular = 0.0

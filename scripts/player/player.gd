@@ -1,6 +1,8 @@
 class_name VexPlayer
 extends CharacterBody3D
 
+const DROPPED_WEAPON_PICKUP_SCENE := preload("res://scenes/props/pickup.tscn")
+
 @export_category("Hareket")
 @export_range(1.0, 12.0, 0.1) var walk_speed := 4.0
 @export_range(1.0, 16.0, 0.1) var sprint_speed := 8.0
@@ -249,7 +251,11 @@ func get_interaction_prompt() -> String:
 	return ""
 
 
-func collect_pickup(pickup_type: StringName, amount: int) -> bool:
+func collect_pickup(
+	pickup_type: StringName,
+	amount: int,
+	source_pickup: Node3D = null
+) -> bool:
 	match pickup_type:
 		&"health":
 			if health >= maximum_health:
@@ -275,6 +281,9 @@ func collect_pickup(pickup_type: StringName, amount: int) -> bool:
 			elif pickup_type == &"mp90_ammo":
 				ammo_name = tr("AMMO_57")
 			GameState.notify_pickup(tr("PICKUP_AMMO_FORMAT") % [ammo_name, collected_ammo], &"ammo")
+		&"p01", &"p07", &"p14", &"p20":
+			if not _collect_sidearm_pickup(pickup_type, amount, source_pickup):
+				return false
 		&"sg04":
 			weapon_controller.call("unlock_weapon", &"sg04", amount)
 			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
@@ -317,6 +326,98 @@ func collect_pickup(pickup_type: StringName, amount: int) -> bool:
 	broadcast_state()
 	return true
 
+
+func _collect_sidearm_pickup(
+	weapon_id: StringName,
+	bonus_ammo: int,
+	source_pickup: Node3D
+) -> bool:
+	var result := weapon_controller.call(
+		"equip_world_weapon",
+		weapon_id,
+		bonus_ammo
+	) as Dictionary
+	if not bool(result.get("success", false)):
+		return false
+
+	var displaced_weapon_id := StringName(str(result.get("displaced_weapon_id", "")))
+	var selected_definition := weapon_controller.call(
+		"get_weapon_definition",
+		weapon_id
+	) as WeaponDefinition
+	var selected_name := str(weapon_id)
+	if selected_definition != null:
+		selected_name = tr(selected_definition.display_name)
+
+	if displaced_weapon_id != &"":
+		var drop_position := _get_sidearm_drop_position(source_pickup)
+		call_deferred(
+			"_spawn_dropped_sidearm_pickup",
+			displaced_weapon_id,
+			drop_position
+		)
+		var displaced_definition := weapon_controller.call(
+			"get_weapon_definition",
+			displaced_weapon_id
+		) as WeaponDefinition
+		var displaced_name := str(displaced_weapon_id)
+		if displaced_definition != null:
+			displaced_name = tr(displaced_definition.display_name)
+		GameState.notify_pickup(
+			tr("PICKUP_SIDEARM_SWAP_FORMAT") % [selected_name, displaced_name],
+			&"weapon"
+		)
+		return true
+
+	match weapon_id:
+		&"p01":
+			GameState.notify_pickup(tr("PICKUP_P01_ACTIVE"), &"weapon")
+		&"p07":
+			GameState.notify_pickup(tr("PICKUP_P07_ACTIVE"), &"weapon")
+		&"p14":
+			GameState.notify_pickup(tr("PICKUP_P14_ACTIVE"), &"weapon")
+		&"p20":
+			GameState.notify_pickup(tr("PICKUP_P20_ACTIVE"), &"weapon")
+	return true
+
+
+func _get_sidearm_drop_position(source_pickup: Node3D) -> Vector3:
+	if source_pickup != null and is_instance_valid(source_pickup):
+		return source_pickup.global_position
+	return global_position
+
+func _spawn_dropped_sidearm_pickup(
+	weapon_id: StringName,
+	drop_position: Vector3
+) -> void:
+	if not is_inside_tree():
+		return
+	var definition := weapon_controller.call(
+		"get_weapon_definition",
+		weapon_id
+	) as WeaponDefinition
+	if definition == null or definition.world_pickup_texture == null:
+		push_warning("Yere bırakılan silah için pickup görseli eksik: %s" % str(weapon_id))
+		return
+	var scene_root := get_tree().current_scene
+	if scene_root == null:
+		return
+	var pickup := DROPPED_WEAPON_PICKUP_SCENE.instantiate() as VexPickup
+	if pickup == null:
+		return
+	pickup.name = "Dropped_%s" % str(weapon_id).to_upper()
+	pickup.pickup_id = StringName(
+		"runtime_drop_%s_%d" % [str(weapon_id), Time.get_ticks_msec()]
+	)
+	pickup.pickup_type = str(weapon_id)
+	pickup.amount = 0
+	pickup.display_name = definition.display_name
+	pickup.persist_collection = false
+	pickup.scale_amount_with_difficulty = false
+	pickup.visual_texture = definition.world_pickup_texture
+	scene_root.add_child(pickup)
+	pickup.global_position = drop_position
+	pickup.block_pickup_for(0.5)
 
 func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = null) -> void:
 	if is_dead or amount <= 0:

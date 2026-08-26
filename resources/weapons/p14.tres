@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
+[ext_resource type="PackedScene" path="res://scenes/ui/weapons/p14_view.tscn" id="2_view"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p14/p14_side.png" id="3_side"]
+
+[resource]
+script = ExtResource("1_weapon")
+weapon_id = &"p14"
+display_name = "WEAPON_P14_NAME"
+ammo_type = &"bullets"
+loadout_group = &"sidearm"
+loadout_slot = 1
+loadout_group_label = "ARMORY_GROUP_SIDEARM"
+hud_slot_label_key = "HUD_SLOT_01"
+hud_ammo_label_key = "HUD_AMMO_PISTOL"
+hud_view_scene = ExtResource("2_view")
+world_pickup_texture = ExtResource("3_side")
+supports_ads_pose = true
+supports_flashlight = true
+flashlight_color = Color(0.58, 0.76, 0.88, 1)
+flashlight_energy = 2.8
+flashlight_range = 20.0
+flashlight_angle_degrees = 23.0
+gunshot_noise_multiplier = 0.45
+magazine_size = 14
+headshot_multiplier = 2.0
+damage_per_pellet = 22
+pellet_count = 1
+fire_interval = 0.25
+reload_duration = 1.15
+spread_degrees = 0.45
+maximum_range = 100.0
+reserve_ammo_capacity = 180
+automatic = false
+recoil_vertical_degrees = 0.9
+recoil_horizontal_degrees = 0.14
+recoil_max_vertical_degrees = 2.8
+recoil_max_horizontal_degrees = 0.55
+recoil_recovery_degrees_per_second = 8.8

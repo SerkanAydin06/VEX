@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://8rnsjmnfa0dn" path="res://scripts/player/player.gd" id="1_player"]
 [ext_resource type="Script" uid="uid://chtweeovuy46q" path="res://scripts/player/weapon_controller.gd" id="2_weapon_controller"]
 [ext_resource type="Resource" path="res://resources/weapons/p01.tres" id="3_pistol"]
+[ext_resource type="Resource" path="res://resources/weapons/p07.tres" id="3_p07"]
+[ext_resource type="Resource" path="res://resources/weapons/p14.tres" id="3_p14"]
+[ext_resource type="Resource" path="res://resources/weapons/p20.tres" id="3_p20"]
 [ext_resource type="Script" uid="uid://bld4sc8fopa04" path="res://scripts/player/weapon_definition.gd" id="4_h17s1"]
 [ext_resource type="Resource" path="res://resources/weapons/sg04.tres" id="4_shotgun"]
 [ext_resource type="AudioStream" uid="uid://dy727qbjov6r7" path="res://assets/audio/footstep_pro.wav" id="5_footstep_audio"]
@@ -39,9 +42,27 @@ target_position = Vector3(0, 0, -3.4)
 collision_mask = 9
 collide_with_areas = true
 
+[node name="WeaponFlashlight" type="SpotLight3D" parent="ViewPivot/Camera3D"]
+visible = false
+position = Vector3(0.12, -0.12, -0.08)
+light_color = Color(0.72, 0.86, 1, 1)
+light_energy = 4.2
+light_indirect_energy = 0.0
+light_specular = 0.3
+light_volumetric_fog_energy = 0.0
+shadow_enabled = true
+shadow_bias = 0.08
+shadow_normal_bias = 0.9
+shadow_blur = 1.2
+shadow_opacity = 0.9
+spot_range = 18.0
+spot_attenuation = 1.1
+spot_angle = 27.0
+spot_angle_attenuation = 0.7
+
 [node name="WeaponController" type="Node" parent="." unique_id=1571382257]
 script = ExtResource("2_weapon_controller")
-weapon_definitions = Array[ExtResource("4_h17s1")]([ExtResource("3_pistol"), ExtResource("4_shotgun"), ExtResource("7_ak47"), ExtResource("8_mp90")])
+weapon_definitions = Array[ExtResource("4_h17s1")]([ExtResource("3_pistol"), ExtResource("3_p07"), ExtResource("3_p14"), ExtResource("3_p20"), ExtResource("4_shotgun"), ExtResource("7_ak47"), ExtResource("8_mp90")])
 weapons_per_loadout_group = 1
 
 [node name="FootstepAudio" type="AudioStreamPlayer3D" parent="." unique_id=578205698]

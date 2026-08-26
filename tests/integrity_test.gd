@@ -4,6 +4,8 @@ const REQUIRED_RESOURCES := [
 	"res://resources/materials/floor_standard.tres",
 	"res://resources/materials/ceiling_standard.tres",
 	"res://resources/materials/wall_panel.tres",
+	"res://resources/shaders/world_planar_surface.gdshader",
+	"res://resources/shaders/world_wall_surface.gdshader",
 	"res://scenes/props/door_side_slide.tscn",
 	"res://resources/materials/door_threshold.tres",
 	"res://scenes/props/burn_remains.tscn",
@@ -12,10 +14,15 @@ const REQUIRED_RESOURCES := [
 	"res://scripts/props/finish_switch.gd",
 	"res://scenes/player/player.tscn",
 	"res://resources/weapons/p01.tres",
+	"res://resources/weapons/p07.tres",
+	"res://resources/weapons/p14.tres",
+	"res://resources/weapons/p20.tres",
 	"res://resources/weapons/sg04.tres",
 	"res://resources/weapons/vx47.tres",
 	"res://resources/weapons/mp90.tres",
 	"res://scenes/world/ceiling_light_white_horror.tscn",
+	"res://scenes/world/ceiling_light_white_fill.tscn",
+	"res://scenes/world/ceiling_light_white_large.tscn",
 	"res://scenes/world/world_piece.tscn",
 	"res://scenes/world/u_staircase.tscn",
 	"res://scenes/world/door_status_light.tscn",
@@ -39,10 +46,57 @@ const REQUIRED_RESOURCES := [
 	"res://assets/weapons/p01/p01_reload_3.png",
 	"res://assets/weapons/p01/p01_reload_4.png",
 	"res://assets/weapons/p01/p01_zoom.png",
-	"res://assets/weapons/p01/p01_lowered.png",
+	"res://assets/weapons/p07/p07_idle.png",
+	"res://assets/weapons/p07/p07_side.png",
+	"res://assets/weapons/p07/p07_fire_1.png",
+	"res://assets/weapons/p07/p07_fire_2.png",
+	"res://assets/weapons/p07/p07_fire_3.png",
+	"res://assets/weapons/p07/p07_fire_4.png",
+	"res://assets/weapons/p07/p07_aim_fire_1.png",
+	"res://assets/weapons/p07/p07_aim_fire_2.png",
+	"res://assets/weapons/p07/p07_aim_fire_3.png",
+	"res://assets/weapons/p07/p07_aim_fire_4.png",
+	"res://assets/weapons/p07/p07_reload_1.png",
+	"res://assets/weapons/p07/p07_reload_2.png",
+	"res://assets/weapons/p07/p07_reload_3.png",
+	"res://assets/weapons/p07/p07_reload_4.png",
+	"res://assets/weapons/p07/p07_zoom.png",
+	"res://assets/weapons/p14/p14_idle.png",
+	"res://assets/weapons/p14/p14_side.png",
+	"res://assets/weapons/p14/p14_fire_1.png",
+	"res://assets/weapons/p14/p14_fire_2.png",
+	"res://assets/weapons/p14/p14_fire_3.png",
+	"res://assets/weapons/p14/p14_fire_4.png",
+	"res://assets/weapons/p14/p14_aim_fire_1.png",
+	"res://assets/weapons/p14/p14_aim_fire_2.png",
+	"res://assets/weapons/p14/p14_aim_fire_3.png",
+	"res://assets/weapons/p14/p14_aim_fire_4.png",
+	"res://assets/weapons/p14/p14_reload_1.png",
+	"res://assets/weapons/p14/p14_reload_2.png",
+	"res://assets/weapons/p14/p14_reload_3.png",
+	"res://assets/weapons/p14/p14_reload_4.png",
+	"res://assets/weapons/p14/p14_zoom.png",
+	"res://assets/weapons/p20/p20_idle.png",
+	"res://assets/weapons/p20/p20_side.png",
+	"res://assets/weapons/p20/p20_fire_1.png",
+	"res://assets/weapons/p20/p20_fire_2.png",
+	"res://assets/weapons/p20/p20_fire_3.png",
+	"res://assets/weapons/p20/p20_fire_4.png",
+	"res://assets/weapons/p20/p20_aim_fire_1.png",
+	"res://assets/weapons/p20/p20_aim_fire_2.png",
+	"res://assets/weapons/p20/p20_aim_fire_3.png",
+	"res://assets/weapons/p20/p20_aim_fire_4.png",
+	"res://assets/weapons/p20/p20_reload_1.png",
+	"res://assets/weapons/p20/p20_reload_2.png",
+	"res://assets/weapons/p20/p20_reload_3.png",
+	"res://assets/weapons/p20/p20_reload_4.png",
+	"res://assets/weapons/p20/p20_zoom.png",
 	"res://scenes/ui/hud.tscn",
 	"res://scripts/ui/hud_weapon_presenter.gd",
 	"res://scenes/ui/weapons/p01_view.tscn",
+	"res://scenes/ui/weapons/p07_view.tscn",
+	"res://scenes/ui/weapons/p14_view.tscn",
+	"res://scenes/ui/weapons/p20_view.tscn",
 	"res://scenes/ui/weapons/sg04_view.tscn",
 	"res://scenes/ui/weapons/vx47_view.tscn",
 	"res://scenes/ui/weapons/mp90_view.tscn",
@@ -65,6 +119,8 @@ const REQUIRED_RESOURCES := [
 	"res://scenes/actors/veilmaw.tscn",
 	"res://scenes/actors/veilmaw_projectile.tscn",
 	"res://scenes/levels/level_03.tscn",
+	"res://scenes/levels/tutorial_trigger.tscn",
+	"res://scripts/levels/tutorial_trigger.gd",
 	"res://resources/missions/vex03.tres",
 	"res://scenes/autoload/settings_manager.tscn",
 	"res://scenes/ui/keybind_panel.tscn",
@@ -88,8 +144,8 @@ var failures: Array[String] = []
 
 func _ready() -> void:
 	_check_required_resources()
-	_check_level("res://scenes/levels/level_01.tscn", 18, 20, 38, 19)
-	_check_level("res://scenes/levels/level_02.tscn", 33, 35, 10, 5)
+	_check_level("res://scenes/levels/level_01.tscn", 26, 26, 38, 27)
+	_check_level("res://scenes/levels/level_02.tscn", 33, 33, 10, 5)
 	_check_level_03()
 	_check_bastion_7()
 	_check_enemy_visuals()
@@ -99,6 +155,9 @@ func _ready() -> void:
 	_check_key_progression()
 	_check_player_movement_contract()
 	_check_p01_visuals()
+	_check_p07_visuals()
+	_check_p14_playable_contract()
+	_check_p20_playable_contract()
 	_check_localization_contract()
 
 	if failures.is_empty():
@@ -287,6 +346,9 @@ func _check_bastion_7() -> void:
 	var laser_rack := hub.get_node_or_null("Systems/ArmoryRacks/LaserRack") as Node3D
 	if pistol_rack == null or pistol_rack.position != Vector3(-16, 1.1, -14.35):
 		failures.append("Bastion-7 tabanca kategori rafı yanlış konumda.")
+	var p07_visual := hub.get_node_or_null("Systems/ArmoryRacks/PistolRack/P07Slot/WeaponVisual") as Sprite3D
+	if p07_visual == null or p07_visual.texture == null:
+		failures.append("Bastion-7 P-07 rafı yandan silah görseline bağlı değil.")
 	if shotgun_rack == null or shotgun_rack.position != Vector3(-12, 1.1, -14.35):
 		failures.append("Bastion-7 pompalı kategori rafı yanlış konumda.")
 	if rifle_rack == null or rifle_rack.position != Vector3(-8, 1.1, -14.35):
@@ -498,7 +560,7 @@ func _check_scene_authority() -> void:
 			for property_name in [
 				&"initial_unlocked_weapons", &"initial_weapon_id", &"equip_cooldown",
 				&"empty_trigger_cooldown", &"hitscan_collision_mask",
-				&"burst_reset_fire_interval_multiplier",
+				&"burst_reset_fire_interval_multiplier", &"weapon_flashlight_path",
 			]:
 				if not _has_property(controller, property_name):
 					failures.append("WeaponController sahne ayarı Inspector'da eksik: %s" % property_name)
@@ -563,6 +625,7 @@ func _check_scene_authority() -> void:
 
 	for weapon_path in [
 		"res://resources/weapons/p01.tres",
+		"res://resources/weapons/p07.tres",
 		"res://resources/weapons/sg04.tres",
 		"res://resources/weapons/vx47.tres",
 		"res://resources/weapons/mp90.tres",
@@ -600,13 +663,26 @@ func _check_door() -> void:
 	var threshold := door.get_node_or_null("DoorThreshold") as MeshInstance3D
 	if threshold == null:
 		failures.append("DoorThreshold kapı sahnesinde eksik.")
-	if not _has_property(door, &"automatic_open"):
-		failures.append("Kapı automatic_open Inspector ayarı eksik.")
+	var left_panel := door.get_node_or_null("DoorPanel") as Node3D
+	var right_panel := door.get_node_or_null("DoorPanelRight") as Node3D
+	if left_panel == null or not is_equal_approx(left_panel.position.z, -1.11):
+		failures.append("Sol kapı kanadı jamb iç yüzüne sıfır boşlukla hizalı değil.")
+	if right_panel == null or not is_equal_approx(right_panel.position.z, 1.11):
+		failures.append("Sağ kapı kanadı jamb iç yüzüne sıfır boşlukla hizalı değil.")
+	var panel_mesh := door.get_node_or_null("DoorPanel/PanelBody") as MeshInstance3D
+	if panel_mesh == null or not (panel_mesh.mesh is BoxMesh) or not is_equal_approx((panel_mesh.mesh as BoxMesh).size.z, 2.22):
+		failures.append("Kapı kanadı genişliği canonical 2.22 m değil.")
+	for frame_collision_path in ["FrameCollision/JambLeft", "FrameCollision/JambRight", "FrameCollision/Header"]:
+		if door.get_node_or_null(frame_collision_path) == null:
+			failures.append("Kapı kasası collision eksik: %s" % frame_collision_path)
+	for property_name in [&"automatic_open", &"required_enemy_ids", &"objective_on_combat_clear"]:
+		if not _has_property(door, property_name):
+			failures.append("Kapı Inspector ayarı eksik: %s" % property_name)
 	door.queue_free()
 
 
 func _check_input_map() -> void:
-	for action_name in ["move_forward", "move_backward", "move_left", "move_right", "jump", "sprint", "crouch", "aim", "fire", "interact", "reload", "pause", "automap", "night_vision", "weapon_1", "weapon_2", "weapon_3", "weapon_4", "weapon_5"]:
+	for action_name in ["move_forward", "move_backward", "move_left", "move_right", "jump", "sprint", "crouch", "aim", "fire", "interact", "reload", "pause", "automap", "night_vision", "weapon_flashlight", "weapon_1", "weapon_2", "weapon_3", "weapon_4", "weapon_5"]:
 		if not InputMap.has_action(action_name):
 			failures.append("InputMap eksik: %s" % action_name)
 
@@ -644,44 +720,138 @@ func _check_player_movement_contract() -> void:
 
 
 func _check_p01_visuals() -> void:
-	var packed := load("res://scenes/ui/hud.tscn") as PackedScene
-	if packed == null:
-		failures.append("P-01 HUD sahnesi yüklenemedi.")
-		return
-	var hud := packed.instantiate()
-	var pistol_sprite := hud.get_node_or_null("Root/WeaponLayer/PistolSprite") as AnimatedSprite2D
-	if pistol_sprite == null or pistol_sprite.sprite_frames == null:
-		failures.append("P-01 AnimatedSprite2D/SpriteFrames eksik.")
+	_check_weapon_view("res://scenes/ui/weapons/p01_view.tscn", "P-01", false)
+
+
+func _check_p07_visuals() -> void:
+	_check_weapon_view("res://scenes/ui/weapons/p07_view.tscn", "P-07", false)
+	var definition := load("res://resources/weapons/p07.tres") as WeaponDefinition
+	if definition == null:
+		failures.append("P-07 WeaponDefinition yüklenemedi.")
 	else:
-		var frames := pistol_sprite.sprite_frames
-		for animation_name in [&"idle", &"fire", &"aim_fire", &"reload", &"zoom", &"lowered"]:
-			if not frames.has_animation(animation_name):
-				failures.append("P-01 animasyonu eksik: %s" % animation_name)
-		if frames.get_frame_count(&"fire") != 4:
-			failures.append("P-01 ateş animasyonu dört kare değil.")
-		if frames.get_frame_count(&"aim_fire") != 4:
-			failures.append("P-01 zoom ateş animasyonu dört kare değil.")
-		if frames.get_frame_count(&"reload") != 4:
-			failures.append("P-01 reload animasyonu dört kare değil.")
-		if pistol_sprite.position != Vector2(1060.0, 772.0):
-			failures.append("P-01 FPS görünümü ekranın alt-sağ bölgesine hizalı değil.")
-		if pistol_sprite.scale != Vector2(0.6, 0.6):
-			failures.append("P-01 HUD ölçeği 0.6 değil.")
-	for property_name in [
-		&"p01_auto_lower_enabled",
-		&"p01_lower_after_seconds",
-		&"p01_fire_animation_seconds",
-		&"p01_aim_fire_animation_seconds",
-		&"p01_reload_animation_seconds",
-		&"p01_zoom_offset",
-		&"p01_aim_fire_offset",
-		&"p01_lowered_offset",
-	]:
-		if not _has_property(hud, property_name):
-			failures.append("P-01 Inspector görsel ayarı eksik: %s" % property_name)
-	if bool(hud.get("p01_auto_lower_enabled")):
-		failures.append("P-01 otomatik aşağı indirme geçici olarak kapalı değil.")
-	hud.queue_free()
+		if definition.weapon_id != &"p07" or definition.loadout_group != &"sidearm":
+			failures.append("P-07 kimliği veya sidearm grubu yanlış.")
+		if not definition.supports_ads_pose or not definition.supports_flashlight:
+			failures.append("P-07 ADS/fener özellik bayrakları eksik.")
+		if definition.magazine_size != 16 or definition.damage_per_pellet != 17:
+			failures.append("P-07 temel şarjör/hasar dengesi yanlış.")
+	var player_packed := load("res://scenes/player/player.tscn") as PackedScene
+	if player_packed != null:
+		var player := player_packed.instantiate()
+		var controller := player.get_node_or_null("WeaponController") as VexWeaponController
+		var flashlight := player.get_node_or_null("ViewPivot/Camera3D/WeaponFlashlight") as SpotLight3D
+		if controller == null or not controller.weapon_definitions.any(
+			func(item: WeaponDefinition) -> bool: return item != null and item.weapon_id == &"p07"
+		):
+			failures.append("Player WeaponController P-07 kaynağına bağlı değil.")
+		if flashlight == null or flashlight.visible:
+			failures.append("P-07 silah feneri oyuncu sahnesinde kapalı başlangıç durumunda değil.")
+		player.queue_free()
+	var level_packed := load("res://scenes/levels/level_01.tscn") as PackedScene
+	if level_packed != null:
+		var level := level_packed.instantiate()
+		var pickup := level.get_node_or_null("Pickups/P07SentinelPickup") as VexPickup
+		if pickup == null or pickup.pickup_type != "p07":
+			failures.append("Level 1 gizli bakım deposunda P-07 pickup eksik.")
+		level.queue_free()
+
+
+func _check_p14_playable_contract() -> void:
+	_check_weapon_view("res://scenes/ui/weapons/p14_view.tscn", "P-14", false)
+	var definition := load("res://resources/weapons/p14.tres") as WeaponDefinition
+	if definition == null:
+		failures.append("P-14 WeaponDefinition yüklenemedi.")
+	else:
+		if definition.weapon_id != &"p14" or definition.loadout_group != &"sidearm":
+			failures.append("P-14 kimliği veya sidearm grubu yanlış.")
+		if not definition.supports_ads_pose or not definition.supports_flashlight:
+			failures.append("P-14 ADS/fener özellik bayrakları eksik.")
+		if definition.magazine_size != 14 or definition.damage_per_pellet != 22:
+			failures.append("P-14 temel şarjör/hasar dengesi yanlış.")
+		if not is_equal_approx(definition.gunshot_noise_multiplier, 0.45):
+			failures.append("P-14 susturucu gürültü çarpanı yanlış.")
+		if definition.world_pickup_texture == null:
+			failures.append("P-14 dünya pickup görseli bağlı değil.")
+	var player_packed := load("res://scenes/player/player.tscn") as PackedScene
+	if player_packed != null:
+		var player := player_packed.instantiate()
+		var controller := player.get_node_or_null("WeaponController") as VexWeaponController
+		if controller == null or not controller.weapon_definitions.any(
+			func(item: WeaponDefinition) -> bool: return item != null and item.weapon_id == &"p14"
+		):
+			failures.append("Player WeaponController P-14 kaynağına bağlı değil.")
+		player.queue_free()
+	var player_script := FileAccess.get_file_as_string("res://scripts/player/player.gd")
+	if "_spawn_dropped_sidearm_pickup" not in player_script:
+		failures.append("Tek tabanca kuralının dünya pickup drop akışı eksik.")
+
+
+func _check_p20_playable_contract() -> void:
+	_check_weapon_view("res://scenes/ui/weapons/p20_view.tscn", "P-20", false)
+	var definition := load("res://resources/weapons/p20.tres") as WeaponDefinition
+	if definition == null:
+		failures.append("P-20 WeaponDefinition yüklenemedi.")
+	else:
+		if definition.weapon_id != &"p20" or definition.loadout_group != &"sidearm":
+			failures.append("P-20 kimliği veya sidearm grubu yanlış.")
+		if definition.ammo_type != &"bullets" or definition.hud_ammo_label_key != "HUD_AMMO_PISTOL":
+			failures.append("P-20 ortak tabanca mühimmatı/HUD etiketine bağlı değil.")
+		if not definition.supports_ads_pose or not definition.supports_flashlight:
+			failures.append("P-20 ADS/fener özellik bayrakları eksik.")
+		if definition.magazine_size != 8 or definition.damage_per_pellet != 42:
+			failures.append("P-20 temel şarjör/hasar dengesi yanlış.")
+		if not is_equal_approx(definition.penetration_power, 0.5):
+			failures.append("P-20 temel hedef delme olasılığı yanlış.")
+		if definition.reserve_ammo_capacity != 180:
+			failures.append("P-20 ortak tabanca rezerv kapasitesi yanlış.")
+		if definition.world_pickup_texture == null:
+			failures.append("P-20 dünya pickup görseli bağlı değil.")
+	var player_packed := load("res://scenes/player/player.tscn") as PackedScene
+	if player_packed != null:
+		var player := player_packed.instantiate()
+		var controller := player.get_node_or_null("WeaponController") as VexWeaponController
+		if controller == null or not controller.weapon_definitions.any(
+			func(item: WeaponDefinition) -> bool: return item != null and item.weapon_id == &"p20"
+		):
+			failures.append("Player WeaponController P-20 kaynağına bağlı değil.")
+		player.queue_free()
+	var level_packed := load("res://scenes/levels/level_01.tscn") as PackedScene
+	if level_packed != null:
+		var level := level_packed.instantiate()
+		var pickup := level.get_node_or_null("Pickups/P20MagnumTestPickup") as VexPickup
+		if pickup == null or pickup.pickup_type != "p20":
+			failures.append("Level 1 başlangıç alanında P-20 test pickup'ı eksik.")
+		level.queue_free()
+	var controller_script := FileAccess.get_file_as_string("res://scripts/player/weapon_controller.gd")
+	if "penetration_power" not in controller_script or "target_limit" not in controller_script:
+		failures.append("P-20 hedef delme runtime akışı eksik.")
+	if "_migrate_legacy_ammo_dictionary" not in controller_script or "legacy_magnum_count" not in controller_script:
+		failures.append("P-20 eski Magnum rezervini bullets havuzuna taşıyan save migration eksik.")
+
+
+func _check_weapon_view(scene_path: String, weapon_label: String, expects_lowered: bool) -> void:
+	var packed := load(scene_path) as PackedScene
+	if packed == null:
+		failures.append("%s HUD sahnesi yüklenemedi." % weapon_label)
+		return
+	var sprite := packed.instantiate() as AnimatedSprite2D
+	if sprite == null or sprite.sprite_frames == null:
+		failures.append("%s AnimatedSprite2D/SpriteFrames eksik." % weapon_label)
+		return
+	var required_animations: Array[StringName] = [&"idle", &"fire", &"aim_fire", &"reload", &"zoom"]
+	if expects_lowered:
+		required_animations.append(&"lowered")
+	for animation_name in required_animations:
+		if not sprite.sprite_frames.has_animation(animation_name):
+			failures.append("%s animasyonu eksik: %s" % [weapon_label, animation_name])
+	for animation_name in [&"fire", &"aim_fire", &"reload"]:
+		if sprite.sprite_frames.get_frame_count(animation_name) != 4:
+			failures.append("%s %s animasyonu dört kare değil." % [weapon_label, animation_name])
+	if sprite.position != Vector2(1060.0, 772.0):
+		failures.append("%s FPS görünümü ekranın alt-sağ bölgesine hizalı değil." % weapon_label)
+	if sprite.scale != Vector2(0.6, 0.6):
+		failures.append("%s HUD ölçeği 0.6 değil." % weapon_label)
+	sprite.queue_free()
 
 
 func _check_localization_contract() -> void:
@@ -700,6 +870,15 @@ func _check_localization_contract() -> void:
 	for required_key in [
 		"LANGUAGE_TURKISH", "LANGUAGE_ENGLISH", "SETTINGS_LANGUAGE",
 		"LEVEL_01_NAME", "BRIEFING_CONTINUE", "HUD_DEATH_BODY",
+		"WEAPON_P07_NAME", "PICKUP_P07_ACTIVE", "WEAPON_P14_NAME",
+		"PICKUP_P14_ACTIVE", "WEAPON_P20_NAME", "PICKUP_P20_ACTIVE",
+		"HUD_AMMO_PISTOL", "DOOR_COMBAT_LOCKED", "DOOR_COMBAT_CLEARED",
+		"LEVEL01_TUTORIAL_MOVE_HINT", "LEVEL01_TUTORIAL_FIRE_HINT",
+		"LEVEL01_TUTORIAL_RELOAD_HINT", "LEVEL01_TUTORIAL_FINAL_HINT",
+		"LEVEL01_OBJECTIVE_RED_ONLY", "LEVEL01_OBJECTIVE_BLUE_ONLY",
+		"LEVEL01_OBJECTIVE_BOTH_KEYS", "UPGRADE_INERTIAL_PISTON",
+		"UPGRADE_OVERPRESSURE_CORE", "UPGRADE_RUPTURE_ROUND",
+		"PICKUP_SIDEARM_SWAP_FORMAT", "KEYBIND_WEAPON_FLASHLIGHT",
 	]:
 		if required_key not in csv_text:
 			failures.append("Çeviri anahtarı eksik: %s" % required_key)

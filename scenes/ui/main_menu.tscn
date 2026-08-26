@@ -8,11 +8,11 @@
 [ext_resource type="AudioStream" uid="uid://dfc8ful0dedx2" path="res://assets/audio/menu_background_pro.mp3" id="6_menu_music"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_menu_shell"]
-content_margin_left = 30.0
-content_margin_top = 26.0
-content_margin_right = 30.0
-content_margin_bottom = 26.0
-bg_color = Color(0.008, 0.022, 0.031, 0.92)
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.008, 0.022, 0.031, 0.88)
 border_width_left = 3
 border_width_top = 1
 border_width_right = 1
@@ -23,7 +23,7 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 shadow_color = Color(0, 0, 0, 0.82)
-shadow_size = 24
+shadow_size = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_status"]
 content_margin_left = 18.0
@@ -42,11 +42,11 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_mission"]
-content_margin_left = 26.0
-content_margin_top = 22.0
-content_margin_right = 26.0
-content_margin_bottom = 22.0
-bg_color = Color(0.009, 0.019, 0.026, 0.9)
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.009, 0.019, 0.026, 0.86)
 border_width_left = 1
 border_width_top = 3
 border_width_right = 1
@@ -57,7 +57,7 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 shadow_color = Color(0, 0, 0, 0.8)
-shadow_size = 20
+shadow_size = 16
 
 [node name="MainMenu" type="Control" unique_id=55908172]
 layout_mode = 3
@@ -104,18 +104,18 @@ color = Color(0.002, 0.007, 0.011, 0.2)
 
 [node name="LeftShade" type="ColorRect" parent="." unique_id=1353869886]
 layout_mode = 0
-offset_right = 760.0
+offset_right = 650.0
 offset_bottom = 1080.0
 mouse_filter = 2
-color = Color(0.001, 0.008, 0.012, 0.73)
+color = Color(0.001, 0.008, 0.012, 0.68)
 
 [node name="LeftShadeSoft" type="ColorRect" parent="." unique_id=1154218124]
 layout_mode = 0
-offset_left = 760.0
-offset_right = 980.0
+offset_left = 650.0
+offset_right = 900.0
 offset_bottom = 1080.0
 mouse_filter = 2
-color = Color(0.001, 0.008, 0.012, 0.24)
+color = Color(0.001, 0.008, 0.012, 0.18)
 
 [node name="TopRail" type="ColorRect" parent="." unique_id=1770837964]
 layout_mode = 0
@@ -161,10 +161,10 @@ horizontal_alignment = 2
 [node name="Logo" type="TextureRect" parent="." unique_id=2085060629]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 48.0
-offset_top = 73.0
-offset_right = 662.0
-offset_bottom = 294.0
+offset_left = 54.0
+offset_top = 80.0
+offset_right = 630.0
+offset_bottom = 287.0
 mouse_filter = 2
 texture = ExtResource("4_logo")
 expand_mode = 1
@@ -172,10 +172,10 @@ stretch_mode = 5
 
 [node name="Tagline" type="Label" parent="." unique_id=2130219234]
 layout_mode = 0
-offset_left = 89.0
-offset_top = 304.0
-offset_right = 639.0
-offset_bottom = 329.0
+offset_left = 74.0
+offset_top = 296.0
+offset_right = 610.0
+offset_bottom = 322.0
 theme_override_colors/font_color = Color(0.49, 0.63, 0.68, 1)
 theme_override_font_sizes/font_size = 16
 text = "MAIN_TAGLINE"
@@ -184,22 +184,22 @@ horizontal_alignment = 1
 [node name="MainShell" type="PanelContainer" parent="." unique_id=1708686842]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 92.0
-offset_top = 344.0
-offset_right = 612.0
-offset_bottom = 887.0
+offset_left = 70.0
+offset_top = 338.0
+offset_right = 460.0
+offset_bottom = 760.0
 theme_override_styles/panel = SubResource("StyleBox_menu_shell")
 
 [node name="Margin" type="MarginContainer" parent="MainShell" unique_id=704014621]
 layout_mode = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 16
 
 [node name="VBox" type="VBoxContainer" parent="MainShell/Margin" unique_id=1668311319]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 9
 
 [node name="Header" type="HBoxContainer" parent="MainShell/Margin/VBox" unique_id=228388606]
 layout_mode = 2
@@ -224,44 +224,49 @@ layout_mode = 2
 
 [node name="MenuButtons" type="VBoxContainer" parent="MainShell/Margin/VBox" unique_id=848617551]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(292, 0)
+custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-size_flags_vertical = 3
-theme_override_constants/separation = 10
+size_flags_vertical = 0
+theme_override_constants/separation = 8
 
 [node name="NewGameButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=368567398]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "MAIN_NEW_GAME"
 alignment = 0
 
 [node name="ContinueButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=1170215118]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "MAIN_CONTINUE"
 alignment = 0
 
 [node name="SettingsButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=1732601213]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "MAIN_SETTINGS"
 alignment = 0
 
 [node name="CreditsButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=1043123445]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "MAIN_CREDITS"
 alignment = 0
 
 [node name="QuitButton" type="Button" parent="MainShell/Margin/VBox/MenuButtons" unique_id=1800610792]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "MAIN_QUIT"
 alignment = 0
 
@@ -312,13 +317,13 @@ horizontal_alignment = 1
 [node name="MissionPanel" type="PanelContainer" parent="." unique_id=271192973]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -588.0
-offset_top = -349.0
+offset_left = -536.0
+offset_top = -318.0
 offset_right = -72.0
 offset_bottom = -104.0
 grow_horizontal = 0
@@ -327,14 +332,14 @@ theme_override_styles/panel = SubResource("StyleBox_mission")
 
 [node name="Margin" type="MarginContainer" parent="MissionPanel" unique_id=552209278]
 layout_mode = 2
-theme_override_constants/margin_left = 28
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 28
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 18
 
 [node name="VBox" type="VBoxContainer" parent="MissionPanel/Margin" unique_id=2026204257]
 layout_mode = 2
-theme_override_constants/separation = 9
+theme_override_constants/separation = 7
 
 [node name="Header" type="Label" parent="MissionPanel/Margin/VBox" unique_id=132228881]
 layout_mode = 2
@@ -345,7 +350,7 @@ text = "MAIN_ACTIVE_OPERATION"
 [node name="Title" type="Label" parent="MissionPanel/Margin/VBox" unique_id=1082169920]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.83, 0.95, 0.98, 1)
-theme_override_font_sizes/font_size = 29
+theme_override_font_sizes/font_size = 27
 text = "MAIN_MISSION_TITLE"
 
 [node name="Description" type="Label" parent="MissionPanel/Margin/VBox" unique_id=1414539382]

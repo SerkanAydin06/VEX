@@ -205,14 +205,14 @@ surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
 
 [node name="Ceiling_L04_Operations4" parent="Geometry/LowerLevel" unique_id=1526359205 instance=ExtResource("2_piece")]
-transform = Transform3D(-2.8062123e-08, 0, 0.1788746, 0, 1, 0, -0.64198655, 0, -7.818857e-09, 22.909954, 7.2, 5.096361)
-piece_size = Vector3(12, 0.4, 10)
+transform = Transform3D(-2.8062123e-08, 0, 0.1788746, 0, 1, 0, -0.64198655, 0, -7.818857e-09, 22.909954, 7.2, 5.0143)
+piece_size = Vector3(9.425, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
 
 [node name="Ceiling_L04_Operations5" parent="Geometry/LowerLevel" unique_id=1117081114 instance=ExtResource("2_piece")]
-transform = Transform3D(-2.8062123e-08, 0, 0.1788746, 0, 1, 0, -0.64198655, 0, -7.818857e-09, 13.084489, 7.2, 5.096361)
-piece_size = Vector3(12, 0.4, 10)
+transform = Transform3D(-2.8062123e-08, 0, 0.1788746, 0, 1, 0, -0.64198655, 0, -7.818857e-09, 13.084489, 7.2, 5.0143)
+piece_size = Vector3(9.425, 0.4, 10)
 surface_material = ExtResource("5_ceiling")
 occlusion_enabled = false
 
@@ -326,23 +326,23 @@ piece_size = Vector3(0.4, 7, 10)
 surface_material = ExtResource("3_wall")
 
 [node name="AE_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=311704801 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.01, 3.5, 10)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.13, 3.5, 10)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="AE_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=110371559 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.99, 3.5, 10)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.87, 3.5, 10)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="CH_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1851584977 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.99, 3.5, 10)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.87, 3.5, 10)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="CH_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1194527807 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.01, 3.5, 10)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.13, 3.5, 10)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="DI_FullWall" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=849025626 instance=ExtResource("2_piece")]
@@ -381,13 +381,13 @@ piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
 
 [node name="HJ_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1998323574 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.99, 3.5, 0)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.87, 3.5, 0)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="HJ_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=2820735 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.01, 3.5, 0)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.13, 3.5, 0)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="HI_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=443072563 instance=ExtResource("2_piece")]
@@ -436,13 +436,13 @@ piece_size = Vector3(0.4, 2.28, 4.92)
 surface_material = ExtResource("3_wall")
 
 [node name="EF_Left" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=2110760990 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.01, 3.5, 0)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.13, 3.5, 0)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="EF_Right" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1441082558 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.99, 3.5, 0)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.87, 3.5, 0)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="EF_TopFill" parent="Geometry/LowerLevel/LowerDoorFrames" unique_id=1180753333 instance=ExtResource("2_piece")]
@@ -660,13 +660,13 @@ piece_size = Vector3(0.4, 7, 2.54)
 surface_material = ExtResource("3_wall")
 
 [node name="U34_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=486569490 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.01, 11.3, 0)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.13, 11.3, 0)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="U34_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1226984904 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.99, 11.3, 0)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.87, 11.3, 0)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="U25_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=864920357 instance=ExtResource("2_piece")]
@@ -715,13 +715,13 @@ piece_size = Vector3(3.58, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="U68_A" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=604342734 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.99, 11.3, -10)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.87, 11.3, -10)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="U68_B" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1211459139 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.01, 11.3, -10)
-piece_size = Vector3(3.58, 7, 0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.13, 11.3, -10)
+piece_size = Vector3(3.34, 7, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="UpperSecretIsolationWall" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=414404433 instance=ExtResource("2_piece")]
@@ -746,7 +746,7 @@ surface_material = ExtResource("3_wall")
 
 [node name="U25_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=315745408 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 13.66, 0)
-piece_size = Vector3(4.92, 2.28, 0.4)
+piece_size = Vector3(4.44, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="U45_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=1987732083 instance=ExtResource("2_piece")]
@@ -761,7 +761,7 @@ surface_material = ExtResource("3_wall")
 
 [node name="U57_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=965182397 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 13.66, -10)
-piece_size = Vector3(4.92, 2.28, 0.4)
+piece_size = Vector3(4.44, 2.28, 0.4)
 surface_material = ExtResource("3_wall")
 
 [node name="U68_TopFill" parent="Geometry/UpperLevel/UpperDoorFrames" unique_id=121989213 instance=ExtResource("2_piece")]

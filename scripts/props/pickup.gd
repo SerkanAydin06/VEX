@@ -4,9 +4,10 @@ extends Area3D
 
 @export_category("Toplanabilir Nesne")
 @export var pickup_id: StringName = &"pickup"
-@export_enum("health", "armor", "bullets", "shells", "sg04", "vx47", "rifle_ammo", "mp90", "mp90_ammo", "night_vision", "key_blue", "key_red", "key_yellow") var pickup_type: String = "health"
-@export_range(1, 200, 1) var amount := 25
+@export_enum("health", "armor", "bullets", "shells", "p01", "p07", "p14", "p20", "sg04", "vx47", "rifle_ammo", "mp90", "mp90_ammo", "night_vision", "key_blue", "key_red", "key_yellow") var pickup_type: String = "health"
+@export_range(0, 200, 1) var amount := 25
 @export var display_name := "NESNE"
+@export var persist_collection := true
 
 @export_category("Zorluk Dağılımı")
 @export_range(0, 3, 1) var spawn_max_difficulty := 3
@@ -37,7 +38,7 @@ var _phase := 0.0
 var _elapsed := 0.0
 var _collected := false
 var _runtime_amount := 0
-
+var _pickup_blocked_until_msec := 0
 
 func _ready() -> void:
 	_runtime_amount = amount
@@ -57,7 +58,7 @@ func _ready() -> void:
 		set_process(false)
 		return
 
-	if GameState.was_pickup_collected(pickup_id):
+	if persist_collection and GameState.was_pickup_collected(pickup_id):
 		queue_free()
 		return
 
@@ -71,7 +72,7 @@ func _ready() -> void:
 func _get_runtime_amount() -> int:
 	if not scale_amount_with_difficulty:
 		return amount
-	if pickup_type in ["sg04", "vx47", "mp90", "night_vision", "key_blue", "key_red", "key_yellow"]:
+	if pickup_type in ["p01", "p07", "p14", "p20", "sg04", "vx47", "mp90", "night_vision", "key_blue", "key_red", "key_yellow"]:
 		return amount
 	if difficulty_amount_multipliers.is_empty():
 		return amount
@@ -97,17 +98,20 @@ func _process(delta: float) -> void:
 
 
 func _on_body_entered(body: Node3D) -> void:
+	if Time.get_ticks_msec() < _pickup_blocked_until_msec:
+		return
 	if _collected or not body.has_method("collect_pickup"):
 		return
 
-	var consumed := bool(body.call("collect_pickup", StringName(pickup_type), _runtime_amount))
+	var consumed := bool(body.call("collect_pickup", StringName(pickup_type), _runtime_amount, self))
 	if not consumed:
 		GameState.notify(tr("PICKUP_CAPACITY_FULL") % tr(display_name))
 		return
 
 	_collected = true
 	set_process(false)
-	GameState.register_pickup_collected(pickup_id)
+	if persist_collection:
+		GameState.register_pickup_collected(pickup_id)
 	set_deferred("monitoring", false)
 	if collision_shape != null:
 		collision_shape.set_deferred("disabled", true)
@@ -116,6 +120,8 @@ func _on_body_entered(body: Node3D) -> void:
 		pickup_audio.play()
 	call_deferred("_finish_collection")
 
+func block_pickup_for(duration: float) -> void:
+	_pickup_blocked_until_msec = Time.get_ticks_msec() + int(duration * 1000.0)
 
 func _finish_collection() -> void:
 	if pickup_audio != null and pickup_audio.stream != null and pickup_audio.playing:

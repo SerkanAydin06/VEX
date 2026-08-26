@@ -27,10 +27,55 @@ def node_origin(scene_text: str, node_name: str):
 
 
 def approximately_equal_vector(actual, expected, tolerance: float = 0.00001) -> bool:
-    return actual is not None and all(
+    return actual is not None and expected is not None and len(actual) == len(expected) and all(
         math.isclose(value, target, abs_tol=tolerance)
         for value, target in zip(actual, expected)
     )
+
+
+def node_transform(scene_text: str, node_name: str):
+    match = re.search(
+        rf'^\[node name="{re.escape(node_name)}"[^\n]*\]\n(.*?)(?=\n\[node |\Z)',
+        scene_text,
+        re.M | re.S,
+    )
+    if match is None:
+        return None
+    transform = re.search(r'^transform = Transform3D\(([^\n]+)\)$', match.group(1), re.M)
+    if transform is None:
+        return (
+            ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
+            (0.0, 0.0, 0.0),
+        )
+    values = [float(value.strip()) for value in transform.group(1).split(',')]
+    if len(values) != 12:
+        return None
+    return (
+        (tuple(values[0:3]), tuple(values[3:6]), tuple(values[6:9])),
+        tuple(values[9:12]),
+    )
+
+
+def transform_point(transform, point):
+    basis, origin = transform
+    return tuple(
+        origin[row] + sum(basis[row][column] * point[column] for column in range(3))
+        for row in range(3)
+    )
+
+
+def subresource_size(scene_text: str, resource_id: str):
+    match = re.search(
+        rf'^\[sub_resource [^\n]* id="{re.escape(resource_id)}"\]\n(.*?)(?=\n\[|\Z)',
+        scene_text,
+        re.M | re.S,
+    )
+    if match is None:
+        return None
+    size = re.search(r'^size = Vector[23]\(([^\n]+)\)$', match.group(1), re.M)
+    if size is None:
+        return None
+    return tuple(float(value.strip()) for value in size.group(1).split(','))
 
 def exists(rel: str):
     p=ROOT/rel
@@ -66,9 +111,20 @@ def check_import_uids():
 
 def check_inputmap():
     p=ROOT/'project.godot'; t=p.read_text(encoding='utf-8') if p.exists() else ''
-    required={'move_forward','move_backward','move_left','move_right','jump','sprint','crouch','aim','fire','interact','reload','pause','automap','night_vision','weapon_1','weapon_2','weapon_3','weapon_4','weapon_5'}
+    required={'move_forward','move_backward','move_left','move_right','jump','sprint','crouch','aim','fire','interact','reload','pause','automap','night_vision','weapon_flashlight','weapon_1','weapon_2','weapon_3','weapon_4','weapon_5'}
     for name in required:
         if re.search(r'^'+re.escape(name)+r'=\{',t,re.M) is None: fail(f"InputMap eksik: {name}")
+    settings=(ROOT/'scripts/autoload/settings_manager.gd').read_text(encoding='utf-8')
+    controller=(ROOT/'scripts/player/weapon_controller.gd').read_text(encoding='utf-8')
+    for contract in [
+        '_ensure_required_input_actions()',
+        'InputMap.add_action(&"weapon_flashlight")',
+        'flashlight_key.physical_keycode = KEY_F',
+    ]:
+        if contract not in settings:
+            fail(f'Eksik weapon_flashlight runtime fallback sözleşmesi: {contract}')
+    if 'InputMap.has_action(&"weapon_flashlight")' not in controller:
+        fail('WeaponController eksik InputMap action durumunu güvenli kontrol etmiyor')
 
 def check_core_scenes():
     required=['scenes/player/player.tscn','scenes/ui/hud.tscn','scenes/ui/main_menu.tscn','scenes/ui/pause_menu.tscn','scenes/ui/terminal_menu.tscn','scripts/ui/terminal_menu.gd','scenes/levels/level_01.tscn','scenes/levels/level_02.tscn','scenes/levels/level_03.tscn','scenes/hub/bastion_7.tscn','scenes/hub/hub_terminal.tscn','scenes/hub/armory_category_rack.tscn','scenes/hub/hub_weapon_rack.tscn','scripts/hub/hub_terminal.gd','scripts/hub/armory_category_rack.gd','scenes/world/korvath_rift.tscn','scenes/world/lore_terminal.tscn','scenes/world/u_staircase.tscn','scenes/world/door_status_light.tscn','scripts/world/door_status_light.gd','scenes/world/room_name_display.tscn','scripts/world/room_name_display.gd','assets/ui/bastion_terminal_screen_idle.png','assets/world/bastion7/bastion_terminal_controls.png','assets/ui/bastion_facility_network.png','resources/missions/vex03.tres','scenes/actors/veilmaw.tscn','scenes/actors/veilmaw_projectile.tscn']
@@ -129,16 +185,31 @@ def check_no_checkpoint_contract():
     if 'continue_button.visible = GameState.checkpoints_enabled()' in main_menu:
         fail('Continue görünürlüğü hâlâ checkpoint bayrağına bağlı')
     main_menu_scene=(ROOT/'scenes/ui/main_menu.tscn').read_text(encoding='utf-8')
-    if main_menu_scene.count('custom_minimum_size = Vector2(0, 60)') < 5:
-        fail('Ana menü buton kompakt boyut standardı eksik')
+    if main_menu_scene.count('custom_minimum_size = Vector2(0, 54)') < 5:
+        fail('Ana menü dikey buton boyut standardı eksik')
     menu_buttons_block=main_menu_scene.split('[node name="MenuButtons"', 1)[-1].split('\n[node ', 1)[0]
-    if 'custom_minimum_size = Vector2(292, 0)' not in menu_buttons_block or 'size_flags_horizontal = 0' not in menu_buttons_block:
-        fail('Ana menü buton sütunu sahne otoriteli kompakt genişlik/shrink standardını kullanmıyor')
+    for compact_contract in ['type="VBoxContainer"', 'custom_minimum_size = Vector2(350, 0)', 'size_flags_horizontal = 0', 'size_flags_vertical = 0', 'theme_override_constants/separation = 8']:
+        if compact_contract not in menu_buttons_block:
+            fail(f'Ana menü sahne otoriteli orantılı dikey buton sözleşmesi eksik: {compact_contract}')
+    for visual_contract in [
+        '[node name="LeftShade" type="ColorRect" parent="."',
+        'offset_right = 650.0\noffset_bottom = 1080.0',
+        'offset_left = 54.0\noffset_top = 80.0\noffset_right = 630.0\noffset_bottom = 287.0',
+        'offset_left = 70.0\noffset_top = 338.0\noffset_right = 460.0\noffset_bottom = 760.0',
+        'content_margin_left = 0.0',
+    ]:
+        if visual_contract not in main_menu_scene:
+            fail(f'Ana menü ilk kompozisyonunun orantılı sahne tasarımı eksik: {visual_contract}')
+    if 'GradientTexture_left_vignette' in main_menu_scene:
+        fail('Ana menüde reddedilen gradient/yatay komuta tasarımı kaldı')
     for runtime_layout_write in ['menu_buttons.custom_minimum_size =', 'menu_buttons.size =', 'new_game_button.custom_minimum_size =']:
         if runtime_layout_write in main_menu:
             fail(f'Ana menü scripti sahne buton genişliğini runtime eziliyor: {runtime_layout_write}')
-    if 'anchors_preset = 8' not in main_menu_scene or 'offset_bottom = -104.0' not in main_menu_scene:
+    if 'anchors_preset = 3' not in main_menu_scene or 'offset_left = -536.0' not in main_menu_scene or 'offset_bottom = -104.0' not in main_menu_scene:
         fail('Ana menü aktif operasyon paneli bottom-right anchor standardı eksik')
+    for script_contract in ['@onready var menu_buttons: VBoxContainer', 'main_shell.position.x -= 46.0']:
+        if script_contract not in main_menu:
+            fail(f'Ana menü ilk dikey kompozisyon runtime bağlantısı eksik: {script_contract}')
     pause=(ROOT/'scripts/ui/pause_menu.gd').read_text(encoding='utf-8')
     if 'restart_level_button.pressed.connect(GameState.restart_level)' not in pause:
         fail('Pause menüsü bölüm başı yeniden başlatma kullanmıyor')
@@ -243,7 +314,7 @@ def check_p01_visual_contract():
         'p01_fire_1.png', 'p01_fire_2.png', 'p01_fire_3.png', 'p01_fire_4.png',
         'p01_aim_fire_1.png', 'p01_aim_fire_2.png', 'p01_aim_fire_3.png', 'p01_aim_fire_4.png',
         'p01_reload_1.png', 'p01_reload_2.png', 'p01_reload_3.png', 'p01_reload_4.png',
-        'p01_zoom.png', 'p01_lowered.png',
+        'p01_zoom.png',
     ]
     for frame_name in frame_names:
         exists(f'assets/weapons/p01/{frame_name}')
@@ -270,13 +341,13 @@ def check_p01_visual_contract():
             continue
         if f'res://assets/weapons/p01/{frame_name}' not in p01_view:
             fail(f'P-01 HUD karesi weapon view sahnesine bağlı değil: {frame_name}')
-    for contract in ['"name": &"zoom"', '"name": &"aim_fire"', '"name": &"lowered"', 'position = Vector2(1060, 772)', 'scale = Vector2(0.6, 0.6)']:
+    for contract in ['"name": &"zoom"', '"name": &"aim_fire"', 'position = Vector2(1060, 772)', 'scale = Vector2(0.6, 0.6)']:
         if contract not in p01_view:
             fail(f'P-01 weapon view poz/animasyon sözleşmesi eksik: {contract}')
     for contract in ['hud_view_scene: PackedScene', 'hud_auto_lower_enabled', 'hud_lower_after_seconds', 'hud_zoom_offset', 'hud_aim_fire_offset', 'hud_lowered_offset']:
         if contract not in definition:
             fail(f'WeaponDefinition sunum verisi eksik: {contract}')
-    for contract in ['hud_view_scene = ExtResource("2_view")', 'supports_ads_pose = true', 'supports_lowered_pose = true', 'hud_zoom_offset = Vector2(-176, 0)', 'hud_lowered_offset = Vector2(160, 0)']:
+    for contract in ['hud_view_scene = ExtResource("2_view")', 'supports_ads_pose = true',  'hud_zoom_offset = Vector2(-176, 0)']:
         if contract not in p01_resource:
             fail(f'P-01 data-driven sunum resource sözleşmesi eksik: {contract}')
     for contract in ['class_name VexHudWeaponPresenter', 'definition.hud_view_scene.instantiate()', 'definition.supports_ads_pose', 'definition.supports_lowered_pose', 'requested_animation = &"aim_fire"', 'sprite.animation_changed.connect(animation_callable)', 'player.is_aiming']:
@@ -293,6 +364,162 @@ def check_p01_visual_contract():
     for contract in ['res://assets/weapons/p01/p01_side.png', 'weapon_texture = ExtResource("19_p01_side")', 'visual_world_width = 0.78']:
         if contract not in hub_scene:
             fail(f'P-01 yandan cephanelik görünüşü eksik: {contract}')
+
+
+def check_p14_playable_contract():
+    asset_dir=ROOT/'assets/weapons/p14'
+    frame_names=[
+        'p14_idle.png', 'p14_side.png', 'p14_zoom.png',
+        *[f'p14_fire_{index}.png' for index in range(1, 5)],
+        *[f'p14_aim_fire_{index}.png' for index in range(1, 5)],
+        *[f'p14_reload_{index}.png' for index in range(1, 5)],
+    ]
+    for frame_name in frame_names:
+        path=asset_dir/frame_name
+        if not path.exists():
+            fail(f'P-14 görsel karesi eksik: {frame_name}')
+            continue
+        data=path.read_bytes()
+        if len(data) < 26 or data[:8] != b'\x89PNG\r\n\x1a\n' or data[25] not in (4, 6):
+            fail(f'P-14 görseli gerçek PNG alfa taşımıyor: {frame_name}')
+
+    view_path=ROOT/'scenes/ui/weapons/p14_view.tscn'
+    resource_path=ROOT/'resources/weapons/p14.tres'
+    if not view_path.exists() or not resource_path.exists():
+        fail('P-14 HUD sahnesi veya WeaponDefinition kaynağı eksik')
+        return
+    view=view_path.read_text(encoding='utf-8')
+    resource=resource_path.read_text(encoding='utf-8')
+    for frame_name in frame_names:
+        if frame_name == 'p14_side.png':
+            continue
+        if f'res://assets/weapons/p14/{frame_name}' not in view:
+            fail(f'P-14 HUD karesi weapon view sahnesine bağlı değil: {frame_name}')
+    for contract in [
+        '"name": &"idle"', '"name": &"fire"', '"name": &"aim_fire"',
+        '"name": &"reload"', '"name": &"zoom"',
+        'position = Vector2(1060, 772)', 'scale = Vector2(0.6, 0.6)',
+    ]:
+        if contract not in view:
+            fail(f'P-14 HUD poz/animasyon sözleşmesi eksik: {contract}')
+    for contract in [
+        'weapon_id = &"p14"', 'loadout_group = &"sidearm"',
+        'world_pickup_texture = ExtResource("3_side")', 'supports_ads_pose = true',
+        'supports_flashlight = true', 'gunshot_noise_multiplier = 0.45',
+        'magazine_size = 14', 'damage_per_pellet = 22',
+        'fire_interval = 0.25', 'reload_duration = 1.15',
+        'spread_degrees = 0.45', 'maximum_range = 100.0',
+    ]:
+        if contract not in resource:
+            fail(f'P-14 WeaponDefinition sözleşmesi eksik: {contract}')
+
+    player_scene=(ROOT/'scenes/player/player.tscn').read_text(encoding='utf-8')
+    player_script=(ROOT/'scripts/player/player.gd').read_text(encoding='utf-8')
+    controller=(ROOT/'scripts/player/weapon_controller.gd').read_text(encoding='utf-8')
+    pickup=(ROOT/'scripts/props/pickup.gd').read_text(encoding='utf-8')
+    hub=(ROOT/'scenes/hub/bastion_7.tscn').read_text(encoding='utf-8')
+    upgrades=(ROOT/'scripts/player/weapon_upgrade_catalog.gd').read_text(encoding='utf-8')
+    for contract in ['res://resources/weapons/p14.tres', 'ExtResource("3_p14")']:
+        if contract not in player_scene:
+            fail(f'Player P-14 bağlantısı eksik: {contract}')
+    for contract in ['func equip_world_weapon(', 'displaced_weapon_id', 'weapon.gunshot_noise_multiplier']:
+        if contract not in controller:
+            fail(f'P-14/controller runtime sözleşmesi eksik: {contract}')
+    for contract in ['_collect_sidearm_pickup', '_spawn_dropped_sidearm_pickup', 'pickup.persist_collection = false', 'pickup.amount = 0']:
+        if contract not in player_script:
+            fail(f'Tek-tabanca dünya drop sözleşmesi eksik: {contract}')
+    for contract in ['"p01", "p07", "p14", "p20"', '@export var persist_collection := true']:
+        if contract not in pickup:
+            fail(f'Pickup tabanca/drop sözleşmesi eksik: {contract}')
+    for contract in ['res://assets/weapons/p14/p14_side.png', 'weapon_texture = ExtResource("20_p14_side")']:
+        if contract not in hub:
+            fail(f'Bastion P-14 raf görseli eksik: {contract}')
+    for contract in ['&"p14": [', 'UPGRADE_VARIABLE_SIGHT', 'UPGRADE_SILENT_BAFFLE', 'UPGRADE_NEEDLE_ROUNDS']:
+        if contract not in upgrades:
+            fail(f'P-14 geliştirme sözleşmesi eksik: {contract}')
+
+
+def check_p20_playable_contract():
+    asset_dir=ROOT/'assets/weapons/p20'
+    frame_names=[
+        'p20_idle.png', 'p20_side.png', 'p20_zoom.png',
+        *[f'p20_fire_{index}.png' for index in range(1, 5)],
+        *[f'p20_aim_fire_{index}.png' for index in range(1, 5)],
+        *[f'p20_reload_{index}.png' for index in range(1, 5)],
+    ]
+    for frame_name in frame_names:
+        path=asset_dir/frame_name
+        if not path.exists():
+            fail(f'P-20 görsel karesi eksik: {frame_name}')
+            continue
+        data=path.read_bytes()
+        if len(data) < 26 or data[:8] != b'\x89PNG\r\n\x1a\n' or data[25] not in (4, 6):
+            fail(f'P-20 görseli gerçek PNG alfa taşımıyor: {frame_name}')
+
+    view_path=ROOT/'scenes/ui/weapons/p20_view.tscn'
+    resource_path=ROOT/'resources/weapons/p20.tres'
+    if not view_path.exists() or not resource_path.exists():
+        fail('P-20 HUD sahnesi veya WeaponDefinition kaynağı eksik')
+        return
+    view=view_path.read_text(encoding='utf-8')
+    resource=resource_path.read_text(encoding='utf-8')
+    for frame_name in frame_names:
+        if frame_name == 'p20_side.png':
+            continue
+        if f'res://assets/weapons/p20/{frame_name}' not in view:
+            fail(f'P-20 HUD karesi weapon view sahnesine bağlı değil: {frame_name}')
+    for contract in [
+        '"name": &"idle"', '"name": &"fire"', '"name": &"aim_fire"',
+        '"name": &"reload"', '"name": &"zoom"',
+        'position = Vector2(1060, 772)', 'scale = Vector2(0.6, 0.6)',
+    ]:
+        if contract not in view:
+            fail(f'P-20 HUD poz/animasyon sözleşmesi eksik: {contract}')
+    for contract in [
+        'weapon_id = &"p20"', 'ammo_type = &"magnum_ammo"',
+        'loadout_group = &"sidearm"', 'world_pickup_texture = ExtResource("3_side")',
+        'supports_ads_pose = true', 'supports_flashlight = true',
+        'penetration_power = 0.5', 'magazine_size = 8',
+        'damage_per_pellet = 42', 'headshot_multiplier = 2.1',
+        'fire_interval = 0.45', 'reload_duration = 1.35',
+        'spread_degrees = 0.7', 'maximum_range = 85.0',
+        'reserve_ammo_capacity = 40',
+    ]:
+        if contract not in resource:
+            fail(f'P-20 WeaponDefinition sözleşmesi eksik: {contract}')
+
+    player_scene=(ROOT/'scenes/player/player.tscn').read_text(encoding='utf-8')
+    player_script=(ROOT/'scripts/player/player.gd').read_text(encoding='utf-8')
+    controller=(ROOT/'scripts/player/weapon_controller.gd').read_text(encoding='utf-8')
+    pickup=(ROOT/'scripts/props/pickup.gd').read_text(encoding='utf-8')
+    level=(ROOT/'scenes/levels/level_01.tscn').read_text(encoding='utf-8')
+    hub=(ROOT/'scenes/hub/bastion_7.tscn').read_text(encoding='utf-8')
+    upgrades=(ROOT/'scripts/player/weapon_upgrade_catalog.gd').read_text(encoding='utf-8')
+    translations=(ROOT/'translations/vex.csv').read_text(encoding='utf-8')
+    for contract in ['res://resources/weapons/p20.tres', 'ExtResource("3_p20")']:
+        if contract not in player_scene:
+            fail(f'Player P-20 bağlantısı eksik: {contract}')
+    for contract in ['penetration_power', 'extra_target_count', 'target_limit', 'damage_target == null']:
+        if contract not in controller:
+            fail(f'P-20 hedef delme runtime sözleşmesi eksik: {contract}')
+    for contract in ['&"p20"', '&"magnum_ammo"', 'PICKUP_P20_ACTIVE', '_spawn_dropped_sidearm_pickup']:
+        if contract not in player_script:
+            fail(f'Player P-20 pickup/swap sözleşmesi eksik: {contract}')
+    for contract in ['"p20"', '"magnum_ammo"']:
+        if contract not in pickup:
+            fail(f'Pickup P-20/magnum tür sözleşmesi eksik: {contract}')
+    for contract in ['name="P20MagnumTestPickup"', 'pickup_type = "p20"', 'level01_start_p20_magnum_test']:
+        if contract not in level:
+            fail(f'Level 1 P-20 test pickup sözleşmesi eksik: {contract}')
+    for contract in ['res://assets/weapons/p20/p20_side.png', 'weapon_texture = ExtResource("20_p20_side")']:
+        if contract not in hub:
+            fail(f'Bastion P-20 raf görseli eksik: {contract}')
+    for contract in ['&"p20": [', 'UPGRADE_INERTIAL_PISTON', 'UPGRADE_OVERPRESSURE_CORE', 'UPGRADE_RUPTURE_ROUND', '"penetration": 0.0']:
+        if contract not in upgrades:
+            fail(f'P-20 geliştirme sözleşmesi eksik: {contract}')
+    for contract in ['HUD_AMMO_MAGNUM', 'PICKUP_P20_ACTIVE', 'AMMO_MAGNUM', 'UPGRADE_INERTIAL_PISTON', 'UPGRADE_OVERPRESSURE_CORE', 'UPGRADE_RUPTURE_ROUND']:
+        if contract not in translations:
+            fail(f'P-20 localization sözleşmesi eksik: {contract}')
 
 
 def check_bastion_door_wall_contract():
@@ -315,23 +542,39 @@ def check_bastion_door_wall_contract():
         'position = Vector3(0, 0, -2.34)',
         'position = Vector3(0, 0, 2.34)',
         'position = Vector3(0, 2.36, 0)',
+        '[node name="FrameCollision" type="StaticBody3D" parent="."]',
+        '[node name="JambLeft" type="CollisionShape3D" parent="FrameCollision"]',
+        '[node name="JambRight" type="CollisionShape3D" parent="FrameCollision"]',
+        '[node name="Header" type="CollisionShape3D" parent="FrameCollision"]',
         'size = Vector3(0.37, 0.03, 1.96)',
         'position = Vector3(0, -2.225, -3.44)',
         'position = Vector3(0, -2.225, 3.44)',
-        'opening_offset_left = Vector3(0, 0, -2.1)',
-        'opening_offset_right = Vector3(0, 0, 2.1)',
+        'size = Vector3(0.2, 4.48, 2.22)',
+        'transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.11)',
+        'transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.11)',
+        'opening_offset_left = Vector3(0, 0, -2.12)',
+        'opening_offset_right = Vector3(0, 0, 2.12)',
     ]:
         if contract not in door:
             fail(f'Bastion kapı kasa/cep ölçü sözleşmesi eksik: {contract}')
+    for contract, expected_count in {
+        'size = Vector3(0.42, 4.48, 0.24)': 2,
+        'size = Vector3(0.42, 0.24, 4.92)': 2,
+        'position = Vector3(0, 0, -2.34)': 2,
+        'position = Vector3(0, 0, 2.34)': 2,
+        'position = Vector3(0, 2.36, 0)': 2,
+    }.items():
+        if door.count(contract) != expected_count:
+            fail(f'Kapı kasası mesh/collision birebir eşleşmiyor: {contract}')
     for contract in [
-        '@export var opening_offset_left := Vector3(0.0, 0.0, -2.1)',
-        '@export var opening_offset_right := Vector3(0.0, 0.0, 2.1)',
+        '@export var opening_offset_left := Vector3(0.0, 0.0, -2.12)',
+        '@export var opening_offset_right := Vector3(0.0, 0.0, 2.12)',
     ]:
         if contract not in door_script:
             fail(f'Kapı açık konumunda 10 cm görünür kanat payı eksik: {contract}')
     for contract in [
         '[node name="PerceptionBlocker" type="StaticBody3D" parent="."]',
-        'size = Vector3(0.24, 4.48, 4.48)',
+        'size = Vector3(0.24, 4.48, 4.44)',
         '[node name="DoorShadowBlocker" type="MeshInstance3D" parent="."]',
         'cast_shadow = 3',
     ]:
@@ -426,16 +669,22 @@ def check_professional_terminal_contract():
         '[node name="HubTerminal" type="Node3D"',
         'res://assets/ui/bastion_terminal_screen_idle.png',
         'res://assets/world/bastion7/bastion_terminal_controls.png',
-        '[node name="ScreenSurface" type="Sprite3D" parent="Visuals/ScreenAssembly"]',
-        '[node name="DeckAssembly" type="Node3D" parent="Visuals"]',
-        '[node name="ControlSurface" type="MeshInstance3D" parent="Visuals/DeckAssembly"]',
-        '[node name="ScreenGlow" type="SpotLight3D" parent="Visuals"]',
-        '[node name="PhysicalBody" type="Node3D" parent="."]',
-        '[node name="SolidCollider" type="StaticBody3D" parent="PhysicalBody"]',
-        '[node name="ScreenInteraction" type="StaticBody3D" parent="."]',
-        '[node name="ScreenInteractionShape" type="CollisionShape3D" parent="ScreenInteraction"]',
+        '[node name="Plinth" type="MeshInstance3D" parent="Visuals"',
+        '[node name="GroundToe" type="MeshInstance3D" parent="Visuals"',
+        '[node name="Support" type="MeshInstance3D" parent="Visuals"',
+        '[node name="ScreenSurface" type="Sprite3D" parent="Visuals/ScreenAssembly"',
+        '[node name="TopRail" type="MeshInstance3D" parent="Visuals/ScreenAssembly"',
+        '[node name="BottomRail" type="MeshInstance3D" parent="Visuals/ScreenAssembly"',
+        '[node name="LeftRail" type="MeshInstance3D" parent="Visuals/ScreenAssembly"',
+        '[node name="RightRail" type="MeshInstance3D" parent="Visuals/ScreenAssembly"',
+        '[node name="DeckAssembly" type="Node3D" parent="Visuals"',
+        '[node name="ControlSurface" type="MeshInstance3D" parent="Visuals/DeckAssembly"',
+        '[node name="PhysicalBody" type="Node3D" parent="."',
+        '[node name="SolidCollider" type="StaticBody3D" parent="PhysicalBody"',
+        '[node name="ScreenInteraction" type="StaticBody3D" parent="."',
+        '[node name="ScreenInteractionShape" type="CollisionShape3D" parent="ScreenInteraction"',
         'res://scenes/ui/terminal_menu.tscn',
-        '[node name="TerminalMenu" parent="." instance=ExtResource("5_menu")]',
+        'instance=ExtResource("5_menu")',
     ]:
         if contract not in terminal_scene:
             fail(f'Gelişmiş 3B Bastion terminali fiziksel/görsel sözleşmesi eksik: {contract}')
@@ -446,8 +695,99 @@ def check_professional_terminal_contract():
         fail('Bastion terminal fiziksel gövdesi world layer 1 üzerinde değil')
     if 'collision_layer = 8' not in screen_interaction_block:
         fail('Bastion terminal ekran etkileşimi layer 8 üzerinde değil')
-    if 'rotation = Vector3(-0.20944, 0, 0)' not in terminal_scene:
+    deck_transform=node_transform(terminal_scene, 'DeckAssembly')
+    if deck_transform is None or not math.isclose(deck_transform[0][1][2], 0.20791216, abs_tol=0.00001) or not math.isclose(deck_transform[0][2][1], -0.20791216, abs_tol=0.00001):
         fail('Bastion terminal kumanda deck eğimi sahnede tanımlı değil')
+
+    centered_nodes=['Plinth', 'GroundToe', 'Support', 'ScreenAssembly', 'Housing', 'ScreenSurface', 'TopRail', 'BottomRail', 'DeckAssembly', 'DeckShell', 'ControlSurface']
+    for node_name in centered_nodes:
+        origin=node_origin(terminal_scene, node_name)
+        if origin is None or not math.isclose(origin[0], 0.0, abs_tol=0.00001):
+            fail(f'Bastion terminal merkez simetrisi bozuk: {node_name}')
+
+    rail_h_size=subresource_size(terminal_scene, 'BoxMesh_screen_rail_h')
+    rail_v_size=subresource_size(terminal_scene, 'BoxMesh_screen_rail_v')
+    screen_origin=node_origin(terminal_scene, 'ScreenSurface')
+    top_origin=node_origin(terminal_scene, 'TopRail')
+    bottom_origin=node_origin(terminal_scene, 'BottomRail')
+    left_origin=node_origin(terminal_scene, 'LeftRail')
+    right_origin=node_origin(terminal_scene, 'RightRail')
+    if None in [rail_h_size, rail_v_size, screen_origin, top_origin, bottom_origin, left_origin, right_origin]:
+        fail('Bastion terminal ekran çerçevesi geometri verisi okunamadı')
+    else:
+        expected_rail_x=(rail_h_size[0] - rail_v_size[0]) / 2.0
+        expected_top_y=screen_origin[1] + (rail_v_size[1] + rail_h_size[1]) / 2.0
+        expected_bottom_y=screen_origin[1] - (rail_v_size[1] + rail_h_size[1]) / 2.0
+        if not approximately_equal_vector(left_origin, (-expected_rail_x, screen_origin[1], top_origin[2])) or not approximately_equal_vector(right_origin, (expected_rail_x, screen_origin[1], top_origin[2])):
+            fail('Bastion terminal dikey ekran rayları simetrik ve uç uca hizalı değil')
+        if not approximately_equal_vector(top_origin, (0.0, expected_top_y, top_origin[2])) or not approximately_equal_vector(bottom_origin, (0.0, expected_bottom_y, top_origin[2])):
+            fail('Bastion terminal yatay ekran rayları simetrik ve uç uca hizalı değil')
+
+    plinth_size=subresource_size(terminal_scene, 'BoxMesh_plinth')
+    support_size=subresource_size(terminal_scene, 'BoxMesh_support')
+    plinth_origin=node_origin(terminal_scene, 'Plinth')
+    support_origin=node_origin(terminal_scene, 'Support')
+    if None in [plinth_size, support_size, plinth_origin, support_origin] or not math.isclose(plinth_origin[1] + plinth_size[1] / 2.0, support_origin[1] - support_size[1] / 2.0, abs_tol=0.00001):
+        fail('Bastion terminal plinth ile ekran desteği uç uca birleşmiyor')
+
+    deck_size=subresource_size(terminal_scene, 'BoxMesh_deck')
+    controls_size=subresource_size(terminal_scene, 'PlaneMesh_controls')
+    deck_shell_origin=node_origin(terminal_scene, 'DeckShell')
+    if deck_size is None or controls_size is None or not approximately_equal_vector((deck_size[0], deck_size[2]), controls_size):
+        fail('Bastion terminal deck kabuğu ile kontrol yüzeyi aynı ayak izine sahip değil')
+    if None not in [deck_transform, deck_shell_origin, deck_size, plinth_origin, plinth_size]:
+        deck_contact=transform_point(deck_transform, (deck_shell_origin[0], deck_shell_origin[1] + deck_size[1] / 2.0, deck_shell_origin[2] + deck_size[2] / 2.0))
+        plinth_front=plinth_origin[2] - plinth_size[2] / 2.0
+        if not math.isclose(deck_contact[2], plinth_front, abs_tol=0.00001):
+            fail('Bastion terminal deck arka üst kenarı plinth ön yüzüne temas etmiyor')
+
+    for mesh_id, shape_id in [
+        ('BoxMesh_plinth', 'BoxShape_plinth'),
+        ('BoxMesh_toe', 'BoxShape_toe'),
+        ('BoxMesh_support', 'BoxShape_support'),
+        ('BoxMesh_deck', 'BoxShape_deck'),
+        ('BoxMesh_screen_back', 'BoxShape_screen_back'),
+        ('BoxMesh_screen_rail_h', 'BoxShape_screen_rail_h'),
+        ('BoxMesh_screen_rail_v', 'BoxShape_screen_rail_v'),
+    ]:
+        if not approximately_equal_vector(subresource_size(terminal_scene, mesh_id), subresource_size(terminal_scene, shape_id)):
+            fail(f'Bastion terminal collision ölçüsü görünür mesh ile eşleşmiyor: {shape_id}')
+
+    for visual_name, collision_name in [
+        ('Plinth', 'PlinthShape'),
+        ('GroundToe', 'GroundToeShape'),
+        ('Support', 'SupportShape'),
+    ]:
+        if not approximately_equal_vector(node_origin(terminal_scene, collision_name), node_origin(terminal_scene, visual_name)):
+            fail(f'Bastion terminal collision transformu görünür mesh ile eşleşmiyor: {collision_name}')
+    if deck_transform is not None and deck_shell_origin is not None:
+        expected_deck_shape=transform_point(deck_transform, deck_shell_origin)
+        if not approximately_equal_vector(node_origin(terminal_scene, 'DeckShape'), expected_deck_shape):
+            fail('Bastion terminal deck collision transformu görünür deck ile eşleşmiyor')
+
+    screen_assembly_transform=node_transform(terminal_scene, 'ScreenAssembly')
+    for visual_name, collision_name in [
+        ('Housing', 'ScreenHousingShape'),
+        ('TopRail', 'TopRailShape'),
+        ('BottomRail', 'BottomRailShape'),
+        ('LeftRail', 'LeftRailShape'),
+        ('RightRail', 'RightRailShape'),
+    ]:
+        visual_origin=node_origin(terminal_scene, visual_name)
+        expected_collision=transform_point(screen_assembly_transform, visual_origin) if screen_assembly_transform is not None and visual_origin is not None else None
+        if not approximately_equal_vector(node_origin(terminal_scene, collision_name), expected_collision):
+            fail(f'Bastion terminal ekran collision transformu görünür mesh ile eşleşmiyor: {collision_name}')
+
+    interaction_size=subresource_size(terminal_scene, 'BoxShape_screen_interaction')
+    interaction_origin=node_origin(terminal_scene, 'ScreenInteraction')
+    screen_world_origin=transform_point(screen_assembly_transform, screen_origin) if screen_assembly_transform is not None and screen_origin is not None else None
+    if rail_h_size is not None and rail_v_size is not None:
+        expected_interaction_size=(rail_h_size[0] - 2.0 * rail_v_size[0], rail_v_size[1], 0.02)
+        if not approximately_equal_vector(interaction_size, expected_interaction_size):
+            fail('Bastion terminal ekran etkileşim alanı gerçek çerçeve açıklığını kaplamıyor')
+    if screen_world_origin is None or interaction_origin is None or not approximately_equal_vector(interaction_origin[:2], screen_world_origin[:2]) or interaction_origin[2] >= screen_world_origin[2]:
+        fail('Bastion terminal ekran etkileşim alanı görünür ekranla hizalı değil')
+
     for generated_node in ['MeshInstance3D.new(', 'BoxMesh.new(', 'CollisionShape3D.new(']:
         if generated_node in terminal_script:
             fail(f'Bastion terminal scripti runtime geometri üretiyor: {generated_node}')
@@ -532,6 +872,9 @@ def check_professional_terminal_contract():
         'res://assets/world/bastion7/bastion_terminal_controls.png',
         '`ScreenInteraction` layer 8', 'TEMİZLENDİ / SIRADAKİ HEDEF / KİLİTLİ',
         '`terminal_code`, `facility_type` ve `terminal_preview`',
+        'X=0 merkez eksenine göre simetriktir',
+        'aynı ölçü ve dünya transformuna sahiptir',
+        'gerçek ekran açıklığını kaplar',
     ]:
         if contract not in standard:
             fail(f'STANDART profesyonel terminal kuralı eksik: {contract}')
@@ -562,8 +905,9 @@ def check_world_visual_standard():
     for contract in ['pixel_size = 0.00175', 'light_energy = 0.58', 'spot_range = 3.2', 'spot_angle = 48.0']:
         if contract not in red_scene or contract not in green_scene:
             fail(f'Kırmızı/yeşil kapı lambası ölçü sözleşmesi uyuşmuyor: {contract}')
-    if 'shadow_enabled = true' not in red_scene or 'shadow_enabled = true' not in green_scene:
-        fail('Kapı durum lambalarında gölge kapalı; ışık kapalı kapıdan sızabilir')
+    for contract in ['shadow_enabled = false', 'light_specular = 0.0', 'light_volumetric_fog_energy = 0.0']:
+        if contract not in red_scene or contract not in green_scene:
+            fail(f'Kapı durum lambası düşük maliyetli dekor profilini kullanmıyor: {contract}')
     ceiling=(ROOT/'scenes/world/ceiling_light_white_horror.tscn').read_text(encoding='utf-8')
     if 'shadow_enabled = true' not in ceiling:
         fail('Ana tavan ışığında gölge kapalı; ışık kapalı kapıdan sızabilir')
@@ -577,7 +921,7 @@ def check_world_visual_standard():
     else:
         fill_scene=fill_path.read_text(encoding='utf-8')
         large_scene=large_path.read_text(encoding='utf-8')
-        for contract in ['ceiling_light_white_horror.tscn', 'light_energy = 3.8', 'light_range = 9.2', 'cone_angle = 42.0', 'cone_attenuation = 1.6', 'distance_attenuation = 0.3', 'shadow_enabled = true']:
+        for contract in ['ceiling_light_white_horror.tscn', 'light_energy = 3.8', 'light_range = 9.2', 'cone_angle = 42.0', 'cone_attenuation = 1.6', 'distance_attenuation = 0.3', 'shadow_enabled = false', 'light_specular = 0.0']:
             if contract not in fill_scene:
                 fail(f'FULL/SPAWN beyaz ışık profili bozuk: {contract}')
         for contract in ['ceiling_light_white_horror.tscn', 'light_energy = 8.0', 'light_range = 20.0', 'cone_angle = 80.0', 'cone_attenuation = 4.0', 'distance_attenuation = 0.0', 'shadow_enabled = true']:
@@ -587,20 +931,74 @@ def check_world_visual_standard():
     world_piece_script=(ROOT/'scripts/world/world_piece.gd').read_text(encoding='utf-8')
     if 'cast_shadow = true' not in world_piece_scene or 'cast_shadow = 1' not in world_piece_scene or '@export var cast_shadow := true' not in world_piece_script:
         fail('Canonical world_piece gölge standardı açık değil')
+
+    wall_shader_path=ROOT/'resources/shaders/world_wall_surface.gdshader'
+    wall_material_path=ROOT/'resources/materials/wall_panel.tres'
+    planar_shader_path=ROOT/'resources/shaders/world_planar_surface.gdshader'
+    if not wall_shader_path.exists() or not wall_material_path.exists() or not planar_shader_path.exists():
+        fail('World-space yüzey shader veya materyali eksik')
+    else:
+        wall_shader=wall_shader_path.read_text(encoding='utf-8')
+        wall_material=wall_material_path.read_text(encoding='utf-8')
+        planar_shader=planar_shader_path.read_text(encoding='utf-8')
+        for contract in ['filter_linear_mipmap_anisotropic', 'MODEL_NORMAL_MATRIX', 'dominant_axis', 'world_position', 'SPECULAR = specular_value']:
+            if contract not in wall_shader:
+                fail(f'Duvar world projection shader sözleşmesi eksik: {contract}')
+        for contract in ['world_wall_surface.gdshader', 'shader_parameter/tile_size_m = 4.0', 'shader_parameter/roughness_value = 0.86', 'shader_parameter/specular_value = 0.28']:
+            if contract not in wall_material:
+                fail(f'Duvar world-grid materyal sözleşmesi eksik: {contract}')
+        for contract in ['filter_linear_mipmap_anisotropic', 'world_position.xz', 'SPECULAR = specular_value']:
+            if contract not in planar_shader:
+                fail(f'Zemin/tavan world planar shader sözleşmesi eksik: {contract}')
+        for material_name, specular in [('floor_standard.tres', '0.3'), ('ceiling_standard.tres', '0.24')]:
+            material=(ROOT/'resources/materials'/material_name).read_text(encoding='utf-8')
+            if f'shader_parameter/specular_value = {specular}' not in material:
+                fail(f'{material_name} kontrollü specular sözleşmesi bozuk')
+
+    player_scene=(ROOT/'scenes/player/player.tscn').read_text(encoding='utf-8')
+    flashlight_match=re.search(r'^\[node name="WeaponFlashlight"[^\n]*\]\n(.*?)(?=\n\[node |\Z)', player_scene, re.M | re.S)
+    if flashlight_match is None:
+        fail('Oyuncu feneri sahnede bulunamadı')
+    else:
+        for contract in ['position = Vector3(0.12, -0.12, -0.08)', 'light_specular = 0.3', 'light_volumetric_fog_energy = 0.0', 'shadow_enabled = true', 'shadow_bias = 0.08', 'shadow_normal_bias = 0.9', 'shadow_blur = 1.2', 'shadow_opacity = 0.9']:
+            if contract not in flashlight_match.group(1):
+                fail(f'Oyuncu feneri kalite/gölge sözleşmesi eksik: {contract}')
+    project_settings=(ROOT/'project.godot').read_text(encoding='utf-8')
+    if 'lights_and_shadows/positional_shadow/atlas_16_bits=false' not in project_settings:
+        fail('Uzun menzilli fener için 32-bit positional shadow atlas sözleşmesi eksik')
+
     standard=(ROOT/'STANDART.txt').read_text(encoding='utf-8')
     for contract in [
-        'Beyaz ışık gölge : AÇIK',
+        'Beyaz ışık gölge : profile göre bütçeli',
         'SHADOW CONTRACT:',
-        'Kapı durum ışıkları (kırmızı/yeşil) de shadow AÇIK',
+        'Kapı durum ışıkları (kırmızı/yeşil) dekoratif profildir: shadow KAPALI',
         'Canonical world_piece cast_shadow AÇIK',
         "Level 1/2/3 instance'ları shadow_enabled=false veya cast_shadow=false/0 ile bu standardı EZEMEZ",
+        'world_wall_surface.gdshader',
+        'Aynı düzlemdeki iki world_piece yüzeyi alan boyunca üst üste binmez',
     ]:
         if contract not in standard:
-            fail(f'STANDART.txt shadow contract eksik: {contract}')
+            fail(f'STANDART.txt görsel/performance contract eksik: {contract}')
+
+    # First-person weapon sprites are CanvasItem assets rendered with the base
+    # texture level. Generating unused mip chains costs GPU memory without
+    # improving their presentation, so the import and scene filter must agree.
+    for weapon_view_path in sorted((ROOT/'scenes/ui/weapons').glob('*_view.tscn')):
+        weapon_view=weapon_view_path.read_text(encoding='utf-8')
+        if 'texture_filter = 2' not in weapon_view:
+            fail(f'{weapon_view_path.name}: HUD silahı mipmapsiz lineer filtreyi kullanmıyor')
+        for texture_relative in sorted(set(re.findall(r'path="res://(assets/weapons/[^\"]+\.png)"', weapon_view))):
+            import_path=ROOT/f'{texture_relative}.import'
+            if not import_path.exists():
+                fail(f'{texture_relative}: HUD silah texture import dosyası eksik')
+                continue
+            import_text=import_path.read_text(encoding='utf-8')
+            if 'mipmaps/generate=false' not in import_text:
+                fail(f'{texture_relative}: sabit ölçekli HUD texture için gereksiz mipmap açık')
 
     light_profile_contracts={
-        'level_01.tscn': ('26_room_light', 17, '36_room_fill', 3, None, 0),
-        'level_02.tscn': ('26_room_light', 32, '36_room_fill', 3, None, 0),
+        'level_01.tscn': ('26_room_light', 36, '36_room_fill', 1, None, 0),
+        'level_02.tscn': ('26_room_light', 32, '36_room_fill', 1, None, 0),
         'level_03.tscn': ('15_room_light', 17, None, 0, None, 0),
     }
     forbidden_instance_keys=['light_energy', 'light_range', 'cone_angle', 'cone_attenuation', 'distance_attenuation', 'shadow_enabled']
@@ -637,7 +1035,7 @@ def check_world_visual_standard():
         fail('Yeşil kapı lambası 768x320 gerçek alfa kanallı PNG değil')
 
     mappings=[
-        ('level_01.tscn', '19_lamp_red', '30_lamp_green', 4, 34, {'Lamp_5_6_1','Lamp_5_6_2','Lamp_3_6_1','Lamp_3_6_2'}),
+        ('level_01.tscn', '19_lamp_red', '30_lamp_green', 4, 20, {'Lamp_25_27_1','Lamp_25_27_2','Lamp_35_37_1','Lamp_35_37_2'}),
         ('level_02.tscn', '19_lamp_red', '30_lamp_green', 8, 2, {f'D0{i}_Lamp{j}' for i in range(1,5) for j in (1,2)}),
         ('level_03.tscn', '16_red_lamp', '35_green_lamp', 4, 24, {f'Door{i:02d}_Lamp{x}' for i in (6,10) for x in ('A','B')}),
     ]
@@ -647,6 +1045,214 @@ def check_world_visual_standard():
         actual_green=re.findall(rf'^\[node name="([^"]+)"[^\n]*instance=ExtResource\("{green_id}"\)', scene, re.M)
         if actual_red != expected_red_names or len(actual_red) != red_count or len(actual_green) != green_count:
             fail(f'{filename} kapı ışığı kuralı bozuk: kırmızı {len(actual_red)}/{red_count}, yeşil {len(actual_green)}/{green_count}')
+
+
+def check_coplanar_world_piece_overlaps():
+    scenes=[
+        ROOT/'scenes/levels/level_01.tscn',
+        ROOT/'scenes/levels/level_02.tscn',
+        ROOT/'scenes/levels/level_03.tscn',
+        ROOT/'scenes/hub/bastion_7.tscn',
+    ]
+    for path in scenes:
+        scene=path.read_text(encoding='utf-8')
+        world_piece_ids=set(re.findall(
+            r'^\[ext_resource[^\n]*path="res://scenes/world/world_piece\.tscn"[^\n]*id="([^"]+)"\]$',
+            scene,
+            re.M,
+        ))
+        pieces=[]
+        for match in re.finditer(r'^\[node name="([^"]+)"[^\n]*instance=ExtResource\("([^"]+)"\)\]\n(.*?)(?=\n\[node |\Z)', scene, re.M | re.S):
+            node_name, resource_id, body=match.groups()
+            if resource_id not in world_piece_ids:
+                continue
+            size_match=re.search(r'^piece_size = Vector3\(([^\n]+)\)$', body, re.M)
+            if size_match is None:
+                continue
+            size=tuple(float(value.strip()) for value in size_match.group(1).split(','))
+            transform_match=re.search(r'^transform = Transform3D\(([^\n]+)\)$', body, re.M)
+            if transform_match is None:
+                transform=(((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)), (0.0, 0.0, 0.0))
+            else:
+                values=[float(value.strip()) for value in transform_match.group(1).split(',')]
+                if len(values) != 12:
+                    fail(f'{path.name}:{node_name} Transform3D parse edilemedi')
+                    continue
+                transform=((tuple(values[0:3]), tuple(values[3:6]), tuple(values[6:9])), tuple(values[9:12]))
+            corners=[]
+            for x in (-size[0] * 0.5, size[0] * 0.5):
+                for y in (-size[1] * 0.5, size[1] * 0.5):
+                    for z in (-size[2] * 0.5, size[2] * 0.5):
+                        corners.append(transform_point(transform, (x, y, z)))
+            lower=tuple(min(point[axis] for point in corners) for axis in range(3))
+            upper=tuple(max(point[axis] for point in corners) for axis in range(3))
+            spans=tuple(upper[axis] - lower[axis] for axis in range(3))
+            thin_axis=min(range(3), key=lambda axis: spans[axis])
+            if spans[thin_axis] <= 0.41:
+                pieces.append((node_name, lower, upper, thin_axis))
+
+        overlaps=[]
+        for index, first in enumerate(pieces):
+            first_name, first_lower, first_upper, first_axis=first
+            for second_name, second_lower, second_upper, second_axis in pieces[index + 1:]:
+                if first_axis != second_axis:
+                    continue
+                first_center=(first_lower[first_axis] + first_upper[first_axis]) * 0.5
+                second_center=(second_lower[second_axis] + second_upper[second_axis]) * 0.5
+                if not math.isclose(first_center, second_center, abs_tol=0.001):
+                    continue
+                surface_axes=[axis for axis in range(3) if axis != first_axis]
+                surface_overlap=[
+                    min(first_upper[axis], second_upper[axis]) - max(first_lower[axis], second_lower[axis])
+                    for axis in surface_axes
+                ]
+                if all(value > 0.01 for value in surface_overlap):
+                    overlaps.append(f'{first_name} <-> {second_name}')
+        if overlaps:
+            preview=', '.join(overlaps[:6])
+            suffix=f' (+{len(overlaps) - 6})' if len(overlaps) > 6 else ''
+            fail(f'{path.name} aynı düzlemde çakışan world_piece içeriyor: {preview}{suffix}')
+
+
+def check_door_frame_wall_alignment():
+    scene_paths=[
+        ROOT/'scenes/levels/level_01.tscn',
+        ROOT/'scenes/levels/level_02.tscn',
+        ROOT/'scenes/levels/level_03.tscn',
+        ROOT/'scenes/hub/bastion_7.tscn',
+    ]
+    expected_door_count=61
+    checked_door_count=0
+
+    def parse_transform(body: str):
+        match=re.search(r'^transform = Transform3D\(([^\n]+)\)$', body, re.M)
+        if match is None:
+            return (
+                ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
+                (0.0, 0.0, 0.0),
+            )
+        values=[float(value.strip()) for value in match.group(1).split(',')]
+        if len(values) != 12:
+            return None
+        axes=(tuple(values[0:3]), tuple(values[3:6]), tuple(values[6:9]))
+        return axes, tuple(values[9:12])
+
+    def add_vector(first, second):
+        return tuple(first[index] + second[index] for index in range(3))
+
+    def scale_vector(vector, scalar):
+        return tuple(component * scalar for component in vector)
+
+    def dot(first, second):
+        return sum(first[index] * second[index] for index in range(3))
+
+    def piece_bounds_in_door_space(piece, door_transform):
+        piece_axes, piece_origin=piece['transform']
+        door_axes, door_origin=door_transform
+        corners=[]
+        for x in (-piece['size'][0] * 0.5, piece['size'][0] * 0.5):
+            for y in (-piece['size'][1] * 0.5, piece['size'][1] * 0.5):
+                for z in (-piece['size'][2] * 0.5, piece['size'][2] * 0.5):
+                    world=piece_origin
+                    world=add_vector(world, scale_vector(piece_axes[0], x))
+                    world=add_vector(world, scale_vector(piece_axes[1], y))
+                    world=add_vector(world, scale_vector(piece_axes[2], z))
+                    relative=tuple(world[index] - door_origin[index] for index in range(3))
+                    corners.append(tuple(dot(relative, door_axes[axis]) for axis in range(3)))
+        lower=tuple(min(corner[axis] for corner in corners) for axis in range(3))
+        upper=tuple(max(corner[axis] for corner in corners) for axis in range(3))
+        return lower, upper
+
+    for path in scene_paths:
+        scene=path.read_text(encoding='utf-8')
+        ext_resources={
+            match.group(2): match.group(1)
+            for match in re.finditer(r'^\[ext_resource[^\n]*path="([^"]+)"[^\n]*id="([^"]+)"\]$', scene, re.M)
+        }
+        door_ids={resource_id for resource_id, resource_path in ext_resources.items() if resource_path == 'res://scenes/props/door_side_slide.tscn'}
+        piece_ids={resource_id for resource_id, resource_path in ext_resources.items() if resource_path == 'res://scenes/world/world_piece.tscn'}
+        doors=[]
+        pieces=[]
+        for match in re.finditer(r'^\[node name="([^"]+)"([^\n]*)\]\n(.*?)(?=\n\[node |\Z)', scene, re.M | re.S):
+            node_name, header, body=match.groups()
+            instance_match=re.search(r'instance=ExtResource\("([^"]+)"\)', header)
+            if instance_match is None:
+                continue
+            resource_id=instance_match.group(1)
+            transform=parse_transform(body)
+            if transform is None:
+                fail(f'{path.name}:{node_name} kapı bağlantısı Transform3D parse edilemedi')
+                continue
+            if resource_id in door_ids:
+                doors.append({'name': node_name, 'transform': transform})
+            elif resource_id in piece_ids:
+                size_match=re.search(r'^piece_size = Vector3\(([^\n]+)\)$', body, re.M)
+                if size_match is not None:
+                    size=tuple(float(value.strip()) for value in size_match.group(1).split(','))
+                    pieces.append({'name': node_name, 'transform': transform, 'size': size})
+
+        checked_door_count += len(doors)
+        for door in doors:
+            negative_sides=[]
+            positive_sides=[]
+            top_fills=[]
+            for piece in pieces:
+                lower, upper=piece_bounds_in_door_space(piece, door['transform'])
+                spans=tuple(upper[axis] - lower[axis] for axis in range(3))
+                if abs((lower[0] + upper[0]) * 0.5) > 0.06 or spans[0] > 0.45:
+                    continue
+                if lower[1] < -2.20 and upper[1] > 4.70:
+                    if upper[2] <= 0.0:
+                        negative_sides.append((abs(upper[2] + 2.46), piece['name'], lower, upper))
+                    if lower[2] >= 0.0:
+                        positive_sides.append((abs(lower[2] - 2.46), piece['name'], lower, upper))
+                if lower[1] >= 2.40 and upper[1] > 4.70 and lower[2] < 0.0 < upper[2]:
+                    error=abs(lower[1] - 2.48) + abs(lower[2] + 2.46) + abs(upper[2] - 2.46)
+                    top_fills.append((error, piece['name'], lower, upper))
+
+            negative=min(negative_sides, default=None, key=lambda item: item[0])
+            positive=min(positive_sides, default=None, key=lambda item: item[0])
+            top=min(top_fills, default=None, key=lambda item: item[0])
+            errors=[]
+            if negative is None or not math.isclose(negative[3][2], -2.46, abs_tol=0.002):
+                errors.append('sol yan duvar/jamb dış yüzü')
+            if positive is None or not math.isclose(positive[2][2], 2.46, abs_tol=0.002):
+                errors.append('sağ yan duvar/jamb dış yüzü')
+            if top is None:
+                errors.append('üst dolgu/header')
+            else:
+                top_lower, top_upper=top[2], top[3]
+                if not math.isclose(top_lower[1], 2.48, abs_tol=0.002):
+                    errors.append('üst dolgu alt yüzü')
+                if not math.isclose(top_lower[2], -2.46, abs_tol=0.002) or not math.isclose(top_upper[2], 2.46, abs_tol=0.002):
+                    errors.append('üst dolgu genişliği')
+            if errors:
+                fail(f'{path.name}:{door["name"]} kapı kasası/duvar uç uca değil: {", ".join(errors)}')
+
+    if checked_door_count != expected_door_count:
+        fail(f'Kapı kasası/duvar hizası denetlenen kapı sayısı yanlış: {checked_door_count}/{expected_door_count}')
+
+    door_scene=(ROOT/'scenes/props/door_side_slide.tscn').read_text(encoding='utf-8')
+    for contract, expected_count in {
+        'size = Vector3(0.2, 4.48, 2.22)': 2,
+        '1.0183498': 4,
+        'size = Vector3(0.24, 4.48, 4.44)': 2,
+    }.items():
+        if door_scene.count(contract) != expected_count:
+            fail(f'Canonical kapı kanadı/görsel/blocker uç uca ölçüsü bozuk: {contract}')
+    for obsolete in ['1.05505', '0.011767507', ', 0, 0, -1.12)', ', 0, 0, 1.12)', 'Vector3(0.24, 4.48, 4.48)']:
+        if obsolete in door_scene:
+            fail(f'Canonical kapıda eski bindirme/boşluk değeri kaldı: {obsolete}')
+    standard=(ROOT/'STANDART.txt').read_text(encoding='utf-8')
+    for contract in [
+        'Kapalı kanat merkezleri        : Z -1.11 / +1.11 m',
+        'Yatay yan duvar parçası : 3.34 x 7.00 x 0.40 m',
+        'Yatay top-fill          : 4.92 x 2.28 x 0.40 m',
+        'Yan duvarların iç kenarları Z/X -2.46 ve +2.46',
+        'Kapı prefabı bulunmayan açık geçitlerde 4.44 m net açıklık',
+    ]:
+        if contract not in standard:
+            fail(f'STANDART kapı kasası/duvar hizası kuralı eksik: {contract}')
 
 
 def check_runtime_signal_contracts():
@@ -672,6 +1278,66 @@ def check_level_briefings():
         text=(ROOT/'scripts/levels'/name).read_text(encoding='utf-8')
         if 'extends VexBaseLevel' not in text: fail(f'{name}: VexBaseLevel kullanmıyor')
 
+
+
+def check_level_01_layout_contract():
+    scene=(ROOT/'scenes/levels/level_01.tscn').read_text(encoding='utf-8')
+    for contract in [
+        'map_revision = "VEX01-R28-37ROOM-13STEP"',
+        'automap_columns = 5', 'automap_rows = 13',
+        'automap_world_min = Vector2(-30, -65)', 'automap_world_max = Vector2(30, 65)',
+        'automap_start_cell = Vector2i(2, 12)', 'automap_exit_cell = Vector2i(2, 0)',
+    ]:
+        if contract not in scene:
+            fail(f'VEX-01 37 oda/13 basamak harita sözleşmesi eksik: {contract}')
+
+    floor_matches=re.findall(
+        r'^\[node name="Floor_R(\d{2})"[^\n]*\]\ntransform = Transform3D\([^\n]+, ([^,]+), -0\.2, ([^)]+)\)',
+        scene, re.M
+    )
+    if len(floor_matches) != 37:
+        fail(f'VEX-01 oda zemin sayısı 37 değil: {len(floor_matches)}')
+    else:
+        row_counts={}
+        x_by_z={}
+        for _room_id, x_text, z_text in floor_matches:
+            x=round(float(x_text.strip()), 3)
+            z=round(float(z_text.strip()), 3)
+            row_counts[z]=row_counts.get(z,0)+1
+            x_by_z.setdefault(z,[]).append(x)
+        expected_counts=[1,3,5,3,1,3,5,3,1,3,5,3,1]
+        actual=[row_counts.get(float(60-10*step),0) for step in range(13)]
+        if actual != expected_counts:
+            fail(f'VEX-01 basamak oda dağılımı bozuk: {actual} / {expected_counts}')
+        expected_x={1:[0.0],3:[-12.0,0.0,12.0],5:[-24.0,-12.0,0.0,12.0,24.0]}
+        for step,count in enumerate(expected_counts):
+            z=float(60-10*step)
+            if sorted(x_by_z.get(z,[])) != expected_x[count]:
+                fail(f'VEX-01 basamak {step+1} oda merkezleri standarda uymuyor')
+
+    if scene.count('name="Ceiling_R') != 37:
+        fail('VEX-01 tavan sayısı 37 oda ile eşleşmiyor')
+    door_names=set(re.findall(r'^\[node name="(Door_\d{2}_\d{2})"[^\n]*parent="Doors"', scene, re.M))
+    expected_edges={
+        (1,3),(2,3),(2,6),(3,4),(3,7),(4,8),(5,6),(6,10),(7,11),(8,9),(8,12),(11,13),
+        (13,15),(14,15),(14,18),(15,16),(15,19),(16,20),(17,18),(18,22),(19,23),(20,21),(20,24),(23,25),
+        (25,27),(26,27),(26,30),(27,28),(27,31),(28,32),(29,30),(30,34),(31,35),(32,33),(32,36),(35,37),
+    }
+    expected_names={f'Door_{a:02d}_{b:02d}' for a,b in expected_edges}
+    if door_names != expected_names:
+        fail(f'VEX-01 seçici oda bağlantı grafiği bozuk: {len(door_names)}/{len(expected_names)} kapı')
+    if scene.count('parent="Doors" instance=ExtResource("8_door")') != 36:
+        fail('VEX-01 bağlantı ağacı 36 kapı olmalı')
+    for contract in [
+        '[node name="Door_25_27" parent="Doors" instance=ExtResource("8_door")]',
+        'required_key = &"blue"',
+        '[node name="Door_35_37" parent="Doors" instance=ExtResource("8_door")]',
+        'required_keys = Array[StringName]([&"blue", &"red"])',
+        'transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 60)',
+        'transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5.72, 1.6, -60)',
+    ]:
+        if contract not in scene:
+            fail(f'VEX-01 ilerleme/başlangıç/çıkış sözleşmesi eksik: {contract}')
 
 def check_level_02_progression():
     scene=(ROOT/'scenes/levels/level_02.tscn').read_text(encoding='utf-8')
@@ -840,7 +1506,7 @@ def check_level_03_contract():
     upper_door_lamps=sum(1 for _x, y, _z in lamp_positions if y == '13.3')
     if lower_door_lamps != 18 or upper_door_lamps != 10:
         fail(f'VEX-03 durum lambaları kapı üstünde değil: {lower_door_lamps} alt / {upper_door_lamps} üst')
-    for standard_contract in ['piece_size = Vector3(12, 0.4, 10)', 'piece_size = Vector3(0.4, 7, 2.54)', 'piece_size = Vector3(0.4, 2.28, 4.92)', 'piece_size = Vector3(4.92, 2.28, 0.4)', '-18, 6.82, 15)']:
+    for standard_contract in ['piece_size = Vector3(12, 0.4, 10)', 'piece_size = Vector3(0.4, 7, 2.54)', 'piece_size = Vector3(0.4, 2.28, 4.92)', 'piece_size = Vector3(4.44, 2.28, 0.4)', 'piece_size = Vector3(9.425, 0.4, 10)', ', 5.0143)', '-18, 6.82, 15)']:
         if standard_contract not in scene:
             fail(f'VEX-03 Level 1/2 ölçü standardı eksik: {standard_contract}')
     if 'map_revision = "VEX03-R11-REUSABLE-U-STAIR"' not in scene:
@@ -956,7 +1622,9 @@ def check_localization_contract():
         'LEVEL01_NAME','LEVEL01_OBJECTIVE_START','LEVEL01_BRIEFING_STORY','LEVEL01_BRIEFING_OBJECTIVE','LEVEL01_MAP_TITLE',
         'LEVEL02_NAME','LEVEL02_OBJECTIVE_START','LEVEL02_BRIEFING_STORY','LEVEL02_BRIEFING_OBJECTIVE','LEVEL02_MAP_TITLE',
         'LEVEL03_NAME','LEVEL03_OBJECTIVE_START','LEVEL03_BRIEFING_STORY','LEVEL03_BRIEFING_OBJECTIVE','LEVEL03_MAP_TITLE',
-        'HUB_DISPLAY_NAME','HUB_ARRIVAL_SAFE_ZONE','HUB_MAP_TITLE','HUD_SLOT_05','SETTINGS_FOV','SETTINGS_HEAD_BOB','SETTINGS_CONTROLLER_SENSITIVITY'
+        'HUB_DISPLAY_NAME','HUB_ARRIVAL_SAFE_ZONE','HUB_MAP_TITLE','HUD_SLOT_05','SETTINGS_FOV','SETTINGS_HEAD_BOB','SETTINGS_CONTROLLER_SENSITIVITY',
+        'WEAPON_P20_NAME','HUD_AMMO_MAGNUM','PICKUP_P20_ACTIVE','AMMO_MAGNUM',
+        'UPGRADE_INERTIAL_PISTON','UPGRADE_OVERPRESSURE_CORE','UPGRADE_RUPTURE_ROUND'
     }
     csv_keys={row['keys'] for row in rows}
     for key in semantic_keys:
@@ -1032,7 +1700,7 @@ def check_brightness_scene_authority():
 
 
 def main():
-    check_paths(); check_import_uids(); check_inputmap(); check_core_scenes(); check_keys_and_pickups(); check_enemies(); check_player_contract(); check_no_checkpoint_contract(); check_weapon_upgrades(); check_armory_loadout_contract(); check_p01_visual_contract(); check_bastion_door_wall_contract(); check_bastion_room_display_contract(); check_professional_terminal_contract(); check_world_visual_standard(); check_runtime_signal_contracts(); check_level_briefings(); check_level_02_progression(); check_level_03_contract(); check_unique_progression_ids(); check_localization_contract(); check_brightness_scene_authority(); check_stale_files()
+    check_paths(); check_import_uids(); check_inputmap(); check_core_scenes(); check_keys_and_pickups(); check_enemies(); check_player_contract(); check_no_checkpoint_contract(); check_weapon_upgrades(); check_armory_loadout_contract(); check_p01_visual_contract(); check_p14_playable_contract(); check_p20_playable_contract(); check_bastion_door_wall_contract(); check_bastion_room_display_contract(); check_professional_terminal_contract(); check_world_visual_standard(); check_coplanar_world_piece_overlaps(); check_door_frame_wall_alignment(); check_runtime_signal_contracts(); check_level_briefings(); check_level_01_layout_contract(); check_level_02_progression(); check_level_03_contract(); check_unique_progression_ids(); check_localization_contract(); check_brightness_scene_authority(); check_stale_files()
     for w in WARNINGS: print('WARNING:',w)
     for f in FAILURES: print('ERROR:',f)
     print(f'VEX VALIDATOR: {len(FAILURES)} gerçek hata, {len(WARNINGS)} uyarı')

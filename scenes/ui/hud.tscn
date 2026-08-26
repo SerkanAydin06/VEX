@@ -84,16 +84,6 @@ corner_radius_bottom_left = 2
 [node name="HUD" type="CanvasLayer" unique_id=1189378943]
 process_mode = 3
 script = ExtResource("1_script")
-critical_health_threshold = 25
-warning_health_threshold = 50
-low_health_overlay_ratio = 0.5
-critical_overlay_ratio = 0.3
-notification_hold_time = 2.5
-notification_fade_time = 0.35
-pickup_slide_time = 0.18
-pickup_hold_time = 1.85
-pickup_fade_time = 0.3
-damage_feedback_time = 0.6
 
 [node name="Root" type="Control" parent="." unique_id=190228756]
 layout_mode = 3

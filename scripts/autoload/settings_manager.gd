@@ -79,7 +79,8 @@ enum GraphicsQuality {
 @export var rebindable_actions: Array[StringName] = [
 	&"move_forward", &"move_backward", &"move_left", &"move_right",
 	&"jump", &"sprint", &"crouch", &"interact", &"reload",
-	&"automap", &"night_vision", &"weapon_1", &"weapon_2", &"weapon_3", &"weapon_4", &"weapon_5",
+	&"automap", &"night_vision", &"weapon_flashlight",
+	&"weapon_1", &"weapon_2", &"weapon_3", &"weapon_4", &"weapon_5",
 ]
 
 @export_category("06 - Difficulty Profiles")
@@ -110,12 +111,25 @@ var _default_keycodes: Dictionary = {}
 
 
 func _ready() -> void:
+	_ensure_required_input_actions()
 	_capture_default_keybindings()
 	_ensure_default_gamepad_bindings()
 	_reset_to_scene_defaults()
 	load_settings()
 	_apply_language(false)
 	call_deferred("apply_settings")
+
+
+## Eski proje paketlerinde sonradan eklenen aksiyonlar project.godot içinde
+## bulunmayabilir. Ayarlar ve oyuncu kodu çalışmadan önce güvenli varsayılanı
+## runtime InputMap'e ekleyerek eksik-action hatasını engeller.
+func _ensure_required_input_actions() -> void:
+	if InputMap.has_action(&"weapon_flashlight"):
+		return
+	InputMap.add_action(&"weapon_flashlight")
+	var flashlight_key := InputEventKey.new()
+	flashlight_key.physical_keycode = KEY_F
+	InputMap.action_add_event(&"weapon_flashlight", flashlight_key)
 
 
 func _reset_to_scene_defaults() -> void:
@@ -501,6 +515,7 @@ func _ensure_default_gamepad_bindings() -> void:
 	_add_joy_button(&"automap", JOY_BUTTON_BACK)
 	_add_joy_button(&"pause", JOY_BUTTON_START)
 	_add_joy_button(&"night_vision", JOY_BUTTON_DPAD_UP)
+	_add_joy_button(&"weapon_flashlight", JOY_BUTTON_DPAD_RIGHT)
 
 
 func _add_joy_motion(action: StringName, axis: JoyAxis, axis_value: float) -> void:

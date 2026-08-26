@@ -60,6 +60,10 @@ Aras, güvenlik sığınağında yaralı hâlde uyanır. Acil durum ışıkları
 
 > “Sıfır Kaynak deneyi başarısız. Boyutsal bütünlük kaybedildi. Yetkisiz yaşam biçimleri tespit edildi.”
 
+Sığınağın tahliye kapısı doğrudan açılmaz. Hasar gören güvenlik yapay zekâsı, Aras'ı sekiz bölmeli **Acil Durum Muharebe Protokolü**ne yönlendirir ve her güvenlik kilidini ancak bölmedeki tehditler temizlendiğinde serbest bırakır. Aras hareket ve silah disiplinini yeniden kazanırken yaratıkların tesis savunma ağının içine kadar sızdığını görür.
+
+Ana karantina tesisinde tahliye hava kilidi çifte yetki ister. Aras önce doğu kanadındaki kırmızı kartı, ardından mühimmat ve pompalı tüfek eğitiminin arkasındaki mavi kartı ele geçirir. Bu zorunlu rota onu hem kaynaklarını yönetmeye hem de kapalı alan çatışmasına alışmaya mecbur eder; son muhafız düştüğünde Bastion-7 hattı açılır.
+
 Aras önce yaratıkların laboratuvar deneyleri olduğunu düşünür. Güvenlik görüntülerinde reaktör odasının ortasında açılan siyah-kızıl bir yarık ve o yarıktan geçen ilk canlı görülür. Bilimsel bir kayıtta yarım kalmış tek cümle vardır:
 
 > “Enerji üretmiyoruz. Bir yerden çekiyoruz.”

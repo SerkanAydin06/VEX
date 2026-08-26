@@ -10,23 +10,26 @@
 [ext_resource type="PackedScene" uid="uid://c4gn8k6ogvf0n" path="res://scenes/ui/hud.tscn" id="7_hud"]
 [ext_resource type="PackedScene" uid="uid://bk5dcdh1lk7nr" path="res://scenes/props/door_side_slide.tscn" id="8_door"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="9_white"]
+[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_large.tscn" id="23_white_large"]
+[ext_resource type="PackedScene" path="res://scenes/world/door_status_light.tscn" id="24_door_status"]
+[ext_resource type="PackedScene" path="res://scenes/world/room_name_display.tscn" id="25_room_display"]
 [ext_resource type="PackedScene" uid="uid://ckhtinn61g27l" path="res://scenes/hub/hub_terminal.tscn" id="11_terminal"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_rack"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="13_ambient"]
-[ext_resource type="Resource" uid="uid://37peeksg02yp" path="res://resources/missions/vex01.tres" id="13_mission01"]
+[ext_resource type="Resource" path="res://resources/missions/vex01.tres" id="13_mission01"]
 [ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="14_logo"]
-[ext_resource type="Resource" uid="uid://066urx6litqr" path="res://resources/missions/vex02.tres" id="14_mission02"]
-[ext_resource type="Resource" uid="uid://bqurnj2kaajwv" path="res://resources/missions/vex03.tres" id="15_mission03"]
+[ext_resource type="Resource" path="res://resources/missions/vex02.tres" id="14_mission02"]
+[ext_resource type="Resource" path="res://resources/missions/vex03.tres" id="15_mission03"]
 [ext_resource type="Texture2D" uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png" id="15_shotgun"]
 [ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="16_ak47"]
 [ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="17_mp90"]
 [ext_resource type="Texture2D" uid="uid://cxwpf6cn3ejr7" path="res://assets/world/bastion7/operator_pad.png" id="18_operator_pad"]
-[ext_resource type="Texture2D" uid="uid://c6x022128ot1i" path="res://assets/weapons/p01/p01_side.png" id="19_p01_side"]
+[ext_resource type="Texture2D" uid="uid://di7g8da07ouwy" path="res://assets/weapons/p01/p01_side.png" id="19_p01_side"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p07/p07_side.png" id="20_p07_side"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p14/p14_side.png" id="20_p14_side"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p20/p20_side.png" id="20_p20_side"]
 [ext_resource type="PackedScene" path="res://scenes/hub/armory_category_rack.tscn" id="21_category_rack"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_survivor_presence.tscn" id="22_survivor"]
-[ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_large.tscn" id="23_white_large"]
-[ext_resource type="PackedScene" path="res://scenes/world/door_status_light.tscn" id="24_door_status"]
-[ext_resource type="PackedScene" path="res://scenes/world/room_name_display.tscn" id="25_room_display"]
 
 [sub_resource type="Environment" id="Environment_hub"]
 background_mode = 1
@@ -500,7 +503,7 @@ automatic_open = true
 [node name="CeilingWhite_Armory" parent="RoomLights" unique_id=941774806 instance=ExtResource("23_white_large")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, -10)
 
-[node name="CeilingWhite_FiringRange" parent="RoomLights" unique_id=902375434 instance=ExtResource("9_white")]
+[node name="CeilingWhite_FiringRange" parent="RoomLights" instance=ExtResource("9_white")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 6.82, -10)
 
 [node name="CeilingWhite_CommandWest" parent="RoomLights" unique_id=1673422956 instance=ExtResource("9_white")]
@@ -520,92 +523,95 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, 20)
 
 [node name="CeilingWhite_OperatorPlatform" parent="RoomLights" unique_id=1709697908 instance=ExtResource("9_white")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, 28)
-light_energy = 7.4
-light_range = 20.0
-cone_angle = 80.0
-cone_attenuation = 0.1
-distance_attenuation = 0.0
 
 [node name="CeilingWhite_CommandEast" parent="RoomLights" unique_id=136198587 instance=ExtResource("9_white")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 6.82, 0)
 
-[node name="DoorLights" type="Node3D" parent="." unique_id=1853953974]
+[node name="DoorLights" type="Node3D" parent="."]
 
-[node name="ArmoryLampA" parent="DoorLights" unique_id=289534749 instance=ExtResource("24_door_status")]
+[node name="ArmoryLampA" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.32, 6.05, -10)
 door_path = NodePath("../../Doors/ArmoryDoor")
 locked_preview = false
 
-[node name="ArmoryLampB" parent="DoorLights" unique_id=196090352 instance=ExtResource("24_door_status")]
+[node name="ArmoryLampB" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.68, 6.05, -10)
 door_path = NodePath("../../Doors/ArmoryDoor")
 locked_preview = false
 
-[node name="FiringRangeLampA" parent="DoorLights" unique_id=1258005273 instance=ExtResource("24_door_status")]
+[node name="FiringRangeLampA" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -18.32, 6.05, -10)
 door_path = NodePath("../../Doors/FiringRangeDoor")
+locked_preview = true
 
-[node name="FiringRangeLampB" parent="DoorLights" unique_id=1948862303 instance=ExtResource("24_door_status")]
+[node name="FiringRangeLampB" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -17.68, 6.05, -10)
 door_path = NodePath("../../Doors/FiringRangeDoor")
+locked_preview = true
 
-[node name="ResearchLampA" parent="DoorLights" unique_id=185352231 instance=ExtResource("24_door_status")]
+[node name="ResearchLampA" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.68, 6.05, -10)
 door_path = NodePath("../../Doors/ResearchDoor")
+locked_preview = true
 
-[node name="ResearchLampB" parent="DoorLights" unique_id=1719198709 instance=ExtResource("24_door_status")]
+[node name="ResearchLampB" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.32, 6.05, -10)
 door_path = NodePath("../../Doors/ResearchDoor")
+locked_preview = true
 
-[node name="WorkshopLampA" parent="DoorLights" unique_id=1673456765 instance=ExtResource("24_door_status")]
+[node name="WorkshopLampA" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.32, 6.05, 10)
 door_path = NodePath("../../Doors/WorkshopDoor")
+locked_preview = true
 
-[node name="WorkshopLampB" parent="DoorLights" unique_id=1065590863 instance=ExtResource("24_door_status")]
+[node name="WorkshopLampB" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.68, 6.05, 10)
 door_path = NodePath("../../Doors/WorkshopDoor")
+locked_preview = true
 
-[node name="EngineeringLampA" parent="DoorLights" unique_id=406532208 instance=ExtResource("24_door_status")]
+[node name="EngineeringLampA" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.68, 6.05, 10)
 door_path = NodePath("../../Doors/EngineeringDoor")
+locked_preview = true
 
-[node name="EngineeringLampB" parent="DoorLights" unique_id=679501970 instance=ExtResource("24_door_status")]
+[node name="EngineeringLampB" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.32, 6.05, 10)
 door_path = NodePath("../../Doors/EngineeringDoor")
+locked_preview = true
 
-[node name="OperatorLampA" parent="DoorLights" unique_id=417123545 instance=ExtResource("24_door_status")]
+[node name="OperatorLampA" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 6.05, 24.68)
 door_path = NodePath("../../Doors/OperatorDoor")
 locked_preview = false
 
-[node name="OperatorLampB" parent="DoorLights" unique_id=677276221 instance=ExtResource("24_door_status")]
+[node name="OperatorLampB" parent="DoorLights" instance=ExtResource("24_door_status")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.05, 25.32)
 door_path = NodePath("../../Doors/OperatorDoor")
 locked_preview = false
 
 [node name="RoomDisplays" type="Node3D" parent="." unique_id=48472396]
 
-[node name="ArmoryDisplay" parent="RoomDisplays" unique_id=1541046739 instance=ExtResource("25_room_display")]
+[node name="ArmoryDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.75, 5.25, -10)
 room_name = "ARMORY"
 
-[node name="FiringRangeDisplay" parent="RoomDisplays" unique_id=308502551 instance=ExtResource("25_room_display")]
+[node name="FiringRangeDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -17.75, 5.25, -10)
 room_name = "FIRING RANGE"
 
-[node name="ResearchDisplay" parent="RoomDisplays" unique_id=1864618439 instance=ExtResource("25_room_display")]
+[node name="ResearchDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.75, 5.25, -10)
 room_name = "RESEARCH LAB"
 
-[node name="WorkshopDisplay" parent="RoomDisplays" unique_id=269709031 instance=ExtResource("25_room_display")]
+[node name="WorkshopDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.75, 5.25, 10)
 room_name = "WEAPON WORKSHOP"
 
-[node name="EngineeringDisplay" parent="RoomDisplays" unique_id=2144975230 instance=ExtResource("25_room_display")]
+[node name="EngineeringDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.75, 5.25, 10)
 room_name = "ENGINEERING BAY"
 
-[node name="OperatorDisplay" parent="RoomDisplays" unique_id=457984931 instance=ExtResource("25_room_display")]
+[node name="OperatorDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 5.25, 24.75)
 room_name = "OPERATOR PLATFORM"
 
@@ -716,6 +722,7 @@ visual_world_width = 0.78
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0.42, -0.15)
 weapon_id = &"p07"
 display_name = "WEAPON_P07_NAME"
+weapon_texture = ExtResource("20_p07_side")
 fallback_visual_text = "P-07"
 locked_message = "ARMORY_RESEARCH_LOCKED"
 visual_world_width = 0.8
@@ -724,6 +731,7 @@ visual_world_width = 0.8
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.92, -0.42, -0.15)
 weapon_id = &"p14"
 display_name = "WEAPON_P14_NAME"
+weapon_texture = ExtResource("20_p14_side")
 fallback_visual_text = "P-14"
 locked_message = "ARMORY_RESEARCH_LOCKED"
 visual_world_width = 0.82
@@ -732,6 +740,7 @@ visual_world_width = 0.82
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, -0.42, -0.15)
 weapon_id = &"p20"
 display_name = "WEAPON_P20_NAME"
+weapon_texture = ExtResource("20_p20_side")
 fallback_visual_text = "P-20"
 locked_message = "ARMORY_RESEARCH_LOCKED"
 visual_world_width = 0.86

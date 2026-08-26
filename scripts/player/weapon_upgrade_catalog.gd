@@ -9,6 +9,21 @@ const TRACKS := {
 		{"id": &"quick_mag", "name": "UPGRADE_QUICK_MAG", "reload": 0.82, "magazine": 3},
 		{"id": &"ghost_trigger", "name": "UPGRADE_GHOST_TRIGGER", "spread": 0.55, "headshot": 1.15},
 	],
+	&"p07": [
+		{"id": &"luma_array", "name": "UPGRADE_LUMA_ARRAY", "flashlight_range": 1.35, "flashlight_energy": 1.12},
+		{"id": &"micro_compensator", "name": "UPGRADE_MICRO_COMPENSATOR", "recoil": 0.75, "recoil_recovery": 1.20},
+		{"id": &"sentinel_link", "name": "UPGRADE_SENTINEL_LINK", "flashlight_damage": 1.15},
+	],
+	&"p14": [
+		{"id": &"variable_sight", "name": "UPGRADE_VARIABLE_SIGHT", "spread": 0.80},
+		{"id": &"silent_baffle", "name": "UPGRADE_SILENT_BAFFLE", "gunshot_noise": 0.40},
+		{"id": &"needle_rounds", "name": "UPGRADE_NEEDLE_ROUNDS", "headshot": 1.20},
+	],
+	&"p20": [
+		{"id": &"inertial_piston", "name": "UPGRADE_INERTIAL_PISTON", "recoil": 0.70, "recoil_recovery": 1.25},
+		{"id": &"overpressure_core", "name": "UPGRADE_OVERPRESSURE_CORE", "damage": 1.20, "recoil": 1.10},
+		{"id": &"rupture_round", "name": "UPGRADE_RUPTURE_ROUND", "penetration": 0.50, "headshot": 1.25},
+	],
 	&"sg04": [
 		{"id": &"choke", "name": "UPGRADE_CHOKE", "spread": 0.72},
 		{"id": &"drum_extension", "name": "UPGRADE_DRUM_EXTENSION", "magazine": 2, "reload": 0.90},
@@ -32,7 +47,21 @@ static func get_track(weapon_id: StringName) -> Array:
 
 
 static func get_modifiers(weapon_id: StringName, level: int) -> Dictionary:
-	var result := {"damage": 1.0, "reload": 1.0, "spread": 1.0, "recoil": 1.0, "headshot": 1.0, "fire_rate": 1.0, "magazine": 0}
+	var result := {
+		"damage": 1.0,
+		"reload": 1.0,
+		"spread": 1.0,
+		"recoil": 1.0,
+		"recoil_recovery": 1.0,
+		"headshot": 1.0,
+		"fire_rate": 1.0,
+		"magazine": 0,
+		"penetration": 0.0,
+		"flashlight_range": 1.0,
+		"flashlight_energy": 1.0,
+		"flashlight_damage": 1.0,
+		"gunshot_noise": 1.0,
+	}
 	var track := get_track(weapon_id)
 	for index in range(mini(level, track.size())):
 		var tier: Dictionary = track[index]
@@ -41,6 +70,8 @@ static func get_modifiers(weapon_id: StringName, level: int) -> Dictionary:
 				continue
 			if key == "magazine":
 				result[key] = int(result[key]) + int(tier[key])
+			elif key == "penetration":
+				result[key] = float(result[key]) + float(tier[key])
 			else:
 				result[key] = float(result[key]) * float(tier[key])
 	return result

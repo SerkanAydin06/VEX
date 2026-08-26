@@ -32,6 +32,28 @@ extends Node3D
 		shadow_enabled = value
 		_apply_configuration()
 
+@export_category("Gölge ve Yüzey Parlaması")
+@export_range(0.0, 1.0, 0.01) var light_specular := 0.12:
+	set(value):
+		light_specular = value
+		_apply_configuration()
+@export_range(0.0, 0.2, 0.005) var shadow_bias := 0.03:
+	set(value):
+		shadow_bias = value
+		_apply_configuration()
+@export_range(0.0, 2.0, 0.05) var shadow_normal_bias := 0.45:
+	set(value):
+		shadow_normal_bias = value
+		_apply_configuration()
+@export_range(0.1, 4.0, 0.1) var shadow_blur := 1.0:
+	set(value):
+		shadow_blur = value
+		_apply_configuration()
+@export_range(0.0, 1.0, 0.05) var shadow_opacity := 0.90:
+	set(value):
+		shadow_opacity = value
+		_apply_configuration()
+
 @export_category("Uzaklık LOD")
 @export var distance_fade_enabled := true:
 	set(value):
@@ -74,6 +96,11 @@ func _apply_configuration() -> void:
 		target_light.spot_angle_attenuation = cone_attenuation
 		target_light.spot_attenuation = distance_attenuation
 		target_light.shadow_enabled = shadow_enabled
+		target_light.light_specular = light_specular
+		target_light.shadow_bias = shadow_bias
+		target_light.shadow_normal_bias = shadow_normal_bias
+		target_light.shadow_blur = shadow_blur
+		target_light.shadow_opacity = shadow_opacity
 		target_light.distance_fade_enabled = distance_fade_enabled
 		target_light.distance_fade_begin = distance_fade_begin
 		target_light.distance_fade_length = distance_fade_length
@@ -82,4 +109,3 @@ func _apply_configuration() -> void:
 	if fixture != null:
 		fixture.pixel_size = fixture_pixel_size
 		fixture.modulate = fixture_modulate
-

@@ -1,6 +1,6 @@
 VEX — CANONICAL PROJE STANDARDI
 ================================
-Belge sürümü: R34 / compact-scene-authoritative-main-menu-buttons
+Belge sürümü: R39 / vex01-15min-tutorial-combat-gates
 
 Bu dosya yeni level, kapı, silah, HUD, save, Bastion ve localization işleri için tek teknik referanstır.
 Eski BaseTrim/süpürgelik kuralları GEÇERSİZDİR ve projeden kaldırılmıştır.
@@ -15,27 +15,30 @@ Tavan kalınlığı  : 0.40 m
 Duvar kalınlığı  : 0.40 m
 Beyaz ışık alt kat Y : 6.82 m
 Beyaz ışık üst kat Y : kat tabanı + 6.82 m (VEX-03 için 14.62 m)
-Beyaz ışık gölge : AÇIK
+Beyaz ışık gölge : profile göre bütçeli
 
 Canonical beyaz ışık profilleri (değerler KODDA değil SAHNE PREFABINDA tutulur):
 - NORMAL ROOM  : res://scenes/world/ceiling_light_white_horror.tscn
   energy 2.6 / range 7.4 m / cone 18° / cone attenuation 1.6 / distance attenuation 0.35 / shadow AÇIK
 - FULL / SPAWN : res://scenes/world/ceiling_light_white_fill.tscn
-  energy 3.8 / range 9.2 m / cone 42° / cone attenuation 1.6 / distance attenuation 0.3 / shadow AÇIK
+  energy 3.8 / range 9.2 m / cone 42° / cone attenuation 1.6 / distance attenuation 0.3 / shadow KAPALI / specular 0
 - LARGE VOLUME : res://scenes/world/ceiling_light_white_large.tscn
   energy 8.0 / range 20.0 m / cone 80° / cone attenuation 4.0 / distance attenuation 0.0 / shadow AÇIK
 
 Kurallar:
 - Level 1, Level 2 ve Level 3 normal odalarda NORMAL ROOM profilini kullanır.
-- Spawn/özellikle aydınlatılması gereken küçük alanlarda FULL / SPAWN profili seçilir.
+- Her level başlangıç/spawn konumunda yalnız bir FULL / SPAWN ışığı kullanılır; aynı spawn alanına ikinci dolgu ışığı eklenmez.
 - LARGE VOLUME yalnız iki kat yüksekliğindeki özel hacim gibi açıkça gerekçeli alanlarda kullanılır.
 - Level sahnelerinde bu profil sayılarını kopyalayan light_energy/light_range/cone override blokları tutulmaz; doğru prefab seçilir.
 - room_ceiling_light.gd yalnız Inspector/prefab değerlerini child SpotLight3D üzerine uygular; profil seçmez ve level ayarlarını ezmez.
 - world_piece canonical olarak gölge üretir; duvar/tavan/zemin ve kapı shadow blocker yapıları beyaz ışık sızıntısını fiziksel olarak keser.
-- SHADOW CONTRACT: NORMAL ROOM, FULL / SPAWN ve LARGE VOLUME beyaz ışık profillerinde shadow AÇIK olmak zorundadır.
-- Kapı durum ışıkları (kırmızı/yeşil) de shadow AÇIK kullanır. Kapalı kapıda DoorShadowBlocker yalnız gölge üreten (shadows-only) görünmez engelleyici olarak aktif olur.
+- SHADOW CONTRACT: NORMAL ROOM ve LARGE VOLUME shadow AÇIK; geniş alanı yalnız dolduran FULL / SPAWN shadow KAPALI olmak zorundadır.
+- Kapı durum ışıkları (kırmızı/yeşil) dekoratif profildir: shadow KAPALI, specular 0 ve volumetric fog energy 0 kullanır. Kapalı kapıda DoorShadowBlocker, gölge üreten ana/player ışıklarını fiziksel olarak kesmeye devam eder.
 - Canonical world_piece cast_shadow AÇIK'tır. Level 1/2/3 instance'ları shadow_enabled=false veya cast_shadow=false/0 ile bu standardı EZEMEZ.
 - Gölge istemeyen özel dekor/efekt gerekiyorsa level instance override yapılmaz; gerekçeli AYRI prefab/material oluşturulur. Böylece level sahnesi canonical shadow standardını sessizce bozamaz.
+- Oyuncu feneri shadow AÇIK; shadow bias 0.08, normal bias 0.90, blur 1.20, opacity 0.90 ve specular 0.30 kullanır. Bu değerler player.tscn Inspector verisidir.
+- Fener ışık kaynağı kamera merkezinin çok önüne taşınmaz; canonical local konumu `(0.12, -0.12, -0.08)` olur. Böylece oyuncu duvara dayandığında SpotLight gölge kamerası duvar yüzeyine girmez ve yakın-mesafe kırpılması oluşmaz.
+- Compatibility renderer masaüstünde positional shadow atlas 32-bit derinlik kullanır (`atlas_16_bits=false`). Bu ayar uzun menzilli oyuncu fenerinde mesafeye bağlı shadow acne/popping'i önler; atlas çözünürlüğünü veya ışık sayısını artırmadığı için çizim maliyetini büyütmez.
 EXIT tabela Y    : 4.85 m
 Texture standard : lowercase snake_case; sürüm eki kullanılmaz
 Enemy filtre     : Linear Mipmap; Fixed-Y billboard
@@ -61,6 +64,10 @@ Enemy taban Y örnekleri:
 - Biten parça, devam eden duvarın yüzünde biter (butt-joint).
 - T birleşimlerinde sona eren duvar devam eden duvarın yüzüne kadar gelir.
 - Level 1, Level 2, Level 3 ve Bastion-7 aynı geometri mantığını kullanır.
+- Aynı düzlemdeki iki world_piece yüzeyi alan boyunca üst üste binmez; z-fighting ve fener altında parlayan birleşim oluşturulmaz.
+- Duvar materyali `res://resources/shaders/world_wall_surface.gdshader` ile dominant dünya ekseninden tek albedo örneği alır; 4.00 m dünya gridine sabitlenir ve anisotropic mipmap kullanır. Canonical `wall_panel.png` 2048x2048, dört kenarı dikişsiz, koyu zırhlı gunmetal panel yüzeyidir; mavi-alt/beyaz-üst boyalı duvar veya sıva görünümü kullanmaz. Materyal metallic 0.72 / roughness 0.58 / specular 0.34 değerlerini kullanır. Böylece her BoxMesh'te yeniden başlayan UV dikişi oluşmaz ve ek texture örneklemesi olmadan metal yüzey okunur.
+- Zemin ve tavan `res://resources/shaders/world_planar_surface.gdshader` ile XZ dünya koordinatında süreklidir.
+- Crisp panel dokusunda üç örnekli triplanar kullanılmaz; duvar shaderı tek örnekli eksen projeksiyonuyla Compatibility renderer maliyetini düşük tutar.
 
 
 4) CANONICAL KAPI STANDARDI
@@ -71,22 +78,29 @@ Tek referans prefab:
 Ayrı Bastion kapı prefabı YOKTUR. Bütün level/hub kapıları aynı sahneyi kullanır.
 
 Canonical kapı geometrisi:
-- Sol/sağ PanelBody / collision : 0.20 x 4.48 x 2.20 m
-- İki yana açılma offsetleri     : Z -2.10 / +2.10 m
+- Sol/sağ PanelBody / collision : 0.20 x 4.48 x 2.22 m
+- Kapalı kanat merkezleri        : Z -1.11 / +1.11 m; merkezde ve jamb kenarında boşluk/bindirme yoktur.
+- İki yana açılma offsetleri     : Z -2.12 / +2.12 m; açıkken jamb içinde 0.10 m görünür kanat payı kalır.
 - Frame jamb                     : 0.42 x 4.48 x 0.24 m
 - Jamb merkezleri                : Z -2.34 / +2.34 m
 - Frame header                   : 0.42 x 0.24 x 4.92 m
 - Header merkez Y                : 2.36 m
+- FrameCollision                : iki jamb ve header için görünür mesh ile aynı ölçü/konumda layer 1 collider
 - Pocket floor                   : 0.37 x 0.03 x 1.96 m
 - Pocket merkezleri              : Z -3.44 / +3.44 m
 - Threshold                      : 0.18 x 4.44 m plane; kapı sahnesinin içindedir
+- Perception/Shadow blocker      : 0.24 x 4.48 x 4.44 m; jamb hacmine girmez.
 
 Canonical duvar açıklığı çevresi:
 - Dikey yan duvar parçası : 0.40 x 7.00 x 2.54 m
 - Dikey top-fill          : 0.40 x 2.28 x 4.92 m
+- Yatay yan duvar parçası : 3.34 x 7.00 x 0.40 m; 11.60 m duvar açıklığında kapı merkezine göre X -4.13 / +4.13 m
 - Yatay top-fill          : 4.92 x 2.28 x 0.40 m
 - Alt kat top-fill merkez Y: 5.86 m
 - Çok katlı üst seviye top-fill Y, ilgili kat tabanına göre aynı 4.48 m kapı yüksekliğini korur.
+- Kasanın dış genişliği 4.92 m'dir. Yan duvarların iç kenarları Z/X -2.46 ve +2.46'da jamb dış yüzlerine; top-fill alt yüzü kapı root'una göre Y=2.48'de header üst yüzüne yalnızca temas eder.
+- Canonical kapının yanında duvar, jamb veya header hacmine girmez; arada görünür boşluk da bırakmaz. Frame kalınlığının duvardan 0.01 m öne/arkaya taşması yalnız dekoratif kasa reveal'idir.
+- Kapı prefabı bulunmayan açık geçitlerde 4.44 m net açıklık için 3.58 m yan parçalar ve 4.44 m top-fill kullanılabilir; bu istisna kapı kasasıyla birlikte kullanılmaz.
 
 Kapı davranışları prefab çoğaltılarak değil Inspector ile ayrılır:
 - automatic_open
@@ -121,7 +135,8 @@ Bastion operasyon terminali:
 - Eğimli kumanda yüzeyi: res://assets/world/bastion7/bastion_terminal_controls.png
 - Tam ekran görev/tesis arayüzü: res://scenes/ui/terminal_menu.tscn
 - Tesis güvenlik görseli: res://assets/ui/bastion_facility_network.png
-- Terminal tek parça kutu veya gövdenin tamamını örten düz decal değildir; plinth, arka kabuk, yan modüller, ekran kasası/çerçevesi, destekler, eğimli deck ve koruma kolları canonical sahnede ayrı 3B mesh düğümleridir.
+- Terminal tek parça kutu veya gövdenin tamamını örten düz decal değildir; zemin ayağı, merkez plinth, ekran desteği, ekran kasası, dört çerçeve rayı ve eğimli deck canonical sahnede ayrı 3B mesh düğümleridir.
+- Canonical terminal X=0 merkez eksenine göre simetriktir. Ekran rayları köşelerde boşluk ya da taşma bırakmadan uç uca birleşir; deck kabuğu kontrol yüzeyiyle aynı ayak izine sahiptir ve arka üst kenarı plinth ön yüzüne temas eder.
 - Sabit VEX ekranı yükseltilmiş fiziksel ekran kasasının içindedir; kumanda dokusu yalnız eğimli `ControlSurface` PlaneMesh üzerinde kullanılır.
 - Fiziksel gövde `PhysicalBody/SolidCollider` altında layer 1'dir. Doğrudan terminal root'una bağlı `ScreenInteraction` layer 8'dir; menüyü yalnız ekran yüzeyine bakıp etkileşim kurmak açar.
 - `ScreenInteraction` dışındaki fiziksel çarpışma gövdesi terminal scriptinin doğrudan çocuğu yapılmaz; böylece oyuncu ray'i konsolun yanından/altından menüyü açmaz.
@@ -130,7 +145,8 @@ Bastion operasyon terminali:
 - Deployment terminali aktif operasyonu seçme ve göreve çıkma yetkisine sahiptir; bilgi terminali aynı kayıtları salt okunur açar.
 - Her VexMissionDefinition `terminal_code`, `facility_type` ve `terminal_preview` alanlarını taşır.
 - Görev görseli/tesis tipi terminal UI scriptinde mission ID ile hard-code edilmez; mission .tres verisinden okunur.
-- Fiziksel gövde, mesh ölçüleri, malzemeler, ekran/kumanda yüzeyleri, ekran ışığı ve çarpışmalar sahne/Inspector değerleridir; kod geometri üretmez, yalnız menü açma ile offline overlay görünürlüğünü yönetir.
+- Fiziksel gövde, mesh ölçüleri, malzemeler, ekran/kumanda yüzeyleri ve çarpışmalar sahne/Inspector değerleridir; kod geometri üretmez, yalnız menü açma ile offline overlay görünürlüğünü yönetir.
+- `PhysicalBody/SolidCollider` altındaki her collision şekli karşılık geldiği görünür mesh ile aynı ölçü ve dünya transformuna sahiptir. `ScreenInteraction` yalnız rayların çevrelediği gerçek ekran açıklığını kaplar.
 
 
 5) ÇOK KATLI DÖŞEME STANDARDI
@@ -154,8 +170,9 @@ Tekrar kullanılabilir U-merdiven:
 ------------------
 - Görsel ve oynanış tuning değerlerinin ana kaynağı sahne/Inspector veya ilgili Resource'dur.
 - Script runtime state'i yönetir; editör tuning değerlerini keyfi şekilde yeniden yazmaz.
-- Ana menü ana buton sütununun genişlik kaynağı `res://scenes/ui/main_menu.tscn` içindeki `MenuButtons.custom_minimum_size.x` değeridir; canonical değer 292 px'dir.
-- `MenuButtons.size_flags_horizontal = SIZE_SHRINK_BEGIN (0)` korunur. Aksi halde VBox parent genişliği çocuk butonlara zorla yayar ve editörde verilen dar ölçüler görünmez.
+- Ana menü navigasyonu `MenuButtons` adlı sahne-otoriteli `VBoxContainer` içindeki beş dikey butondur. Sütun genişliği 350 px, her buton yüksekliği 54 px ve aralarındaki boşluk 8 px'dir.
+- `MenuButtons.size_flags_horizontal = SIZE_SHRINK_BEGIN (0)` korunur. `MainShell` 390 px genişliğindedir ve toplam 40 px yatay iç boşlukla buton sütununa tam oturur; panel içinde kullanılmayan yatay alan bırakılmaz.
+- Ana menünün ilk kompozisyonu korunur: VEX logosu ve kompakt navigasyon sol tarafta, operasyon özeti bottom-right anchor ile sahne otoritelidir. Sol karartma iki kademeli ve arka planı gereksiz kapatmayacak orandadır.
 - `main_menu.gd` ana butonların `size`, `offset` veya `custom_minimum_size` değerlerini runtime'da yazmaz.
 - Enemy health/damage/speed/detection/cooldown/windup çarpanları enemy sahnelerindedir.
 - Ortak saf enemy hesapları VexEnemyRuntimeUtils üzerinden paylaşılır; yeni enemy türlerinde kopya utility fonksiyonu yazılmaz.
@@ -190,6 +207,17 @@ Level 1/2/3 ortak root kategorileri:
 - Props
 - Enemies
 - Pickups
+
+VEX-01 öğretici ve süre standardı:
+- Canonical hedef süre ilk oynayışta yaklaşık 15–20 dakikadır; süre boş koridor veya yapay bekleme ile uzatılmaz.
+- Ana 18 odalı karantina tesisi korunur; başlangıçta sekiz odalı Acil Durum Muharebe Protokolü kanadı bulunur.
+- Öğretici sırası hareket/koşma/eğilme/zıplama, kapı etkileşimi, tabanca ateşi/ADS, reload, hareketli çatışma, patlayıcı varil, can-zırh-mühimmat yönetimi ve final muharebe sınamasıdır.
+- Öğretici mesaj alanları reusable `scenes/levels/tutorial_trigger.tscn` sahnesidir; konum ve gameplay alanı Level 1 sahnesinde Inspector otoritelidir.
+- Combat gate kapıları `required_enemy_ids` ile sahne verisine bağlıdır. Bu listede kullanılan her düşman Easy dahil bütün zorluklarda doğmak zorundadır; aksi halde rota kilitlenir.
+- Kapı kilidi açılınca `enemy_defeated` sinyali üzerinden dinamik kırmızı/yeşil durum ışıkları güncellenir.
+- Kırmızı erişim kartı doğu karantina kanadında, mavi erişim kartı pompalı tüfek eğitim rotasının sonunda bulunur; final hava kilidi iki kartı da ister.
+- Kaynak pickup'ları dolu kapasitede dünyada kalır. Öğretici cephane miktarı oyuncunun kaçırma payını destekler ama sınırsız değildir.
+- Mid-level checkpoint eklenmez; VEX'in campaign-boundary save standardı korunur.
 
 Ek Objectives, Secrets ve LoreTerminals kategorileri gereken levelde root altında bulunabilir; ortak kategoriler Gameplay gibi level-özel bir ara düğüm altına taşınmaz.
 
@@ -257,6 +285,9 @@ Legacy weapon ID migration:
 ----------------------------------------
 Canonical oynanabilir ID'ler:
 - p01
+- p07
+- p14
+- p20
 - sg04
 - vx47
 - mp90
@@ -266,6 +297,9 @@ Yeni gameplay/resource/sahne içeriğinde kullanılmaz.
 
 WeaponDefinition kaynakları:
 - resources/weapons/p01.tres
+- resources/weapons/p07.tres
+- resources/weapons/p14.tres
+- resources/weapons/p20.tres
 - resources/weapons/sg04.tres
 - resources/weapons/vx47.tres
 - resources/weapons/mp90.tres
@@ -291,10 +325,15 @@ Yeni silah eklerken HUD'a weapon_id match bloğu yazmak yerine WeaponDefinition 
 - HUD silah ID'sine göre ayrı sprite kurulum fonksiyonları üretmez.
 - Her oynanabilir silah kendi hud_view_scene presentation sahnesiyle instantiate edilir.
 - P-01 presentation : scenes/ui/weapons/p01_view.tscn
+- P-07 presentation : scenes/ui/weapons/p07_view.tscn
+- P-14 presentation : scenes/ui/weapons/p14_view.tscn
+- P-20 presentation : scenes/ui/weapons/p20_view.tscn
 - SG-04 presentation: scenes/ui/weapons/sg04_view.tscn
 - VX-47 presentation: scenes/ui/weapons/vx47_view.tscn
 - MP90 presentation : scenes/ui/weapons/mp90_view.tscn
 - ADS/lowered pose davranışı WeaponDefinition capability alanları ve presentation offsetleri üzerinden yönetilir.
+- HUD weapon view kökü `texture_filter = 2` (Linear, mipmapsiz) kullanır. Yalnız CanvasItem HUD'da kullanılan frame PNG importlarında `mipmaps/generate=false` tutulur; temel 1536x1024 görüntü değişmez. Dünya raf/pickup `*_side.png` dokuları bu kurala dahil değildir ve 3B uzaklık filtrelemesi için mipmap kullanabilir.
+- P-01, P-07, P-14 ve P-20 aynı `bullets` rezervini ve `HUD_AMMO_PISTOL` etiketini kullanır. P-20'nin Magnum adı, hasarı ve geri tepmesi korunur; ayrı `magnum_ammo` pickup/HUD kaynağı yoktur. Eski save içindeki `magnum_ammo` miktarı yüklemede `bullets` rezervine kapasite sınırıyla aktarılır.
 - Silah sesleri şu refactor kapsamının DIŞINDADIR; VX-47/MP90 için özgün sesler daha sonra hazırlanacaktır.
 
 

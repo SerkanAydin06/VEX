@@ -22,6 +22,8 @@ enum DoorOpeningMode {
 @export var required_keys: Array[StringName] = []
 @export var required_key_label := ""
 @export var objective_on_unlock := ""
+@export var required_enemy_ids: Array[StringName] = []
+@export var objective_on_combat_clear := ""
 @export var permanently_locked := false
 @export var permanent_lock_message := "POWER OFFLINE"
 @export var campaign_unlock_stage := -1
@@ -29,8 +31,8 @@ enum DoorOpeningMode {
 @export_category("Açılma Hareketi")
 @export_enum("Yukarı", "İki Yana") var opening_mode: int = DoorOpeningMode.UP
 @export var opening_offset_up := Vector3(0.0, 4.2, 0.0)
-@export var opening_offset_left := Vector3(0.0, 0.0, -2.1)
-@export var opening_offset_right := Vector3(0.0, 0.0, 2.1)
+@export var opening_offset_left := Vector3(0.0, 0.0, -2.12)
+@export var opening_offset_right := Vector3(0.0, 0.0, 2.12)
 @export_range(0.1, 3.0, 0.05) var opening_time := 0.75
 @export var auto_close := true
 @export_range(1.0, 15.0, 0.5) var auto_close_delay := 4.0
@@ -59,6 +61,7 @@ var _motion_tween: Tween
 var _motion_generation := 0
 var _auto_close_generation := 0
 var _runtime_locked := false
+var _combat_lock_was_active := false
 var _auto_close_available := false
 var _open_audio: AudioStreamPlayer3D
 var _denied_audio: AudioStreamPlayer3D
@@ -70,7 +73,10 @@ func _ready() -> void:
 		permanently_locked = false
 		locked = false
 	_runtime_locked = locked
+	_combat_lock_was_active = _has_active_combat_lock()
 	_emit_lock_state()
+	if not GameState.enemy_defeated.is_connected(_on_enemy_defeated):
+		GameState.enemy_defeated.connect(_on_enemy_defeated)
 	_auto_close_available = auto_close
 	door_panel = get_node_or_null("DoorPanel") as AnimatableBody3D
 	door_panel_right = get_node_or_null("DoorPanelRight") as AnimatableBody3D
@@ -134,6 +140,8 @@ func get_interaction_text(player: Node) -> String:
 		return ""
 	if permanently_locked:
 		return tr("INTERACT_LOCKED") % [tr(display_name), tr(permanent_lock_message)]
+	if _has_active_combat_lock():
+		return tr("INTERACT_COMBAT_LOCKED") % tr(display_name)
 	if _runtime_locked and not _player_has_required_keys(player):
 		return tr("INTERACT_REQUIRED") % [tr(display_name), _get_required_key_label()]
 	return tr("INTERACT_OPEN") % tr(display_name)
@@ -148,6 +156,11 @@ func interact(player: Node) -> void:
 		if _denied_audio != null and _denied_audio.stream != null:
 			_denied_audio.play()
 		GameState.notify(tr("DOOR_LOCKED_MESSAGE") % [tr(display_name), tr(permanent_lock_message)])
+		return
+	if _has_active_combat_lock():
+		if _denied_audio != null and _denied_audio.stream != null:
+			_denied_audio.play()
+		GameState.notify(tr("DOOR_COMBAT_LOCKED"))
 		return
 	if _runtime_locked:
 		if not _player_has_required_keys(player):
@@ -219,7 +232,24 @@ func force_open() -> void:
 
 
 func is_access_locked() -> bool:
-	return permanently_locked or _runtime_locked
+	return permanently_locked or _runtime_locked or _has_active_combat_lock()
+
+
+func _has_active_combat_lock() -> bool:
+	for enemy_id: StringName in required_enemy_ids:
+		if enemy_id != &"" and not GameState.was_enemy_defeated(enemy_id):
+			return true
+	return false
+
+
+func _on_enemy_defeated(_enemy_id: StringName) -> void:
+	if not _combat_lock_was_active or _has_active_combat_lock():
+		return
+	_combat_lock_was_active = false
+	_emit_lock_state()
+	GameState.notify("DOOR_COMBAT_CLEARED")
+	if not objective_on_combat_clear.is_empty():
+		GameState.set_objective(objective_on_combat_clear)
 
 
 func _emit_lock_state() -> void:

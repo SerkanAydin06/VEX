@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_idle.png" id="1_idle"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_fire_1.png" id="2_fire1"]
@@ -10,7 +10,6 @@
 [ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_reload_3.png" id="8_reload3"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_reload_4.png" id="9_reload4"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_zoom.png" id="10_zoom"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_lowered.png" id="11_lowered"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_aim_fire_1.png" id="12_aim1"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_aim_fire_2.png" id="13_aim2"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_aim_fire_3.png" id="14_aim3"]
@@ -36,11 +35,6 @@ animations = [{
 "frames": [{"duration": 1.0, "texture": ExtResource("1_idle")}],
 "loop": 1,
 "name": &"idle",
-"speed": 1.0
-}, {
-"frames": [{"duration": 1.0, "texture": ExtResource("11_lowered")}],
-"loop": 1,
-"name": &"lowered",
 "speed": 1.0
 }, {
 "frames": [{"duration": 1.0, "texture": ExtResource("6_reload1")}, {"duration": 1.0, "texture": ExtResource("7_reload2")}, {"duration": 1.0, "texture": ExtResource("8_reload3")}, {"duration": 1.0, "texture": ExtResource("9_reload4")}],

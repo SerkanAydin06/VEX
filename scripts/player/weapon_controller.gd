@@ -21,6 +21,9 @@ signal loadout_changed
 @export_range(0.0, 2.0, 0.01) var empty_trigger_cooldown := 0.25
 @export_flags_3d_physics var hitscan_collision_mask := 1 | 4 | 8
 
+@export_category("Silaha Bağlı Fener")
+@export_node_path("SpotLight3D") var weapon_flashlight_path := NodePath("../ViewPivot/Camera3D/WeaponFlashlight")
+
 @export_category("Otomatik Silah Sekme Birikimi")
 @export_range(0.0, 2.0, 0.01) var burst_reset_min_time := 0.22
 @export_range(0.0, 8.0, 0.1) var burst_reset_fire_interval_multiplier := 2.5
@@ -40,15 +43,20 @@ var reserve_ammo: Dictionary = {}
 var upgrade_levels: Dictionary = {}
 var current_weapon_id: StringName = &""
 var is_reloading := false
+var flashlight_enabled := false
 var _cooldown_remaining := 0.0
 var _definitions_by_id: Dictionary = {}
 var _player: VexPlayer
+var _weapon_flashlight: SpotLight3D
 var _burst_shots := 0
 var _burst_reset_remaining := 0.0
 
 
 func _ready() -> void:
 	_player = get_parent() as VexPlayer
+	_weapon_flashlight = get_node_or_null(weapon_flashlight_path) as SpotLight3D
+	if _weapon_flashlight != null:
+		_weapon_flashlight.visible = false
 	for definition: WeaponDefinition in weapon_definitions:
 		if definition == null:
 			continue
@@ -106,6 +114,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("reload"):
 		reload()
+	elif (
+		InputMap.has_action(&"weapon_flashlight")
+		and event.is_action_pressed(&"weapon_flashlight")
+	):
+		toggle_weapon_flashlight()
 	elif event.is_action_pressed("weapon_1"):
 		switch_to_loadout_slot(1)
 	elif event.is_action_pressed("weapon_2"):
@@ -188,6 +201,7 @@ func install_next_upgrade(weapon_id: StringName) -> bool:
 	var definition := _definitions_by_id.get(weapon_id) as WeaponDefinition
 	if definition != null:
 		magazines[weapon_id] = mini(int(magazines.get(weapon_id, 0)), _effective_magazine_size(definition))
+	_sync_weapon_flashlight()
 	var tier: Dictionary = track[level]
 	GameState.notify(tr("WEAPON_UPGRADE_FORMAT") % tr(str(tier.get("name", "UPGRADE_GENERIC"))))
 	broadcast_state()
@@ -360,7 +374,34 @@ func unlock_weapon(weapon_id: StringName, bonus_ammo: int) -> void:
 	loadout_changed.emit()
 
 
+## Görev içindeki fiziksel silah pickup'ları için kullanılır. Cephanelik rafı
+## davranışından farklı olarak, yer açılan silağın kimliğini çağırana döndürür;
+## Player bu modeli aynı noktada tekrar toplanabilir bir pickup olarak üretir.
+func equip_world_weapon(weapon_id: StringName, bonus_ammo: int) -> Dictionary:
+	var canonical_id := canonical_weapon_id(weapon_id)
+	var definition := _definitions_by_id.get(canonical_id) as WeaponDefinition
+	if definition == null or is_reloading:
+		return {"success": false}
+
+	if not acquired_weapons.has(canonical_id):
+		acquired_weapons.append(canonical_id)
+	var displaced_weapon_id := _make_room_for_loadout_group(canonical_id, definition)
+	if not unlocked_weapons.has(canonical_id):
+		unlocked_weapons.append(canonical_id)
+	if int(magazines.get(canonical_id, 0)) <= 0:
+		magazines[canonical_id] = definition.magazine_size
+	add_ammo(definition.ammo_type, bonus_ammo)
+	switch_to(canonical_id)
+	loadout_changed.emit()
+	return {
+		"success": true,
+		"weapon_id": canonical_id,
+		"displaced_weapon_id": displaced_weapon_id,
+	}
+
+
 func broadcast_state() -> void:
+	_sync_weapon_flashlight()
 	var weapon := get_current_weapon()
 	if weapon == null:
 		GameState.publish_weapon(&"", "UI_UNARMED")
@@ -381,6 +422,7 @@ func capture_state() -> Dictionary:
 		"reserve_ammo": reserve_ammo.duplicate(true),
 		"current_weapon_id": current_weapon_id,
 		"upgrade_levels": upgrade_levels.duplicate(true),
+		"flashlight_enabled": flashlight_enabled,
 	}
 
 
@@ -408,9 +450,12 @@ func restore_state(state: Dictionary) -> void:
 					unlocked_weapons.append(weapon_id)
 				break
 	magazines = _canonicalize_weapon_dictionary((state.get("magazines", magazines) as Dictionary).duplicate(true))
-	reserve_ammo = (state.get("reserve_ammo", reserve_ammo) as Dictionary).duplicate(true)
+	reserve_ammo = _migrate_legacy_ammo_dictionary(
+		(state.get("reserve_ammo", reserve_ammo) as Dictionary).duplicate(true)
+	)
 	current_weapon_id = canonical_weapon_id(StringName(str(state.get("current_weapon_id", initial_weapon_id))))
 	upgrade_levels = _canonicalize_weapon_dictionary((state.get("upgrade_levels", upgrade_levels) as Dictionary).duplicate(true))
+	flashlight_enabled = bool(state.get("flashlight_enabled", false))
 	if not unlocked_weapons.has(current_weapon_id):
 		current_weapon_id = (
 			unlocked_weapons[0]
@@ -419,6 +464,67 @@ func restore_state(state: Dictionary) -> void:
 		)
 	broadcast_state()
 	loadout_changed.emit()
+
+
+func _migrate_legacy_ammo_dictionary(source: Dictionary) -> Dictionary:
+	var migrated := source.duplicate(true)
+	var bullet_count := int(migrated.get(&"bullets", migrated.get("bullets", 0)))
+	var legacy_magnum_count := int(
+		migrated.get(&"magnum_ammo", migrated.get("magnum_ammo", 0))
+	)
+	migrated.erase(&"bullets")
+	migrated.erase("bullets")
+	migrated.erase(&"magnum_ammo")
+	migrated.erase("magnum_ammo")
+	migrated[&"bullets"] = clampi(
+		bullet_count + legacy_magnum_count,
+		0,
+		_get_reserve_ammo_capacity(&"bullets")
+	)
+	for definition: WeaponDefinition in weapon_definitions:
+		if definition != null and not migrated.has(definition.ammo_type):
+			migrated[definition.ammo_type] = 0
+	return migrated
+
+
+func toggle_weapon_flashlight() -> void:
+	var weapon := get_current_weapon()
+	if weapon == null or not weapon.supports_flashlight:
+		GameState.notify("WEAPON_FLASHLIGHT_UNAVAILABLE")
+		return
+	flashlight_enabled = not flashlight_enabled
+	_sync_weapon_flashlight()
+	GameState.notify(
+		"WEAPON_FLASHLIGHT_ACTIVE"
+		if flashlight_enabled
+		else "WEAPON_FLASHLIGHT_INACTIVE"
+	)
+	GameState.call_deferred("save_current_safe_progress", "weapon_flashlight")
+
+
+func _sync_weapon_flashlight() -> void:
+	if _weapon_flashlight == null or not is_instance_valid(_weapon_flashlight):
+		return
+	var weapon := get_current_weapon()
+	var active := weapon != null and weapon.supports_flashlight and flashlight_enabled
+	_weapon_flashlight.visible = active
+	if weapon == null or not weapon.supports_flashlight:
+		return
+	var modifiers := _modifiers(weapon)
+	_weapon_flashlight.light_color = weapon.flashlight_color
+	_weapon_flashlight.light_energy = weapon.flashlight_energy * float(modifiers.flashlight_energy)
+	_weapon_flashlight.spot_range = weapon.flashlight_range * float(modifiers.flashlight_range)
+	_weapon_flashlight.spot_angle = weapon.flashlight_angle_degrees
+
+
+func _is_weapon_flashlight_active(weapon: WeaponDefinition) -> bool:
+	return (
+		weapon != null
+		and weapon.supports_flashlight
+		and flashlight_enabled
+		and _weapon_flashlight != null
+		and _weapon_flashlight.visible
+	)
 
 
 func _try_fire() -> void:
@@ -435,7 +541,11 @@ func _try_fire() -> void:
 	_cooldown_remaining = weapon.fire_interval * float(_modifiers(weapon).fire_rate)
 	_play_hud_action(&"fire")
 	_shoot_hitscan(weapon)
-	GameState.emit_gunshot(_player.global_position, 1.0 if weapon.weapon_id in [&"p01", &"sg04"] else 1.15, _player)
+	GameState.emit_gunshot(
+		_player.global_position,
+		weapon.gunshot_noise_multiplier * float(_modifiers(weapon).gunshot_noise),
+		_player
+	)
 	_apply_recoil(weapon)
 	broadcast_state()
 
@@ -483,7 +593,7 @@ func _apply_recoil(weapon: WeaponDefinition) -> void:
 		horizontal_kick,
 		weapon.recoil_max_vertical_degrees,
 		weapon.recoil_max_horizontal_degrees,
-		weapon.recoil_recovery_degrees_per_second
+		weapon.recoil_recovery_degrees_per_second * float(_modifiers(weapon).recoil_recovery)
 	)
 
 
@@ -512,32 +622,61 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 		deg_to_rad(weapon.spread_degrees * float(_modifiers(weapon).spread) * _player.get_weapon_spread_multiplier())
 	)
 	var hit_something := false
+	var damage_multiplier := float(_modifiers(weapon).damage)
+	if _is_weapon_flashlight_active(weapon):
+		damage_multiplier *= float(_modifiers(weapon).flashlight_damage)
 	# Aynı tetik çekişinde bir hedefe isabet eden saçmaları tek hasar çağrısında
 	# birleştir. Böylece pompalı 6-8 ayrı take_damage() çağrısıyla düşmanın
 	# vurulma tepkisini spamlamaz; toplam hasar değişmez.
 	var pending_damage: Dictionary = {}
 	var pending_hit_positions: Dictionary = {}
+	var penetration_power := maxf(
+		0.0,
+		weapon.penetration_power + float(_modifiers(weapon).penetration)
+	)
+	var extra_target_count := floori(penetration_power)
+	var penetration_chance := penetration_power - float(extra_target_count)
+	if penetration_chance > 0.0 and randf() < penetration_chance:
+		extra_target_count += 1
+	var target_limit := 1 + extra_target_count
 	for _pellet: int in weapon.pellet_count:
 		var direction: Vector3 = (
 			forward
 			+ right * randf_range(-spread_tangent, spread_tangent)
 			+ up * randf_range(-spread_tangent, spread_tangent)
 		).normalized()
-		var query := PhysicsRayQueryParameters3D.create(
-			origin,
-			origin + direction * weapon.maximum_range,
-			hitscan_collision_mask,
-			[_player.get_rid()]
-		)
-		query.collide_with_areas = true
-		var result := space_state.intersect_ray(query)
-		if result.is_empty():
-			continue
-		var collider := result.get("collider") as Object
-		var damage_target := _resolve_damage_target(collider)
-		if damage_target != null:
+		var exclusions: Array[RID] = [_player.get_rid()]
+		var ray_origin := origin
+		var target_hits := 0
+		var ray_casts := 0
+		var hit_targets: Array[Node] = []
+		while target_hits < target_limit and ray_casts < target_limit + 4:
+			ray_casts += 1
+			var query := PhysicsRayQueryParameters3D.create(
+				ray_origin,
+				origin + direction * weapon.maximum_range,
+				hitscan_collision_mask,
+				exclusions
+			)
+			query.collide_with_areas = true
+			var result := space_state.intersect_ray(query)
+			if result.is_empty():
+				break
+			var collider := result.get("collider") as Object
+			var damage_target := _resolve_damage_target(collider)
+			# Delme yalnızca canlı/hedef nesneler arasında devam eder. Duvar ve
+			# kapılar mermiyi durdurur; böylece arka odalardaki hedefler vurulmaz.
+			if damage_target == null:
+				break
+			if collider is CollisionObject3D:
+				exclusions.append((collider as CollisionObject3D).get_rid())
 			var hit_position: Vector3 = result.get("position", Vector3.ZERO)
-			var pellet_damage := maxi(1, roundi(float(weapon.damage_per_pellet) * float(_modifiers(weapon).damage)))
+			ray_origin = hit_position + direction * 0.05
+			if hit_targets.has(damage_target):
+				continue
+			hit_targets.append(damage_target)
+			target_hits += 1
+			var pellet_damage := maxi(1, roundi(float(weapon.damage_per_pellet) * damage_multiplier))
 			var was_headshot := false
 			if damage_target.has_method("get_weapon_hit_multiplier"):
 				var upgraded_headshot := weapon.headshot_multiplier * float(_modifiers(weapon).headshot)

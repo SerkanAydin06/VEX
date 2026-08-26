@@ -10,6 +10,7 @@ signal objective_changed(text: String)
 signal notification_requested(text: String)
 signal pickup_notification_requested(text: String, category: StringName)
 signal level_stats_changed(kills: int, total_enemies: int, secrets: int, total_secrets: int)
+signal enemy_defeated(enemy_id: StringName)
 signal hit_confirmed
 signal damage_received(amount: int)
 signal player_died
@@ -220,6 +221,7 @@ func register_enemy_defeated(enemy_id: StringName = &"") -> void:
 		defeated_enemy_ids.append(enemy_id)
 	kills += 1
 	level_stats_changed.emit(kills, total_enemies, secrets, total_secrets)
+	enemy_defeated.emit(enemy_id)
 
 
 func was_enemy_defeated(enemy_id: StringName) -> bool:

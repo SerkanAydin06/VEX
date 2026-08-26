@@ -14,6 +14,7 @@ extends Resource
 @export var hud_slot_label_key := "HUD_SLOT_UNKNOWN"
 @export var hud_ammo_label_key := "HUD_AMMUNITION"
 @export var hud_view_scene: PackedScene
+@export var world_pickup_texture: Texture2D
 @export var supports_ads_pose := false
 @export var supports_lowered_pose := false
 @export var hud_auto_lower_enabled := false
@@ -24,10 +25,15 @@ extends Resource
 
 @export_category("Gelecek Silah Yetenekleri")
 @export var supports_flashlight := false
+@export var flashlight_color := Color(0.76, 0.88, 1.0, 1.0)
+@export_range(0.0, 16.0, 0.1) var flashlight_energy := 4.0
+@export_range(1.0, 60.0, 0.5) var flashlight_range := 18.0
+@export_range(5.0, 80.0, 0.5) var flashlight_angle_degrees := 28.0
 @export var supports_alt_fire := false
 @export var uses_heat := false
 @export var uses_charge := false
 @export_range(0.0, 10.0, 0.05) var penetration_power := 0.0
+@export_range(0.0, 2.0, 0.05) var gunshot_noise_multiplier := 1.15
 
 @export_category("Şarjör ve Atış")
 @export_range(1, 100, 1) var magazine_size := 12

@@ -17,7 +17,8 @@
 - Oyuncu aynı anda her silah sınıfından en fazla **bir** silah taşıyabilir.
 - Taşınmayan fakat daha önce edinilmiş silahlar Bastion-7 cephaneliğindeki kendi 2×2 raflarına bırakılır.
 - Rafa bırakılan silahın mühimmatı, takılı geliştirmeleri ve keşif durumu korunur.
-- Yeni bir model alındığında aynı sınıftaki taşınan silah otomatik olarak rafa döner.
+- Bastion-7 cephaneliğinde yeni bir model kuşanıldığında aynı sınıftaki taşınan silah otomatik olarak rafa döner.
+- Görev içindeki fiziksel bir tabanca pickup'ı alındığında taşınan tabanca pickup noktasının yanına düşer ve yeniden alınabilir; tabanca yuvasında aynı anda yalnız bir model kalır.
 - Oyuncu hiçbir silah taşımadan operasyona çıkamaz.
 - Silahların kaybedilmesi ölüm cezası değildir. Oyuncu ölünce bölüm baştan başlar ve bölüm başlangıcındaki teçhizat durumu geri yüklenir.
 
@@ -55,7 +56,7 @@
 
 - Canonical resource dosyaları `p01.tres`, `sg04.tres`, `vx47.tres`, `mp90.tres` olarak kullanılır.
 - HUD presentation bilgisi `WeaponDefinition.hud_view_scene` üzerinden gelir.
-- P-01, SG-04, VX-47 ve MP-90 kendi `scenes/ui/weapons/*_view.tscn` presentation sahnelerini kullanır.
+- P-01, P-07, P-14, SG-04, VX-47 ve MP-90 kendi `scenes/ui/weapons/*_view.tscn` presentation sahnelerini kullanır.
 - Yeni bir silah için HUD içine silah kimliğine özel sprite kurulum bloğu eklenmez.
 - `supports_ads_pose`, `supports_lowered_pose`, `supports_flashlight`, `supports_alt_fire`, `uses_heat`, `uses_charge` ve `penetration_power` gelecek model davranışları için capability alanlarıdır.
 - Silah sesleri bu mimari geçişte değiştirilmemiştir; VX-47/MP-90 özgün ses seti ayrı audio pass olarak yapılacaktır.
@@ -69,6 +70,7 @@ Yeni içerikte her silah kendi model kimliğini kullanacaktır. Mevcut kayıtlar
 | Görünen model | Hedef `weapon_id` | Mevcut/eski kimlik | Durum |
 |---|---|---|---|
 | P-01 | `p01` | `pistol` | Oynanabilir; canonical ID aktif, legacy migration hazır |
+| P-07 | `p07` | Yok | Oynanabilir; Level 1 gizli bakım deposundan açılır |
 | SG-04 | `sg04` | `shotgun` | Oynanabilir; canonical ID aktif, legacy migration hazır |
 | VX-47 | `vx47` | `ak47` | Oynanabilir; canonical ID aktif, legacy migration hazır |
 | MP-90 | `mp90` | `mp90` | Oynanabilir; kimlik uyumlu |
@@ -92,9 +94,9 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 | Model | Tam ad | Sınıf | Ana rol | Ayırt edici özellik | Durum |
 |---|---|---|---|---|---|
 | P-01 | P-01 Taktik Tabanca | Tabanca | Dengeli başlangıç silahı | Güvenilir mekanik nişangâh | Oynanabilir |
-| P-07 | P-07 Sentinel | Tabanca | Karanlık alan / hızlı takip | Entegre taktik fener | Planlandı |
-| P-14 | P-14 Specter | Tabanca | Gizli operasyon / hassasiyet | Fener, susturucu, gelişmiş optik | Planlandı |
-| P-20 | P-20 Magnum | Tabanca | Zırhlı hedef / tek atış gücü | Ağır mühimmat ve delme | Planlandı |
+| P-07 | P-07 Sentinel | Tabanca | Karanlık alan / hızlı takip | Entegre taktik fener | Oynanabilir |
+| P-14 | P-14 Specter | Tabanca | Gizli operasyon / hassasiyet | Fener, susturucu, gelişmiş optik | Oynanabilir; Level 1 başlangıcında test pickup'ı |
+| P-20 | P-20 Magnum | Tabanca | Zırhlı hedef / tek atış gücü | Standart tabanca mühimmatı ve delme | Oynanabilir |
 | SG-04 | SG-04 Kırıcı | Pompalı | Yakın mesafe durdurma | Manuel pompa ve yüksek saçma | Oynanabilir |
 | SG-09 | SG-09 Aegis | Pompalı | Savunma / seri takip | Yarı otomatik mekanizma | Planlandı |
 | SG-15 | SG-15 Tempest | Pompalı | Kalabalık kontrolü | Tam otomatik tambur | Planlandı |
@@ -195,7 +197,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 
 **Kimlik:** `p20`
 **Rol:** Zırhlı yaratık, seçkin düşman ve kritik tek atış.
-**Temel özellik:** Ağır mühimmat, yüksek geri tepme ve bir hedefi delme ihtimali.
+**Temel özellik:** Ortak `bullets` tabanca mühimmatı, yüksek geri tepme ve bir hedefi delme ihtimali.
 
 | Değer | Plan |
 |---|---:|
@@ -602,8 +604,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 
 | Kaynak | Kullanan modeller | Renk standardı | Not |
 |---|---|---|---|
-| `bullets` | P-01, P-07, P-14 | Sarı / pirinç | P-14 özel mühimmatı geliştirmeyle uygulanır |
-| `magnum_ammo` | P-20 | Koyu kırmızı / gunmetal | Nadir ve yüksek hasarlı |
+| `bullets` | P-01, P-07, P-14, P-20 | Sarı / pirinç | P-14 özel profili ve P-20 yüksek hasarı silah verisi/geliştirmeyle uygulanır |
 | `shells` | SG-04, SG-09, SG-15 | Kırmızı | SG-21 için temel uyumluluk korunabilir |
 | `graviton_shells` | SG-21 alternatif atış | Mor kullanılmayacak; cyan-beyaz | Boyutsal ama temiz VEX renk standardı |
 | `rifle_ammo` | VX-47, VX-58, VX-72, VX-90 | Turuncu / pirinç | Programlanabilir profil aynı kaynağı tüketir |
@@ -633,6 +634,9 @@ Her silah için aşağıdaki ana görseller hazırlanacaktır:
 
 - Bütün birinci şahıs silahlar ekranın altından devam eden aynı oyuncu kolunu kullanır.
 - Eldiven modeli, rengi, dikişleri ve malzeme yapısı bütün karelerde sabit kalır.
+- Tabancalarda P-07 idle karesi standart kamera mesafesi, ekran konumu ve tutuş açısı referansıdır; silah değişiminde yalnız silah modeli değişir.
+- Ateş karelerinde standart tutuş açısı korunur; yalnız geri tepmenin gerektirdiği küçük dikey hareket uygulanır ve silah yana doğru döndürülmez.
+- Reload karelerinde kamera ve kıyafet sabit kalır; silah yalnız şarjör işleminin zorunlu kıldığı kadar çevrilir.
 - El silahın çok önüne çıkmaz; tutuş oyuncunun gövdesine yakın görünür.
 - Bekleme pozu ekranın alt-sağındadır ve silah merkeze doğru hafif açılı tutulur.
 - ADS görselinde gez, arpacık, namlu ekseni ve ekran merkezi tek hizada olur.
@@ -729,7 +733,7 @@ Bu kararlar yeni bir ana tasarım kararı alınmadıkça sabittir:
 6. P-07’nin temel farkı taktik fenerdir.
 7. P-14 fener, susturucu ve gelişmiş büyütmeli optiği birleştirir.
 8. P-20 tabanca sınıfının yüksek hasarlı, düşük kapasiteli ağır modelidir.
-9. Silah görsellerinde aynı eldiven ve alttan devam eden kol kullanılır.
+9. Silah görsellerinde P-07 ile aynı eldiven, kol kıyafeti, kamera mesafesi ve sınıf içi standart tutuş açısı kullanılır.
 10. Silahların yandan raf görsellerinde namlu sağa bakar.
 11. Otomatik silahı aşağı indirme sistemi şimdilik kapalıdır.
 12. Yeni silahlar kod içindeki sabit `match` bloklarıyla değil, veri kaynaklarıyla tanımlanır.
