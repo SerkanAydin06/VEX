@@ -19,6 +19,7 @@ world_pickup_texture = ExtResource("3_side")
 supports_ads_pose = true
 ads_fov_multiplier = 0.64
 hud_zoom_offset = Vector2(-175, -220)
+hud_ads_scale_multiplier = 1.34
 hud_aim_fire_offset = Vector2(0, 0)
 supports_flashlight = true
 flashlight_color = Color(0.72, 0.86, 1, 1)
