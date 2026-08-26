@@ -73,6 +73,7 @@ func _sync_visibility() -> void:
 		or player.is_dead
 		or not player.is_aiming
 		or _fire_animation_suppressed
+		or _is_weapon_fire_animation_active()
 		or get_tree().paused
 	):
 		visible = false
@@ -90,6 +91,25 @@ func _sync_visibility() -> void:
 			return
 
 	visible = true
+
+
+func _is_weapon_fire_animation_active() -> bool:
+	var hud_root := get_parent() as Control
+	if hud_root == null:
+		return false
+	var weapon_layer := hud_root.get_node_or_null("WeaponLayer") as Control
+	if weapon_layer == null:
+		return false
+	for child: Node in weapon_layer.get_children():
+		var sprite := child as AnimatedSprite2D
+		if (
+			sprite != null
+			and sprite.visible
+			and sprite.animation == &"aim_fire"
+			and sprite.is_playing()
+		):
+			return true
+	return false
 
 
 func _sync_style(player: VexPlayer) -> void:
