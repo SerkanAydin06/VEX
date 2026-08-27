@@ -313,7 +313,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 6.82, -10)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, -10)
 
 [node name="CeilingWhite_C2_R1" parent="RoomLights" unique_id=727214944 instance=ExtResource("20_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 6.82, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, -10)
 
 [node name="CeilingWhite_C3_R1" parent="RoomLights" unique_id=24035357 instance=ExtResource("20_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 6.82, -10)
