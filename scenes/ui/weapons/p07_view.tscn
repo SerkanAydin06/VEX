@@ -98,5 +98,5 @@ texture_filter = 2
 position = Vector2(1200, 773)
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_p07")
-animation = &"zoom"
+animation = &"idle"
 autoplay = "idle"
