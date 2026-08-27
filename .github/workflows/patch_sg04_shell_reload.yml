@@ -1,0 +1,242 @@
+name: Patch SG04 Shell Reload
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/patch_sg04_shell_reload.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply SG04 shell-by-shell reload
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              p = Path(path)
+              text = p.read_text(encoding="utf-8")
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{path}: expected exact fragment once, found {count}")
+              p.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          controller_path = "scripts/player/weapon_controller.gd"
+          replace_once(
+              controller_path,
+              '''func _effective_magazine_size(weapon: WeaponDefinition) -> int:\n\treturn weapon.magazine_size + int(_modifiers(weapon).magazine)\n''',
+              '''func _effective_magazine_size(weapon: WeaponDefinition) -> int:\n\treturn weapon.magazine_size + int(_modifiers(weapon).magazine)\n\n\nfunc get_reload_animation_speed_multiplier(weapon_id: StringName) -> float:\n\tvar weapon := get_weapon_definition(weapon_id)\n\tif weapon == null:\n\t\treturn 1.0\n\tvar reload_time_multiplier := maxf(0.01, float(_modifiers(weapon).reload))\n\treturn 1.0 / reload_time_multiplier\n''',
+          )
+
+          replace_once(
+              controller_path,
+              '''func reload() -> void:\n\tvar weapon := get_current_weapon()\n\tif weapon == null or is_reloading:\n\t\treturn\n\tvar magazine := int(magazines.get(current_weapon_id, 0))\n\tvar reserve := int(reserve_ammo.get(weapon.ammo_type, 0))\n\tvar magazine_size := _effective_magazine_size(weapon)\n\tif magazine >= magazine_size or reserve <= 0:\n\t\treturn\n\tis_reloading = true\n\t_play_hud_action(&"reload")\n\tawait get_tree().create_timer(weapon.reload_duration * float(_modifiers(weapon).reload)).timeout\n\tif not is_inside_tree() or _player.is_dead:\n\t\tis_reloading = false\n\t\treturn\n\tvar required: int = magazine_size - magazine\n\tvar loaded: int = mini(required, reserve)\n\tmagazines[current_weapon_id] = magazine + loaded\n\treserve_ammo[weapon.ammo_type] = reserve - loaded\n\tis_reloading = false\n\tbroadcast_state()\n''',
+              '''func reload() -> void:\n\tvar weapon := get_current_weapon()\n\tif weapon == null or is_reloading:\n\t\treturn\n\tvar magazine := int(magazines.get(current_weapon_id, 0))\n\tvar reserve := int(reserve_ammo.get(weapon.ammo_type, 0))\n\tvar magazine_size := _effective_magazine_size(weapon)\n\tif magazine >= magazine_size or reserve <= 0:\n\t\treturn\n\tif weapon.weapon_id == &"sg04":\n\t\tawait _reload_sg04_shells(weapon, magazine_size, magazine, reserve)\n\t\treturn\n\tis_reloading = true\n\t_play_hud_action(&"reload")\n\tawait get_tree().create_timer(weapon.reload_duration * float(_modifiers(weapon).reload)).timeout\n\tif not is_inside_tree() or _player.is_dead:\n\t\tis_reloading = false\n\t\treturn\n\tvar required: int = magazine_size - magazine\n\tvar loaded: int = mini(required, reserve)\n\tmagazines[current_weapon_id] = magazine + loaded\n\treserve_ammo[weapon.ammo_type] = reserve - loaded\n\tis_reloading = false\n\tbroadcast_state()\n\n\nfunc _reload_sg04_shells(\n\tweapon: WeaponDefinition,\n\tmagazine_size: int,\n\tstarting_magazine: int,\n\tstarting_reserve: int\n) -> void:\n\tis_reloading = true\n\tvar rounds_to_load := mini(magazine_size - starting_magazine, starting_reserve)\n\tvar reload_time_multiplier := maxf(0.01, float(_modifiers(weapon).reload))\n\t# SG04 reload art has four equal-duration authored frames. Frames 1-2-3 are\n\t# one shell insertion cycle; frame 4 is the single final close/ready pose.\n\tvar shell_cycle_duration := weapon.reload_duration * 0.75 * reload_time_multiplier\n\tvar finish_duration := weapon.reload_duration * 0.25 * reload_time_multiplier\n\n\tfor _round_index: int in range(rounds_to_load):\n\t\t_play_hud_action(&"reload_shell")\n\t\tawait get_tree().create_timer(shell_cycle_duration).timeout\n\t\tif not is_inside_tree() or _player == null or _player.is_dead:\n\t\t\tis_reloading = false\n\t\t\treturn\n\n\t\tvar current_magazine := int(magazines.get(weapon.weapon_id, 0))\n\t\tvar current_reserve := int(reserve_ammo.get(weapon.ammo_type, 0))\n\t\tif current_magazine >= magazine_size or current_reserve <= 0:\n\t\t\tbreak\n\t\tmagazines[weapon.weapon_id] = current_magazine + 1\n\t\treserve_ammo[weapon.ammo_type] = current_reserve - 1\n\t\tbroadcast_state()\n\n\tif not is_inside_tree() or _player == null or _player.is_dead:\n\t\tis_reloading = false\n\t\treturn\n\t_play_hud_action(&"reload_finish")\n\tawait get_tree().create_timer(finish_duration).timeout\n\tif not is_inside_tree() or _player == null or _player.is_dead:\n\t\tis_reloading = false\n\t\treturn\n\tis_reloading = false\n\tbroadcast_state()\n''',
+          )
+
+          presenter_path = "scripts/ui/hud_weapon_presenter.gd"
+          replace_once(
+              presenter_path,
+              'sprite.animation not in [&"fire", &"aim_fire", &"reload"]',
+              'sprite.animation not in [&"fire", &"aim_fire", &"reload", &"reload_shell", &"reload_finish"]',
+          )
+          replace_once(
+              presenter_path,
+              'if sprite.animation in [&"fire", &"aim_fire", &"reload", &"equip"] and sprite.is_playing():',
+              'if sprite.animation in [&"fire", &"aim_fire", &"reload", &"reload_shell", &"reload_finish", &"equip"] and sprite.is_playing():',
+          )
+          replace_once(
+              presenter_path,
+              '''\tif sprite.sprite_frames != null and sprite.sprite_frames.has_animation(requested_animation):\n\t\tif action == &"fire":\n\t\t\tsprite.stop()\n\t\t\tsprite.frame = 0\n\t\t\tsprite.play(requested_animation)\n\t\telse:\n\t\t\tsprite.play(requested_animation)\n''',
+              '''\tvar playback_speed := 1.0\n\tif action in [&"reload_shell", &"reload_finish"]:\n\t\tplayback_speed = _get_reload_animation_speed(weapon_id)\n\tif sprite.sprite_frames != null and sprite.sprite_frames.has_animation(requested_animation):\n\t\tif action == &"fire":\n\t\t\tsprite.stop()\n\t\t\tsprite.frame = 0\n\t\t\tsprite.play(requested_animation)\n\t\telse:\n\t\t\tsprite.stop()\n\t\t\tsprite.frame = 0\n\t\t\tsprite.play(requested_animation, playback_speed)\n''',
+          )
+          replace_once(
+              presenter_path,
+              '''\tif sprite.animation == &"aim_fire":\n\t\t_set_ads_reticle_fire_suppressed(false)\n\tvar definition := _get_weapon_definition(weapon_id)\n''',
+              '''\tif sprite.animation == &"aim_fire":\n\t\t_set_ads_reticle_fire_suppressed(false)\n\tif sprite.animation == &"reload_shell" and _is_weapon_reload_active(weapon_id):\n\t\t# Shell cycle frame 3 stays visible until the controller starts the next\n\t\t# insertion cycle; do not flash back to idle between shells.\n\t\treturn\n\tvar definition := _get_weapon_definition(weapon_id)\n''',
+          )
+          replace_once(
+              presenter_path,
+              '''func _get_weapon_definition(weapon_id: StringName) -> WeaponDefinition:\n\tif GameState.player == null or not is_instance_valid(GameState.player):\n\t\treturn null\n\tvar controller := GameState.player.get_node_or_null("WeaponController") as VexWeaponController\n\tif controller == null:\n\t\treturn null\n\treturn controller.get_weapon_definition(weapon_id)\n''',
+              '''func _get_weapon_controller() -> VexWeaponController:\n\tif GameState.player == null or not is_instance_valid(GameState.player):\n\t\treturn null\n\treturn GameState.player.get_node_or_null("WeaponController") as VexWeaponController\n\n\nfunc _get_reload_animation_speed(weapon_id: StringName) -> float:\n\tvar controller := _get_weapon_controller()\n\tif controller == null:\n\t\treturn 1.0\n\treturn controller.get_reload_animation_speed_multiplier(weapon_id)\n\n\nfunc _is_weapon_reload_active(weapon_id: StringName) -> bool:\n\tvar controller := _get_weapon_controller()\n\treturn (\n\t\tcontroller != null\n\t\tand controller.current_weapon_id == weapon_id\n\t\tand controller.is_reloading\n\t)\n\n\nfunc _get_weapon_definition(weapon_id: StringName) -> WeaponDefinition:\n\tvar controller := _get_weapon_controller()\n\tif controller == null:\n\t\treturn null\n\treturn controller.get_weapon_definition(weapon_id)\n''',
+          )
+
+          replace_once(
+              "scripts/ui/hud.gd",
+              'elif action == &"reload":',
+              'elif action in [&"reload", &"reload_shell"]:',
+          )
+
+          scene_path = "scenes/ui/weapons/sg04_view.tscn"
+          replace_once(
+              scene_path,
+              '''"loop": 0,\n"name": &"reload",\n"speed": 2.7586207\n}, {\n"frames": [{\n"duration": 1.0,\n"texture": ExtResource("10_zoom_idle")\n}],\n''',
+              '''"loop": 0,\n"name": &"reload",\n"speed": 2.7586207\n}, {\n"frames": [{\n"duration": 1.0,\n"texture": ExtResource("6_reload1")\n}, {\n"duration": 1.0,\n"texture": ExtResource("7_reload2")\n}, {\n"duration": 1.0,\n"texture": ExtResource("8_reload3")\n}],\n"loop": 0,\n"name": &"reload_shell",\n"speed": 2.7586207\n}, {\n"frames": [{\n"duration": 1.0,\n"texture": ExtResource("9_reload4")\n}],\n"loop": 0,\n"name": &"reload_finish",\n"speed": 2.7586207\n}, {\n"frames": [{\n"duration": 1.0,\n"texture": ExtResource("10_zoom_idle")\n}],\n''',
+          )
+
+          audit = r'''#!/usr/bin/env python3
+          from pathlib import Path
+          import re
+          import sys
+
+          ROOT = Path(__file__).resolve().parents[1]
+          ERRORS = []
+
+
+          def read(path: str) -> str:
+              full = ROOT / path
+              if not full.exists():
+                  ERRORS.append(f"Eksik SG04 dosyası: {path}")
+                  return ""
+              return full.read_text(encoding="utf-8")
+
+
+          def require(text: str, needle: str, label: str) -> None:
+              if needle not in text:
+                  ERRORS.append(f"SG04 sözleşmesi eksik: {label}")
+
+
+          def animation_frame_counts(view: str) -> dict[str, int]:
+              counts: dict[str, int] = {}
+              pattern = re.compile(
+                  r'\{\n"frames": \[(.*?)\],\n"loop": (?:true|false|0|1),\n"name": &"([^"]+)"',
+                  re.S,
+              )
+              for frames, name in pattern.findall(view):
+                  counts[name] = frames.count('"texture":')
+              return counts
+
+
+          def main() -> int:
+              assets = [
+                  "sg04_idle.png",
+                  *[f"sg04_fire_{i}.png" for i in range(1, 5)],
+                  *[f"sg04_reload_{i}.png" for i in range(1, 5)],
+                  "sg04_side.png",
+                  "sg04_zoom_idle.png",
+                  *[f"sg04_zoom_fire_{i}.png" for i in range(1, 5)],
+              ]
+              for name in assets:
+                  path = ROOT / "assets/weapons/sg04" / name
+                  if not path.exists():
+                      ERRORS.append(f"Eksik SG04 görseli: {name}")
+                  if not Path(str(path) + ".import").exists():
+                      ERRORS.append(f"Eksik SG04 import metadata: {name}.import")
+
+              view = read("scenes/ui/weapons/sg04_view.tscn")
+              weapon = read("resources/weapons/sg04.tres")
+              controller = read("scripts/player/weapon_controller.gd")
+              presenter = read("scripts/ui/hud_weapon_presenter.gd")
+              hud = read("scripts/ui/hud.gd")
+              player_scene = read("scenes/player/player.tscn")
+              pickup_script = read("scripts/props/pickup.gd")
+              player_script = read("scripts/player/player.gd")
+              level_test = read("scenes/levels/level_test.tscn")
+              rack = read("scenes/world/weapon_rack.tscn")
+
+              for name in assets:
+                  if name == "sg04_side.png":
+                      continue
+                  require(view, f"res://assets/weapons/sg04/{name}", f"view texture {name}")
+
+              observed_frames = animation_frame_counts(view)
+              expected_frames = {
+                  "idle": 1,
+                  "fire": 4,
+                  "reload": 4,
+                  "reload_shell": 3,
+                  "reload_finish": 1,
+                  "zoom": 1,
+                  "aim_fire": 4,
+              }
+              for animation, expected in expected_frames.items():
+                  observed = observed_frames.get(animation, 0)
+                  if observed != expected:
+                      ERRORS.append(f"SG04 {animation} frame sayısı {observed}; beklenen {expected}")
+
+              # Visual tuning is intentionally user/scene authoritative. The audit only
+              # verifies that tunable properties still exist; it does not freeze their values.
+              require(view, "position = Vector2(", "HUD position tuning")
+              require(view, "scale = Vector2(", "HUD scale tuning")
+              require(view, 'autoplay = "idle"', "idle autoplay")
+
+              for needle, label in [
+                  ('weapon_id = &"sg04"', "weapon id"),
+                  ('ammo_type = &"shells"', "shell ammo type"),
+                  ('world_pickup_texture = ExtResource("3_side")', "side pickup texture"),
+                  ('supports_ads_pose = true', "ADS desteği"),
+                  ('hud_preserve_authored_frame_motion = true', "authored frame motion"),
+                  ('hud_aim_fire_preserve_frame_motion = true', "ADS recoil frame motion"),
+                  ('magazine_size =', "magazine tuning"),
+                  ('reload_duration =', "reload duration tuning"),
+                  ('pellet_count =', "pellet tuning"),
+              ]:
+                  require(weapon, needle, label)
+              require(weapon, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "SG04 side UID/path")
+
+              for needle, label in [
+                  ('if weapon.weapon_id == &"sg04":', "SG04 özel reload dalı"),
+                  ('await _reload_sg04_shells(weapon, magazine_size, magazine, reserve)', "shell reload çağrısı"),
+                  ('_play_hud_action(&"reload_shell")', "1-2-3 shell cycle aksiyonu"),
+                  ('_play_hud_action(&"reload_finish")', "4. kare final aksiyonu"),
+                  ('weapon.reload_duration * 0.75 * reload_time_multiplier', "1-2-3 süre oranı"),
+                  ('weapon.reload_duration * 0.25 * reload_time_multiplier', "4. kare süre oranı"),
+                  ('magazines[weapon.weapon_id] = current_magazine + 1', "her döngüde tek fişek yükleme"),
+                  ('reserve_ammo[weapon.ammo_type] = current_reserve - 1', "her döngüde tek rezerv azaltma"),
+                  ('func get_reload_animation_speed_multiplier(', "reload upgrade görsel hız senkronu"),
+              ]:
+                  require(controller, needle, label)
+
+              for needle, label in [
+                  ('&"reload_shell", &"reload_finish"', "presenter custom reload animasyonları"),
+                  ('playback_speed = _get_reload_animation_speed(weapon_id)', "presenter reload speed senkronu"),
+                  ('sprite.animation == &"reload_shell" and _is_weapon_reload_active(weapon_id)', "shell arası idle flash engeli"),
+              ]:
+                  require(presenter, needle, label)
+              require(hud, 'action in [&"reload", &"reload_shell"]', "SG04 shell reload ses yönlendirmesi")
+
+              require(player_scene, 'path="res://resources/weapons/sg04.tres"', "Player weapon definitions içinde SG04")
+              require(pickup_script, '"sg04"', "pickup enum içinde SG04")
+              require(player_script, '&"sg04":', "player SG04 pickup handler")
+              require(player_script, 'unlock_weapon", &"sg04"', "SG04 unlock çağrısı")
+              require(level_test, 'pickup_type = "sg04"', "Level Test SG04 pickup")
+              require(level_test, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "Level Test SG04 side art")
+              require(rack, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "weapon rack SG04 side art")
+
+              generic = 'res://assets/pickups/shotgun.png'
+              for path in ROOT.rglob("*.tscn"):
+                  text = path.read_text(encoding="utf-8")
+                  if generic in text:
+                      ERRORS.append(f"Eski generic shotgun görseli hâlâ scene'de: {path.relative_to(ROOT)}")
+
+              if ERRORS:
+                  print("SG04 WEAPON AUDIT FAILED:")
+                  for error in ERRORS:
+                      print(" -", error)
+                  return 1
+              print("SG04 WEAPON AUDIT OK")
+              return 0
+
+
+          if __name__ == "__main__":
+              sys.exit(main())
+          '''
+          Path("tests/sg04_weapon_audit.py").write_text(textwrap.dedent(audit), encoding="utf-8")
+          PY
+      - name: Commit SG04 shell reload
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/player/weapon_controller.gd scripts/ui/hud_weapon_presenter.gd scripts/ui/hud.gd scenes/ui/weapons/sg04_view.tscn tests/sg04_weapon_audit.py
+          git diff --cached --quiet && exit 0
+          git commit -m "feat: reload SG04 shells one by one"
+          git push origin HEAD:main
