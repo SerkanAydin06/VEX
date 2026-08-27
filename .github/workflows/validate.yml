@@ -33,6 +33,7 @@ jobs:
       - name: Audit pistol visual frames
         run: python tests/pistol_visual_probe.py
       - name: Upload pistol contact sheets
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pistol-contact-sheets
