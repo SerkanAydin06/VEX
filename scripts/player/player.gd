@@ -14,7 +14,7 @@ const DROPPED_WEAPON_PICKUP_SCENE := preload("res://scenes/props/pickup.tscn")
 @export_category("Çömelme")
 @export_range(1.0, 12.0, 0.1) var crouch_speed := 2.9
 @export_range(0.7, 2.5, 0.01) var crouch_capsule_height := 1.10
-@export_range(0.1, 1.8, 0.01) var crouch_view_pivot_height := 0.30
+@export_range(0.0, 1.8, 0.01) var crouch_view_pivot_height := 0.30
 @export_range(1.0, 30.0, 0.5) var crouch_transition_speed := 12.0
 @export_range(0.0, 0.1, 0.005) var stand_clearance_margin := 0.02
 @export_category("Nişan Alma / ADS")
@@ -221,7 +221,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _try_jump() -> void:
-	if is_dead or get_tree().paused or is_crouching:
+	if is_dead or get_tree().paused:
+		return
+	if is_crouching:
+		# Crouch + jump önce ayağa kalkma isteğidir. Üstte yeterli alan varsa
+		# aynı basışta zıplamadan stand pozuna geç; sıkışık alanda crouch korunur.
+		if _can_stand_up():
+			_set_crouching(false)
 		return
 	if not is_on_floor():
 		return
