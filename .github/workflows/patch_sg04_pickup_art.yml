@@ -1,0 +1,48 @@
+name: Patch SG04 pickup art
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/patch_sg04_pickup_art.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Replace generic SG04 art references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          old = 'uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png"'
+          new = 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"'
+          changed = []
+          total = 0
+          for path in Path('.').rglob('*.tscn'):
+              text = path.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count == 0:
+                  continue
+              path.write_text(text.replace(old, new), encoding='utf-8')
+              changed.append(str(path))
+              total += count
+          print('SG04 replacements:', total)
+          for path in changed:
+              print(' -', path)
+          if total != 6:
+              raise SystemExit(f'Expected 6 exact SG04 generic-art references, found {total}')
+          PY
+      - name: Commit SG04 pickup art
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add '*.tscn' ':!*.import'
+          git diff --cached --quiet && exit 0
+          git commit -m "feat: use SG04 side art for world pickups"
+          git push origin HEAD:main
