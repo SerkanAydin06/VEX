@@ -21,13 +21,16 @@ extends "res://scripts/actors/ravager.gd"
 @onready var projectile_muzzle: Marker3D = $ProjectileMuzzle
 @onready var thermal_burst_origin: Marker3D = $ThermalBurstOrigin
 
+var _thermal_burst_ready_at_msec := 0
+
 
 func _attempt_attack() -> void:
 	if _attack_locked or _player == null or not is_instance_valid(_player):
 		return
 
 	var distance_to_player := _horizontal_distance(global_position, _player.global_position)
-	var use_thermal_burst := distance_to_player <= close_attack_threshold
+	var thermal_burst_ready := Time.get_ticks_msec() >= _thermal_burst_ready_at_msec
+	var use_thermal_burst := distance_to_player <= close_attack_threshold and thermal_burst_ready
 	_attack_locked = true
 	_attack_windup_active = true
 	_attack_strafe_direction *= -1.0
@@ -41,6 +44,7 @@ func _attempt_attack() -> void:
 		attack_audio.play()
 
 	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
+	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
 	var selected_windup := thermal_burst_windup if use_thermal_burst else projectile_attack_windup
 	var runtime_windup := maxf(0.01, selected_windup * windup_scale)
 	await get_tree().create_timer(runtime_windup).timeout
@@ -49,6 +53,8 @@ func _attempt_attack() -> void:
 
 	if use_thermal_burst:
 		_emit_thermal_burst()
+		var runtime_thermal_cooldown := maxf(0.01, thermal_burst_cooldown * cooldown_scale)
+		_thermal_burst_ready_at_msec = Time.get_ticks_msec() + int(round(runtime_thermal_cooldown * 1000.0))
 	else:
 		var still_in_range := (
 			_player != null
@@ -62,10 +68,10 @@ func _attempt_attack() -> void:
 	_attack_windup_active = false
 	_play_directional_animation(&"idle", &"idle_back")
 
-	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
-	var selected_cooldown := thermal_burst_cooldown if use_thermal_burst else projectile_attack_cooldown
-	var runtime_cooldown := maxf(runtime_windup, selected_cooldown * cooldown_scale)
-	var remaining := maxf(0.0, runtime_cooldown - runtime_windup)
+	# Thermal Burst'un kendi cooldown'u ayrı tutulur. Yakında kalındığında burst
+	# hazır değilse Carrier normal projectile saldırısına devam eder.
+	var runtime_attack_cooldown := maxf(runtime_windup, projectile_attack_cooldown * cooldown_scale)
+	var remaining := maxf(0.0, runtime_attack_cooldown - runtime_windup)
 	if remaining > 0.0:
 		await get_tree().create_timer(remaining).timeout
 	if not is_inside_tree() or state == State.DEAD:
