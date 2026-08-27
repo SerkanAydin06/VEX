@@ -26,5 +26,7 @@ jobs:
         run: python tests/scene_syntax_audit.py
       - name: Validate Level Test arena
         run: python tests/level_test_audit.py
+      - name: Validate player movement
+        run: python tests/player_movement_audit.py
       - name: Validate weapon ADS targeting
         run: python tests/weapon_ads_audit.py
