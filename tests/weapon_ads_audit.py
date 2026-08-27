@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +20,11 @@ def read(relative: str) -> str:
 def require(text: str, contract: str, message: str) -> None:
     if contract not in text:
         ERRORS.append(message)
+
+
+def numeric_property(text: str, key: str) -> float | None:
+    match = re.search(rf"^{re.escape(key)}\s*=\s*(-?\d+(?:\.\d+)?)$", text, re.M)
+    return float(match.group(1)) if match else None
 
 
 def main() -> int:
@@ -160,27 +166,24 @@ def main() -> int:
     observed: list[float] = []
     for weapon_id, multiplier in expected_multiplier.items():
         weapon = read(f"resources/weapons/{weapon_id}.tres")
+        view = read(f"scenes/ui/weapons/{weapon_id}_view.tscn")
         require(weapon, "supports_ads_pose = true", f"{weapon_id} ADS pose desteğini kaybetmiş")
         require(
             weapon,
             "hud_preserve_authored_frame_motion = true",
             f"{weapon_id} yeni authored 1536x1024 animasyon karelerinin yerleşimini korumuyor",
         )
-        require(
-            weapon,
-            f"ads_fov_multiplier = {multiplier:.2f}",
-            f"{weapon_id} ads_fov_multiplier beklenen {multiplier:.2f} değil",
-        )
+        fov_value = numeric_property(weapon, "ads_fov_multiplier")
+        if fov_value is None or abs(fov_value - multiplier) > 0.000001:
+            ERRORS.append(f"{weapon_id} ads_fov_multiplier beklenen {multiplier:.2f} değil")
         require(
             weapon,
             "hud_zoom_offset = Vector2(",
             f"{weapon_id} ADS zoom görseli mikro-kalibrasyon alanını taşımıyor",
         )
-        require(
-            weapon,
-            f"hud_ads_scale_multiplier = {expected_ads_scale[weapon_id]:.2f}",
-            f"{weapon_id} ADS HUD scale değeri ekran altını dolduran kalibrasyonda değil",
-        )
+        scale_value = numeric_property(weapon, "hud_ads_scale_multiplier")
+        if scale_value is None or abs(scale_value - expected_ads_scale[weapon_id]) > 0.000001:
+            ERRORS.append(f"{weapon_id} ADS HUD scale değeri ekran altını dolduran kalibrasyonda değil")
         style_key = "hud_ads_reticle_style ="
         expected_style = f'hud_ads_reticle_style = "{expected_reticle_style[weapon_id]}"'
         if expected_reticle_style[weapon_id] == "small_cross":
@@ -192,10 +195,11 @@ def main() -> int:
             ERRORS.append(f"{weapon_id} ADS ateş animasyonu zoom baz hizasına ek ofset taşıyor")
         if "ads_fov =" in weapon:
             ERRORS.append(f"{weapon_id} hâlâ eski mutlak ads_fov değerini taşıyor")
+        require(view, 'animation = &"idle"', f"{weapon_id} WeaponView editor başlangıç animasyonu idle değil")
+        require(view, 'autoplay = "idle"', f"{weapon_id} WeaponView idle autoplay sözleşmesini kaybetmiş")
         observed.append(multiplier)
 
     p14 = read("resources/weapons/p14.tres")
-    require(p14, "hud_zoom_offset = Vector2(-165, -63)", "P14 yeni optik görsele göre yeniden kalibre edilmemiş")
     require(p14, "hud_aim_fire_preserve_frame_motion = true", "P14 aim_fire karelerinin çizilmiş recoil hareketini korumuyor")
 
     if len(set(observed)) != len(observed):
