@@ -1,0 +1,93 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/furnice_carrier_projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnice_carrier_effects_spritesheet.png" id="2_sheet"]
+[ext_resource type="PackedScene" path="res://scenes/effects/furnice_carrier_decal.tscn" id="3_decal"]
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_impact1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_impact2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_impact3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_impact4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="Frames_projectile"]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_projectile1")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile2")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile3")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile4")}], "loop": true, "name": &"default", "speed": 12.0}]
+
+[sub_resource type="SpriteFrames" id="Frames_impact"]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_impact1")}, {"duration": 1.0, "texture": SubResource("Atlas_impact2")}, {"duration": 1.0, "texture": SubResource("Atlas_impact3")}, {"duration": 1.0, "texture": SubResource("Atlas_impact4")}], "loop": false, "name": &"default", "speed": 12.0}]
+
+[sub_resource type="SphereShape3D" id="Sphere_projectile"]
+radius = 0.22
+
+[node name="FurniceCarrierProjectile" type="Area3D"]
+collision_layer = 0
+collision_mask = 3
+monitoring = true
+monitorable = false
+script = ExtResource("1_script")
+speed = 14.0
+lifetime = 5.0
+collision_radius = 0.22
+decal_scene = ExtResource("3_decal")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Sphere_projectile")
+
+[node name="ProjectileVisual" type="AnimatedSprite3D" parent="."]
+cast_shadow = 0
+pixel_size = 0.0018
+billboard = 2
+shaded = false
+sprite_frames = SubResource("Frames_projectile")
+animation = &"default"
+autoplay = "default"
+
+[node name="ImpactVisual" type="AnimatedSprite3D" parent="."]
+visible = false
+cast_shadow = 0
+pixel_size = 0.0034
+billboard = 2
+shaded = false
+sprite_frames = SubResource("Frames_impact")
+animation = &"default"
+
+[node name="ImpactLight" type="OmniLight3D" parent="."]
+visible = false
+light_color = Color(1, 0.34, 0.08, 1)
+light_energy = 3.8
+omni_range = 4.0
+shadow_enabled = false
