@@ -46,6 +46,11 @@ def main() -> int:
     )
     require(
         definition,
+        '@export var hud_preserve_authored_frame_motion := false',
+        "WeaponDefinition authored HUD kare hareketini koruma ayarını taşımıyor",
+    )
+    require(
+        definition,
         '@export var hud_aim_fire_preserve_frame_motion := false',
         "WeaponDefinition art-authored ADS fire frame hareketi ayarını taşımıyor",
     )
@@ -91,6 +96,8 @@ def main() -> int:
         ('if sprite.animation == &"aim_fire":', "ADS presenter aim_fire bitişini ayırt etmiyor"),
         ('_set_ads_reticle_fire_suppressed(false)', "ADS reticle aim_fire sonrasında geri açılmıyor"),
         ('has_method("set_fire_animation_suppressed")', "Presenter reticle recoil-suppression API'sini kullanmıyor"),
+        ('if definition.hud_preserve_authored_frame_motion:', "Presenter authored pistol kare yerleşimini koruyamıyor"),
+        ('offsets[frame_key] = Vector2.ZERO', "Presenter authored hip-fire/reload karelerini alpha bounds ile yeniden merkezliyor"),
         ('if definition.hud_aim_fire_preserve_frame_motion:', "Presenter art-authored ADS fire frame hareketini seçemiyor"),
         ('offsets[frame_key] = definition.hud_zoom_offset + definition.hud_aim_fire_offset', "Presenter preserve modunda transient alpha bounds ile aim_fire karesini yeniden merkezliyor"),
     ]:
@@ -154,6 +161,11 @@ def main() -> int:
     for weapon_id, multiplier in expected_multiplier.items():
         weapon = read(f"resources/weapons/{weapon_id}.tres")
         require(weapon, "supports_ads_pose = true", f"{weapon_id} ADS pose desteğini kaybetmiş")
+        require(
+            weapon,
+            "hud_preserve_authored_frame_motion = true",
+            f"{weapon_id} yeni authored 1536x1024 animasyon karelerinin yerleşimini korumuyor",
+        )
         require(
             weapon,
             f"ads_fov_multiplier = {multiplier:.2f}",
