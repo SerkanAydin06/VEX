@@ -64,11 +64,20 @@ jobs:
         with:
           name: p14-contact-sheet
           path: /tmp/p14_contact_sheet.jpg
-      - name: Upload P14 ADS source frames
+      - name: Upload P14 first-person source frames
         uses: actions/upload-artifact@v4
         with:
-          name: p14-ads-source-frames
+          name: p14-first-person-source-frames
           path: |
+            assets/weapons/p14/p14_idle.png
+            assets/weapons/p14/p14_fire_1.png
+            assets/weapons/p14/p14_fire_2.png
+            assets/weapons/p14/p14_fire_3.png
+            assets/weapons/p14/p14_fire_4.png
+            assets/weapons/p14/p14_reload_1.png
+            assets/weapons/p14/p14_reload_2.png
+            assets/weapons/p14/p14_reload_3.png
+            assets/weapons/p14/p14_reload_4.png
             assets/weapons/p14/p14_zoom.png
             assets/weapons/p14/p14_aim_fire_1.png
             assets/weapons/p14/p14_aim_fire_2.png
