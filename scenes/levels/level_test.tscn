@@ -36,6 +36,7 @@
 [ext_resource type="Texture2D" uid="uid://cawc32x5hgb8q" path="res://assets/pickups/armor.png" id="34_armor"]
 [ext_resource type="AudioStream" uid="uid://bc6m2yvln3f84" path="res://assets/audio/game_music_pro.mp3" id="35_music"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="36_ambience"]
+[ext_resource type="PackedScene" path="res://scenes/actors/furnice_carrier.tscn" id="37_furnice"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -312,7 +313,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 6.82, -10)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 6.82, -10)
 
 [node name="CeilingWhite_C2_R1" parent="RoomLights" unique_id=727214944 instance=ExtResource("20_room_light")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.82, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 6.82, -10)
 
 [node name="CeilingWhite_C3_R1" parent="RoomLights" unique_id=24035357 instance=ExtResource("20_room_light")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 6.82, -10)
@@ -530,6 +531,10 @@ enemy_id = &"level_test_voidweaver"
 [node name="HellMagma" parent="Enemies" unique_id=1262786008 instance=ExtResource("16_hellmagma")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.4, -20)
 enemy_id = &"level_test_hellmagma"
+
+[node name="FurniceCarrier" parent="Enemies" instance=ExtResource("37_furnice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.2, -20)
+enemy_id = &"level_test_furnice_carrier"
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]
 stream = ExtResource("35_music")
