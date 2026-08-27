@@ -98,5 +98,5 @@ texture_filter = 2
 position = Vector2(1200, 773.00006)
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_p01")
-animation = &"fire"
+animation = &"idle"
 autoplay = "idle"
