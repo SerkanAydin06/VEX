@@ -1,58 +1,102 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene format=3 uid="uid://dm7dfyixa12mr"]
 
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_idle.png" id="1_idle"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_fire_1.png" id="2_fire1"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_fire_2.png" id="3_fire2"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_fire_3.png" id="4_fire3"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_fire_4.png" id="5_fire4"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_reload_1.png" id="6_reload1"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_reload_2.png" id="7_reload2"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_reload_3.png" id="8_reload3"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_reload_4.png" id="9_reload4"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_zoom.png" id="10_zoom"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_aim_fire_1.png" id="12_aim1"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_aim_fire_2.png" id="13_aim2"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_aim_fire_3.png" id="14_aim3"]
-[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_aim_fire_4.png" id="15_aim4"]
+[ext_resource type="Texture2D" uid="uid://47xsr6nyo4p8" path="res://assets/weapons/p01/p01_idle.png" id="1_idle"]
+[ext_resource type="Texture2D" uid="uid://cfenwh6vvx1jy" path="res://assets/weapons/p01/p01_fire_1.png" id="2_fire1"]
+[ext_resource type="Texture2D" uid="uid://bm1ud7u0w2el3" path="res://assets/weapons/p01/p01_fire_2.png" id="3_fire2"]
+[ext_resource type="Texture2D" uid="uid://b8vgje2shik54" path="res://assets/weapons/p01/p01_fire_3.png" id="4_fire3"]
+[ext_resource type="Texture2D" uid="uid://thlqm1bnhif8" path="res://assets/weapons/p01/p01_fire_4.png" id="5_fire4"]
+[ext_resource type="Texture2D" uid="uid://buvbk157flmr1" path="res://assets/weapons/p01/p01_reload_1.png" id="6_reload1"]
+[ext_resource type="Texture2D" uid="uid://cm2c4weeb8djc" path="res://assets/weapons/p01/p01_reload_2.png" id="7_reload2"]
+[ext_resource type="Texture2D" uid="uid://47val2o1n6gb" path="res://assets/weapons/p01/p01_reload_3.png" id="8_reload3"]
+[ext_resource type="Texture2D" uid="uid://biehpot1x5u32" path="res://assets/weapons/p01/p01_reload_4.png" id="9_reload4"]
+[ext_resource type="Texture2D" uid="uid://n4ch8v06dubn" path="res://assets/weapons/p01/p01_zoom.png" id="10_zoom"]
+[ext_resource type="Texture2D" uid="uid://ct8fom08cfo77" path="res://assets/weapons/p01/p01_aim_fire_1.png" id="12_aim1"]
+[ext_resource type="Texture2D" uid="uid://bis5ugvuirp12" path="res://assets/weapons/p01/p01_aim_fire_2.png" id="13_aim2"]
+[ext_resource type="Texture2D" uid="uid://dbi33syu1rpwq" path="res://assets/weapons/p01/p01_aim_fire_3.png" id="14_aim3"]
+[ext_resource type="Texture2D" uid="uid://cm5q4g01fyp4k" path="res://assets/weapons/p01/p01_aim_fire_4.png" id="15_aim4"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_p01"]
 animations = [{
-"frames": [{"duration": 1.0, "texture": ExtResource("1_idle")}],
-"loop": 0,
-"name": &"equip",
-"speed": 1.0
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_aim1")
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("12_aim1")}, {"duration": 1.0, "texture": ExtResource("13_aim2")}, {"duration": 1.0, "texture": ExtResource("14_aim3")}, {"duration": 1.0, "texture": ExtResource("15_aim4")}],
+"duration": 1.0,
+"texture": ExtResource("13_aim2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_aim3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_aim4")
+}],
 "loop": 0,
 "name": &"aim_fire",
 "speed": 16.6666667
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("2_fire1")}, {"duration": 1.0, "texture": ExtResource("3_fire2")}, {"duration": 1.0, "texture": ExtResource("4_fire3")}, {"duration": 1.0, "texture": ExtResource("5_fire4")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_idle")
+}],
+"loop": 0,
+"name": &"equip",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_fire1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_fire2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_fire3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_fire4")
+}],
 "loop": 0,
 "name": &"fire",
 "speed": 22.2222222
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_idle")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_idle")
+}],
 "loop": 1,
 "name": &"idle",
 "speed": 1.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("6_reload1")}, {"duration": 1.0, "texture": ExtResource("7_reload2")}, {"duration": 1.0, "texture": ExtResource("8_reload3")}, {"duration": 1.0, "texture": ExtResource("9_reload4")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_reload1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_reload2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_reload3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_reload4")
+}],
 "loop": 0,
 "name": &"reload",
 "speed": 3.6363636
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("10_zoom")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_zoom")
+}],
 "loop": 1,
 "name": &"zoom",
 "speed": 1.0
 }]
 
-[node name="WeaponView" type="AnimatedSprite2D"]
-visible = false
+[node name="WeaponView" type="AnimatedSprite2D" unique_id=504721468]
 texture_filter = 2
-position = Vector2(1060, 772)
+position = Vector2(1200, 773.00006)
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_p01")
-animation = &"idle"
+animation = &"fire"
 autoplay = "idle"
