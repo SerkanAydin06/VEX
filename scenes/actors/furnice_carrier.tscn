@@ -200,6 +200,8 @@ close_attack_threshold = 6.0
 projectile_attack_cooldown = 1.8
 projectile_attack_windup = 0.45
 projectile_decal_tick_damage = 4
+projectile_muzzle_sprite_offset_pixels = Vector2(0, -139)
+projectile_muzzle_depth_offset = 0.08
 thermal_burst_scene = ExtResource("4_shockwave")
 thermal_burst_damage = 22
 thermal_burst_cooldown = 3.2
@@ -235,9 +237,6 @@ pixel_size = 0.0052
 texture_filter = 5
 render_priority = -1
 texture = ExtResource("8_shadow")
-
-[node name="ProjectileMuzzle" type="Marker3D" parent="."]
-position = Vector3(0.38, 0.35, 0.28)
 
 [node name="ThermalBurstOrigin" type="Marker3D" parent="."]
 position = Vector3(0, -0.92, 0)
