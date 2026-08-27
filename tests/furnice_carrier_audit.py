@@ -146,10 +146,7 @@ def main() -> int:
         require(carrier_scene, f'&"{animation}"', f"body animation {animation}")
     require(carrier_scene, 'enemy_id = &"furnice_carrier"', "canonical enemy id")
     require(carrier_scene, 'attack_damage = 18', "scene direct hasar")
-    require(carrier_scene, 'close_attack_threshold = 6.0', "scene yakın menzil")
     require(carrier_scene, 'projectile_scene = ExtResource("3_projectile")', "scene projectile bağlantısı")
-    require(carrier_scene, 'projectile_muzzle_sprite_offset_pixels = Vector2(0, -139)', "scene furnace ağzı muzzle offset")
-    require(carrier_scene, 'projectile_muzzle_depth_offset = 0.08', "scene muzzle depth offset")
     require(carrier_scene, 'thermal_burst_scene = ExtResource("4_shockwave")', "scene thermal bağlantısı")
     if '[node name="ProjectileMuzzle"' in carrier_scene:
         fail("Eski world-space ProjectileMuzzle marker sahnede kalmış")

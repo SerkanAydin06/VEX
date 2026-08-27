@@ -11,6 +11,8 @@ extends Control
 @export_range(0.75, 3.0, 0.25) var cross_thickness := 1.25
 @export_range(1.0, 4.0, 0.1) var dot_radius := 1.8
 @export_range(1.5, 6.0, 0.1) var dot_outline_radius := 3.0
+@export_range(3.0, 11.0, 0.25) var ring_radius := 7.0
+@export_range(0.75, 3.0, 0.25) var ring_thickness := 1.5
 @export_range(0.05, 1.0, 0.01) var feedback_duration := 0.24
 
 var _feedback_remaining := 0.0
@@ -40,6 +42,10 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	var center := size * 0.5
+	if _reticle_style == "ring":
+		draw_arc(center, ring_radius, 0.0, TAU, 48, shadow_color, ring_thickness + 2.0, true)
+		draw_arc(center, ring_radius, 0.0, TAU, 48, _display_color, ring_thickness, true)
+		return
 	if _reticle_style == "red_dot":
 		draw_circle(center, dot_outline_radius, shadow_color)
 		draw_circle(center, dot_radius, _display_color)

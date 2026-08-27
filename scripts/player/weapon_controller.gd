@@ -50,6 +50,7 @@ var _player: VexPlayer
 var _weapon_flashlight: SpotLight3D
 var _burst_shots := 0
 var _burst_reset_remaining := 0.0
+var _sg04_reload_generation := 0
 
 
 func _ready() -> void:
@@ -102,9 +103,13 @@ func _process(delta: float) -> void:
 	if get_tree().paused or _player == null or _player.is_dead:
 		return
 	var weapon := get_current_weapon()
-	if weapon == null or is_reloading or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if weapon == null or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 	var wants_to_fire := Input.is_action_pressed("fire") if weapon.automatic else Input.is_action_just_pressed("fire")
+	if is_reloading:
+		if weapon.weapon_id == &"sg04" and wants_to_fire:
+			_interrupt_sg04_reload_and_fire()
+		return
 	if wants_to_fire:
 		_try_fire()
 
@@ -355,6 +360,8 @@ func _reload_sg04_shells(
 	starting_reserve: int
 ) -> void:
 	is_reloading = true
+	_sg04_reload_generation += 1
+	var reload_generation := _sg04_reload_generation
 	var rounds_to_load := mini(magazine_size - starting_magazine, starting_reserve)
 	var reload_time_multiplier := maxf(0.01, float(_modifiers(weapon).reload))
 	# SG04 reload art has four equal-duration authored frames. Frames 1-2-3 are
@@ -365,6 +372,8 @@ func _reload_sg04_shells(
 	for _round_index: int in range(rounds_to_load):
 		_play_hud_action(&"reload_shell")
 		await get_tree().create_timer(shell_cycle_duration).timeout
+		if reload_generation != _sg04_reload_generation:
+			return
 		if not is_inside_tree() or _player == null or _player.is_dead:
 			is_reloading = false
 			return
@@ -382,11 +391,25 @@ func _reload_sg04_shells(
 		return
 	_play_hud_action(&"reload_finish")
 	await get_tree().create_timer(finish_duration).timeout
+	if reload_generation != _sg04_reload_generation:
+		return
 	if not is_inside_tree() or _player == null or _player.is_dead:
 		is_reloading = false
 		return
 	is_reloading = false
 	broadcast_state()
+
+
+func _interrupt_sg04_reload_and_fire() -> void:
+	var weapon := get_current_weapon()
+	if weapon == null or weapon.weapon_id != &"sg04" or not is_reloading:
+		return
+	# Fire interval bitmediyse reload devam eder; ilk yasal ateş tıklaması anında keser.
+	if _cooldown_remaining > 0.0:
+		return
+	_sg04_reload_generation += 1
+	is_reloading = false
+	_try_fire()
 
 
 func add_ammo(ammo_type: StringName, amount: int) -> int:
@@ -672,8 +695,11 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 	var forward: Vector3 = camera.project_ray_normal(aim_screen_position).normalized()
 	var right: Vector3 = camera.global_transform.basis.x
 	var up: Vector3 = camera.global_transform.basis.y
+	var spread_multiplier := _player.get_weapon_spread_multiplier()
+	if _player.is_aiming and weapon.supports_ads_pose:
+		spread_multiplier = weapon.ads_spread_multiplier
 	var spread_tangent: float = tan(
-		deg_to_rad(weapon.spread_degrees * float(_modifiers(weapon).spread) * _player.get_weapon_spread_multiplier())
+		deg_to_rad(weapon.spread_degrees * float(_modifiers(weapon).spread) * spread_multiplier)
 	)
 	var hit_something := false
 	var damage_multiplier := float(_modifiers(weapon).damage)
@@ -730,7 +756,14 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 				continue
 			hit_targets.append(damage_target)
 			target_hits += 1
-			var pellet_damage := maxi(1, roundi(float(weapon.damage_per_pellet) * damage_multiplier))
+			var distance_damage_multiplier := _get_distance_damage_multiplier(
+				weapon,
+				origin.distance_to(hit_position)
+			)
+			var pellet_damage := maxi(
+				1,
+				roundi(float(weapon.damage_per_pellet) * damage_multiplier * distance_damage_multiplier)
+			)
 			var was_headshot := false
 			if damage_target.has_method("get_weapon_hit_multiplier"):
 				var upgraded_headshot := weapon.headshot_multiplier * float(_modifiers(weapon).headshot)
@@ -756,6 +789,15 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 
 	if hit_something:
 		GameState.confirm_hit()
+
+
+func _get_distance_damage_multiplier(weapon: WeaponDefinition, distance: float) -> float:
+	var start := maxf(0.0, weapon.damage_falloff_start_distance)
+	var finish := maxf(0.0, weapon.damage_falloff_end_distance)
+	if finish <= start or distance <= start:
+		return 1.0
+	var ratio := clampf((distance - start) / (finish - start), 0.0, 1.0)
+	return lerpf(1.0, weapon.damage_falloff_min_multiplier, ratio)
 
 
 func _resolve_damage_target(collider: Object) -> Node:

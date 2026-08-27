@@ -92,7 +92,13 @@ def main() -> int:
         ('hud_preserve_authored_frame_motion = true', "authored frame motion"),
         ('hud_aim_fire_preserve_frame_motion = true', "ADS recoil frame motion"),
         ('magazine_size =', "magazine tuning"),
-        ('reload_duration =', "reload duration tuning"),
+        ('reload_duration = 0.725', "2x reload hızı"),
+        ('hud_crosshair_scale_multiplier = 2.0', "2x hip crosshair"),
+        ('hud_ads_reticle_style = "ring"', "ADS halka reticle"),
+        ('ads_spread_multiplier = 0.6', "ADS shotgun spread"),
+        ('damage_falloff_start_distance = 8.0', "yakın tam hasar mesafesi"),
+        ('damage_falloff_end_distance = 30.0', "falloff bitiş mesafesi"),
+        ('damage_falloff_min_multiplier = 0.35', "uzak minimum pellet hasarı"),
         ('pellet_count =', "pellet tuning"),
     ]:
         require(weapon, needle, label)
@@ -108,6 +114,10 @@ def main() -> int:
         ('magazines[weapon.weapon_id] = current_magazine + 1', "her döngüde tek fişek yükleme"),
         ('reserve_ammo[weapon.ammo_type] = current_reserve - 1', "her döngüde tek rezerv azaltma"),
         ('func get_reload_animation_speed_multiplier(', "reload upgrade görsel hız senkronu"),
+        ('func _interrupt_sg04_reload_and_fire()', "ateşle reload kesme"),
+        ('_sg04_reload_generation += 1', "async reload iptal tokeni"),
+        ('spread_multiplier = weapon.ads_spread_multiplier', "silah-bazlı ADS spread"),
+        ('func _get_distance_damage_multiplier(', "mesafe hasar düşüşü"),
     ]:
         require(controller, needle, label)
 

@@ -24,3 +24,5 @@ cross_half_length = 4.0
 cross_thickness = 1.25
 dot_radius = 1.8
 dot_outline_radius = 3.0
+ring_radius = 7.0
+ring_thickness = 1.5

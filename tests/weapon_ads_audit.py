@@ -47,7 +47,7 @@ def main() -> int:
     )
     require(
         definition,
-        '@export_enum("small_cross", "red_dot") var hud_ads_reticle_style := "small_cross"',
+        '@export_enum("small_cross", "red_dot", "ring") var hud_ads_reticle_style := "small_cross"',
         "WeaponDefinition silah-bazlı ADS reticle stilini taşımıyor",
     )
     require(
@@ -80,6 +80,7 @@ def main() -> int:
         ("not uses_ads_optical_center", "Hip-fire/ADS hedef ayrımı eksik"),
         ('GameState.hud.has_method("get_crosshair_screen_position")', "Hip-fire HUD crosshair hedeflemesi kaybolmuş"),
         ("camera.get_viewport().get_visible_rect().size * 0.5", "ADS için kamera ekran merkezi hesaplanmıyor"),
+        ("spread_multiplier = weapon.ads_spread_multiplier", "Silah-bazlı ADS spread override eksik"),
     ]:
         require(controller, contract, message)
 
@@ -130,6 +131,8 @@ def main() -> int:
         ('get_node_or_null("PauseMenu")', "ADS reticle pause menüsünde gizlenmiyor"),
         ("GameState.hit_confirmed.connect(_on_hit_confirmed)", "ADS reticle hit feedback almıyor"),
         ("GameState.headshot_confirmed.connect(_on_headshot_confirmed)", "ADS reticle headshot feedback almıyor"),
+        ('if _reticle_style == "ring"', "ADS reticle halka stilini çizmiyor"),
+        ("draw_arc(center, ring_radius", "ADS halka reticle çizimi eksik"),
         ('if _reticle_style == "red_dot"', "ADS reticle optik red-dot stilini çizmiyor"),
         ("draw_circle(center, dot_radius, _display_color)", "Optik ADS hedef noktası gerçek küçük nokta olarak çizilmiyor"),
         ("draw_line(horizontal_from, horizontal_to", "Ironsight ADS küçük + yatay kolu çizilmiyor"),

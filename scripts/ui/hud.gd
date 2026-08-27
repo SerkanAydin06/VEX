@@ -91,6 +91,7 @@ var _health_ratio := 1.0
 var _danger_pulse_time := 0.0
 var _crosshair_hit_timer := 0.0
 var _crosshair_rest_position := Vector2.ZERO
+var _crosshair_base_scale := Vector2.ONE
 var _world_ui_sample_remaining := 0.0
 var _weapon_presenter: VexHudWeaponPresenter = null
 
@@ -99,6 +100,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_weapon_layer_rest_position = weapon_layer.position
 	_crosshair_rest_position = crosshair.position
+	_crosshair_base_scale = crosshair.scale
+	crosshair.pivot_offset = crosshair.size * 0.5
 	crosshair.texture = DOOM3_CROSSHAIR
 	crosshair.modulate = crosshair_default_color
 	_damage_amount_rest_position = damage_amount.position
@@ -335,8 +338,16 @@ func _on_weapon_changed(weapon_id: StringName, display_name: String) -> void:
 	else:
 		weapon_slot.text = tr("HUD_SLOT_UNKNOWN")
 		ammo_type.text = tr("HUD_AMMUNITION")
+	_apply_crosshair_weapon_scale(definition)
 	if _weapon_presenter != null:
 		_weapon_presenter.set_current_weapon(weapon_id)
+
+
+func _apply_crosshair_weapon_scale(definition: WeaponDefinition) -> void:
+	var multiplier := 1.0
+	if definition != null:
+		multiplier = maxf(0.5, definition.hud_crosshair_scale_multiplier)
+	crosshair.scale = _crosshair_base_scale * multiplier
 
 
 func _on_ammo_changed(current: int, reserve: int) -> void:

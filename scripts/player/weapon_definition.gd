@@ -15,6 +15,7 @@ extends Resource
 @export var hud_ammo_label_key := "HUD_AMMUNITION"
 @export var hud_view_scene: PackedScene
 @export var world_pickup_texture: Texture2D
+@export_range(0.5, 3.0, 0.05) var hud_crosshair_scale_multiplier := 1.0
 @export var supports_ads_pose := false
 ## ADS FOV'u oyuncunun normal FOV'una oranlıdır. 0.80 = hafif zoom,
 ## 0.58 = daha güçlü precision zoom. Böylece kullanıcı FOV ayarı zoom miktarını bozmaz.
@@ -32,7 +33,7 @@ extends Resource
 ## 1.0 = normal HUD ölçeği; 1.30 = ADS görselini yaklaşık %30 büyütür.
 @export_range(1.0, 1.5, 0.01) var hud_ads_scale_multiplier := 1.0
 ## small_cross = gez/arpacık; red_dot = optik pencere.
-@export_enum("small_cross", "red_dot") var hud_ads_reticle_style := "small_cross"
+@export_enum("small_cross", "red_dot", "ring") var hud_ads_reticle_style := "small_cross"
 @export var hud_aim_fire_offset := Vector2.ZERO
 ## true olduğunda aim_fire karelerinin PNG içinde çizilmiş recoil hareketi korunur.
 ## Muzzle flash/kovan gibi geçici alpha alanları kareyi otomatik yeniden merkezlemez.
@@ -60,7 +61,13 @@ extends Resource
 @export_range(0.05, 2.0, 0.01) var fire_interval := 0.28
 @export_range(0.1, 5.0, 0.05) var reload_duration := 1.1
 @export_range(0.0, 20.0, 0.1) var spread_degrees := 1.0
+## ADS pellet/mermi dağılımı. 0 = tam merkez; shotgun gibi silahlar ADS’de de dağılım koruyabilir.
+@export_range(0.0, 1.0, 0.01) var ads_spread_multiplier := 0.0
 @export_range(5.0, 200.0, 1.0) var maximum_range := 80.0
+## End <= start ise mesafe hasar düşüşü devre dışıdır.
+@export_range(0.0, 200.0, 0.5) var damage_falloff_start_distance := 0.0
+@export_range(0.0, 200.0, 0.5) var damage_falloff_end_distance := 0.0
+@export_range(0.05, 1.0, 0.05) var damage_falloff_min_multiplier := 1.0
 @export_range(1, 1000, 1) var reserve_ammo_capacity := 180
 @export var automatic := false
 
