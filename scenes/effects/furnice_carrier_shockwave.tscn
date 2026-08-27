@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/effects/furnice_carrier_shockwave.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnice_carrier_effects_spritesheet.png" id="2_sheet"]
+
+[sub_resource type="AtlasTexture" id="Atlas_shockwave1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_shockwave2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_shockwave3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_shockwave4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="Frames_shockwave"]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_shockwave1")}, {"duration": 1.0, "texture": SubResource("Atlas_shockwave2")}, {"duration": 1.0, "texture": SubResource("Atlas_shockwave3")}, {"duration": 1.0, "texture": SubResource("Atlas_shockwave4")}], "loop": false, "name": &"default", "speed": 8.0}]
+
+[sub_resource type="CylinderShape3D" id="Cylinder_shockwave"]
+radius = 6.0
+height = 0.8
+
+[node name="FurniceCarrierShockwave" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+monitoring = true
+monitorable = false
+script = ExtResource("1_script")
+burst_radius = 6.0
+burst_damage = 22
+visual_duration = 0.6
+damage_time_ratio = 0.62
+effect_height = 0.8
+occlusion_mask = 1
+visual_reference_radius = 6.0
+visual_start_scale = 0.18
+visual_end_scale = 1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.4, 0)
+shape = SubResource("Cylinder_shockwave")
+
+[node name="Visual" type="AnimatedSprite3D" parent="."]
+rotation = Vector3(-1.5708, 0, 0)
+position = Vector3(0, 0.035, 0)
+cast_shadow = 0
+pixel_size = 0.0234375
+shaded = false
+render_priority = 3
+sprite_frames = SubResource("Frames_shockwave")
+animation = &"default"
