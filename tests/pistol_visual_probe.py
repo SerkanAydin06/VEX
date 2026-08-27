@@ -4,6 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from PIL import Image, ImageDraw
 import math
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = Path("/tmp/pistol_visual_audit")
@@ -36,7 +37,6 @@ def alpha_stats(path: Path) -> dict[str, object]:
     semi = nonzero - opaque
     coverage = nonzero / (im.width * im.height)
 
-    # Alpha ağırlıklı merkez; sadece görünür silah/efekt içeriğini ölçer.
     total = 0
     sx = 0
     sy = 0
@@ -50,10 +50,17 @@ def alpha_stats(path: Path) -> dict[str, object]:
                 sy += y * a
     cx = sx / total
     cy = sy / total
+    left, top, right, bottom = bbox
+    # hud_weapon_presenter.gd içindeki _get_texture_visual_anchor ile aynı hesap.
+    anchor = (
+        left + (right - left) * 0.5 - im.width * 0.5,
+        bottom - im.height * 0.5,
+    )
     return {
         "size": im.size,
         "bbox": bbox,
         "center": (cx, cy),
+        "anchor": anchor,
         "coverage": coverage,
         "semi": semi,
         "opaque": opaque,
@@ -95,6 +102,43 @@ def make_sheet(weapon: str, files: list[Path]) -> None:
     sheet.save(OUT / f"{weapon}_contact_sheet.jpg", quality=94)
 
 
+def parse_vec2(text: str, key: str) -> tuple[float, float]:
+    match = re.search(rf'^{re.escape(key)}\s*=\s*Vector2\(([-0-9.]+),\s*([-0-9.]+)\)$', text, re.M)
+    return (float(match.group(1)), float(match.group(2))) if match else (0.0, 0.0)
+
+
+def presenter_alignment_report(weapon: str, stats: dict[tuple[str, str], dict[str, object]]) -> None:
+    resource_text = (ROOT / "resources" / "weapons" / f"{weapon}.tres").read_text(encoding="utf-8")
+    zoom_offset = parse_vec2(resource_text, "hud_zoom_offset")
+    aim_offset = parse_vec2(resource_text, "hud_aim_fire_offset")
+    preserve = bool(re.search(r'^hud_aim_fire_preserve_frame_motion\s*=\s*true$', resource_text, re.M))
+    idle = stats.get((weapon, "idle"))
+    zoom = stats.get((weapon, "zoom"))
+    if not idle or not zoom:
+        return
+    idle_anchor = idle["anchor"]
+    zoom_anchor = (zoom["anchor"][0] + zoom_offset[0], zoom["anchor"][1] + zoom_offset[1])
+    print(f"PRESENTER {weapon}: zoom_offset={zoom_offset} preserve_aim_motion={preserve}")
+    for stem in FIRST_PERSON:
+        stat = stats.get((weapon, stem))
+        if stat is None:
+            continue
+        anchor = stat["anchor"]
+        if stem == "zoom":
+            offset = zoom_offset
+        elif stem.startswith("aim_fire_"):
+            if preserve:
+                offset = (zoom_offset[0] + aim_offset[0], zoom_offset[1] + aim_offset[1])
+            else:
+                offset = (
+                    zoom_anchor[0] - anchor[0] + aim_offset[0],
+                    zoom_anchor[1] - anchor[1] + aim_offset[1],
+                )
+        else:
+            offset = (idle_anchor[0] - anchor[0], idle_anchor[1] - anchor[1])
+        print(f"  {stem:12s} anchor=({anchor[0]:+.1f},{anchor[1]:+.1f}) presenter_offset=({offset[0]:+.1f},{offset[1]:+.1f})")
+
+
 def main() -> int:
     errors: list[str] = []
     warnings: list[str] = []
@@ -119,10 +163,12 @@ def main() -> int:
             size = stat["size"]
             bbox = stat["bbox"]
             center = stat["center"]
+            anchor = stat["anchor"]
             coverage = float(stat["coverage"])
             print(
                 f"{path.name:24s} size={size[0]}x{size[1]} "
                 f"bbox={bbox} center=({center[0]:.1f},{center[1]:.1f}) "
+                f"anchor=({anchor[0]:+.1f},{anchor[1]:+.1f}) "
                 f"coverage={coverage:.3f} semi={stat['semi']}"
             )
             if size != (1536, 1024):
@@ -131,7 +177,6 @@ def main() -> int:
                 errors.append(f"{weapon}: {path.name} alpha coverage aşırı yüksek ({coverage:.3f}); arka plan şeffaf olmayabilir")
             if coverage < 0.02:
                 warnings.append(f"{weapon}: {path.name} görünür içerik çok küçük ({coverage:.3f})")
-            # Kenara dayanan içerik, oynatıcıda kırpılma riski olabilir; hata değil uyarı.
             left, top, right, bottom = bbox
             touching = []
             if left <= 1: touching.append("sol")
@@ -163,7 +208,6 @@ def main() -> int:
                         errors.append(f"{weapon} {series_name}: ani frame merkez sıçraması {dx:+.1f},{dy:+.1f} @ {stem}")
                 prev = stat
 
-        # Idle -> ilk hip fire ve zoom -> ilk aim fire başlangıç tutarlılığı.
         for a, b, label, limit in [
             ("idle", "fire_1", "idle->fire_1", 180.0),
             ("zoom", "aim_fire_1", "zoom->aim_fire_1", 180.0),
@@ -176,6 +220,7 @@ def main() -> int:
                 print(f"TRANSITION {weapon} {label}: center distance={dist:.1f}")
                 if dist > limit:
                     warnings.append(f"{weapon}: {label} alpha merkezi {dist:.1f}px değişiyor; görsel sıçrama açısından kontrol et")
+        presenter_alignment_report(weapon, all_stats)
 
     print("\n=== WARNINGS ===")
     for item in warnings:
