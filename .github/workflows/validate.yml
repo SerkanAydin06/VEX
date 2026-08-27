@@ -30,5 +30,7 @@ jobs:
         run: python tests/player_movement_audit.py
       - name: Validate Furnice Carrier
         run: python tests/furnice_carrier_audit.py
+      - name: Validate SG04 weapon
+        run: python tests/sg04_weapon_audit.py
       - name: Validate weapon ADS targeting
         run: python tests/weapon_ads_audit.py
