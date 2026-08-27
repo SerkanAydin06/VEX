@@ -1,0 +1,261 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/furnice_carrier.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c6pvy1xlbe5dg" path="res://assets/enemies/furnice_carrier/furnice_carrier_body_spritesheet.png" id="2_sheet"]
+[ext_resource type="PackedScene" path="res://scenes/actors/furnice_carrier_projectile.tscn" id="3_projectile"]
+[ext_resource type="PackedScene" path="res://scenes/effects/furnice_carrier_shockwave.tscn" id="4_shockwave"]
+[ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="5_attack_audio"]
+[ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="6_hurt_audio"]
+[ext_resource type="AudioStream" uid="uid://clas3vxrwxpr3" path="res://assets/audio/enemy_death_scream_pro.wav" id="7_death_audio"]
+[ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="8_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="9_burn"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
+radius = 0.55
+height = 1.9
+
+[sub_resource type="AtlasTexture" id="Atlas_idle1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 0, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 0, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 0, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 341, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 341, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 341, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 341, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 682, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 682, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 682, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 682, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1023, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 1023, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 1023, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 1023, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1364, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 1364, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 1364, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 1364, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_thermal_burst1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1705, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_thermal_burst2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 1705, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_thermal_burst3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 1705, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_thermal_burst4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 1705, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2046, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 2046, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 2046, 512, 341)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 2046, 512, 341)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
+animations = [
+{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle4")}], "loop": true, "name": &"idle", "speed": 3.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_back1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back4")}], "loop": true, "name": &"idle_back", "speed": 3.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk4")}], "loop": true, "name": &"walk", "speed": 5.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death1")}], "loop": false, "name": &"hurt", "speed": 8.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_back1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back4")}], "loop": true, "name": &"walk_back", "speed": 5.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack4")}], "loop": false, "name": &"attack", "speed": 8.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_thermal_burst1")}, {"duration": 1.0, "texture": SubResource("Atlas_thermal_burst2")}, {"duration": 1.0, "texture": SubResource("Atlas_thermal_burst3")}, {"duration": 1.0, "texture": SubResource("Atlas_thermal_burst4")}], "loop": false, "name": &"thermal_burst", "speed": 8.0},
+{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death1")}, {"duration": 1.0, "texture": SubResource("Atlas_death2")}, {"duration": 1.0, "texture": SubResource("Atlas_death3")}, {"duration": 1.0, "texture": SubResource("Atlas_death4")}], "loop": false, "name": &"death", "speed": 5.0}
+]
+
+[node name="FurniceCarrier" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 15
+floor_snap_length = 0.3
+safe_margin = 0.06
+script = ExtResource("1_script")
+enemy_id = &"furnice_carrier"
+maximum_health = 130
+move_speed = 1.8
+movement_acceleration = 9.0
+braking_acceleration = 20.0
+detection_range = 22.0
+pursuit_range = 22.0
+sight_origin_height = 0.65
+attack_damage = 18
+attack_range = 22.0
+attack_cooldown = 1.8
+attack_windup = 0.45
+attack_range_tolerance = 1.5
+projectile_scene = ExtResource("3_projectile")
+projectile_target_height = 0.5
+attack_preferred_distance = 8.0
+navigation_clearance = 0.6
+idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+hurt_frame_y_offsets = PackedFloat32Array(0)
+death_frame_y_offsets = PackedFloat32Array(0, -0.01, -0.02, -0.03)
+close_attack_threshold = 6.0
+projectile_attack_cooldown = 1.8
+projectile_attack_windup = 0.45
+projectile_decal_tick_damage = 4
+thermal_burst_scene = ExtResource("4_shockwave")
+thermal_burst_damage = 22
+thermal_burst_cooldown = 3.2
+thermal_burst_windup = 0.5
+thermal_burst_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+ground_effect_collision_mask = 1
+burn_remains_scene = ExtResource("9_burn")
+burn_remains_scale = 1.1
+burn_smoke_duration = 9.0
+burn_smoke_alpha = 0.14
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, -0.05, 0)
+shape = SubResource("CapsuleShape_enemy")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+position = Vector3(0, -0.15, 0)
+cast_shadow = 0
+pixel_size = 0.0041
+billboard = 2
+shaded = true
+alpha_cut = 1
+sprite_frames = SubResource("SpriteFrames_enemy")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="GroundShadow" type="Sprite3D" parent="."]
+rotation = Vector3(-1.5708, 0, 0)
+position = Vector3(0, -1.0, 0)
+cast_shadow = 0
+modulate = Color(1, 1, 1, 0.72)
+pixel_size = 0.0052
+texture_filter = 5
+render_priority = -1
+texture = ExtResource("8_shadow")
+
+[node name="ProjectileMuzzle" type="Marker3D" parent="."]
+position = Vector3(0.38, 0.62, 0.28)
+
+[node name="ThermalBurstOrigin" type="Marker3D" parent="."]
+position = Vector3(0, -0.92, 0)
+
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_attack_audio")
+volume_db = -1.0
+max_distance = 24.0
+bus = &"SFX"
+
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_hurt_audio")
+volume_db = -2.0
+max_distance = 20.0
+bus = &"SFX"
+
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("7_death_audio")
+volume_db = 1.5
+max_distance = 24.0
+bus = &"SFX"
