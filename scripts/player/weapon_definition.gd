@@ -31,6 +31,9 @@ extends Resource
 ## small_cross = gez/arpacık; red_dot = optik pencere.
 @export_enum("small_cross", "red_dot") var hud_ads_reticle_style := "small_cross"
 @export var hud_aim_fire_offset := Vector2.ZERO
+## true olduğunda aim_fire karelerinin PNG içinde çizilmiş recoil hareketi korunur.
+## Muzzle flash/kovan gibi geçici alpha alanları kareyi otomatik yeniden merkezlemez.
+@export var hud_aim_fire_preserve_frame_motion := false
 @export var hud_lowered_offset := Vector2.ZERO
 
 @export_category("Gelecek Silah Yetenekleri")
