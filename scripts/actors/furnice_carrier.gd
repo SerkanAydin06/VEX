@@ -84,13 +84,38 @@ func _fire_furnice_projectile() -> void:
 	if projectile == null:
 		return
 	get_tree().current_scene.add_child(projectile)
-	projectile.global_position = projectile_muzzle.global_position
+	projectile.global_position = _projectile_muzzle_world_position()
 
 	# Atış anında hedef yönü kilitlenir; projectile sonrasında homing yapmaz.
 	var target_position := _player.global_position + Vector3.UP * projectile_target_height
 	var shot_direction := (target_position - projectile.global_position).normalized()
 	var decal_damage := _scaled_special_damage(projectile_decal_tick_damage)
 	projectile.call("launch", shot_direction, self, _runtime_attack_damage, decal_damage)
+
+
+func _projectile_muzzle_world_position() -> Vector3:
+	# Marker konumu Inspector tuning verisidir:
+	# X = sağ/sol, Y = yükseklik, Z = baktığı yönde ileri/geri.
+	# Ravager omurgası root'u fiziksel olarak döndürmediği için marker global_position'ı
+	# doğrudan kullanmak yerine logical facing yönüne dönüştürürüz.
+	var forward := _facing_direction
+	forward.y = 0.0
+	if forward.length_squared() <= 0.001:
+		forward = Vector3.FORWARD
+	else:
+		forward = forward.normalized()
+	var right := forward.cross(Vector3.UP)
+	if right.length_squared() <= 0.001:
+		right = Vector3.RIGHT
+	else:
+		right = right.normalized()
+	var tuning_offset := projectile_muzzle.position
+	return (
+		global_position
+		+ right * tuning_offset.x
+		+ Vector3.UP * tuning_offset.y
+		+ forward * tuning_offset.z
+	)
 
 
 func _emit_thermal_burst() -> void:
