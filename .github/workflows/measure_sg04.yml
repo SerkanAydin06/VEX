@@ -24,11 +24,15 @@ jobs:
           for path in sorted(root.glob('*.png')):
               im = Image.open(path).convert('RGBA')
               alpha = im.getchannel('A')
-              bbox = alpha.getbbox()
-              if bbox is None:
-                  bbox = (0,0,0,0)
+              bbox = alpha.getbbox() or (0, 0, 0, 0)
               x0,y0,x1,y1 = bbox
               anchor_x = (x0+x1)/2 - im.width/2
               anchor_y = y1 - im.height/2
               print(f'{path.name}|size={im.width}x{im.height}|bbox={bbox}|anchor=({anchor_x:.1f},{anchor_y:.1f})')
           PY
+      - name: Upload SG04 sprites
+        uses: actions/upload-artifact@v4
+        with:
+          name: sg04-sprites
+          path: assets/weapons/sg04/*.png
+          retention-days: 1
