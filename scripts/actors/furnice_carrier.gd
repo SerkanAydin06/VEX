@@ -6,6 +6,8 @@ extends "res://scripts/actors/ravager.gd"
 @export_range(0.2, 6.0, 0.05) var projectile_attack_cooldown := 1.80
 @export_range(0.05, 2.0, 0.05) var projectile_attack_windup := 0.45
 @export_range(1, 100, 1) var projectile_decal_tick_damage := 4
+@export var projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -139.0)
+@export_range(0.0, 0.5, 0.01) var projectile_muzzle_depth_offset := 0.08
 
 @export_category("10 - Thermal Burst")
 @export var thermal_burst_scene: PackedScene
@@ -18,7 +20,6 @@ extends "res://scripts/actors/ravager.gd"
 @export_range(0.5, 6.0, 0.1) var ground_probe_depth := 2.5
 @export_range(0.0, 0.2, 0.01) var ground_effect_surface_offset := 0.03
 
-@onready var projectile_muzzle: Marker3D = $ProjectileMuzzle
 @onready var thermal_burst_origin: Marker3D = $ThermalBurstOrigin
 
 var _thermal_burst_ready_at_msec := 0
@@ -100,27 +101,35 @@ func _fire_furnice_projectile() -> void:
 
 
 func _projectile_muzzle_world_position() -> Vector3:
-	# Marker konumu Inspector tuning verisidir:
-	# X = sağ/sol, Y = yükseklik, Z = baktığı yönde ileri/geri.
-	# Ravager omurgası root'u fiziksel olarak döndürmediği için marker global_position'ı
-	# doğrudan kullanmak yerine logical facing yönüne dönüştürürüz.
-	var forward := _facing_direction
-	forward.y = 0.0
-	if forward.length_squared() <= 0.001:
-		forward = Vector3.FORWARD
+	# Carrier billboard sprite kullandığı için muzzle'ı logical facing marker'ına bağlamak
+	# ekranda kayma üretir. Offset doğrudan 512x341 attack frame'indeki furnace ağzının
+	# piksel konumuna bağlanır. +X sprite üzerinde sağ, +Y sprite üzerinde aşağıdır.
+	var billboard_right := Vector3.RIGHT
+	var camera := get_viewport().get_camera_3d()
+	if camera != null and is_instance_valid(camera):
+		billboard_right = camera.global_transform.basis.x
+		billboard_right.y = 0.0
+		if billboard_right.length_squared() > 0.001:
+			billboard_right = billboard_right.normalized()
+		else:
+			billboard_right = Vector3.RIGHT
+
+	var depth_direction := _facing_direction
+	if _player != null and is_instance_valid(_player):
+		depth_direction = _player.global_position - global_position
+	depth_direction.y = 0.0
+	if depth_direction.length_squared() <= 0.001:
+		depth_direction = Vector3.FORWARD
 	else:
-		forward = forward.normalized()
-	var right := forward.cross(Vector3.UP)
-	if right.length_squared() <= 0.001:
-		right = Vector3.RIGHT
-	else:
-		right = right.normalized()
-	var tuning_offset := projectile_muzzle.position
+		depth_direction = depth_direction.normalized()
+
+	var pixel_offset := projectile_muzzle_sprite_offset_pixels
+	var pixel_size := animated_sprite.pixel_size
 	return (
-		global_position
-		+ right * tuning_offset.x
-		+ Vector3.UP * tuning_offset.y
-		+ forward * tuning_offset.z
+		animated_sprite.global_position
+		+ billboard_right * pixel_offset.x * pixel_size
+		+ Vector3.UP * -pixel_offset.y * pixel_size
+		+ depth_direction * projectile_muzzle_depth_offset
 	)
 
 
