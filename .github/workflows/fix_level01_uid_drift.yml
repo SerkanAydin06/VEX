@@ -1,0 +1,44 @@
+name: Fix Level01 UID drift
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/fix_level01_uid_drift.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  fix-uids:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch stale P07/P20 texture UIDs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("scenes/levels/level_01.tscn")
+          text = path.read_text(encoding="utf-8")
+          replacements = {
+              'uid://b47e110pgvcky': 'uid://btxhjh0tqaspe',
+              'uid://bn3g5aqwfhn5w': 'uid://bv5uciexmohkj',
+          }
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"Expected exactly one {old}, found {count}")
+              text = text.replace(old, new)
+          path.write_text(text, encoding="utf-8")
+          PY
+      - name: Commit UID repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scenes/levels/level_01.tscn
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: sync Level01 P07/P20 texture UIDs"
+          git push origin HEAD:main
