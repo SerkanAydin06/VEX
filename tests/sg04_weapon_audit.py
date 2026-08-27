@@ -20,13 +20,15 @@ def require(text: str, needle: str, label: str) -> None:
         ERRORS.append(f"SG04 sözleşmesi eksik: {label}")
 
 
-def count_animation_frames(view: str, animation: str) -> int:
-    match = re.search(
-        rf'"frames": \[(.*?)\],\n"loop": (?:true|false),\n"name": &"{re.escape(animation)}"',
-        view,
+def animation_frame_counts(view: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    pattern = re.compile(
+        r'\{\n"frames": \[(.*?)\],\n"loop": (?:true|false),\n"name": &"([^"]+)"',
         re.S,
     )
-    return match.group(1).count('"texture":') if match else 0
+    for frames, name in pattern.findall(view):
+        counts[name] = frames.count('"texture":')
+    return counts
 
 
 def main() -> int:
@@ -58,9 +60,10 @@ def main() -> int:
             continue
         require(view, f"res://assets/weapons/sg04/{name}", f"view texture {name}")
 
+    observed_frames = animation_frame_counts(view)
     expected_frames = {"idle": 1, "fire": 4, "reload": 4, "zoom": 1, "aim_fire": 4}
     for animation, expected in expected_frames.items():
-        observed = count_animation_frames(view, animation)
+        observed = observed_frames.get(animation, 0)
         if observed != expected:
             ERRORS.append(f"SG04 {animation} frame sayısı {observed}; beklenen {expected}")
     require(view, "position = Vector2(960, 780)", "HUD base position")
