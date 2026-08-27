@@ -108,7 +108,10 @@ def main() -> int:
         ('projectile_attack_cooldown * cooldown_scale', "thermal aralarında projectile saldırı ritmi"),
         ('_fire_furnice_projectile()', "projectile saldırısı"),
         ('_emit_thermal_burst()', "thermal saldırısı"),
-        ('func _projectile_muzzle_world_position()', "yöne bağlı sırt muzzle dönüşümü"),
+        ('projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -139.0)', "furnace ağzı sprite-pixel anchor"),
+        ('camera.global_transform.basis.x', "billboard kamera-sağ muzzle ekseni"),
+        ('animated_sprite.global_position', "muzzle sprite merkezi tabanı"),
+        ('func _projectile_muzzle_world_position()', "sprite-pixel muzzle dönüşümü"),
         ('projectile.call("launch", shot_direction, self, _runtime_attack_damage, decal_damage)', "projectile direct + decal damage aktarımı"),
     ]:
         require(carrier_script, needle, label)
@@ -145,7 +148,11 @@ def main() -> int:
     require(carrier_scene, 'attack_damage = 18', "scene direct hasar")
     require(carrier_scene, 'close_attack_threshold = 6.0', "scene yakın menzil")
     require(carrier_scene, 'projectile_scene = ExtResource("3_projectile")', "scene projectile bağlantısı")
+    require(carrier_scene, 'projectile_muzzle_sprite_offset_pixels = Vector2(0, -139)', "scene furnace ağzı muzzle offset")
+    require(carrier_scene, 'projectile_muzzle_depth_offset = 0.08', "scene muzzle depth offset")
     require(carrier_scene, 'thermal_burst_scene = ExtResource("4_shockwave")', "scene thermal bağlantısı")
+    if '[node name="ProjectileMuzzle"' in carrier_scene:
+        fail("Eski world-space ProjectileMuzzle marker sahnede kalmış")
 
     require(projectile_scene, 'decal_scene = ExtResource("3_decal")', "projectile decal scene bağlantısı")
     require(projectile_scene, 'region = Rect2(0, 0, 512, 512)', "projectile effect row")
