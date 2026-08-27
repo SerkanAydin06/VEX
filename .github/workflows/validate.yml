@@ -26,6 +26,44 @@ jobs:
         run: python tests/scene_syntax_audit.py
       - name: Probe P14 visuals
         run: python tests/p14_visual_probe.py
+      - name: Build P14 contact sheet
+        run: |
+          python -m pip install pillow
+          python - <<'PY'
+          from PIL import Image, ImageDraw
+          from pathlib import Path
+          root = Path('assets/weapons/p14')
+          names = [
+            'p14_idle.png',
+            'p14_fire_1.png','p14_fire_2.png','p14_fire_3.png','p14_fire_4.png',
+            'p14_reload_1.png','p14_reload_2.png','p14_reload_3.png','p14_reload_4.png',
+            'p14_zoom.png',
+            'p14_aim_fire_1.png','p14_aim_fire_2.png','p14_aim_fire_3.png','p14_aim_fire_4.png',
+            'p14_side.png',
+          ]
+          thumb = (384, 256)
+          cols = 4
+          rows = (len(names) + cols - 1) // cols
+          sheet = Image.new('RGB', (cols*thumb[0], rows*(thumb[1]+26)), (35,35,35))
+          draw = ImageDraw.Draw(sheet)
+          for i, name in enumerate(names):
+              im = Image.open(root/name).convert('RGBA')
+              bg = Image.new('RGBA', im.size, (35,35,35,255))
+              bg.alpha_composite(im)
+              bg = bg.convert('RGB')
+              bg.thumbnail(thumb, Image.Resampling.LANCZOS)
+              x = (i % cols)*thumb[0] + (thumb[0]-bg.width)//2
+              y0 = (i // cols)*(thumb[1]+26)
+              y = y0 + (thumb[1]-bg.height)//2
+              sheet.paste(bg, (x,y))
+              draw.text(((i%cols)*thumb[0]+6, y0+thumb[1]+5), name, fill=(240,240,240))
+          sheet.save('/tmp/p14_contact_sheet.jpg', quality=92)
+          PY
+      - name: Upload P14 contact sheet
+        uses: actions/upload-artifact@v4
+        with:
+          name: p14-contact-sheet
+          path: /tmp/p14_contact_sheet.jpg
       - name: Validate Level Test arena
         run: python tests/level_test_audit.py
       - name: Validate weapon ADS targeting
