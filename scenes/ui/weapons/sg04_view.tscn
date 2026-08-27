@@ -86,6 +86,28 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("6_reload1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_reload2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_reload3")
+}],
+"loop": 0,
+"name": &"reload_shell",
+"speed": 2.7586207
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_reload4")
+}],
+"loop": 0,
+"name": &"reload_finish",
+"speed": 2.7586207
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("10_zoom_idle")
 }],
 "loop": 1,

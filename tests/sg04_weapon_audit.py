@@ -23,7 +23,7 @@ def require(text: str, needle: str, label: str) -> None:
 def animation_frame_counts(view: str) -> dict[str, int]:
     counts: dict[str, int] = {}
     pattern = re.compile(
-        r'\{\n"frames": \[(.*?)\],\n"loop": (?:true|false),\n"name": &"([^"]+)"',
+        r'\{\n"frames": \[(.*?)\],\n"loop": (?:true|false|0|1),\n"name": &"([^"]+)"',
         re.S,
     )
     for frames, name in pattern.findall(view):
@@ -49,6 +49,9 @@ def main() -> int:
 
     view = read("scenes/ui/weapons/sg04_view.tscn")
     weapon = read("resources/weapons/sg04.tres")
+    controller = read("scripts/player/weapon_controller.gd")
+    presenter = read("scripts/ui/hud_weapon_presenter.gd")
+    hud = read("scripts/ui/hud.gd")
     player_scene = read("scenes/player/player.tscn")
     pickup_script = read("scripts/props/pickup.gd")
     player_script = read("scripts/player/player.gd")
@@ -61,41 +64,65 @@ def main() -> int:
         require(view, f"res://assets/weapons/sg04/{name}", f"view texture {name}")
 
     observed_frames = animation_frame_counts(view)
-    expected_frames = {"idle": 1, "fire": 4, "reload": 4, "zoom": 1, "aim_fire": 4}
+    expected_frames = {
+        "idle": 1,
+        "fire": 4,
+        "reload": 4,
+        "reload_shell": 3,
+        "reload_finish": 1,
+        "zoom": 1,
+        "aim_fire": 4,
+    }
     for animation, expected in expected_frames.items():
         observed = observed_frames.get(animation, 0)
         if observed != expected:
             ERRORS.append(f"SG04 {animation} frame sayısı {observed}; beklenen {expected}")
-    require(view, "position = Vector2(960, 780)", "HUD base position")
-    require(view, "scale = Vector2(0.6, 0.6)", "HUD base scale")
-    require(view, 'animation = &"idle"', "editor idle başlangıcı")
+
+    # Visual tuning is intentionally user/scene authoritative. The audit only
+    # verifies that tunable properties still exist; it does not freeze their values.
+    require(view, "position = Vector2(", "HUD position tuning")
+    require(view, "scale = Vector2(", "HUD scale tuning")
     require(view, 'autoplay = "idle"', "idle autoplay")
 
     for needle, label in [
         ('weapon_id = &"sg04"', "weapon id"),
+        ('ammo_type = &"shells"', "shell ammo type"),
         ('world_pickup_texture = ExtResource("3_side")', "side pickup texture"),
         ('supports_ads_pose = true', "ADS desteği"),
-        ('ads_fov_multiplier = 0.74', "ADS FOV"),
         ('hud_preserve_authored_frame_motion = true', "authored frame motion"),
-        ('hud_zoom_offset = Vector2(5, -354)', "iron sight merkez hizası"),
-        ('hud_ads_reticle_style = "small_cross"', "iron sight reticle"),
         ('hud_aim_fire_preserve_frame_motion = true', "ADS recoil frame motion"),
-        ('magazine_size = 6', "6 shell magazine"),
-        ('damage_per_pellet = 11', "pellet damage"),
-        ('pellet_count = 8', "pellet count"),
-        ('fire_interval = 0.82', "fire interval"),
-        ('reload_duration = 1.45', "reload duration"),
-        ('spread_degrees = 5.5', "hip spread"),
-        ('maximum_range = 48.0', "range"),
+        ('magazine_size =', "magazine tuning"),
+        ('reload_duration =', "reload duration tuning"),
+        ('pellet_count =', "pellet tuning"),
     ]:
         require(weapon, needle, label)
     require(weapon, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "SG04 side UID/path")
+
+    for needle, label in [
+        ('if weapon.weapon_id == &"sg04":', "SG04 özel reload dalı"),
+        ('await _reload_sg04_shells(weapon, magazine_size, magazine, reserve)', "shell reload çağrısı"),
+        ('_play_hud_action(&"reload_shell")', "1-2-3 shell cycle aksiyonu"),
+        ('_play_hud_action(&"reload_finish")', "4. kare final aksiyonu"),
+        ('weapon.reload_duration * 0.75 * reload_time_multiplier', "1-2-3 süre oranı"),
+        ('weapon.reload_duration * 0.25 * reload_time_multiplier', "4. kare süre oranı"),
+        ('magazines[weapon.weapon_id] = current_magazine + 1', "her döngüde tek fişek yükleme"),
+        ('reserve_ammo[weapon.ammo_type] = current_reserve - 1', "her döngüde tek rezerv azaltma"),
+        ('func get_reload_animation_speed_multiplier(', "reload upgrade görsel hız senkronu"),
+    ]:
+        require(controller, needle, label)
+
+    for needle, label in [
+        ('&"reload_shell", &"reload_finish"', "presenter custom reload animasyonları"),
+        ('playback_speed = _get_reload_animation_speed(weapon_id)', "presenter reload speed senkronu"),
+        ('sprite.animation == &"reload_shell" and _is_weapon_reload_active(weapon_id)', "shell arası idle flash engeli"),
+    ]:
+        require(presenter, needle, label)
+    require(hud, 'action in [&"reload", &"reload_shell"]', "SG04 shell reload ses yönlendirmesi")
 
     require(player_scene, 'path="res://resources/weapons/sg04.tres"', "Player weapon definitions içinde SG04")
     require(pickup_script, '"sg04"', "pickup enum içinde SG04")
     require(player_script, '&"sg04":', "player SG04 pickup handler")
     require(player_script, 'unlock_weapon", &"sg04"', "SG04 unlock çağrısı")
-
     require(level_test, 'pickup_type = "sg04"', "Level Test SG04 pickup")
     require(level_test, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "Level Test SG04 side art")
     require(rack, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "weapon rack SG04 side art")

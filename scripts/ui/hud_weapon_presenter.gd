@@ -28,7 +28,7 @@ func set_current_weapon(weapon_id: StringName) -> void:
 	_ensure_weapon_sprite_ready(weapon_id)
 	_set_weapon_sprite_visibility(weapon_id)
 	var sprite := _get_weapon_sprite(weapon_id)
-	if sprite != null and sprite.animation not in [&"fire", &"aim_fire", &"reload"]:
+	if sprite != null and sprite.animation not in [&"fire", &"aim_fire", &"reload", &"reload_shell", &"reload_finish"]:
 		sprite.play(&"idle")
 
 
@@ -58,13 +58,18 @@ func play_action(weapon_id: StringName, action: StringName) -> void:
 	):
 		requested_animation = &"aim_fire"
 	_set_ads_reticle_fire_suppressed(requested_animation == &"aim_fire")
+	var playback_speed := 1.0
+	if action in [&"reload_shell", &"reload_finish"]:
+		playback_speed = _get_reload_animation_speed(weapon_id)
 	if sprite.sprite_frames != null and sprite.sprite_frames.has_animation(requested_animation):
 		if action == &"fire":
 			sprite.stop()
 			sprite.frame = 0
 			sprite.play(requested_animation)
 		else:
-			sprite.play(requested_animation)
+			sprite.stop()
+			sprite.frame = 0
+			sprite.play(requested_animation, playback_speed)
 	elif sprite.sprite_frames != null and sprite.sprite_frames.has_animation(&"idle"):
 		sprite.play(&"idle")
 
@@ -86,7 +91,7 @@ func update(delta: float, blocked: bool) -> void:
 		_inactive_seconds += delta
 	else:
 		_inactive_seconds = 0.0
-	if sprite.animation in [&"fire", &"aim_fire", &"reload", &"equip"] and sprite.is_playing():
+	if sprite.animation in [&"fire", &"aim_fire", &"reload", &"reload_shell", &"reload_finish", &"equip"] and sprite.is_playing():
 		return
 	_apply_rest_pose(sprite, definition)
 
@@ -251,6 +256,10 @@ func _on_weapon_animation_finished(sprite: AnimatedSprite2D, weapon_id: StringNa
 		return
 	if sprite.animation == &"aim_fire":
 		_set_ads_reticle_fire_suppressed(false)
+	if sprite.animation == &"reload_shell" and _is_weapon_reload_active(weapon_id):
+		# Shell cycle frame 3 stays visible until the controller starts the next
+		# insertion cycle; do not flash back to idle between shells.
+		return
 	var definition := _get_weapon_definition(weapon_id)
 	if definition != null and (definition.supports_ads_pose or definition.supports_lowered_pose):
 		_apply_rest_pose(sprite, definition)
@@ -288,10 +297,30 @@ func _sync_ads_crosshair_visibility() -> void:
 		crosshair_node.visible = not _is_weapon_ads_active()
 
 
-func _get_weapon_definition(weapon_id: StringName) -> WeaponDefinition:
+func _get_weapon_controller() -> VexWeaponController:
 	if GameState.player == null or not is_instance_valid(GameState.player):
 		return null
-	var controller := GameState.player.get_node_or_null("WeaponController") as VexWeaponController
+	return GameState.player.get_node_or_null("WeaponController") as VexWeaponController
+
+
+func _get_reload_animation_speed(weapon_id: StringName) -> float:
+	var controller := _get_weapon_controller()
+	if controller == null:
+		return 1.0
+	return controller.get_reload_animation_speed_multiplier(weapon_id)
+
+
+func _is_weapon_reload_active(weapon_id: StringName) -> bool:
+	var controller := _get_weapon_controller()
+	return (
+		controller != null
+		and controller.current_weapon_id == weapon_id
+		and controller.is_reloading
+	)
+
+
+func _get_weapon_definition(weapon_id: StringName) -> WeaponDefinition:
+	var controller := _get_weapon_controller()
 	if controller == null:
 		return null
 	return controller.get_weapon_definition(weapon_id)

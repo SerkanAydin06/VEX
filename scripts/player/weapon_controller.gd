@@ -217,6 +217,14 @@ func _effective_magazine_size(weapon: WeaponDefinition) -> int:
 	return weapon.magazine_size + int(_modifiers(weapon).magazine)
 
 
+func get_reload_animation_speed_multiplier(weapon_id: StringName) -> float:
+	var weapon := get_weapon_definition(weapon_id)
+	if weapon == null:
+		return 1.0
+	var reload_time_multiplier := maxf(0.01, float(_modifiers(weapon).reload))
+	return 1.0 / reload_time_multiplier
+
+
 func switch_to(weapon_id: StringName) -> void:
 	if is_reloading or not unlocked_weapons.has(weapon_id) or not _definitions_by_id.has(weapon_id):
 		return
@@ -323,6 +331,9 @@ func reload() -> void:
 	var magazine_size := _effective_magazine_size(weapon)
 	if magazine >= magazine_size or reserve <= 0:
 		return
+	if weapon.weapon_id == &"sg04":
+		await _reload_sg04_shells(weapon, magazine_size, magazine, reserve)
+		return
 	is_reloading = true
 	_play_hud_action(&"reload")
 	await get_tree().create_timer(weapon.reload_duration * float(_modifiers(weapon).reload)).timeout
@@ -333,6 +344,47 @@ func reload() -> void:
 	var loaded: int = mini(required, reserve)
 	magazines[current_weapon_id] = magazine + loaded
 	reserve_ammo[weapon.ammo_type] = reserve - loaded
+	is_reloading = false
+	broadcast_state()
+
+
+func _reload_sg04_shells(
+	weapon: WeaponDefinition,
+	magazine_size: int,
+	starting_magazine: int,
+	starting_reserve: int
+) -> void:
+	is_reloading = true
+	var rounds_to_load := mini(magazine_size - starting_magazine, starting_reserve)
+	var reload_time_multiplier := maxf(0.01, float(_modifiers(weapon).reload))
+	# SG04 reload art has four equal-duration authored frames. Frames 1-2-3 are
+	# one shell insertion cycle; frame 4 is the single final close/ready pose.
+	var shell_cycle_duration := weapon.reload_duration * 0.75 * reload_time_multiplier
+	var finish_duration := weapon.reload_duration * 0.25 * reload_time_multiplier
+
+	for _round_index: int in range(rounds_to_load):
+		_play_hud_action(&"reload_shell")
+		await get_tree().create_timer(shell_cycle_duration).timeout
+		if not is_inside_tree() or _player == null or _player.is_dead:
+			is_reloading = false
+			return
+
+		var current_magazine := int(magazines.get(weapon.weapon_id, 0))
+		var current_reserve := int(reserve_ammo.get(weapon.ammo_type, 0))
+		if current_magazine >= magazine_size or current_reserve <= 0:
+			break
+		magazines[weapon.weapon_id] = current_magazine + 1
+		reserve_ammo[weapon.ammo_type] = current_reserve - 1
+		broadcast_state()
+
+	if not is_inside_tree() or _player == null or _player.is_dead:
+		is_reloading = false
+		return
+	_play_hud_action(&"reload_finish")
+	await get_tree().create_timer(finish_duration).timeout
+	if not is_inside_tree() or _player == null or _player.is_dead:
+		is_reloading = false
+		return
 	is_reloading = false
 	broadcast_state()
 

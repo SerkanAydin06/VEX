@@ -248,7 +248,7 @@ func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 				_:
 					fire_audio.pitch_scale = 1.0
 			fire_audio.play()
-	elif action == &"reload":
+	elif action in [&"reload", &"reload_shell"]:
 		var reload_player := shotgun_reload_audio if weapon_id == &"sg04" else pistol_reload_audio
 		if reload_player.stream != null:
 			match weapon_id:
