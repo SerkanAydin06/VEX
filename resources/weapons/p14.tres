@@ -18,6 +18,7 @@ hud_view_scene = ExtResource("2_view")
 world_pickup_texture = ExtResource("3_side")
 supports_ads_pose = true
 ads_fov_multiplier = 0.50
+hud_preserve_authored_frame_motion = true
 hud_zoom_offset = Vector2(-165, -63)
 hud_ads_scale_multiplier = 1.29
 hud_ads_reticle_style = "red_dot"
