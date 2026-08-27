@@ -24,6 +24,9 @@ collision_mask = 13
 floor_max_angle = 0.872665
 floor_snap_length = 0.4
 script = ExtResource("1_player")
+crouch_capsule_height = 1.1
+crouch_view_pivot_height = 0.05
+crouch_transition_speed = 12.0
 maximum_health = 100
 night_vision_shader = ExtResource("9_night_vision_shader")
 
