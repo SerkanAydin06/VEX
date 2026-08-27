@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="WeaponDefinition" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="WeaponDefinition" format=3 uid="uid://bnjrukmf77w71"]
 
-[ext_resource type="Script" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
-[ext_resource type="PackedScene" path="res://scenes/ui/weapons/sg04_view.tscn" id="2_view"]
+[ext_resource type="Script" uid="uid://bld4sc8fopa04" path="res://scripts/player/weapon_definition.gd" id="1_weapon"]
+[ext_resource type="PackedScene" uid="uid://c04cxb0khp5xs" path="res://scenes/ui/weapons/sg04_view.tscn" id="2_view"]
 [ext_resource type="Texture2D" uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png" id="3_side"]
 
 [resource]
@@ -19,24 +19,20 @@ world_pickup_texture = ExtResource("3_side")
 supports_ads_pose = true
 ads_fov_multiplier = 0.74
 hud_preserve_authored_frame_motion = true
-hud_zoom_offset = Vector2(5, -354)
-hud_ads_scale_multiplier = 1.0
-hud_ads_reticle_style = "small_cross"
-hud_aim_fire_offset = Vector2(0, 0)
+hud_zoom_offset = Vector2(-400, -250)
+hud_ads_scale_multiplier = 1.5
 hud_aim_fire_preserve_frame_motion = true
 gunshot_noise_multiplier = 1.0
 magazine_size = 6
-headshot_multiplier = 1.60
 damage_per_pellet = 11
+headshot_multiplier = 1.6
 pellet_count = 8
 fire_interval = 0.82
 reload_duration = 1.45
 spread_degrees = 5.5
 maximum_range = 48.0
 reserve_ammo_capacity = 60
-automatic = false
 recoil_vertical_degrees = 3.8
 recoil_horizontal_degrees = 0.45
 recoil_max_vertical_degrees = 5.6
-recoil_max_horizontal_degrees = 1.0
 recoil_recovery_degrees_per_second = 6.0

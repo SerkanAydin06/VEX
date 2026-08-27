@@ -36,7 +36,7 @@
 [ext_resource type="Texture2D" uid="uid://cawc32x5hgb8q" path="res://assets/pickups/armor.png" id="34_armor"]
 [ext_resource type="AudioStream" uid="uid://bc6m2yvln3f84" path="res://assets/audio/game_music_pro.mp3" id="35_music"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="36_ambience"]
-[ext_resource type="PackedScene" path="res://scenes/actors/furnice_carrier.tscn" id="37_furnice"]
+[ext_resource type="PackedScene" uid="uid://csh77lhvvhlfs" path="res://scenes/actors/furnice_carrier.tscn" id="37_furnice"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -368,6 +368,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 6.82, 20)
 
 [node name="Player" parent="." unique_id=341834561 instance=ExtResource("9_player")]
 transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, -24, 1, 20)
+maximum_health = 10000000
 
 [node name="HUD" parent="." unique_id=1220464976 instance=ExtResource("10_hud")]
 
@@ -507,34 +508,55 @@ visual_texture = ExtResource("34_armor")
 [node name="Ravager" parent="Enemies" unique_id=1314898711 instance=ExtResource("13_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.2, 20)
 enemy_id = &"level_test_ravager"
+maximum_health = 100
+move_speed = 5.0
+detection_range = 30.0
 
 [node name="CinderHound" parent="Enemies" unique_id=139156611 instance=ExtResource("19_cinderhound")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.2, 20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.031110287, 20)
 enemy_id = &"level_test_cinderhound"
+maximum_health = 120
+move_speed = 10.0
+chase_speed = 10.0
+detection_range = 30.0
 
 [node name="RedViper" parent="Enemies" unique_id=406336072 instance=ExtResource("14_redviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.2, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.5046375, 10)
 enemy_id = &"level_test_redviper"
+maximum_health = 150
+move_speed = 7.0
+detection_range = 25.0
 
 [node name="BadRedViper" parent="Enemies" unique_id=1097403212 instance=ExtResource("15_badredviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.5306901, 0)
 enemy_id = &"level_test_badredviper"
+maximum_health = 500
+move_speed = 10.0
+movement_acceleration = 40.0
+detection_range = 30.0
 
 [node name="Veilmaw" parent="Enemies" unique_id=1564511686 instance=ExtResource("17_veilmaw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 enemy_id = &"level_test_veilmaw"
 
 [node name="Voidweaver" parent="Enemies" unique_id=219460760 instance=ExtResource("18_voidweaver")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.137886, -20)
 enemy_id = &"level_test_voidweaver"
 
 [node name="HellMagma" parent="Enemies" unique_id=1262786008 instance=ExtResource("16_hellmagma")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.4, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.8941709, -20)
 enemy_id = &"level_test_hellmagma"
+maximum_health = 250
+move_speed = 5.0
+detection_range = 28.0
+attack_damage = 35
 
-[node name="FurniceCarrier" parent="Enemies" instance=ExtResource("37_furnice")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.2, -20)
+[node name="FurniceCarrier" parent="Enemies" unique_id=1822641573 instance=ExtResource("37_furnice")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.1341183, -20)
+projectile_attack_windup = 0.5
+thermal_burst_cooldown = 3.0
 enemy_id = &"level_test_furnice_carrier"
+maximum_health = 500
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]
 stream = ExtResource("35_music")
