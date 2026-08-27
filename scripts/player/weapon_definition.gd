@@ -22,6 +22,9 @@ extends Resource
 @export var supports_lowered_pose := false
 @export var hud_auto_lower_enabled := false
 @export_range(1.0, 30.0, 0.5) var hud_lower_after_seconds := 6.0
+## Aynı canvas üzerinde elle hizalanmış animasyon karelerinin kendi hareketini korur.
+## true iken el/şarjör/kovan/flash gibi geçici alpha alanları tüm silahı yeniden merkezlemez.
+@export var hud_preserve_authored_frame_motion := false
 ## ADS silah görselinin mikro hizasıdır. Reticle ve mermi merkezi sabit kalır.
 ## +X silah/arpacığı sağa, -X sola; +Y aşağı, -Y yukarı taşır.
 @export var hud_zoom_offset := Vector2.ZERO
