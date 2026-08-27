@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://cawc32x5hgb8q" path="res://assets/pickups/armor.png" id="14_armor"]
 [ext_resource type="Texture2D" uid="uid://u351flp6poca" path="res://assets/pickups/ammo_bullets.png" id="15_bullets"]
 [ext_resource type="Texture2D" uid="uid://dhke3ncfbfvfk" path="res://assets/pickups/ammo_shells.png" id="16_shells"]
-[ext_resource type="Texture2D" uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png" id="17_shotgun"]
+[ext_resource type="Texture2D" uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png" id="17_shotgun"]
 [ext_resource type="Texture2D" uid="uid://bjeurg4ipxvmu" path="res://assets/pickups/key_blue.png" id="18_key_blue"]
 [ext_resource type="Texture2D" uid="uid://clp5g0eqcky2c" path="res://assets/pickups/key_red.png" id="19_key_red"]
 [ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_red.tscn" id="19_lamp_red"]

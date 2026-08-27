@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://cn2d45b6k6ypg" path="res://scenes/world/table.tscn" id="10_cs0tf"]
 [ext_resource type="PackedScene" uid="uid://ckhtinn61g27l" path="res://scenes/hub/hub_terminal.tscn" id="11_u2ooc"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_weapon_rack.tscn" id="12_i4t6o"]
-[ext_resource type="Texture2D" uid="uid://dx6s07qrtd2cf" path="res://assets/pickups/shotgun.png" id="13_wj067"]
+[ext_resource type="Texture2D" uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png" id="13_wj067"]
 [ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="14_m2rkv"]
 [ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="15_mkccu"]
 [ext_resource type="PackedScene" uid="uid://c026efgr2oia3" path="res://scenes/player/player.tscn" id="16_d1ucx"]
