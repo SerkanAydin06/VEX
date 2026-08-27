@@ -51,6 +51,7 @@ var _weapon_flashlight: SpotLight3D
 var _burst_shots := 0
 var _burst_reset_remaining := 0.0
 var _sg04_reload_generation := 0
+var _sg04_reload_fire_queued := false
 
 
 func _ready() -> void:
@@ -106,6 +107,13 @@ func _process(delta: float) -> void:
 	if weapon == null or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 	var wants_to_fire := Input.is_action_pressed("fire") if weapon.automatic else Input.is_action_just_pressed("fire")
+	if _sg04_reload_fire_queued:
+		if weapon.weapon_id != &"sg04":
+			_sg04_reload_fire_queued = false
+		elif not is_reloading and _cooldown_remaining <= 0.0:
+			_sg04_reload_fire_queued = false
+			_try_fire()
+			return
 	if is_reloading:
 		if weapon.weapon_id == &"sg04" and wants_to_fire:
 			_interrupt_sg04_reload_and_fire()
@@ -360,6 +368,7 @@ func _reload_sg04_shells(
 	starting_reserve: int
 ) -> void:
 	is_reloading = true
+	_sg04_reload_fire_queued = false
 	_sg04_reload_generation += 1
 	var reload_generation := _sg04_reload_generation
 	var rounds_to_load := mini(magazine_size - starting_magazine, starting_reserve)
@@ -404,11 +413,14 @@ func _interrupt_sg04_reload_and_fire() -> void:
 	var weapon := get_current_weapon()
 	if weapon == null or weapon.weapon_id != &"sg04" or not is_reloading:
 		return
-	# Fire interval bitmediyse reload devam eder; ilk yasal ateş tıklaması anında keser.
-	if _cooldown_remaining > 0.0:
-		return
 	_sg04_reload_generation += 1
 	is_reloading = false
+	# Reload görselini anında bırak; ateş intervali bitmediyse aynı tıklamayı queue et.
+	_play_hud_action(&"equip")
+	if _cooldown_remaining > 0.0:
+		_sg04_reload_fire_queued = true
+		return
+	_sg04_reload_fire_queued = false
 	_try_fire()
 
 

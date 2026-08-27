@@ -82,7 +82,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"reload",
-"speed": 2.7586207
+"speed": 5.5172414
 }, {
 "frames": [{
 "duration": 1.0,
@@ -96,7 +96,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"reload_shell",
-"speed": 2.7586207
+"speed": 5.5172414
 }, {
 "frames": [{
 "duration": 1.0,
@@ -104,7 +104,7 @@ animations = [{
 }],
 "loop": 0,
 "name": &"reload_finish",
-"speed": 2.7586207
+"speed": 5.5172414
 }, {
 "frames": [{
 "duration": 1.0,

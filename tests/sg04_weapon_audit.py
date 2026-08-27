@@ -83,6 +83,8 @@ def main() -> int:
     require(view, "position = Vector2(", "HUD position tuning")
     require(view, "scale = Vector2(", "HUD scale tuning")
     require(view, 'autoplay = "idle"', "idle autoplay")
+    if view.count('\"speed\": 5.5172414') < 3:
+        ERRORS.append("SG04 2x reload SpriteFrames hızı üç reload animasyonuna uygulanmamış")
 
     for needle, label in [
         ('weapon_id = &"sg04"', "weapon id"),
@@ -115,6 +117,8 @@ def main() -> int:
         ('reserve_ammo[weapon.ammo_type] = current_reserve - 1', "her döngüde tek rezerv azaltma"),
         ('func get_reload_animation_speed_multiplier(', "reload upgrade görsel hız senkronu"),
         ('func _interrupt_sg04_reload_and_fire()', "ateşle reload kesme"),
+        ('_sg04_reload_fire_queued = true', "cooldown sırasında ateş tıklaması queue"),
+        ('_play_hud_action(&"equip")', "reload görselini anında kesme"),
         ('_sg04_reload_generation += 1', "async reload iptal tokeni"),
         ('spread_multiplier = weapon.ads_spread_multiplier', "silah-bazlı ADS spread"),
         ('func _get_distance_damage_multiplier(', "mesafe hasar düşüşü"),
