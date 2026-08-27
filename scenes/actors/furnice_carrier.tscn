@@ -11,8 +11,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="9_burn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
-radius = 0.55
-height = 1.9
+radius = 0.58
+height = 1.5
 
 [sub_resource type="AtlasTexture" id="Atlas_idle1"]
 atlas = ExtResource("2_sheet")
@@ -179,7 +179,7 @@ movement_acceleration = 9.0
 braking_acceleration = 20.0
 detection_range = 22.0
 pursuit_range = 22.0
-sight_origin_height = 0.65
+sight_origin_height = 0.35
 attack_damage = 18
 attack_range = 22.0
 attack_cooldown = 1.8
@@ -212,11 +212,11 @@ burn_smoke_duration = 9.0
 burn_smoke_alpha = 0.14
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-position = Vector3(0, -0.05, 0)
+position = Vector3(0, -0.25, 0)
 shape = SubResource("CapsuleShape_enemy")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
-position = Vector3(0, -0.15, 0)
+position = Vector3(0, -0.28, 0)
 cast_shadow = 0
 pixel_size = 0.0041
 billboard = 2
@@ -237,7 +237,7 @@ render_priority = -1
 texture = ExtResource("8_shadow")
 
 [node name="ProjectileMuzzle" type="Marker3D" parent="."]
-position = Vector3(0.38, 0.62, 0.28)
+position = Vector3(0.38, 0.35, 0.28)
 
 [node name="ThermalBurstOrigin" type="Marker3D" parent="."]
 position = Vector3(0, -0.92, 0)
