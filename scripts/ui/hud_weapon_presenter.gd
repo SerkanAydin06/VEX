@@ -167,7 +167,19 @@ func _configure_weapon_frame_alignment(sprite: AnimatedSprite2D, definition: Wea
 			if texture == null:
 				continue
 			var frame_key := _weapon_frame_key(animation_name, frame_index)
-			if definition.supports_ads_pose and animation_name == &"aim_fire":
+			if definition.hud_preserve_authored_frame_motion:
+				# Aynı 1536x1024 canvas üzerinde elle yerleştirilmiş karelerde PNG koordinatları
+				# sunum otoritesidir. El/şarjör/kovan/flash used_rect'i değişse bile bütün silahı
+				# yeniden merkezlemeyiz; yalnız ADS/lowered tuning offsetlerini uygularız.
+				if definition.supports_ads_pose and animation_name == &"zoom":
+					offsets[frame_key] = definition.hud_zoom_offset
+				elif definition.supports_ads_pose and animation_name == &"aim_fire":
+					offsets[frame_key] = definition.hud_zoom_offset + definition.hud_aim_fire_offset
+				elif definition.supports_lowered_pose and animation_name == &"lowered":
+					offsets[frame_key] = definition.hud_lowered_offset
+				else:
+					offsets[frame_key] = Vector2.ZERO
+			elif definition.supports_ads_pose and animation_name == &"aim_fire":
 				if definition.hud_aim_fire_preserve_frame_motion:
 					# Bu karelerde recoil zaten PNG içinde çizilmiştir. Muzzle flash/kovan gibi
 					# geçici alpha alanlarının used_rect'i büyütmesi silahı sağa-sola çekmesin.
