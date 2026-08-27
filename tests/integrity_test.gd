@@ -1,5 +1,8 @@
 extends Node
 
+const INVALID_SAVE_FIXTURE := "res://tests/fixtures/save_invalid_version.cfg"
+const VALID_BACKUP_FIXTURE := "res://tests/fixtures/save_valid_backup.cfg"
+
 const REQUIRED_RESOURCES := [
 	"res://scenes/player/player.tscn",
 	"res://scenes/ui/hud.tscn",
@@ -37,13 +40,16 @@ func _ready() -> void:
 	_check_weapon_contracts()
 	_check_input_map()
 	_check_localization_contract()
+	_check_save_recovery_contract()
 
 	if failures.is_empty():
 		print("VEX integrity test başarılı: güncel level, tutorial, automap, kapı ve silah sözleşmeleri temiz.")
+		get_tree().quit(0)
 	else:
 		for message in failures:
 			push_error(message)
 		push_error("VEX integrity test başarısız: %d hata." % failures.size())
+		get_tree().quit(1)
 
 
 func _check_required_resources() -> void:
@@ -289,6 +295,32 @@ func _check_localization_contract() -> void:
 	]:
 		if required_key not in csv_text:
 			failures.append("Çeviri anahtarı eksik: %s" % required_key)
+
+
+func _check_save_recovery_contract() -> void:
+	for fixture_path in [INVALID_SAVE_FIXTURE, VALID_BACKUP_FIXTURE]:
+		if not FileAccess.file_exists(fixture_path):
+			failures.append("Save recovery fixture eksik: %s" % fixture_path)
+			return
+	var recovered := bool(GameState.call(
+		"_load_campaign_save_from_paths",
+		INVALID_SAVE_FIXTURE,
+		VALID_BACKUP_FIXTURE
+	))
+	if not recovered:
+		failures.append("Semantik olarak bozuk ana kayıtta sağlam .bak yüklenemiyor.")
+		return
+	if str(GameState.saved_run_state.get("save_reason", "")) != "test_backup":
+		failures.append("Save recovery ana kayıt yerine doğrulanmış yedeği seçmiyor.")
+	if not bool(GameState.get("_loaded_save_from_backup")):
+		failures.append("Save recovery yedekten yükleme durumunu korumuyor.")
+	var invalid_pair_loaded := bool(GameState.call(
+		"_load_campaign_save_from_paths",
+		INVALID_SAVE_FIXTURE,
+		INVALID_SAVE_FIXTURE
+	))
+	if invalid_pair_loaded:
+		failures.append("Save recovery iki semantik bozuk kaydı geçerli kabul ediyor.")
 
 
 func _has_property(object: Object, property_name: StringName) -> bool:

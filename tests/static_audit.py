@@ -90,6 +90,10 @@ def check_core_files() -> None:
         "scenes/props/door_side_slide.tscn", "scripts/props/door.gd",
         "scenes/world/door_status_light.tscn", "scripts/world/door_status_light.gd",
         "scenes/hub/bastion_7.tscn", "translations/vex.csv",
+        "tests/integrity_test.gd", "tests/integrity_test.tscn",
+        "tests/fixtures/save_invalid_version.cfg",
+        "tests/fixtures/save_valid_backup.cfg",
+        ".github/workflows/validate.yml",
     ]
     for relative in required:
         exists(relative)
@@ -368,6 +372,74 @@ def check_scene_authority() -> None:
         fail("VEX-01 tutorial oynanış prop'u sahnede tutulmuyor")
 
 
+def check_save_recovery_and_runtime_ci() -> None:
+    game_state = read("scripts/autoload/game_state.gd")
+    for contract in [
+        "_load_campaign_save_from_paths(SAVE_PATH, SAVE_BACKUP_PATH)",
+        "func _read_valid_campaign_save(path: String) -> Dictionary:",
+        "loaded_state = _read_valid_campaign_save(backup_path)",
+        "if version < 3 or version > SAVE_VERSION:",
+        "if _loaded_save_from_backup:",
+    ]:
+        if contract not in game_state:
+            fail(f"Save recovery sözleşmesi eksik: {contract}")
+    integrity = read("tests/integrity_test.gd")
+    for contract in [
+        "_check_save_recovery_contract()",
+        "INVALID_SAVE_FIXTURE",
+        "VALID_BACKUP_FIXTURE",
+        "get_tree().quit(0)",
+        "get_tree().quit(1)",
+    ]:
+        if contract not in integrity:
+            fail(f"Godot integrity runner sözleşmesi eksik: {contract}")
+    workflow = read(".github/workflows/validate.yml")
+    for contract in [
+        "Godot_v4.7-stable_linux.x86_64.zip",
+        "godot --headless --editor --path . --quit",
+        "godot --headless --path . tests/integrity_test.tscn",
+    ]:
+        if contract not in workflow:
+            fail(f"Headless Godot CI sözleşmesi eksik: {contract}")
+
+
+def check_repository_hygiene() -> None:
+    obsolete_paths = [
+        "scenes/world/weapon_rack.tscn",
+        "scripts/world/weapon_rack.gd",
+        "assets/world/bastion7/bastion_terminal_front.png",
+        "assets/world/metal_board.png",
+        "assets/world/weapon_rack_panel.png",
+        "assets/pickups/pistol.png",
+        "assets/pickups/shotgun.png",
+        "assets/weapons/shotgun_idle.png",
+        "assets/weapons/shotgun_fire.png",
+        "assets/weapons/shotgun_reload_1.png",
+        "assets/weapons/shotgun_reload_2.png",
+    ]
+    for relative in obsolete_paths:
+        if (ROOT / relative).exists():
+            fail(f"Kaldırılmış eski içerik yeniden eklenmiş: {relative}")
+    project_text = "\n".join(text for _path, text in text_files())
+    for png_path in sorted((ROOT / "assets").rglob("*.png")):
+        relative = png_path.relative_to(ROOT).as_posix()
+        if f"res://{relative}" not in project_text:
+            fail(f"Referanssız PNG asset: {relative}")
+    for import_path in sorted((ROOT / "assets").rglob("*.png.import")):
+        source_path = Path(str(import_path)[:-7])
+        if not source_path.exists():
+            fail(f"Kaynak PNG'si olmayan import metadata: {import_path.relative_to(ROOT)}")
+    gitignore = read(".gitignore")
+    if "build/" not in gitignore:
+        fail("Export build klasörü .gitignore içinde değil")
+    export = read("export_presets.cfg")
+    if 'export_path="./build/windows/VEX.exe"' not in export:
+        fail("Windows export çıktısı build/windows altında değil")
+    for excluded in ["tests/*", "scenes/levels/level_test.tscn", "scenes/levels/test_support/*"]:
+        if excluded not in export:
+            fail(f"Geliştirme içeriği release export filtresinden çıkarılmıyor: {excluded}")
+
+
 def check_stale_contracts() -> None:
     project_text = "\n".join(text for _path, text in text_files())
     for token in ["door_side_slide_bastion.tscn", "CargoElevator_Main"]:
@@ -380,7 +452,9 @@ def main() -> int:
         check_core_files, check_res_paths, check_input_map, check_level_01,
         check_automap, check_level_02, check_level_03, check_bastion,
         check_door_contract, check_weapons, check_unique_progression_ids,
-        check_localization, check_scene_authority, check_stale_contracts,
+        check_localization, check_scene_authority,
+        check_save_recovery_and_runtime_ci, check_repository_hygiene,
+        check_stale_contracts,
     ]
     for check in checks:
         check()
