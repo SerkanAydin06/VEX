@@ -66,10 +66,12 @@ func play_action(weapon_id: StringName, action: StringName) -> void:
 			sprite.stop()
 			sprite.frame = 0
 			sprite.play(requested_animation)
-		else:
+		elif action in [&"reload_shell", &"reload_finish"]:
 			sprite.stop()
 			sprite.frame = 0
 			sprite.play(requested_animation, playback_speed)
+		else:
+			sprite.play(requested_animation)
 	elif sprite.sprite_frames != null and sprite.sprite_frames.has_animation(&"idle"):
 		sprite.play(&"idle")
 
