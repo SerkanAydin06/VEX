@@ -32,6 +32,9 @@ jobs:
         run: python -m pip install pillow
       - name: Audit pistol visual frames
         run: python tests/pistol_visual_probe.py
+      - name: Build pistol runtime sheets
+        if: always()
+        run: python tests/pistol_runtime_sheet.py
       - name: Upload pistol contact sheets
         if: always()
         uses: actions/upload-artifact@v4
