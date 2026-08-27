@@ -5,14 +5,14 @@ extends Area3D
 @export_range(1.0, 12.0, 0.1) var burst_radius := 6.0
 @export_range(1, 100, 1) var burst_damage := 22
 @export_range(0.1, 2.0, 0.05) var visual_duration := 0.60
-@export_range(0.0, 1.0, 0.01) var damage_time_ratio := 0.62
+@export_range(0.0, 1.0, 0.01) var damage_time_ratio := 0.82
 @export_range(0.1, 2.0, 0.05) var effect_height := 0.8
 @export_flags_3d_physics var occlusion_mask := 1
 
 @export_category("02 - Görsel")
 @export_range(1.0, 12.0, 0.1) var visual_reference_radius := 6.0
 @export_range(0.05, 1.0, 0.01) var visual_start_scale := 0.18
-@export_range(0.2, 2.0, 0.05) var visual_end_scale := 1.0
+@export_range(0.2, 2.0, 0.05) var visual_end_scale := 1.20
 
 @onready var visual: AnimatedSprite3D = $Visual
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
@@ -39,6 +39,9 @@ func _configure_shape_and_visual() -> void:
 		cylinder.radius = burst_radius
 		cylinder.height = effect_height
 		collision_shape.position.y = effect_height * 0.5
+	# Base visual scale sahneden gelir. Shockwave kaynak görseli perspektif nedeniyle
+	# zemin eksenlerinden birinde çok sıkışık olduğu için scene scale burada bilinçli
+	# olarak telafi edilebilir; büyüme faktörü yine tüm eksenlere eşit uygulanır.
 	_base_visual_scale = visual.scale
 	var radius_scale := burst_radius / maxf(visual_reference_radius, 0.01)
 	visual.scale = _base_visual_scale * radius_scale * visual_start_scale
