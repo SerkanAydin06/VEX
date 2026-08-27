@@ -44,6 +44,11 @@ def main() -> int:
         '@export_enum("small_cross", "red_dot") var hud_ads_reticle_style := "small_cross"',
         "WeaponDefinition silah-bazlı ADS reticle stilini taşımıyor",
     )
+    require(
+        definition,
+        '@export var hud_aim_fire_preserve_frame_motion := false',
+        "WeaponDefinition art-authored ADS fire frame hareketi ayarını taşımıyor",
+    )
     require(definition, "+X silah/arpacığı sağa", "hud_zoom_offset mikro-kalibrasyon yönü belgelenmemiş")
     if 'var ads_fov := ' in definition:
         ERRORS.append("WeaponDefinition hâlâ mutlak ads_fov otoritesi taşıyor")
@@ -86,6 +91,8 @@ def main() -> int:
         ('if sprite.animation == &"aim_fire":', "ADS presenter aim_fire bitişini ayırt etmiyor"),
         ('_set_ads_reticle_fire_suppressed(false)', "ADS reticle aim_fire sonrasında geri açılmıyor"),
         ('has_method("set_fire_animation_suppressed")', "Presenter reticle recoil-suppression API'sini kullanmıyor"),
+        ('if definition.hud_aim_fire_preserve_frame_motion:', "Presenter art-authored ADS fire frame hareketini seçemiyor"),
+        ('offsets[frame_key] = definition.hud_zoom_offset + definition.hud_aim_fire_offset', "Presenter preserve modunda transient alpha bounds ile aim_fire karesini yeniden merkezliyor"),
     ]:
         require(presenter, contract, message)
     if 'or Input.is_action_pressed("aim")' in presenter:
@@ -174,6 +181,10 @@ def main() -> int:
         if "ads_fov =" in weapon:
             ERRORS.append(f"{weapon_id} hâlâ eski mutlak ads_fov değerini taşıyor")
         observed.append(multiplier)
+
+    p14 = read("resources/weapons/p14.tres")
+    require(p14, "hud_zoom_offset = Vector2(-165, -63)", "P14 yeni optik görsele göre yeniden kalibre edilmemiş")
+    require(p14, "hud_aim_fire_preserve_frame_motion = true", "P14 aim_fire karelerinin çizilmiş recoil hareketini korumuyor")
 
     if len(set(observed)) != len(observed):
         ERRORS.append("Tabanca ADS zoom çarpanları birbirinden ayrışmıyor")
