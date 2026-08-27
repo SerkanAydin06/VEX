@@ -1,0 +1,60 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/effects/furnice_carrier_decal.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnice_carrier_effects_spritesheet.png" id="2_sheet"]
+
+[sub_resource type="AtlasTexture" id="Atlas_decal1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1536, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_decal2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 1536, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_decal3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 1536, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_decal4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 1536, 512, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="Frames_decal"]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_decal1")}, {"duration": 1.0, "texture": SubResource("Atlas_decal2")}, {"duration": 1.0, "texture": SubResource("Atlas_decal3")}, {"duration": 1.0, "texture": SubResource("Atlas_decal4")}], "loop": true, "name": &"default", "speed": 6.0}]
+
+[sub_resource type="CylinderShape3D" id="Cylinder_decal"]
+radius = 2.0
+height = 0.6
+
+[node name="FurniceCarrierDecal" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+monitoring = true
+monitorable = false
+script = ExtResource("1_script")
+hazard_radius = 2.0
+lifetime = 6.0
+damage_tick_interval = 0.5
+damage_per_tick = 4
+hazard_height = 0.6
+visual_reference_radius = 2.0
+fade_duration = 0.65
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.3, 0)
+shape = SubResource("Cylinder_decal")
+
+[node name="Visual" type="AnimatedSprite3D" parent="."]
+rotation = Vector3(-1.5708, 0, 0)
+position = Vector3(0, 0.025, 0)
+cast_shadow = 0
+pixel_size = 0.0078125
+shaded = false
+render_priority = 2
+sprite_frames = SubResource("Frames_decal")
+animation = &"default"
+autoplay = "default"
