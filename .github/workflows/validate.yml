@@ -2,7 +2,7 @@ name: Validate VEX
 
 on:
   push:
-    branches: [main]
+    branches: [main, "tmp/p14-visual-audit"]
   pull_request:
     branches: [main]
 
@@ -24,6 +24,8 @@ jobs:
         run: python tests/static_audit.py
       - name: Validate scene root syntax
         run: python tests/scene_syntax_audit.py
+      - name: Probe P14 visuals
+        run: python tests/p14_visual_probe.py
       - name: Validate Level Test arena
         run: python tests/level_test_audit.py
       - name: Validate weapon ADS targeting
