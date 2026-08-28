@@ -14,11 +14,11 @@
 [ext_resource type="PackedScene" uid="uid://16s412t1otyl" path="res://scenes/props/pickup.tscn" id="12_pickup"]
 [ext_resource type="PackedScene" uid="uid://cpdi2qa0vdcq5" path="res://scenes/actors/ravager.tscn" id="13_ravager"]
 [ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/redviper.tscn" id="14_redviper"]
-[ext_resource type="PackedScene" path="res://scenes/actors/badredviper.tscn" id="15_badredviper"]
+[ext_resource type="PackedScene" uid="uid://dnj5rfyxbcvek" path="res://scenes/actors/badredviper.tscn" id="15_badredviper"]
 [ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/hellmagma.tscn" id="16_hellmagma"]
-[ext_resource type="PackedScene" path="res://scenes/actors/veilmaw.tscn" id="17_veilmaw"]
+[ext_resource type="PackedScene" uid="uid://bf7vnpaj7o8rt" path="res://scenes/actors/veilmaw.tscn" id="17_veilmaw"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="18_voidweaver"]
-[ext_resource type="PackedScene" path="res://scenes/actors/cinderhound.tscn" id="19_cinderhound"]
+[ext_resource type="PackedScene" uid="uid://c2oiuiy5xjdpm" path="res://scenes/actors/cinderhound.tscn" id="19_cinderhound"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="20_room_light"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_fill.tscn" id="21_spawn_light"]
 [ext_resource type="Texture2D" uid="uid://cphgrl2urhby0" path="res://assets/weapons/p01/p01_side.png" id="22_p01"]
@@ -529,6 +529,9 @@ enemy_id = &"level_test_cinderhound"
 maximum_health = 120
 move_speed = 10.0
 chase_speed = 10.0
+detection_range = 15.0
+pursuit_range = 26.0
+dormant_distance = 30.0
 
 [node name="RedViper" parent="Enemies" unique_id=406336072 instance=ExtResource("14_redviper")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.5046375, 10)
@@ -544,6 +547,7 @@ maximum_health = 500
 move_speed = 10.0
 movement_acceleration = 40.0
 detection_range = 30.0
+dormant_distance = 32.0
 
 [node name="Veilmaw" parent="Enemies" unique_id=1564511686 instance=ExtResource("17_veilmaw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
