@@ -1,0 +1,55 @@
+name: Apply Warden Corner Push V2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/apply_warden_corner_push_v2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - name: Patch Warden
+        run: |
+          echo 'ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCnAgPSBQYXRoKCJzY3JpcHRzL2FjdG9ycy9jcnVjaWJsZV93YXJkZW4uZ2QiKQpzID0gcC5yZWFkX3RleHQoZW5jb2Rpbmc9InV0Zi04IikKbmVlZGxlID0gImZ1bmMgX2F0dGVtcHRfYXR0YWNrKCkgLT4gdm9pZDoiCmlmIG5lZWRsZSBub3QgaW4gczoKICAgIHJhaXNlIFN5c3RlbUV4aXQoImF0dGVtcHQgYXR0YWNrIG1hcmtlciBub3QgZm91bmQiKQppZiAiZnVuYyBfd2FyZGVuX2NvdmVyX2FkdmFuY2VfdGFyZ2V0KCIgaW4gczoKICAgIHJhaXNlIFN5c3RlbUV4aXQoIndhcmRlbiBjb3ZlciBsb2dpYyBhbHJlYWR5IHByZXNlbnQiKQppbnNlcnQgPSAiIiJmdW5jIF91cGRhdGVfYmVoYXZpb3IoZGVsdGE6IGZsb2F0KSAtPiB2b2lkOgoJIyBDcnVjaWJsZSBXYXJkZW4gaXMgYSBjbG9zZS1wcmVzc3VyZSBlbGl0ZS4gUGFydGlhbCB2aXNpYmlsaXR5IGFyb3VuZCBjb3ZlcgoJIyBtdXN0IG1ha2UgaXQgcHVzaCB0aGUgY29ybmVyIGluc3RlYWQgb2Ygd2FpdGluZyBhdCBsb25nIHJhbmdlLgoJaWYgKAoJCXN0YXRlICE9IFN0YXRlLkRFQUQKCQlhbmQgX2FsZXJ0ZWQKCQlhbmQgbm90IF9hdHRhY2tfbG9ja2VkCgkJYW5kIF9wbGF5ZXIgIT0gbnVsbAoJCWFuZCBpc19pbnN0YW5jZV92YWxpZChfcGxheWVyKQoJKToKCQl2YXIgcGxheWVyX2Rpc3RhbmNlIDo9IF9ob3Jpem9udGFsX2Rpc3RhbmNlKGdsb2JhbF9wb3NpdGlvbiwgX3BsYXllci5nbG9iYWxfcG9zaXRpb24pCgkJaWYgcGxheWVyX2Rpc3RhbmNlID4gaGVhdHdhdmVfdHJpZ2dlcl9yYW5nZSAqIDAuOTU6CgkJCXZhciBvYnNlcnZlciA6PSBnbG9iYWxfcG9zaXRpb24gKyBWZWN0b3IzLlVQICogc2lnaHRfb3JpZ2luX2hlaWdodAoJCQl2YXIgdmlzaWJpbGl0eV9yYXRpbyA6PSBfcmFuZ2VkX3Zpc2liaWxpdHlfcmF0aW9fZnJvbShvYnNlcnZlcikKCQkJaWYgdmlzaWJpbGl0eV9yYXRpbyA8IDAuODU6CgkJCQlzdGF0ZSA9IFN0YXRlLkNIQVNICgkJCQlfbmF2aWdhdGVfdG8oX3dhcmRlbl9jb3Zlcl9hZHZhbmNlX3RhcmdldChfcGxheWVyLmdsb2JhbF9wb3NpdGlvbiksIGRlbHRhKQoJCQkJcmV0dXJuCglzdXBlci5fdXBkYXRlX2JlaGF2aW9yKGRlbHRhKQoKCmZ1bmMgX3dhcmRlbl9jb3Zlcl9hZHZhbmNlX3RhcmdldChzb3VyY2VfcG9zaXRpb246IFZlY3RvcjMpIC0+IFZlY3RvcjM6Cgl2YXIgZmxhdF9zb3VyY2UgOj0gc291cmNlX3Bvc2l0aW9uCglmbGF0X3NvdXJjZS55ID0gZ2xvYmFsX3Bvc2l0aW9uLnkKCXZhciB0b3dhcmRfc291cmNlIDo9IGZsYXRfc291cmNlIC0gZ2xvYmFsX3Bvc2l0aW9uCgl0b3dhcmRfc291cmNlLnkgPSAwLjAKCXZhciBkaXN0YW5jZSA6PSB0b3dhcmRfc291cmNlLmxlbmd0aCgpCglpZiBkaXN0YW5jZSA8PSAwLjAwMToKCQlyZXR1cm4gZmxhdF9zb3VyY2UKCgl2YXIgZGlyZWN0aW9uIDo9IHRvd2FyZF9zb3VyY2UgLyBkaXN0YW5jZQoJdmFyIHJheV9zdGFydCA6PSBnbG9iYWxfcG9zaXRpb24gKyBWZWN0b3IzLlVQICogbWF4ZigwLjU1LCBzaWdodF9vcmlnaW5faGVpZ2h0ICogMC43KQoJdmFyIHJheV9lbmQgOj0gZmxhdF9zb3VyY2UgKyBWZWN0b3IzLlVQICogbWF4ZigwLjQ1LCBzaWdodF90YXJnZXRfaGVpZ2h0KQoJdmFyIHF1ZXJ5IDo9IFBoeXNpY3NSYXlRdWVyeVBhcmFtZXRlcnMzRC5jcmVhdGUoCgkJcmF5X3N0YXJ0LAoJCXJheV9lbmQsCgkJbmF2aWdhdGlvbl9jb2xsaXNpb25fbWFzaywKCQlbZ2V0X3JpZCgpXQoJKQoJcXVlcnkuY29sbGlkZV93aXRoX2FyZWFzID0gZmFsc2UKCXZhciBoaXQgOj0gZ2V0X3dvcmxkXzNkKCkuZGlyZWN0X3NwYWNlX3N0YXRlLmludGVyc2VjdF9yYXkocXVlcnkpCglpZiBoaXQuaXNfZW1wdHkoKToKCQl2YXIgb3Blbl90YXJnZXQgOj0gZmxhdF9zb3VyY2UgLSBkaXJlY3Rpb24gKiBtaW5mKDEuNCwgZGlzdGFuY2UgKiAwLjI1KQoJCW9wZW5fdGFyZ2V0LnkgPSBnbG9iYWxfcG9zaXRpb24ueQoJCXJldHVybiBvcGVuX3RhcmdldAoKCXZhciBoaXRfcG9zaXRpb246IFZlY3RvcjMgPSBoaXQuZ2V0KCJwb3NpdGlvbiIsIGZsYXRfc291cmNlKQoJdmFyIGNsZWFyYW5jZSA6PSBtYXhmKG5hdmlnYXRpb25fY2xlYXJhbmNlICsgMC41NSwgMS4zNSkKCXZhciBuZWFyX3NpZGUgOj0gaGl0X3Bvc2l0aW9uIC0gZGlyZWN0aW9uICogY2xlYXJhbmNlCgluZWFyX3NpZGUueSA9IGdsb2JhbF9wb3NpdGlvbi55CgoJdmFyIHNpZGUgOj0gVmVjdG9yMygtZGlyZWN0aW9uLnosIDAuMCwgZGlyZWN0aW9uLngpLm5vcm1hbGl6ZWQoKQoJdmFyIHNpZGVfZGlzdGFuY2UgOj0gbWF4ZihuYXZpZ2F0aW9uX2NsZWFyYW5jZSAqIDIuMiwgMS44KQoJdmFyIGNhbmRpZGF0ZXM6IEFycmF5W1ZlY3RvcjNdID0gWwoJCW5lYXJfc2lkZSArIHNpZGUgKiBzaWRlX2Rpc3RhbmNlLAoJCW5lYXJfc2lkZSAtIHNpZGUgKiBzaWRlX2Rpc3RhbmNlLAoJCW5lYXJfc2lkZSwKCV0KCXZhciBiZXN0X3RhcmdldCA6PSBuZWFyX3NpZGUKCXZhciBiZXN0X3Njb3JlIDo9IC1JTkYKCWZvciBjYW5kaWRhdGU6IFZlY3RvcjMgaW4gY2FuZGlkYXRlczoKCQljYW5kaWRhdGUueSA9IGdsb2JhbF9wb3NpdGlvbi55CgkJdmFyIGNhbmRpZGF0ZV92aXNpYmlsaXR5IDo9IF9yYW5nZWRfdmlzaWJpbGl0eV9yYXRpb19mcm9tKAoJCQljYW5kaWRhdGUgKyBWZWN0b3IzLlVQICogc2lnaHRfb3JpZ2luX2hlaWdodAoJCSkKCQl2YXIgd2Fsa19ib251cyA6PSAxLjUgaWYgX2lzX3dhbGtfc2VnbWVudF9jbGVhcihnbG9iYWxfcG9zaXRpb24sIGNhbmRpZGF0ZSkgZWxzZSAwLjAKCQl2YXIgc2NvcmUgOj0gY2FuZGlkYXRlX3Zpc2liaWxpdHkgKiA2LjAgKyB3YWxrX2JvbnVzCgkJaWYgc2NvcmUgPiBiZXN0X3Njb3JlOgoJCQliZXN0X3Njb3JlID0gc2NvcmUKCQkJYmVzdF90YXJnZXQgPSBjYW5kaWRhdGUKCXJldHVybiBiZXN0X3RhcmdldAoKCiIiIgpzID0gcy5yZXBsYWNlKG5lZWRsZSwgaW5zZXJ0ICsgbmVlZGxlLCAxKQpwLndyaXRlX3RleHQocywgZW5jb2Rpbmc9InV0Zi04IikK' | base64 -d > /tmp/patch_warden.py
+          python /tmp/patch_warden.py
+      - name: Validate Warden contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s = Path('scripts/actors/crucible_warden.gd').read_text(encoding='utf-8')
+          assert 'func _update_behavior(delta: float) -> void:' in s
+          assert 'visibility_ratio < 0.85' in s
+          assert 'func _warden_cover_advance_target' in s
+          assert '_navigate_to(_warden_cover_advance_target' in s
+          print('Warden corner push contract passed')
+          PY
+      - name: Install Godot 4.7
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+          unzip -q Godot_v4.7-stable_linux.x86_64.zip
+          chmod +x Godot_v4.7-stable_linux.x86_64
+      - name: Verify Godot
+        run: ./Godot_v4.7-stable_linux.x86_64 --version
+      - name: Import project
+        run: ./Godot_v4.7-stable_linux.x86_64 --headless --editor --path . --quit
+      - name: Commit fix
+        run: |
+          git config user.name OpenAI
+          git config user.email openai@users.noreply.github.com
+          git add scripts/actors/crucible_warden.gd
+          git diff --cached --quiet && exit 0
+          git commit -m 'fix: make crucible warden push cover edges'
+          git push origin HEAD:main
