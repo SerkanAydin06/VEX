@@ -144,6 +144,13 @@ volume_db = -6.131
 max_polyphony = 4
 bus = &"SFX"
 
+[node name="Sg09Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1969983472]
+unique_name_in_owner = true
+stream = ExtResource("4_65nxt")
+volume_db = -6.131
+max_polyphony = 4
+bus = &"SFX"
+
 [node name="Vx47Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=943404295]
 unique_name_in_owner = true
 stream = ExtResource("7_1e6lo")
