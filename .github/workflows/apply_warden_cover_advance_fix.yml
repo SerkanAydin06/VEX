@@ -1,0 +1,186 @@
+name: Apply Warden Cover Advance Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/apply_warden_cover_advance_fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Patch Warden cover advance behavior
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('scripts/actors/ravager.gd')
+          s = p.read_text(encoding='utf-8')
+
+          old = '''func _damage_source_approach_position(source_position: Vector3) -> Vector3:
+\t# Oyuncu duvar kenarından ateş ettiğinde karakter merkezi fiziksel olarak
+\t# düşmanın sığamayacağı kadar duvara yakın olabilir. Tam merkeze rota vermek
+\t# yerine merminin geldiği açık koridora doğru küçük bir adım öne hedefle.
+\tvar result := source_position
+\tresult.y = global_position.y
+\tvar toward_enemy := global_position - result
+\ttoward_enemy.y = 0.0
+\tvar distance := toward_enemy.length()
+\tif distance > 0.001:
+\t\tvar offset := minf(damage_approach_offset, distance * 0.30)
+\t\tresult += (toward_enemy / distance) * offset
+\treturn result
+'''
+          new = '''func _damage_source_approach_position(source_position: Vector3) -> Vector3:
+\t# Hasar kaynağı bir duvar/köşe arkasındaysa karakter merkezini hedeflemek
+\t# rotayı engelin öbür tarafına kilitleyebilir. Önce düşman ile kaynak arasındaki
+\t# ilk fiziksel engeli bul ve engelin düşman tarafında, gövde açıklığı kadar
+\t# geride kalan erişilebilir yaklaşma noktasını kullan.
+\tvar flat_source := source_position
+\tflat_source.y = global_position.y
+\tvar toward_source := flat_source - global_position
+\ttoward_source.y = 0.0
+\tvar distance := toward_source.length()
+\tif distance <= 0.001:
+\t\treturn flat_source
+
+\tvar direction := toward_source / distance
+\tvar ray_start := global_position + Vector3.UP * maxf(0.45, sight_origin_height * 0.65)
+\tvar ray_end := flat_source + Vector3.UP * maxf(0.45, sight_target_height)
+\tvar query := PhysicsRayQueryParameters3D.create(
+\t\tray_start,
+\t\tray_end,
+\t\tnavigation_collision_mask,
+\t\t[get_rid()]
+\t)
+\tquery.collide_with_areas = false
+\tvar hit := get_world_3d().direct_space_state.intersect_ray(query)
+\tif not hit.is_empty():
+\t\tvar hit_position: Vector3 = hit.get("position", flat_source)
+\t\tvar clearance := maxf(damage_approach_offset, navigation_clearance + 0.45)
+\t\tvar result := hit_position - direction * clearance
+\t\tresult.y = global_position.y
+\t\treturn result
+
+\t# Açık hatta da oyuncunun tam collider merkezine kadar yürümek yerine biraz
+\t# mesafe bırak. Bu özellikle büyük gövdeli elitlerin oyuncuya takılmasını önler.
+\tvar result := flat_source - direction * minf(damage_approach_offset, distance * 0.30)
+\tresult.y = global_position.y
+\treturn result
+'''
+          if old not in s:
+              raise SystemExit('damage approach block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\t\tif _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+\t\t\tstate = State.CHASE
+\t\t\t_reposition_for_clear_shot(delta)
+\t\t\treturn
+'''
+          new = '''\t\tif _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+\t\t\tstate = State.CHASE
+\t\t\tif _uses_projectile_cover_tactics():
+\t\t\t\t_reposition_for_clear_shot(delta)
+\t\t\telse:
+\t\t\t\t# Warden gibi geniş attack_range değerine sahip ama gerçek saldırıları
+\t\t\t\t# yakın mesafe olan düşmanlar cover arkasında kule gibi beklemez.
+\t\t\t\t# Görülen kenara doğru, ilk engelin bu tarafındaki erişilebilir noktaya ilerler.
+\t\t\t\t_navigate_to(_damage_source_approach_position(_player.global_position), delta)
+\t\t\treturn
+'''
+          if old not in s:
+              raise SystemExit('partial visibility behavior block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\t\telif _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+\t\t\t# Atış bittikten sonra oyuncu yalnız duvar/kapı kenarından görünüyorsa
+\t\t\t# cooldown boyunca kule gibi bekleme; daha açık bir atış açısı ara.
+\t\t\t_reposition_for_clear_shot(delta)
+'''
+          new = '''\t\telif _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+\t\t\t# Gerçek projectile kullanan düşman açı arar; yakın dövüş / alan baskısı
+\t\t\t# düşmanları ise cover kenarına doğru basar.
+\t\t\tif _uses_projectile_cover_tactics():
+\t\t\t\t_reposition_for_clear_shot(delta)
+\t\t\telif _player != null and is_instance_valid(_player):
+\t\t\t\t_navigate_to(_damage_source_approach_position(_player.global_position), delta)
+'''
+          if old not in s:
+              raise SystemExit('attack recovery partial visibility block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''func _uses_ranged_tactics() -> bool:
+\treturn projectile_scene != null or attack_range >= 4.0
+'''
+          new = '''func _uses_ranged_tactics() -> bool:
+\t# Geniş saldırı menzili kısmi görünürlüğü daha dikkatli ölçmek için yeterli,
+\t# fakat tek başına düşmanın cover-peek yapan bir shooter olduğu anlamına gelmez.
+\treturn projectile_scene != null or attack_range >= 4.0
+
+
+func _uses_projectile_cover_tactics() -> bool:
+\treturn projectile_scene != null
+'''
+          if old not in s:
+              raise SystemExit('ranged tactics function not found')
+          s = s.replace(old, new, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Validate Warden behavior contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          r = Path('scripts/actors/ravager.gd').read_text(encoding='utf-8')
+          w = Path('scripts/actors/crucible_warden.gd').read_text(encoding='utf-8')
+          scene = Path('scenes/actors/crucible_warden.tscn').read_text(encoding='utf-8')
+          assert 'func _uses_projectile_cover_tactics() -> bool:' in r
+          assert 'return projectile_scene != null' in r
+          assert '_navigate_to(_damage_source_approach_position(_player.global_position), delta)' in r
+          assert 'var hit := get_world_3d().direct_space_state.intersect_ray(query)' in r
+          assert 'var result := hit_position - direction * clearance' in r
+          assert 'attack_range = 5.4' in scene
+          assert 'heatwave_projectile_scene' in w
+          assert 'projectile_scene' not in scene
+          print('Warden cover advance contract passed')
+          PY
+
+      - name: Install official Godot 4.7
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+          unzip -q Godot_v4.7-stable_linux.x86_64.zip
+          chmod +x Godot_v4.7-stable_linux.x86_64
+
+      - name: Verify Godot version
+        run: ./Godot_v4.7-stable_linux.x86_64 --version
+
+      - name: Import project headlessly
+        run: ./Godot_v4.7-stable_linux.x86_64 --headless --editor --path . --quit
+
+      - name: Commit fix
+        run: |
+          git config user.name OpenAI
+          git config user.email openai@users.noreply.github.com
+          git add scripts/actors/ravager.gd
+          if git diff --cached --quiet; then
+            echo 'No gameplay changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: make wardens advance through partial cover'
+          git push origin HEAD:main
