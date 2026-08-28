@@ -56,7 +56,6 @@ def main() -> int:
     pickup_script = read("scripts/props/pickup.gd")
     player_script = read("scripts/player/player.gd")
     level_test = read("scenes/levels/level_test.tscn")
-    rack = read("scenes/world/weapon_rack.tscn")
 
     for name in assets:
         if name == "sg04_side.png":
@@ -139,7 +138,6 @@ def main() -> int:
     require(player_script, 'unlock_weapon", &"sg04"', "SG04 unlock çağrısı")
     require(level_test, 'pickup_type = "sg04"', "Level Test SG04 pickup")
     require(level_test, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "Level Test SG04 side art")
-    require(rack, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "weapon rack SG04 side art")
 
     generic = 'res://assets/pickups/shotgun.png'
     for path in ROOT.rglob("*.tscn"):

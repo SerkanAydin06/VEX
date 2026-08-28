@@ -53,6 +53,7 @@ var current_level_start_state: Dictionary = {}
 var campaign_stage := 0
 var hub_selected_mission_path := ""
 var hub_selected_mission_label := ""
+var _loaded_save_from_backup := false
 
 
 func start_new_game() -> void:
@@ -354,18 +355,45 @@ func _write_save_config(config: ConfigFile) -> bool:
 	if temp_error != OK:
 		push_error("VEX geçici kayıt dosyası yazılamadı. Hata kodu: %s" % temp_error)
 		return false
+
+	# Ana kayıt semantik olarak bozuk olduğu için yedekten devam edildiyse sağlam
+	# yedeği döndürmeyiz. Bozuk ana dosyayı kaldırıp yeni temp kaydını doğrudan
+	# etkinleştiririz; herhangi bir hata halinde .bak dokunulmadan kalır.
+	if _loaded_save_from_backup:
+		if FileAccess.file_exists(SAVE_PATH):
+			var invalid_remove_error := DirAccess.remove_absolute(SAVE_PATH)
+			if invalid_remove_error != OK:
+				DirAccess.remove_absolute(SAVE_TEMP_PATH)
+				push_error("VEX bozuk ana kayıt kaldırılamadı. Hata kodu: %s" % invalid_remove_error)
+				return false
+		var recovered_rename_error := DirAccess.rename_absolute(SAVE_TEMP_PATH, SAVE_PATH)
+		if recovered_rename_error != OK:
+			push_error("VEX yedekten devam sonrası yeni ana kayıt etkinleştirilemedi. Hata kodu: %s" % recovered_rename_error)
+			return false
+		_loaded_save_from_backup = false
+		return true
+
 	if FileAccess.file_exists(SAVE_BACKUP_PATH):
-		DirAccess.remove_absolute(SAVE_BACKUP_PATH)
+		var backup_remove_error := DirAccess.remove_absolute(SAVE_BACKUP_PATH)
+		if backup_remove_error != OK:
+			DirAccess.remove_absolute(SAVE_TEMP_PATH)
+			push_error("VEX eski kayıt yedeği kaldırılamadı. Hata kodu: %s" % backup_remove_error)
+			return false
 	if FileAccess.file_exists(SAVE_PATH):
 		var backup_error := DirAccess.rename_absolute(SAVE_PATH, SAVE_BACKUP_PATH)
 		if backup_error != OK:
-			push_warning("VEX eski kayıt yedeklenemedi. Hata kodu: %s" % backup_error)
+			DirAccess.remove_absolute(SAVE_TEMP_PATH)
+			push_error("VEX eski kayıt yedeklenemedi. Hata kodu: %s" % backup_error)
+			return false
 	var rename_error := DirAccess.rename_absolute(SAVE_TEMP_PATH, SAVE_PATH)
 	if rename_error != OK:
 		if not FileAccess.file_exists(SAVE_PATH) and FileAccess.file_exists(SAVE_BACKUP_PATH):
-			DirAccess.rename_absolute(SAVE_BACKUP_PATH, SAVE_PATH)
+			var restore_error := DirAccess.rename_absolute(SAVE_BACKUP_PATH, SAVE_PATH)
+			if restore_error != OK:
+				push_error("VEX kayıt yedeği geri yüklenemedi. Hata kodu: %s" % restore_error)
 		push_error("VEX kayıt dosyası etkinleştirilemedi. Hata kodu: %s" % rename_error)
 		return false
+	_loaded_save_from_backup = false
 	return true
 
 
@@ -502,6 +530,7 @@ func _register_campaign_completion(current_scene: Node) -> void:
 
 
 func _clear_saved_run() -> void:
+	_loaded_save_from_backup = false
 	for path in [SAVE_PATH, SAVE_TEMP_PATH, SAVE_BACKUP_PATH]:
 		if FileAccess.file_exists(path):
 			var remove_error := DirAccess.remove_absolute(path)
@@ -510,33 +539,61 @@ func _clear_saved_run() -> void:
 
 
 func _load_campaign_save() -> bool:
+	return _load_campaign_save_from_paths(SAVE_PATH, SAVE_BACKUP_PATH)
+
+
+func _load_campaign_save_from_paths(primary_path: String, backup_path: String) -> bool:
 	saved_run_state = {}
+	_loaded_save_from_backup = false
+	var loaded_state := _read_valid_campaign_save(primary_path)
+	if loaded_state.is_empty():
+		loaded_state = _read_valid_campaign_save(backup_path)
+		if loaded_state.is_empty():
+			return false
+		_loaded_save_from_backup = true
+	saved_run_state = loaded_state
+	_apply_loaded_campaign_state()
+	return true
+
+
+func _read_valid_campaign_save(path: String) -> Dictionary:
+	if path.is_empty() or not FileAccess.file_exists(path):
+		return {}
 	var config := ConfigFile.new()
-	var error := config.load(SAVE_PATH)
+	var error := config.load(path)
 	if error != OK:
-		# Ana kayıt bozulduysa son sağlam yedeği dene.
-		if not FileAccess.file_exists(SAVE_BACKUP_PATH):
-			return false
-		config = ConfigFile.new()
-		error = config.load(SAVE_BACKUP_PATH)
-		if error != OK:
-			return false
-
-	var section := "campaign" if config.has_section("campaign") else "run"
+		return {}
+	var section := ""
+	if config.has_section("campaign"):
+		section = "campaign"
+	elif config.has_section("run"):
+		section = "run"
+	else:
+		return {}
+	var state: Dictionary = {}
 	for key: String in config.get_section_keys(section):
-		saved_run_state[key] = config.get_value(section, key)
+		state[key] = config.get_value(section, key)
 
-	var version := int(saved_run_state.get("save_version", 0))
+	var raw_version: Variant = state.get("save_version", 0)
+	if typeof(raw_version) not in [TYPE_INT, TYPE_FLOAT]:
+		return {}
+	var version := int(raw_version)
 	if version < 3 or version > SAVE_VERSION:
-		saved_run_state = {}
-		return false
+		return {}
 	if version < SAVE_VERSION:
-		_migrate_save_state(version)
+		state = _migrate_save_state(state, version)
 
+	var level_path := str(state.get("current_level_path", ""))
+	if level_path.is_empty() or not ResourceLoader.exists(level_path):
+		return {}
+	var player_state: Variant = state.get("resume_player_state", {})
+	if typeof(player_state) != TYPE_DICTIONARY:
+		return {}
+	return state
+
+
+func _apply_loaded_campaign_state() -> void:
 	var level_path := str(saved_run_state.get("current_level_path", LEVEL_01_PATH))
-	if not ResourceLoader.exists(level_path):
-		saved_run_state = {}
-		return false
 
 	# Campaign saves intentionally discard mission-local world state.
 	_reset_level_counters()
@@ -549,26 +606,27 @@ func _load_campaign_save() -> bool:
 	hub_selected_mission_path = str(saved_run_state.get("hub_selected_mission_path", ""))
 	hub_selected_mission_label = str(saved_run_state.get("hub_selected_mission_label", ""))
 	current_level_path = level_path
-	return true
 
 
-func _migrate_save_state(version: int) -> void:
+func _migrate_save_state(state: Dictionary, version: int) -> Dictionary:
+	var migrated := state.duplicate(true)
 	if version < 4:
 		var resume_player_state: Dictionary = {}
 		for key in ["health", "armor", "stamina", "keys", "position", "rotation_y", "weapon_state", "night_vision_owned", "night_vision_enabled", "is_crouching"]:
-			if saved_run_state.has(key):
-				resume_player_state[key] = saved_run_state[key]
-		saved_run_state["resume_player_state"] = resume_player_state
+			if migrated.has(key):
+				resume_player_state[key] = migrated[key]
+		migrated["resume_player_state"] = resume_player_state
 	if version < 5:
-		var player_state := (saved_run_state.get("resume_player_state", {}) as Dictionary).duplicate(true)
+		var player_state := (migrated.get("resume_player_state", {}) as Dictionary).duplicate(true)
 		player_state = _sanitize_campaign_player_state(player_state)
 		if player_state.has("weapon_state"):
 			player_state["weapon_state"] = _migrate_weapon_state_ids(player_state["weapon_state"] as Dictionary)
-		saved_run_state["resume_player_state"] = player_state
-		saved_run_state["resume_mode"] = "campaign_boundary"
-		saved_run_state["save_reason"] = "migrated_v%d" % version
-		saved_run_state["saved_unix_time"] = Time.get_unix_time_from_system()
-		saved_run_state["save_version"] = SAVE_VERSION
+		migrated["resume_player_state"] = player_state
+		migrated["resume_mode"] = "campaign_boundary"
+		migrated["save_reason"] = "migrated_v%d" % version
+		migrated["saved_unix_time"] = Time.get_unix_time_from_system()
+		migrated["save_version"] = SAVE_VERSION
+	return migrated
 
 
 func _migrate_weapon_state_ids(state: Dictionary) -> Dictionary:
