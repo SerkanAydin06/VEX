@@ -1,0 +1,107 @@
+name: Fix Moving Surface Impacts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix_moving_surface_impacts.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest main
+        run: git pull --ff-only origin main
+      - name: Apply moving-surface impact fix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          effect_path = Path('scripts/effects/hit_impact_v1.gd')
+          effect = effect_path.read_text(encoding='utf-8')
+
+          old = 'const FLESH_QUERY_RADIUS := 0.24\n'
+          new = 'const FLESH_QUERY_RADIUS := 0.24\nconst WORLD_SURFACE_OFFSET := 0.018\nconst MOVING_SURFACE_OFFSET := 0.065\n'
+          assert old in effect, 'impact constants anchor changed'
+          effect = effect.replace(old, new, 1)
+
+          old = '''static func spawn_world(\n\tparent: Node,\n\thit_position: Vector3,\n\thit_normal: Vector3,\n\tshot_direction: Vector3 = Vector3.ZERO\n) -> void:\n\tif parent == null or not is_instance_valid(parent):\n\t\treturn\n\t_prune_group(parent, &"vex_world_impacts", MAX_WORLD_IMPACTS)\n\tvar effect := VexHitImpactV1.new()\n\teffect.name = "WorldHitImpactV1"\n\tparent.add_child(effect)\n\teffect.add_to_group(&"vex_world_impacts")\n\tvar normal := _safe_normal(hit_normal, -shot_direction)\n\teffect.global_position = hit_position + normal * 0.012\n\teffect._align_to_normal(normal)\n'''
+          new = '''static func spawn_world(\n\tparent: Node,\n\thit_position: Vector3,\n\thit_normal: Vector3,\n\tshot_direction: Vector3 = Vector3.ZERO,\n\tsurface: Object = null\n) -> void:\n\tif parent == null or not is_instance_valid(parent):\n\t\treturn\n\t_prune_group(parent, &"vex_world_impacts", MAX_WORLD_IMPACTS)\n\tvar effect := VexHitImpactV1.new()\n\teffect.name = "WorldHitImpactV1"\n\tvar anchor := _world_impact_anchor(parent, surface)\n\tanchor.add_child(effect)\n\teffect.add_to_group(&"vex_world_impacts")\n\tvar normal := _safe_normal(hit_normal, -shot_direction)\n\tvar surface_offset := _world_surface_offset(surface)\n\teffect.global_position = hit_position + normal * surface_offset\n\teffect._align_to_normal(normal)\n'''
+          assert old in effect, 'spawn_world block changed'
+          effect = effect.replace(old, new, 1)
+
+          anchor = '''static func _safe_normal(primary: Vector3, fallback: Vector3) -> Vector3:\n'''
+          helper = '''static func _world_impact_anchor(fallback_parent: Node, surface: Object) -> Node:\n\tif surface is Node3D and is_instance_valid(surface):\n\t\treturn surface as Node3D\n\treturn fallback_parent\n\n\nstatic func _world_surface_offset(surface: Object) -> float:\n\tvar current := surface as Node\n\tvar depth := 0\n\twhile current != null and depth < 5:\n\t\tif current is AnimatableBody3D:\n\t\t\treturn MOVING_SURFACE_OFFSET\n\t\tcurrent = current.get_parent()\n\t\tdepth += 1\n\treturn WORLD_SURFACE_OFFSET\n\n\n'''
+          assert anchor in effect, 'safe normal anchor changed'
+          effect = effect.replace(anchor, helper + anchor, 1)
+
+          old = '''\tmaterial.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA\n\tmaterial.albedo_texture = texture\n'''
+          new = '''\tmaterial.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA\n\tmaterial.render_priority = 2\n\tmaterial.albedo_texture = texture\n'''
+          assert old in effect, 'world material block changed'
+          effect = effect.replace(old, new, 1)
+          effect_path.write_text(effect, encoding='utf-8')
+
+          controller_path = Path('scripts/player/weapon_controller.gd')
+          controller = controller_path.read_text(encoding='utf-8')
+          old = '''\t\t\t\t\t\thit_normal,\n\t\t\t\t\t\tdirection\n\t\t\t\t\t)'''
+          new = '''\t\t\t\t\t\thit_normal,\n\t\t\t\t\t\tdirection,\n\t\t\t\t\t\tcollider\n\t\t\t\t\t)'''
+          count = controller.count(old)
+          assert count == 1, f'expected one first world impact call, found {count}'
+          controller = controller.replace(old, new, 1)
+
+          old = '''\t\t\t\t\thit_normal,\n\t\t\t\t\tdirection\n\t\t\t\t)'''
+          new = '''\t\t\t\t\thit_normal,\n\t\t\t\t\tdirection,\n\t\t\t\t\tcollider\n\t\t\t\t)'''
+          count = controller.count(old)
+          assert count == 1, f'expected one second world impact call, found {count}'
+          controller = controller.replace(old, new, 1)
+          controller_path.write_text(controller, encoding='utf-8')
+
+          audit_path = Path('tests/hit_impact_audit.py')
+          audit = audit_path.read_text(encoding='utf-8')
+          old = '''    "func spawn_world(",\n    "func spawn_flesh(",\n'''
+          new = '''    "func spawn_world(",\n    "surface: Object = null",\n    "func _world_impact_anchor(",\n    "func _world_surface_offset(",\n    "MOVING_SURFACE_OFFSET := 0.065",\n    "surface is AnimatableBody3D",\n    "func spawn_flesh(",\n'''
+          assert old in audit, 'impact audit list changed'
+          audit = audit.replace(old, new, 1)
+          old = '''    "HIT_IMPACT_V1.spawn_world(",\n    "HIT_IMPACT_V1.spawn_flesh(",\n'''
+          new = '''    "HIT_IMPACT_V1.spawn_world(",\n    "direction,\\n\\t\\t\\t\\t\\t\\tcollider",\n    "direction,\\n\\t\\t\\t\\t\\tcollider",\n    "HIT_IMPACT_V1.spawn_flesh(",\n'''
+          assert old in audit, 'controller impact audit list changed'
+          audit = audit.replace(old, new, 1)
+          audit_path.write_text(audit, encoding='utf-8')
+          PY
+      - name: Diff sanity
+        run: git diff --check
+      - name: Run hit impact audit
+        run: python tests/hit_impact_audit.py
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Verify Godot version
+        run: godot --version | grep '^4.7'
+      - name: Import project headlessly
+        run: godot --headless --editor --path . --quit
+      - name: Commit fix
+        run: |
+          git config user.name "OpenAI"
+          git config user.email "openai@users.noreply.github.com"
+          git add scripts/effects/hit_impact_v1.gd scripts/player/weapon_controller.gd tests/hit_impact_audit.py
+          if git diff --cached --quiet; then
+            echo "No gameplay changes to commit"
+            exit 0
+          fi
+          git commit -m "fix: attach impacts to moving surfaces"
+          git push origin HEAD:main
