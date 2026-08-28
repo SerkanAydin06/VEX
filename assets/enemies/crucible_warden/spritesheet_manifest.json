@@ -1,0 +1,138 @@
+{
+  "source_zip": "crucible_warden(1).zip",
+  "notes": [
+    "Spritesheets were generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
+  ],
+  "character_spritesheet": {
+    "output_file": "crucible_warden_character_spritesheet.png",
+    "sheet_size": {
+      "width": 1364,
+      "height": 3584
+    },
+    "frame_size": {
+      "width": 341,
+      "height": 512
+    },
+    "grid": {
+      "columns": 4,
+      "rows": 7
+    },
+    "rows": [
+      {
+        "row_index": 0,
+        "animation": "idle",
+        "source_prefix": "crucible_warden_idle",
+        "frames": [
+          "crucible_warden_idle_1_result.png",
+          "crucible_warden_idle_2_result.png",
+          "crucible_warden_idle_3_result.png",
+          "crucible_warden_idle_4_result.png"
+        ],
+        "frame_count": 4
+      },
+      {
+        "row_index": 1,
+        "animation": "walk",
+        "source_prefix": "crucible_warden_walk",
+        "frames": [
+          "crucible_warden_walk_1_result.png",
+          "crucible_warden_walk_2_result.png",
+          "crucible_warden_walk_3_result.png",
+          "crucible_warden_walk_4_result.png"
+        ],
+        "frame_count": 4
+      },
+      {
+        "row_index": 2,
+        "animation": "attack",
+        "source_prefix": "crucible_warden_attack",
+        "frames": [
+          "crucible_warden_attack_1_result.png",
+          "crucible_warden_attack_2_result.png",
+          "crucible_warden_attack_3_result.png",
+          "crucible_warden_attack_4_result.png"
+        ],
+        "frame_count": 4
+      },
+      {
+        "row_index": 3,
+        "animation": "heatwave",
+        "source_prefix": "crucible_warden_heatwave",
+        "frames": [
+          "crucible_warden_heatwave_1_result.png",
+          "crucible_warden_heatwave_2_result.png",
+          "crucible_warden_heatwave_3_result.png",
+          "crucible_warden_heatwave_4_result.png"
+        ],
+        "frame_count": 4
+      },
+      {
+        "row_index": 4,
+        "animation": "death",
+        "source_prefix": "crucible_warden_death",
+        "frames": [
+          "crucible_warden_death_1_result.png",
+          "crucible_warden_death_2_result.png",
+          "crucible_warden_death_3_result.png",
+          "crucible_warden_death_4_result.png"
+        ],
+        "frame_count": 4
+      },
+      {
+        "row_index": 5,
+        "animation": "idle_back",
+        "source_prefix": "crucible_warden_idle_back",
+        "frames": [
+          "crucible_warden_idle_back_1_result.png",
+          "crucible_warden_idle_back_2_result.png",
+          "crucible_warden_idle_back_3_result.png",
+          "crucible_warden_idle_back_4_result.png"
+        ],
+        "frame_count": 4
+      },
+      {
+        "row_index": 6,
+        "animation": "walk_back",
+        "source_prefix": "crucible_warden_walk_back",
+        "frames": [
+          "crucible_warden_walk_back_1_result.png",
+          "crucible_warden_walk_back_2_result.png",
+          "crucible_warden_walk_back_3_result.png",
+          "crucible_warden_walk_back_4_result.png"
+        ],
+        "frame_count": 4
+      }
+    ]
+  },
+  "effects_spritesheet": {
+    "output_file": "crucible_warden_effects_spritesheet.png",
+    "sheet_size": {
+      "width": 2048,
+      "height": 512
+    },
+    "frame_size": {
+      "width": 512,
+      "height": 512
+    },
+    "grid": {
+      "columns": 4,
+      "rows": 1
+    },
+    "rows": [
+      {
+        "row_index": 0,
+        "animation": "heatwave_projectile",
+        "source_prefix": "crucible_warden_heatwave_projectile",
+        "frames": [
+          "crucible_warden_heatwave_projectile_1_result.png",
+          "crucible_warden_heatwave_projectile_2_result.png",
+          "crucible_warden_heatwave_projectile_3_result.png",
+          "crucible_warden_heatwave_projectile_4_result.png"
+        ],
+        "frame_count": 4
+      }
+    ]
+  }
+}
