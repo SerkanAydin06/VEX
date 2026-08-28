@@ -43,6 +43,7 @@ enum State {
 @export_range(30.0, 360.0, 5.0) var initial_view_angle := 240.0
 @export_range(1.0, 60.0, 0.5) var lost_sight_timeout := 20.0
 @export_range(1.0, 30.0, 0.5) var search_duration := 10.0
+@export_range(0.5, 5.0, 0.1) var search_probe_radius := 2.2
 @export_range(15.0, 180.0, 5.0) var search_turn_speed := 45.0
 @export_range(1.0, 30.0, 0.5) var ally_alert_radius := 10.5
 @export_range(0.0, 3.0, 0.05) var sight_origin_height := 0.55
@@ -52,6 +53,7 @@ enum State {
 @export_flags_3d_physics var sight_collision_mask := 1 | 2
 @export var aggro_on_damage := true
 @export var alert_allies_on_damage := true
+@export var alert_allies_on_detection := true
 @export var receive_ally_alerts := true
 @export_category("03B - İşitme / Stealth")
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 14.0
@@ -153,6 +155,9 @@ var _seconds_without_sight := 0.0
 var _last_seen_position := Vector3.ZERO
 var _has_last_seen_position := false
 var _search_remaining := 0.0
+var _search_probe_index := 0
+var _search_probe_target := Vector3.ZERO
+var _has_search_probe := false
 
 static var _shared_navigation_scene_id := -1
 static var _shared_navigation_caches: Dictionary = {}
@@ -430,8 +435,11 @@ func _update_perception(delta: float) -> void:
 			_has_last_seen_position = true
 
 	if _player_visible:
+		var was_alerted := _alerted
 		_alerted = true
 		_seconds_without_sight = 0.0
+		if not was_alerted and alert_allies_on_detection and _has_last_seen_position:
+			_alert_nearby_allies(_last_seen_position)
 	elif _alerted:
 		_seconds_without_sight += delta
 
@@ -492,7 +500,7 @@ func _update_behavior(delta: float) -> void:
 		if _has_last_seen_position:
 			state = State.CHASE
 			if _horizontal_distance(global_position, _last_seen_position) <= waypoint_reach_distance:
-				_stop_horizontal_motion()
+				_begin_search()
 			else:
 				_navigate_to(_last_seen_position, delta)
 			return
@@ -525,21 +533,59 @@ func _return_to_patrol(delta: float) -> void:
 func _begin_search() -> void:
 	state = State.SEARCH
 	_search_remaining = search_duration
+	_reset_search_probe()
+	_advance_search_probe()
+
+
+func _reset_search_probe() -> void:
+	_search_probe_index = 0
+	_search_probe_target = Vector3.ZERO
+	_has_search_probe = false
+
+
+func _advance_search_probe() -> void:
+	if not _has_last_seen_position:
+		_reset_search_probe()
+		return
+	_search_probe_target = VexEnemyRuntimeUtils.investigation_probe(
+		_last_seen_position,
+		_facing_direction,
+		_search_probe_index,
+		search_probe_radius
+	)
+	_search_probe_target.y = global_position.y
+	_search_probe_index += 1
+	_has_search_probe = true
 	_clear_path()
-	_stop_horizontal_motion()
+	_path_refresh_remaining = 0.0
 
 
 func _search_last_seen_area(delta: float) -> void:
 	_search_remaining -= delta
+	if _search_remaining <= 0.0 or not _has_last_seen_position:
+		_give_up_chase()
+		return
+
+	if (
+		not _has_search_probe
+		or _horizontal_distance(global_position, _search_probe_target) <= waypoint_reach_distance
+	):
+		_advance_search_probe()
+
+	# Ulaşılamayan tek bir probe bütün aramayı kilitlemesin. AStar rota bulamazsa
+	# aynı karede birkaç alternatif köşe/yan probe dene.
+	for _attempt: int in range(4):
+		_navigate_to(_search_probe_target, delta)
+		if not _current_path.is_empty() and _path_index < _current_path.size():
+			return
+		_advance_search_probe()
+
 	_stop_horizontal_motion()
 	_facing_direction = _facing_direction.rotated(
 		Vector3.UP,
 		deg_to_rad(search_turn_speed) * delta
 	).normalized()
 	rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
-
-	if _search_remaining <= 0.0:
-		_give_up_chase()
 
 
 func _give_up_chase() -> void:
@@ -548,6 +594,7 @@ func _give_up_chase() -> void:
 	_seconds_without_sight = 0.0
 	_search_remaining = 0.0
 	_has_last_seen_position = false
+	_reset_search_probe()
 	state = State.RETURN
 	_clear_path()
 	_stop_horizontal_motion()
@@ -1051,35 +1098,15 @@ func _is_player_inside_initial_view() -> bool:
 func _check_line_of_sight() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
-
-	# Crouch sırasında oyuncunun kapsülünün üstü alçalıyor. Sabit 0.45 m
-	# hedef noktası crouched kapsülün üstünde kalabildiği için ray oyuncuya
-	# hiç çarpmıyordu. Hedefi oyuncunun gerçek collision shape yüksekliğine göre
-	# belirliyoruz.
-	var target_height := sight_target_height
-	if _player.get("is_crouching") == true:
-		target_height = _get_crouched_sight_target_height()
-
 	var origin := global_position + Vector3.UP * sight_origin_height
-	var target := _player.global_position + Vector3.UP * target_height
-	var query := PhysicsRayQueryParameters3D.create(
+	return VexEnemyRuntimeUtils.has_visual_contact(
+		get_world_3d(),
 		origin,
-		target,
+		_player,
 		sight_collision_mask,
-		[get_rid()]
+		get_rid(),
+		sight_target_height
 	)
-	var result: Dictionary = get_world_3d().direct_space_state.intersect_ray(query)
-	if result.is_empty():
-		return false
-
-	var collider := result.get("collider") as Node
-	if not _is_player_collider(collider):
-		return false
-
-	# This function is a pure line-of-sight test. Detection chance is handled
-	# by _can_see_player(), so an attack windup cannot randomly fail to spawn
-	# its projectile after the attack animation has already started.
-	return true
 
 
 func _get_crouched_sight_target_height() -> float:

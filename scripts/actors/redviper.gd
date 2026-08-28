@@ -39,6 +39,7 @@ extends CharacterBody3D
 @export_range(30.0, 360.0, 5.0) var initial_view_angle := 360.0
 @export_range(1.0, 30.0, 0.5) var lost_sight_timeout := 20.0
 @export_range(1.0, 20.0, 0.5) var search_duration := 10.0
+@export_range(0.5, 5.0, 0.1) var search_probe_radius := 2.0
 @export_range(2.0, 20.0, 0.5) var ally_alert_radius := 9.0
 @export_range(0.0, 3.0, 0.05) var sight_origin_height := 0.65
 @export_range(0.0, 3.0, 0.05) var sight_target_height := 0.45
@@ -118,6 +119,9 @@ var _hurt_anim_locked := false
 var _aggro := false
 var _lost_sight_remaining := 0.0
 var _search_remaining := 0.0
+var _search_probe_index := 0
+var _search_probe_target := Vector3.ZERO
+var _has_search_probe := false
 var _last_seen_position := Vector3.ZERO
 var _facing_direction := Vector3.FORWARD
 var _detour_direction := Vector3.ZERO
@@ -237,6 +241,7 @@ func _physics_process(delta: float) -> void:
 			_last_seen_position = _player.global_position
 			_lost_sight_remaining = lost_sight_timeout
 			_search_remaining = search_duration
+			_reset_search_probe()
 			if not was_aggro and alert_allies_on_detection:
 				_alert_nearby_allies(_last_seen_position)
 
@@ -251,52 +256,24 @@ func _physics_process(delta: float) -> void:
 			_update_chase_detour()
 			return
 
-		# Görüş kesilince anında devriyeye dönmez; sahnedeki takip hafızası
-		# süresince son görülen noktaya gitmeye devam eder.
+		# Görüş kesilince son görülen noktaya kadar kovala. Noktaya ulaşıldığında
+		# kalan hafıza süresini boşta beklemek yerine aktif köşe/yan aramasına geçir.
 		if _aggro and _lost_sight_remaining > 0.0:
-			_lost_sight_remaining = maxf(
-				0.0,
-				_lost_sight_remaining - delta
-			)
-			if _horizontal_distance(
-				global_position,
-				_last_seen_position
-			) > investigation_reach_distance:
+			_lost_sight_remaining = maxf(0.0, _lost_sight_remaining - delta)
+			if _horizontal_distance(global_position, _last_seen_position) > investigation_reach_distance:
 				_chase_position(delta, _last_seen_position)
-			else:
-				velocity.x = move_toward(
-					velocity.x,
-					0.0,
-					delta * braking_acceleration
-				)
-				velocity.z = move_toward(
-					velocity.z,
-					0.0,
-					delta * braking_acceleration
-				)
-				_play_animation(&"idle")
+				move_and_slide()
+				_update_chase_detour()
+				return
+			_lost_sight_remaining = 0.0
+
+		if _aggro and _search_remaining > 0.0:
+			_search_remaining = maxf(0.0, _search_remaining - delta)
+			_investigate_last_seen(delta)
 			move_and_slide()
 			_update_chase_detour()
 			return
 
-		# Son görülen yere ulaştıktan / takip süresi bittikten sonra sahnede
-		# belirlenen süre boyunca bölgede bekler.
-		if _aggro and _search_remaining > 0.0:
-			_search_remaining = maxf(0.0, _search_remaining - delta)
-			velocity.x = move_toward(
-				velocity.x,
-				0.0,
-				delta * braking_acceleration
-			)
-			velocity.z = move_toward(
-				velocity.z,
-				0.0,
-				delta * braking_acceleration
-			)
-			_face_position(_last_seen_position)
-			_play_animation(&"idle")
-			move_and_slide()
-			return
 
 		if _aggro:
 			_aggro = false
@@ -304,6 +281,7 @@ func _physics_process(delta: float) -> void:
 			_sight_check_remaining = 0.0
 			_lost_sight_remaining = 0.0
 			_search_remaining = 0.0
+			_reset_search_probe()
 
 	if _wait_remaining > 0.0:
 		_wait_remaining = maxf(_wait_remaining - delta, 0.0)
@@ -439,6 +417,34 @@ func _face_player() -> void:
 	_face_position(_player.global_position)
 
 
+func _reset_search_probe() -> void:
+	_search_probe_index = 0
+	_search_probe_target = Vector3.ZERO
+	_has_search_probe = false
+
+
+func _advance_search_probe() -> void:
+	_search_probe_target = VexEnemyRuntimeUtils.investigation_probe(
+		_last_seen_position,
+		_facing_direction,
+		_search_probe_index,
+		search_probe_radius
+	)
+	_search_probe_target.y = global_position.y
+	_search_probe_index += 1
+	_has_search_probe = true
+	_detour_remaining = 0.0
+
+
+func _investigate_last_seen(delta: float) -> void:
+	if (
+		not _has_search_probe
+		or _horizontal_distance(global_position, _search_probe_target) <= investigation_reach_distance
+	):
+		_advance_search_probe()
+	_chase_position(delta, _search_probe_target)
+
+
 func _is_player_inside_initial_view() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
@@ -456,35 +462,24 @@ func _is_player_inside_initial_view() -> bool:
 func _check_line_of_sight() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
-
-	# Crouch sırasında oyuncunun kapsülünün üstü alçalıyor. Sabit 0.45 m
-	# hedef noktası crouched kapsülün üstünde kalabildiği için ray oyuncuya
-	# hiç çarpmıyordu. Hedefi oyuncunun gerçek collision shape yüksekliğine göre
-	# belirliyoruz.
-	var target_height := sight_target_height
-	if _player.get("is_crouching") == true:
-		target_height = _get_crouched_sight_target_height()
-
-	var origin: Vector3 = global_position + Vector3.UP * sight_origin_height
-	var target: Vector3 = _player.global_position + Vector3.UP * target_height
-	var query := PhysicsRayQueryParameters3D.create(
+	var origin := global_position + Vector3.UP * sight_origin_height
+	if not VexEnemyRuntimeUtils.has_visual_contact(
+		get_world_3d(),
 		origin,
-		target,
+		_player,
 		1 | 2,
-		[get_rid()]
-	)
-	var result: Dictionary = get_world_3d().direct_space_state.intersect_ray(query)
-	if result.is_empty():
-		return false
-
-	var collider := result.get("collider") as Node
-	if not _is_player_collider(collider):
+		get_rid(),
+		sight_target_height
+	):
 		return false
 
 	var player_distance := _horizontal_distance(global_position, _player.global_position)
-	if _player.get("is_crouching") == true and player_distance > crouch_guaranteed_detection_distance:
+	if (
+		not _aggro
+		and _player.get("is_crouching") == true
+		and player_distance > crouch_guaranteed_detection_distance
+	):
 		return randf() <= crouch_detection_chance
-
 	return true
 
 
@@ -644,6 +639,7 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 			_last_seen_position = _player.global_position
 			_lost_sight_remaining = lost_sight_timeout
 			_search_remaining = search_duration
+			_reset_search_probe()
 			if alert_allies_on_damage:
 				_alert_nearby_allies(_last_seen_position)
 
@@ -1007,6 +1003,7 @@ func receive_ally_alert(suspected_position: Vector3) -> void:
 	_last_seen_position = suspected_position
 	_lost_sight_remaining = lost_sight_timeout
 	_search_remaining = search_duration
+	_reset_search_probe()
 	_detour_remaining = 0.0
 
 
@@ -1028,6 +1025,7 @@ func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -
 	_last_seen_position = noise_position
 	_lost_sight_remaining = lost_sight_timeout
 	_search_remaining = search_duration
+	_reset_search_probe()
 	_path_refresh_remaining = 0.0
 	if loudness >= 0.9:
 		_alert_nearby_allies(noise_position)

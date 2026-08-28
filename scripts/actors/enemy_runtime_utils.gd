@@ -35,3 +35,106 @@ static func has_clear_acoustic_path(
 	)
 	return world.direct_space_state.intersect_ray(query).is_empty()
 
+
+
+static func has_visual_contact(
+	world: World3D,
+	observer_position: Vector3,
+	target: Node3D,
+	collision_mask: int,
+	observer_rid: RID,
+	fallback_target_height: float = 0.45
+) -> bool:
+	if world == null or target == null or not is_instance_valid(target):
+		return false
+
+	var target_center := target.global_position + Vector3.UP * fallback_target_height
+	var half_height := maxf(fallback_target_height, 0.45)
+	var lateral_radius := 0.28
+	var shape_node := target.get_node_or_null("CollisionShape3D") as CollisionShape3D
+	if shape_node != null and shape_node.shape != null and not shape_node.disabled:
+		target_center = shape_node.global_position
+		var capsule := shape_node.shape as CapsuleShape3D
+		if capsule != null:
+			half_height = maxf(capsule.height * 0.5, capsule.radius)
+			lateral_radius = capsule.radius
+		else:
+			var box := shape_node.shape as BoxShape3D
+			if box != null:
+				half_height = box.size.y * 0.5
+				lateral_radius = minf(box.size.x, box.size.z) * 0.5
+
+	var toward_target := target.global_position - observer_position
+	toward_target.y = 0.0
+	if toward_target.length_squared() <= 0.0001:
+		toward_target = Vector3.FORWARD
+	else:
+		toward_target = toward_target.normalized()
+	var side := Vector3.UP.cross(toward_target).normalized()
+	var vertical_span := clampf(half_height * 0.55, 0.20, 0.68)
+	var lateral_span := clampf(lateral_radius * 0.82, 0.15, 0.38)
+
+	# Merkez ilk sırada: açık görüşte eski tek-ray maliyeti korunur. Ek örnekler
+	# yalnız merkez kapı/duvar tarafından kesildiğinde omuz/üst gövde görünürlüğünü
+	# yakalamak için çalışır.
+	var samples: Array[Vector3] = [
+		target_center,
+		target_center + Vector3.UP * vertical_span,
+		target_center + side * lateral_span + Vector3.UP * (vertical_span * 0.08),
+		target_center - side * lateral_span + Vector3.UP * (vertical_span * 0.08),
+		target_center - Vector3.UP * (vertical_span * 0.45),
+	]
+	var space_state := world.direct_space_state
+	for sample: Vector3 in samples:
+		var query := PhysicsRayQueryParameters3D.create(
+			observer_position,
+			sample,
+			collision_mask,
+			[observer_rid]
+		)
+		query.collide_with_areas = true
+		var result := space_state.intersect_ray(query)
+		if result.is_empty():
+			continue
+		var collider := result.get("collider") as Node
+		if _node_belongs_to_target(collider, target):
+			return true
+	return false
+
+
+static func investigation_probe(
+	center: Vector3,
+	forward_hint: Vector3,
+	probe_index: int,
+	radius: float
+) -> Vector3:
+	var forward := forward_hint
+	forward.y = 0.0
+	if forward.length_squared() <= 0.0001:
+		forward = Vector3.FORWARD
+	else:
+		forward = forward.normalized()
+	var right := Vector3(-forward.z, 0.0, forward.x).normalized()
+	var directions: Array[Vector3] = [
+		forward,
+		(forward + right * 0.85).normalized(),
+		(forward - right * 0.85).normalized(),
+		right,
+		-right,
+		-forward,
+	]
+	var direction := directions[probe_index % directions.size()]
+	var result := center + direction * maxf(radius, 0.1)
+	result.y = center.y
+	return result
+
+
+static func _node_belongs_to_target(collider: Node, target: Node) -> bool:
+	var current := collider
+	var depth := 0
+	while current != null and depth < 6:
+		if current == target:
+			return true
+		current = current.get_parent()
+		depth += 1
+	return false

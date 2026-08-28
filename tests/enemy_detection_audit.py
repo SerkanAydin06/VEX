@@ -44,3 +44,34 @@ assert "var pursuit_range := 38.0" in redviper_script
 assert "var dormant_distance := 44.0" in redviper_script
 
 print("Enemy detection audit passed")
+
+
+utils_script = (ROOT / "scripts/actors/enemy_runtime_utils.gd").read_text(encoding="utf-8")
+for needle in [
+    "static func has_visual_contact(",
+    "target_center + side * lateral_span",
+    "target_center - side * lateral_span",
+    "static func investigation_probe(",
+]:
+    assert needle in utils_script, needle
+
+for needle in [
+    "search_probe_radius := 2.2",
+    "alert_allies_on_detection := true",
+    "VexEnemyRuntimeUtils.has_visual_contact(",
+    "func _advance_search_probe()",
+    "VexEnemyRuntimeUtils.investigation_probe(",
+    "_begin_search()",
+]:
+    assert needle in ravager_script, needle
+
+for needle in [
+    "search_probe_radius := 2.0",
+    "VexEnemyRuntimeUtils.has_visual_contact(",
+    "func _investigate_last_seen(delta: float)",
+    "VexEnemyRuntimeUtils.investigation_probe(",
+    "_lost_sight_remaining = 0.0",
+]:
+    assert needle in redviper_script, needle
+
+print("Enemy awareness/search contract passed")
