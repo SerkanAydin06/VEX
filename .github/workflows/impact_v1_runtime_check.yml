@@ -1,0 +1,40 @@
+name: Verify Hit Impact Runtime
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/impact_v1_runtime_check.yml
+      - scripts/effects/hit_impact_v1.gd
+      - tests/hit_impact_audit.py
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run hit impact contract
+        run: python tests/hit_impact_audit.py
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Verify Godot version
+        run: godot --version | grep '^4.7'
+      - name: Import project headlessly
+        run: godot --headless --editor --path . --quit
