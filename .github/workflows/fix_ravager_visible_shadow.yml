@@ -1,0 +1,64 @@
+name: Fix Ravager Visible Shadow Warning
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix_ravager_visible_shadow.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - name: Rename shadowing variable
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/actors/ravager.gd')
+          s = p.read_text(encoding='utf-8')
+          old = '''\tvar visible := VexEnemyRuntimeUtils.has_visual_contact(
+\t\tget_world_3d(),
+\t\torigin,
+\t\t_player,
+\t\tsight_collision_mask,
+\t\tget_rid(),
+\t\tsight_target_height
+\t)
+\t_last_visibility_ratio = 1.0 if visible else 0.0
+\treturn visible
+'''
+          new = '''\tvar has_contact := VexEnemyRuntimeUtils.has_visual_contact(
+\t\tget_world_3d(),
+\t\torigin,
+\t\t_player,
+\t\tsight_collision_mask,
+\t\tget_rid(),
+\t\tsight_target_height
+\t)
+\t_last_visibility_ratio = 1.0 if has_contact else 0.0
+\treturn has_contact
+'''
+          if old not in s:
+              raise SystemExit('target visibility block not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          assert 'var visible :=' not in p.read_text(encoding='utf-8')
+          print('ravager visible shadow warning fixed')
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name OpenAI
+          git config user.email openai@users.noreply.github.com
+          git add scripts/actors/ravager.gd
+          git commit -m 'fix: avoid Node3D visible shadow warning'
+          git push origin HEAD:main
