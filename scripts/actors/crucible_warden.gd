@@ -109,9 +109,9 @@ func _close_for_heatwave(speed_multiplier: float) -> void:
 	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
 	var maximum_speed := _runtime_move_speed * speed_scale
 	if horizontal_speed > maximum_speed and horizontal_speed > 0.001:
-		var scale := maximum_speed / horizontal_speed
-		velocity.x *= scale
-		velocity.z *= scale
+		var velocity_scale := maximum_speed / horizontal_speed
+		velocity.x *= velocity_scale
+		velocity.z *= velocity_scale
 
 
 func _begin_ground_slam_attack() -> void:

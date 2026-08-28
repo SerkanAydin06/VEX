@@ -916,7 +916,7 @@ func _runtime_grid_heap_push(
 	heap.append(entry)
 	var index := heap.size() - 1
 	while index > 0:
-		var parent := (index - 1) / 2
+		var parent: int = floori(float(index - 1) / 2.0)
 		if float(heap[parent].get("priority", INF)) <= priority:
 			break
 		heap[index] = heap[parent]
