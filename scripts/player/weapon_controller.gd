@@ -1,6 +1,9 @@
 class_name VexWeaponController
 extends Node
 
+const HIT_IMPACT_V1 := preload("res://scripts/effects/hit_impact_v1.gd")
+const MAX_WORLD_IMPACTS_PER_TRIGGER := 4
+
 signal loadout_changed
 
 @export_category("Başlangıç")
@@ -722,6 +725,8 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 	# vurulma tepkisini spamlamaz; toplam hasar değişmez.
 	var pending_damage: Dictionary = {}
 	var pending_hit_positions: Dictionary = {}
+	var pending_hit_normals: Dictionary = {}
+	var world_impacts_spawned := 0
 	var penetration_power := maxf(
 		0.0,
 		weapon.penetration_power + float(_modifiers(weapon).penetration)
@@ -756,13 +761,30 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 				break
 			var collider := result.get("collider") as Object
 			var damage_target := _resolve_damage_target(collider)
+			var hit_position: Vector3 = result.get("position", Vector3.ZERO)
+			var hit_normal: Vector3 = result.get("normal", -direction)
 			# Delme yalnızca canlı/hedef nesneler arasında devam eder. Duvar ve
 			# kapılar mermiyi durdurur; böylece arka odalardaki hedefler vurulmaz.
 			if damage_target == null:
+				if world_impacts_spawned < MAX_WORLD_IMPACTS_PER_TRIGGER:
+					HIT_IMPACT_V1.spawn_world(
+						get_tree().current_scene,
+						hit_position,
+						hit_normal,
+						direction
+					)
+					world_impacts_spawned += 1
 				break
+			if not damage_target.is_in_group("enemy") and world_impacts_spawned < MAX_WORLD_IMPACTS_PER_TRIGGER:
+				HIT_IMPACT_V1.spawn_world(
+					get_tree().current_scene,
+					hit_position,
+					hit_normal,
+					direction
+				)
+				world_impacts_spawned += 1
 			if collider is CollisionObject3D:
 				exclusions.append((collider as CollisionObject3D).get_rid())
-			var hit_position: Vector3 = result.get("position", Vector3.ZERO)
 			ray_origin = hit_position + direction * 0.05
 			if hit_targets.has(damage_target):
 				continue
@@ -786,18 +808,30 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 				GameState.confirm_headshot()
 			pending_damage[damage_target] = int(pending_damage.get(damage_target, 0)) + pellet_damage
 			pending_hit_positions[damage_target] = hit_position
+			pending_hit_normals[damage_target] = hit_normal
 			hit_something = true
 
 	for damage_target_variant: Variant in pending_damage:
 		var damage_target := damage_target_variant as Node
 		if damage_target == null or not is_instance_valid(damage_target):
 			continue
+		var aggregated_hit_position: Vector3 = pending_hit_positions.get(
+			damage_target,
+			Vector3.ZERO
+		)
 		damage_target.call(
 			"take_damage",
 			int(pending_damage.get(damage_target, 0)),
-			pending_hit_positions.get(damage_target, Vector3.ZERO),
+			aggregated_hit_position,
 			_player
 		)
+		if damage_target.is_in_group("enemy"):
+			HIT_IMPACT_V1.spawn_flesh(
+				get_tree().current_scene,
+				aggregated_hit_position,
+				pending_hit_normals.get(damage_target, Vector3.UP),
+				Vector3.ZERO
+			)
 
 	if hit_something:
 		GameState.confirm_hit()
