@@ -43,6 +43,79 @@ var _heatwave_burst_generation := 0
 var _last_heatwave_player_hit_generation := -1
 
 
+func _update_behavior(delta: float) -> void:
+	# Crucible Warden is a close-pressure elite. Partial visibility around cover
+	# must make it push the corner instead of waiting at long range.
+	if (
+		state != State.DEAD
+		and _alerted
+		and not _attack_locked
+		and _player != null
+		and is_instance_valid(_player)
+	):
+		var player_distance := _horizontal_distance(global_position, _player.global_position)
+		if player_distance > heatwave_trigger_range * 0.95:
+			var observer := global_position + Vector3.UP * sight_origin_height
+			var visibility_ratio := _ranged_visibility_ratio_from(observer)
+			if visibility_ratio < 0.85:
+				state = State.CHASH
+				_navigate_to(_warden_cover_advance_target(_player.global_position), delta)
+				return
+	super._update_behavior(delta)
+
+
+func _warden_cover_advance_target(source_position: Vector3) -> Vector3:
+	var flat_source := source_position
+	flat_source.y = global_position.y
+	var toward_source := flat_source - global_position
+	toward_source.y = 0.0
+	var distance := toward_source.length()
+	if distance <= 0.001:
+		return flat_source
+
+	var direction := toward_source / distance
+	var ray_start := global_position + Vector3.UP * maxf(0.55, sight_origin_height * 0.7)
+	var ray_end := flat_source + Vector3.UP * maxf(0.45, sight_target_height)
+	var query := PhysicsRayQueryParameters3D.create(
+		ray_start,
+		ray_end,
+		navigation_collision_mask,
+		[get_rid()]
+	)
+	query.collide_with_areas = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		var open_target := flat_source - direction * minf(1.4, distance * 0.25)
+		open_target.y = global_position.y
+		return open_target
+
+	var hit_position: Vector3 = hit.get("position", flat_source)
+	var clearance := maxf(navigation_clearance + 0.55, 1.35)
+	var near_side := hit_position - direction * clearance
+	near_side.y = global_position.y
+
+	var side := Vector3(-direction.z, 0.0, direction.x).normalized()
+	var side_distance := maxf(navigation_clearance * 2.2, 1.8)
+	var candidates: Array[Vector3] = [
+		near_side + side * side_distance,
+		near_side - side * side_distance,
+		near_side,
+	]
+	var best_target := near_side
+	var best_score := -INF
+	for candidate: Vector3 in candidates:
+		candidate.y = global_position.y
+		var candidate_visibility := _ranged_visibility_ratio_from(
+			candidate + Vector3.UP * sight_origin_height
+		)
+		var walk_bonus := 1.5 if _is_walk_segment_clear(global_position, candidate) else 0.0
+		var score := candidate_visibility * 6.0 + walk_bonus
+		if score > best_score:
+			best_score = score
+			best_target = candidate
+	return best_target
+
+
 func _attempt_attack() -> void:
 	if _attack_locked or _player == null or not is_instance_valid(_player):
 		return
