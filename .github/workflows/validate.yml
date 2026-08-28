@@ -28,6 +28,8 @@ jobs:
         run: python tests/level_test_audit.py
       - name: Validate player movement
         run: python tests/player_movement_audit.py
+      - name: Validate enemy detection and awareness
+        run: python tests/enemy_detection_audit.py
       - name: Validate Furnice Carrier
         run: python tests/furnice_carrier_audit.py
       - name: Validate Crucible Warden
