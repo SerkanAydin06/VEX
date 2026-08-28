@@ -67,7 +67,7 @@ jobs:
           audit_path = Path('tests/hit_impact_audit.py')
           audit = audit_path.read_text(encoding='utf-8')
           old = '''    "func spawn_world(",\n    "func spawn_flesh(",\n'''
-          new = '''    "func spawn_world(",\n    "surface: Object = null",\n    "func _world_impact_anchor(",\n    "func _world_surface_offset(",\n    "MOVING_SURFACE_OFFSET := 0.065",\n    "surface is AnimatableBody3D",\n    "func spawn_flesh(",\n'''
+          new = '''    "func spawn_world(",\n    "surface: Object = null",\n    "func _world_impact_anchor(",\n    "func _world_surface_offset(",\n    "MOVING_SURFACE_OFFSET := 0.065",\n    "current is AnimatableBody3D",\n    "func spawn_flesh(",\n'''
           assert old in audit, 'impact audit list changed'
           audit = audit.replace(old, new, 1)
           old = '''    "HIT_IMPACT_V1.spawn_world(",\n    "HIT_IMPACT_V1.spawn_flesh(",\n'''
