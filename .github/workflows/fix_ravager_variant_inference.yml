@@ -1,0 +1,57 @@
+name: Fix Ravager Variant Inference
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix_ravager_variant_inference.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - name: Fix Variant inference
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/actors/ravager.gd')
+          s = p.read_text(encoding='utf-8')
+          old = '\tvar last := heap.pop_back()\n'
+          new = '\tvar last: Dictionary = heap.pop_back() as Dictionary\n'
+          if old not in s:
+              raise SystemExit('expected Variant inference line not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Validate exact fix
+        run: |
+          grep -n 'var last: Dictionary = heap.pop_back() as Dictionary' scripts/actors/ravager.gd
+          if grep -n 'var last := heap.pop_back()' scripts/actors/ravager.gd; then exit 1; fi
+      - name: Install Godot 4.7.1
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.7.1-stable/Godot_v4.7.1-stable_linux.x86_64.zip
+          unzip -q Godot_v4.7.1-stable_linux.x86_64.zip
+          chmod +x Godot_v4.7.1-stable_linux.x86_64
+      - name: Validate with Godot 4.7.1
+        run: |
+          ./Godot_v4.7.1-stable_linux.x86_64 --version
+          ./Godot_v4.7.1-stable_linux.x86_64 --headless --editor --path . --quit
+      - name: Commit fix
+        run: |
+          git config user.name OpenAI
+          git config user.email openai@users.noreply.github.com
+          git add scripts/actors/ravager.gd
+          git diff --cached --quiet && exit 0
+          git commit -m 'fix: type runtime path heap values'
+          git push origin HEAD:main
