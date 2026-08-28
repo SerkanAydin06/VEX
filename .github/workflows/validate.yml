@@ -36,6 +36,8 @@ jobs:
         run: python tests/sg04_weapon_audit.py
       - name: Validate weapon ADS targeting
         run: python tests/weapon_ads_audit.py
+      - name: Validate hit impact V1
+        run: python tests/hit_impact_audit.py
       - name: Install official Godot 4.7
         env:
           GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
