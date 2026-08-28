@@ -1,0 +1,246 @@
+name: Apply Enemy Thin Wall Chase Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/apply_enemy_thin_wall_chase_fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Patch enemy chase arrival and local detour
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/actors/ravager.gd')
+          s = path.read_text(encoding='utf-8')
+
+          old = '''var _ranged_reposition_target := Vector3.ZERO\nvar _has_ranged_reposition_target := false\nvar _ranged_reposition_remaining := 0.0\n'''
+          new = '''var _ranged_reposition_target := Vector3.ZERO\nvar _has_ranged_reposition_target := false\nvar _ranged_reposition_remaining := 0.0\nvar _local_detour_side := 0.0\nvar _local_detour_remaining := 0.0\n'''
+          if old not in s:
+              raise SystemExit('detour state insertion anchor not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\t_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)\n\t_ranged_reposition_remaining = maxf(0.0, _ranged_reposition_remaining - delta)\n'''
+          new = '''\t_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)\n\t_ranged_reposition_remaining = maxf(0.0, _ranged_reposition_remaining - delta)\n\t_local_detour_remaining = maxf(0.0, _local_detour_remaining - delta)\n'''
+          if old not in s:
+              raise SystemExit('physics timer anchor not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\t\t_path_refresh_remaining = 0.0\n\t\t_ranged_reposition_remaining = 0.0\n\t\t_has_ranged_reposition_target = false\n\t\t_clear_path()\n'''
+          new = '''\t\t_path_refresh_remaining = 0.0\n\t\t_ranged_reposition_remaining = 0.0\n\t\t_has_ranged_reposition_target = false\n\t\t_local_detour_remaining = 0.0\n\t\t_local_detour_side = 0.0\n\t\t_clear_path()\n'''
+          if old not in s:
+              raise SystemExit('damage detour reset anchor not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\t\tif _has_last_seen_position:\n\t\t\tstate = State.CHASE\n\t\t\tif _horizontal_distance(global_position, _last_seen_position) <= waypoint_reach_distance:\n\t\t\t\t_begin_search()\n\t\t\telse:\n\t\t\t\t_navigate_to(_last_seen_position, delta)\n\t\t\treturn\n'''
+          new = '''\t\tif _has_last_seen_position:\n\t\t\tstate = State.CHASE\n\t\t\t# İnce bir duvarın öbür tarafındaki hedef geometrik olarak çok yakın\n\t\t\t# olabilir. Yalnız mesafeye bakmak hedefi ulaşıldı sayıp AI'ı SEARCH'e\n\t\t\t# geçiriyordu. Fiziksel yürüyüş bağlantısı yoksa chase devam etmeli.\n\t\t\tif _has_reached_walkable_target(_last_seen_position, waypoint_reach_distance):\n\t\t\t\t_begin_search()\n\t\t\telse:\n\t\t\t\t_navigate_to(_last_seen_position, delta)\n\t\t\treturn\n'''
+          if old not in s:
+              raise SystemExit('alerted reached block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\tif (\n\t\tnot _has_search_probe\n\t\tor _horizontal_distance(global_position, _search_probe_target) <= waypoint_reach_distance\n\t):\n'''
+          new = '''\tif (\n\t\tnot _has_search_probe\n\t\tor _has_reached_walkable_target(_search_probe_target, waypoint_reach_distance)\n\t):\n'''
+          if old not in s:
+              raise SystemExit('search probe reached block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\twhile (\n\t\t_path_index < _current_path.size()\n\t\tand _horizontal_distance(global_position, _current_path[_path_index]) <= waypoint_reach_distance\n\t):\n\t\t_path_index += 1\n'''
+          new = '''\twhile (\n\t\t_path_index < _current_path.size()\n\t\tand _has_reached_walkable_target(\n\t\t\t_current_path[_path_index],\n\t\t\twaypoint_reach_distance\n\t\t)\n\t):\n\t\t_path_index += 1\n'''
+          if old not in s:
+              raise SystemExit('path waypoint reached loop not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\t_current_path = graph.get_point_path(start_id, target_id)\n\tif _current_path.is_empty():\n\t\t# Oyuncunun son görüldüğü nokta duvara çok yakınsa düşmanın gövdesi\n\t\t# hedef noktasına sığmayabilir. Duvarın yanlış tarafında beklemek yerine,\n\t\t# hedefle aynı açık alanda bulunan en yakın ulaşılabilir rota noktasına git.\n\t\t_current_path = _find_investigation_path(graph, start_id, destination)\n\tif _current_path.size() > 1:\n'''
+          new = '''\t_current_path = graph.get_point_path(start_id, target_id)\n\tif _current_path.is_empty():\n\t\t# Oyuncunun son görüldüğü nokta duvara çok yakınsa düşmanın gövdesi\n\t\t# hedef noktasına sığmayabilir. Önce sahne waypoint ağını dene.\n\t\t_current_path = _find_investigation_path(graph, start_id, destination)\n\tif _current_path.is_empty():\n\t\t# Bazı test/level sahnelerinde enemy_navigation_waypoint bulunmuyor.\n\t\t# Böyle bir sahnede duvar doğrudan yolu kapattığında boş rota ile donmak\n\t\t# yerine yerel sağ/sol detour üret ve her yenilemede köşeyi ilerleyerek ara.\n\t\t_current_path = _build_local_detour_path(destination)\n\tif _current_path.size() > 1:\n'''
+          if old not in s:
+              raise SystemExit('rebuild fallback block not found')
+          s = s.replace(old, new, 1)
+
+          marker = '''\n\nfunc _build_astar_graph() -> AStar3D:\n'''
+          helper = r'''
+
+func _build_local_detour_path(destination: Vector3) -> PackedVector3Array:
+	var toward_target := destination - global_position
+	toward_target.y = 0.0
+	if toward_target.length_squared() <= 0.001:
+		return PackedVector3Array()
+
+	var forward := toward_target.normalized()
+	var side := Vector3(-forward.z, 0.0, forward.x)
+	var base_step := maxf(navigation_clearance * 1.45, 0.90)
+	var lateral_steps := PackedFloat32Array([
+		base_step,
+		base_step * 1.8,
+		base_step * 2.8,
+		base_step * 4.0,
+	])
+	var forward_steps := PackedFloat32Array([0.0, base_step * 0.75, base_step * 1.5])
+	var side_signs := PackedFloat32Array([-1.0, 1.0])
+	if _local_detour_remaining > 0.0 and absf(_local_detour_side) > 0.5:
+		side_signs = PackedFloat32Array([_local_detour_side, -_local_detour_side])
+
+	var best_path := PackedVector3Array()
+	var best_score := -INF
+	var best_side := 0.0
+	var current_remaining := _horizontal_distance(global_position, destination)
+
+	for side_sign: float in side_signs:
+		for lateral_distance: float in lateral_steps:
+			for forward_distance: float in forward_steps:
+				var candidate := (
+					global_position
+					+ side * side_sign * lateral_distance
+					+ forward * forward_distance
+				)
+				candidate.y = global_position.y
+				if not _has_navigation_floor(candidate):
+					continue
+				if not _is_walk_segment_clear(global_position, candidate):
+					continue
+
+				var approach_point := _furthest_walkable_point_toward(candidate, destination)
+				var remaining := _horizontal_distance(approach_point, destination)
+				var progress := current_remaining - remaining
+				var direct_open := _is_walk_segment_clear(candidate, destination)
+				var score := -remaining + progress * 1.5 - lateral_distance * 0.08
+				if direct_open:
+					score += 8.0
+				if _local_detour_remaining > 0.0 and side_sign == _local_detour_side:
+					score += 0.45
+
+				if score <= best_score:
+					continue
+				best_score = score
+				best_side = side_sign
+				best_path = PackedVector3Array([global_position, candidate])
+				if (
+					_horizontal_distance(candidate, approach_point)
+					> waypoint_reach_distance * 0.35
+				):
+					best_path.append(approach_point)
+
+	if not best_path.is_empty():
+		_local_detour_side = best_side
+		_local_detour_remaining = 0.90
+	return best_path
+
+
+func _has_navigation_floor(position: Vector3) -> bool:
+	var ray_start := position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
+	var ray_end := position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
+	var query := PhysicsRayQueryParameters3D.create(
+		ray_start,
+		ray_end,
+		floor_collision_mask,
+		[get_rid()]
+	)
+	query.collide_with_areas = false
+	return not get_world_3d().direct_space_state.intersect_ray(query).is_empty()
+
+
+func _has_reached_walkable_target(target: Vector3, reach_distance: float) -> bool:
+	if _horizontal_distance(global_position, target) > reach_distance:
+		return false
+
+	# _is_walk_segment_clear() çok kısa segmentleri otomatik açık kabul ediyor.
+	# İnce duvarın iki tarafındaki merkezler de çok yakın olabildiği için burada
+	# kısa mesafede dahi üç fizik ışınıyla gerçekten aynı yürünebilir tarafta
+	# olup olmadığımızı doğrula.
+	var direction := target - global_position
+	direction.y = 0.0
+	if direction.length_squared() <= 0.000001:
+		return true
+	var perpendicular := Vector3(-direction.z, 0.0, direction.x).normalized()
+	perpendicular *= navigation_clearance
+	var offsets: Array[Vector3] = [Vector3.ZERO, perpendicular, -perpendicular]
+	var space_state := get_world_3d().direct_space_state
+	for offset: Vector3 in offsets:
+		var ray_start := global_position + offset
+		var ray_end := target + offset
+		ray_start.y = global_position.y
+		ray_end.y = global_position.y
+		var query := PhysicsRayQueryParameters3D.create(
+			ray_start,
+			ray_end,
+			navigation_collision_mask,
+			[get_rid()]
+		)
+		query.collide_with_areas = false
+		if not space_state.intersect_ray(query).is_empty():
+			return false
+	return true
+'''
+          if marker not in s:
+              raise SystemExit('helper insertion marker not found')
+          s = s.replace(marker, helper + marker, 1)
+
+          old = '''\tif direction.length_squared() < 0.05:\n\t\t_stop_horizontal_motion()\n\t\treturn\n'''
+          new = '''\tif (\n\t\tdirection.length_squared() < 0.05\n\t\tand _has_reached_walkable_target(target, sqrt(0.05))\n\t):\n\t\t_stop_horizontal_motion()\n\t\treturn\n'''
+          if old not in s:
+              raise SystemExit('move close-stop block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''\t\tnot _has_ranged_reposition_target\n\t\tor _ranged_reposition_remaining <= 0.0\n\t\tor _horizontal_distance(global_position, _ranged_reposition_target) <= waypoint_reach_distance\n\t):\n'''
+          new = '''\t\tnot _has_ranged_reposition_target\n\t\tor _ranged_reposition_remaining <= 0.0\n\t\tor _has_reached_walkable_target(_ranged_reposition_target, waypoint_reach_distance)\n\t):\n'''
+          if old in s:
+              s = s.replace(old, new, 1)
+
+          path.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Validate thin-wall chase contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s = Path('scripts/actors/ravager.gd').read_text(encoding='utf-8')
+          required = [
+              'func _has_reached_walkable_target',
+              'func _build_local_detour_path',
+              'func _has_navigation_floor',
+              '_current_path = _build_local_detour_path(destination)',
+              '_has_reached_walkable_target(_last_seen_position, waypoint_reach_distance)',
+              '_has_reached_walkable_target(_search_probe_target, waypoint_reach_distance)',
+              '_local_detour_remaining = 0.90',
+          ]
+          for token in required:
+              assert token in s, token
+          assert '_horizontal_distance(global_position, _last_seen_position) <= waypoint_reach_distance' not in s
+          print('Enemy thin-wall chase contract passed')
+          PY
+
+      - name: Install Godot 4.7
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+          unzip -q Godot_v4.7-stable_linux.x86_64.zip
+          chmod +x Godot_v4.7-stable_linux.x86_64
+
+      - name: Validate Godot scripts
+        run: |
+          ./Godot_v4.7-stable_linux.x86_64 --version
+          ./Godot_v4.7-stable_linux.x86_64 --headless --editor --path . --quit
+
+      - name: Commit gameplay fix
+        run: |
+          git config user.name OpenAI
+          git config user.email openai@users.noreply.github.com
+          git add scripts/actors/ravager.gd
+          git diff --cached --quiet && exit 0
+          git commit -m 'fix: keep enemies chasing across thin cover'
+          git push origin HEAD:main
