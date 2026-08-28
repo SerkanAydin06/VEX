@@ -48,6 +48,8 @@ extends CharacterBody3D
 @export var aggro_on_damage := true
 @export var alert_allies_on_detection := true
 @export var alert_allies_on_damage := true
+@export_range(1.0, 120.0, 1.0) var damage_reaction_range := 80.0
+@export_range(1.0, 30.0, 0.5) var damage_reaction_duration := 12.0
 @export_category("03B - İşitme / Stealth")
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 16.0
 @export_range(0.1, 2.0, 0.05) var hearing_loudness_scale := 1.0
@@ -122,6 +124,7 @@ var _search_remaining := 0.0
 var _search_probe_index := 0
 var _search_probe_target := Vector3.ZERO
 var _has_search_probe := false
+var _damage_reaction_remaining := 0.0
 var _last_seen_position := Vector3.ZERO
 var _facing_direction := Vector3.FORWARD
 var _detour_direction := Vector3.ZERO
@@ -194,6 +197,7 @@ func _physics_process(delta: float) -> void:
 
 	if _player == null or not is_instance_valid(_player):
 		_player = GameState.player as Node3D
+	_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)
 
 	if _should_use_dormant_mode():
 		_enter_dormant_mode()
@@ -227,6 +231,8 @@ func _physics_process(delta: float) -> void:
 			if _aggro
 			else _runtime_detection_range
 		)
+		if _damage_reaction_remaining > 0.0:
+			active_sight_range = maxf(active_sight_range, damage_reaction_range)
 		var can_see_player := _get_cached_player_visibility(
 			delta,
 			player_distance,
@@ -348,8 +354,9 @@ func _physics_process(delta: float) -> void:
 
 
 func _chase_position(delta: float, target_position: Vector3) -> void:
-	_movement_target = target_position
-	var direction: Vector3 = target_position - global_position
+	var resolved_target := _resolve_enemy_door_step(target_position)
+	_movement_target = resolved_target
+	var direction: Vector3 = resolved_target - global_position
 	direction.y = 0.0
 	if direction.length_squared() <= 0.001:
 		velocity.x = 0.0
@@ -400,6 +407,34 @@ func _update_chase_detour() -> void:
 		)
 		_detour_remaining = detour_duration
 		return
+
+
+func is_pursuing_player() -> bool:
+	return not _dead and _aggro
+
+
+func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
+	var best_point := target_position
+	var best_score := INF
+	var found := false
+	for node: Node in get_tree().get_nodes_in_group("enemy_navigation_door"):
+		if not node.has_method("get_enemy_navigation_step"):
+			continue
+		var route: Variant = node.call("get_enemy_navigation_step", global_position, target_position)
+		if not (route is Dictionary):
+			continue
+		var data := route as Dictionary
+		if not bool(data.get("valid", false)):
+			continue
+		var point: Variant = data.get("point", target_position)
+		if typeof(point) != TYPE_VECTOR3:
+			continue
+		var score := float(data.get("score", INF))
+		if score < best_score:
+			best_score = score
+			best_point = point
+			found = true
+	return best_point if found else target_position
 
 
 func _face_position(target_position: Vector3) -> void:
@@ -634,12 +669,18 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 	if aggro_on_damage:
 		if _player == null or not is_instance_valid(_player):
 			_player = GameState.player as Node3D
-		if _player != null and is_instance_valid(_player):
+		var retaliation_target := _source as Node3D if _source is Node3D else _player
+		if retaliation_target != null and is_instance_valid(retaliation_target):
 			_aggro = true
-			_last_seen_position = _player.global_position
+			_damage_reaction_remaining = damage_reaction_duration
+			_last_seen_position = retaliation_target.global_position
 			_lost_sight_remaining = lost_sight_timeout
 			_search_remaining = search_duration
+			_cached_player_visible = false
+			_sight_check_remaining = 0.0
+			_detour_remaining = 0.0
 			_reset_search_probe()
+			_face_position(_last_seen_position)
 			if alert_allies_on_damage:
 				_alert_nearby_allies(_last_seen_position)
 

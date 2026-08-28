@@ -43,6 +43,17 @@ assert "var detection_range := 30.0" in redviper_script
 assert "var pursuit_range := 38.0" in redviper_script
 assert "var dormant_distance := 44.0" in redviper_script
 
+door_script = (ROOT / "scripts/props/door.gd").read_text(encoding="utf-8")
+for script_name, script in (("ravager", ravager_script), ("redviper", redviper_script)):
+    assert "damage_reaction_range := 80.0" in script, script_name
+    assert "damage_reaction_duration := 12.0" in script, script_name
+    assert "func is_pursuing_player() -> bool:" in script, script_name
+    assert "_resolve_enemy_door_step" in script, script_name
+assert 'add_to_group("enemy_navigation_door")' in door_script
+assert "func get_enemy_navigation_step(" in door_script
+assert "allow_enemy_open := true" in door_script
+assert 'proximity_sensor.collision_mask = 2 | (4 if allow_enemy_open else 0)' in door_script
+
 print("Enemy detection audit passed")
 
 

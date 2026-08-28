@@ -41,6 +41,11 @@ enum DoorOpeningMode {
 @export_range(1.0, 15.0, 0.5) var auto_close_delay := 4.0
 @export var automatic_open := false
 
+@export_category("Düşman Geçişi")
+@export var allow_enemy_open := true
+@export_range(0.5, 2.5, 0.05) var enemy_portal_offset := 1.15
+@export_range(2.0, 24.0, 0.5) var enemy_portal_consider_distance := 14.0
+
 @export_category("Güvenli Kapanma")
 @export_flags_3d_physics var safety_collision_mask := 2 | 4
 @export_range(0.05, 1.0, 0.05) var safety_recheck_time := 0.2
@@ -72,6 +77,7 @@ var _denied_audio: AudioStreamPlayer3D
 
 func _ready() -> void:
 	add_to_group("interactable")
+	add_to_group("enemy_navigation_door")
 	if campaign_unlock_stage >= 0 and GameState.campaign_stage >= campaign_unlock_stage:
 		permanently_locked = false
 		locked = false
@@ -124,8 +130,11 @@ func _ready() -> void:
 	safety_sensor.monitorable = false
 	if not safety_sensor.body_entered.is_connected(_on_safety_body_entered):
 		safety_sensor.body_entered.connect(_on_safety_body_entered)
-	if proximity_sensor != null and not proximity_sensor.body_entered.is_connected(_on_proximity_body_entered):
-		proximity_sensor.body_entered.connect(_on_proximity_body_entered)
+	if proximity_sensor != null:
+		proximity_sensor.collision_layer = 0
+		proximity_sensor.collision_mask = 2 | (4 if allow_enemy_open else 0)
+		if not proximity_sensor.body_entered.is_connected(_on_proximity_body_entered):
+			proximity_sensor.body_entered.connect(_on_proximity_body_entered)
 	# Yalnızca kapanma hareketi sırasında güvenlik sorgusu gerekir.
 	set_physics_process(false)
 
@@ -433,12 +442,64 @@ func _on_closing_finished(motion_generation: int) -> void:
 
 
 func _on_proximity_body_entered(body: Node3D) -> void:
-	if not automatic_open or body == null or body != GameState.player:
+	if body == null:
 		return
-	if permanently_locked or _runtime_locked:
+	var player_trigger := automatic_open and body == GameState.player
+	var enemy_trigger := (
+		allow_enemy_open
+		and body.is_in_group("enemy")
+		and body.has_method("is_pursuing_player")
+		and bool(body.call("is_pursuing_player"))
+	)
+	if not player_trigger and not enemy_trigger:
+		return
+	if is_access_locked():
 		return
 	if _state == DoorState.CLOSED or _state == DoorState.CLOSING:
 		_begin_opening()
+
+
+func get_enemy_navigation_step(from_position: Vector3, target_position: Vector3) -> Dictionary:
+	if not allow_enemy_open or is_access_locked():
+		return {}
+
+	var from_local := to_local(from_position)
+	var target_local := to_local(target_position)
+	var plane_epsilon := 0.30
+	# Kapı yalnız hedef gerçekten öbür taraftaysa rota portalı olur. Aynı taraftaki
+	# kapılara sırf yakın oldukları için sapmak istemiyoruz.
+	if (
+		absf(from_local.x) > plane_epsilon
+		and absf(target_local.x) > plane_epsilon
+		and signf(from_local.x) == signf(target_local.x)
+	):
+		return {}
+
+	var horizontal_to_door := Vector2(
+		from_position.x - global_position.x,
+		from_position.z - global_position.z
+	).length()
+	if horizontal_to_door > enemy_portal_consider_distance:
+		return {}
+
+	var from_side := 1.0 if from_local.x >= 0.0 else -1.0
+	var near_point := to_global(Vector3(from_side * enemy_portal_offset, 0.0, 0.0))
+	var far_point := to_global(Vector3(-from_side * enemy_portal_offset, 0.0, 0.0))
+	near_point.y = from_position.y
+	far_point.y = from_position.y
+
+	var approach_distance := Vector2(
+		from_position.x - near_point.x,
+		from_position.z - near_point.z
+	).length()
+	var route_point := near_point
+	# Panel tamamen açılmadan öbür tarafa hedef verme; aksi halde melee AI açılan
+	# panelin gövdesine çarpıp tangent detour ile kapı ağzından kaçabiliyor.
+	if _state == DoorState.OPEN and approach_distance <= enemy_portal_offset * 1.35:
+		route_point = far_point
+
+	var score := from_position.distance_to(near_point) + far_point.distance_to(target_position)
+	return {"valid": true, "point": route_point, "score": score}
 
 
 func _on_safety_body_entered(_body: Node3D) -> void:
