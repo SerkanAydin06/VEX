@@ -169,6 +169,8 @@ var _last_visibility_ratio := 0.0
 var _ranged_reposition_target := Vector3.ZERO
 var _has_ranged_reposition_target := false
 var _ranged_reposition_remaining := 0.0
+var _local_detour_side := 0.0
+var _local_detour_remaining := 0.0
 
 static var _shared_navigation_scene_id := -1
 static var _shared_navigation_caches: Dictionary = {}
@@ -267,6 +269,7 @@ func _physics_process(delta: float) -> void:
 		_player = GameState.player as Node3D
 	_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)
 	_ranged_reposition_remaining = maxf(0.0, _ranged_reposition_remaining - delta)
+	_local_detour_remaining = maxf(0.0, _local_detour_remaining - delta)
 
 	if _should_use_dormant_mode():
 		_enter_dormant_mode()
@@ -315,6 +318,8 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		_path_refresh_remaining = 0.0
 		_ranged_reposition_remaining = 0.0
 		_has_ranged_reposition_target = false
+		_local_detour_remaining = 0.0
+		_local_detour_side = 0.0
 		_clear_path()
 		if _has_last_seen_position:
 			_face_toward_position(_last_seen_position)
@@ -532,7 +537,9 @@ func _update_behavior(delta: float) -> void:
 			return
 		if _has_last_seen_position:
 			state = State.CHASE
-			if _horizontal_distance(global_position, _last_seen_position) <= waypoint_reach_distance:
+			# İnce duvarın öbür tarafındaki hedef yakın görünse bile fiziksel olarak
+			# ulaşılmış sayılmaz. Duvar varsa chase devam eder.
+			if _has_reached_walkable_target(_last_seen_position, waypoint_reach_distance):
 				_begin_search()
 			else:
 				_navigate_to(_last_seen_position, delta)
@@ -629,7 +636,7 @@ func _search_last_seen_area(delta: float) -> void:
 
 	if (
 		not _has_search_probe
-		or _horizontal_distance(global_position, _search_probe_target) <= waypoint_reach_distance
+		or _has_reached_walkable_target(_search_probe_target, waypoint_reach_distance)
 	):
 		_advance_search_probe()
 
@@ -692,7 +699,10 @@ func _navigate_to(target: Vector3, delta: float) -> void:
 
 	while (
 		_path_index < _current_path.size()
-		and _horizontal_distance(global_position, _current_path[_path_index]) <= waypoint_reach_distance
+		and _has_reached_walkable_target(
+			_current_path[_path_index],
+			waypoint_reach_distance
+		)
 	):
 		_path_index += 1
 
@@ -731,16 +741,126 @@ func _rebuild_path(destination: Vector3) -> void:
 
 	_current_path = graph.get_point_path(start_id, target_id)
 	if _current_path.is_empty():
-		# Oyuncunun son görüldüğü nokta duvara çok yakınsa düşmanın gövdesi
-		# hedef noktasına sığmayabilir. Duvarın yanlış tarafında beklemek yerine,
-		# hedefle aynı açık alanda bulunan en yakın ulaşılabilir rota noktasına git.
+		# Önce sahne waypoint ağını dene.
 		_current_path = _find_investigation_path(graph, start_id, destination)
+	if _current_path.is_empty():
+		# Waypoint bulunmayan test/level sahnelerinde boş rota ile donmak yerine
+		# yerel sağ/sol detour üret ve köşeyi adım adım ara.
+		_current_path = _build_local_detour_path(destination)
 	if _current_path.size() > 1:
 		_path_index = 1
 
 	# Ortak grafiği bir sonraki düşman için temiz bırak.
 	graph.remove_point(target_id)
 	graph.remove_point(start_id)
+
+
+func _build_local_detour_path(destination: Vector3) -> PackedVector3Array:
+	var toward_target := destination - global_position
+	toward_target.y = 0.0
+	if toward_target.length_squared() <= 0.001:
+		return PackedVector3Array()
+
+	var forward := toward_target.normalized()
+	var side := Vector3(-forward.z, 0.0, forward.x)
+	var base_step := maxf(navigation_clearance * 1.45, 0.90)
+	var lateral_steps := PackedFloat32Array([
+		base_step,
+		base_step * 1.8,
+		base_step * 2.8,
+		base_step * 4.0,
+	])
+	var forward_steps := PackedFloat32Array([0.0, base_step * 0.75, base_step * 1.5])
+	var side_signs := PackedFloat32Array([-1.0, 1.0])
+	if _local_detour_remaining > 0.0 and absf(_local_detour_side) > 0.5:
+		side_signs = PackedFloat32Array([_local_detour_side, -_local_detour_side])
+
+	var best_path := PackedVector3Array()
+	var best_score := -INF
+	var best_side := 0.0
+	var current_remaining := _horizontal_distance(global_position, destination)
+
+	for side_sign: float in side_signs:
+		for lateral_distance: float in lateral_steps:
+			for forward_distance: float in forward_steps:
+				var candidate := (
+					global_position
+					+ side * side_sign * lateral_distance
+					+ forward * forward_distance
+				)
+				candidate.y = global_position.y
+				if not _has_navigation_floor(candidate):
+					continue
+				if not _is_walk_segment_clear(global_position, candidate):
+					continue
+
+				var approach_point := _furthest_walkable_point_toward(candidate, destination)
+				var remaining := _horizontal_distance(approach_point, destination)
+				var progress := current_remaining - remaining
+				var direct_open := _is_walk_segment_clear(candidate, destination)
+				var score := -remaining + progress * 1.5 - lateral_distance * 0.08
+				if direct_open:
+					score += 8.0
+				if _local_detour_remaining > 0.0 and side_sign == _local_detour_side:
+					score += 0.45
+
+				if score <= best_score:
+					continue
+				best_score = score
+				best_side = side_sign
+				best_path = PackedVector3Array([global_position, candidate])
+				if (
+					_horizontal_distance(candidate, approach_point)
+					> waypoint_reach_distance * 0.35
+				):
+					best_path.append(approach_point)
+
+	if not best_path.is_empty():
+		_local_detour_side = best_side
+		_local_detour_remaining = 0.90
+	return best_path
+
+
+func _has_navigation_floor(position: Vector3) -> bool:
+	var ray_start := position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
+	var ray_end := position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
+	var query := PhysicsRayQueryParameters3D.create(
+		ray_start,
+		ray_end,
+		floor_collision_mask,
+		[get_rid()]
+	)
+	query.collide_with_areas = false
+	return not get_world_3d().direct_space_state.intersect_ray(query).is_empty()
+
+
+func _has_reached_walkable_target(target: Vector3, reach_distance: float) -> bool:
+	if _horizontal_distance(global_position, target) > reach_distance:
+		return false
+
+	var direction := target - global_position
+	direction.y = 0.0
+	if direction.length_squared() <= 0.000001:
+		return true
+	var perpendicular := Vector3(-direction.z, 0.0, direction.x).normalized()
+	perpendicular *= navigation_clearance
+	var offsets: Array[Vector3] = [Vector3.ZERO, perpendicular, -perpendicular]
+	var space_state := get_world_3d().direct_space_state
+	for offset: Vector3 in offsets:
+		var ray_start := global_position + offset
+		var ray_end := target + offset
+		ray_start.y = global_position.y
+		ray_end.y = global_position.y
+		var query := PhysicsRayQueryParameters3D.create(
+			ray_start,
+			ray_end,
+			navigation_collision_mask,
+			[get_rid()]
+		)
+		query.collide_with_areas = false
+		if not space_state.intersect_ray(query).is_empty():
+			return false
+	return true
 
 
 func _build_astar_graph() -> AStar3D:
@@ -970,7 +1090,10 @@ func _is_center_segment_clear(from_position: Vector3, to_position: Vector3) -> b
 func _move_toward_point(target: Vector3, delta: float) -> void:
 	var direction := target - global_position
 	direction.y = 0.0
-	if direction.length_squared() < 0.05:
+	if (
+		direction.length_squared() < 0.05
+		and _has_reached_walkable_target(target, sqrt(0.05))
+	):
 		_stop_horizontal_motion()
 		return
 
@@ -1327,7 +1450,7 @@ func _reposition_for_clear_shot(delta: float) -> void:
 	if (
 		not _has_ranged_reposition_target
 		or _ranged_reposition_remaining <= 0.0
-		or _horizontal_distance(global_position, _ranged_reposition_target) <= waypoint_reach_distance
+		or _has_reached_walkable_target(_ranged_reposition_target, waypoint_reach_distance)
 	):
 		_has_ranged_reposition_target = false
 		var forward := _player.global_position - global_position
