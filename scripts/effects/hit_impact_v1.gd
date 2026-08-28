@@ -1,7 +1,7 @@
 class_name VexHitImpactV1
 extends Node3D
 
-const IMPACT_ASSET_ROOT := "res:/" + "/assets/effects/impacts/"
+const IMPACT_ASSET_ROOT := "res:/" + "/assets/impacts/"
 const WORLD_TEXTURE_PATH := IMPACT_ASSET_ROOT + "impact_world_v1.png"
 const FLESH_TEXTURE_PATH := IMPACT_ASSET_ROOT + "impact_flesh_v1.png"
 const MAX_WORLD_IMPACTS := 72
@@ -98,6 +98,9 @@ func _align_to_normal(normal: Vector3) -> void:
 
 
 func _build_world_visual() -> void:
+	var texture := _load_optional_texture(WORLD_TEXTURE_PATH)
+	if texture == null:
+		return
 	var mark := MeshInstance3D.new()
 	mark.name = "BulletMark"
 	var quad := QuadMesh.new()
@@ -106,11 +109,8 @@ func _build_world_visual() -> void:
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.albedo_color = Color(0.055, 0.048, 0.042, 0.92)
-	var texture := _load_optional_texture(WORLD_TEXTURE_PATH)
-	if texture != null:
-		material.albedo_texture = texture
-		material.albedo_color = Color.WHITE
+	material.albedo_texture = texture
+	material.albedo_color = Color.WHITE
 	quad.material = material
 	mark.mesh = quad
 	add_child(mark)
