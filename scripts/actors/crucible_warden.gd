@@ -298,3 +298,32 @@ func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Ar
 	if animation_name == &"heatwave":
 		return heatwave_frame_y_offsets
 	return super._frame_offsets_for_animation(animation_name)
+
+
+func _stop_horizontal_motion() -> void:
+	# Ravager's generic ATTACK branch brakes before calling _attempt_attack().
+	# The Warden sometimes uses that same branch to keep closing for Heatwave.
+	# Skipping only that pre-attack brake prevents brake/accelerate jitter while
+	# preserving normal stopping during actual attacks, patrol and search states.
+	if (
+		state == State.ATTACK
+		and not _attack_locked
+		and _player_visible
+		and _player != null
+		and is_instance_valid(_player)
+	):
+		var distance_to_player := _horizontal_distance(global_position, _player.global_position)
+		var now_msec := Time.get_ticks_msec()
+		var heatwave_ready := now_msec >= _heatwave_ready_at_msec
+		var ground_slam_ready := now_msec >= _ground_slam_ready_at_msec
+		var should_keep_closing := (
+			(heatwave_ready and distance_to_player > heatwave_trigger_range)
+			or (
+				not heatwave_ready
+				and not ground_slam_ready
+				and distance_to_player > heatwave_trigger_range * 0.85
+			)
+		)
+		if should_keep_closing:
+			return
+	super._stop_horizontal_motion()
