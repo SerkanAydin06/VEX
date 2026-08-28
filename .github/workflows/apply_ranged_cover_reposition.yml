@@ -1,0 +1,132 @@
+name: Apply Ranged Cover Reposition Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/apply_ranged_cover_reposition.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Patch ranged cover behavior
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/actors/ravager.gd')
+          text = path.read_text(encoding='utf-8')
+
+          def replace_once(old: str, new: str) -> None:
+              global text
+              if old not in text:
+                  raise SystemExit(f'missing ravager patch anchor:\n{old[:180]}')
+              text = text.replace(old, new, 1)
+
+          replace_once(
+              '@export_range(1.0, 120.0, 1.0) var damage_reaction_range := 80.0\n@export_range(1.0, 30.0, 0.5) var damage_reaction_duration := 12.0\n',
+              '@export_range(1.0, 120.0, 1.0) var damage_reaction_range := 80.0\n@export_range(1.0, 30.0, 0.5) var damage_reaction_duration := 12.0\n@export_range(0.1, 1.0, 0.05) var ranged_cover_visibility_threshold := 0.60\n@export_range(0.8, 6.0, 0.1) var ranged_cover_reposition_distance := 2.6\n@export_range(0.15, 2.0, 0.05) var ranged_cover_reposition_refresh := 0.55\n@export_range(0.2, 3.0, 0.1) var damage_approach_offset := 1.4\n'
+          )
+
+          replace_once(
+              'var _has_search_probe := false\nvar _damage_reaction_remaining := 0.0\n',
+              'var _has_search_probe := false\nvar _damage_reaction_remaining := 0.0\nvar _last_visibility_ratio := 0.0\nvar _ranged_reposition_target := Vector3.ZERO\nvar _has_ranged_reposition_target := false\nvar _ranged_reposition_remaining := 0.0\n'
+          )
+
+          replace_once(
+              '\t_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)\n\n\tif _should_use_dormant_mode():',
+              '\t_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)\n\t_ranged_reposition_remaining = maxf(0.0, _ranged_reposition_remaining - delta)\n\n\tif _should_use_dormant_mode():'
+          )
+
+          replace_once(
+              '\t\tif _source is Node3D:\n\t\t\tvar source_node := _source as Node3D\n\t\t\t_last_seen_position = source_node.global_position\n\t\t\t_has_last_seen_position = true\n',
+              '\t\tif _source is Node3D:\n\t\t\tvar source_node := _source as Node3D\n\t\t\t_last_seen_position = _damage_source_approach_position(source_node.global_position)\n\t\t\t_has_last_seen_position = true\n'
+          )
+
+          replace_once(
+              '\t\t_path_refresh_remaining = 0.0\n\t\t_clear_path()\n\t\tif _has_last_seen_position:',
+              '\t\t_path_refresh_remaining = 0.0\n\t\t_ranged_reposition_remaining = 0.0\n\t\t_has_ranged_reposition_target = false\n\t\t_clear_path()\n\t\tif _has_last_seen_position:'
+          )
+
+          replace_once(
+              '\t\telif _attack_windup_active:\n\t\t\t# Hazırlık karesi zeminde kaymasın; mermi çıkar çıkmaz yürüyüş\n\t\t\t# animasyonuyla yeniden konumlanmaya başlanır.\n\t\t\t_face_toward_position(attack_target)\n\t\t\t_stop_horizontal_motion()\n\t\telse:\n\t\t\t_move_during_attack_recovery(attack_target, delta)\n',
+              '\t\telif _attack_windup_active:\n\t\t\t# Hazırlık karesi zeminde kaymasın; mermi çıkar çıkmaz yürüyüş\n\t\t\t# animasyonuyla yeniden konumlanmaya başlanır.\n\t\t\t_face_toward_position(attack_target)\n\t\t\t_stop_horizontal_motion()\n\t\telif _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:\n\t\t\t# Atış bittikten sonra oyuncu yalnız duvar/kapı kenarından görünüyorsa\n\t\t\t# cooldown boyunca kule gibi bekleme; daha açık bir atış açısı ara.\n\t\t\t_reposition_for_clear_shot(delta)\n\t\telse:\n\t\t\t_move_during_attack_recovery(attack_target, delta)\n'
+          )
+
+          replace_once(
+              '\t\t# Görüş örnekleri arasındaki karelerde oyuncunun duvar arkasındaki canlı\n\t\t# konumunu değil, doğrulanmış son görünür konumu kullan.\n\t\tvar distance_to_player := _horizontal_distance(global_position, _last_seen_position)\n',
+              '\t\t# Görüş örnekleri arasındaki karelerde oyuncunun duvar arkasındaki canlı\n\t\t# konumunu değil, doğrulanmış son görünür konumu kullan.\n\t\t# Menzilli düşman oyuncunun yalnız küçük bir parçasını görüyorsa mevcut\n\t\t# noktadan atış spamlamak yerine gerçek bir yeni görüş açısı arar.\n\t\tif _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:\n\t\t\tstate = State.CHASE\n\t\t\t_reposition_for_clear_shot(delta)\n\t\t\treturn\n\t\tvar distance_to_player := _horizontal_distance(global_position, _last_seen_position)\n'
+          )
+
+          old_los = '''func _check_line_of_sight() -> bool:\n\tif _player == null or not is_instance_valid(_player):\n\t\treturn false\n\tvar origin := global_position + Vector3.UP * sight_origin_height\n\treturn VexEnemyRuntimeUtils.has_visual_contact(\n\t\tget_world_3d(),\n\t\torigin,\n\t\t_player,\n\t\tsight_collision_mask,\n\t\tget_rid(),\n\t\tsight_target_height\n\t)\n'''
+          new_los = '''func _check_line_of_sight() -> bool:\n\tif _player == null or not is_instance_valid(_player):\n\t\t_last_visibility_ratio = 0.0\n\t\treturn false\n\tvar origin := global_position + Vector3.UP * sight_origin_height\n\tif _uses_ranged_tactics():\n\t\t_last_visibility_ratio = _ranged_visibility_ratio_from(origin)\n\t\treturn _last_visibility_ratio > 0.0\n\tvar visible := VexEnemyRuntimeUtils.has_visual_contact(\n\t\tget_world_3d(),\n\t\torigin,\n\t\t_player,\n\t\tsight_collision_mask,\n\t\tget_rid(),\n\t\tsight_target_height\n\t)\n\t_last_visibility_ratio = 1.0 if visible else 0.0\n\treturn visible\n'''
+          replace_once(old_los, new_los)
+
+          old_collider = '''func _is_player_collider(collider: Node) -> bool:\n\tif collider == null:\n\t\treturn false\n\tif collider == _player:\n\t\treturn true\n\treturn collider.get_parent() == _player\n\n\nfunc _attempt_attack() -> void:\n'''
+          new_collider = '''func _is_player_collider(collider: Node) -> bool:\n\tvar current := collider\n\tvar depth := 0\n\twhile current != null and depth < 6:\n\t\tif current == _player:\n\t\t\treturn true\n\t\tcurrent = current.get_parent()\n\t\tdepth += 1\n\treturn false\n\n\nfunc _uses_ranged_tactics() -> bool:\n\treturn projectile_scene != null or attack_range >= 4.0\n\n\nfunc _damage_source_approach_position(source_position: Vector3) -> Vector3:\n\t# Oyuncu duvar kenarından ateş ettiğinde karakter merkezi fiziksel olarak\n\t# düşmanın sığamayacağı kadar duvara yakın olabilir. Tam merkeze rota vermek\n\t# yerine merminin geldiği açık koridora doğru küçük bir adım öne hedefle.\n\tvar result := source_position\n\tresult.y = global_position.y\n\tvar toward_enemy := global_position - result\n\ttoward_enemy.y = 0.0\n\tvar distance := toward_enemy.length()\n\tif distance > 0.001:\n\t\tvar offset := minf(damage_approach_offset, distance * 0.30)\n\t\tresult += (toward_enemy / distance) * offset\n\treturn result\n\n\nfunc _ranged_visibility_ratio_from(observer_position: Vector3) -> float:\n\tif _player == null or not is_instance_valid(_player):\n\t\treturn 0.0\n\n\tvar target_center := _player.global_position + Vector3.UP * sight_target_height\n\tvar half_height := maxf(sight_target_height, 0.45)\n\tvar lateral_radius := 0.28\n\tvar shape_node := _player.get_node_or_null("CollisionShape3D") as CollisionShape3D\n\tif shape_node != null and shape_node.shape != null and not shape_node.disabled:\n\t\ttarget_center = shape_node.global_position\n\t\tvar capsule := shape_node.shape as CapsuleShape3D\n\t\tif capsule != null:\n\t\t\thalf_height = maxf(capsule.height * 0.5, capsule.radius)\n\t\t\tlateral_radius = capsule.radius\n\t\telse:\n\t\t\tvar box := shape_node.shape as BoxShape3D\n\t\t\tif box != null:\n\t\t\t\thalf_height = box.size.y * 0.5\n\t\t\t\tlateral_radius = minf(box.size.x, box.size.z) * 0.5\n\n\tvar toward_target := _player.global_position - observer_position\n\ttoward_target.y = 0.0\n\tif toward_target.length_squared() <= 0.0001:\n\t\ttoward_target = Vector3.FORWARD\n\telse:\n\t\ttoward_target = toward_target.normalized()\n\tvar side := Vector3.UP.cross(toward_target).normalized()\n\tvar vertical_span := clampf(half_height * 0.55, 0.20, 0.68)\n\tvar lateral_span := clampf(lateral_radius * 0.82, 0.15, 0.38)\n\tvar samples: Array[Vector3] = [\n\t\ttarget_center,\n\t\ttarget_center + Vector3.UP * vertical_span,\n\t\ttarget_center + side * lateral_span + Vector3.UP * (vertical_span * 0.08),\n\t\ttarget_center - side * lateral_span + Vector3.UP * (vertical_span * 0.08),\n\t\ttarget_center - Vector3.UP * (vertical_span * 0.45),\n\t]\n\tvar visible_samples := 0\n\tvar space_state := get_world_3d().direct_space_state\n\tfor sample: Vector3 in samples:\n\t\tvar query := PhysicsRayQueryParameters3D.create(\n\t\t\tobserver_position,\n\t\t\tsample,\n\t\t\tsight_collision_mask,\n\t\t\t[get_rid()]\n\t\t)\n\t\tquery.collide_with_areas = true\n\t\tvar result := space_state.intersect_ray(query)\n\t\tif result.is_empty():\n\t\t\tcontinue\n\t\tvar collider := result.get("collider") as Node\n\t\tif _is_player_collider(collider):\n\t\t\tvisible_samples += 1\n\treturn float(visible_samples) / float(samples.size())\n\n\nfunc _reposition_for_clear_shot(delta: float) -> void:\n\tif _player == null or not is_instance_valid(_player):\n\t\t_stop_horizontal_motion()\n\t\treturn\n\n\tif (\n\t\tnot _has_ranged_reposition_target\n\t\tor _ranged_reposition_remaining <= 0.0\n\t\tor _horizontal_distance(global_position, _ranged_reposition_target) <= waypoint_reach_distance\n\t):\n\t\t_has_ranged_reposition_target = false\n\t\tvar forward := _player.global_position - global_position\n\t\tforward.y = 0.0\n\t\tif forward.length_squared() <= 0.001:\n\t\t\tforward = _facing_direction\n\t\telse:\n\t\t\tforward = forward.normalized()\n\t\tvar right := Vector3(-forward.z, 0.0, forward.x).normalized()\n\t\tvar radius := ranged_cover_reposition_distance\n\t\tvar offsets: Array[Vector3] = [\n\t\t\tright * radius,\n\t\t\t-right * radius,\n\t\t\tright * (radius * 1.35) + forward * (radius * 0.35),\n\t\t\t-right * (radius * 1.35) + forward * (radius * 0.35),\n\t\t]\n\t\tvar best_score := -INF\n\t\tfor offset: Vector3 in offsets:\n\t\t\tvar candidate := global_position + offset\n\t\t\tcandidate.y = global_position.y\n\t\t\tif not _is_walk_segment_clear(global_position, candidate):\n\t\t\t\tcontinue\n\t\t\tvar ratio := _ranged_visibility_ratio_from(\n\t\t\t\tcandidate + Vector3.UP * sight_origin_height\n\t\t\t)\n\t\t\tvar score := ratio * 4.0 - offset.length() * 0.08\n\t\t\tif ratio >= ranged_cover_visibility_threshold:\n\t\t\t\tscore += 2.0\n\t\t\tif score > best_score:\n\t\t\t\tbest_score = score\n\t\t\t\t_ranged_reposition_target = candidate\n\t\t\t\t_has_ranged_reposition_target = true\n\t\t_ranged_reposition_remaining = (\n\t\t\tranged_cover_reposition_refresh\n\t\t\tif _has_ranged_reposition_target\n\t\t\telse 0.20\n\t\t)\n\t\tif _has_ranged_reposition_target:\n\t\t\t_clear_path()\n\t\t\t_path_refresh_remaining = 0.0\n\n\tif _has_ranged_reposition_target:\n\t\t_navigate_to(_ranged_reposition_target, delta)\n\telif _has_last_seen_position:\n\t\t_navigate_to(_last_seen_position, delta)\n\telse:\n\t\t_stop_horizontal_motion()\n\n\nfunc _attempt_attack() -> void:\n'''
+          replace_once(old_collider, new_collider)
+
+          path.write_text(text, encoding='utf-8')
+
+          audit_path = Path('tests/enemy_detection_audit.py')
+          audit = audit_path.read_text(encoding='utf-8')
+          anchor = 'print("Enemy awareness/search contract passed")\n'
+          extra = '''\nfor needle in [\n    "ranged_cover_visibility_threshold := 0.60",\n    "ranged_cover_reposition_distance := 2.6",\n    "damage_approach_offset := 1.4",\n    "func _ranged_visibility_ratio_from(observer_position: Vector3) -> float:",\n    "func _reposition_for_clear_shot(delta: float) -> void:",\n    "_damage_source_approach_position(source_node.global_position)",\n    "_last_visibility_ratio < ranged_cover_visibility_threshold",\n]:\n    assert needle in ravager_script, needle\n\nprint("Ranged cover reposition contract passed")\n'''
+          if extra.strip() not in audit:
+              if anchor not in audit:
+                  raise SystemExit('missing audit anchor')
+              audit = audit.replace(anchor, anchor + extra, 1)
+              audit_path.write_text(audit, encoding='utf-8')
+          PY
+
+      - name: Diff sanity
+        run: |
+          git diff --check
+          git diff --stat
+
+      - name: Validate ranged cover behavior
+        run: python tests/enemy_detection_audit.py
+
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+
+      - name: Verify Godot version
+        run: godot --version | grep '^4.7'
+
+      - name: Import project headlessly
+        run: godot --headless --editor --path . --quit
+
+      - name: Commit fix
+        run: |
+          git config user.name "OpenAI"
+          git config user.email "openai@users.noreply.github.com"
+          git add scripts/actors/ravager.gd tests/enemy_detection_audit.py
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "fix: make ranged enemies reposition from cover"
+          git push origin HEAD:main
