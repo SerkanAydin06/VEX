@@ -1,0 +1,47 @@
+name: Apply Ranged Cover Classification Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/apply_ranged_cover_classification_fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - name: Apply AI classification fix
+        run: python .github/fix_ranged_cover_classification.py
+      - name: Validate contract
+        run: |
+          python -c "from pathlib import Path; s=Path('scripts/actors/ravager.gd').read_text(); assert 'func _uses_cover_reposition_tactics() -> bool:' in s; assert 'return projectile_scene != null' in s; assert s.count('_uses_cover_reposition_tactics() and _last_visibility_ratio') == 2"
+          python -c "from pathlib import Path; s=Path('scripts/actors/crucible_warden.gd').read_text(); assert 'heatwave_projectile_scene' in s"
+          python -c "from pathlib import Path; s=Path('scenes/actors/voidweaver.tscn').read_text(); assert 'projectile_scene = ExtResource' in s"
+      - name: Install Godot 4.7
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+          unzip -q Godot_v4.7-stable_linux.x86_64.zip
+          chmod +x Godot_v4.7-stable_linux.x86_64
+      - name: Validate Godot scripts
+        run: |
+          ./Godot_v4.7-stable_linux.x86_64 --version
+          ./Godot_v4.7-stable_linux.x86_64 --headless --editor --path . --quit
+      - name: Commit gameplay fix
+        run: |
+          git config user.name OpenAI
+          git config user.email openai@users.noreply.github.com
+          git add scripts/actors/ravager.gd
+          git diff --cached --quiet && exit 0
+          git commit -m 'fix: separate ranged cover roles'
+          git push origin HEAD:main
