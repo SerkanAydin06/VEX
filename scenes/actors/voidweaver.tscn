@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://c681xjbwrnbxa" path="res://scripts/actors/ravager.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dx51in8rriii4" path="res://assets/enemies/voidweaver/voidweaver_spritesheet.png" id="2_sheet"]
+[ext_resource type="AudioStream" uid="uid://dpg7kfv4pqud7" path="res://assets/audio/void_weaver_attack.wav" id="6_nhar0"]
+[ext_resource type="AudioStream" uid="uid://du3qs6vkja5nu" path="res://assets/audio/void_weaver_hurt.wav" id="7_nhar0"]
+[ext_resource type="AudioStream" uid="uid://cb1km2et21ycr" path="res://assets/audio/voidweaver_death.wav" id="8_nhar0"]
 [ext_resource type="PackedScene" path="res://scenes/actors/voidweaver_projectile.tscn" id="26_projectile"]
-[ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
-[ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
-[ext_resource type="AudioStream" uid="uid://clas3vxrwxpr3" path="res://assets/audio/enemy_death_scream_pro.wav" id="29_death_audio"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="30_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
@@ -324,19 +324,19 @@ render_priority = -1
 texture = ExtResource("30_shadow")
 
 [node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=1922460514]
-stream = ExtResource("27_attack_audio")
+stream = ExtResource("6_nhar0")
 volume_db = -1.0
 max_distance = 20.0
 bus = &"SFX"
 
 [node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=1839545639]
-stream = ExtResource("28_hurt_audio")
+stream = ExtResource("7_nhar0")
 volume_db = -2.0
 max_distance = 18.0
 bus = &"SFX"
 
 [node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=1505386996]
-stream = ExtResource("29_death_audio")
+stream = ExtResource("8_nhar0")
 volume_db = 1.5
 max_distance = 20.0
 bus = &"SFX"

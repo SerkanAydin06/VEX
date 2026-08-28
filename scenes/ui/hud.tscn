@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://chgbh7yrhmbew" path="res://assets/audio/shotgun_single_fire.wav" id="4_65nxt"]
 [ext_resource type="Texture2D" uid="uid://drjnb7q64xjwu" path="res://assets/ui/crosshair_doom3_circle.png" id="4_crosshair"]
 [ext_resource type="AudioStream" uid="uid://btbm3ffodq3f1" path="res://assets/audio/louder_magnum_single.wav" id="4_el1dq"]
+[ext_resource type="AudioStream" uid="uid://b6bkwof3k40tg" path="res://assets/audio/p14_pistol.wav" id="5_pkwgd"]
 [ext_resource type="Texture2D" uid="uid://bn1ug716sunu0" path="res://assets/ui/automap_console_frame.png" id="6_map_frame"]
 [ext_resource type="AudioStream" uid="uid://b0ve2pulakkn2" path="res://assets/audio/ak47_single_shot.wav" id="7_1e6lo"]
 [ext_resource type="Script" uid="uid://ct0slkur86ywi" path="res://scripts/ui/automap_view.gd" id="7_automap"]
@@ -18,7 +19,6 @@
 [ext_resource type="Texture2D" uid="uid://dwv6dgosxheen" path="res://assets/ui/blood_vignette.png" id="14_blood"]
 [ext_resource type="Texture2D" uid="uid://b6iwopfobi8ob" path="res://assets/ui/blood_vignette_critical.png" id="15_blood_critical"]
 [ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="18_mono_font"]
-[ext_resource type="AudioStream" uid="uid://6r2ekfh65cg2" path="res://assets/audio/pistol_fire_pro.wav" id="23_pistol_audio"]
 [ext_resource type="AudioStream" uid="uid://dfiiq8d0261ko" path="res://assets/audio/pistol_reload_pro.wav" id="25_pistol_reload_audio"]
 [ext_resource type="AudioStream" uid="uid://cjoqg8ao6lvuv" path="res://assets/audio/shotgun_reload_pro.wav" id="26_shotgun_reload_audio"]
 [ext_resource type="AudioStream" uid="uid://c2jv4ucc4qgg2" path="res://assets/audio/player_death_pro.wav" id="27_player_death_audio"]
@@ -125,8 +125,8 @@ bus = &"SFX"
 
 [node name="P14Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1615326222]
 unique_name_in_owner = true
-stream = ExtResource("23_pistol_audio")
-volume_db = -4.0
+stream = ExtResource("5_pkwgd")
+volume_db = 1.944
 max_polyphony = 12
 bus = &"SFX"
 

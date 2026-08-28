@@ -1,12 +1,12 @@
-[gd_scene format=3 ]
+[gd_scene format=3 uid="uid://bf7vnpaj7o8rt"]
 
-[ext_resource type="Script" path="res://scripts/actors/veilmaw.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/veilmaw/veilmaw_spritesheet.png" id="2_sheet"]
+[ext_resource type="Script" uid="uid://b4apgrelkmkch" path="res://scripts/actors/veilmaw.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://c4pp75dy0u01e" path="res://assets/enemies/veilmaw/veilmaw_spritesheet.png" id="2_sheet"]
+[ext_resource type="AudioStream" uid="uid://doa6is2yoo5sl" path="res://assets/audio/veilmaw_attack.wav" id="6_evcf2"]
+[ext_resource type="AudioStream" uid="uid://ciow32hh0rynl" path="res://assets/audio/veilmaw_hurt.wav" id="7_evcf2"]
+[ext_resource type="AudioStream" uid="uid://cnp8eamwi4vv5" path="res://assets/audio/veilmaw_death.wav" id="8_evcf2"]
 [ext_resource type="PackedScene" path="res://scenes/actors/veilmaw_projectile.tscn" id="26_projectile"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
-[ext_resource type="AudioStream" path="res://assets/audio/enemy_death_scream_pro.wav" id="29_death_audio"]
-[ext_resource type="Texture2D" path="res://assets/world/contact_shadow.png" id="30_shadow"]
+[ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="30_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
@@ -246,19 +246,21 @@ animations = [{
 "speed": 5.5
 }]
 
-[node name="Veilmaw" type="CharacterBody3D" ]
+[node name="Veilmaw" type="CharacterBody3D" unique_id=189718010]
 collision_layer = 4
 collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
 enemy_id = &"veilmaw"
-crouch_detection_chance = 0.20
-crouch_guaranteed_detection_distance = 2.2
-hearing_radius = 11.0
 maximum_health = 105
+difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
+difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
+difficulty_speed_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.15)
+difficulty_detection_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.2)
+difficulty_cooldown_multipliers = PackedFloat32Array(1.25, 1, 0.85, 0.7)
+difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
 move_speed = 2.55
-movement_acceleration = 12.0
 detection_range = 17.0
 pursuit_range = 22.0
 initial_view_angle = 180.0
@@ -267,6 +269,9 @@ search_duration = 9.0
 search_turn_speed = 48.0
 ally_alert_radius = 11.0
 sight_origin_height = 0.8
+crouch_detection_chance = 0.2
+crouch_guaranteed_detection_distance = 2.2
+hearing_radius = 11.0
 attack_damage = 16
 attack_range = 12.0
 attack_cooldown = 1.25
@@ -275,7 +280,7 @@ attack_range_tolerance = 3.0
 projectile_scene = ExtResource("26_projectile")
 projectile_spawn_height = 0.78
 projectile_spawn_forward_offset = 0.18
-projectile_target_height = 0.50
+projectile_target_height = 0.5
 projectile_lead_factor = 0.55
 projectile_max_lead_time = 1.1
 attack_approach_speed = 1.0
@@ -286,84 +291,32 @@ navigation_clearance = 0.55
 back_view_threshold = -0.12
 corpse_visual_y = -0.06
 back_corpse_visual_y = -0.06
-difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
-difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
-difficulty_speed_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.15)
-difficulty_detection_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.2)
-difficulty_cooldown_multipliers = PackedFloat32Array(1.25, 1, 0.85, 0.7)
-difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
-floor_collision_mask = 1
-floor_snap_max_correction = 2.0
-floor_snap_ray_start_height = 0.5
-floor_snap_ray_extra_depth = 2.0
-aggro_on_damage = true
-alert_allies_on_damage = true
-receive_ally_alerts = true
+idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+hurt_frame_y_offsets = PackedFloat32Array(0)
+death_frame_y_offsets = PackedFloat32Array(0, -0.008, -0.016, -0.025)
 burn_remains_scene = ExtResource("31_burn")
-burn_remains_scale_multiplier = 1.0
-burn_scorch_tint = Color(0.18, 0.03, 0.06, 0.96)
 burn_ember_tint = Color(0.36, 0.06, 0.12, 0.26)
-burn_ember_emission_energy = 0.1
-burn_smoke_enabled = false
-hurt_reaction_enabled = true
-spawn_min_difficulty = 0
-apply_difficulty_scaling = true
-braking_acceleration = 21.0
-gravity_scale = 1.0
-floor_stick_velocity = -0.1
-patrol_offset = Vector3(0, 0, 3.0)
-sight_target_height = 0.45
-sight_collision_mask = 3
-projectile_spawn_side_offset = 0.0
-path_refresh_interval = 0.35
-waypoint_reach_distance = 0.65
-path_target_change_distance = 1.0
-patrol_path_refresh_interval = 0.5
-endpoint_link_distance_multiplier = 1.5
-endpoint_candidate_count = 10
-endpoint_connection_limit = 5
-investigation_candidate_count = 18
-navigation_collision_mask = 9
-idle_detection_margin = 6.0
-near_sight_interval = 0.12
-medium_sight_interval = 0.18
-distant_think_distance = 24.0
-distant_sight_interval = 0.2
-idle_far_sight_interval = 0.32
-distant_path_refresh_interval = 0.6
-dormant_distance = 32.0
-hurt_reaction_duration = 0.16
-death_fall_time = 0.3
-corpse_hold_duration = 2.4
-corpse_floor_clearance = 0.02
-idle_frame_y_offsets = PackedFloat32Array(0.0, 0.0, 0.0, 0.0)
-idle_back_frame_y_offsets = PackedFloat32Array(0.0, 0.0, 0.0, 0.0)
-walk_frame_y_offsets = PackedFloat32Array(0.0, 0.0, 0.0, 0.0)
-walk_back_frame_y_offsets = PackedFloat32Array(0.0, 0.0, 0.0, 0.0)
-attack_frame_y_offsets = PackedFloat32Array(0.0, 0.0, 0.0, 0.0)
-hurt_frame_y_offsets = PackedFloat32Array(0.0)
-death_frame_y_offsets = PackedFloat32Array(0.0, -0.008, -0.016, -0.025)
-burn_remains_scale = 1.0
-burn_smoke_duration = 9.0
-burn_smoke_alpha = 0.14
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." ]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=546602074]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.02, 0)
 shape = SubResource("CapsuleShape_enemy")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." ]
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1991264069]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.02, 0)
 cast_shadow = 0
 pixel_size = 0.0041
 billboard = 2
 shaded = true
-texture_filter = 3
 alpha_cut = 1
 sprite_frames = SubResource("SpriteFrames_enemy")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="GroundShadow" type="Sprite3D" parent="." ]
+[node name="GroundShadow" type="Sprite3D" parent="." unique_id=110478211]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.98, 0)
 cast_shadow = 0
 modulate = Color(1, 1, 1, 0.72)
@@ -372,20 +325,20 @@ texture_filter = 5
 render_priority = -1
 texture = ExtResource("30_shadow")
 
-[node name="AttackAudio" type="AudioStreamPlayer3D" parent="." ]
-stream = ExtResource("27_attack_audio")
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=658329044]
+stream = ExtResource("6_evcf2")
 volume_db = -1.0
 max_distance = 20.0
 bus = &"SFX"
 
-[node name="HurtAudio" type="AudioStreamPlayer3D" parent="." ]
-stream = ExtResource("28_hurt_audio")
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=1844502729]
+stream = ExtResource("7_evcf2")
 volume_db = -2.0
 max_distance = 18.0
 bus = &"SFX"
 
-[node name="DeathAudio" type="AudioStreamPlayer3D" parent="." ]
-stream = ExtResource("29_death_audio")
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=895190058]
+stream = ExtResource("8_evcf2")
 volume_db = 1.5
 max_distance = 20.0
 bus = &"SFX"
