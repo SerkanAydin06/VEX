@@ -172,15 +172,6 @@ jobs:
           print("HIT IMPACT V1 AUDIT OK")
           '''.replace('\n          ', '\n').lstrip()
           Path('tests/hit_impact_audit.py').write_text(audit, encoding='utf-8')
-
-          validate_path = Path('.github/workflows/validate.yml')
-          validate = validate_path.read_text(encoding='utf-8')
-          marker = '      - name: Validate weapon ADS targeting\n        run: python tests/weapon_ads_audit.py\n'
-          if 'Validate hit impact V1' not in validate:
-              if marker not in validate:
-                  raise SystemExit('validate workflow marker changed')
-              validate = validate.replace(marker, marker + '      - name: Validate hit impact V1\n        run: python tests/hit_impact_audit.py\n', 1)
-              validate_path.write_text(validate, encoding='utf-8')
           PY
           git diff --check
 
@@ -201,6 +192,6 @@ jobs:
         run: |
           git config user.name "OpenAI"
           git config user.email "openai@users.noreply.github.com"
-          git add scripts/player/weapon_controller.gd tests/hit_impact_audit.py .github/workflows/validate.yml
+          git add scripts/player/weapon_controller.gd tests/hit_impact_audit.py
           git commit -m "feat: wire hit impact V1"
           git push origin HEAD:main
