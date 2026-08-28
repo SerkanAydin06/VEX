@@ -9,23 +9,28 @@ const MAX_WORLD_IMPACTS := 72
 const MAX_FLESH_IMPACTS := 24
 const DEFAULT_FLESH_COLOR := Color(0.42, 0.025, 0.035, 1.0)
 const FLESH_QUERY_RADIUS := 0.24
+const WORLD_SURFACE_OFFSET := 0.018
+const MOVING_SURFACE_OFFSET := 0.065
 
 
 static func spawn_world(
 	parent: Node,
 	hit_position: Vector3,
 	hit_normal: Vector3,
-	shot_direction: Vector3 = Vector3.ZERO
+	shot_direction: Vector3 = Vector3.ZERO,
+	surface: Object = null
 ) -> void:
 	if parent == null or not is_instance_valid(parent):
 		return
 	_prune_group(parent, &"vex_world_impacts", MAX_WORLD_IMPACTS)
 	var effect := VexHitImpactV1.new()
 	effect.name = "WorldHitImpactV1"
-	parent.add_child(effect)
+	var anchor := _world_impact_anchor(parent, surface)
+	anchor.add_child(effect)
 	effect.add_to_group(&"vex_world_impacts")
 	var normal := _safe_normal(hit_normal, -shot_direction)
-	effect.global_position = hit_position + normal * 0.012
+	var surface_offset := _world_surface_offset(surface)
+	effect.global_position = hit_position + normal * surface_offset
 	effect._align_to_normal(normal)
 	effect._build_world_visual()
 	effect._build_particle_burst(
@@ -62,6 +67,23 @@ static func spawn_flesh(
 	)
 	effect._build_flesh_fragment_burst(fragment_color)
 	effect._schedule_free(0.48)
+
+
+static func _world_impact_anchor(fallback_parent: Node, surface: Object) -> Node:
+	if surface is Node3D and is_instance_valid(surface):
+		return surface as Node3D
+	return fallback_parent
+
+
+static func _world_surface_offset(surface: Object) -> float:
+	var current := surface as Node
+	var depth := 0
+	while current != null and depth < 5:
+		if current is AnimatableBody3D:
+			return MOVING_SURFACE_OFFSET
+		current = current.get_parent()
+		depth += 1
+	return WORLD_SURFACE_OFFSET
 
 
 static func _safe_normal(primary: Vector3, fallback: Vector3) -> Vector3:
@@ -105,6 +127,7 @@ func _build_world_visual() -> void:
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.render_priority = 2
 	material.albedo_texture = texture
 	material.albedo_color = Color.WHITE
 	quad.material = material

@@ -771,7 +771,8 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 						get_tree().current_scene,
 						hit_position,
 						hit_normal,
-						direction
+						direction,
+						collider
 					)
 					world_impacts_spawned += 1
 				break
@@ -780,7 +781,8 @@ func _shoot_hitscan(weapon: WeaponDefinition) -> void:
 					get_tree().current_scene,
 					hit_position,
 					hit_normal,
-					direction
+					direction,
+					collider
 				)
 				world_impacts_spawned += 1
 			if collider is CollisionObject3D:
