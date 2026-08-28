@@ -1,0 +1,35 @@
+name: Export SG09 Integration Sources
+
+on:
+  push:
+    branches:
+      - tooling/sg09-integration
+
+permissions:
+  contents: read
+
+jobs:
+  export-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Package SG09 sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: sg09-integration-sources
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            assets/weapons/sg09
+            scenes/player/player.tscn
+            scenes/ui/weapons/sg04_view.tscn
+            scenes/levels/level_test.tscn
+            scenes/hub/bastion_7.tscn
+            resources/weapons/sg04.tres
+            scripts/player/weapon_upgrade_catalog.gd
+            translations/vex.csv
+            Weapons_VEX.md
+            tests/static_audit.py
+            tests/integrity_test.gd
