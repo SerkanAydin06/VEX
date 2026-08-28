@@ -25,11 +25,11 @@ static func spawn_world(
 	_prune_group(parent, &"vex_world_impacts", MAX_WORLD_IMPACTS)
 	var effect := VexHitImpactV1.new()
 	effect.name = "WorldHitImpactV1"
-	var anchor := _world_impact_anchor(parent, surface)
+	var anchor := _world_impact_anchor(parent, surface, hit_position)
 	anchor.add_child(effect)
 	effect.add_to_group(&"vex_world_impacts")
 	var normal := _safe_normal(hit_normal, -shot_direction)
-	var surface_offset := _world_surface_offset(surface)
+	var surface_offset := _world_surface_offset(anchor)
 	effect.global_position = hit_position + normal * surface_offset
 	effect._align_to_normal(normal)
 	effect._build_world_visual()
@@ -69,9 +69,28 @@ static func spawn_flesh(
 	effect._schedule_free(0.48)
 
 
-static func _world_impact_anchor(fallback_parent: Node, surface: Object) -> Node:
-	if surface is Node3D and is_instance_valid(surface):
-		return surface as Node3D
+static func _world_impact_anchor(
+	fallback_parent: Node,
+	surface: Object,
+	hit_position: Vector3
+) -> Node:
+	if surface is Node and is_instance_valid(surface):
+		var surface_node := surface as Node
+		var current := surface_node
+		var depth := 0
+		while current != null and depth < 8:
+			if current.has_method("resolve_bullet_impact_anchor"):
+				var resolved: Variant = current.call(
+					"resolve_bullet_impact_anchor",
+					surface_node,
+					hit_position
+				)
+				if resolved is Node3D and is_instance_valid(resolved):
+					return resolved as Node3D
+			current = current.get_parent()
+			depth += 1
+		if surface_node is Node3D:
+			return surface_node as Node3D
 	return fallback_parent
 
 

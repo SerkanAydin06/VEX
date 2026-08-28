@@ -16,6 +16,7 @@ def read(path):
 
 effect = read("scripts/effects/hit_impact_v1.gd")
 controller = read("scripts/player/weapon_controller.gd")
+door = read("scripts/props/door.gd")
 
 for needle in [
     "class_name VexHitImpactV1",
@@ -24,6 +25,9 @@ for needle in [
     "func spawn_world(",
     "surface: Object = null",
     "func _world_impact_anchor(",
+    'current.has_method("resolve_bullet_impact_anchor")',
+    '"resolve_bullet_impact_anchor",',
+    "_world_surface_offset(anchor)",
     "func _world_surface_offset(",
     "MOVING_SURFACE_OFFSET := 0.065",
     "current is AnimatableBody3D",
@@ -43,6 +47,18 @@ for needle in [
 ]:
     if needle not in effect:
         errors.append(f"Impact effect sözleşmesi eksik: {needle}")
+
+
+for needle in [
+    "func resolve_bullet_impact_anchor(",
+    "if surface == perception_blocker:",
+    "return _bullet_impact_panel_for_position(hit_position)",
+    "func _bullet_impact_panel_for_position(",
+    "left_distance := absf(local_hit.z - door_panel.position.z)",
+    "right_distance := absf(local_hit.z - door_panel_right.position.z)",
+]:
+    if needle not in door:
+        errors.append(f"Door impact anchor sözleşmesi eksik: {needle}")
 
 for forbidden in [
     "func _build_flesh_visual(",

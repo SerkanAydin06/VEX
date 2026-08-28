@@ -256,6 +256,42 @@ func _emit_lock_state() -> void:
 	lock_state_changed.emit(is_access_locked())
 
 
+func resolve_bullet_impact_anchor(surface: Node, hit_position: Vector3) -> Node3D:
+	# Kapı tam kapalıyken PerceptionBlocker tek parça world collider olarak
+	# mermiyi panelden önce yakalayabilir. İz blocker'a bağlanırsa kapı açılınca
+	# havada kalır; bu yüzden blocker isabetini gerçek hareketli panele yönlendir.
+	if surface == perception_blocker:
+		return _bullet_impact_panel_for_position(hit_position)
+
+	# Ray doğrudan gerçek paneli (veya onun bir child collider'ını) vurduysa
+	# paneli koru. Frame/jamb gibi sabit kapı parçaları kendi collider'ında kalır.
+	var current := surface
+	var depth := 0
+	while current != null and depth < 6:
+		if current == door_panel:
+			return door_panel
+		if current == door_panel_right:
+			return door_panel_right
+		if current == self:
+			break
+		current = current.get_parent()
+		depth += 1
+	if surface is Node3D:
+		return surface as Node3D
+	return self
+
+
+func _bullet_impact_panel_for_position(hit_position: Vector3) -> Node3D:
+	if door_panel == null:
+		return self
+	if not _is_split_side_door():
+		return door_panel
+	var local_hit := to_local(hit_position)
+	var left_distance := absf(local_hit.z - door_panel.position.z)
+	var right_distance := absf(local_hit.z - door_panel_right.position.z)
+	return door_panel if left_distance <= right_distance else door_panel_right
+
+
 func _begin_opening() -> void:
 	if door_panel == null or _state == DoorState.OPEN or _state == DoorState.OPENING:
 		return
