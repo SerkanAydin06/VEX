@@ -29,6 +29,11 @@ const TRACKS := {
 		{"id": &"drum_extension", "name": "UPGRADE_DRUM_EXTENSION", "magazine": 2, "reload": 0.90},
 		{"id": &"breacher", "name": "UPGRADE_BREACHER", "damage": 1.18, "recoil": 1.12},
 	],
+	&"sg09": [
+		{"id": &"aegis_gas_drive", "name": "UPGRADE_AEGIS_GAS_DRIVE", "fire_rate": 0.88, "recoil": 0.90},
+		{"id": &"smart_caddy", "name": "UPGRADE_SMART_CADDY", "magazine": 2, "reload": 0.80},
+		{"id": &"flechette_load", "name": "UPGRADE_FLECHETTE_LOAD", "spread": 0.85},
+	],
 	&"vx47": [
 		{"id": &"gas_regulator", "name": "UPGRADE_GAS_REGULATOR", "recoil": 0.82},
 		{"id": &"smart_feed", "name": "UPGRADE_SMART_FEED", "reload": 0.80},

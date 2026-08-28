@@ -90,6 +90,10 @@ def check_core_files() -> None:
         "scenes/props/door_side_slide.tscn", "scripts/props/door.gd",
         "scenes/world/door_status_light.tscn", "scripts/world/door_status_light.gd",
         "scenes/hub/bastion_7.tscn", "translations/vex.csv",
+        "tests/integrity_test.gd", "tests/integrity_test.tscn",
+        "tests/fixtures/save_invalid_version.cfg",
+        "tests/fixtures/save_valid_backup.cfg",
+        ".github/workflows/validate.yml",
     ]
     for relative in required:
         exists(relative)
@@ -292,7 +296,7 @@ def check_door_contract() -> None:
 
 
 def check_weapons() -> None:
-    weapon_ids = ["p01", "p07", "p14", "p20", "sg04", "vx47", "mp90"]
+    weapon_ids = ["p01", "p07", "p14", "p20", "sg04", "sg09", "vx47", "mp90"]
     for weapon_id in weapon_ids:
         exists(f"resources/weapons/{weapon_id}.tres")
         exists(f"scenes/ui/weapons/{weapon_id}_view.tscn")
@@ -311,6 +315,59 @@ def check_weapons() -> None:
     for contract in ["penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count"]:
         if contract not in controller:
             fail(f"WeaponController P-20/save migration sözleşmesi eksik: {contract}")
+
+    sg09 = read("resources/weapons/sg09.tres")
+    for contract in [
+        'weapon_id = &"sg09"', 'ammo_type = &"shells"',
+        'loadout_group = &"shotgun"', 'loadout_slot = 2',
+        'supports_ads_pose = true', 'supports_flashlight = true',
+        'magazine_size = 8', 'damage_per_pellet = 10', 'pellet_count = 8',
+        'fire_interval = 0.38', 'reload_duration = 1.6',
+        'spread_degrees = 4.8', 'maximum_range = 50.0',
+        'automatic = false',
+    ]:
+        if contract not in sg09:
+            fail(f"SG-09 silah sözleşmesi eksik: {contract}")
+    if 'loadout_group = &"shotgun"' not in read("resources/weapons/sg04.tres"):
+        fail("SG-04 ve SG-09 aynı shotgun loadout grubunu paylaşmıyor")
+    sg09_view = read("scenes/ui/weapons/sg09_view.tscn")
+    for contract in [
+        'name": &"idle"', 'name": &"fire"', 'name": &"aim_fire"',
+        'name": &"reload"', 'name": &"zoom"',
+        'sg09_zoom.png', 'sg09_reload_4.png', 'sg09_aim_fire_4.png',
+    ]:
+        if contract not in sg09_view:
+            fail(f"SG-09 HUD animasyon sözleşmesi eksik: {contract}")
+    player_scene = read("scenes/player/player.tscn")
+    if 'res://resources/weapons/sg09.tres' not in player_scene:
+        fail("Player WeaponController SG-09 tanımını kaydetmiyor")
+    level_test = read("scenes/levels/level_test.tscn")
+    if 'pickup_type = "sg09"' not in level_test:
+        fail("Level Test SG-09 pickup içermiyor")
+    bastion = read("scenes/hub/bastion_7.tscn")
+    if 'weapon_texture = ExtResource("20_sg09_side")' not in bastion:
+        fail("Bastion SG-09 rafı authored side görselini kullanmıyor")
+    pickup_script = read("scripts/props/pickup.gd")
+    player_script = read("scripts/player/player.gd")
+    if '"sg04", "sg09", "vx47"' not in pickup_script:
+        fail("Pickup tipi SG-09'u silah olarak tanımıyor")
+    for contract in [
+        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":',
+        "func _collect_loadout_weapon_pickup(",
+        '"equip_world_weapon"',
+        '"_spawn_dropped_weapon_pickup"',
+        'displaced_weapon_id',
+    ]:
+        if contract not in player_script:
+            fail(f"Player fiziksel loadout silah swap sözleşmesi eksik: {contract}")
+    for obsolete in [
+        'unlock_weapon", &"sg04"',
+        'unlock_weapon", &"sg09"',
+        "func _collect_sidearm_pickup(",
+        '"_spawn_dropped_sidearm_pickup"',
+    ]:
+        if obsolete in player_script:
+            fail(f"Shotgun pickup eski kaybolan-silah akışını kullanıyor: {obsolete}")
 
 
 def check_unique_progression_ids() -> None:
@@ -347,7 +404,8 @@ def check_localization() -> None:
         "LEVEL01_TUTORIAL_STRAFE_HINT", "LEVEL01_TUTORIAL_BARREL_HINT",
         "LEVEL01_TUTORIAL_RESOURCE_HINT", "LEVEL01_TUTORIAL_FINAL_HINT",
         "LEVEL01_TUTORIAL_COMPLETE_HINT", "LEVEL01_DOOR_FIRE_TRAINING",
-        "LEVEL01_DOOR_PROTOCOL_ENTRY", "WEAPON_P20_NAME", "HUD_AMMO_PISTOL",
+        "LEVEL01_DOOR_PROTOCOL_ENTRY", "WEAPON_P20_NAME", "WEAPON_SG09_NAME", "HUD_AMMO_PISTOL",
+        "UPGRADE_AEGIS_GAS_DRIVE", "UPGRADE_SMART_CADDY", "UPGRADE_FLECHETTE_LOAD",
         "DOOR_COMBAT_LOCKED", "DOOR_COMBAT_CLEARED",
     }
     missing = sorted(required - set(keys))
@@ -368,6 +426,74 @@ def check_scene_authority() -> None:
         fail("VEX-01 tutorial oynanış prop'u sahnede tutulmuyor")
 
 
+def check_save_recovery_and_runtime_ci() -> None:
+    game_state = read("scripts/autoload/game_state.gd")
+    for contract in [
+        "_load_campaign_save_from_paths(SAVE_PATH, SAVE_BACKUP_PATH)",
+        "func _read_valid_campaign_save(path: String) -> Dictionary:",
+        "loaded_state = _read_valid_campaign_save(backup_path)",
+        "if version < 3 or version > SAVE_VERSION:",
+        "if _loaded_save_from_backup:",
+    ]:
+        if contract not in game_state:
+            fail(f"Save recovery sözleşmesi eksik: {contract}")
+    integrity = read("tests/integrity_test.gd")
+    for contract in [
+        "_check_save_recovery_contract()",
+        "INVALID_SAVE_FIXTURE",
+        "VALID_BACKUP_FIXTURE",
+        "get_tree().quit(0)",
+        "get_tree().quit(1)",
+    ]:
+        if contract not in integrity:
+            fail(f"Godot integrity runner sözleşmesi eksik: {contract}")
+    workflow = read(".github/workflows/validate.yml")
+    for contract in [
+        "Godot_v4.7-stable_linux.x86_64.zip",
+        "godot --headless --editor --path . --quit",
+        "godot --headless --path . tests/integrity_test.tscn",
+    ]:
+        if contract not in workflow:
+            fail(f"Headless Godot CI sözleşmesi eksik: {contract}")
+
+
+def check_repository_hygiene() -> None:
+    obsolete_paths = [
+        "scenes/world/weapon_rack.tscn",
+        "scripts/world/weapon_rack.gd",
+        "assets/world/bastion7/bastion_terminal_front.png",
+        "assets/world/metal_board.png",
+        "assets/world/weapon_rack_panel.png",
+        "assets/pickups/pistol.png",
+        "assets/pickups/shotgun.png",
+        "assets/weapons/shotgun_idle.png",
+        "assets/weapons/shotgun_fire.png",
+        "assets/weapons/shotgun_reload_1.png",
+        "assets/weapons/shotgun_reload_2.png",
+    ]
+    for relative in obsolete_paths:
+        if (ROOT / relative).exists():
+            fail(f"Kaldırılmış eski içerik yeniden eklenmiş: {relative}")
+    project_text = "\n".join(text for _path, text in text_files())
+    for png_path in sorted((ROOT / "assets").rglob("*.png")):
+        relative = png_path.relative_to(ROOT).as_posix()
+        if f"res://{relative}" not in project_text:
+            fail(f"Referanssız PNG asset: {relative}")
+    for import_path in sorted((ROOT / "assets").rglob("*.png.import")):
+        source_path = Path(str(import_path)[:-7])
+        if not source_path.exists():
+            fail(f"Kaynak PNG'si olmayan import metadata: {import_path.relative_to(ROOT)}")
+    gitignore = read(".gitignore")
+    if "build/" not in gitignore:
+        fail("Export build klasörü .gitignore içinde değil")
+    export = read("export_presets.cfg")
+    if 'export_path="./build/windows/VEX.exe"' not in export:
+        fail("Windows export çıktısı build/windows altında değil")
+    for excluded in ["tests/*", "scenes/levels/level_test.tscn", "scenes/levels/test_support/*"]:
+        if excluded not in export:
+            fail(f"Geliştirme içeriği release export filtresinden çıkarılmıyor: {excluded}")
+
+
 def check_stale_contracts() -> None:
     project_text = "\n".join(text for _path, text in text_files())
     for token in ["door_side_slide_bastion.tscn", "CargoElevator_Main"]:
@@ -380,7 +506,9 @@ def main() -> int:
         check_core_files, check_res_paths, check_input_map, check_level_01,
         check_automap, check_level_02, check_level_03, check_bastion,
         check_door_contract, check_weapons, check_unique_progression_ids,
-        check_localization, check_scene_authority, check_stale_contracts,
+        check_localization, check_scene_authority,
+        check_save_recovery_and_runtime_ci, check_repository_hygiene,
+        check_stale_contracts,
     ]
     for check in checks:
         check()

@@ -1,5 +1,8 @@
 extends Node
 
+const INVALID_SAVE_FIXTURE := "res://tests/fixtures/save_invalid_version.cfg"
+const VALID_BACKUP_FIXTURE := "res://tests/fixtures/save_valid_backup.cfg"
+
 const REQUIRED_RESOURCES := [
 	"res://scenes/player/player.tscn",
 	"res://scenes/ui/hud.tscn",
@@ -17,6 +20,7 @@ const REQUIRED_RESOURCES := [
 	"res://resources/weapons/p14.tres",
 	"res://resources/weapons/p20.tres",
 	"res://resources/weapons/sg04.tres",
+	"res://resources/weapons/sg09.tres",
 	"res://resources/weapons/vx47.tres",
 	"res://resources/weapons/mp90.tres",
 	"res://translations/vex.csv",
@@ -37,13 +41,16 @@ func _ready() -> void:
 	_check_weapon_contracts()
 	_check_input_map()
 	_check_localization_contract()
+	_check_save_recovery_contract()
 
 	if failures.is_empty():
 		print("VEX integrity test başarılı: güncel level, tutorial, automap, kapı ve silah sözleşmeleri temiz.")
+		get_tree().quit(0)
 	else:
 		for message in failures:
 			push_error(message)
 		push_error("VEX integrity test başarısız: %d hata." % failures.size())
+		get_tree().quit(1)
 
 
 func _check_required_resources() -> void:
@@ -257,10 +264,42 @@ func _check_weapon_contracts() -> void:
 			failures.append("P-20 ortak bullets rezerv kapasitesi 180 değil.")
 		if not is_equal_approx(p20.penetration_power, 0.5):
 			failures.append("P-20 penetrasyon gücü 0.5 değil.")
+	var sg09 := load("res://resources/weapons/sg09.tres") as WeaponDefinition
+	if sg09 == null:
+		failures.append("SG-09 WeaponDefinition yüklenemedi.")
+	else:
+		if sg09.weapon_id != &"sg09" or sg09.ammo_type != &"shells":
+			failures.append("SG-09 shotgun mühimmat sözleşmesi yanlış.")
+		if sg09.loadout_group != &"shotgun" or sg09.loadout_slot != 2:
+			failures.append("SG-09 shotgun loadout grubu/slotu yanlış.")
+		if sg09.magazine_size != 8 or sg09.damage_per_pellet != 10 or sg09.pellet_count != 8:
+			failures.append("SG-09 şarjör/saçma dengesi yanlış.")
+		if not is_equal_approx(sg09.fire_interval, 0.38) or not is_equal_approx(sg09.reload_duration, 1.6):
+			failures.append("SG-09 atış/reload süresi yanlış.")
+		if not sg09.supports_ads_pose or not sg09.supports_flashlight or sg09.automatic:
+			failures.append("SG-09 ADS/fener/yarı otomatik sözleşmesi yanlış.")
 	var controller := FileAccess.get_file_as_string("res://scripts/player/weapon_controller.gd")
 	for contract in ["penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count"]:
 		if contract not in controller:
 			failures.append("WeaponController P-20/save migration sözleşmesi eksik: %s" % contract)
+	var player_script := FileAccess.get_file_as_string("res://scripts/player/player.gd")
+	for contract in [
+		'&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":',
+		"func _collect_loadout_weapon_pickup(",
+		'"equip_world_weapon"',
+		'"_spawn_dropped_weapon_pickup"',
+		"displaced_weapon_id",
+	]:
+		if contract not in player_script:
+			failures.append("SG-04/SG-09 fiziksel swap sözleşmesi eksik: %s" % contract)
+	for obsolete in [
+		'unlock_weapon", &"sg04"',
+		'unlock_weapon", &"sg09"',
+		"func _collect_sidearm_pickup(",
+		'"_spawn_dropped_sidearm_pickup"',
+	]:
+		if obsolete in player_script:
+			failures.append("Shotgun pickup eski kaybolan-silah akışını kullanıyor: %s" % obsolete)
 
 
 func _check_input_map() -> void:
@@ -289,6 +328,32 @@ func _check_localization_contract() -> void:
 	]:
 		if required_key not in csv_text:
 			failures.append("Çeviri anahtarı eksik: %s" % required_key)
+
+
+func _check_save_recovery_contract() -> void:
+	for fixture_path in [INVALID_SAVE_FIXTURE, VALID_BACKUP_FIXTURE]:
+		if not FileAccess.file_exists(fixture_path):
+			failures.append("Save recovery fixture eksik: %s" % fixture_path)
+			return
+	var recovered := bool(GameState.call(
+		"_load_campaign_save_from_paths",
+		INVALID_SAVE_FIXTURE,
+		VALID_BACKUP_FIXTURE
+	))
+	if not recovered:
+		failures.append("Semantik olarak bozuk ana kayıtta sağlam .bak yüklenemiyor.")
+		return
+	if str(GameState.saved_run_state.get("save_reason", "")) != "test_backup":
+		failures.append("Save recovery ana kayıt yerine doğrulanmış yedeği seçmiyor.")
+	if not bool(GameState.get("_loaded_save_from_backup")):
+		failures.append("Save recovery yedekten yükleme durumunu korumuyor.")
+	var invalid_pair_loaded := bool(GameState.call(
+		"_load_campaign_save_from_paths",
+		INVALID_SAVE_FIXTURE,
+		INVALID_SAVE_FIXTURE
+	))
+	if invalid_pair_loaded:
+		failures.append("Save recovery iki semantik bozuk kaydı geçerli kabul ediyor.")
 
 
 func _has_property(object: Object, property_name: StringName) -> bool:

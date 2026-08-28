@@ -56,7 +56,6 @@ def main() -> int:
     pickup_script = read("scripts/props/pickup.gd")
     player_script = read("scripts/player/player.gd")
     level_test = read("scenes/levels/level_test.tscn")
-    rack = read("scenes/world/weapon_rack.tscn")
 
     for name in assets:
         if name == "sg04_side.png":
@@ -135,11 +134,16 @@ def main() -> int:
 
     require(player_scene, 'path="res://resources/weapons/sg04.tres"', "Player weapon definitions içinde SG04")
     require(pickup_script, '"sg04"', "pickup enum içinde SG04")
-    require(player_script, '&"sg04":', "player SG04 pickup handler")
-    require(player_script, 'unlock_weapon", &"sg04"', "SG04 unlock çağrısı")
+    require(
+        player_script,
+        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":',
+        "player SG04/SG09 ortak fiziksel pickup handler",
+    )
+    require(player_script, 'func _collect_loadout_weapon_pickup(', "loadout pickup swap helper")
+    require(player_script, '"equip_world_weapon"', "loadout grup displacement çağrısı")
+    require(player_script, '"_spawn_dropped_weapon_pickup"', "yerinden çıkan shotgun pickup spawn")
     require(level_test, 'pickup_type = "sg04"', "Level Test SG04 pickup")
     require(level_test, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "Level Test SG04 side art")
-    require(rack, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "weapon rack SG04 side art")
 
     generic = 'res://assets/pickups/shotgun.png'
     for path in ROOT.rglob("*.tscn"):

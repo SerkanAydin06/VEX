@@ -34,8 +34,8 @@ extends CharacterBody3D
 @export_range(0.0, 3.0, 0.05) var detour_duration := 0.55
 
 @export_category("03 - Algılama ve Takip")
-@export_range(1.0, 30.0, 0.5) var detection_range := 14.0
-@export_range(5.0, 40.0, 0.5) var pursuit_range := 24.0
+@export_range(1.0, 50.0, 0.5) var detection_range := 30.0
+@export_range(5.0, 60.0, 0.5) var pursuit_range := 38.0
 @export_range(30.0, 360.0, 5.0) var initial_view_angle := 360.0
 @export_range(1.0, 30.0, 0.5) var lost_sight_timeout := 20.0
 @export_range(1.0, 20.0, 0.5) var search_duration := 10.0
@@ -96,7 +96,7 @@ extends CharacterBody3D
 @export_category("06 - Performans")
 @export_range(0.02, 1.0, 0.01) var near_sight_interval := 0.08
 @export_range(0.05, 1.0, 0.01) var far_sight_interval := 0.20
-@export_range(12.0, 80.0, 1.0) var dormant_distance := 28.0
+@export_range(12.0, 80.0, 1.0) var dormant_distance := 44.0
 
 @onready var animated_sprite: AnimatedSprite3D = $AnimatedSprite3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
