@@ -1,0 +1,59 @@
+name: Fix Ravager Position Shadow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix_ravager_position_shadow.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - name: Rename shadowing parameter
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/actors/ravager.gd')
+          s = p.read_text(encoding='utf-8')
+          old = '''func _has_navigation_floor(position: Vector3) -> bool:
+	var ray_start := position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
+	var ray_end := position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
+'''
+          new = '''func _has_navigation_floor(probe_position: Vector3) -> bool:
+	var ray_start := probe_position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
+	var ray_end := probe_position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
+'''
+          if old not in s:
+              raise SystemExit('expected shadowing helper block not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Validate rename
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s = Path('scripts/actors/ravager.gd').read_text(encoding='utf-8')
+          assert 'func _has_navigation_floor(position: Vector3)' not in s
+          assert 'func _has_navigation_floor(probe_position: Vector3) -> bool:' in s
+          assert 'var ray_start := probe_position +' in s
+          assert 'var ray_end := probe_position +' in s
+          print('Ravager position shadow warning fixed')
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name OpenAI
+          git config user.email openai@users.noreply.github.com
+          git add scripts/actors/ravager.gd
+          git commit -m 'fix: avoid Node3D position shadow warning'
+          git push origin HEAD:main
