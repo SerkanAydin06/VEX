@@ -1163,7 +1163,7 @@ func _check_line_of_sight() -> bool:
 	if _uses_ranged_tactics():
 		_last_visibility_ratio = _ranged_visibility_ratio_from(origin)
 		return _last_visibility_ratio > 0.0
-	var visible := VexEnemyRuntimeUtils.has_visual_contact(
+	var has_contact := VexEnemyRuntimeUtils.has_visual_contact(
 		get_world_3d(),
 		origin,
 		_player,
@@ -1171,8 +1171,8 @@ func _check_line_of_sight() -> bool:
 		get_rid(),
 		sight_target_height
 	)
-	_last_visibility_ratio = 1.0 if visible else 0.0
-	return visible
+	_last_visibility_ratio = 1.0 if has_contact else 0.0
+	return has_contact
 
 
 func _get_crouched_sight_target_height() -> float:
