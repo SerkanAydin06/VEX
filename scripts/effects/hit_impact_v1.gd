@@ -1,9 +1,8 @@
 class_name VexHitImpactV1
 extends Node3D
 
-const IMPACT_ASSET_ROOT := "res:/" + "/assets/impacts/"
-const WORLD_TEXTURE_PATH := IMPACT_ASSET_ROOT + "impact_world_v1.png"
-const FLESH_TEXTURE_PATH := IMPACT_ASSET_ROOT + "impact_flesh_v1.png"
+const WORLD_TEXTURE_PATH := "res://assets/impacts/impact_world_v1.png"
+const FLESH_TEXTURE_PATH := "res://assets/impacts/impact_flesh_v1.png"
 const MAX_WORLD_IMPACTS := 72
 const MAX_FLESH_IMPACTS := 24
 
