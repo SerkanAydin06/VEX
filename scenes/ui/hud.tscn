@@ -11,7 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://bn1ug716sunu0" path="res://assets/ui/automap_console_frame.png" id="6_map_frame"]
 [ext_resource type="AudioStream" uid="uid://b0ve2pulakkn2" path="res://assets/audio/ak47_single_shot.wav" id="7_1e6lo"]
 [ext_resource type="Script" uid="uid://ct0slkur86ywi" path="res://scripts/ui/automap_view.gd" id="7_automap"]
+[ext_resource type="AudioStream" uid="uid://s1hw7lmyw5pd" path="res://assets/audio/sg09_shot.wav" id="8_d5po8"]
 [ext_resource type="Texture2D" uid="uid://bjeurg4ipxvmu" path="res://assets/pickups/key_blue.png" id="8_key_blue"]
+[ext_resource type="AudioStream" uid="uid://db4ckljshuklh" path="res://assets/weapons/sg15/sg15_shot.wav" id="9_7yoph"]
 [ext_resource type="Texture2D" uid="uid://clp5g0eqcky2c" path="res://assets/pickups/key_red.png" id="9_key_red"]
 [ext_resource type="AudioStream" uid="uid://bvcanu6kyuser" path="res://assets/audio/mp90_rifle_single_shot.wav" id="9_pkwgd"]
 [ext_resource type="Texture2D" uid="uid://blwigqvrkpxbe" path="res://assets/pickups/key_yellow.png" id="10_key_yellow"]
@@ -146,7 +148,14 @@ bus = &"SFX"
 
 [node name="Sg09Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1969983472]
 unique_name_in_owner = true
-stream = ExtResource("4_65nxt")
+stream = ExtResource("8_d5po8")
+volume_db = -6.131
+max_polyphony = 4
+bus = &"SFX"
+
+[node name="Sg15Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=396871556]
+unique_name_in_owner = true
+stream = ExtResource("9_7yoph")
 volume_db = -6.131
 max_polyphony = 4
 bus = &"SFX"

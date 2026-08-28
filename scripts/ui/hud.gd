@@ -66,6 +66,7 @@ const DOOM3_CROSSHAIR: Texture2D = preload("res://assets/ui/crosshair_doom3_circ
 @onready var p20_audio: AudioStreamPlayer = %P20Audio
 @onready var sg04_audio: AudioStreamPlayer = %Sg04Audio
 @onready var sg09_audio: AudioStreamPlayer = %Sg09Audio
+@onready var sg15_audio: AudioStreamPlayer = %Sg15Audio
 @onready var vx47_audio: AudioStreamPlayer = %Vx47Audio
 @onready var mp90_audio: AudioStreamPlayer = %Mp90Audio
 @onready var pistol_reload_audio: AudioStreamPlayer = %PistolReloadAudio
@@ -255,6 +256,7 @@ func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 			&"p20": fire_audio = p20_audio
 			&"sg04": fire_audio = sg04_audio
 			&"sg09": fire_audio = sg09_audio
+			&"sg15": fire_audio = sg15_audio
 			&"vx47": fire_audio = vx47_audio
 			&"mp90": fire_audio = mp90_audio
 		if fire_audio.stream != null: fire_audio.play()
