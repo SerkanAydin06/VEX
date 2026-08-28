@@ -821,9 +821,9 @@ func _build_local_detour_path(destination: Vector3) -> PackedVector3Array:
 	return best_path
 
 
-func _has_navigation_floor(position: Vector3) -> bool:
-	var ray_start := position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
-	var ray_end := position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
+func _has_navigation_floor(probe_position: Vector3) -> bool:
+	var ray_start := probe_position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
+	var ray_end := probe_position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
 	var query := PhysicsRayQueryParameters3D.create(
 		ray_start,
 		ray_end,
