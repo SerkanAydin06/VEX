@@ -122,7 +122,7 @@ func _sample_enemy_hit_color(hit_position: Vector3) -> Color:
 	var texture := _current_sprite_texture(visual)
 	if texture == null:
 		return _fallback_visual_color(visual)
-	var image := texture.get_image()
+	var image := _texture_image(texture)
 	if image == null or image.is_empty():
 		return _fallback_visual_color(visual)
 
@@ -138,6 +138,25 @@ func _sample_enemy_hit_color(hit_position: Vector3) -> Color:
 	sampled.b *= tint.b
 	sampled.a = 1.0
 	return _prepare_fragment_color(sampled)
+
+
+func _texture_image(texture: Texture2D) -> Image:
+	if texture is AtlasTexture:
+		var atlas_texture := texture as AtlasTexture
+		if atlas_texture.atlas == null:
+			return null
+		var atlas_image := atlas_texture.atlas.get_image()
+		if atlas_image == null or atlas_image.is_empty():
+			return null
+		var region := atlas_texture.region
+		var region_rect := Rect2i(
+			roundi(region.position.x),
+			roundi(region.position.y),
+			maxi(1, roundi(region.size.x)),
+			maxi(1, roundi(region.size.y))
+		)
+		return atlas_image.get_region(region_rect)
+	return texture.get_image()
 
 
 func _find_enemy_near_hit(hit_position: Vector3) -> Node:
@@ -279,7 +298,7 @@ func _sample_opaque_neighborhood(
 ) -> Color:
 	var rgb_sum := Vector3.ZERO
 	var total_weight := 0.0
-	var step := maxi(1, radius / 3)
+	var step := maxi(1, int(radius / 3.0))
 	for y: int in range(center_y - radius, center_y + radius + 1, step):
 		if y < 0 or y >= image.get_height():
 			continue
@@ -305,8 +324,8 @@ func _sample_opaque_neighborhood(
 func _average_opaque_color(image: Image) -> Color:
 	var rgb_sum := Vector3.ZERO
 	var total_weight := 0.0
-	var step_x := maxi(1, image.get_width() / 18)
-	var step_y := maxi(1, image.get_height() / 18)
+	var step_x := maxi(1, int(image.get_width() / 18.0))
+	var step_y := maxi(1, int(image.get_height() / 18.0))
 	for y: int in range(0, image.get_height(), step_y):
 		for x: int in range(0, image.get_width(), step_x):
 			var pixel := image.get_pixel(x, y)
