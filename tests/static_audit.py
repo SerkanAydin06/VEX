@@ -296,7 +296,7 @@ def check_door_contract() -> None:
 
 
 def check_weapons() -> None:
-    weapon_ids = ["p01", "p07", "p14", "p20", "sg04", "vx47", "mp90"]
+    weapon_ids = ["p01", "p07", "p14", "p20", "sg04", "sg09", "vx47", "mp90"]
     for weapon_id in weapon_ids:
         exists(f"resources/weapons/{weapon_id}.tres")
         exists(f"scenes/ui/weapons/{weapon_id}_view.tscn")
@@ -315,6 +315,44 @@ def check_weapons() -> None:
     for contract in ["penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count"]:
         if contract not in controller:
             fail(f"WeaponController P-20/save migration sözleşmesi eksik: {contract}")
+
+    sg09 = read("resources/weapons/sg09.tres")
+    for contract in [
+        'weapon_id = &"sg09"', 'ammo_type = &"shells"',
+        'loadout_group = &"shotgun"', 'loadout_slot = 2',
+        'supports_ads_pose = true', 'supports_flashlight = true',
+        'magazine_size = 8', 'damage_per_pellet = 10', 'pellet_count = 8',
+        'fire_interval = 0.38', 'reload_duration = 1.6',
+        'spread_degrees = 4.8', 'maximum_range = 50.0',
+        'automatic = false',
+    ]:
+        if contract not in sg09:
+            fail(f"SG-09 silah sözleşmesi eksik: {contract}")
+    if 'loadout_group = &"shotgun"' not in read("resources/weapons/sg04.tres"):
+        fail("SG-04 ve SG-09 aynı shotgun loadout grubunu paylaşmıyor")
+    sg09_view = read("scenes/ui/weapons/sg09_view.tscn")
+    for contract in [
+        'name": &"idle"', 'name": &"fire"', 'name": &"aim_fire"',
+        'name": &"reload"', 'name": &"zoom"',
+        'sg09_zoom.png', 'sg09_reload_4.png', 'sg09_aim_fire_4.png',
+    ]:
+        if contract not in sg09_view:
+            fail(f"SG-09 HUD animasyon sözleşmesi eksik: {contract}")
+    player_scene = read("scenes/player/player.tscn")
+    if 'res://resources/weapons/sg09.tres' not in player_scene:
+        fail("Player WeaponController SG-09 tanımını kaydetmiyor")
+    level_test = read("scenes/levels/level_test.tscn")
+    if 'pickup_type = "sg09"' not in level_test:
+        fail("Level Test SG-09 pickup içermiyor")
+    bastion = read("scenes/hub/bastion_7.tscn")
+    if 'weapon_texture = ExtResource("20_sg09_side")' not in bastion:
+        fail("Bastion SG-09 rafı authored side görselini kullanmıyor")
+    pickup_script = read("scripts/props/pickup.gd")
+    player_script = read("scripts/player/player.gd")
+    if '"sg04", "sg09", "vx47"' not in pickup_script:
+        fail("Pickup tipi SG-09'u silah olarak tanımıyor")
+    if '&"sg09":' not in player_script or 'unlock_weapon", &"sg09"' not in player_script:
+        fail("Player SG-09 pickup toplama akışı eksik")
 
 
 def check_unique_progression_ids() -> None:
@@ -351,7 +389,8 @@ def check_localization() -> None:
         "LEVEL01_TUTORIAL_STRAFE_HINT", "LEVEL01_TUTORIAL_BARREL_HINT",
         "LEVEL01_TUTORIAL_RESOURCE_HINT", "LEVEL01_TUTORIAL_FINAL_HINT",
         "LEVEL01_TUTORIAL_COMPLETE_HINT", "LEVEL01_DOOR_FIRE_TRAINING",
-        "LEVEL01_DOOR_PROTOCOL_ENTRY", "WEAPON_P20_NAME", "HUD_AMMO_PISTOL",
+        "LEVEL01_DOOR_PROTOCOL_ENTRY", "WEAPON_P20_NAME", "WEAPON_SG09_NAME", "HUD_AMMO_PISTOL",
+        "UPGRADE_AEGIS_GAS_DRIVE", "UPGRADE_SMART_CADDY", "UPGRADE_FLECHETTE_LOAD",
         "DOOR_COMBAT_LOCKED", "DOOR_COMBAT_CLEARED",
     }
     missing = sorted(required - set(keys))

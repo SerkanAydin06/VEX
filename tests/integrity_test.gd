@@ -20,6 +20,7 @@ const REQUIRED_RESOURCES := [
 	"res://resources/weapons/p14.tres",
 	"res://resources/weapons/p20.tres",
 	"res://resources/weapons/sg04.tres",
+	"res://resources/weapons/sg09.tres",
 	"res://resources/weapons/vx47.tres",
 	"res://resources/weapons/mp90.tres",
 	"res://translations/vex.csv",
@@ -263,6 +264,20 @@ func _check_weapon_contracts() -> void:
 			failures.append("P-20 ortak bullets rezerv kapasitesi 180 değil.")
 		if not is_equal_approx(p20.penetration_power, 0.5):
 			failures.append("P-20 penetrasyon gücü 0.5 değil.")
+	var sg09 := load("res://resources/weapons/sg09.tres") as WeaponDefinition
+	if sg09 == null:
+		failures.append("SG-09 WeaponDefinition yüklenemedi.")
+	else:
+		if sg09.weapon_id != &"sg09" or sg09.ammo_type != &"shells":
+			failures.append("SG-09 shotgun mühimmat sözleşmesi yanlış.")
+		if sg09.loadout_group != &"shotgun" or sg09.loadout_slot != 2:
+			failures.append("SG-09 shotgun loadout grubu/slotu yanlış.")
+		if sg09.magazine_size != 8 or sg09.damage_per_pellet != 10 or sg09.pellet_count != 8:
+			failures.append("SG-09 şarjör/saçma dengesi yanlış.")
+		if not is_equal_approx(sg09.fire_interval, 0.38) or not is_equal_approx(sg09.reload_duration, 1.6):
+			failures.append("SG-09 atış/reload süresi yanlış.")
+		if not sg09.supports_ads_pose or not sg09.supports_flashlight or sg09.automatic:
+			failures.append("SG-09 ADS/fener/yarı otomatik sözleşmesi yanlış.")
 	var controller := FileAccess.get_file_as_string("res://scripts/player/weapon_controller.gd")
 	for contract in ["penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count"]:
 		if contract not in controller:

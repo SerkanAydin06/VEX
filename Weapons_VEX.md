@@ -247,6 +247,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 
 ### SG-09 Aegis
 
+**Durum:** Oyunda uygulanmış (`resources/weapons/sg09.tres`, `scenes/ui/weapons/sg09_view.tscn`).
 **Kimlik:** `sg09`
 **Rol:** Koridor savunması ve hızlı ikinci atış.
 **Temel özellik:** Yarı otomatik mekanizma ve namlu altı fener.

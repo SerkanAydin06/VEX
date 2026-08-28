@@ -28,6 +28,7 @@
 [ext_resource type="Texture2D" path="res://assets/weapons/p07/p07_side.png" id="20_p07_side"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p14/p14_side.png" id="20_p14_side"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p20/p20_side.png" id="20_p20_side"]
+[ext_resource type="Texture2D" path="res://assets/weapons/sg09/sg09_side.png" id="20_sg09_side"]
 [ext_resource type="PackedScene" path="res://scenes/hub/armory_category_rack.tscn" id="21_category_rack"]
 [ext_resource type="PackedScene" path="res://scenes/hub/hub_survivor_presence.tscn" id="22_survivor"]
 
@@ -763,6 +764,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.92, 0.42, -0.15)
 weapon_id = &"sg09"
 display_name = "WEAPON_SG09_NAME"
 group_label = "ARMORY_GROUP_SHOTGUN"
+weapon_texture = ExtResource("20_sg09_side")
 fallback_visual_text = "SG-09"
 locked_message = "ARMORY_RESEARCH_LOCKED"
 visual_world_width = 1.18

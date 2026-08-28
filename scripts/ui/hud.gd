@@ -241,7 +241,7 @@ func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 	# Weapon audio stays on the current placeholder routing until dedicated VX-47/MP90
 	# recordings are added. Visual routing is fully data-driven now.
 	if action == &"fire":
-		var fire_audio := shotgun_audio if weapon_id == &"sg04" else pistol_audio
+		var fire_audio := shotgun_audio if weapon_id in [&"sg04", &"sg09"] else pistol_audio
 		if fire_audio.stream != null:
 			match weapon_id:
 				&"vx47":
@@ -252,7 +252,7 @@ func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 					fire_audio.pitch_scale = 1.0
 			fire_audio.play()
 	elif action in [&"reload", &"reload_shell"]:
-		var reload_player := shotgun_reload_audio if weapon_id == &"sg04" else pistol_reload_audio
+		var reload_player := shotgun_reload_audio if weapon_id in [&"sg04", &"sg09"] else pistol_reload_audio
 		if reload_player.stream != null:
 			match weapon_id:
 				&"vx47":
