@@ -926,7 +926,7 @@ func _runtime_grid_heap_push(
 
 func _runtime_grid_heap_pop(heap: Array[Dictionary]) -> Dictionary:
 	var root := heap[0]
-	var last := heap.pop_back()
+	var last: Dictionary = heap.pop_back() as Dictionary
 	if heap.is_empty():
 		return root
 
