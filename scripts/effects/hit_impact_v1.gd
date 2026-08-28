@@ -29,7 +29,7 @@ static func spawn_world(
 	anchor.add_child(effect)
 	effect.add_to_group(&"vex_world_impacts")
 	var normal := _safe_normal(hit_normal, -shot_direction)
-	var surface_offset := _world_surface_offset(anchor)
+	var surface_offset := _world_surface_offset(anchor, normal)
 	effect.global_position = hit_position + normal * surface_offset
 	effect._align_to_normal(normal)
 	effect._build_world_visual()
@@ -94,9 +94,26 @@ static func _world_impact_anchor(
 	return fallback_parent
 
 
-static func _world_surface_offset(surface: Object) -> float:
+static func _world_surface_offset(surface: Object, hit_normal: Vector3) -> float:
+	# Önce yüzeye/prop'a özel offset çözümünü ara. Kapı gibi sprite ile
+	# collider yüzeyi farklı olan hareketli objelerde tek sabit offset yanlış olur.
 	var current := surface as Node
 	var depth := 0
+	while current != null and depth < 8:
+		if current.has_method("resolve_bullet_impact_offset"):
+			var resolved: Variant = current.call(
+				"resolve_bullet_impact_offset",
+				surface,
+				hit_normal
+			)
+			if typeof(resolved) == TYPE_FLOAT or typeof(resolved) == TYPE_INT:
+				return maxf(0.001, float(resolved))
+		current = current.get_parent()
+		depth += 1
+
+	# Özel resolver yoksa eski güvenli davranışı koru.
+	current = surface as Node
+	depth = 0
 	while current != null and depth < 5:
 		if current is AnimatableBody3D:
 			return MOVING_SURFACE_OFFSET

@@ -3,6 +3,9 @@ extends Node3D
 
 signal lock_state_changed(is_locked: bool)
 
+const BULLET_IMPACT_FACE_OFFSET := 0.052
+const BULLET_IMPACT_EDGE_OFFSET := 0.004
+
 enum DoorState {
 	CLOSED,
 	OPENING,
@@ -279,6 +282,25 @@ func resolve_bullet_impact_anchor(surface: Node, hit_position: Vector3) -> Node3
 	if surface is Node3D:
 		return surface as Node3D
 	return self
+
+
+func resolve_bullet_impact_offset(anchor: Node3D, hit_normal: Vector3) -> float:
+	if anchor != door_panel and anchor != door_panel_right:
+		return 0.018
+	if hit_normal.length_squared() <= 0.000001:
+		return BULLET_IMPACT_EDGE_OFFSET
+
+	# DoorPanel collider kalınlığı X ekseninde 0.20 m, görünen ön/arka
+	# Sprite3D düzlemleri ise X = +/-0.15 m'de. Ön/arka isabette yaklaşık
+	# 5 cm telafi gerekir. Açık kapının görünen ince Y/Z kenarlarında ise
+	# BoxMesh ile collider aynı yüzeydedir; yalnız z-fighting kadar offset ver.
+	var local_normal := anchor.global_transform.basis.inverse() * hit_normal.normalized()
+	var abs_x := absf(local_normal.x)
+	var abs_y := absf(local_normal.y)
+	var abs_z := absf(local_normal.z)
+	if abs_x >= abs_y and abs_x >= abs_z:
+		return BULLET_IMPACT_FACE_OFFSET
+	return BULLET_IMPACT_EDGE_OFFSET
 
 
 func _bullet_impact_panel_for_position(hit_position: Vector3) -> Node3D:
