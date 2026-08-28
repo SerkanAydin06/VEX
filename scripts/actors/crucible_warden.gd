@@ -58,7 +58,7 @@ func _update_behavior(delta: float) -> void:
 			var observer := global_position + Vector3.UP * sight_origin_height
 			var visibility_ratio := _ranged_visibility_ratio_from(observer)
 			if visibility_ratio < 0.85:
-				state = State.CHASH
+				state = State.CHASE
 				_navigate_to(_warden_cover_advance_target(_player.global_position), delta)
 				return
 	super._update_behavior(delta)
