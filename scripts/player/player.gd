@@ -292,6 +292,9 @@ func collect_pickup(
 		&"sg04":
 			weapon_controller.call("unlock_weapon", &"sg04", amount)
 			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
+		&"sg09":
+			weapon_controller.call("unlock_weapon", &"sg09", amount)
+			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
 		&"vx47":
 			weapon_controller.call("unlock_weapon", &"vx47", amount)
 			GameState.notify_pickup(tr("PICKUP_RIFLE_ACTIVE"), &"weapon")
