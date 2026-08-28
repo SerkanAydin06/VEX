@@ -26,7 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://dafyvwemvyfmf" path="res://assets/weapons/p14/p14_side.png" id="24_p14"]
 [ext_resource type="Texture2D" uid="uid://bv5uciexmohkj" path="res://assets/weapons/p20/p20_side.png" id="25_p20"]
 [ext_resource type="Texture2D" uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png" id="26_sg04"]
-[ext_resource type="Texture2D" path="res://assets/weapons/sg09/sg09_side.png" id="26_sg09"]
+[ext_resource type="Texture2D" uid="uid://dyyy870flflig" path="res://assets/weapons/sg09/sg09_side.png" id="26_sg09"]
 [ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="27_vx47"]
 [ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="28_mp90"]
 [ext_resource type="Texture2D" uid="uid://u351flp6poca" path="res://assets/pickups/ammo_bullets.png" id="29_bullets"]
@@ -426,8 +426,8 @@ persist_collection = false
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("26_sg04")
 
-[node name="Weapon_SG09" parent="Pickups" instance=ExtResource("12_pickup")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.2, 0.9, 22)
+[node name="Weapon_SG09" parent="Pickups" unique_id=39572815 instance=ExtResource("12_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.005669, 0.9, 22)
 pickup_id = &"level_test_weapon_sg09"
 pickup_type = "sg09"
 amount = 1
@@ -522,7 +522,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.2, 20)
 enemy_id = &"level_test_ravager"
 maximum_health = 100
 move_speed = 5.0
-detection_range = 30.0
 
 [node name="CinderHound" parent="Enemies" unique_id=139156611 instance=ExtResource("19_cinderhound")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.031110287, 20)
@@ -530,7 +529,6 @@ enemy_id = &"level_test_cinderhound"
 maximum_health = 120
 move_speed = 10.0
 chase_speed = 10.0
-detection_range = 30.0
 
 [node name="RedViper" parent="Enemies" unique_id=406336072 instance=ExtResource("14_redviper")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.5046375, 10)
