@@ -1,0 +1,56 @@
+name: Apply Warden Corner Push
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/apply_warden_corner_push.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - name: Patch Crucible Warden
+        run: |
+          echo 'ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgpwID0gUGF0aCgic2NyaXB0cy9hY3RvcnMvY3J1Y2libGVfd2FyZGVuLmdkIikKcyA9IHAucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCm1hcmtlciA9ICJ2YXIgX2xhc3RfaGVhdHdhdmVfcGxheWVyX2hpdF9nZW5lcmF0aW9uIDo9IC0xXFxuXFxuXFxuZnVuYyBfYXR0ZW1wdF9hdHRhY2soKSAtPiB2b2lkOlxuIgppZiBtYXJrZXIgbm90IGluIHM6CiAgICByYWlzZSBTeXN0ZW1FeGl0KCJ3YXJkZW4gaW5zZXJ0aW9uIG1hcmtlciBub3QgZm91bmQiKQppbnNlcnQgPSAiIiJ2YXIgX2xhc3RfaGVhdHdhdmVfcGxheWVyX2hpdF9nZW5lcmF0aW9uIDo9IC0xCgoKZnVuYyBfdXBkYXRlX2JlaGF2aW9yKGRlbHRhOiBmbG9hdCkgLT4gdm9pZDoKCSMgQ3J1Y2libGUgV2FyZGVuIGlzIGEgY2xvc2UtcHJlc3N1cmUgZWxpdGUsIG5vdCBhIHN0YXRpb25hcnkgcmFuZ2VkIHNob290ZXIuCgkjIFdoZW4gb25seSBhIHNsaXZlciBvZiB0aGUgcGxheWVyIGlzIHZpc2libGUgYXJvdW5kIGNvdmVyLCBmb3JjZSBhbiBhZHZhbmNlCgkjIHRvd2FyZCBhIHJlYWNoYWJsZSBjb3ZlciBlZGdlIGJlZm9yZSB0aGUgZ2VuZXJpYyBhdHRhY2sgbG9naWMgY2FuIHN0b3AgaXQuCglpZiAoCgkJc3RhdGUgIT0gU3RhdGUuREVBRAoJCWFuZCBfYWxlcnRlZAoJCWFuZCBub3QgX2F0dGFja19sb2NrZWQKCQlhbmQgX3BsYXllciAhPSBudWxsCgkJYW5kIGlzX2luc3RhbmNlX3ZhbGlkKF9wbGF5ZXIpCgkpOgoJCXZhciBwbGF5ZXJfZGlzdGFuY2UgOj0gX2hvcml6b250YWxfZGlzdGFuY2UoZ2xvYmFsX3Bvc2l0aW9uLCBfcGxheWVyLmdsb2JhbF9wb3NpdGlvbikKCQlpZiBwbGF5ZXJfZGlzdGFuY2UgPiBoZWF0d2F2ZV90cmlnZ2VyX3JhbmdlICogMC45NToKCQkJdmFyIG9ic2VydmVyIDo9IGdsb2JhbF9wb3NpdGlvbiArIFZlY3RvcjMuVVAgKiBzaWdodF9vcmlnaW5faGVpZ2h0CgkJCXZhciB2aXNpYmlsaXR5X3JhdGlvIDo9IF9yYW5nZWRfdmlzaWJpbGl0eV9yYXRpb19mcm9tKG9ic2VydmVyKQoJCQlpZiB2aXNpYmlsaXR5X3JhdGlvIDwgMC44NToKCQkJCXN0YXRlID0gU3RhdGUuQ0hBU0UKCQkJCV9uYXZpZ2F0ZV90byhfd2FyZGVuX2NvdmVyX2FkdmFuY2VfdGFyZ2V0KF9wbGF5ZXIuZ2xvYmFsX3Bvc2l0aW9uKSwgZGVsdGEpCgkJCQlyZXR1cm4KCXN1cGVyLl91cGRhdGVfYmVoYXZpb3IoZGVsdGEpCgoKZnVuYyBfd2FyZGVuX2NvdmVyX2FkdmFuY2VfdGFyZ2V0KHNvdXJjZV9wb3NpdGlvbjogVmVjdG9yMykgLT4gVmVjdG9yMzoKCXZhciBmbGF0X3NvdXJjZSA6PSBzb3VyY2VfcG9zaXRpb24KCWZsYXRfc291cmNlLnkgPSBnbG9iYWxfcG9zaXRpb24ueQoJdmFyIHRvd2FyZF9zb3VyY2UgOj0gZmxhdF9zb3VyY2UgLSBnbG9iYWxfcG9zaXRpb24KCXRvd2FyZF9zb3VyY2UueSA9IDAuMAoJdmFyIGRpc3RhbmNlIDo9IHRvd2FyZF9zb3VyY2UubGVuZ3RoKCkKCWlmIGRpc3RhbmNlIDw9IDAuMDAxOgoJCXJldHVybiBmbGF0X3NvdXJjZQoKCXZhciBkaXJlY3Rpb24gOj0gdG93YXJkX3NvdXJjZSAvIGRpc3RhbmNlCgl2YXIgcmF5X2hlaWdodCA6PSBtYXhmKDAuNTUsIHNpZ2h0X29yaWdpbl9oZWlnaHQgKiAwLjcpCgl2YXIgcmF5X3N0YXJ0IDo9IGdsb2JhbF9wb3NpdGlvbiArIFZlY3RvcjMuVVAgKiByYXlfaGVpZ2h0Cgl2YXIgcmF5X2VuZCA6PSBmbGF0X3NvdXJjZSArIFZlY3RvcjMuVVAgKiBtYXhmKDAuNDUsIHNpZ2h0X3RhcmdldF9oZWlnaHQpCgl2YXIgcXVlcnkgOj0gUGh5c2ljc1JheVF1ZXJ5UGFyYW1ldGVyczNELmNyZWF0ZSgKCQlyYXlfc3RhcnQsCgkJcmF5X2VuZCwKCQluYXZpZ2F0aW9uX2NvbGxpc2lvbl9tYXNrLAoJCVtnZXRfcmlkKCldCgkpCglxdWVyeS5jb2xsaWRlX3dpdGhfYXJlYXMgPSBmYWxzZQoJdmFyIGhpdCA6PSBnZXRfd29ybGRfM2QoKS5kaXJlY3Rfc3BhY2Vfc3RhdGUuaW50ZXJzZWN0X3JheShxdWVyeSkKCWlmIGhpdC5pc19lbXB0eSgpOgoJCXZhciBvcGVuX3RhcmdldCA6PSBmbGF0X3NvdXJjZSAtIGRpcmVjdGlvbiAqIG1pbmYoMS40LCBkaXN0YW5jZSAqIDAuMjUpCgkJb3Blbl90YXJnZXQueSA9IGdsb2JhbF9wb3NpdGlvbi55CgkJcmV0dXJuIG9wZW5fdGFyZ2V0CgoJdmFyIGhpdF9wb3NpdGlvbjogVmVjdG9yMyA9IGhpdC5nZXQoInBvc2l0aW9uIiwgZmxhdF9zb3VyY2UpCgl2YXIgY2xlYXJhbmNlIDo9IG1heGYobmF2aWdhdGlvbl9jbGVhcmFuY2UgKyAwLjU1LCAxLjM1KQoJdmFyIG5lYXJfc2lkZSA6PSBoaXRfcG9zaXRpb24gLSBkaXJlY3Rpb24gKiBjbGVhcmFuY2UKCW5lYXJfc2lkZS55ID0gZ2xvYmFsX3Bvc2l0aW9uLnkKCiMJIFRyeSBib3RoIHNpZGVzIG9mIHRoZSBibG9ja2luZyB3YWxsLiBQcmVmZXIgYSByZWFjaGFibGUgc2lkZSB0aGF0IGdpdmVzIGEKCSMgYmV0dGVyIHZpZXcgb2YgdGhlIHBsYXllcjsgdGhpcyB0dXJucyBhIHdhbGwgaGl0IGludG8gYW4gYWN0dWFsIGNvcm5lciBwdXNoLgoJdmFyIHNpZGUgOj0gVmVjdG9yMygtZGlyZWN0aW9uLnosIDAuMCwgZGlyZWN0aW9uLngpLm5vcm1hbGl6ZWQoKQoJdmFyIHNpZGVfZGlzdGFuY2UgOj0gbWF4ZihuYXZpZ2F0aW9uX2NsZWFyYW5jZSAqIDIuMiwgMS44KQoJdmFyIGNhbmRpZGF0ZXM6IEFycmF5W1ZlY3RvcjNdID0gWwoJCW5lYXJfc2lkZSArIHNpZGUgKiBzaWRlX2Rpc3RhbmNlLAoJCW5lYXJfc2lkZSAtIHNpZGUgKiBzaWRlX2Rpc3RhbmNlLAoJCW5lYXJfc2lkZSwKCV0KCXZhciBiZXN0X3RhcmdldCA6PSBuZWFyX3NpZGUKCXZhciBiZXN0X3Njb3JlIDo9IC1JTkYKCWZvciBjYW5kaWRhdGU6IFZlY3RvcjMgaW4gY2FuZGlkYXRlczoKCQljYW5kaWRhdGUueSA9IGdsb2JhbF9wb3NpdGlvbi55CgkJdmFyIGNhbmRpZGF0ZV92aXNpYmlsaXR5IDo9IF9yYW5nZWRfdmlzaWJpbGl0eV9yYXRpb19mcm9tKAoJCQljYW5kaWRhdGUgKyBWZWN0b3IzLlVQICogc2lnaHRfb3JpZ2luX2hlaWdodAoJCSkKCQl2YXIgd2Fsa19ib251cyA6PSAxLjUgaWYgX2lzX3dhbGtfc2VnbWVudF9jbGVhcihnbG9iYWxfcG9zaXRpb24sIGNhbmRpZGF0ZSkgZWxzZSAwLjAKCQl2YXIgc2NvcmUgOj0gY2FuZGlkYXRlX3Zpc2liaWxpdHkgKiA2LjAgKyB3YWxrX2JvbnVzCgkJaWYgc2NvcmUgPiBiZXN0X3Njb3JlOgoJCQliZXN0X3Njb3JlID0gc2NvcmUKCQkJYmVzdF90YXJnZXQgPSBjYW5kaWRhdGUKCXJldHVybiBiZXN0X3RhcmdldAoKCmZ1bmMgX2F0dGVtcHRfYXR0YWNrKCkgLT4gdm9pZDoKIiIiCnMgPSBzLnJlcGxhY2UobWFya2VyLCBpbnNlcnQsIDEpCnAud3JpdGVfdGV4dChzLCBlbmNvZGluZz0idXRmLTgiKQo=' | base64 -d > /tmp/patch_warden.py
+          python /tmp/patch_warden.py
+      - name: Validate Warden contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s = Path('scripts/actors/crucible_warden.gd').read_text(encoding='utf-8')
+          assert 'func _update_behavior(delta: float) -> void:' in s
+          assert 'visibility_ratio < 0.85' in s
+          assert 'func _warden_cover_advance_target' in s
+          assert 'near_side + side * side_distance' in s
+          assert '_navigate_to(_warden_cover_advance_target' in s
+          print('Crucible Warden corner push contract passed')
+          PY
+      - name: Install Godot 4.7
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+          unzip -q Godot_v4.7-stable_linux.x86_64.zip
+          chmod +x Godot_v4.7-stable_linux.x86_64
+      - name: Verify Godot
+        run: ./Godot_v4.7-stable_linux.x86_64 --version
+      - name: Import project
+        run: ./Godot_v4.7-stable_linux.x86_64 --headless --editor --path . --quit
+      - name: Commit fix
+        run: |
+          git config user.name OpenAI
+          git config user.email openai@users.noreply.github.com
+          git add scripts/actors/crucible_warden.gd
+          git diff --cached --quiet && exit 0
+          git commit -m 'fix: make crucible warden push cover edges'
+          git push origin HEAD:main
