@@ -1,0 +1,92 @@
+name: Fix Door Impact Anchor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix_door_impact_anchor.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest main
+        run: git pull --ff-only origin main
+      - name: Patch door impact anchoring
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          door_path = Path('scripts/props/door.gd')
+          door = door_path.read_text(encoding='utf-8')
+          anchor = '''func _emit_lock_state() -> void:\n\tlock_state_changed.emit(is_access_locked())\n\n\n'''
+          insert = '''func _emit_lock_state() -> void:\n\tlock_state_changed.emit(is_access_locked())\n\n\nfunc resolve_bullet_impact_anchor(surface: Node, hit_position: Vector3) -> Node3D:\n\t# Kapı tam kapalıyken PerceptionBlocker tek parça world collider olarak\n\t# mermiyi panelden önce yakalayabilir. İz blocker'a bağlanırsa kapı açılınca\n\t# havada kalır; bu yüzden blocker isabetini gerçek hareketli panele yönlendir.\n\tif surface == perception_blocker:\n\t\treturn _bullet_impact_panel_for_position(hit_position)\n\n\t# Ray doğrudan gerçek paneli (veya onun bir child collider'ını) vurduysa\n\t# paneli koru. Frame/jamb gibi sabit kapı parçaları kendi collider'ında kalır.\n\tvar current := surface\n\tvar depth := 0\n\twhile current != null and depth < 6:\n\t\tif current == door_panel:\n\t\t\treturn door_panel\n\t\tif current == door_panel_right:\n\t\t\treturn door_panel_right\n\t\tif current == self:\n\t\t\tbreak\n\t\tcurrent = current.get_parent()\n\t\tdepth += 1\n\tif surface is Node3D:\n\t\treturn surface as Node3D\n\treturn self\n\n\nfunc _bullet_impact_panel_for_position(hit_position: Vector3) -> Node3D:\n\tif door_panel == null:\n\t\treturn self\n\tif not _is_split_side_door():\n\t\treturn door_panel\n\tvar local_hit := to_local(hit_position)\n\tvar left_distance := absf(local_hit.z - door_panel.position.z)\n\tvar right_distance := absf(local_hit.z - door_panel_right.position.z)\n\treturn door_panel if left_distance <= right_distance else door_panel_right\n\n\n'''
+          assert anchor in door, 'door anchor changed'
+          assert 'func resolve_bullet_impact_anchor(' not in door
+          door = door.replace(anchor, insert, 1)
+          door_path.write_text(door, encoding='utf-8')
+
+          effect_path = Path('scripts/effects/hit_impact_v1.gd')
+          effect = effect_path.read_text(encoding='utf-8')
+          old = '''\tvar anchor := _world_impact_anchor(parent, surface)\n\tanchor.add_child(effect)\n\teffect.add_to_group(&"vex_world_impacts")\n\tvar normal := _safe_normal(hit_normal, -shot_direction)\n\tvar surface_offset := _world_surface_offset(surface)\n'''
+          new = '''\tvar anchor := _world_impact_anchor(parent, surface, hit_position)\n\tanchor.add_child(effect)\n\teffect.add_to_group(&"vex_world_impacts")\n\tvar normal := _safe_normal(hit_normal, -shot_direction)\n\tvar surface_offset := _world_surface_offset(anchor)\n'''
+          assert old in effect, 'spawn anchor block changed'
+          effect = effect.replace(old, new, 1)
+
+          old = '''static func _world_impact_anchor(fallback_parent: Node, surface: Object) -> Node:\n\tif surface is Node3D and is_instance_valid(surface):\n\t\treturn surface as Node3D\n\treturn fallback_parent\n'''
+          new = '''static func _world_impact_anchor(\n\tfallback_parent: Node,\n\tsurface: Object,\n\thit_position: Vector3\n) -> Node:\n\tif surface is Node and is_instance_valid(surface):\n\t\tvar surface_node := surface as Node\n\t\tvar current := surface_node\n\t\tvar depth := 0\n\t\twhile current != null and depth < 8:\n\t\t\tif current.has_method("resolve_bullet_impact_anchor"):\n\t\t\t\tvar resolved: Variant = current.call(\n\t\t\t\t\t"resolve_bullet_impact_anchor",\n\t\t\t\t\tsurface_node,\n\t\t\t\t\thit_position\n\t\t\t\t)\n\t\t\t\tif resolved is Node3D and is_instance_valid(resolved):\n\t\t\t\t\treturn resolved as Node3D\n\t\t\tcurrent = current.get_parent()\n\t\t\tdepth += 1\n\t\tif surface_node is Node3D:\n\t\t\treturn surface_node as Node3D\n\treturn fallback_parent\n'''
+          assert old in effect, 'world anchor helper changed'
+          effect = effect.replace(old, new, 1)
+          effect_path.write_text(effect, encoding='utf-8')
+
+          audit_path = Path('tests/hit_impact_audit.py')
+          audit = audit_path.read_text(encoding='utf-8')
+          old = '''effect = read("scripts/effects/hit_impact_v1.gd")\ncontroller = read("scripts/player/weapon_controller.gd")\n'''
+          new = '''effect = read("scripts/effects/hit_impact_v1.gd")\ncontroller = read("scripts/player/weapon_controller.gd")\ndoor = read("scripts/props/door.gd")\n'''
+          assert old in audit, 'audit read block changed'
+          audit = audit.replace(old, new, 1)
+
+          old = '''    "func _world_impact_anchor(",\n    "func _world_surface_offset(",\n'''
+          new = '''    "func _world_impact_anchor(",\n    'current.has_method("resolve_bullet_impact_anchor")',\n    '"resolve_bullet_impact_anchor",',\n    "_world_surface_offset(anchor)",\n    "func _world_surface_offset(",\n'''
+          assert old in audit, 'effect audit block changed'
+          audit = audit.replace(old, new, 1)
+
+          marker = '''for forbidden in [\n'''
+          door_checks = '''\nfor needle in [\n    "func resolve_bullet_impact_anchor(",\n    "if surface == perception_blocker:",\n    "return _bullet_impact_panel_for_position(hit_position)",\n    "func _bullet_impact_panel_for_position(",\n    "left_distance := absf(local_hit.z - door_panel.position.z)",\n    "right_distance := absf(local_hit.z - door_panel_right.position.z)",\n]:\n    if needle not in door:\n        errors.append(f"Door impact anchor sözleşmesi eksik: {needle}")\n\n'''
+          assert marker in audit, 'forbidden marker changed'
+          audit = audit.replace(marker, door_checks + marker, 1)
+          audit_path.write_text(audit, encoding='utf-8')
+          PY
+      - name: Diff sanity
+        run: git diff --check
+      - name: Run hit impact audit
+        run: python tests/hit_impact_audit.py
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Verify Godot version
+        run: godot --version | grep '^4.7'
+      - name: Import project headlessly
+        run: godot --headless --editor --path . --quit
+      - name: Commit fix
+        run: |
+          git config user.name "OpenAI"
+          git config user.email "openai@users.noreply.github.com"
+          git add scripts/props/door.gd scripts/effects/hit_impact_v1.gd tests/hit_impact_audit.py
+          git commit -m "fix: anchor door impacts to moving panels"
+          git push origin HEAD:main
