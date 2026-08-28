@@ -1,4 +1,4 @@
-name: Export SG09 Integration Sources
+name: Apply SG09 Integration
 
 on:
   push:
@@ -6,33 +6,59 @@ on:
       - tooling/sg09-integration-v2
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  export-sources:
+  apply-sg09:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
-      - name: Checkout repository
+      - name: Checkout staging branch
         uses: actions/checkout@v4
-      - name: Package SG09 sources
-        uses: actions/upload-artifact@v4
         with:
-          name: sg09-integration-sources-v2
-          if-no-files-found: error
-          retention-days: 1
-          path: |
-            assets/weapons/sg09
-            scenes/player/player.tscn
-            scenes/ui/weapons/sg04_view.tscn
-            scenes/levels/level_test.tscn
-            scenes/hub/bastion_7.tscn
-            resources/weapons/sg04.tres
-            scripts/player/player.gd
-            scripts/player/weapon_upgrade_catalog.gd
-            scripts/props/pickup.gd
-            scripts/ui/hud.gd
+          ref: tooling/sg09-integration-v2
+          fetch-depth: 0
+      - name: Apply SG09 patch to current main
+        shell: bash
+        run: |
+          base64 -d .github/sg09_integration.patch.gz.b64 | gzip -d > /tmp/sg09_integration.patch
+          echo "01901fff74c7cb14bb295af666bf04ba0dccbc0554ca12b2b1de9861d633004d  /tmp/sg09_integration.patch" | sha256sum -c -
+          git fetch origin main
+          git checkout -B main origin/main
+          test "$(git rev-parse HEAD)" = "d19ec16c5f2f638608cf4182b13cceb54513425e"
+          git apply --check /tmp/sg09_integration.patch
+          git apply /tmp/sg09_integration.patch
+          git diff --check
+      - name: Validate SG09 integration
+        run: |
+          python -m py_compile tests/static_audit.py
+          python tests/static_audit.py
+          python tests/scene_syntax_audit.py
+          python tests/level_test_audit.py
+          python tests/player_movement_audit.py
+          python tests/furnice_carrier_audit.py
+          python tests/crucible_warden_audit.py
+          python tests/sg04_weapon_audit.py
+          python tests/weapon_ads_audit.py
+      - name: Commit SG09 to main
+        shell: bash
+        run: |
+          git config user.name "OpenAI"
+          git config user.email "openai@users.noreply.github.com"
+          git add \
+            Weapons_VEX.md \
+            resources/weapons/sg04.tres \
+            resources/weapons/sg09.tres \
+            scenes/hub/bastion_7.tscn \
+            scenes/levels/level_test.tscn \
+            scenes/player/player.tscn \
+            scenes/ui/weapons/sg09_view.tscn \
+            scripts/player/player.gd \
+            scripts/player/weapon_upgrade_catalog.gd \
+            scripts/props/pickup.gd \
+            scripts/ui/hud.gd \
+            tests/integrity_test.gd \
+            tests/static_audit.py \
             translations/vex.csv
-            Weapons_VEX.md
-            tests/static_audit.py
-            tests/integrity_test.gd
+          git commit -m "feat: add SG09 shotgun"
+          git push origin HEAD:main
