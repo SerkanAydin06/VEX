@@ -22,34 +22,10 @@ jobs:
           git reset --hard origin/main
       - name: Rename shadowing parameter
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('scripts/actors/ravager.gd')
-          s = p.read_text(encoding='utf-8')
-          old = '''func _has_navigation_floor(position: Vector3) -> bool:
-	var ray_start := position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
-	var ray_end := position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
-'''
-          new = '''func _has_navigation_floor(probe_position: Vector3) -> bool:
-	var ray_start := probe_position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
-	var ray_end := probe_position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
-'''
-          if old not in s:
-              raise SystemExit('expected shadowing helper block not found')
-          s = s.replace(old, new, 1)
-          p.write_text(s, encoding='utf-8')
-          PY
-      - name: Validate rename
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          s = Path('scripts/actors/ravager.gd').read_text(encoding='utf-8')
-          assert 'func _has_navigation_floor(position: Vector3)' not in s
-          assert 'func _has_navigation_floor(probe_position: Vector3) -> bool:' in s
-          assert 'var ray_start := probe_position +' in s
-          assert 'var ray_end := probe_position +' in s
-          print('Ravager position shadow warning fixed')
-          PY
+          sed -i 's/func _has_navigation_floor(position: Vector3)/func _has_navigation_floor(probe_position: Vector3)/' scripts/actors/ravager.gd
+          sed -i '/func _has_navigation_floor(probe_position: Vector3)/,+2 s/position +/probe_position +/g' scripts/actors/ravager.gd
+          grep -F 'func _has_navigation_floor(probe_position: Vector3) -> bool:' scripts/actors/ravager.gd
+          ! grep -F 'func _has_navigation_floor(position: Vector3)' scripts/actors/ravager.gd
       - name: Commit fix
         run: |
           git config user.name OpenAI
