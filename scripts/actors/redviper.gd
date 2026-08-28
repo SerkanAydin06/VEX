@@ -673,7 +673,7 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		if retaliation_target != null and is_instance_valid(retaliation_target):
 			_aggro = true
 			_damage_reaction_remaining = damage_reaction_duration
-			_last_seen_position = retaliation_target.global_position
+			_last_seen_position = _retaliation_approach_position(retaliation_target.global_position)
 			_lost_sight_remaining = lost_sight_timeout
 			_search_remaining = search_duration
 			_cached_player_visible = false
@@ -688,6 +688,30 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		hurt_audio.play()
 	_flash_hurt()
 	_play_hurt_feedback()
+
+
+func _retaliation_approach_position(source_position: Vector3) -> Vector3:
+	var flat_source := source_position
+	flat_source.y = global_position.y
+	var toward_source := flat_source - global_position
+	toward_source.y = 0.0
+	var distance := toward_source.length()
+	if distance <= 0.001:
+		return flat_source
+
+	var direction := toward_source / distance
+	var ray_start := global_position + Vector3.UP * maxf(0.55, sight_origin_height)
+	var ray_end := flat_source + Vector3.UP * maxf(0.45, sight_target_height)
+	var query := PhysicsRayQueryParameters3D.create(ray_start, ray_end, 1 | 8, [get_rid()])
+	query.collide_with_areas = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return flat_source
+
+	var hit_position: Vector3 = hit.get("position", flat_source)
+	var result := hit_position - direction * maxf(investigation_reach_distance + 0.45, 0.9)
+	result.y = global_position.y
+	return result
 
 
 func _collision_floor_local_y() -> float:

@@ -304,7 +304,10 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 			state = State.CHASE
 		if _source is Node3D:
 			var source_node := _source as Node3D
-			_last_seen_position = _damage_source_approach_position(source_node.global_position)
+			# Gerçek ateş kaynağını sakla. Rota sistemi hedef fiziksel olarak
+			# ulaşılamıyorsa ona en yakın ulaşılabilir noktayı kendisi çözer.
+			_last_seen_position = source_node.global_position
+			_last_seen_position.y = global_position.y
 			_has_last_seen_position = true
 		elif _player != null and is_instance_valid(_player):
 			_last_seen_position = _player.global_position
@@ -754,23 +757,69 @@ func _find_investigation_path(
 	start_id: int,
 	destination: Vector3
 ) -> PackedVector3Array:
-	# Son görülen konum duvara çok yakınsa 154 waypoint'in tamamına ray
-	# atmak yerine hedefe en yakın sınırlı adayları dene.
+	# Hedef (özellikle oyuncunun duvar kenarındaki merkezi) doğrudan erişilemez
+	# olabilir. Hedefe düz görüş şartı aramak boş rota üretip AI'ı donduruyordu.
+	# Erişilebilir waypoint'lerden hedefe fiziksel olarak en çok yaklaşılabilen
+	# noktayı seç; dolaşma yolu varsa hedefe tamamen ulaşan aday doğal olarak kazanır.
 	var nearby_indices := _nearest_waypoint_indices(
 		destination,
 		INF,
-		investigation_candidate_count
+		_navigation_points.size()
 	)
+	var best_path := PackedVector3Array()
+	var best_remaining_distance := INF
+	var reachable_candidates := 0
+
 	for point_index: int in nearby_indices:
-		var waypoint := _navigation_points[point_index]
-		if not _is_center_segment_clear(waypoint, destination):
-			continue
-
 		var candidate_path := graph.get_point_path(start_id, point_index)
-		if not candidate_path.is_empty():
-			return candidate_path
+		if candidate_path.is_empty():
+			continue
+		reachable_candidates += 1
+		var waypoint := _navigation_points[point_index]
+		var approach_point := _furthest_walkable_point_toward(waypoint, destination)
+		var remaining_distance := _horizontal_distance(approach_point, destination)
 
-	return PackedVector3Array()
+		if remaining_distance < best_remaining_distance:
+			best_remaining_distance = remaining_distance
+			best_path = candidate_path.duplicate()
+			if (
+				best_path.is_empty()
+				or _horizontal_distance(best_path[best_path.size() - 1], approach_point)
+				> waypoint_reach_distance * 0.25
+			):
+				best_path.append(approach_point)
+
+		if best_remaining_distance <= waypoint_reach_distance * 0.25:
+			break
+		if reachable_candidates >= 16 and best_remaining_distance <= search_probe_radius * 1.5:
+			break
+
+	return best_path
+
+
+func _furthest_walkable_point_toward(from_position: Vector3, destination: Vector3) -> Vector3:
+	var start := from_position
+	start.y = global_position.y
+	var target := destination
+	target.y = global_position.y
+	if _is_walk_segment_clear(start, target):
+		return target
+
+	# Gövde açıklığını hesaba katarak hedef yönünde yürünebilen son noktayı bul.
+	var low := 0.0
+	var high := 1.0
+	for _step: int in range(8):
+		var middle := (low + high) * 0.5
+		var probe := start.lerp(target, middle)
+		probe.y = global_position.y
+		if _is_walk_segment_clear(start, probe):
+			low = middle
+		else:
+			high = middle
+
+	var result := start.lerp(target, low)
+	result.y = global_position.y
+	return result
 
 
 func _connect_endpoint_to_graph(graph: AStar3D, endpoint_id: int, endpoint: Vector3) -> void:
