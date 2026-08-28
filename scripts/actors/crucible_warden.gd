@@ -41,6 +41,98 @@ var _ground_slam_ready_at_msec := 0
 var _heatwave_ready_at_msec := 0
 var _heatwave_burst_generation := 0
 var _last_heatwave_player_hit_generation := -1
+var _warden_detour_direction := Vector3.ZERO
+var _warden_detour_remaining := 0.0
+var _warden_movement_target := Vector3.ZERO
+
+
+func _navigate_to(target: Vector3, delta: float) -> void:
+	# Warden chase intentionally mirrors the collision-tangent behavior that
+	# works reliably for the RedViper family. Search/patrol still use the shared
+	# AStar navigation, but active pursuit reacts to the wall actually touched
+	# instead of sampling wide left/right guesses that can oscillate.
+	if state == State.SEARCH or state == State.PATROL or state == State.RETURN:
+		super._navigate_to(target, delta)
+		return
+
+	var resolved_target := _resolve_enemy_door_step(target)
+	resolved_target.y = global_position.y
+	_warden_movement_target = resolved_target
+	_warden_detour_remaining = maxf(0.0, _warden_detour_remaining - delta)
+	_refresh_warden_collision_detour()
+
+	var direction := resolved_target - global_position
+	direction.y = 0.0
+	if direction.length_squared() <= 0.001:
+		_stop_horizontal_motion()
+		return
+	direction = direction.normalized()
+
+	if (
+		_warden_detour_remaining > 0.0
+		and _warden_detour_direction.length_squared() > 0.001
+	):
+		direction = _warden_detour_direction
+
+	_facing_direction = direction
+	rotation.y = atan2(-direction.x, -direction.z)
+	velocity.x = move_toward(
+		velocity.x,
+		direction.x * _runtime_move_speed,
+		delta * movement_acceleration
+	)
+	velocity.z = move_toward(
+		velocity.z,
+		direction.z * _runtime_move_speed,
+		delta * movement_acceleration
+	)
+	if animated_sprite.animation != &"hurt" and animated_sprite.animation != &"attack":
+		_play_directional_animation(&"walk", &"walk_back")
+
+
+func _refresh_warden_collision_detour() -> void:
+	# Keep the chosen side briefly. Re-selecting every frame is what produced
+	# the visible left/right oscillation around cover.
+	if _warden_detour_remaining > 0.0:
+		return
+
+	for collision_index: int in range(get_slide_collision_count()):
+		var collision := get_slide_collision(collision_index)
+		if collision == null:
+			continue
+		var normal := collision.get_normal()
+		if absf(normal.y) >= 0.55:
+			continue
+		normal.y = 0.0
+		if normal.length_squared() <= 0.001:
+			continue
+		normal = normal.normalized()
+
+		var tangent_a := Vector3(-normal.z, 0.0, normal.x).normalized()
+		var tangent_b := -tangent_a
+		var target_direction := _warden_movement_target - global_position
+		target_direction.y = 0.0
+		if target_direction.length_squared() > 0.001:
+			target_direction = target_direction.normalized()
+
+		var probe_distance := maxf(navigation_clearance * 1.8, 1.15)
+		var candidate_a := global_position + tangent_a * probe_distance
+		var candidate_b := global_position + tangent_b * probe_distance
+		var a_clear := _is_walk_segment_clear(global_position, candidate_a)
+		var b_clear := _is_walk_segment_clear(global_position, candidate_b)
+
+		if a_clear and not b_clear:
+			_warden_detour_direction = tangent_a
+		elif b_clear and not a_clear:
+			_warden_detour_direction = tangent_b
+		else:
+			_warden_detour_direction = (
+				tangent_a
+				if tangent_a.dot(target_direction) >= tangent_b.dot(target_direction)
+				else tangent_b
+			)
+		_warden_detour_remaining = 0.70
+		return
 
 
 func _update_behavior(delta: float) -> void:
@@ -98,28 +190,20 @@ func _attempt_attack() -> void:
 func _close_for_heatwave(speed_multiplier: float) -> void:
 	if _player == null or not is_instance_valid(_player):
 		return
-	var direction := _player.global_position - global_position
-	direction.y = 0.0
-	if direction.length_squared() <= 0.001:
-		_stop_horizontal_motion()
-		return
-	direction = direction.normalized()
-	_facing_direction = direction
-	rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
-
+	# Do not bypass navigation while closing for Heatwave. Direct velocity toward
+	# a player behind cover made the large Warden body slide unpredictably along
+	# the wall and fight the chase detour logic.
 	var delta := get_physics_process_delta_time()
-	var target_speed := _runtime_move_speed * maxf(0.1, speed_multiplier)
-	velocity.x = move_toward(
-		velocity.x,
-		direction.x * target_speed,
-		movement_acceleration * delta
-	)
-	velocity.z = move_toward(
-		velocity.z,
-		direction.z * target_speed,
-		movement_acceleration * delta
-	)
-	_play_directional_animation(&"walk", &"walk_back")
+	_navigate_to(_player.global_position, delta)
+	var speed_scale := maxf(0.1, speed_multiplier)
+	velocity.x *= speed_scale
+	velocity.z *= speed_scale
+	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
+	var maximum_speed := _runtime_move_speed * speed_scale
+	if horizontal_speed > maximum_speed and horizontal_speed > 0.001:
+		var scale := maximum_speed / horizontal_speed
+		velocity.x *= scale
+		velocity.z *= scale
 
 
 func _begin_ground_slam_attack() -> void:
