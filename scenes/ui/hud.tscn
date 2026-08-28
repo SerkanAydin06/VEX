@@ -2,18 +2,23 @@
 
 [ext_resource type="Script" uid="uid://dcjn4lehfpt6g" path="res://scripts/ui/hud.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
+[ext_resource type="AudioStream" uid="uid://qg4twiu05eht" path="res://assets/audio/9mm_pistol_single_shot.wav" id="3_gmc6u"]
+[ext_resource type="AudioStream" uid="uid://c6lf4qbqo21vi" path="res://assets/audio/glock_17_single_shot.wav" id="4_4mi7y"]
+[ext_resource type="AudioStream" uid="uid://chgbh7yrhmbew" path="res://assets/audio/shotgun_single_fire.wav" id="4_65nxt"]
 [ext_resource type="Texture2D" uid="uid://drjnb7q64xjwu" path="res://assets/ui/crosshair_doom3_circle.png" id="4_crosshair"]
+[ext_resource type="AudioStream" uid="uid://btbm3ffodq3f1" path="res://assets/audio/louder_magnum_single.wav" id="4_el1dq"]
 [ext_resource type="Texture2D" uid="uid://bn1ug716sunu0" path="res://assets/ui/automap_console_frame.png" id="6_map_frame"]
+[ext_resource type="AudioStream" uid="uid://b0ve2pulakkn2" path="res://assets/audio/ak47_single_shot.wav" id="7_1e6lo"]
 [ext_resource type="Script" uid="uid://ct0slkur86ywi" path="res://scripts/ui/automap_view.gd" id="7_automap"]
 [ext_resource type="Texture2D" uid="uid://bjeurg4ipxvmu" path="res://assets/pickups/key_blue.png" id="8_key_blue"]
 [ext_resource type="Texture2D" uid="uid://clp5g0eqcky2c" path="res://assets/pickups/key_red.png" id="9_key_red"]
+[ext_resource type="AudioStream" uid="uid://bvcanu6kyuser" path="res://assets/audio/mp90_rifle_single_shot.wav" id="9_pkwgd"]
 [ext_resource type="Texture2D" uid="uid://blwigqvrkpxbe" path="res://assets/pickups/key_yellow.png" id="10_key_yellow"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="13_pause"]
 [ext_resource type="Texture2D" uid="uid://dwv6dgosxheen" path="res://assets/ui/blood_vignette.png" id="14_blood"]
 [ext_resource type="Texture2D" uid="uid://b6iwopfobi8ob" path="res://assets/ui/blood_vignette_critical.png" id="15_blood_critical"]
 [ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="18_mono_font"]
 [ext_resource type="AudioStream" uid="uid://6r2ekfh65cg2" path="res://assets/audio/pistol_fire_pro.wav" id="23_pistol_audio"]
-[ext_resource type="AudioStream" uid="uid://km5n3iai504p" path="res://assets/audio/shotgun_fire_pro.wav" id="24_shotgun_audio"]
 [ext_resource type="AudioStream" uid="uid://dfiiq8d0261ko" path="res://assets/audio/pistol_reload_pro.wav" id="25_pistol_reload_audio"]
 [ext_resource type="AudioStream" uid="uid://cjoqg8ao6lvuv" path="res://assets/audio/shotgun_reload_pro.wav" id="26_shotgun_reload_audio"]
 [ext_resource type="AudioStream" uid="uid://c2jv4ucc4qgg2" path="res://assets/audio/player_death_pro.wav" id="27_player_death_audio"]
@@ -105,18 +110,52 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PistolAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1631838649]
+[node name="P01Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1631838649]
+unique_name_in_owner = true
+stream = ExtResource("3_gmc6u")
+max_polyphony = 12
+bus = &"SFX"
+
+[node name="P07Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1491625899]
+unique_name_in_owner = true
+stream = ExtResource("4_4mi7y")
+volume_db = 12.523
+max_polyphony = 12
+bus = &"SFX"
+
+[node name="P14Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1615326222]
 unique_name_in_owner = true
 stream = ExtResource("23_pistol_audio")
 volume_db = -4.0
 max_polyphony = 12
 bus = &"SFX"
 
-[node name="ShotgunAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1667912531]
+[node name="P20Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=723427809]
 unique_name_in_owner = true
-stream = ExtResource("24_shotgun_audio")
-volume_db = -3.0
+stream = ExtResource("4_el1dq")
+volume_db = -4.0
+max_polyphony = 12
+bus = &"SFX"
+
+[node name="Sg04Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=1667912531]
+unique_name_in_owner = true
+stream = ExtResource("4_65nxt")
+volume_db = -6.131
 max_polyphony = 4
+bus = &"SFX"
+
+[node name="Vx47Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=943404295]
+unique_name_in_owner = true
+stream = ExtResource("7_1e6lo")
+volume_db = -4.0
+max_polyphony = 12
+bus = &"SFX"
+
+[node name="Mp90Audio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=572676706]
+unique_name_in_owner = true
+stream = ExtResource("9_pkwgd")
+volume_db = -4.0
+max_polyphony = 12
 bus = &"SFX"
 
 [node name="PistolReloadAudio" type="AudioStreamPlayer" parent="Root/WeaponLayer" unique_id=974088784]
