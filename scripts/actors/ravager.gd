@@ -494,9 +494,9 @@ func _update_behavior(delta: float) -> void:
 			# animasyonuyla yeniden konumlanmaya başlanır.
 			_face_toward_position(attack_target)
 			_stop_horizontal_motion()
-		elif _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
-			# Atış bittikten sonra oyuncu yalnız duvar/kapı kenarından görünüyorsa
-			# cooldown boyunca kule gibi bekleme; daha açık bir atış açısı ara.
+		elif _uses_cover_reposition_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+			# Yalnız gerçek projectile shooter'lar kısmi görüşte yan/çapraz atış açısı arar.
+			# Warden gibi geniş attack_range kullanan yakın baskı elitleri burada strafe etmez.
 			_reposition_for_clear_shot(delta)
 		else:
 			_move_during_attack_recovery(attack_target, delta)
@@ -512,7 +512,7 @@ func _update_behavior(delta: float) -> void:
 		# konumunu değil, doğrulanmış son görünür konumu kullan.
 		# Menzilli düşman oyuncunun yalnız küçük bir parçasını görüyorsa mevcut
 		# noktadan atış spamlamak yerine gerçek bir yeni görüş açısı arar.
-		if _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+		if _uses_cover_reposition_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
 			state = State.CHASE
 			_reposition_for_clear_shot(delta)
 			return
@@ -1369,7 +1369,17 @@ func _is_player_collider(collider: Node) -> bool:
 
 
 func _uses_ranged_tactics() -> bool:
+	# Geniş menzil, oyuncunun kısmen görünür olduğu durumlarda çoklu LOS örneklemesi
+	# için yeterlidir; fakat tek başına düşmanın cover-strafe yapan bir shooter olduğu
+	# anlamına gelmez.
 	return projectile_scene != null or attack_range >= 4.0
+
+
+func _uses_cover_reposition_tactics() -> bool:
+	# Rastgele sağ/sol/çapraz atış pozisyonu yalnız gerçek projectile shooter'larda
+	# kullanılmalı. Warden kendi yakın/orta menzil baskı saldırılarına sahip ve
+	# projectile_scene kullanmadığı için chase/navigation davranışında kalır.
+	return projectile_scene != null
 
 
 func _damage_source_approach_position(source_position: Vector3) -> Vector3:
