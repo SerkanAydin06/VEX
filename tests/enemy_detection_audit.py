@@ -86,3 +86,16 @@ for needle in [
     assert needle in redviper_script, needle
 
 print("Enemy awareness/search contract passed")
+
+for needle in [
+    "ranged_cover_visibility_threshold := 0.60",
+    "ranged_cover_reposition_distance := 2.6",
+    "damage_approach_offset := 1.4",
+    "func _ranged_visibility_ratio_from(observer_position: Vector3) -> float:",
+    "func _reposition_for_clear_shot(delta: float) -> void:",
+    "_damage_source_approach_position(source_node.global_position)",
+    "_last_visibility_ratio < ranged_cover_visibility_threshold",
+]:
+    assert needle in ravager_script, needle
+
+print("Ranged cover reposition contract passed")

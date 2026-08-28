@@ -57,6 +57,10 @@ enum State {
 @export var receive_ally_alerts := true
 @export_range(1.0, 120.0, 1.0) var damage_reaction_range := 80.0
 @export_range(1.0, 30.0, 0.5) var damage_reaction_duration := 12.0
+@export_range(0.1, 1.0, 0.05) var ranged_cover_visibility_threshold := 0.60
+@export_range(0.8, 6.0, 0.1) var ranged_cover_reposition_distance := 2.6
+@export_range(0.15, 2.0, 0.05) var ranged_cover_reposition_refresh := 0.55
+@export_range(0.2, 3.0, 0.1) var damage_approach_offset := 1.4
 @export_category("03B - İşitme / Stealth")
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 14.0
 @export_range(0.1, 2.0, 0.05) var hearing_loudness_scale := 1.0
@@ -161,6 +165,10 @@ var _search_probe_index := 0
 var _search_probe_target := Vector3.ZERO
 var _has_search_probe := false
 var _damage_reaction_remaining := 0.0
+var _last_visibility_ratio := 0.0
+var _ranged_reposition_target := Vector3.ZERO
+var _has_ranged_reposition_target := false
+var _ranged_reposition_remaining := 0.0
 
 static var _shared_navigation_scene_id := -1
 static var _shared_navigation_caches: Dictionary = {}
@@ -258,6 +266,7 @@ func _physics_process(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
 		_player = GameState.player as Node3D
 	_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)
+	_ranged_reposition_remaining = maxf(0.0, _ranged_reposition_remaining - delta)
 
 	if _should_use_dormant_mode():
 		_enter_dormant_mode()
@@ -295,12 +304,14 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 			state = State.CHASE
 		if _source is Node3D:
 			var source_node := _source as Node3D
-			_last_seen_position = source_node.global_position
+			_last_seen_position = _damage_source_approach_position(source_node.global_position)
 			_has_last_seen_position = true
 		elif _player != null and is_instance_valid(_player):
 			_last_seen_position = _player.global_position
 			_has_last_seen_position = true
 		_path_refresh_remaining = 0.0
+		_ranged_reposition_remaining = 0.0
+		_has_ranged_reposition_target = false
 		_clear_path()
 		if _has_last_seen_position:
 			_face_toward_position(_last_seen_position)
@@ -475,6 +486,10 @@ func _update_behavior(delta: float) -> void:
 			# animasyonuyla yeniden konumlanmaya başlanır.
 			_face_toward_position(attack_target)
 			_stop_horizontal_motion()
+		elif _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+			# Atış bittikten sonra oyuncu yalnız duvar/kapı kenarından görünüyorsa
+			# cooldown boyunca kule gibi bekleme; daha açık bir atış açısı ara.
+			_reposition_for_clear_shot(delta)
 		else:
 			_move_during_attack_recovery(attack_target, delta)
 		return
@@ -487,6 +502,12 @@ func _update_behavior(delta: float) -> void:
 	):
 		# Görüş örnekleri arasındaki karelerde oyuncunun duvar arkasındaki canlı
 		# konumunu değil, doğrulanmış son görünür konumu kullan.
+		# Menzilli düşman oyuncunun yalnız küçük bir parçasını görüyorsa mevcut
+		# noktadan atış spamlamak yerine gerçek bir yeni görüş açısı arar.
+		if _uses_ranged_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+			state = State.CHASE
+			_reposition_for_clear_shot(delta)
+			return
 		var distance_to_player := _horizontal_distance(global_position, _last_seen_position)
 		if distance_to_player <= attack_range:
 			state = State.ATTACK
@@ -1136,9 +1157,13 @@ func _is_player_inside_initial_view() -> bool:
 
 func _check_line_of_sight() -> bool:
 	if _player == null or not is_instance_valid(_player):
+		_last_visibility_ratio = 0.0
 		return false
 	var origin := global_position + Vector3.UP * sight_origin_height
-	return VexEnemyRuntimeUtils.has_visual_contact(
+	if _uses_ranged_tactics():
+		_last_visibility_ratio = _ranged_visibility_ratio_from(origin)
+		return _last_visibility_ratio > 0.0
+	var visible := VexEnemyRuntimeUtils.has_visual_contact(
 		get_world_3d(),
 		origin,
 		_player,
@@ -1146,6 +1171,8 @@ func _check_line_of_sight() -> bool:
 		get_rid(),
 		sight_target_height
 	)
+	_last_visibility_ratio = 1.0 if visible else 0.0
+	return visible
 
 
 func _get_crouched_sight_target_height() -> float:
@@ -1159,11 +1186,146 @@ func _get_crouched_sight_target_height() -> float:
 
 
 func _is_player_collider(collider: Node) -> bool:
-	if collider == null:
-		return false
-	if collider == _player:
-		return true
-	return collider.get_parent() == _player
+	var current := collider
+	var depth := 0
+	while current != null and depth < 6:
+		if current == _player:
+			return true
+		current = current.get_parent()
+		depth += 1
+	return false
+
+
+func _uses_ranged_tactics() -> bool:
+	return projectile_scene != null or attack_range >= 4.0
+
+
+func _damage_source_approach_position(source_position: Vector3) -> Vector3:
+	# Oyuncu duvar kenarından ateş ettiğinde karakter merkezi fiziksel olarak
+	# düşmanın sığamayacağı kadar duvara yakın olabilir. Tam merkeze rota vermek
+	# yerine merminin geldiği açık koridora doğru küçük bir adım öne hedefle.
+	var result := source_position
+	result.y = global_position.y
+	var toward_enemy := global_position - result
+	toward_enemy.y = 0.0
+	var distance := toward_enemy.length()
+	if distance > 0.001:
+		var offset := minf(damage_approach_offset, distance * 0.30)
+		result += (toward_enemy / distance) * offset
+	return result
+
+
+func _ranged_visibility_ratio_from(observer_position: Vector3) -> float:
+	if _player == null or not is_instance_valid(_player):
+		return 0.0
+
+	var target_center := _player.global_position + Vector3.UP * sight_target_height
+	var half_height := maxf(sight_target_height, 0.45)
+	var lateral_radius := 0.28
+	var shape_node := _player.get_node_or_null("CollisionShape3D") as CollisionShape3D
+	if shape_node != null and shape_node.shape != null and not shape_node.disabled:
+		target_center = shape_node.global_position
+		var capsule := shape_node.shape as CapsuleShape3D
+		if capsule != null:
+			half_height = maxf(capsule.height * 0.5, capsule.radius)
+			lateral_radius = capsule.radius
+		else:
+			var box := shape_node.shape as BoxShape3D
+			if box != null:
+				half_height = box.size.y * 0.5
+				lateral_radius = minf(box.size.x, box.size.z) * 0.5
+
+	var toward_target := _player.global_position - observer_position
+	toward_target.y = 0.0
+	if toward_target.length_squared() <= 0.0001:
+		toward_target = Vector3.FORWARD
+	else:
+		toward_target = toward_target.normalized()
+	var side := Vector3.UP.cross(toward_target).normalized()
+	var vertical_span := clampf(half_height * 0.55, 0.20, 0.68)
+	var lateral_span := clampf(lateral_radius * 0.82, 0.15, 0.38)
+	var samples: Array[Vector3] = [
+		target_center,
+		target_center + Vector3.UP * vertical_span,
+		target_center + side * lateral_span + Vector3.UP * (vertical_span * 0.08),
+		target_center - side * lateral_span + Vector3.UP * (vertical_span * 0.08),
+		target_center - Vector3.UP * (vertical_span * 0.45),
+	]
+	var visible_samples := 0
+	var space_state := get_world_3d().direct_space_state
+	for sample: Vector3 in samples:
+		var query := PhysicsRayQueryParameters3D.create(
+			observer_position,
+			sample,
+			sight_collision_mask,
+			[get_rid()]
+		)
+		query.collide_with_areas = true
+		var result := space_state.intersect_ray(query)
+		if result.is_empty():
+			continue
+		var collider := result.get("collider") as Node
+		if _is_player_collider(collider):
+			visible_samples += 1
+	return float(visible_samples) / float(samples.size())
+
+
+func _reposition_for_clear_shot(delta: float) -> void:
+	if _player == null or not is_instance_valid(_player):
+		_stop_horizontal_motion()
+		return
+
+	if (
+		not _has_ranged_reposition_target
+		or _ranged_reposition_remaining <= 0.0
+		or _horizontal_distance(global_position, _ranged_reposition_target) <= waypoint_reach_distance
+	):
+		_has_ranged_reposition_target = false
+		var forward := _player.global_position - global_position
+		forward.y = 0.0
+		if forward.length_squared() <= 0.001:
+			forward = _facing_direction
+		else:
+			forward = forward.normalized()
+		var right := Vector3(-forward.z, 0.0, forward.x).normalized()
+		var radius := ranged_cover_reposition_distance
+		var offsets: Array[Vector3] = [
+			right * radius,
+			-right * radius,
+			right * (radius * 1.35) + forward * (radius * 0.35),
+			-right * (radius * 1.35) + forward * (radius * 0.35),
+		]
+		var best_score := -INF
+		for offset: Vector3 in offsets:
+			var candidate := global_position + offset
+			candidate.y = global_position.y
+			if not _is_walk_segment_clear(global_position, candidate):
+				continue
+			var ratio := _ranged_visibility_ratio_from(
+				candidate + Vector3.UP * sight_origin_height
+			)
+			var score := ratio * 4.0 - offset.length() * 0.08
+			if ratio >= ranged_cover_visibility_threshold:
+				score += 2.0
+			if score > best_score:
+				best_score = score
+				_ranged_reposition_target = candidate
+				_has_ranged_reposition_target = true
+		_ranged_reposition_remaining = (
+			ranged_cover_reposition_refresh
+			if _has_ranged_reposition_target
+			else 0.20
+		)
+		if _has_ranged_reposition_target:
+			_clear_path()
+			_path_refresh_remaining = 0.0
+
+	if _has_ranged_reposition_target:
+		_navigate_to(_ranged_reposition_target, delta)
+	elif _has_last_seen_position:
+		_navigate_to(_last_seen_position, delta)
+	else:
+		_stop_horizontal_motion()
 
 
 func _attempt_attack() -> void:
