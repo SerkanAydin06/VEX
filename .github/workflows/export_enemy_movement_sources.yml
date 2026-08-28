@@ -1,0 +1,35 @@
+name: Stage Enemy Movement Patch
+
+on:
+  push:
+    branches:
+      - tooling/enemy-movement-export
+
+permissions:
+  contents: write
+
+jobs:
+  stage-patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: tooling/enemy-movement-export
+          fetch-depth: 0
+      - name: Apply movement patch
+        run: |
+          cat .github/enemy_movement.patch.part1 .github/enemy_movement.patch.part2 | base64 -d | gzip -d > /tmp/enemy_movement.patch
+          sha256sum /tmp/enemy_movement.patch
+          git apply --check /tmp/enemy_movement.patch
+          git apply /tmp/enemy_movement.patch
+          python -m py_compile tests/enemy_movement_audit.py
+          python tests/enemy_movement_audit.py
+      - name: Commit staged result
+        run: |
+          git config user.name "SerkanAydin06"
+          git config user.email "srknydn88@gmail.com"
+          git add scripts/actors/ravager.gd scripts/actors/redviper.gd scripts/actors/crucible_warden.gd scripts/actors/enemy_runtime_utils.gd tests/enemy_movement_audit.py .github/workflows/validate.yml
+          git commit -m "stage: enemy geometry avoidance"
+          git push origin HEAD:tooling/enemy-movement-export
