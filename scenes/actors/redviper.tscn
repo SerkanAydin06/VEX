@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://d0if1xpxh6no2"]
 
 [ext_resource type="Script" uid="uid://b7pixtku56b8v" path="res://scripts/actors/redviper.gd" id="1_script"]
-[ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="2_hurt_audio"]
-[ext_resource type="AudioStream" uid="uid://1020vrqglcix" path="res://assets/audio/redviper_death.mp3" id="3_death_audio"]
-[ext_resource type="AudioStream" uid="uid://0mee11feqbq0" path="res://assets/audio/redviper_attack.mp3" id="4_attack_audio"]
+[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/red_viper_hurt.wav" id="5_1tqjx"]
 [ext_resource type="Texture2D" uid="uid://br7j8yy64bf7x" path="res://assets/enemies/redviper/redviper_spritesheet.png" id="5_sheet"]
+[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/red_viper_death.wav" id="6_1tqjx"]
+[ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/red_viper_attack.wav" id="7_1tqjx"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="29_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
@@ -289,8 +289,9 @@ billboard = 2
 shaded = true
 alpha_cut = 1
 sprite_frames = SubResource("SpriteFrames_redviper")
-animation = &"walk_back"
+animation = &"idle"
 autoplay = "idle"
+frame_progress = 0.031359572
 
 [node name="GroundShadow" type="Sprite3D" parent="." unique_id=466059463]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.4768, 0)
@@ -302,19 +303,19 @@ render_priority = -1
 texture = ExtResource("29_shadow")
 
 [node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=895634324]
-stream = ExtResource("2_hurt_audio")
+stream = ExtResource("5_1tqjx")
 volume_db = -2.0
 max_distance = 18.0
 bus = &"SFX"
 
 [node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=1381045313]
-stream = ExtResource("3_death_audio")
+stream = ExtResource("6_1tqjx")
 volume_db = 0.5
 max_distance = 20.0
 bus = &"SFX"
 
 [node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=1175127253]
-stream = ExtResource("4_attack_audio")
+stream = ExtResource("7_1tqjx")
 volume_db = -1.0
 max_distance = 18.0
 max_polyphony = 2

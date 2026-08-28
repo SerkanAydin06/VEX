@@ -5,10 +5,10 @@
 [ext_resource type="PackedScene" path="res://scenes/actors/furnice_carrier_projectile.tscn" id="3_projectile"]
 [ext_resource type="PackedScene" path="res://scenes/effects/furnice_carrier_shockwave.tscn" id="4_shockwave"]
 [ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="5_attack_audio"]
-[ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="6_hurt_audio"]
-[ext_resource type="AudioStream" uid="uid://clas3vxrwxpr3" path="res://assets/audio/enemy_death_scream_pro.wav" id="7_death_audio"]
+[ext_resource type="AudioStream" uid="uid://b8rfduunyjbx5" path="res://assets/audio/furnice_carrier_hurt.wav" id="8_qi4ce"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="8_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="9_burn"]
+[ext_resource type="AudioStream" uid="uid://cffwo85og682d" path="res://assets/audio/furnice_carrier_death.wav" id="9_qi4ce"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
 radius = 0.58
@@ -354,13 +354,13 @@ max_distance = 24.0
 bus = &"SFX"
 
 [node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=450639569]
-stream = ExtResource("6_hurt_audio")
+stream = ExtResource("8_qi4ce")
 volume_db = -2.0
 max_distance = 20.0
 bus = &"SFX"
 
 [node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=1757984052]
-stream = ExtResource("7_death_audio")
+stream = ExtResource("9_qi4ce")
 volume_db = 1.5
 max_distance = 24.0
 bus = &"SFX"

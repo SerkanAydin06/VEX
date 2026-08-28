@@ -60,8 +60,14 @@ const DOOM3_CROSSHAIR: Texture2D = preload("res://assets/ui/crosshair_doom3_circ
 @onready var damage_flash: ColorRect = %DamageFlash
 @onready var damage_amount: Label = %DamageAmount
 @onready var weapon_layer: Control = %WeaponLayer
-@onready var pistol_audio: AudioStreamPlayer = %PistolAudio
-@onready var shotgun_audio: AudioStreamPlayer = %ShotgunAudio
+@onready var p01_audio: AudioStreamPlayer = %P01Audio
+@onready var p07_audio: AudioStreamPlayer = %P07Audio
+@onready var p14_audio: AudioStreamPlayer = %P14Audio
+@onready var p20_audio: AudioStreamPlayer = %P20Audio
+@onready var sg04_audio: AudioStreamPlayer = %Sg04Audio
+@onready var sg09_audio: AudioStreamPlayer = %Sg09Audio
+@onready var vx47_audio: AudioStreamPlayer = %Vx47Audio
+@onready var mp90_audio: AudioStreamPlayer = %Mp90Audio
 @onready var pistol_reload_audio: AudioStreamPlayer = %PistolReloadAudio
 @onready var shotgun_reload_audio: AudioStreamPlayer = %ShotgunReloadAudio
 @onready var empty_gun_audio: AudioStreamPlayer = %EmptyGunAudio
@@ -241,16 +247,17 @@ func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 	# Weapon audio stays on the current placeholder routing until dedicated VX-47/MP90
 	# recordings are added. Visual routing is fully data-driven now.
 	if action == &"fire":
-		var fire_audio := shotgun_audio if weapon_id in [&"sg04", &"sg09"] else pistol_audio
-		if fire_audio.stream != null:
-			match weapon_id:
-				&"vx47":
-					fire_audio.pitch_scale = 0.82
-				&"mp90":
-					fire_audio.pitch_scale = 1.18
-				_:
-					fire_audio.pitch_scale = 1.0
-			fire_audio.play()
+		var fire_audio = null
+		match weapon_id:
+			&"p01": fire_audio = p01_audio
+			&"p07": fire_audio = p07_audio
+			&"p14": fire_audio = p14_audio
+			&"p20": fire_audio = p20_audio
+			&"sg04": fire_audio = sg04_audio
+			&"sg09": fire_audio = sg09_audio
+			&"vx47": fire_audio = vx47_audio
+			&"mp90": fire_audio = mp90_audio
+		if fire_audio.stream != null: fire_audio.play()
 	elif action in [&"reload", &"reload_shell"]:
 		var reload_player := shotgun_reload_audio if weapon_id in [&"sg04", &"sg09"] else pistol_reload_audio
 		if reload_player.stream != null:

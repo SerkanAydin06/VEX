@@ -1,10 +1,10 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://c2oiuiy5xjdpm"]
 
-[ext_resource type="Script" path="res://scripts/actors/cinderhound.gd" id="1_script"]
-[ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="2_hurt_audio"]
-[ext_resource type="AudioStream" uid="uid://1020vrqglcix" path="res://assets/audio/redviper_death.mp3" id="3_death_audio"]
-[ext_resource type="AudioStream" uid="uid://0mee11feqbq0" path="res://assets/audio/redviper_attack.mp3" id="4_attack_audio"]
-[ext_resource type="Texture2D" path="res://assets/enemies/cinderhound/cinderhound_spritesheet.png" id="5_sheet"]
+[ext_resource type="Script" uid="uid://x3ufu21tv0uk" path="res://scripts/actors/cinderhound.gd" id="1_script"]
+[ext_resource type="AudioStream" uid="uid://c3y6p5ej1oa1e" path="res://assets/audio/cinder_hound_hurt.wav" id="5_evij0"]
+[ext_resource type="Texture2D" uid="uid://byifwp1vo0qoe" path="res://assets/enemies/cinderhound/cinderhound_spritesheet.png" id="5_sheet"]
+[ext_resource type="AudioStream" uid="uid://bgmaicfe6x3tw" path="res://assets/audio/cinder_hound_death.wav" id="6_evij0"]
+[ext_resource type="AudioStream" uid="uid://y0d3apk5yonj" path="res://assets/audio/cinder_hound_attack.wav" id="7_evij0"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="29_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
@@ -233,7 +233,7 @@ animations = [{
 "speed": 7.0
 }]
 
-[node name="CinderHound" type="CharacterBody3D"]
+[node name="CinderHound" type="CharacterBody3D" unique_id=1327417114]
 collision_layer = 4
 collision_mask = 15
 floor_snap_length = 0.3
@@ -283,7 +283,13 @@ difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
 move_speed = 3.8
 chase_speed = 7.2
 movement_acceleration = 22.0
-sight_origin_height = 0.65
+braking_acceleration = 18.0
+patrol_offset = Vector3(0, 0, 2.2)
+patrol_pause_duration = 0.45
+detection_range = 15.0
+pursuit_range = 26.0
+ally_alert_radius = 8.0
+hearing_radius = 18.0
 attack_range = 1.75
 attack_damage = 16
 attack_cooldown = 1.05
@@ -303,26 +309,28 @@ attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
 hurt_frame_y_offsets = PackedFloat32Array(0)
 death_frame_y_offsets = PackedFloat32Array(0, -0.008, -0.016, -0.024)
 burn_remains_scene = ExtResource("31_burn")
-burn_remains_scale = 0.80
+burn_remains_scale = 0.8
 burn_smoke_duration = 6.5
 burn_smoke_alpha = 0.12
+dormant_distance = 30.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-position = Vector3(0, 0.725, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1561553514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, 0)
 shape = SubResource("CapsuleShape_cinderhound")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
-position = Vector3(0, 0.8704, 0)
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1000373379]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8704, 0)
 cast_shadow = 0
 pixel_size = 0.0034
 billboard = 2
 shaded = true
 alpha_cut = 1
 sprite_frames = SubResource("SpriteFrames_cinderhound")
-animation = &"walk_back"
+animation = &"idle"
 autoplay = "idle"
+frame_progress = 0.12572752
 
-[node name="GroundShadow" type="Sprite3D" parent="."]
+[node name="GroundShadow" type="Sprite3D" parent="." unique_id=767731571]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, 0.012, 0)
 cast_shadow = 0
 modulate = Color(1, 1, 1, 0.72)
@@ -332,19 +340,19 @@ render_priority = -1
 texture = ExtResource("29_shadow")
 
 [node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=895634324]
-stream = ExtResource("2_hurt_audio")
+stream = ExtResource("5_evij0")
 volume_db = -2.0
 max_distance = 18.0
 bus = &"SFX"
 
 [node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=1381045313]
-stream = ExtResource("3_death_audio")
+stream = ExtResource("6_evij0")
 volume_db = 0.5
 max_distance = 20.0
 bus = &"SFX"
 
 [node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=1175127253]
-stream = ExtResource("4_attack_audio")
+stream = ExtResource("7_evij0")
 volume_db = -1.0
 max_distance = 18.0
 max_polyphony = 2

@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://ceaxa6s7v5v5y" path="res://scripts/actors/hellmagma.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://blk6m6w5p84d2" path="res://assets/enemies/hellmagma/HellMagma_spritesheet.png" id="2_sheet"]
+[ext_resource type="AudioStream" uid="uid://d3d23chsf3l" path="res://assets/audio/hell_magma_attack.wav" id="6_hhf7w"]
+[ext_resource type="AudioStream" uid="uid://cxjxoucjvy13u" path="res://assets/audio/hell_magma_hurt.wav" id="7_hhf7w"]
+[ext_resource type="AudioStream" uid="uid://l03ab26phvuw" path="res://assets/audio/hell_magma_death.wav" id="8_hhf7w"]
 [ext_resource type="PackedScene" path="res://scenes/actors/hellmagma_projectile.tscn" id="26_projectile"]
-[ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="27_attack_audio"]
-[ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="28_hurt_audio"]
-[ext_resource type="AudioStream" uid="uid://clas3vxrwxpr3" path="res://assets/audio/enemy_death_scream_pro.wav" id="29_death_audio"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="30_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
@@ -254,6 +254,12 @@ safe_margin = 0.06
 script = ExtResource("1_script")
 enemy_id = &"hellmagma"
 maximum_health = 240
+difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
+difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
+difficulty_speed_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.15)
+difficulty_detection_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.2)
+difficulty_cooldown_multipliers = PackedFloat32Array(1.25, 1, 0.85, 0.7)
+difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
 move_speed = 3.2
 movement_acceleration = 14.0
 braking_acceleration = 22.0
@@ -302,47 +308,14 @@ walk_back_frame_y_offsets = PackedFloat32Array(0, 0, -0.005, 0)
 attack_frame_y_offsets = PackedFloat32Array(0, 0, -0.005, 0)
 hurt_frame_y_offsets = PackedFloat32Array(0)
 death_frame_y_offsets = PackedFloat32Array(0, -0.015, -0.035, -0.05)
-burn_remains_scale = 1.35
-burn_smoke_duration = 11.0
-burn_smoke_alpha = 0.16
-difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
-difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
-difficulty_speed_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.15)
-difficulty_detection_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.2)
-difficulty_cooldown_multipliers = PackedFloat32Array(1.25, 1, 0.85, 0.7)
-difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
-floor_collision_mask = 1
-floor_snap_max_correction = 2.0
-floor_snap_ray_start_height = 0.5
-floor_snap_ray_extra_depth = 2.0
-aggro_on_damage = true
-alert_allies_on_damage = true
-receive_ally_alerts = true
 burn_remains_scene = ExtResource("31_burn")
+burn_remains_scale = 1.35
 burn_remains_scale_multiplier = 1.18
 burn_scorch_tint = Color(0.16, 0.08, 0.04, 0.98)
 burn_ember_tint = Color(1, 0.24, 0.04, 0.62)
 burn_ember_emission_energy = 0.82
-burn_smoke_enabled = false
-hurt_reaction_enabled = true
-spawn_min_difficulty = 0
-apply_difficulty_scaling = true
-gravity_scale = 1.0
-floor_stick_velocity = -0.1
-lost_sight_timeout = 20.0
-search_duration = 10.0
-sight_target_height = 0.45
-sight_collision_mask = 3
-projectile_spawn_side_offset = 0.0
-projectile_target_height = 0.40
-waypoint_link_distance = 9.0
-path_target_change_distance = 1.0
-endpoint_link_distance_multiplier = 1.5
-endpoint_connection_limit = 5
-navigation_collision_mask = 9
-distant_sight_interval = 0.2
-back_view_threshold = -0.15
-corpse_floor_clearance = 0.02
+burn_smoke_duration = 11.0
+burn_smoke_alpha = 0.16
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=998560482]
 shape = SubResource("CapsuleShape_hellmagma")
@@ -353,7 +326,6 @@ cast_shadow = 0
 pixel_size = 0.0073547
 billboard = 2
 shaded = true
-texture_filter = 3
 alpha_cut = 1
 sprite_frames = SubResource("SpriteFrames_hellmagma")
 animation = &"idle"
@@ -369,19 +341,19 @@ render_priority = -1
 texture = ExtResource("30_shadow")
 
 [node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=2112231629]
-stream = ExtResource("27_attack_audio")
+stream = ExtResource("6_hhf7w")
 volume_db = 1.0
 max_distance = 24.0
 bus = &"SFX"
 
 [node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=440904435]
-stream = ExtResource("28_hurt_audio")
+stream = ExtResource("7_hhf7w")
 volume_db = -1.0
 max_distance = 22.0
 bus = &"SFX"
 
 [node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=545233618]
-stream = ExtResource("29_death_audio")
+stream = ExtResource("8_hhf7w")
 volume_db = 2.5
 max_distance = 26.0
 bus = &"SFX"
