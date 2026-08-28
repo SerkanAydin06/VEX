@@ -1,0 +1,49 @@
+name: Validate SG09 Main
+
+on:
+  push:
+    branches:
+      - tooling/sg09-integration-v2
+
+permissions:
+  contents: read
+
+jobs:
+  validate-sg09-main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout SG09 main commit
+        uses: actions/checkout@v4
+        with:
+          ref: f99df47d8de84eb7afdd813756c7491eb827cd10
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run static audits
+        run: |
+          python tests/static_audit.py
+          python tests/scene_syntax_audit.py
+          python tests/level_test_audit.py
+          python tests/player_movement_audit.py
+          python tests/furnice_carrier_audit.py
+          python tests/crucible_warden_audit.py
+          python tests/sg04_weapon_audit.py
+          python tests/weapon_ads_audit.py
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Verify Godot version
+        run: godot --version | grep '^4.7'
+      - name: Import project headlessly
+        run: godot --headless --editor --path . --quit
+      - name: Run Godot integrity scene
+        run: godot --headless --path . tests/integrity_test.tscn
