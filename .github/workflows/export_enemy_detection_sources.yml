@@ -1,0 +1,36 @@
+name: Export Enemy Detection Sources
+
+on:
+  push:
+    branches:
+      - tooling/enemy-detection-export
+
+permissions:
+  contents: read
+
+jobs:
+  export-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Package detection sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: enemy-detection-sources
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            scripts/actors/ravager.gd
+            scripts/actors/redviper.gd
+            scenes/actors/ravager.tscn
+            scenes/actors/veilmaw.tscn
+            scenes/actors/voidweaver.tscn
+            scenes/actors/hellmagma.tscn
+            scenes/actors/furnice_carrier.tscn
+            scenes/actors/crucible_warden.tscn
+            scenes/actors/redviper.tscn
+            scenes/actors/badredviper.tscn
+            scenes/actors/cinderhound.tscn
+            .github/workflows/validate.yml
