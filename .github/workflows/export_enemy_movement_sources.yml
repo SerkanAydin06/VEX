@@ -20,7 +20,8 @@ jobs:
           fetch-depth: 0
       - name: Apply movement patch
         run: |
-          base64 -d .github/enemy_movement.patch.gz.b64 | gzip -d > /tmp/enemy_movement.patch
+          cat .github/enemy_movement.patch.part1 .github/enemy_movement.patch.part2 | base64 -d | gzip -d > /tmp/enemy_movement.patch
+          sha256sum /tmp/enemy_movement.patch
           git apply --check /tmp/enemy_movement.patch
           git apply /tmp/enemy_movement.patch
           python -m py_compile tests/enemy_movement_audit.py
