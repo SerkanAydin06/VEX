@@ -5,6 +5,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
 
+
 def read(path):
     full = ROOT / path
     if not full.exists():
@@ -12,15 +13,24 @@ def read(path):
         return ""
     return full.read_text(encoding="utf-8")
 
+
 effect = read("scripts/effects/hit_impact_v1.gd")
 controller = read("scripts/player/weapon_controller.gd")
 
 for needle in [
     "class_name VexHitImpactV1",
-    "impact_world_v1.png",
-    "impact_flesh_v1.png",
+    'WORLD_TEXTURE_PATH := "res://assets/impacts/impact_world_v1.png"',
+    'FLESH_TEXTURE_PATH := "res://assets/impacts/impact_flesh_v1.png"',
     "func spawn_world(",
     "func spawn_flesh(",
+    "func _sample_enemy_hit_color(",
+    "func _sample_sprite_image_at_hit(",
+    "func _build_flesh_fragment_burst(",
+    "func _build_fragment_layer(",
+    "func _build_droplet_layer(",
+    "PhysicsShapeQueryParameters3D.new()",
+    'get_nodes_in_group("enemy")',
+    "texture.get_image()",
     "GPUParticles3D.new()",
     "MAX_WORLD_IMPACTS := 72",
     "MAX_FLESH_IMPACTS := 24",
@@ -28,6 +38,14 @@ for needle in [
 ]:
     if needle not in effect:
         errors.append(f"Impact effect sözleşmesi eksik: {needle}")
+
+for forbidden in [
+    "func _build_flesh_visual(",
+    'splash.name = "FleshSplash"',
+    "material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED",
+]:
+    if forbidden in effect:
+        errors.append(f"Enemy impact artık kalıcı/billboard görsel üretmemeli: {forbidden}")
 
 for needle in [
     'preload("res://scripts/effects/hit_impact_v1.gd")',
