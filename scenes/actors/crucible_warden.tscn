@@ -1,0 +1,303 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/crucible_warden.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/enemies/crucible_warden/crucible_warden_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="PackedScene" path="res://scenes/effects/crucible_warden_ground_slam.tscn" id="3_slam"]
+[ext_resource type="PackedScene" path="res://scenes/actors/crucible_warden_heatwave_projectile.tscn" id="4_heatwave_projectile"]
+[ext_resource type="AudioStream" path="res://assets/audio/barrel_explosion_pro.wav" id="5_slam_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/enemy_fire_pro.wav" id="6_heatwave_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/enemy_hurt_pro.wav" id="7_hurt_audio"]
+[ext_resource type="AudioStream" path="res://assets/audio/enemy_death_scream_pro.wav" id="8_death_audio"]
+[ext_resource type="Texture2D" path="res://assets/world/contact_shadow.png" id="9_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="10_burn"]
+
+[sub_resource type="CapsuleShape3D" id="Capsule_warden"]
+radius = 0.72
+height = 2.4
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_heatwave_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_heatwave_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_heatwave_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_heatwave_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 3072, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 3072, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 3072, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 3072, 341, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="Frames_warden"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_4")}],
+"loop": false,
+"name": &"attack",
+"speed": 6.5
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death_1")}, {"duration": 1.0, "texture": SubResource("Atlas_death_2")}, {"duration": 1.0, "texture": SubResource("Atlas_death_3")}, {"duration": 1.0, "texture": SubResource("Atlas_death_4")}],
+"loop": false,
+"name": &"death",
+"speed": 4.5
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_heatwave_1")}, {"duration": 1.0, "texture": SubResource("Atlas_heatwave_2")}, {"duration": 1.0, "texture": SubResource("Atlas_heatwave_3")}, {"duration": 1.0, "texture": SubResource("Atlas_heatwave_4")}],
+"loop": false,
+"name": &"heatwave",
+"speed": 7.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}],
+"loop": false,
+"name": &"hurt",
+"speed": 8.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_4")}],
+"loop": true,
+"name": &"idle",
+"speed": 2.8
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_back_1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_4")}],
+"loop": true,
+"name": &"idle_back",
+"speed": 2.8
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_4")}],
+"loop": true,
+"name": &"walk",
+"speed": 4.5
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_back_1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_4")}],
+"loop": true,
+"name": &"walk_back",
+"speed": 4.5
+}]
+
+[node name="CrucibleWarden" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 15
+floor_snap_length = 0.3
+safe_margin = 0.06
+script = ExtResource("1_script")
+enemy_id = &"crucible_warden"
+maximum_health = 260
+move_speed = 2.4
+movement_acceleration = 10.0
+braking_acceleration = 24.0
+detection_range = 22.0
+pursuit_range = 28.0
+initial_view_angle = 180.0
+lost_sight_timeout = 20.0
+search_duration = 10.0
+ally_alert_radius = 11.0
+sight_origin_height = 0.8
+sight_target_height = 0.55
+hearing_radius = 16.0
+attack_damage = 1
+attack_range = 5.4
+attack_cooldown = 1.0
+attack_windup = 0.1
+attack_range_tolerance = 0.2
+attack_approach_speed = 0.0
+attack_strafe_speed = 0.0
+attack_preferred_distance = 1.4
+navigation_clearance = 0.75
+dormant_distance = 30.0
+ground_slam_scene = ExtResource("3_slam")
+heatwave_projectile_scene = ExtResource("4_heatwave_projectile")
+heatwave_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+hurt_frame_y_offsets = PackedFloat32Array(0)
+death_frame_y_offsets = PackedFloat32Array(0, -0.015, -0.03, -0.045)
+corpse_visual_y = 0.0
+back_corpse_visual_y = 0.0
+burn_remains_scene = ExtResource("10_burn")
+burn_remains_scale = 1.35
+burn_smoke_duration = 10.0
+burn_smoke_alpha = 0.14
+headshot_local_height = 1.15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, -0.05, 0)
+shape = SubResource("Capsule_warden")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+position = Vector3(0, 0.39, 0)
+cast_shadow = 0
+pixel_size = 0.0064
+billboard = 2
+shaded = true
+alpha_cut = 1
+texture_filter = 3
+sprite_frames = SubResource("Frames_warden")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="GroundShadow" type="Sprite3D" parent="."]
+rotation = Vector3(-1.5708, 0, 0)
+position = Vector3(0, -1.22, 0)
+cast_shadow = 0
+modulate = Color(1, 1, 1, 0.74)
+pixel_size = 0.0062
+texture_filter = 5
+render_priority = -1
+texture = ExtResource("9_shadow")
+
+[node name="HeatwaveOrigin" type="Marker3D" parent="."]
+position = Vector3(0, 0.18, 0)
+
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_slam_audio")
+volume_db = 0.0
+max_distance = 26.0
+bus = &"SFX"
+
+[node name="HeatwaveAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_heatwave_audio")
+volume_db = -1.0
+pitch_scale = 0.72
+max_distance = 24.0
+bus = &"SFX"
+
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("7_hurt_audio")
+volume_db = -2.0
+pitch_scale = 0.82
+max_distance = 22.0
+bus = &"SFX"
+
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("8_death_audio")
+volume_db = 1.5
+pitch_scale = 0.78
+max_distance = 26.0
+bus = &"SFX"

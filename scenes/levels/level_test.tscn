@@ -37,6 +37,7 @@
 [ext_resource type="AudioStream" uid="uid://bc6m2yvln3f84" path="res://assets/audio/game_music_pro.mp3" id="35_music"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="36_ambience"]
 [ext_resource type="PackedScene" uid="uid://csh77lhvvhlfs" path="res://scenes/actors/furnice_carrier.tscn" id="37_furnice"]
+[ext_resource type="PackedScene" path="res://scenes/actors/crucible_warden.tscn" id="38_crucible"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -94,13 +95,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -20)
 [node name="Room_C0_R1" parent="Geometry" unique_id=1076543757 instance=ExtResource("2_room")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -10)
 
-[node name="Room_C1_R1" parent="Geometry" unique_id=718836447 instance=ExtResource("2_room")]
+[node name="Room_C1_R1" parent="Geometry" unique_id=718336447 instance=ExtResource("2_room")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -10)
 
 [node name="Room_C2_R1" parent="Geometry" unique_id=1454521713 instance=ExtResource("2_room")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
 
-[node name="Room_C3_R1" parent="Geometry" unique_id=1555699668 instance=ExtResource("2_room")]
+[node name="Room_C3_R1" parent="Geometry" unique_id=1550826259 instance=ExtResource("2_room")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -10)
 
 [node name="Room_C4_R1" parent="Geometry" unique_id=1145688836 instance=ExtResource("2_room")]
@@ -556,6 +557,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.1341183, -20)
 projectile_attack_windup = 0.5
 thermal_burst_cooldown = 3.0
 enemy_id = &"level_test_furnice_carrier"
+maximum_health = 500
+
+[node name="CrucibleWarden" parent="Enemies" instance=ExtResource("38_crucible")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.25, -20)
+enemy_id = &"level_test_crucible_warden"
 maximum_health = 500
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]
