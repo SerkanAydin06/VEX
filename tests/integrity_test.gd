@@ -282,6 +282,24 @@ func _check_weapon_contracts() -> void:
 	for contract in ["penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count"]:
 		if contract not in controller:
 			failures.append("WeaponController P-20/save migration sözleşmesi eksik: %s" % contract)
+	var player_script := FileAccess.get_file_as_string("res://scripts/player/player.gd")
+	for contract in [
+		'&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":',
+		"func _collect_loadout_weapon_pickup(",
+		'"equip_world_weapon"',
+		'"_spawn_dropped_weapon_pickup"',
+		"displaced_weapon_id",
+	]:
+		if contract not in player_script:
+			failures.append("SG-04/SG-09 fiziksel swap sözleşmesi eksik: %s" % contract)
+	for obsolete in [
+		'unlock_weapon", &"sg04"',
+		'unlock_weapon", &"sg09"',
+		"func _collect_sidearm_pickup(",
+		'"_spawn_dropped_sidearm_pickup"',
+	]:
+		if obsolete in player_script:
+			failures.append("Shotgun pickup eski kaybolan-silah akışını kullanıyor: %s" % obsolete)
 
 
 func _check_input_map() -> void:

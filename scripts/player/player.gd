@@ -286,15 +286,9 @@ func collect_pickup(
 			elif pickup_type == &"mp90_ammo":
 				ammo_name = tr("AMMO_57")
 			GameState.notify_pickup(tr("PICKUP_AMMO_FORMAT") % [ammo_name, collected_ammo], &"ammo")
-		&"p01", &"p07", &"p14", &"p20":
-			if not _collect_sidearm_pickup(pickup_type, amount, source_pickup):
+		&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":
+			if not _collect_loadout_weapon_pickup(pickup_type, amount, source_pickup):
 				return false
-		&"sg04":
-			weapon_controller.call("unlock_weapon", &"sg04", amount)
-			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
-		&"sg09":
-			weapon_controller.call("unlock_weapon", &"sg09", amount)
-			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
 		&"vx47":
 			weapon_controller.call("unlock_weapon", &"vx47", amount)
 			GameState.notify_pickup(tr("PICKUP_RIFLE_ACTIVE"), &"weapon")
@@ -335,7 +329,7 @@ func collect_pickup(
 	return true
 
 
-func _collect_sidearm_pickup(
+func _collect_loadout_weapon_pickup(
 	weapon_id: StringName,
 	bonus_ammo: int,
 	source_pickup: Node3D
@@ -358,9 +352,9 @@ func _collect_sidearm_pickup(
 		selected_name = tr(selected_definition.display_name)
 
 	if displaced_weapon_id != &"":
-		var drop_position := _get_sidearm_drop_position(source_pickup)
+		var drop_position := _get_weapon_drop_position(source_pickup)
 		call_deferred(
-			"_spawn_dropped_sidearm_pickup",
+			"_spawn_dropped_weapon_pickup",
 			displaced_weapon_id,
 			drop_position
 		)
@@ -386,15 +380,17 @@ func _collect_sidearm_pickup(
 			GameState.notify_pickup(tr("PICKUP_P14_ACTIVE"), &"weapon")
 		&"p20":
 			GameState.notify_pickup(tr("PICKUP_P20_ACTIVE"), &"weapon")
+		&"sg04", &"sg09":
+			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
 	return true
 
 
-func _get_sidearm_drop_position(source_pickup: Node3D) -> Vector3:
+func _get_weapon_drop_position(source_pickup: Node3D) -> Vector3:
 	if source_pickup != null and is_instance_valid(source_pickup):
 		return source_pickup.global_position
 	return global_position
 
-func _spawn_dropped_sidearm_pickup(
+func _spawn_dropped_weapon_pickup(
 	weapon_id: StringName,
 	drop_position: Vector3
 ) -> void:

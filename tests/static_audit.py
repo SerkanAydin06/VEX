@@ -351,8 +351,23 @@ def check_weapons() -> None:
     player_script = read("scripts/player/player.gd")
     if '"sg04", "sg09", "vx47"' not in pickup_script:
         fail("Pickup tipi SG-09'u silah olarak tanımıyor")
-    if '&"sg09":' not in player_script or 'unlock_weapon", &"sg09"' not in player_script:
-        fail("Player SG-09 pickup toplama akışı eksik")
+    for contract in [
+        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":',
+        "func _collect_loadout_weapon_pickup(",
+        '"equip_world_weapon"',
+        '"_spawn_dropped_weapon_pickup"',
+        'displaced_weapon_id',
+    ]:
+        if contract not in player_script:
+            fail(f"Player fiziksel loadout silah swap sözleşmesi eksik: {contract}")
+    for obsolete in [
+        'unlock_weapon", &"sg04"',
+        'unlock_weapon", &"sg09"',
+        "func _collect_sidearm_pickup(",
+        '"_spawn_dropped_sidearm_pickup"',
+    ]:
+        if obsolete in player_script:
+            fail(f"Shotgun pickup eski kaybolan-silah akışını kullanıyor: {obsolete}")
 
 
 def check_unique_progression_ids() -> None:
