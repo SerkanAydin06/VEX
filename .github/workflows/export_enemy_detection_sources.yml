@@ -21,7 +21,7 @@ jobs:
       - name: Apply patch to current main
         shell: bash
         run: |
-          cp .github/enemy_detection.patch /tmp/enemy_detection.patch
+          cp .github/enemy_detection_no_workflow.patch /tmp/enemy_detection.patch
           git fetch origin main
           git checkout -B main origin/main
           test "$(git rev-parse HEAD)" = "ed9b1e283bdda3cfea1ede03eff8c0183f9fa01b"
@@ -43,6 +43,6 @@ jobs:
         run: |
           git config user.name "OpenAI"
           git config user.email "openai@users.noreply.github.com"
-          git add .github/workflows/validate.yml scripts/actors/ravager.gd scripts/actors/redviper.gd scenes/actors/ravager.tscn scenes/actors/veilmaw.tscn scenes/actors/voidweaver.tscn scenes/actors/hellmagma.tscn scenes/actors/furnice_carrier.tscn scenes/actors/crucible_warden.tscn scenes/actors/redviper.tscn scenes/actors/badredviper.tscn scenes/actors/cinderhound.tscn tests/enemy_detection_audit.py
+          git add scripts/actors/ravager.gd scripts/actors/redviper.gd scenes/actors/ravager.tscn scenes/actors/veilmaw.tscn scenes/actors/voidweaver.tscn scenes/actors/hellmagma.tscn scenes/actors/furnice_carrier.tscn scenes/actors/crucible_warden.tscn scenes/actors/redviper.tscn scenes/actors/badredviper.tscn scenes/actors/cinderhound.tscn tests/enemy_detection_audit.py
           git commit -m "tune: extend enemy detection ranges"
           git push origin HEAD:main
