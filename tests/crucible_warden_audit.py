@@ -105,6 +105,10 @@ def main() -> int:
         ("heatwave_projectile_count := 12", "12 yönlü radyal Heatwave"),
         ("if heatwave_ready:", "Heatwave önceliği"),
         ("_close_for_heatwave(heatwave_approach_speed_multiplier)", "Heatwave için oyuncuya kadar kapanma"),
+        ("func _stop_horizontal_motion() -> void:", "yaklaşma sırasında fren override"),
+        ("state == State.ATTACK", "yalnız saldırı durumunda fren istisnası"),
+        ("var should_keep_closing :=", "Heatwave yaklaşma kararının açık takibi"),
+        ("super._stop_horizontal_motion()", "diğer durumlarda canonical fren"),
         ("_begin_heatwave_attack()", "Heatwave saldırı coroutine"),
         ("_begin_ground_slam_attack()", "Ground Slam saldırı coroutine"),
         ("var angular_step := TAU / float(projectile_count)", "360 derece eşit yayılım"),
@@ -146,7 +150,7 @@ def main() -> int:
     )
     require(warden_scene, 'region = Rect2(0, 1536, 341, 512)', "character heatwave row başlangıcı")
     require(warden_scene, 'region = Rect2(1023, 1536, 341, 512)', "character heatwave row son frame")
-    require(warden_scene, '[node name="HeatwaveOrigin" type="Marker3D" parent="."]', "Heatwave merkez marker")
+    require(warden_scene, '[node name="HeatwaveOrigin" type="Marker3D" parent="."', "Heatwave merkez marker")
 
     for x in [0, 512, 1024, 1536]:
         require(
