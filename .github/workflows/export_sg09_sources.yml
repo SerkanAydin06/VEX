@@ -28,7 +28,9 @@ jobs:
             scenes/levels/level_test.tscn
             scenes/hub/bastion_7.tscn
             resources/weapons/sg04.tres
+            scripts/player/player.gd
             scripts/player/weapon_upgrade_catalog.gd
+            scripts/props/pickup.gd
             translations/vex.csv
             Weapons_VEX.md
             tests/static_audit.py
