@@ -64,8 +64,8 @@ func _attempt_attack() -> void:
 		if distance_to_player > heatwave_trigger_range:
 			if _is_heatwave_approach_stalled(distance_to_player):
 				# Rota veya kapı ağzı ilerlemiyorsa aynı bitmiş yolu her kare yeniden
-				kullanma. Önce rotayı zorla yenile; oyuncu Slam menzilinde ve gerçekten
-				görünürse elit düşman dimdik beklemek yerine alan baskısına döner.
+				# kullanma. Önce rotayı zorla yenile; oyuncu Slam menzilinde ve gerçekten
+				# görünürse elit düşman dimdik beklemek yerine alan baskısına döner.
 				_clear_path()
 				_path_refresh_remaining = 0.0
 				_reset_heatwave_approach_progress(distance_to_player)
