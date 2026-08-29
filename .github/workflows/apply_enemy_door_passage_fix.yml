@@ -34,6 +34,7 @@ jobs:
           python tests/enemy_role_ai_audit.py
           python tests/enemy_detection_audit.py
           python tests/enemy_runtime_global_path_audit.py
+          python tests/crucible_warden_audit.py
 
       - name: Install Godot 4.7.1
         env:
