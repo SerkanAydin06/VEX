@@ -688,7 +688,7 @@ func _try_fire() -> void:
 		return
 	magazines[current_weapon_id] = magazine - 1
 	if weapon.uses_heat:
-		var shot_heat_capacity := _effective_shot_heat_capacity(weapon)
+		var shot_heat_capacity := _effective_heat_capacity(weapon)
 		var next_heat := minf(
 			shot_heat_capacity,
 			float(weapon_heat.get(current_weapon_id, 0.0)) + weapon.heat_per_shot
