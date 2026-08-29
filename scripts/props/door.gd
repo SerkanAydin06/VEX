@@ -44,6 +44,8 @@ enum DoorOpeningMode {
 @export_category("Düşman Geçişi")
 @export var allow_enemy_open := true
 @export_range(0.5, 2.5, 0.05) var enemy_portal_offset := 1.15
+@export_range(0.15, 1.0, 0.05) var enemy_portal_alignment_tolerance := 0.45
+@export_range(0.15, 1.0, 0.05) var enemy_portal_commit_depth := 0.45
 @export_range(2.0, 24.0, 0.5) var enemy_portal_consider_distance := 14.0
 
 @export_category("Güvenli Kapanma")
@@ -459,7 +461,11 @@ func _on_proximity_body_entered(body: Node3D) -> void:
 		_begin_opening()
 
 
-func get_enemy_navigation_step(from_position: Vector3, target_position: Vector3) -> Dictionary:
+func get_enemy_navigation_step(
+	from_position: Vector3,
+	target_position: Vector3,
+	agent_clearance: float = 0.6
+) -> Dictionary:
 	if not allow_enemy_open or is_access_locked():
 		return {}
 
@@ -482,9 +488,20 @@ func get_enemy_navigation_step(from_position: Vector3, target_position: Vector3)
 	if horizontal_to_door > enemy_portal_consider_distance:
 		return {}
 
+	var safe_clearance := maxf(agent_clearance, 0.1)
+	# Büyük gövdeler kapı düzlemine gelmeden önce merkez hatta otursun. Warden gibi
+	# geniş kapsüllerde eski sabit 1.15 m yaklaşma noktası çok erken çapraz geçişe
+	# izin veriyor ve jamb kenarında tekrar tekrar rota yenilenmesine yol açıyordu.
+	var portal_offset := maxf(enemy_portal_offset, safe_clearance + 0.60)
+	var target_side := 1.0 if target_local.x >= 0.0 else -1.0
 	var from_side := 1.0 if from_local.x >= 0.0 else -1.0
-	var near_point := to_global(Vector3(from_side * enemy_portal_offset, 0.0, 0.0))
-	var far_point := to_global(Vector3(-from_side * enemy_portal_offset, 0.0, 0.0))
+	# Gövde kapı düzleminin tam merkezindeyken taraf işareti kareden kareye
+	# değişmesin; hedefin ters tarafını giriş tarafı kabul ederek geçişi koru.
+	if absf(from_local.x) <= plane_epsilon and absf(target_local.x) > plane_epsilon:
+		from_side = -target_side
+
+	var near_point := to_global(Vector3(from_side * portal_offset, 0.0, 0.0))
+	var far_point := to_global(Vector3(-from_side * portal_offset, 0.0, 0.0))
 	near_point.y = from_position.y
 	far_point.y = from_position.y
 
@@ -492,10 +509,23 @@ func get_enemy_navigation_step(from_position: Vector3, target_position: Vector3)
 		from_position.x - near_point.x,
 		from_position.z - near_point.z
 	).length()
+	var alignment_tolerance := maxf(
+		enemy_portal_alignment_tolerance,
+		minf(safe_clearance * 0.55, 0.65)
+	)
+	var center_band := maxf(0.55, safe_clearance * 0.85)
+	var centered_inside_portal := (
+		absf(from_local.x) <= enemy_portal_commit_depth
+		and absf(from_local.z) <= center_band
+	)
 	var route_point := near_point
-	# Panel tamamen açılmadan öbür tarafa hedef verme; aksi halde melee AI açılan
-	# panelin gövdesine çarpıp tangent detour ile kapı ağzından kaçabiliyor.
-	if _state == DoorState.OPEN and approach_distance <= enemy_portal_offset * 1.35:
+	# Önce yakın taraftaki merkez noktasına kesin hizalan. Yalnız kapı tamamen açık
+	# ve gövde merkeze yeterince oturmuşsa karşı tarafa commit et. Kapı düzlemine
+	# zaten merkezden girmiş bir gövdeyi ise geriye çekme.
+	if (
+		_state == DoorState.OPEN
+		and (approach_distance <= alignment_tolerance or centered_inside_portal)
+	):
 		route_point = far_point
 
 	var score := from_position.distance_to(near_point) + far_point.distance_to(target_position)

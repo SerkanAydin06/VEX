@@ -157,7 +157,6 @@ var _idle_anchor_position := Vector3.ZERO
 var _idle_wander_target := Vector3.ZERO
 var _has_idle_wander_target := false
 var _idle_wander_pause_remaining := 0.0
-var _patrol_forward := true
 var _facing_direction := Vector3.FORWARD
 var _alerted := false
 var _attack_locked := false
@@ -608,7 +607,12 @@ func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
 	for node: Node in get_tree().get_nodes_in_group("enemy_navigation_door"):
 		if not node.has_method("get_enemy_navigation_step"):
 			continue
-		var route: Variant = node.call("get_enemy_navigation_step", global_position, target_position)
+		var route: Variant = node.call(
+			"get_enemy_navigation_step",
+			global_position,
+			target_position,
+			navigation_clearance
+		)
 		if not (route is Dictionary):
 			continue
 		var data := route as Dictionary
