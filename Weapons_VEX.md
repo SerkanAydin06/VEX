@@ -98,8 +98,8 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 | P-14 | P-14 Specter | Tabanca | Gizli operasyon / hassasiyet | Fener, susturucu, gelişmiş optik | Oynanabilir; Level 1 başlangıcında test pickup'ı |
 | P-20 | P-20 Magnum | Tabanca | Zırhlı hedef / tek atış gücü | Standart tabanca mühimmatı ve delme | Oynanabilir |
 | SG-04 | SG-04 Kırıcı | Pompalı | Yakın mesafe durdurma | Manuel pompa ve yüksek saçma | Oynanabilir |
-| SG-09 | SG-09 Aegis | Pompalı | Savunma / seri takip | Yarı otomatik mekanizma | Planlandı |
-| SG-15 | SG-15 Tempest | Pompalı | Kalabalık kontrolü | Tam otomatik tambur | Planlandı |
+| SG-09 | SG-09 Aegis | Pompalı | Savunma / seri takip | Yarı otomatik mekanizma | Oynanabilir |
+| SG-15 | SG-15 Tempest | Pompalı | Kalabalık kontrolü | Tam otomatik tambur ve ısı yönetimi | Oynanabilir |
 | SG-21 | SG-21 Graviton | Pompalı | Ağır yaratık / alan kontrolü | Adaptif şok ve gravitasyon fişeği | Planlandı |
 | VX-47 | VX-47 Taarruz Tüfeği | Tüfek | Dengeli orta mesafe | Sağlam tam otomatik platform | Oynanabilir |
 | VX-58 | VX-58 Vanguard | Tüfek | Kontrollü hücum | Seçilebilir üçlü seri | Planlandı |
@@ -271,6 +271,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 ### SG-15 Tempest
 
 **Kimlik:** `sg15`
+**Durum:** Oyunda uygulanmış (`resources/weapons/sg15.tres`, `scenes/ui/weapons/sg15_view.tscn`).
 **Rol:** Hızlı yaratık sürüleri ve acil alan temizliği.
 **Temel özellik:** Tam otomatik ateş ve tambur şarjör; uzun kullanımda ısı biriktirir.
 

@@ -55,6 +55,8 @@ var _burst_shots := 0
 var _burst_reset_remaining := 0.0
 var _sg04_reload_generation := 0
 var _sg04_reload_fire_queued := false
+var weapon_heat: Dictionary = {}
+var _heat_cooldown_remaining: Dictionary = {}
 
 
 func _ready() -> void:
@@ -68,6 +70,8 @@ func _ready() -> void:
 		_definitions_by_id[definition.weapon_id] = definition
 		upgrade_levels[definition.weapon_id] = 0
 		magazines[definition.weapon_id] = 0
+		weapon_heat[definition.weapon_id] = 0.0
+		_heat_cooldown_remaining[definition.weapon_id] = 0.0
 		if not reserve_ammo.has(definition.ammo_type):
 			reserve_ammo[definition.ammo_type] = 0
 
@@ -106,6 +110,7 @@ func _process(delta: float) -> void:
 		_burst_shots = 0
 	if get_tree().paused or _player == null or _player.is_dead:
 		return
+	_update_weapon_heat(delta)
 	var weapon := get_current_weapon()
 	if weapon == null or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
@@ -617,9 +622,31 @@ func _is_weapon_flashlight_active(weapon: WeaponDefinition) -> bool:
 	)
 
 
+func _effective_heat_capacity(weapon: WeaponDefinition) -> float:
+	return weapon.heat_capacity * float(_modifiers(weapon).heat_capacity)
+
+
+func _update_weapon_heat(delta: float) -> void:
+	for weapon_id: StringName in _definitions_by_id.keys():
+		var weapon := _definitions_by_id.get(weapon_id) as WeaponDefinition
+		if weapon == null or not weapon.uses_heat:
+			continue
+		var cooldown := maxf(0.0, float(_heat_cooldown_remaining.get(weapon_id, 0.0)) - delta)
+		_heat_cooldown_remaining[weapon_id] = cooldown
+		if cooldown > 0.0:
+			continue
+		var cooling := weapon.heat_cooling_per_second * float(_modifiers(weapon).heat_cooling)
+		weapon_heat[weapon_id] = maxf(0.0, float(weapon_heat.get(weapon_id, 0.0)) - cooling * delta)
+
+
 func _try_fire() -> void:
 	var weapon := get_current_weapon()
 	if weapon == null or _cooldown_remaining > 0.0 or is_reloading:
+		return
+	if weapon.uses_heat and float(weapon_heat.get(current_weapon_id, 0.0)) >= _effective_heat_capacity(weapon):
+		_play_hud_action(&"empty")
+		GameState.notify(tr("WEAPON_OVERHEATED"))
+		_cooldown_remaining = empty_trigger_cooldown
 		return
 	var magazine := int(magazines.get(current_weapon_id, 0))
 	if magazine <= 0:
@@ -628,6 +655,12 @@ func _try_fire() -> void:
 		_cooldown_remaining = empty_trigger_cooldown
 		return
 	magazines[current_weapon_id] = magazine - 1
+	if weapon.uses_heat:
+		weapon_heat[current_weapon_id] = minf(
+			_effective_heat_capacity(weapon),
+			float(weapon_heat.get(current_weapon_id, 0.0)) + weapon.heat_per_shot
+		)
+		_heat_cooldown_remaining[current_weapon_id] = weapon.heat_cooldown_delay
 	_cooldown_remaining = weapon.fire_interval * float(_modifiers(weapon).fire_rate)
 	_play_hud_action(&"fire")
 	_shoot_hitscan(weapon)

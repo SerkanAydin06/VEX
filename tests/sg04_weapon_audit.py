@@ -136,7 +136,7 @@ def main() -> int:
     require(pickup_script, '"sg04"', "pickup enum içinde SG04")
     require(
         player_script,
-        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":',
+        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09", &"sg15":',
         "player SG04/SG09 ortak fiziksel pickup handler",
     )
     require(player_script, 'func _collect_loadout_weapon_pickup(', "loadout pickup swap helper")

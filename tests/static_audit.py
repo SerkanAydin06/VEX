@@ -296,7 +296,7 @@ def check_door_contract() -> None:
 
 
 def check_weapons() -> None:
-    weapon_ids = ["p01", "p07", "p14", "p20", "sg04", "sg09", "vx47", "mp90"]
+    weapon_ids = ["p01", "p07", "p14", "p20", "sg04", "sg09", "sg15", "vx47", "mp90"]
     for weapon_id in weapon_ids:
         exists(f"resources/weapons/{weapon_id}.tres")
         exists(f"scenes/ui/weapons/{weapon_id}_view.tscn")
@@ -329,7 +329,7 @@ def check_weapons() -> None:
         if contract not in sg09:
             fail(f"SG-09 silah sözleşmesi eksik: {contract}")
     if 'loadout_group = &"shotgun"' not in read("resources/weapons/sg04.tres"):
-        fail("SG-04 ve SG-09 aynı shotgun loadout grubunu paylaşmıyor")
+        fail("SG-04, SG-09 ve SG-15 aynı shotgun loadout grubunu paylaşmıyor")
     sg09_view = read("scenes/ui/weapons/sg09_view.tscn")
     for contract in [
         'name": &"idle"', 'name": &"fire"', 'name": &"aim_fire"',
@@ -347,12 +347,44 @@ def check_weapons() -> None:
     bastion = read("scenes/hub/bastion_7.tscn")
     if 'weapon_texture = ExtResource("20_sg09_side")' not in bastion:
         fail("Bastion SG-09 rafı authored side görselini kullanmıyor")
+
+    sg15 = read("resources/weapons/sg15.tres")
+    for contract in [
+        'weapon_id = &"sg15"', 'ammo_type = &"shells"',
+        'loadout_group = &"shotgun"', 'loadout_slot = 2',
+        'supports_ads_pose = true', 'uses_heat = true',
+        'heat_per_shot = 14.0', 'heat_capacity = 100.0',
+        'heat_cooling_per_second = 32.0',
+        'magazine_size = 12', 'damage_per_pellet = 8', 'pellet_count = 7',
+        'fire_interval = 0.18', 'reload_duration = 2.0',
+        'spread_degrees = 6.2', 'maximum_range = 42.0',
+        'automatic = true',
+    ]:
+        if contract not in sg15:
+            fail(f"SG-15 silah sözleşmesi eksik: {contract}")
+    sg15_view = read("scenes/ui/weapons/sg15_view.tscn")
+    for contract in [
+        'name": &"idle"', 'name": &"fire"', 'name": &"aim_fire"',
+        'name": &"reload"', 'name": &"zoom"',
+        'sg15_idle.png', 'sg15_fire_3.png', 'sg15_aim_fire_4.png',
+        'sg15_reload_4.png', 'sg15_zoom_idle.png',
+    ]:
+        if contract not in sg15_view:
+            fail(f"SG-15 HUD animasyon sözleşmesi eksik: {contract}")
+    if 'sg15_3.png' in sg15_view:
+        fail("SG-15 HUD sahnesi yanlış adlandırılmış sg15_3.png dosyasını kullanıyor")
+    if 'res://resources/weapons/sg15.tres' not in player_scene:
+        fail("Player WeaponController SG-15 tanımını kaydetmiyor")
+    if 'pickup_type = "sg15"' not in level_test:
+        fail("Level Test SG-15 pickup içermiyor")
+    if 'weapon_texture = ExtResource("20_sg15_side")' not in bastion:
+        fail("Bastion SG-15 rafı authored side görselini kullanmıyor")
     pickup_script = read("scripts/props/pickup.gd")
     player_script = read("scripts/player/player.gd")
-    if '"sg04", "sg09", "vx47"' not in pickup_script:
-        fail("Pickup tipi SG-09'u silah olarak tanımıyor")
+    if '"sg04", "sg09", "sg15", "vx47"' not in pickup_script:
+        fail("Pickup tipi SG-09/SG-15'i silah olarak tanımıyor")
     for contract in [
-        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":',
+        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09", &"sg15":',
         "func _collect_loadout_weapon_pickup(",
         '"equip_world_weapon"',
         '"_spawn_dropped_weapon_pickup"',
@@ -363,6 +395,7 @@ def check_weapons() -> None:
     for obsolete in [
         'unlock_weapon", &"sg04"',
         'unlock_weapon", &"sg09"',
+        'unlock_weapon", &"sg15"',
         "func _collect_sidearm_pickup(",
         '"_spawn_dropped_sidearm_pickup"',
     ]:
@@ -406,6 +439,8 @@ def check_localization() -> None:
         "LEVEL01_TUTORIAL_COMPLETE_HINT", "LEVEL01_DOOR_FIRE_TRAINING",
         "LEVEL01_DOOR_PROTOCOL_ENTRY", "WEAPON_P20_NAME", "WEAPON_SG09_NAME", "HUD_AMMO_PISTOL",
         "UPGRADE_AEGIS_GAS_DRIVE", "UPGRADE_SMART_CADDY", "UPGRADE_FLECHETTE_LOAD",
+        "WEAPON_SG15_NAME", "WEAPON_OVERHEATED",
+        "UPGRADE_TEMPEST_DRUM", "UPGRADE_THERMAL_JACKET", "UPGRADE_CYCLONE_BOLT",
         "DOOR_COMBAT_LOCKED", "DOOR_COMBAT_CLEARED",
     }
     missing = sorted(required - set(keys))

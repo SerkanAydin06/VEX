@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  static-audit:
+  python-audits:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -20,26 +20,23 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run VEX static audit
-        run: python tests/static_audit.py
-      - name: Validate scene root syntax
-        run: python tests/scene_syntax_audit.py
-      - name: Validate Level Test arena
-        run: python tests/level_test_audit.py
-      - name: Validate player movement
-        run: python tests/player_movement_audit.py
-      - name: Validate enemy detection and awareness
-        run: python tests/enemy_detection_audit.py
-      - name: Validate Furnice Carrier
-        run: python tests/furnice_carrier_audit.py
-      - name: Validate Crucible Warden
-        run: python tests/crucible_warden_audit.py
-      - name: Validate SG04 weapon
-        run: python tests/sg04_weapon_audit.py
-      - name: Validate weapon ADS targeting
-        run: python tests/weapon_ads_audit.py
-      - name: Validate hit impact V1
-        run: python tests/hit_impact_audit.py
+      - name: Run every Python audit
+        shell: bash
+        run: |
+          status=0
+          while IFS= read -r audit; do
+            echo "::group::$audit"
+            python "$audit" || status=1
+            echo "::endgroup::"
+          done < <(find tests -maxdepth 1 -name '*_audit.py' -print | sort)
+          exit "$status"
+
+  godot-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Install official Godot 4.7
         env:
           GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
