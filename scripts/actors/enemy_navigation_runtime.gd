@@ -4,6 +4,45 @@ extends RefCounted
 # Shared runtime navigation for every enemy family. It samples the real physics
 # world, so no creature-specific waypoint graph is required during active chase.
 
+static func resolve_enemy_door_step(
+    host: Node3D,
+    target_position: Vector3,
+    navigation_clearance: float,
+    reach_distance: float
+) -> Vector3:
+    if host == null or not host.is_inside_tree():
+        return target_position
+    var best_point := target_position
+    var best_score := INF
+    var best_door: Node = null
+    for node: Node in host.get_tree().get_nodes_in_group("enemy_navigation_door"):
+        if not node.has_method("get_enemy_navigation_step"):
+            continue
+        var route: Variant = node.call(
+            "get_enemy_navigation_step",
+            host.global_position,
+            target_position,
+            navigation_clearance,
+            reach_distance
+        )
+        if not (route is Dictionary):
+            continue
+        var data := route as Dictionary
+        if not bool(data.get("valid", false)):
+            continue
+        var point: Variant = data.get("point", target_position)
+        if typeof(point) != TYPE_VECTOR3:
+            continue
+        var score := float(data.get("score", INF))
+        if score < best_score:
+            best_score = score
+            best_point = point
+            best_door = node
+    if best_door != null and best_door.has_method("request_enemy_open"):
+        best_door.call("request_enemy_open")
+    return best_point
+
+
 static func build_shortest_path(
     host: CharacterBody3D,
     destination: Vector3,

@@ -77,7 +77,7 @@ Korvath varlıkları saldırırken “istila” yapmaz; daha çok **enerji söm�
 
 ### 2. Cinder Hound
 
-**Durum:** Planlandı
+**Durum:** Mevcut
 
 - **Rol:** Hızlı flank yaratığı
 - **Hikâye rolü:** Ocak tünellerinde arıza ve sızıntı tespiti yapan avcı canlı.
@@ -86,7 +86,9 @@ Korvath varlıkları saldırırken “istila” yapmaz; daha çok **enerji söm�
 
 ### 3. Furnace Carrier
 
-**Durum:** Planlandı
+**Durum:** Mevcut
+
+> Geriye dönük sahne ve kayıt uyumluluğu için dahili kimlik/dosya yolu `furnice_carrier` olarak korunur.
 
 - **Rol:** Destek / alan bozucu
 - **Hikâye rolü:** Isı çekirdeği ve işçi sürüleri taşıyan yarı-organik saha taşıyıcısı.
@@ -95,7 +97,7 @@ Korvath varlıkları saldırırken “istila” yapmaz; daha çok **enerji söm�
 
 ### 4. Crucible Warden
 
-**Durum:** Planlandı
+**Durum:** Mevcut
 
 - **Rol:** Elit koruyucu / miniboss sınıfı
 - **Hikâye rolü:** Korvath enerji kuyularının nöbetçi kastı.

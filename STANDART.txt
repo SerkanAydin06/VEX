@@ -317,6 +317,8 @@ WeaponDefinition temel gameplay değerlerine ek olarak presentation/capability v
 - supports_flashlight
 - supports_alt_fire
 - uses_heat
+- heat_per_shot / heat_capacity / heat_unlock_ratio
+- heat_cooldown_delay / heat_cooling_per_second
 - uses_charge
 - penetration_power
 
@@ -328,6 +330,7 @@ Yeni silah eklerken HUD'a weapon_id match bloğu yazmak yerine WeaponDefinition 
 -----------------------------
 - HUD silah ID'sine göre ayrı sprite kurulum fonksiyonları üretmez.
 - Her oynanabilir silah kendi hud_view_scene presentation sahnesiyle instantiate edilir.
+- Isı kullanan silahlar HeatPanel/HeatMeter üzerinden mevcut ısıyı ve aşırı ısınma kilidini gösterir; eşik tuning'i WeaponDefinition resource'unda tutulur.
 - P-01 presentation : scenes/ui/weapons/p01_view.tscn
 - P-07 presentation : scenes/ui/weapons/p07_view.tscn
 - P-14 presentation : scenes/ui/weapons/p14_view.tscn

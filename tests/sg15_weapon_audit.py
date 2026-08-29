@@ -34,6 +34,9 @@ def main() -> int:
     level_test = read("scenes/levels/level_test.tscn")
     bastion = read("scenes/hub/bastion_7.tscn")
     localization = read("translations/vex.csv")
+    hud_script = read("scripts/ui/hud.gd")
+    hud_scene = read("scenes/ui/hud.tscn")
+    game_state = read("scripts/autoload/game_state.gd")
 
     for contract in [
         'weapon_id = &"sg15"',
@@ -45,6 +48,7 @@ def main() -> int:
         'uses_heat = true',
         'heat_per_shot = 14.0',
         'heat_capacity = 100.0',
+        'heat_unlock_ratio = 0.65',
         'heat_cooling_per_second = 32.0',
         'magazine_size = 12',
         'damage_per_pellet = 8',
@@ -76,14 +80,24 @@ def main() -> int:
         require(view, f'"name": &"{animation}"', f"SG-15 animasyonu eksik: {animation}")
 
     for contract in [
-        "heat_per_shot", "heat_capacity", "heat_cooldown_delay", "heat_cooling_per_second",
+        "heat_per_shot", "heat_capacity", "heat_unlock_ratio",
+        "heat_cooldown_delay", "heat_cooling_per_second",
     ]:
         require(definition, contract, f"WeaponDefinition ısı alanı eksik: {contract}")
     for contract in [
-        "weapon_heat", "_heat_cooldown_remaining", "_effective_heat_capacity",
-        "_update_weapon_heat", "WEAPON_OVERHEATED",
+        "weapon_heat", "weapon_overheated", "_heat_cooldown_remaining",
+        "_effective_heat_capacity", "_update_weapon_heat", "heat_unlock_ratio",
+        "WEAPON_OVERHEATED", "WEAPON_COOLED",
     ]:
         require(controller, contract, f"WeaponController ısı davranışı eksik: {contract}")
+    for text, contract, message in [
+        (game_state, "signal weapon_heat_changed", "GameState ısı sinyali eksik"),
+        (hud_script, "_on_weapon_heat_changed", "HUD ısı sinyalini işlemiyor"),
+        (hud_scene, '[node name="HeatPanel"', "HUD HeatPanel sahne düğümü eksik"),
+        (hud_scene, '[node name="HeatMeter"', "HUD HeatMeter sahne düğümü eksik"),
+    ]:
+        require(text, contract, message)
+
     for contract in [
         '&"sg15"', '&"tempest_drum"', '&"thermal_jacket"', '&"cyclone_bolt"',
         '"heat_capacity": 1.40', '"heat_cooling": 1.25',
@@ -100,7 +114,8 @@ def main() -> int:
         require(text, contract, message)
 
     for key in [
-        "WEAPON_SG15_NAME", "WEAPON_OVERHEATED", "UPGRADE_TEMPEST_DRUM",
+        "WEAPON_SG15_NAME", "WEAPON_OVERHEATED", "WEAPON_COOLED",
+        "HUD_WEAPON_HEAT", "HUD_HEAT_OVERHEATED", "UPGRADE_TEMPEST_DRUM",
         "UPGRADE_THERMAL_JACKET", "UPGRADE_CYCLONE_BOLT",
     ]:
         require(localization, key, f"SG-15 çeviri anahtarı eksik: {key}")

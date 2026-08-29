@@ -39,6 +39,7 @@ func _ready() -> void:
 	_check_training_overlay()
 	_check_automap_contract()
 	_check_door_contract()
+	_check_heat_hud_contract()
 	_check_weapon_contracts()
 	_check_input_map()
 	_check_localization_contract()
@@ -248,6 +249,21 @@ func _check_door_contract() -> void:
 		if door.get_node_or_null(node_path) == null:
 			failures.append("Canonical kapı bileşeni eksik: %s" % node_path)
 	door.free()
+
+
+func _check_heat_hud_contract() -> void:
+	var hud_scene := _instantiate("res://scenes/ui/hud.tscn")
+	if hud_scene == null:
+		return
+	for node_name in ["HeatPanel", "HeatMeter", "HeatValue", "HeatStatus"]:
+		if hud_scene.find_child(node_name, true, false) == null:
+			failures.append("HUD ısı düğümü eksik: %s" % node_name)
+	if not GameState.has_signal("weapon_heat_changed"):
+		failures.append("GameState weapon_heat_changed sinyali eksik.")
+	var sg15 := load("res://resources/weapons/sg15.tres") as WeaponDefinition
+	if sg15 == null or not sg15.uses_heat or not is_equal_approx(sg15.heat_unlock_ratio, 0.65):
+		failures.append("SG-15 aşırı ısınma kilidi/çözülme eşiği yanlış.")
+	hud_scene.free()
 
 
 func _check_weapon_contracts() -> void:
