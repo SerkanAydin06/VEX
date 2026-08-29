@@ -21,6 +21,7 @@ const REQUIRED_RESOURCES := [
 	"res://resources/weapons/p20.tres",
 	"res://resources/weapons/sg04.tres",
 	"res://resources/weapons/sg09.tres",
+	"res://resources/weapons/sg15.tres",
 	"res://resources/weapons/vx47.tres",
 	"res://resources/weapons/mp90.tres",
 	"res://translations/vex.csv",
@@ -278,13 +279,30 @@ func _check_weapon_contracts() -> void:
 			failures.append("SG-09 atış/reload süresi yanlış.")
 		if not sg09.supports_ads_pose or not sg09.supports_flashlight or sg09.automatic:
 			failures.append("SG-09 ADS/fener/yarı otomatik sözleşmesi yanlış.")
+	var sg15 := load("res://resources/weapons/sg15.tres") as WeaponDefinition
+	if sg15 == null:
+		failures.append("SG-15 WeaponDefinition yüklenemedi.")
+	else:
+		if sg15.weapon_id != &"sg15" or sg15.ammo_type != &"shells":
+			failures.append("SG-15 shotgun mühimmat sözleşmesi yanlış.")
+		if sg15.loadout_group != &"shotgun" or sg15.loadout_slot != 2:
+			failures.append("SG-15 shotgun loadout grubu/slotu yanlış.")
+		if sg15.magazine_size != 12 or sg15.damage_per_pellet != 8 or sg15.pellet_count != 7:
+			failures.append("SG-15 tambur/saçma dengesi yanlış.")
+		if not is_equal_approx(sg15.fire_interval, 0.18) or not is_equal_approx(sg15.reload_duration, 2.0):
+			failures.append("SG-15 atış/reload süresi yanlış.")
+		if not sg15.supports_ads_pose or not sg15.uses_heat or not sg15.automatic:
+			failures.append("SG-15 ADS/ısı/tam otomatik sözleşmesi yanlış.")
 	var controller := FileAccess.get_file_as_string("res://scripts/player/weapon_controller.gd")
-	for contract in ["penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count"]:
+	for contract in [
+		"penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count",
+		"_effective_heat_capacity", "_update_weapon_heat", "WEAPON_OVERHEATED",
+	]:
 		if contract not in controller:
 			failures.append("WeaponController P-20/save migration sözleşmesi eksik: %s" % contract)
 	var player_script := FileAccess.get_file_as_string("res://scripts/player/player.gd")
 	for contract in [
-		'&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":',
+		'&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09", &"sg15":',
 		"func _collect_loadout_weapon_pickup(",
 		'"equip_world_weapon"',
 		'"_spawn_dropped_weapon_pickup"',
@@ -295,6 +313,7 @@ func _check_weapon_contracts() -> void:
 	for obsolete in [
 		'unlock_weapon", &"sg04"',
 		'unlock_weapon", &"sg09"',
+		'unlock_weapon", &"sg15"',
 		"func _collect_sidearm_pickup(",
 		'"_spawn_dropped_sidearm_pickup"',
 	]:
@@ -323,7 +342,9 @@ func _check_localization_contract() -> void:
 		"LEVEL01_TUTORIAL_STRAFE_HINT", "LEVEL01_TUTORIAL_BARREL_HINT",
 		"LEVEL01_TUTORIAL_RESOURCE_HINT", "LEVEL01_TUTORIAL_FINAL_HINT",
 		"LEVEL01_TUTORIAL_COMPLETE_HINT", "LEVEL01_DOOR_FIRE_TRAINING",
-		"LEVEL01_DOOR_PROTOCOL_ENTRY", "WEAPON_P20_NAME", "HUD_AMMO_PISTOL",
+		"LEVEL01_DOOR_PROTOCOL_ENTRY", "WEAPON_P20_NAME", "WEAPON_SG15_NAME",
+		"WEAPON_OVERHEATED", "UPGRADE_TEMPEST_DRUM", "UPGRADE_THERMAL_JACKET",
+		"UPGRADE_CYCLONE_BOLT", "HUD_AMMO_PISTOL",
 		"DOOR_COMBAT_LOCKED", "DOOR_COMBAT_CLEARED",
 	]:
 		if required_key not in csv_text:

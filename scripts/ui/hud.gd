@@ -261,7 +261,7 @@ func play_weapon_action(weapon_id: StringName, action: StringName) -> void:
 			&"mp90": fire_audio = mp90_audio
 		if fire_audio.stream != null: fire_audio.play()
 	elif action in [&"reload", &"reload_shell"]:
-		var reload_player := shotgun_reload_audio if weapon_id in [&"sg04", &"sg09"] else pistol_reload_audio
+		var reload_player := shotgun_reload_audio if weapon_id in [&"sg04", &"sg09", &"sg15"] else pistol_reload_audio
 		if reload_player.stream != null:
 			match weapon_id:
 				&"vx47":

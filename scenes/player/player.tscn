@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bld4sc8fopa04" path="res://scripts/player/weapon_definition.gd" id="4_h17s1"]
 [ext_resource type="Resource" path="res://resources/weapons/sg04.tres" id="4_shotgun"]
 [ext_resource type="Resource" path="res://resources/weapons/sg09.tres" id="4_sg09"]
+[ext_resource type="Resource" path="res://resources/weapons/sg15.tres" id="4_sg15"]
 [ext_resource type="AudioStream" uid="uid://dy727qbjov6r7" path="res://assets/audio/footstep_pro.wav" id="5_footstep_audio"]
 [ext_resource type="AudioStream" uid="uid://k8ycpgqn64hb" path="res://assets/audio/player_hurt_pro.wav" id="6_hurt_audio"]
 [ext_resource type="Resource" uid="uid://cqxwolkagivyx" path="res://resources/weapons/vx47.tres" id="7_ak47"]
@@ -66,7 +67,7 @@ spot_angle_attenuation = 0.7
 
 [node name="WeaponController" type="Node" parent="." unique_id=1571382257]
 script = ExtResource("2_weapon_controller")
-weapon_definitions = Array[ExtResource("4_h17s1")]([ExtResource("3_pistol"), ExtResource("3_p07"), ExtResource("3_p14"), ExtResource("3_p20"), ExtResource("4_shotgun"), ExtResource("4_sg09"), ExtResource("7_ak47"), ExtResource("8_mp90")])
+weapon_definitions = Array[ExtResource("4_h17s1")]([ExtResource("3_pistol"), ExtResource("3_p07"), ExtResource("3_p14"), ExtResource("3_p20"), ExtResource("4_shotgun"), ExtResource("4_sg09"), ExtResource("4_sg15"), ExtResource("7_ak47"), ExtResource("8_mp90")])
 weapons_per_loadout_group = 1
 
 [node name="FootstepAudio" type="AudioStreamPlayer3D" parent="." unique_id=578205698]

@@ -40,7 +40,7 @@ extends Resource
 @export var hud_aim_fire_preserve_frame_motion := false
 @export var hud_lowered_offset := Vector2.ZERO
 
-@export_category("Gelecek Silah Yetenekleri")
+@export_category("Silah Yetenekleri")
 @export var supports_flashlight := false
 @export var flashlight_color := Color(0.76, 0.88, 1.0, 1.0)
 @export_range(0.0, 16.0, 0.1) var flashlight_energy := 4.0
@@ -48,6 +48,10 @@ extends Resource
 @export_range(5.0, 80.0, 0.5) var flashlight_angle_degrees := 28.0
 @export var supports_alt_fire := false
 @export var uses_heat := false
+@export_range(0.1, 100.0, 0.1) var heat_per_shot := 10.0
+@export_range(1.0, 500.0, 1.0) var heat_capacity := 100.0
+@export_range(0.0, 10.0, 0.05) var heat_cooldown_delay := 0.6
+@export_range(0.1, 500.0, 0.1) var heat_cooling_per_second := 30.0
 @export var uses_charge := false
 @export_range(0.0, 10.0, 0.05) var penetration_power := 0.0
 @export_range(0.0, 2.0, 0.05) var gunshot_noise_multiplier := 1.15

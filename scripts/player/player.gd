@@ -286,7 +286,7 @@ func collect_pickup(
 			elif pickup_type == &"mp90_ammo":
 				ammo_name = tr("AMMO_57")
 			GameState.notify_pickup(tr("PICKUP_AMMO_FORMAT") % [ammo_name, collected_ammo], &"ammo")
-		&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09":
+		&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09", &"sg15":
 			if not _collect_loadout_weapon_pickup(pickup_type, amount, source_pickup):
 				return false
 		&"vx47":
@@ -380,7 +380,7 @@ func _collect_loadout_weapon_pickup(
 			GameState.notify_pickup(tr("PICKUP_P14_ACTIVE"), &"weapon")
 		&"p20":
 			GameState.notify_pickup(tr("PICKUP_P20_ACTIVE"), &"weapon")
-		&"sg04", &"sg09":
+		&"sg04", &"sg09", &"sg15":
 			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
 	return true
 

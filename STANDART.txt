@@ -289,6 +289,8 @@ Canonical oynanabilir ID'ler:
 - p14
 - p20
 - sg04
+- sg09
+- sg15
 - vx47
 - mp90
 
@@ -301,6 +303,8 @@ WeaponDefinition kaynakları:
 - resources/weapons/p14.tres
 - resources/weapons/p20.tres
 - resources/weapons/sg04.tres
+- resources/weapons/sg09.tres
+- resources/weapons/sg15.tres
 - resources/weapons/vx47.tres
 - resources/weapons/mp90.tres
 
@@ -329,6 +333,8 @@ Yeni silah eklerken HUD'a weapon_id match bloğu yazmak yerine WeaponDefinition 
 - P-14 presentation : scenes/ui/weapons/p14_view.tscn
 - P-20 presentation : scenes/ui/weapons/p20_view.tscn
 - SG-04 presentation: scenes/ui/weapons/sg04_view.tscn
+- SG-09 presentation: scenes/ui/weapons/sg09_view.tscn
+- SG-15 presentation: scenes/ui/weapons/sg15_view.tscn
 - VX-47 presentation: scenes/ui/weapons/vx47_view.tscn
 - MP90 presentation : scenes/ui/weapons/mp90_view.tscn
 - ADS/lowered pose davranışı WeaponDefinition capability alanları ve presentation offsetleri üzerinden yönetilir.

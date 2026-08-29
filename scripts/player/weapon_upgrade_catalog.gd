@@ -34,6 +34,11 @@ const TRACKS := {
 		{"id": &"smart_caddy", "name": "UPGRADE_SMART_CADDY", "magazine": 2, "reload": 0.80},
 		{"id": &"flechette_load", "name": "UPGRADE_FLECHETTE_LOAD", "spread": 0.85},
 	],
+	&"sg15": [
+		{"id": &"tempest_drum", "name": "UPGRADE_TEMPEST_DRUM", "magazine": 6, "reload": 1.10},
+		{"id": &"thermal_jacket", "name": "UPGRADE_THERMAL_JACKET", "heat_capacity": 1.40, "heat_cooling": 1.25},
+		{"id": &"cyclone_bolt", "name": "UPGRADE_CYCLONE_BOLT", "fire_rate": 0.85, "spread": 1.08},
+	],
 	&"vx47": [
 		{"id": &"gas_regulator", "name": "UPGRADE_GAS_REGULATOR", "recoil": 0.82},
 		{"id": &"smart_feed", "name": "UPGRADE_SMART_FEED", "reload": 0.80},
@@ -66,6 +71,8 @@ static func get_modifiers(weapon_id: StringName, level: int) -> Dictionary:
 		"flashlight_energy": 1.0,
 		"flashlight_damage": 1.0,
 		"gunshot_noise": 1.0,
+		"heat_capacity": 1.0,
+		"heat_cooling": 1.0,
 	}
 	var track := get_track(weapon_id)
 	for index in range(mini(level, track.size())):
