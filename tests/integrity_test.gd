@@ -3,6 +3,38 @@ extends Node
 const INVALID_SAVE_FIXTURE := "res://tests/fixtures/save_invalid_version.cfg"
 const VALID_BACKUP_FIXTURE := "res://tests/fixtures/save_valid_backup.cfg"
 
+const CREATURE_SCENES := [
+	"res://scenes/actors/redviper.tscn",
+	"res://scenes/actors/badredviper.tscn",
+	"res://scenes/actors/cinderhound.tscn",
+	"res://scenes/actors/ravager.tscn",
+	"res://scenes/actors/hellmagma.tscn",
+	"res://scenes/actors/veilmaw.tscn",
+	"res://scenes/actors/voidweaver.tscn",
+	"res://scenes/actors/furnice_carrier.tscn",
+	"res://scenes/actors/crucible_warden.tscn",
+]
+
+const COMMON_CREATURE_INSPECTOR_PROPERTIES := [
+	&"idle_wander_radius", &"idle_wander_attempts", &"idle_pause_min", &"idle_pause_max",
+	&"path_target_change_distance", &"runtime_grid_step", &"runtime_grid_max_nodes",
+	&"runtime_grid_search_margin", &"sight_collision_mask", &"aggro_on_damage",
+	&"damage_pursuit_min_progress", &"damage_pursuit_stall_timeout",
+	&"damage_pursuit_commit_time", &"acoustic_collision_mask", &"acoustic_probe_height",
+	&"loud_noise_alert_threshold", &"headshot_reference_height",
+	&"visibility_vertical_span_scale", &"visibility_lateral_span_scale",
+	&"crouched_target_height_scale", &"search_probe_diagonal_weight",
+]
+
+const RANGED_CREATURE_INSPECTOR_PROPERTIES := [
+	&"ranged_visibility_sampling_enabled", &"cover_reposition_enabled",
+	&"ranged_cover_visibility_threshold", &"ranged_cover_reposition_distance",
+	&"attack_preferred_distance", &"attack_minimum_distance",
+	&"attack_recovery_strafe_scale", &"attack_retreat_speed_scale",
+	&"chase_path_refresh_interval", &"local_detour_duration",
+	&"cover_visibility_score_weight",
+]
+
 const REQUIRED_RESOURCES := [
 	"res://scenes/player/player.tscn",
 	"res://scenes/ui/hud.tscn",
@@ -44,6 +76,7 @@ func _ready() -> void:
 	_check_input_map()
 	_check_localization_contract()
 	_check_save_recovery_contract()
+	_check_creature_inspector_contract()
 
 	if failures.is_empty():
 		print("VEX integrity test başarılı: güncel level, tutorial, automap, kapı ve silah sözleşmeleri temiz.")
@@ -391,6 +424,26 @@ func _check_save_recovery_contract() -> void:
 	))
 	if invalid_pair_loaded:
 		failures.append("Save recovery iki semantik bozuk kaydı geçerli kabul ediyor.")
+
+
+func _check_creature_inspector_contract() -> void:
+	for scene_path: String in CREATURE_SCENES:
+		var creature := _instantiate(scene_path)
+		if creature == null:
+			continue
+		var editor_properties: Dictionary = {}
+		for property_data: Dictionary in creature.get_property_list():
+			var usage := int(property_data.get("usage", 0))
+			if (usage & PROPERTY_USAGE_EDITOR) != 0:
+				editor_properties[StringName(property_data.get("name", ""))] = true
+		for property_name: StringName in COMMON_CREATURE_INSPECTOR_PROPERTIES:
+			if not editor_properties.has(property_name):
+				failures.append("Yaratık Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
+		if not scene_path.ends_with("redviper.tscn") and not scene_path.ends_with("cinderhound.tscn"):
+			for property_name: StringName in RANGED_CREATURE_INSPECTOR_PROPERTIES:
+				if not editor_properties.has(property_name):
+					failures.append("Ravager ailesi Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
+		creature.free()
 
 
 func _has_property(object: Object, property_name: StringName) -> bool:

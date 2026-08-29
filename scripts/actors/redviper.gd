@@ -31,13 +31,26 @@ const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_ru
 @export_range(0.1, 5.0, 0.1) var floor_snap_max_correction := 2.0
 @export_range(0.0, 2.0, 0.05) var floor_snap_ray_start_height := 0.5
 @export_range(0.0, 4.0, 0.1) var floor_snap_ray_extra_depth := 2.0
-@export var patrol_offset := Vector3(2.0, 0.0, 0.0)
-@export_range(0.0, 3.0, 0.05) var patrol_pause_duration := 0.65
+@export_storage var patrol_offset := Vector3(2.0, 0.0, 0.0)
+@export_storage var patrol_pause_duration := 0.65
+@export_range(0.1, 12.0, 0.1) var idle_wander_radius := 2.8
+@export_range(1, 32, 1) var idle_wander_attempts := 12
+@export_range(0.0, 1.0, 0.05) var idle_wander_min_radius_ratio := 0.35
+@export_range(0.0, 5.0, 0.05) var idle_pause_min := 0.35
+@export_range(0.0, 5.0, 0.05) var idle_pause_max := 0.95
+@export_range(0.0, 3.0, 0.05) var idle_turn_speed := 0.32
+@export_range(0.05, 2.0, 0.05) var idle_target_min_distance := 0.25
 @export_range(0.1, 1.5, 0.05) var patrol_reach_distance := 0.35
 @export_range(0.1, 2.0, 0.05) var investigation_reach_distance := 0.55
 @export_range(0.0, 3.0, 0.05) var detour_duration := 0.55
 @export_range(0.3, 1.2, 0.05) var navigation_clearance := 0.55
 @export_flags_3d_physics var navigation_collision_mask := 1 | 8
+@export_range(0.1, 1.0, 0.05) var path_refresh_interval := 0.30
+@export_range(0.1, 5.0, 0.1) var path_target_change_distance := 1.20
+@export_range(0.6, 2.0, 0.05) var runtime_grid_step := 0.78
+@export_range(200, 6000, 100) var runtime_grid_max_nodes := 2600
+@export_range(4.0, 30.0, 0.5) var runtime_grid_search_margin := 18.0
+@export_range(0.0, 1.0, 0.05) var wall_normal_y_threshold := 0.55
 
 @export_category("03 - Algılama ve Takip")
 @export_range(1.0, 50.0, 0.5) var detection_range := 30.0
@@ -49,6 +62,7 @@ const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_ru
 @export_range(2.0, 20.0, 0.5) var ally_alert_radius := 9.0
 @export_range(0.0, 3.0, 0.05) var sight_origin_height := 0.65
 @export_range(0.0, 3.0, 0.05) var sight_target_height := 0.45
+@export_flags_3d_physics var sight_collision_mask := 1 | 2
 @export_range(0.0, 1.0, 0.05) var crouch_detection_chance := 0.45
 @export_range(0.5, 5.0, 0.25) var crouch_guaranteed_detection_distance := 3.0
 @export var aggro_on_damage := true
@@ -56,11 +70,31 @@ const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_ru
 @export var alert_allies_on_damage := true
 @export_range(1.0, 120.0, 1.0) var damage_reaction_range := 80.0
 @export_range(1.0, 30.0, 0.5) var damage_reaction_duration := 12.0
+@export_range(0.01, 1.0, 0.01) var damage_pursuit_min_progress := 0.20
+@export_range(0.1, 10.0, 0.1) var damage_pursuit_stall_timeout := 3.0
+@export_range(0.0, 2.0, 0.01) var damage_pursuit_commit_time := 0.12
 @export_category("03B - İşitme / Stealth")
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 16.0
 @export_range(0.1, 2.0, 0.05) var hearing_loudness_scale := 1.0
+@export_flags_3d_physics var acoustic_collision_mask := 1
+@export_range(0.0, 3.0, 0.05) var acoustic_probe_height := 0.8
+@export_range(0.0, 2.0, 0.05) var loud_noise_alert_threshold := 0.9
 @export_range(0.1, 1.0, 0.05) var headshot_height_ratio := 0.62
+@export_range(0.0, 3.0, 0.05) var headshot_reference_height := 0.95
 @export var receive_ally_alerts := true
+
+@export_category("03C - Görüş ve Arama Örnekleme")
+@export_range(0.1, 1.0, 0.05) var visibility_vertical_span_scale := 0.55
+@export_range(0.0, 1.0, 0.05) var visibility_vertical_span_min := 0.20
+@export_range(0.0, 2.0, 0.05) var visibility_vertical_span_max := 0.68
+@export_range(0.1, 1.0, 0.05) var visibility_lateral_span_scale := 0.82
+@export_range(0.0, 1.0, 0.05) var visibility_lateral_span_min := 0.15
+@export_range(0.0, 1.0, 0.05) var visibility_lateral_span_max := 0.38
+@export_range(0.0, 1.0, 0.01) var visibility_shoulder_height_ratio := 0.08
+@export_range(0.0, 1.0, 0.05) var visibility_lower_body_ratio := 0.45
+@export_range(0.0, 1.5, 0.05) var crouched_target_height_scale := 0.50
+@export_range(-1.0, 1.0, 0.05) var crouched_target_min_height := -0.20
+@export_range(0.0, 2.0, 0.05) var search_probe_diagonal_weight := 0.85
 
 @export_category("04 - Saldırı")
 @export_range(0.5, 4.0, 0.05) var attack_range := 1.45
@@ -238,9 +272,9 @@ func _physics_process(delta: float) -> void:
 			_reset_navigation_path()
 		else:
 			var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
-			if forced_distance < _forced_damage_best_distance - 0.20:
+			if forced_distance < _forced_damage_best_distance - damage_pursuit_min_progress:
 				_forced_damage_best_distance = forced_distance
-				_forced_damage_stall_remaining = 3.0
+				_forced_damage_stall_remaining = damage_pursuit_stall_timeout
 			else:
 				_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
 			if EnemyNavigationRuntime.has_reached_walkable_target(
@@ -376,7 +410,7 @@ func _idle_wander(delta: float) -> void:
 		_wait_remaining = maxf(_wait_remaining - delta, 0.0)
 		velocity.x = move_toward(velocity.x, 0.0, delta * braking_acceleration)
 		velocity.z = move_toward(velocity.z, 0.0, delta * braking_acceleration)
-		_facing_direction = _facing_direction.rotated(Vector3.UP, delta * 0.32).normalized()
+		_facing_direction = _facing_direction.rotated(Vector3.UP, delta * idle_turn_speed).normalized()
 		rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
 		_play_animation(&"idle")
 		move_and_slide()
@@ -398,19 +432,21 @@ func _idle_wander(delta: float) -> void:
 		_idle_wander_target = EnemyNavigationRuntime.choose_idle_wander_target(
 			self,
 			_idle_anchor_position,
-			EnemyCombatProfiles.idle_wander_radius(combat_role),
+			idle_wander_radius,
 			navigation_collision_mask,
 			floor_collision_mask,
 			navigation_clearance,
 			floor_snap_ray_start_height,
-			floor_snap_ray_extra_depth
+			floor_snap_ray_extra_depth,
+			idle_wander_attempts,
+			idle_wander_min_radius_ratio
 		)
-		_has_idle_wander_target = _horizontal_distance(global_position, _idle_wander_target) > 0.25
+		_has_idle_wander_target = (
+			_horizontal_distance(global_position, _idle_wander_target)
+			> idle_target_min_distance
+		)
 		if not _has_idle_wander_target:
-			_wait_remaining = randf_range(
-				EnemyCombatProfiles.idle_pause_min(combat_role),
-				EnemyCombatProfiles.idle_pause_max(combat_role)
-			)
+			_wait_remaining = randf_range(idle_pause_min, maxf(idle_pause_min, idle_pause_max))
 			velocity.x = 0.0
 			velocity.z = 0.0
 			_play_animation(&"idle")
@@ -428,10 +464,9 @@ func _chase_position(delta: float, target_position: Vector3, use_chase_speed: bo
 	resolved_target.y = global_position.y
 	_movement_target = resolved_target
 
-	var target_change_distance := EnemyCombatProfiles.path_target_change_distance(combat_role)
 	var target_changed := (
 		not _has_navigation_target
-		or _horizontal_distance(_navigation_target, resolved_target) > target_change_distance
+		or _horizontal_distance(_navigation_target, resolved_target) > path_target_change_distance
 	)
 	if _navigation_refresh_remaining <= 0.0 or target_changed:
 		_navigation_path = EnemyNavigationRuntime.build_shortest_path(
@@ -442,14 +477,14 @@ func _chase_position(delta: float, target_position: Vector3, use_chase_speed: bo
 			navigation_clearance,
 			floor_snap_ray_start_height,
 			floor_snap_ray_extra_depth,
-			EnemyCombatProfiles.grid_step(combat_role),
-			EnemyCombatProfiles.grid_max_nodes(combat_role),
-			EnemyCombatProfiles.grid_search_margin(combat_role)
+			runtime_grid_step,
+			runtime_grid_max_nodes,
+			runtime_grid_search_margin
 		)
 		_navigation_path_index = 1 if _navigation_path.size() > 1 else 0
 		_navigation_target = resolved_target
 		_has_navigation_target = true
-		_navigation_refresh_remaining = EnemyCombatProfiles.path_refresh_interval(combat_role)
+		_navigation_refresh_remaining = path_refresh_interval
 
 	while (
 		_navigation_path_index < _navigation_path.size()
@@ -513,7 +548,7 @@ func _update_chase_detour() -> void:
 		if collision == null:
 			continue
 		var normal := collision.get_normal()
-		if absf(normal.y) >= 0.55:
+		if absf(normal.y) >= wall_normal_y_threshold:
 			continue
 		normal.y = 0.0
 		if normal.length_squared() <= 0.001:
@@ -572,7 +607,8 @@ func _advance_search_probe() -> void:
 		_last_seen_position,
 		_facing_direction,
 		_search_probe_index,
-		search_probe_radius
+		search_probe_radius,
+		search_probe_diagonal_weight
 	)
 	_search_probe_target.y = global_position.y
 	_search_probe_index += 1
@@ -611,9 +647,17 @@ func _check_line_of_sight() -> bool:
 		get_world_3d(),
 		origin,
 		_player,
-		1 | 2,
+		sight_collision_mask,
 		get_rid(),
-		sight_target_height
+		sight_target_height,
+		visibility_vertical_span_scale,
+		visibility_vertical_span_min,
+		visibility_vertical_span_max,
+		visibility_lateral_span_scale,
+		visibility_lateral_span_min,
+		visibility_lateral_span_max,
+		visibility_shoulder_height_ratio,
+		visibility_lower_body_ratio
 	):
 		return false
 
@@ -633,7 +677,11 @@ func _get_crouched_sight_target_height() -> float:
 		var capsule := shape_node.shape as CapsuleShape3D
 		if capsule != null:
 			var top_height := shape_node.position.y + (capsule.height * 0.5)
-			return clampf(top_height * 0.5, -0.2, sight_target_height)
+			return clampf(
+				top_height * crouched_target_height_scale,
+				crouched_target_min_height,
+				sight_target_height
+			)
 	return 0.0
 
 
@@ -793,15 +841,8 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		_die()
 		return
 
-	# Any damage immediately interrupts the current attack and forces pursuit of
-	# the exact source position, independent of sight cone or normal ranges.
 	if _player == null or not is_instance_valid(_player):
 		_player = GameState.player as Node3D
-	_attack_generation += 1
-	_attack_locked = false
-	_attack_lunge_remaining = 0.0
-	_aggro = true
-	_damage_reaction_remaining = damage_reaction_duration
 	var retaliation_target := Vector3.ZERO
 	var has_retaliation_target := false
 	if _source is Node3D:
@@ -810,23 +851,29 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 	elif _player != null and is_instance_valid(_player):
 		retaliation_target = _player.global_position
 		has_retaliation_target = true
-	if has_retaliation_target:
-		retaliation_target.y = global_position.y
-		_forced_damage_target = retaliation_target
-		_has_forced_damage_target = true
-		_forced_damage_best_distance = _horizontal_distance(global_position, retaliation_target)
-		_forced_damage_stall_remaining = 3.0
-		_forced_damage_commit_remaining = EnemyCombatProfiles.damage_pursuit_commit_time(combat_role)
-		_last_seen_position = retaliation_target
-	_lost_sight_remaining = lost_sight_timeout
-	_search_remaining = search_duration
-	_cached_player_visible = false
-	_sight_check_remaining = 0.0
-	_detour_remaining = 0.0
-	_reset_search_probe()
-	_reset_navigation_path()
-	if has_retaliation_target:
-		_face_position(retaliation_target)
+	if aggro_on_damage:
+		_attack_generation += 1
+		_attack_locked = false
+		_attack_lunge_remaining = 0.0
+		_aggro = true
+		_damage_reaction_remaining = damage_reaction_duration
+		if has_retaliation_target:
+			retaliation_target.y = global_position.y
+			_forced_damage_target = retaliation_target
+			_has_forced_damage_target = true
+			_forced_damage_best_distance = _horizontal_distance(global_position, retaliation_target)
+			_forced_damage_stall_remaining = damage_pursuit_stall_timeout
+			_forced_damage_commit_remaining = damage_pursuit_commit_time
+			_last_seen_position = retaliation_target
+		_lost_sight_remaining = lost_sight_timeout
+		_search_remaining = search_duration
+		_cached_player_visible = false
+		_sight_check_remaining = 0.0
+		_detour_remaining = 0.0
+		_reset_search_probe()
+		_reset_navigation_path()
+		if has_retaliation_target:
+			_face_position(retaliation_target)
 	if alert_allies_on_damage:
 		_alert_nearby_allies(retaliation_target if has_retaliation_target else global_position)
 
@@ -996,18 +1043,22 @@ func _die() -> void:
 			return
 		animated_sprite.pause()
 		animated_sprite.frame = animated_sprite.sprite_frames.get_frame_count(&"death") - 1
-		_apply_frame_ground_offset()
+		_place_corpse_visual_on_floor()
 		await get_tree().create_timer(corpse_hold_duration).timeout
 		if not is_inside_tree():
 			return
 	else:
 		_play_animation(&"idle")
 		animated_sprite.pause()
-		_apply_frame_ground_offset()
+		_place_corpse_visual_on_floor()
 		await get_tree().create_timer(corpse_hold_duration).timeout
 		if not is_inside_tree():
 			return
 	_finalize_death_visual()
+
+
+func _place_corpse_visual_on_floor() -> void:
+	animated_sprite.position.y = corpse_visual_y + corpse_floor_clearance
 
 
 func _play_hurt_feedback() -> void:
@@ -1201,10 +1252,10 @@ func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -
 	var effective_range := hearing_radius * maxf(loudness * hearing_loudness_scale, 0.1)
 	if distance > effective_range:
 		return
-	var hearing_origin := global_position + Vector3.UP * 0.8
-	var hearing_target := noise_position + Vector3.UP * 0.8
+	var hearing_origin := global_position + Vector3.UP * acoustic_probe_height
+	var hearing_target := noise_position + Vector3.UP * acoustic_probe_height
 	if not VexEnemyRuntimeUtils.has_clear_acoustic_path(
-		get_world_3d(), hearing_origin, hearing_target
+		get_world_3d(), hearing_origin, hearing_target, acoustic_collision_mask
 	):
 		return
 	_exit_dormant_mode()
@@ -1214,13 +1265,17 @@ func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -
 	_search_remaining = search_duration
 	_reset_search_probe()
 	_path_refresh_remaining = 0.0
-	if loudness >= 0.9:
+	if loudness >= loud_noise_alert_threshold:
 		_alert_nearby_allies(noise_position)
 
 
 func get_weapon_hit_multiplier(hit_position: Vector3, base_headshot_multiplier: float) -> float:
 	var local_y := hit_position.y - global_position.y
-	return base_headshot_multiplier if local_y >= 0.95 * headshot_height_ratio else 1.0
+	return (
+		base_headshot_multiplier
+		if local_y >= headshot_reference_height * headshot_height_ratio
+		else 1.0
+	)
 
 
 func _alert_nearby_allies(suspected_position: Vector3) -> void:
@@ -1234,8 +1289,9 @@ func _alert_nearby_allies(suspected_position: Vector3) -> void:
 			continue
 		if not VexEnemyRuntimeUtils.has_clear_acoustic_path(
 			get_world_3d(),
-			global_position + Vector3.UP * 0.8,
-			ally.global_position + Vector3.UP * 0.8
+			global_position + Vector3.UP * acoustic_probe_height,
+			ally.global_position + Vector3.UP * acoustic_probe_height,
+			acoustic_collision_mask
 		):
 			continue
 		ally.call("receive_ally_alert", suspected_position)

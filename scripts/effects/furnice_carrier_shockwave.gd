@@ -8,6 +8,8 @@ extends Area3D
 @export_range(0.0, 1.0, 0.01) var damage_time_ratio := 0.82
 @export_range(0.1, 2.0, 0.05) var effect_height := 0.8
 @export_flags_3d_physics var occlusion_mask := 1
+@export_range(0.0, 2.0, 0.05) var occlusion_origin_height := 0.35
+@export_range(0.0, 2.0, 0.05) var occlusion_target_height := 0.35
 
 @export_category("02 - Görsel")
 @export_range(1.0, 12.0, 0.1) var visual_reference_radius := 6.0
@@ -82,8 +84,8 @@ func _apply_damage_once() -> void:
 
 
 func _has_clear_path_to_player(player: Node3D) -> bool:
-	var origin := global_position + Vector3.UP * 0.35
-	var target := player.global_position + Vector3.UP * 0.35
+	var origin := global_position + Vector3.UP * occlusion_origin_height
+	var target := player.global_position + Vector3.UP * occlusion_target_height
 	var exclusions: Array[RID] = [get_rid()]
 	if _source is CollisionObject3D:
 		exclusions.append((_source as CollisionObject3D).get_rid())

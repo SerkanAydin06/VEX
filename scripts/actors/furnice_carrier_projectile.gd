@@ -13,6 +13,7 @@ extends Area3D
 @export_range(0.1, 4.0, 0.1) var ground_probe_height := 1.4
 @export_range(0.5, 8.0, 0.1) var ground_probe_depth := 3.5
 @export_range(0.0, 0.2, 0.01) var decal_surface_offset := 0.03
+@export_range(0.05, 2.0, 0.05) var impact_light_fade_duration := 0.35
 
 @onready var projectile_visual: AnimatedSprite3D = $ProjectileVisual
 @onready var impact_visual: AnimatedSprite3D = $ImpactVisual
@@ -104,7 +105,7 @@ func _begin_impact(impact_position: Vector3) -> void:
 	impact_visual.play(&"default")
 	impact_light.visible = true
 	var tween := create_tween()
-	tween.tween_property(impact_light, "light_energy", 0.0, 0.35)
+	tween.tween_property(impact_light, "light_energy", 0.0, impact_light_fade_duration)
 	await impact_visual.animation_finished
 	if is_inside_tree():
 		queue_free()

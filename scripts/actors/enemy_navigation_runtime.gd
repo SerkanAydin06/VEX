@@ -285,15 +285,18 @@ static func choose_idle_wander_target(
     floor_collision_mask: int,
     navigation_clearance: float,
     floor_ray_start_height: float,
-    floor_ray_extra_depth: float
+    floor_ray_extra_depth: float,
+    attempt_count: int = 12,
+    minimum_radius_ratio: float = 0.35
 ) -> Vector3:
     var flat_anchor: Vector3 = anchor
     flat_anchor.y = host.global_position.y
     var best_target: Vector3 = host.global_position
     var best_distance := 0.0
-    for _attempt: int in range(12):
+    for _attempt: int in range(maxi(1, attempt_count)):
         var angle: float = randf_range(0.0, TAU)
-        var distance: float = randf_range(radius * 0.35, radius)
+        var clamped_minimum_ratio := clampf(minimum_radius_ratio, 0.0, 1.0)
+        var distance: float = randf_range(radius * clamped_minimum_ratio, radius)
         var candidate := flat_anchor + Vector3(cos(angle), 0.0, sin(angle)) * distance
         candidate.y = host.global_position.y
         if not _has_floor(

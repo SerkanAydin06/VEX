@@ -43,7 +43,15 @@ static func has_visual_contact(
 	target: Node3D,
 	collision_mask: int,
 	observer_rid: RID,
-	fallback_target_height: float = 0.45
+	fallback_target_height: float = 0.45,
+	vertical_span_scale: float = 0.55,
+	vertical_span_min: float = 0.20,
+	vertical_span_max: float = 0.68,
+	lateral_span_scale: float = 0.82,
+	lateral_span_min: float = 0.15,
+	lateral_span_max: float = 0.38,
+	shoulder_height_ratio: float = 0.08,
+	lower_body_ratio: float = 0.45
 ) -> bool:
 	if world == null or target == null or not is_instance_valid(target):
 		return false
@@ -71,8 +79,16 @@ static func has_visual_contact(
 	else:
 		toward_target = toward_target.normalized()
 	var side := Vector3.UP.cross(toward_target).normalized()
-	var vertical_span := clampf(half_height * 0.55, 0.20, 0.68)
-	var lateral_span := clampf(lateral_radius * 0.82, 0.15, 0.38)
+	var vertical_span := clampf(
+		half_height * vertical_span_scale,
+		vertical_span_min,
+		maxf(vertical_span_min, vertical_span_max)
+	)
+	var lateral_span := clampf(
+		lateral_radius * lateral_span_scale,
+		lateral_span_min,
+		maxf(lateral_span_min, lateral_span_max)
+	)
 
 	# Merkez ilk sırada: açık görüşte eski tek-ray maliyeti korunur. Ek örnekler
 	# yalnız merkez kapı/duvar tarafından kesildiğinde omuz/üst gövde görünürlüğünü
@@ -80,9 +96,9 @@ static func has_visual_contact(
 	var samples: Array[Vector3] = [
 		target_center,
 		target_center + Vector3.UP * vertical_span,
-		target_center + side * lateral_span + Vector3.UP * (vertical_span * 0.08),
-		target_center - side * lateral_span + Vector3.UP * (vertical_span * 0.08),
-		target_center - Vector3.UP * (vertical_span * 0.45),
+		target_center + side * lateral_span + Vector3.UP * (vertical_span * shoulder_height_ratio),
+		target_center - side * lateral_span + Vector3.UP * (vertical_span * shoulder_height_ratio),
+		target_center - Vector3.UP * (vertical_span * lower_body_ratio),
 	]
 	var space_state := world.direct_space_state
 	for sample: Vector3 in samples:
@@ -106,7 +122,8 @@ static func investigation_probe(
 	center: Vector3,
 	forward_hint: Vector3,
 	probe_index: int,
-	radius: float
+	radius: float,
+	diagonal_weight: float = 0.85
 ) -> Vector3:
 	var forward := forward_hint
 	forward.y = 0.0
@@ -117,8 +134,8 @@ static func investigation_probe(
 	var right := Vector3(-forward.z, 0.0, forward.x).normalized()
 	var directions: Array[Vector3] = [
 		forward,
-		(forward + right * 0.85).normalized(),
-		(forward - right * 0.85).normalized(),
+		(forward + right * diagonal_weight).normalized(),
+		(forward - right * diagonal_weight).normalized(),
 		right,
 		-right,
 		-forward,

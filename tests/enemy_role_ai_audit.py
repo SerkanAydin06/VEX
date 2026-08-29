@@ -9,10 +9,15 @@ red = (ROOT / "scripts/actors/redviper.gd").read_text(encoding="utf-8")
 warden = (ROOT / "scripts/actors/crucible_warden.gd").read_text(encoding="utf-8")
 
 for token in [
-    "enum Role", "CLOSE", "MID", "LONG", "preferred_distance", "grid_step",
-    "grid_max_nodes", "grid_search_margin", "idle_wander_radius",
+    "enum Role", "CLOSE", "MID", "LONG",
 ]:
     assert token in profile, token
+for obsolete in [
+    "preferred_distance", "minimum_distance", "cover_visibility_threshold",
+    "idle_wander_radius", "path_refresh_interval", "grid_step",
+    "grid_max_nodes", "grid_search_margin",
+]:
+    assert obsolete not in profile, obsolete
 for token in [
     "func build_shortest_path", "func has_reached_walkable_target",
     "func choose_idle_wander_target", "func has_walk_segment_clear",
@@ -25,6 +30,33 @@ for source in [ravager, red]:
     assert "_has_forced_damage_target" in source
     assert "EnemyNavigationRuntime" in source
     assert "EnemyCombatProfiles" in source
+
+common_inspector_settings = [
+    "idle_wander_radius", "idle_wander_attempts", "idle_pause_min", "idle_pause_max",
+    "path_target_change_distance", "runtime_grid_step", "runtime_grid_max_nodes",
+    "runtime_grid_search_margin", "sight_collision_mask", "aggro_on_damage",
+    "damage_pursuit_min_progress", "damage_pursuit_stall_timeout",
+    "damage_pursuit_commit_time", "acoustic_collision_mask", "acoustic_probe_height",
+    "loud_noise_alert_threshold", "headshot_reference_height",
+    "visibility_vertical_span_scale", "visibility_lateral_span_scale",
+    "crouched_target_height_scale", "search_probe_diagonal_weight",
+]
+for source_name, source in [("ravager", ravager), ("redviper", red)]:
+    for setting in common_inspector_settings:
+        assert re.search(rf"@export[^\n]*\bvar {setting}\b", source), (source_name, setting)
+
+for setting in [
+    "ranged_visibility_sampling_enabled", "cover_reposition_enabled",
+    "ranged_cover_visibility_threshold", "ranged_cover_reposition_distance",
+    "attack_preferred_distance", "attack_minimum_distance",
+    "attack_recovery_strafe_scale", "attack_retreat_speed_scale",
+    "chase_path_refresh_interval", "local_detour_duration",
+    "cover_visibility_score_weight",
+]:
+    assert re.search(rf"@export[^\n]*\bvar {setting}\b", ravager), setting
+
+for obsolete_call in re.findall(r"EnemyCombatProfiles\.([A-Za-z_][A-Za-z0-9_]*)", ravager + red):
+    assert obsolete_call == "Role", obsolete_call
 
 assert ravager.index("if _has_forced_damage_target:") < ravager.index("if _attack_locked:")
 assert red.index("if _has_forced_damage_target:") < red.index("if _attack_locked:")
@@ -45,6 +77,22 @@ expected_roles = {
     "badredviper": 0,
     "cinderhound": 0,
 }
+role_scene_settings = {
+    0: ["damage_pursuit_commit_time", "runtime_grid_step", "runtime_grid_max_nodes"],
+    1: [
+        "ranged_cover_visibility_threshold", "ranged_cover_reposition_distance",
+        "attack_minimum_distance", "chase_path_refresh_interval", "runtime_grid_step",
+        "runtime_grid_max_nodes", "runtime_grid_search_margin",
+    ],
+    2: [
+        "idle_wander_radius", "idle_pause_max", "damage_pursuit_commit_time",
+        "ranged_cover_visibility_threshold", "ranged_cover_reposition_distance",
+        "attack_minimum_distance", "attack_recovery_strafe_scale",
+        "attack_retreat_speed_scale", "chase_path_refresh_interval",
+        "path_target_change_distance", "runtime_grid_step", "runtime_grid_max_nodes",
+        "runtime_grid_search_margin",
+    ],
+}
 for enemy, role in expected_roles.items():
     text = (ROOT / "scenes" / "actors" / f"{enemy}.tscn").read_text(encoding="utf-8")
     assert re.findall(r"(?m)^combat_role = (\d+)$", text) == [str(role)], enemy
@@ -57,5 +105,10 @@ for enemy, role in expected_roles.items():
     keys = re.findall(r"(?m)^([A-Za-z_][A-Za-z0-9_]*)\s*=", root.group(1))
     duplicates = sorted({key for key in keys if keys.count(key) > 1})
     assert not duplicates, (enemy, duplicates)
+    # RedViper ailesi CLOSE varsayılanlarını doğrudan kendi base scriptinden alır.
+    # Ravager ailesinin rol tabanlı eski gizli profil değerleri artık sahnede saklanır.
+    if enemy not in {"redviper", "badredviper", "cinderhound"}:
+        for setting in role_scene_settings[role]:
+            assert setting in keys, (enemy, setting)
 
 print("enemy role AI audit passed")
