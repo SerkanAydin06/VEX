@@ -539,38 +539,12 @@ func is_pursuing_player() -> bool:
 
 
 func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
-	var best_point := target_position
-	var best_score := INF
-	var found := false
-	var best_door: Node = null
-	for node: Node in get_tree().get_nodes_in_group("enemy_navigation_door"):
-		if not node.has_method("get_enemy_navigation_step"):
-			continue
-		var route: Variant = node.call(
-			"get_enemy_navigation_step",
-			global_position,
-			target_position,
-			navigation_clearance,
-			investigation_reach_distance
-		)
-		if not (route is Dictionary):
-			continue
-		var data := route as Dictionary
-		if not bool(data.get("valid", false)):
-			continue
-		var point: Variant = data.get("point", target_position)
-		if typeof(point) != TYPE_VECTOR3:
-			continue
-		var score := float(data.get("score", INF))
-		if score < best_score:
-			best_score = score
-			best_point = point
-			found = true
-			best_door = node
-	if found and best_door != null and best_door.has_method("request_enemy_open"):
-		best_door.call("request_enemy_open")
-	return best_point if found else target_position
-
+	return EnemyNavigationRuntime.resolve_enemy_door_step(
+		self,
+		target_position,
+		navigation_clearance,
+		investigation_reach_distance
+	)
 
 func _face_position(target_position: Vector3) -> void:
 	var direction: Vector3 = target_position - global_position

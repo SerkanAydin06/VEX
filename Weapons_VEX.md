@@ -54,11 +54,11 @@
 
 ### 1.5 Uygulanmış runtime mimarisi
 
-- Canonical resource dosyaları `p01.tres`, `sg04.tres`, `vx47.tres`, `mp90.tres` olarak kullanılır.
+- Oynanabilir canonical resource dosyaları `p01.tres`, `p07.tres`, `p14.tres`, `p20.tres`, `sg04.tres`, `sg09.tres`, `sg15.tres`, `vx47.tres` ve `mp90.tres` olarak kullanılır.
 - HUD presentation bilgisi `WeaponDefinition.hud_view_scene` üzerinden gelir.
-- P-01, P-07, P-14, SG-04, VX-47 ve MP-90 kendi `scenes/ui/weapons/*_view.tscn` presentation sahnelerini kullanır.
+- Dokuz oynanabilir modelin tamamı kendi `scenes/ui/weapons/*_view.tscn` presentation sahnesini kullanır.
 - Yeni bir silah için HUD içine silah kimliğine özel sprite kurulum bloğu eklenmez.
-- `supports_ads_pose`, `supports_lowered_pose`, `supports_flashlight`, `supports_alt_fire`, `uses_heat`, `uses_charge` ve `penetration_power` gelecek model davranışları için capability alanlarıdır.
+- `supports_ads_pose`, `supports_lowered_pose`, `supports_flashlight`, `supports_alt_fire`, `uses_heat`, `uses_charge` ve `penetration_power` veri odaklı capability alanlarıdır; `uses_heat` SG-15 tarafından aktif olarak kullanılır.
 - Silah sesleri bu mimari geçişte değiştirilmemiştir; VX-47/MP-90 özgün ses seti ayrı audio pass olarak yapılacaktır.
 
 ---
@@ -71,10 +71,14 @@ Yeni içerikte her silah kendi model kimliğini kullanacaktır. Mevcut kayıtlar
 |---|---|---|---|
 | P-01 | `p01` | `pistol` | Oynanabilir; canonical ID aktif, legacy migration hazır |
 | P-07 | `p07` | Yok | Oynanabilir; Level 1 gizli bakım deposundan açılır |
+| P-14 | `p14` | Yok | Oynanabilir |
+| P-20 | `p20` | Yok | Oynanabilir; ortak `bullets` rezervini kullanır |
 | SG-04 | `sg04` | `shotgun` | Oynanabilir; canonical ID aktif, legacy migration hazır |
+| SG-09 | `sg09` | Yok | Oynanabilir |
+| SG-15 | `sg15` | Yok | Oynanabilir; ısı yönetimi aktif |
 | VX-47 | `vx47` | `ak47` | Oynanabilir; canonical ID aktif, legacy migration hazır |
 | MP-90 | `mp90` | `mp90` | Oynanabilir; kimlik uyumlu |
-| Diğer modeller | Küçük harf model kodu | Yok | Planlandı |
+| Diğer 11 model | Küçük harf model kodu | Yok | Planlandı |
 
 **Kayıt göçü kuralı:**
 
@@ -97,11 +101,11 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 | P-07 | P-07 Sentinel | Tabanca | Karanlık alan / hızlı takip | Entegre taktik fener | Oynanabilir |
 | P-14 | P-14 Specter | Tabanca | Gizli operasyon / hassasiyet | Fener, susturucu, gelişmiş optik | Oynanabilir; Level 1 başlangıcında test pickup'ı |
 | P-20 | P-20 Magnum | Tabanca | Zırhlı hedef / tek atış gücü | Standart tabanca mühimmatı ve delme | Oynanabilir |
-| SG-04 | SG-04 Kırıcı | Pompalı | Yakın mesafe durdurma | Manuel pompa ve yüksek saçma | Oynanabilir |
+| SG-04 | SG-04 Breacher | Pompalı | Yakın mesafe durdurma | Manuel pompa ve yüksek saçma | Oynanabilir |
 | SG-09 | SG-09 Aegis | Pompalı | Savunma / seri takip | Yarı otomatik mekanizma | Oynanabilir |
 | SG-15 | SG-15 Tempest | Pompalı | Kalabalık kontrolü | Tam otomatik tambur ve ısı yönetimi | Oynanabilir |
-| SG-21 | SG-21 Graviton | Pompalı | Ağır yaratık / alan kontrolü | Adaptif şok ve gravitasyon fişeği | Planlandı |
-| VX-47 | VX-47 Taarruz Tüfeği | Tüfek | Dengeli orta mesafe | Sağlam tam otomatik platform | Oynanabilir |
+| SG-21 | SG-21 Rupture | Pompalı | Ağır yaratık / alan kontrolü | Adaptif şok ve gravitasyon fişeği | Planlandı |
+| VX-47 | VX-47 Striker | Tüfek | Dengeli orta mesafe | Sağlam tam otomatik platform | Oynanabilir |
 | VX-58 | VX-58 Vanguard | Tüfek | Kontrollü hücum | Seçilebilir üçlü seri | Planlandı |
 | VX-72 | VX-72 Warden | Tüfek | Uzun mesafe / zayıf nokta | Yarı otomatik DMR ve termal optik | Planlandı |
 | VX-90 | VX-90 Chimera | Tüfek | Uyarlanabilir son seviye tüfek | Programlanabilir mühimmat | Planlandı |
@@ -222,7 +226,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 
 ## 5. Pompalı ve savaş tüfekleri
 
-### SG-04 Kırıcı
+### SG-04 Breacher
 
 **Kimlik:** `sg04` — legacy save alias: `shotgun`
 **Rol:** Yakın mesafede güvenilir durdurma gücü.
@@ -273,7 +277,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 **Kimlik:** `sg15`
 **Durum:** Oyunda uygulanmış (`resources/weapons/sg15.tres`, `scenes/ui/weapons/sg15_view.tscn`).
 **Rol:** Hızlı yaratık sürüleri ve acil alan temizliği.
-**Temel özellik:** Tam otomatik ateş ve tambur şarjör; uzun kullanımda ısı biriktirir.
+**Temel özellik:** Tam otomatik ateş ve tambur şarjör; uzun kullanımda ısı biriktirir. Aşırı ısındığında kapasitenin `%65` altına soğuyana kadar kilitlenir ve HUD ısı göstergesi oyuncuyu önceden uyarır.
 
 | Değer | Plan |
 |---|---:|
@@ -291,7 +295,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 2. `thermal_jacket` — **Isı Ceketi:** Aşırı ısınma eşiği `+40%`, soğuma hızı `+25%`.
 3. `cyclone_bolt` — **Cyclone Sürgü:** Atış aralığı `−15%`; tam otomatik yayılım `+8%`.
 
-### SG-21 Graviton
+### SG-21 Rupture
 
 **Kimlik:** `sg21`
 **Rol:** Ağır yaratıklar, dar geçitler ve alan kontrolü.
@@ -317,7 +321,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 
 ## 6. Taarruz ve nişancı tüfekleri
 
-### VX-47 Taarruz Tüfeği
+### VX-47 Striker
 
 **Kimlik:** `vx47` — legacy save alias: `ak47`
 **Rol:** Orta mesafede dengeli ana silah.

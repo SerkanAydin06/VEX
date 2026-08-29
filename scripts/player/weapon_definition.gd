@@ -50,6 +50,8 @@ extends Resource
 @export var uses_heat := false
 @export_range(0.1, 100.0, 0.1) var heat_per_shot := 10.0
 @export_range(1.0, 500.0, 1.0) var heat_capacity := 100.0
+## Aşırı ısınan silah kapasitenin bu oranına inmeden yeniden ateş edemez.
+@export_range(0.05, 0.95, 0.05) var heat_unlock_ratio := 0.65
 @export_range(0.0, 10.0, 0.05) var heat_cooldown_delay := 0.6
 @export_range(0.1, 500.0, 0.1) var heat_cooling_per_second := 30.0
 @export var uses_charge := false

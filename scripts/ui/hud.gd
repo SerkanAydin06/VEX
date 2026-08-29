@@ -38,6 +38,10 @@ const DOOM3_CROSSHAIR: Texture2D = preload("res://assets/ui/crosshair_doom3_circ
 @onready var weapon_name: Label = %WeaponName
 @onready var weapon_slot: Label = %WeaponSlot
 @onready var ammo_type: Label = %AmmoType
+@onready var heat_panel: VBoxContainer = %HeatPanel
+@onready var heat_meter: ProgressBar = %HeatMeter
+@onready var heat_value: Label = %HeatValue
+@onready var heat_status: Label = %HeatStatus
 @onready var kills_value: Label = %KillsValue
 @onready var key_icon: TextureRect = %KeyIcon
 @onready var red_key_icon: TextureRect = %RedKeyIcon
@@ -118,6 +122,7 @@ func _ready() -> void:
 	GameState.player_stamina_changed.connect(_on_player_stamina_changed)
 	GameState.weapon_changed.connect(_on_weapon_changed)
 	GameState.ammo_changed.connect(_on_ammo_changed)
+	GameState.weapon_heat_changed.connect(_on_weapon_heat_changed)
 	GameState.key_inventory_changed.connect(_on_keys_changed)
 	GameState.objective_changed.connect(_on_objective_changed)
 	GameState.notification_requested.connect(_on_notification_requested)
@@ -363,6 +368,33 @@ func _on_ammo_changed(current: int, reserve: int) -> void:
 	ammo_value.text = str(current).pad_zeros(2)
 	reserve_value.text = "/ %03d" % reserve
 	ammo_value.modulate = Color(1.0, 0.32, 0.2) if current <= 2 else Color.WHITE
+
+
+func _on_weapon_heat_changed(
+	current: float,
+	maximum: float,
+	overheated: bool,
+	uses_heat: bool
+) -> void:
+	heat_panel.visible = uses_heat
+	if not uses_heat:
+		heat_meter.value = 0.0
+		heat_value.text = ""
+		return
+	var safe_maximum := maxf(maximum, 0.001)
+	var ratio := clampf(current / safe_maximum, 0.0, 1.0)
+	heat_meter.max_value = safe_maximum
+	heat_meter.value = current
+	heat_value.text = "%03d%%" % int(round(ratio * 100.0))
+	if overheated:
+		heat_status.text = tr("HUD_HEAT_OVERHEATED")
+		heat_status.modulate = Color(1.0, 0.24, 0.12)
+	elif ratio >= 0.75:
+		heat_status.text = tr("HUD_HEAT_HIGH")
+		heat_status.modulate = Color(1.0, 0.62, 0.18)
+	else:
+		heat_status.text = tr("HUD_HEAT_READY")
+		heat_status.modulate = Color(0.46, 0.78, 0.72)
 
 
 func _on_keys_changed(keys: Array[StringName]) -> void:

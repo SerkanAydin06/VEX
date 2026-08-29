@@ -24,7 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://brcnwydimyxqv" path="res://assets/pickups/ak47.png" id="16_ak47"]
 [ext_resource type="Texture2D" uid="uid://bggu6utcgan1q" path="res://assets/pickups/mp90.png" id="17_mp90"]
 [ext_resource type="Texture2D" uid="uid://cxwpf6cn3ejr7" path="res://assets/world/bastion7/operator_pad.png" id="18_operator_pad"]
-[ext_resource type="Texture2D" uid="uid://di7g8da07ouwy" path="res://assets/weapons/p01/p01_side.png" id="19_p01_side"]
+[ext_resource type="Texture2D" uid="uid://cphgrl2urhby0" path="res://assets/weapons/p01/p01_side.png" id="19_p01_side"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p07/p07_side.png" id="20_p07_side"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p14/p14_side.png" id="20_p14_side"]
 [ext_resource type="Texture2D" path="res://assets/weapons/p20/p20_side.png" id="20_p20_side"]

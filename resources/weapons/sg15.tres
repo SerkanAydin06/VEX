@@ -27,6 +27,7 @@ hud_aim_fire_preserve_frame_motion = true
 uses_heat = true
 heat_per_shot = 14.0
 heat_capacity = 100.0
+heat_unlock_ratio = 0.65
 heat_cooldown_delay = 0.65
 heat_cooling_per_second = 32.0
 gunshot_noise_multiplier = 1.2

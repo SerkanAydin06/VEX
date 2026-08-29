@@ -15,9 +15,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Run every Python audit
@@ -33,10 +33,10 @@ jobs:
 
   godot-integrity:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Install official Godot 4.7
         env:
           GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
@@ -52,4 +52,42 @@ jobs:
       - name: Import project headlessly
         run: godot --headless --editor --path . --quit
       - name: Run Godot integrity scene
-        run: godot --headless --path . tests/integrity_test.tscn
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/godot-integrity.log"
+          godot --headless --path . tests/integrity_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Godot integrity log contains an error or invalid UID"
+            exit 1
+          fi
+      - name: Run Warden doorway runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/warden-door-runtime.log"
+          godot --headless --path . tests/warden_door_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Warden doorway runtime log contains an error or invalid UID"
+            exit 1
+          fi
+      - name: Install Windows export templates
+        env:
+          TEMPLATE_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz
+        run: |
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/templates.tpz" "$TEMPLATE_URL"
+          unzip -q "$RUNNER_TEMP/templates.tpz" -d "$RUNNER_TEMP/export-templates"
+          mkdir -p "$HOME/.local/share/godot/export_templates"
+          mv "$RUNNER_TEMP/export-templates/templates" "$HOME/.local/share/godot/export_templates/4.7.stable"
+      - name: Smoke-test Windows release export
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/windows
+          log="$RUNNER_TEMP/windows-export.log"
+          godot --headless --path . --export-release "Windows Desktop" build/windows/VEX.exe 2>&1 | tee "$log"
+          test -s build/windows/VEX.exe
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Windows export log contains an error or invalid UID"
+            exit 1
+          fi

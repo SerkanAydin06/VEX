@@ -78,7 +78,7 @@ def check_res_paths() -> None:
 
 def check_core_files() -> None:
     required = [
-        "project.godot", "STANDART.txt", "Story_VEX.md",
+        "project.godot", "README.md", "STANDART.txt", "Story_VEX.md",
         "scenes/player/player.tscn", "scripts/player/player.gd",
         "scripts/player/weapon_controller.gd", "scripts/autoload/game_state.gd",
         "scripts/autoload/settings_manager.gd", "scripts/levels/base_level.gd",
@@ -487,6 +487,10 @@ def check_save_recovery_and_runtime_ci() -> None:
         "Godot_v4.7-stable_linux.x86_64.zip",
         "godot --headless --editor --path . --quit",
         "godot --headless --path . tests/integrity_test.tscn",
+        "godot --headless --path . tests/warden_door_runtime_test.tscn",
+        '--export-release "Windows Desktop"',
+        "actions/checkout@v7",
+        "actions/setup-python@v7",
     ]:
         if contract not in workflow:
             fail(f"Headless Godot CI sözleşmesi eksik: {contract}")
@@ -505,6 +509,14 @@ def check_repository_hygiene() -> None:
         "assets/weapons/shotgun_fire.png",
         "assets/weapons/shotgun_reload_1.png",
         "assets/weapons/shotgun_reload_2.png",
+        ".github/emp01",
+        ".github/enemy_detection.patch",
+        ".github/enemy_detection_no_workflow.patch",
+        ".github/enemy_movement.patch.gz.b64",
+        ".github/enemy_movement.patch.part1",
+        ".github/enemy_movement.patch.part2",
+        ".github/workflows/export_enemy_detection_sources.yml",
+        ".github/workflows/export_enemy_movement_sources.yml",
     ]
     for relative in obsolete_paths:
         if (ROOT / relative).exists():

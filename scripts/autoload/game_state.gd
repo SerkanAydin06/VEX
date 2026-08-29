@@ -5,6 +5,7 @@ signal player_stats_changed(health: int, max_health: int, armor: int)
 signal player_stamina_changed(current: float, maximum: float, sprinting: bool)
 signal weapon_changed(weapon_id: StringName, display_name: String)
 signal ammo_changed(current: int, reserve: int)
+signal weapon_heat_changed(current: float, maximum: float, overheated: bool, uses_heat: bool)
 signal key_inventory_changed(keys: Array[StringName])
 signal objective_changed(text: String)
 signal notification_requested(text: String)
@@ -209,6 +210,10 @@ func publish_weapon(weapon_id: StringName, display_name: String) -> void:
 
 func publish_ammo(current: int, reserve: int) -> void:
 	ammo_changed.emit(current, reserve)
+
+
+func publish_weapon_heat(current: float, maximum: float, overheated: bool, uses_heat: bool) -> void:
+	weapon_heat_changed.emit(current, maximum, overheated, uses_heat)
 
 
 func publish_keys(keys: Array[StringName]) -> void:
