@@ -1,5 +1,5 @@
 class_name VexFurniceCarrier
-extends "res://scripts/actors/ravager.gd"
+extends "res://scripts/actors/enemy_combatant_base.gd"
 
 @export_category("09 - Furnice Carrier Saldırı Seçimi")
 @export_range(0.5, 12.0, 0.1) var close_attack_threshold := 6.0

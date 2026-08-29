@@ -1,8 +1,8 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-ravager = (ROOT / "scripts/actors/ravager.gd").read_text(encoding="utf-8")
-redviper = (ROOT / "scripts/actors/redviper.gd").read_text(encoding="utf-8")
+ravager = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
+redviper = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 warden = (ROOT / "scripts/actors/crucible_warden.gd").read_text(encoding="utf-8")
 nav = (ROOT / "scripts/actors/enemy_navigation_runtime.gd").read_text(encoding="utf-8")
 profile = (ROOT / "scripts/actors/enemy_combat_profiles.gd").read_text(encoding="utf-8")

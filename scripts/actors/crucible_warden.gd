@@ -1,5 +1,5 @@
 class_name VexCrucibleWarden
-extends "res://scripts/actors/ravager.gd"
+extends "res://scripts/actors/enemy_combatant_base.gd"
 
 @export_category("09 - Ground Slam")
 @export var ground_slam_scene: PackedScene

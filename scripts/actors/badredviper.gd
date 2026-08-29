@@ -1,7 +1,6 @@
 @tool
 class_name VexBadRedViper
-extends "res://scripts/actors/redviper.gd"
+extends "res://scripts/actors/enemy_lunge_base.gd"
 
-# BadRedViper, RedViper'ın tek yapay zekâ kaynağını doğrudan miras alır.
-# Can, hasar, hız, menzil ve diğer bütün export değerleri kendi sahnesinde
-# bağımsız olarak saklanır ve Inspector üzerinden düzenlenir.
+# BadRedViper başka bir yaratığı değil, standart yakın dövüş/hamle ailesini
+# kullanır. Can, hasar, hız ve menzil değerleri kendi sahnesinde saklanır.
