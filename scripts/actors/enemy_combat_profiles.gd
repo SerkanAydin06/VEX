@@ -97,6 +97,22 @@ static func idle_pause_max(role: int) -> float:
     return 1.20 if role == Role.LONG else 0.95
 
 
+static func damage_pursuit_commit_time(role: int) -> float:
+    # Hasar alınan anda her rol önce kaynağa doğru fiziksel olarak tepki verir.
+    # Bu kısa commit süresi, hedef zaten menzilde olsa bile 'hasarı aldım ve
+    # anında yöneldim' hissini korur; sonrasında saldırı menziline girilmişse
+    # combat devralır ve gövde gövdeye sonsuza dek yürünmez.
+    match role:
+        Role.CLOSE:
+            return 0.12
+        Role.MID:
+            return 0.16
+        Role.LONG:
+            return 0.20
+        _:
+            return 0.16
+
+
 static func path_refresh_interval(role: int) -> float:
     match role:
         Role.CLOSE:

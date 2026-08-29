@@ -137,6 +137,7 @@ var _forced_damage_target := Vector3.ZERO
 var _has_forced_damage_target := false
 var _forced_damage_best_distance := INF
 var _forced_damage_stall_remaining := 0.0
+var _forced_damage_commit_remaining := 0.0
 var _last_seen_position := Vector3.ZERO
 var _facing_direction := Vector3.FORWARD
 var _detour_direction := Vector3.ZERO
@@ -216,6 +217,7 @@ func _physics_process(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
 		_player = GameState.player as Node3D
 	_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)
+	_forced_damage_commit_remaining = maxf(0.0, _forced_damage_commit_remaining - delta)
 	_navigation_refresh_remaining = maxf(0.0, _navigation_refresh_remaining - delta)
 
 	if _should_use_dormant_mode():
@@ -229,40 +231,46 @@ func _physics_process(delta: float) -> void:
 
 	# Damage direction has absolute priority, even over an attack windup.
 	if _has_forced_damage_target:
-		var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
-		if forced_distance < _forced_damage_best_distance - 0.20:
-			_forced_damage_best_distance = forced_distance
-			_forced_damage_stall_remaining = 3.0
-		else:
-			_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
-		if EnemyNavigationRuntime.has_reached_walkable_target(
-			self,
-			_forced_damage_target,
-			investigation_reach_distance,
-			navigation_collision_mask,
-			floor_collision_mask,
-			navigation_clearance,
-			floor_snap_ray_start_height,
-			floor_snap_ray_extra_depth
-		):
+		if _can_handoff_damage_pursuit_to_combat():
 			_has_forced_damage_target = false
 			_damage_reaction_remaining = 0.0
-			_last_seen_position = _forced_damage_target
-			_search_remaining = search_duration
-			_reset_search_probe()
+			_forced_damage_stall_remaining = 0.0
+			_reset_navigation_path()
 		else:
-			_chase_position(delta, _forced_damage_target)
-			move_and_slide()
-			_update_chase_detour()
-			if (
-				_forced_damage_stall_remaining <= 0.0
-				and (_navigation_path.is_empty() or _navigation_path_index >= _navigation_path.size())
+			var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
+			if forced_distance < _forced_damage_best_distance - 0.20:
+				_forced_damage_best_distance = forced_distance
+				_forced_damage_stall_remaining = 3.0
+			else:
+				_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
+			if EnemyNavigationRuntime.has_reached_walkable_target(
+				self,
+				_forced_damage_target,
+				investigation_reach_distance,
+				navigation_collision_mask,
+				floor_collision_mask,
+				navigation_clearance,
+				floor_snap_ray_start_height,
+				floor_snap_ray_extra_depth
 			):
 				_has_forced_damage_target = false
 				_damage_reaction_remaining = 0.0
 				_last_seen_position = _forced_damage_target
 				_search_remaining = search_duration
 				_reset_search_probe()
+			else:
+				_chase_position(delta, _forced_damage_target)
+				move_and_slide()
+				_update_chase_detour()
+				if (
+					_forced_damage_stall_remaining <= 0.0
+					and (_navigation_path.is_empty() or _navigation_path_index >= _navigation_path.size())
+				):
+					_has_forced_damage_target = false
+					_damage_reaction_remaining = 0.0
+					_last_seen_position = _forced_damage_target
+					_search_remaining = search_duration
+					_reset_search_probe()
 			return
 
 	# Saldırı hazırlığında oyuncuyu kısa bir ileri hamleyle takip et. Böylece
@@ -296,6 +304,15 @@ func _physics_process(delta: float) -> void:
 			player_distance,
 			active_sight_range
 		)
+		# Yakın dövüşçü oyuncunun dibindeyken cache yüzünden saldırı kaçıramaz.
+		if (
+			combat_role == EnemyCombatProfiles.Role.CLOSE
+			and player_distance <= attack_range + attack_range_tolerance
+		):
+			can_see_player = _check_line_of_sight()
+			_cached_player_visible = can_see_player
+			if can_see_player:
+				_sight_check_remaining = near_sight_interval
 
 		# İlk algılama ve alarm sonrası takip menzilleri sahne kökünden bağımsız
 		# olarak ayarlanır.
@@ -673,6 +690,25 @@ func _get_cached_player_visibility(
 	return _cached_player_visible
 
 
+func _can_handoff_damage_pursuit_to_combat() -> bool:
+	if _forced_damage_commit_remaining > 0.0:
+		return false
+	if _player == null or not is_instance_valid(_player):
+		return false
+	if _horizontal_distance(global_position, _player.global_position) > attack_range + attack_range_tolerance:
+		return false
+	if not _check_line_of_sight():
+		return false
+	_aggro = true
+	_cached_player_visible = true
+	_sight_check_remaining = near_sight_interval
+	_last_seen_position = _player.global_position
+	_last_seen_position.y = global_position.y
+	_lost_sight_remaining = lost_sight_timeout
+	_search_remaining = search_duration
+	return true
+
+
 func _update_attack_lunge(delta: float) -> void:
 	if (
 		_attack_lunge_remaining <= 0.0
@@ -801,6 +837,7 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		_has_forced_damage_target = true
 		_forced_damage_best_distance = _horizontal_distance(global_position, retaliation_target)
 		_forced_damage_stall_remaining = 3.0
+		_forced_damage_commit_remaining = EnemyCombatProfiles.damage_pursuit_commit_time(combat_role)
 		_last_seen_position = retaliation_target
 	_lost_sight_remaining = lost_sight_timeout
 	_search_remaining = search_duration

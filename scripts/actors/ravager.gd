@@ -180,6 +180,7 @@ var _forced_damage_target := Vector3.ZERO
 var _has_forced_damage_target := false
 var _forced_damage_best_distance := INF
 var _forced_damage_stall_remaining := 0.0
+var _forced_damage_commit_remaining := 0.0
 var _combat_interrupt_generation := 0
 var _last_visibility_ratio := 0.0
 var _ranged_reposition_target := Vector3.ZERO
@@ -283,6 +284,7 @@ func _physics_process(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
 		_player = GameState.player as Node3D
 	_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)
+	_forced_damage_commit_remaining = maxf(0.0, _forced_damage_commit_remaining - delta)
 	_ranged_reposition_remaining = maxf(0.0, _ranged_reposition_remaining - delta)
 	_local_detour_remaining = maxf(0.0, _local_detour_remaining - delta)
 
@@ -333,6 +335,7 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		_has_forced_damage_target = true
 		_forced_damage_best_distance = _horizontal_distance(global_position, retaliation_target)
 		_forced_damage_stall_remaining = 3.0
+		_forced_damage_commit_remaining = EnemyCombatProfiles.damage_pursuit_commit_time(combat_role)
 		_last_seen_position = retaliation_target
 		_has_last_seen_position = true
 	_path_refresh_remaining = 0.0
@@ -493,31 +496,40 @@ func _update_behavior(delta: float) -> void:
 	# A hit immediately overrides normal combat. Reach the exact source position,
 	# or the closest reachable point, before resuming normal role tactics.
 	if _has_forced_damage_target:
-		var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
-		if forced_distance < _forced_damage_best_distance - 0.20:
-			_forced_damage_best_distance = forced_distance
-			_forced_damage_stall_remaining = 3.0
+		# Hasar geldiği anda önce kaynağa yönel; fakat oyuncu artık gerçekten
+		# saldırı menzilindeyse ve arada duvar yoksa exact eski koordinata
+		# ulaşmaya çalışıp gövdenin içine yürümek yerine combat'a teslim et.
+		if _can_handoff_damage_pursuit_to_combat():
+			_has_forced_damage_target = false
+			_damage_reaction_remaining = 0.0
+			_forced_damage_stall_remaining = 0.0
+			_clear_path()
 		else:
-			_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
-		if _has_reached_walkable_target(_forced_damage_target, waypoint_reach_distance):
-			_has_forced_damage_target = false
-			_damage_reaction_remaining = 0.0
-			_last_seen_position = _forced_damage_target
-			_has_last_seen_position = true
-			_begin_search()
+			var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
+			if forced_distance < _forced_damage_best_distance - 0.20:
+				_forced_damage_best_distance = forced_distance
+				_forced_damage_stall_remaining = 3.0
+			else:
+				_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
+			if _has_reached_walkable_target(_forced_damage_target, waypoint_reach_distance):
+				_has_forced_damage_target = false
+				_damage_reaction_remaining = 0.0
+				_last_seen_position = _forced_damage_target
+				_has_last_seen_position = true
+				_begin_search()
+				return
+			state = State.CHASE
+			_navigate_to(_forced_damage_target, delta)
+			if (
+				_forced_damage_stall_remaining <= 0.0
+				and (_current_path.is_empty() or _path_index >= _current_path.size())
+			):
+				_has_forced_damage_target = false
+				_damage_reaction_remaining = 0.0
+				_last_seen_position = _forced_damage_target
+				_has_last_seen_position = true
+				_begin_search()
 			return
-		state = State.CHASE
-		_navigate_to(_forced_damage_target, delta)
-		if (
-			_forced_damage_stall_remaining <= 0.0
-			and (_current_path.is_empty() or _path_index >= _current_path.size())
-		):
-			_has_forced_damage_target = false
-			_damage_reaction_remaining = 0.0
-			_last_seen_position = _forced_damage_target
-			_has_last_seen_position = true
-			_begin_search()
-		return
 	# Atış başladıktan sonra kısa hazırlık penceresi tamamlanır. Oyuncunun
 	# yalnız geri yürümesi atışı iptal etmez; duvar arkasına geçmek hâlâ
 	# görüş kontrolü sayesinde mermiyi engeller.
@@ -546,6 +558,10 @@ func _update_behavior(delta: float) -> void:
 		else:
 			_move_during_attack_recovery(attack_target, delta)
 		return
+
+	# CLOSE rolünde point-blank saldırı kararı cache'lenmiş görüş sonucunu
+	# beklemez. Oyuncu menzildeyse LOS'u bu fizik karesinde doğrula.
+	_refresh_close_combat_visibility()
 
 	if (
 		_player_visible
@@ -594,6 +610,41 @@ func _update_behavior(delta: float) -> void:
 		_return_to_patrol(delta)
 	else:
 		_patrol(delta)
+
+
+func _refresh_close_combat_visibility() -> void:
+	if combat_role != EnemyCombatProfiles.Role.CLOSE:
+		return
+	if _player == null or not is_instance_valid(_player):
+		return
+	if _horizontal_distance(global_position, _player.global_position) > attack_range + attack_range_tolerance:
+		return
+	if not _check_line_of_sight():
+		return
+	_player_visible = true
+	_alerted = true
+	_seconds_without_sight = 0.0
+	_last_seen_position = _player.global_position
+	_last_seen_position.y = global_position.y
+	_has_last_seen_position = true
+
+
+func _can_handoff_damage_pursuit_to_combat() -> bool:
+	if _forced_damage_commit_remaining > 0.0:
+		return false
+	if _player == null or not is_instance_valid(_player):
+		return false
+	if _horizontal_distance(global_position, _player.global_position) > attack_range + attack_range_tolerance:
+		return false
+	if not _check_line_of_sight():
+		return false
+	_player_visible = true
+	_alerted = true
+	_seconds_without_sight = 0.0
+	_last_seen_position = _player.global_position
+	_last_seen_position.y = global_position.y
+	_has_last_seen_position = true
+	return true
 
 
 func is_pursuing_player() -> bool:
