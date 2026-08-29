@@ -252,6 +252,7 @@ collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
+combat_role = 1
 enemy_id = &"hellmagma"
 maximum_health = 240
 difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)

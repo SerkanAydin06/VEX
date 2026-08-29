@@ -16,10 +16,10 @@ EXPECTED = {
 }
 
 def root_value(text: str, key: str) -> float:
-    match = re.search(rf"(?m)^{re.escape(key)} = ([0-9.]+)$", text)
-    if not match:
-        raise AssertionError(f"missing {key}")
-    return float(match.group(1))
+    matches = re.findall(rf"(?m)^{re.escape(key)} = ([0-9.]+)$", text)
+    if len(matches) != 1:
+        raise AssertionError(f"{key} must appear exactly once, got {len(matches)}")
+    return float(matches[0])
 
 for enemy, (min_detection, min_pursuit, min_dormant) in EXPECTED.items():
     path = ROOT / "scenes" / "actors" / f"{enemy}.tscn"
@@ -93,8 +93,9 @@ for needle in [
     "damage_approach_offset := 1.4",
     "func _ranged_visibility_ratio_from(observer_position: Vector3) -> float:",
     "func _reposition_for_clear_shot(delta: float) -> void:",
-    "_damage_source_approach_position(source_node.global_position)",
-    "_last_visibility_ratio < ranged_cover_visibility_threshold",
+    "_has_forced_damage_target",
+    "EnemyCombatProfiles",
+    "_last_visibility_ratio < _cover_visibility_threshold()",
 ]:
     assert needle in ravager_script, needle
 

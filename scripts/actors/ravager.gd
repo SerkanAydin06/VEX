@@ -1,6 +1,9 @@
 class_name VexRavager
 extends CharacterBody3D
 
+const EnemyCombatProfiles = preload("res://scripts/actors/enemy_combat_profiles.gd")
+const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_runtime.gd")
+
 enum State {
 	IDLE,
 	PATROL,
@@ -13,6 +16,7 @@ enum State {
 
 @export_category("01 - Kimlik, Can ve Zorluk")
 @export var enemy_id: StringName = &"ravager"
+@export_enum("Yakın", "Orta", "Uzak") var combat_role: int = EnemyCombatProfiles.Role.MID
 @export_range(1, 1000, 1) var maximum_health := 75
 @export_range(0, 3, 1) var spawn_min_difficulty := 0
 @export var apply_difficulty_scaling := true
@@ -25,8 +29,9 @@ enum State {
 @export var difficulty_cooldown_multipliers := PackedFloat32Array([1.25, 1.0, 0.85, 0.70])
 @export var difficulty_windup_multipliers := PackedFloat32Array([1.20, 1.0, 0.90, 0.75])
 
-@export_category("02 - Hareket ve Devriye")
+@export_category("02 - Hareket ve Boşta Gezinme")
 @export_range(0.5, 10.0, 0.1) var move_speed := 2.7
+@export_range(0.0, 16.0, 0.1) var chase_speed := 0.0
 @export_range(0.5, 40.0, 0.5) var movement_acceleration := 12.0
 @export_range(0.5, 40.0, 0.5) var braking_acceleration := 21.0
 @export_range(0.0, 4.0, 0.05) var gravity_scale := 1.0
@@ -148,6 +153,10 @@ var health := 0
 var state := State.IDLE
 
 var _spawn_position := Vector3.ZERO
+var _idle_anchor_position := Vector3.ZERO
+var _idle_wander_target := Vector3.ZERO
+var _has_idle_wander_target := false
+var _idle_wander_pause_remaining := 0.0
 var _patrol_forward := true
 var _facing_direction := Vector3.FORWARD
 var _alerted := false
@@ -168,6 +177,11 @@ var _search_probe_index := 0
 var _search_probe_target := Vector3.ZERO
 var _has_search_probe := false
 var _damage_reaction_remaining := 0.0
+var _forced_damage_target := Vector3.ZERO
+var _has_forced_damage_target := false
+var _forced_damage_best_distance := INF
+var _forced_damage_stall_remaining := 0.0
+var _combat_interrupt_generation := 0
 var _last_visibility_ratio := 0.0
 var _ranged_reposition_target := Vector3.ZERO
 var _has_ranged_reposition_target := false
@@ -189,6 +203,7 @@ var _has_path_target := false
 var _runtime_maximum_health := 1
 var _runtime_attack_damage := 1
 var _runtime_move_speed := 0.5
+var _runtime_chase_speed := 0.5
 var _runtime_detection_range := 1.0
 var _runtime_pursuit_range := 1.0
 var _runtime_attack_cooldown := 1.0
@@ -213,15 +228,11 @@ func _ready() -> void:
 	_configure_runtime_stats()
 	health = _runtime_maximum_health
 	_spawn_position = global_position
+	_idle_anchor_position = global_position
 	_gravity = (
 		float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 		* gravity_scale
 	)
-
-	var initial_patrol_direction := patrol_offset
-	initial_patrol_direction.y = 0.0
-	if initial_patrol_direction.length_squared() > 0.001:
-		_facing_direction = initial_patrol_direction.normalized()
 
 	if GameState.was_enemy_defeated(enemy_id):
 		_restore_defeated_state()
@@ -238,6 +249,7 @@ func _configure_runtime_stats() -> void:
 	_runtime_maximum_health = maximum_health
 	_runtime_attack_damage = attack_damage
 	_runtime_move_speed = move_speed
+	_runtime_chase_speed = chase_speed if chase_speed > 0.0 else move_speed
 	_runtime_detection_range = detection_range
 	_runtime_pursuit_range = pursuit_range
 	_runtime_attack_cooldown = attack_cooldown
@@ -254,6 +266,7 @@ func _configure_runtime_stats() -> void:
 	_runtime_maximum_health = maxi(1, int(round(float(maximum_health) * health_scale)))
 	_runtime_attack_damage = maxi(1, int(round(float(attack_damage) * damage_scale)))
 	_runtime_move_speed = maxf(0.0, move_speed * speed_scale)
+	_runtime_chase_speed = maxf(0.0, (chase_speed if chase_speed > 0.0 else move_speed) * speed_scale)
 	_runtime_detection_range = maxf(0.0, detection_range * detection_scale)
 	_runtime_pursuit_range = maxf(0.0, pursuit_range * detection_scale)
 	_runtime_attack_cooldown = maxf(0.01, attack_cooldown * cooldown_scale)
@@ -297,40 +310,42 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 
 	health -= amount
 	_exit_dormant_mode()
-	if aggro_on_damage:
-		_alerted = true
-		_damage_reaction_remaining = damage_reaction_duration
-		_seconds_without_sight = 0.0
-		_search_remaining = 0.0
-		_sight_check_remaining = 0.0
-		# Hasar, başlamış bir saldırıyı iptal etmesin. Düşman saldırı hazırlığı
-		# içindeyse ATTACK durumu ve zamanlayıcı korunur; yalnız hedef bilgisi
-		# güncellenir. Böylece seri atışla düşmanı kalıcı olarak kilitlemek mümkün olmaz.
-		if not _attack_locked:
-			state = State.CHASE
-		if _source is Node3D:
-			var source_node := _source as Node3D
-			# Gerçek ateş kaynağını sakla. Rota sistemi hedef fiziksel olarak
-			# ulaşılamıyorsa ona en yakın ulaşılabilir noktayı kendisi çözer.
-			_last_seen_position = source_node.global_position
-			_last_seen_position.y = global_position.y
-			_has_last_seen_position = true
-		elif _player != null and is_instance_valid(_player):
-			_last_seen_position = _player.global_position
-			_has_last_seen_position = true
-		_path_refresh_remaining = 0.0
-		_ranged_reposition_remaining = 0.0
-		_has_ranged_reposition_target = false
-		_local_detour_remaining = 0.0
-		_local_detour_side = 0.0
-		_clear_path()
-		if _has_last_seen_position:
-			_face_toward_position(_last_seen_position)
-		if alert_allies_on_damage:
-			if _has_last_seen_position:
-				_alert_nearby_allies(_last_seen_position)
-			else:
-				_alert_nearby_allies(global_position)
+	# Damage pursuit is mandatory and has higher priority than sight/range/attack state.
+	_alerted = true
+	_combat_interrupt_generation += 1
+	_attack_locked = false
+	_attack_windup_active = false
+	state = State.CHASE
+	_damage_reaction_remaining = damage_reaction_duration
+	_seconds_without_sight = 0.0
+	_search_remaining = 0.0
+	_sight_check_remaining = 0.0
+	var retaliation_target := Vector3.ZERO
+	var has_retaliation_target := false
+	if _source is Node3D:
+		retaliation_target = (_source as Node3D).global_position
+		has_retaliation_target = true
+	elif _player != null and is_instance_valid(_player):
+		retaliation_target = _player.global_position
+		has_retaliation_target = true
+	if has_retaliation_target:
+		retaliation_target.y = global_position.y
+		_forced_damage_target = retaliation_target
+		_has_forced_damage_target = true
+		_forced_damage_best_distance = _horizontal_distance(global_position, retaliation_target)
+		_forced_damage_stall_remaining = 3.0
+		_last_seen_position = retaliation_target
+		_has_last_seen_position = true
+	_path_refresh_remaining = 0.0
+	_ranged_reposition_remaining = 0.0
+	_has_ranged_reposition_target = false
+	_local_detour_remaining = 0.0
+	_local_detour_side = 0.0
+	_clear_path()
+	if _has_last_seen_position:
+		_face_toward_position(_last_seen_position)
+	if alert_allies_on_damage:
+		_alert_nearby_allies(_last_seen_position if _has_last_seen_position else global_position)
 
 	if health <= 0:
 		_die()
@@ -476,6 +491,34 @@ func _update_perception(delta: float) -> void:
 
 
 func _update_behavior(delta: float) -> void:
+	# A hit immediately overrides normal combat. Reach the exact source position,
+	# or the closest reachable point, before resuming normal role tactics.
+	if _has_forced_damage_target:
+		var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
+		if forced_distance < _forced_damage_best_distance - 0.20:
+			_forced_damage_best_distance = forced_distance
+			_forced_damage_stall_remaining = 3.0
+		else:
+			_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
+		if _has_reached_walkable_target(_forced_damage_target, waypoint_reach_distance):
+			_has_forced_damage_target = false
+			_damage_reaction_remaining = 0.0
+			_last_seen_position = _forced_damage_target
+			_has_last_seen_position = true
+			_begin_search()
+			return
+		state = State.CHASE
+		_navigate_to(_forced_damage_target, delta)
+		if (
+			_forced_damage_stall_remaining <= 0.0
+			and (_current_path.is_empty() or _path_index >= _current_path.size())
+		):
+			_has_forced_damage_target = false
+			_damage_reaction_remaining = 0.0
+			_last_seen_position = _forced_damage_target
+			_has_last_seen_position = true
+			_begin_search()
+		return
 	# Atış başladıktan sonra kısa hazırlık penceresi tamamlanır. Oyuncunun
 	# yalnız geri yürümesi atışı iptal etmez; duvar arkasına geçmek hâlâ
 	# görüş kontrolü sayesinde mermiyi engeller.
@@ -497,7 +540,7 @@ func _update_behavior(delta: float) -> void:
 			# animasyonuyla yeniden konumlanmaya başlanır.
 			_face_toward_position(attack_target)
 			_stop_horizontal_motion()
-		elif _uses_cover_reposition_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+		elif _uses_cover_reposition_tactics() and _last_visibility_ratio < _cover_visibility_threshold():
 			# Yalnız gerçek projectile shooter'lar kısmi görüşte yan/çapraz atış açısı arar.
 			# Warden gibi geniş attack_range kullanan yakın baskı elitleri burada strafe etmez.
 			_reposition_for_clear_shot(delta)
@@ -515,7 +558,7 @@ func _update_behavior(delta: float) -> void:
 		# konumunu değil, doğrulanmış son görünür konumu kullan.
 		# Menzilli düşman oyuncunun yalnız küçük bir parçasını görüyorsa mevcut
 		# noktadan atış spamlamak yerine gerçek bir yeni görüş açısı arar.
-		if _uses_cover_reposition_tactics() and _last_visibility_ratio < ranged_cover_visibility_threshold:
+		if _uses_cover_reposition_tactics() and _last_visibility_ratio < _cover_visibility_threshold():
 			state = State.CHASE
 			_reposition_for_clear_shot(delta)
 			return
@@ -584,21 +627,60 @@ func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
 
 func _patrol(delta: float) -> void:
 	state = State.PATROL
-	var target: Vector3 = _spawn_position + (patrol_offset if _patrol_forward else -patrol_offset)
-	if _horizontal_distance(global_position, target) <= waypoint_reach_distance:
-		_patrol_forward = not _patrol_forward
-		target = _spawn_position + (patrol_offset if _patrol_forward else -patrol_offset)
-	_navigate_to(target, delta)
-
-
-func _return_to_patrol(delta: float) -> void:
-	if _horizontal_distance(global_position, _spawn_position) <= waypoint_reach_distance:
-		state = State.PATROL
-		_patrol_forward = true
-		_clear_path()
+	if _idle_wander_pause_remaining > 0.0:
+		_idle_wander_pause_remaining = maxf(0.0, _idle_wander_pause_remaining - delta)
 		_stop_horizontal_motion()
+		_facing_direction = _facing_direction.rotated(Vector3.UP, delta * 0.28).normalized()
+		rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
 		return
-	_navigate_to(_spawn_position, delta)
+
+	if (
+		not _has_idle_wander_target
+		or _has_reached_walkable_target(_idle_wander_target, waypoint_reach_distance)
+	):
+		var radius := EnemyCombatProfiles.idle_wander_radius(combat_role)
+		_idle_wander_target = EnemyNavigationRuntime.choose_idle_wander_target(
+			self,
+			_idle_anchor_position,
+			radius,
+			navigation_collision_mask,
+			floor_collision_mask,
+			navigation_clearance,
+			floor_snap_ray_start_height,
+			floor_snap_ray_extra_depth
+		)
+		_has_idle_wander_target = _horizontal_distance(global_position, _idle_wander_target) > 0.25
+		if not _has_idle_wander_target:
+			_idle_wander_pause_remaining = randf_range(
+				EnemyCombatProfiles.idle_pause_min(combat_role),
+				EnemyCombatProfiles.idle_pause_max(combat_role)
+			)
+			_stop_horizontal_motion()
+			return
+		_clear_path()
+		_path_refresh_remaining = 0.0
+
+	_navigate_to(_idle_wander_target, delta)
+	if _has_reached_walkable_target(_idle_wander_target, waypoint_reach_distance):
+		_has_idle_wander_target = false
+		_idle_wander_pause_remaining = randf_range(
+			EnemyCombatProfiles.idle_pause_min(combat_role),
+			EnemyCombatProfiles.idle_pause_max(combat_role)
+		)
+
+
+func _return_to_patrol(_delta: float) -> void:
+	# No fixed patrol route: after combat the current position becomes the new
+	# local idle anchor and the creature resumes contextual wandering there.
+	_idle_anchor_position = global_position
+	_has_idle_wander_target = false
+	_idle_wander_pause_remaining = randf_range(
+		EnemyCombatProfiles.idle_pause_min(combat_role),
+		EnemyCombatProfiles.idle_pause_max(combat_role)
+	)
+	state = State.PATROL
+	_clear_path()
+	_stop_horizontal_motion()
 
 
 func _begin_search() -> void:
@@ -665,8 +747,15 @@ func _give_up_chase() -> void:
 	_seconds_without_sight = 0.0
 	_search_remaining = 0.0
 	_has_last_seen_position = false
+	_has_forced_damage_target = false
 	_reset_search_probe()
-	state = State.RETURN
+	_idle_anchor_position = global_position
+	_has_idle_wander_target = false
+	_idle_wander_pause_remaining = randf_range(
+		EnemyCombatProfiles.idle_pause_min(combat_role),
+		EnemyCombatProfiles.idle_pause_max(combat_role)
+	)
+	state = State.PATROL
 	_clear_path()
 	_stop_horizontal_motion()
 
@@ -675,11 +764,16 @@ func _navigate_to(target: Vector3, delta: float) -> void:
 	var destination := _resolve_enemy_door_step(target)
 	destination.y = global_position.y
 
+	var role_target_change := EnemyCombatProfiles.path_target_change_distance(combat_role)
 	var target_changed := (
 		not _has_path_target
-		or _horizontal_distance(_path_target, destination) > path_target_change_distance
+		or _horizontal_distance(_path_target, destination) > role_target_change
 	)
-	var refresh_interval := path_refresh_interval
+	var refresh_interval := (
+		EnemyCombatProfiles.path_refresh_interval(combat_role)
+		if state == State.CHASE
+		else path_refresh_interval
+	)
 	if _player != null and is_instance_valid(_player):
 		var player_distance := _horizontal_distance(global_position, _player.global_position)
 		if player_distance > distant_think_distance:
@@ -769,208 +863,18 @@ func _rebuild_path(destination: Vector3) -> void:
 
 
 func _build_runtime_shortest_path(destination: Vector3) -> PackedVector3Array:
-	var start := global_position
-	start.y = global_position.y
-	var target := destination
-	target.y = global_position.y
-	if _is_walk_segment_clear(start, target):
-		return PackedVector3Array([start, target])
-
-	var step := maxf(runtime_grid_step, navigation_clearance * 1.20)
-	var delta := target - start
-	var goal_cell := Vector2i(
-		roundi(delta.x / step),
-		roundi(delta.z / step)
+	return EnemyNavigationRuntime.build_shortest_path(
+		self,
+		destination,
+		navigation_collision_mask,
+		floor_collision_mask,
+		navigation_clearance,
+		floor_snap_ray_start_height,
+		floor_snap_ray_extra_depth,
+		EnemyCombatProfiles.grid_step(combat_role),
+		EnemyCombatProfiles.grid_max_nodes(combat_role),
+		EnemyCombatProfiles.grid_search_margin(combat_role)
 	)
-	if goal_cell == Vector2i.ZERO:
-		return PackedVector3Array()
-
-	var margin_cells := maxi(4, ceili(runtime_grid_search_margin / step))
-	var min_cell_x := mini(0, goal_cell.x) - margin_cells
-	var max_cell_x := maxi(0, goal_cell.x) + margin_cells
-	var min_cell_y := mini(0, goal_cell.y) - margin_cells
-	var max_cell_y := maxi(0, goal_cell.y) + margin_cells
-
-	var start_cell := Vector2i.ZERO
-	var open_heap: Array[Dictionary] = []
-	var came_from: Dictionary = {}
-	var g_score: Dictionary = {start_cell: 0.0}
-	var closed: Dictionary = {}
-	var goal_distance_cells := Vector2(float(goal_cell.x), float(goal_cell.y)).length()
-	_runtime_grid_heap_push(open_heap, start_cell, goal_distance_cells)
-
-	var best_cell := start_cell
-	var best_distance := _horizontal_distance(start, target)
-	var found_cell := start_cell
-	var found_destination := false
-	var explored := 0
-	var neighbor_steps: Array[Vector2i] = [
-		Vector2i(1, 0),
-		Vector2i(-1, 0),
-		Vector2i(0, 1),
-		Vector2i(0, -1),
-		Vector2i(1, 1),
-		Vector2i(1, -1),
-		Vector2i(-1, 1),
-		Vector2i(-1, -1),
-	]
-
-	while not open_heap.is_empty() and explored < runtime_grid_max_nodes:
-		var entry := _runtime_grid_heap_pop(open_heap)
-		var current_cell: Vector2i = entry.get("cell", Vector2i.ZERO)
-		if closed.has(current_cell):
-			continue
-		closed[current_cell] = true
-		explored += 1
-
-		var current_world := _runtime_grid_world(start, current_cell, step)
-		var remaining := _horizontal_distance(current_world, target)
-		if remaining < best_distance:
-			best_distance = remaining
-			best_cell = current_cell
-
-		# Hedefe birkaç hücre kala artık grid merkezine zorlamadan gerçek dünya
-		# koordinatına doğrudan bağlan. Bu, duvar kenarında oyuncu merkezine yakın
-		# ama geçerli bir son yaklaşma üretir.
-		if (
-			remaining <= maxf(step * 3.0, 4.0)
-			and _is_walk_segment_clear(current_world, target)
-		):
-			found_cell = current_cell
-			found_destination = true
-			break
-
-		var current_g := float(g_score.get(current_cell, INF))
-		for neighbor_step: Vector2i in neighbor_steps:
-			var next_cell := current_cell + neighbor_step
-			if (
-				next_cell.x < min_cell_x
-				or next_cell.x > max_cell_x
-				or next_cell.y < min_cell_y
-				or next_cell.y > max_cell_y
-				or closed.has(next_cell)
-			):
-				continue
-
-			var next_world := _runtime_grid_world(start, next_cell, step)
-			if not _has_navigation_floor(next_world):
-				continue
-			if not _is_walk_segment_clear(current_world, next_world):
-				continue
-
-			var diagonal := neighbor_step.x != 0 and neighbor_step.y != 0
-			var travel_cost := 1.41421356 if diagonal else 1.0
-			var tentative_g := current_g + travel_cost
-			if tentative_g >= float(g_score.get(next_cell, INF)):
-				continue
-
-			came_from[next_cell] = current_cell
-			g_score[next_cell] = tentative_g
-			var heuristic := Vector2(
-				float(goal_cell.x - next_cell.x),
-				float(goal_cell.y - next_cell.y)
-			).length()
-			_runtime_grid_heap_push(open_heap, next_cell, tentative_g + heuristic)
-
-	if not found_destination:
-		# Arama bütçesi hedefin tamamına yetmediyse bile, başlangıçtan anlamlı
-		# biçimde daha yakın olan en iyi erişilebilir hücreye ilerle; donma yok.
-		if best_distance >= _horizontal_distance(start, target) - step * 0.5:
-			return PackedVector3Array()
-		found_cell = best_cell
-
-	var cell_path: Array[Vector2i] = []
-	var cursor := found_cell
-	cell_path.push_front(cursor)
-	while cursor != start_cell:
-		if not came_from.has(cursor):
-			return PackedVector3Array()
-		cursor = came_from[cursor]
-		cell_path.push_front(cursor)
-
-	var world_path := PackedVector3Array()
-	world_path.append(start)
-	for path_cell: Vector2i in cell_path:
-		if path_cell == start_cell:
-			continue
-		world_path.append(_runtime_grid_world(start, path_cell, step))
-	if found_destination:
-		world_path.append(target)
-	return _simplify_runtime_grid_path(world_path)
-
-
-func _runtime_grid_world(origin: Vector3, cell: Vector2i, step: float) -> Vector3:
-	return Vector3(
-		origin.x + float(cell.x) * step,
-		global_position.y,
-		origin.z + float(cell.y) * step
-	)
-
-
-func _runtime_grid_heap_push(
-	heap: Array[Dictionary],
-	cell: Vector2i,
-	priority: float
-) -> void:
-	var entry := {"cell": cell, "priority": priority}
-	heap.append(entry)
-	var index := heap.size() - 1
-	while index > 0:
-		var parent: int = floori(float(index - 1) / 2.0)
-		if float(heap[parent].get("priority", INF)) <= priority:
-			break
-		heap[index] = heap[parent]
-		index = parent
-	heap[index] = entry
-
-
-func _runtime_grid_heap_pop(heap: Array[Dictionary]) -> Dictionary:
-	var root := heap[0]
-	var last: Dictionary = heap.pop_back() as Dictionary
-	if heap.is_empty():
-		return root
-
-	heap[0] = last
-	var index := 0
-	while true:
-		var left := index * 2 + 1
-		if left >= heap.size():
-			break
-		var right := left + 1
-		var smallest := left
-		if (
-			right < heap.size()
-			and float(heap[right].get("priority", INF))
-			< float(heap[left].get("priority", INF))
-		):
-			smallest = right
-		if (
-			float(heap[index].get("priority", INF))
-			<= float(heap[smallest].get("priority", INF))
-		):
-			break
-		var swap := heap[index]
-		heap[index] = heap[smallest]
-		heap[smallest] = swap
-		index = smallest
-	return root
-
-
-func _simplify_runtime_grid_path(path: PackedVector3Array) -> PackedVector3Array:
-	if path.size() <= 2:
-		return path
-	var simplified := PackedVector3Array([path[0]])
-	var anchor_index := 0
-	while anchor_index < path.size() - 1:
-		var next_index := path.size() - 1
-		while (
-			next_index > anchor_index + 1
-			and not _is_walk_segment_clear(path[anchor_index], path[next_index])
-		):
-			next_index -= 1
-		simplified.append(path[next_index])
-		anchor_index = next_index
-	return simplified
 
 
 func _build_local_detour_path(destination: Vector3) -> PackedVector3Array:
@@ -1317,14 +1221,19 @@ func _move_toward_point(target: Vector3, delta: float) -> void:
 
 	direction = direction.normalized()
 	_facing_direction = direction
+	var travel_speed := (
+		_runtime_chase_speed
+		if state == State.CHASE or state == State.SEARCH
+		else _runtime_move_speed
+	)
 	velocity.x = move_toward(
 		velocity.x,
-		direction.x * _runtime_move_speed,
+		direction.x * travel_speed,
 		delta * movement_acceleration
 	)
 	velocity.z = move_toward(
 		velocity.z,
-		direction.z * _runtime_move_speed,
+		direction.z * travel_speed,
 		delta * movement_acceleration
 	)
 	if animated_sprite.animation != &"hurt" and animated_sprite.animation != &"attack":
@@ -1350,23 +1259,37 @@ func _move_during_attack_recovery(target: Vector3, delta: float) -> void:
 
 	var forward_direction := direction_to_target / distance_to_target
 	var right_direction := forward_direction.cross(Vector3.UP).normalized()
-	var difficulty_speed_scale := (
-		_runtime_move_speed / maxf(move_speed, 0.001)
-	)
-	var desired_velocity := (
-		right_direction
-		* attack_strafe_speed
-		* _attack_strafe_direction
-		* difficulty_speed_scale
-	)
-	if distance_to_target > attack_preferred_distance:
+	var preferred_distance := EnemyCombatProfiles.preferred_distance(combat_role, attack_range)
+	var minimum_distance := EnemyCombatProfiles.minimum_distance(combat_role, attack_range)
+	var speed_scale := _runtime_move_speed / maxf(move_speed, 0.001)
+	var desired_velocity := Vector3.ZERO
+
+	var strafe_scale := EnemyCombatProfiles.recovery_strafe_scale(combat_role)
+	if strafe_scale > 0.0 and attack_strafe_speed > 0.0:
 		desired_velocity += (
-			forward_direction
-			* attack_approach_speed
-			* difficulty_speed_scale
+			right_direction
+			* attack_strafe_speed
+			* _attack_strafe_direction
+			* speed_scale
+			* strafe_scale
 		)
-	if desired_velocity.length() > _runtime_move_speed:
-		desired_velocity = desired_velocity.normalized() * _runtime_move_speed
+
+	if combat_role == EnemyCombatProfiles.Role.CLOSE:
+		if distance_to_target > preferred_distance:
+			desired_velocity = forward_direction * _runtime_chase_speed
+	elif distance_to_target > preferred_distance + 0.35:
+		var approach_speed := maxf(attack_approach_speed * speed_scale, _runtime_move_speed * 0.45)
+		desired_velocity += forward_direction * approach_speed
+	elif distance_to_target < minimum_distance:
+		desired_velocity -= (
+			forward_direction
+			* _runtime_move_speed
+			* EnemyCombatProfiles.retreat_scale(combat_role)
+		)
+
+	var maximum_speed := _runtime_chase_speed if combat_role == EnemyCombatProfiles.Role.CLOSE else _runtime_move_speed
+	if desired_velocity.length() > maximum_speed:
+		desired_velocity = desired_velocity.normalized() * maximum_speed
 
 	_facing_direction = forward_direction
 	rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
@@ -1374,16 +1297,8 @@ func _move_during_attack_recovery(target: Vector3, delta: float) -> void:
 		_stop_horizontal_motion()
 		return
 
-	velocity.x = move_toward(
-		velocity.x,
-		desired_velocity.x,
-		delta * movement_acceleration
-	)
-	velocity.z = move_toward(
-		velocity.z,
-		desired_velocity.z,
-		delta * movement_acceleration
-	)
+	velocity.x = move_toward(velocity.x, desired_velocity.x, delta * movement_acceleration)
+	velocity.z = move_toward(velocity.z, desired_velocity.z, delta * movement_acceleration)
 	if animated_sprite.animation != &"hurt":
 		_play_directional_animation(&"walk", &"walk_back")
 
@@ -1587,17 +1502,18 @@ func _is_player_collider(collider: Node) -> bool:
 
 
 func _uses_ranged_tactics() -> bool:
-	# Geniş menzil, oyuncunun kısmen görünür olduğu durumlarda çoklu LOS örneklemesi
-	# için yeterlidir; fakat tek başına düşmanın cover-strafe yapan bir shooter olduğu
-	# anlamına gelmez.
-	return projectile_scene != null or attack_range >= 4.0
+	return EnemyCombatProfiles.uses_multi_sample_visibility(combat_role)
 
 
 func _uses_cover_reposition_tactics() -> bool:
-	# Rastgele sağ/sol/çapraz atış pozisyonu yalnız gerçek projectile shooter'larda
-	# kullanılmalı. Warden kendi yakın/orta menzil baskı saldırılarına sahip ve
-	# projectile_scene kullanmadığı için chase/navigation davranışında kalır.
-	return projectile_scene != null
+	return EnemyCombatProfiles.uses_cover_reposition(
+		combat_role,
+		projectile_scene != null
+	)
+
+
+func _cover_visibility_threshold() -> float:
+	return EnemyCombatProfiles.cover_visibility_threshold(combat_role)
 
 
 func _damage_source_approach_position(source_position: Vector3) -> Vector3:
@@ -1688,7 +1604,7 @@ func _reposition_for_clear_shot(delta: float) -> void:
 		else:
 			forward = forward.normalized()
 		var right := Vector3(-forward.z, 0.0, forward.x).normalized()
-		var radius := ranged_cover_reposition_distance
+		var radius := EnemyCombatProfiles.cover_reposition_distance(combat_role)
 		var offsets: Array[Vector3] = [
 			right * radius,
 			-right * radius,
@@ -1705,7 +1621,7 @@ func _reposition_for_clear_shot(delta: float) -> void:
 				candidate + Vector3.UP * sight_origin_height
 			)
 			var score := ratio * 4.0 - offset.length() * 0.08
-			if ratio >= ranged_cover_visibility_threshold:
+			if ratio >= _cover_visibility_threshold():
 				score += 2.0
 			if score > best_score:
 				best_score = score
@@ -1731,6 +1647,7 @@ func _reposition_for_clear_shot(delta: float) -> void:
 func _attempt_attack() -> void:
 	if _attack_locked:
 		return
+	var combat_generation := _combat_interrupt_generation
 	_attack_locked = true
 	_attack_windup_active = true
 	_attack_strafe_direction *= -1.0
@@ -1741,7 +1658,7 @@ func _attempt_attack() -> void:
 		attack_audio.play()
 
 	await get_tree().create_timer(_runtime_attack_windup).timeout
-	if not is_inside_tree() or state == State.DEAD:
+	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	if _player != null and is_instance_valid(_player):
 		var still_in_range := (
@@ -1761,7 +1678,7 @@ func _attempt_attack() -> void:
 		_runtime_attack_cooldown - _runtime_attack_windup
 	)
 	await get_tree().create_timer(remaining).timeout
-	if not is_inside_tree() or state == State.DEAD:
+	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false
 	_attack_windup_active = false

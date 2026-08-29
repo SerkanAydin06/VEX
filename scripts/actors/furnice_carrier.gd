@@ -28,6 +28,7 @@ var _thermal_burst_ready_at_msec := 0
 func _attempt_attack() -> void:
 	if _attack_locked or _player == null or not is_instance_valid(_player):
 		return
+	var combat_generation := _combat_interrupt_generation
 
 	var distance_to_player := _horizontal_distance(global_position, _player.global_position)
 	var thermal_burst_ready := Time.get_ticks_msec() >= _thermal_burst_ready_at_msec
@@ -49,7 +50,7 @@ func _attempt_attack() -> void:
 	var selected_windup := thermal_burst_windup if use_thermal_burst else projectile_attack_windup
 	var runtime_windup := maxf(0.01, selected_windup * windup_scale)
 	await get_tree().create_timer(runtime_windup).timeout
-	if not is_inside_tree() or state == State.DEAD:
+	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 
 	if use_thermal_burst:
@@ -75,7 +76,7 @@ func _attempt_attack() -> void:
 	var remaining := maxf(0.0, runtime_attack_cooldown - runtime_windup)
 	if remaining > 0.0:
 		await get_tree().create_timer(remaining).timeout
-	if not is_inside_tree() or state == State.DEAD:
+	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false
 	_attack_windup_active = false

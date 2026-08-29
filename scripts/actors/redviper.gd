@@ -2,8 +2,12 @@
 class_name VexRedViper
 extends CharacterBody3D
 
+const EnemyCombatProfiles = preload("res://scripts/actors/enemy_combat_profiles.gd")
+const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_runtime.gd")
+
 @export_category("01 - Kimlik, Can ve Zorluk")
 @export var enemy_id: StringName = &"redviper"
+@export_enum("Yakın", "Orta", "Uzak") var combat_role: int = EnemyCombatProfiles.Role.CLOSE
 @export_range(1, 1000, 1) var maximum_health := 90
 @export_range(0, 3, 1) var spawn_min_difficulty := 0
 @export var apply_difficulty_scaling := true
@@ -16,7 +20,7 @@ extends CharacterBody3D
 @export var difficulty_cooldown_multipliers := PackedFloat32Array([1.25, 1.0, 0.85, 0.70])
 @export var difficulty_windup_multipliers := PackedFloat32Array([1.20, 1.0, 0.90, 0.75])
 
-@export_category("02 - Hareket ve Devriye")
+@export_category("02 - Hareket ve Boşta Gezinme")
 @export_range(0.5, 10.0, 0.1) var move_speed := 2.35
 @export_range(0.5, 16.0, 0.1) var chase_speed := 5.8
 @export_range(0.5, 40.0, 0.5) var movement_acceleration := 12.0
@@ -32,6 +36,8 @@ extends CharacterBody3D
 @export_range(0.1, 1.5, 0.05) var patrol_reach_distance := 0.35
 @export_range(0.1, 2.0, 0.05) var investigation_reach_distance := 0.55
 @export_range(0.0, 3.0, 0.05) var detour_duration := 0.55
+@export_range(0.3, 1.2, 0.05) var navigation_clearance := 0.55
+@export_flags_3d_physics var navigation_collision_mask := 1 | 8
 
 @export_category("03 - Algılama ve Takip")
 @export_range(1.0, 50.0, 0.5) var detection_range := 30.0
@@ -110,6 +116,9 @@ extends CharacterBody3D
 
 var health := 0
 var _spawn_position := Vector3.ZERO
+var _idle_anchor_position := Vector3.ZERO
+var _idle_wander_target := Vector3.ZERO
+var _has_idle_wander_target := false
 var _patrol_forward := true
 var _wait_remaining := 0.0
 var _gravity := 20.0
@@ -125,11 +134,20 @@ var _search_probe_index := 0
 var _search_probe_target := Vector3.ZERO
 var _has_search_probe := false
 var _damage_reaction_remaining := 0.0
+var _forced_damage_target := Vector3.ZERO
+var _has_forced_damage_target := false
+var _forced_damage_best_distance := INF
+var _forced_damage_stall_remaining := 0.0
 var _last_seen_position := Vector3.ZERO
 var _facing_direction := Vector3.FORWARD
 var _detour_direction := Vector3.ZERO
 var _detour_remaining := 0.0
 var _movement_target := Vector3.ZERO
+var _navigation_path := PackedVector3Array()
+var _navigation_path_index := 0
+var _navigation_target := Vector3.ZERO
+var _has_navigation_target := false
+var _navigation_refresh_remaining := 0.0
 var _attack_generation := 0
 var _attack_lunge_remaining := 0.0
 var _base_sprite_modulate := Color.WHITE
@@ -173,6 +191,7 @@ func _ready() -> void:
 	_configure_runtime_stats()
 	health = _runtime_maximum_health
 	_spawn_position = global_position
+	_idle_anchor_position = global_position
 	_player = GameState.player as Node3D
 	_gravity = (
 		float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
@@ -198,6 +217,7 @@ func _physics_process(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
 		_player = GameState.player as Node3D
 	_damage_reaction_remaining = maxf(0.0, _damage_reaction_remaining - delta)
+	_navigation_refresh_remaining = maxf(0.0, _navigation_refresh_remaining - delta)
 
 	if _should_use_dormant_mode():
 		_enter_dormant_mode()
@@ -207,6 +227,45 @@ func _physics_process(delta: float) -> void:
 
 	_apply_gravity(delta)
 	_detour_remaining = maxf(0.0, _detour_remaining - delta)
+
+	# Damage direction has absolute priority, even over an attack windup.
+	if _has_forced_damage_target:
+		var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
+		if forced_distance < _forced_damage_best_distance - 0.20:
+			_forced_damage_best_distance = forced_distance
+			_forced_damage_stall_remaining = 3.0
+		else:
+			_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
+		if EnemyNavigationRuntime.has_reached_walkable_target(
+			self,
+			_forced_damage_target,
+			investigation_reach_distance,
+			navigation_collision_mask,
+			floor_collision_mask,
+			navigation_clearance,
+			floor_snap_ray_start_height,
+			floor_snap_ray_extra_depth
+		):
+			_has_forced_damage_target = false
+			_damage_reaction_remaining = 0.0
+			_last_seen_position = _forced_damage_target
+			_search_remaining = search_duration
+			_reset_search_probe()
+		else:
+			_chase_position(delta, _forced_damage_target)
+			move_and_slide()
+			_update_chase_detour()
+			if (
+				_forced_damage_stall_remaining <= 0.0
+				and (_navigation_path.is_empty() or _navigation_path_index >= _navigation_path.size())
+			):
+				_has_forced_damage_target = false
+				_damage_reaction_remaining = 0.0
+				_last_seen_position = _forced_damage_target
+				_search_remaining = search_duration
+				_reset_search_probe()
+			return
+
 	# Saldırı hazırlığında oyuncuyu kısa bir ileri hamleyle takip et. Böylece
 	# normal geri yürüyüş, başlamış her yakın dövüş saldırısını otomatik olarak
 	# boşa çıkarmaz. Hızlı koşan oyuncu hâlâ menzilden kaçabilir.
@@ -288,98 +347,148 @@ func _physics_process(delta: float) -> void:
 			_lost_sight_remaining = 0.0
 			_search_remaining = 0.0
 			_reset_search_probe()
+			_idle_anchor_position = global_position
+			_has_idle_wander_target = false
+			_reset_navigation_path()
 
+	_idle_wander(delta)
+	return
+
+
+func _idle_wander(delta: float) -> void:
 	if _wait_remaining > 0.0:
 		_wait_remaining = maxf(_wait_remaining - delta, 0.0)
-		velocity.x = move_toward(
-			velocity.x,
-			0.0,
-			delta * braking_acceleration
-		)
-		velocity.z = move_toward(
-			velocity.z,
-			0.0,
-			delta * braking_acceleration
-		)
+		velocity.x = move_toward(velocity.x, 0.0, delta * braking_acceleration)
+		velocity.z = move_toward(velocity.z, 0.0, delta * braking_acceleration)
+		_facing_direction = _facing_direction.rotated(Vector3.UP, delta * 0.32).normalized()
+		rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
 		_play_animation(&"idle")
 		move_and_slide()
 		return
 
-	var target: Vector3 = _spawn_position + (
-		patrol_offset if _patrol_forward else -patrol_offset
-	)
-	target.y = global_position.y
-	var direction: Vector3 = target - global_position
-	direction.y = 0.0
-
-	if direction.length() <= patrol_reach_distance:
-		_patrol_forward = not _patrol_forward
-		_wait_remaining = patrol_pause_duration
-		velocity.x = 0.0
-		velocity.z = 0.0
-		_play_animation(&"idle")
-		move_and_slide()
-		return
-
-	direction = direction.normalized()
-	_facing_direction = direction
-	velocity.x = move_toward(
-		velocity.x,
-		direction.x * _runtime_move_speed,
-		delta * movement_acceleration
-	)
-	velocity.z = move_toward(
-		velocity.z,
-		direction.z * _runtime_move_speed,
-		delta * movement_acceleration
-	)
-	rotation.y = atan2(-direction.x, -direction.z)
-	_play_animation(&"walk")
-	move_and_slide()
-
-	# Sadece duvar / yatay engel çarpışmalarında yön değiştir.
-	for collision_index: int in range(get_slide_collision_count()):
-		var collision: KinematicCollision3D = get_slide_collision(
-			collision_index
+	if (
+		not _has_idle_wander_target
+		or EnemyNavigationRuntime.has_reached_walkable_target(
+			self,
+			_idle_wander_target,
+			patrol_reach_distance,
+			navigation_collision_mask,
+			floor_collision_mask,
+			navigation_clearance,
+			floor_snap_ray_start_height,
+			floor_snap_ray_extra_depth
 		)
-		if collision == null:
-			continue
-		var normal: Vector3 = collision.get_normal()
-		if absf(normal.y) < 0.55:
-			_patrol_forward = not _patrol_forward
-			_wait_remaining = patrol_pause_duration
+	):
+		_idle_wander_target = EnemyNavigationRuntime.choose_idle_wander_target(
+			self,
+			_idle_anchor_position,
+			EnemyCombatProfiles.idle_wander_radius(combat_role),
+			navigation_collision_mask,
+			floor_collision_mask,
+			navigation_clearance,
+			floor_snap_ray_start_height,
+			floor_snap_ray_extra_depth
+		)
+		_has_idle_wander_target = _horizontal_distance(global_position, _idle_wander_target) > 0.25
+		if not _has_idle_wander_target:
+			_wait_remaining = randf_range(
+				EnemyCombatProfiles.idle_pause_min(combat_role),
+				EnemyCombatProfiles.idle_pause_max(combat_role)
+			)
 			velocity.x = 0.0
 			velocity.z = 0.0
-			break
+			_play_animation(&"idle")
+			move_and_slide()
+			return
+		_reset_navigation_path()
+
+	_chase_position(delta, _idle_wander_target, false)
+	move_and_slide()
+	_update_chase_detour()
 
 
-func _chase_position(delta: float, target_position: Vector3) -> void:
+func _chase_position(delta: float, target_position: Vector3, use_chase_speed: bool = true) -> void:
 	var resolved_target := _resolve_enemy_door_step(target_position)
+	resolved_target.y = global_position.y
 	_movement_target = resolved_target
-	var direction: Vector3 = resolved_target - global_position
+
+	var target_change_distance := EnemyCombatProfiles.path_target_change_distance(combat_role)
+	var target_changed := (
+		not _has_navigation_target
+		or _horizontal_distance(_navigation_target, resolved_target) > target_change_distance
+	)
+	if _navigation_refresh_remaining <= 0.0 or target_changed:
+		_navigation_path = EnemyNavigationRuntime.build_shortest_path(
+			self,
+			resolved_target,
+			navigation_collision_mask,
+			floor_collision_mask,
+			navigation_clearance,
+			floor_snap_ray_start_height,
+			floor_snap_ray_extra_depth,
+			EnemyCombatProfiles.grid_step(combat_role),
+			EnemyCombatProfiles.grid_max_nodes(combat_role),
+			EnemyCombatProfiles.grid_search_margin(combat_role)
+		)
+		_navigation_path_index = 1 if _navigation_path.size() > 1 else 0
+		_navigation_target = resolved_target
+		_has_navigation_target = true
+		_navigation_refresh_remaining = EnemyCombatProfiles.path_refresh_interval(combat_role)
+
+	while (
+		_navigation_path_index < _navigation_path.size()
+		and EnemyNavigationRuntime.has_reached_walkable_target(
+			self,
+			_navigation_path[_navigation_path_index],
+			investigation_reach_distance,
+			navigation_collision_mask,
+			floor_collision_mask,
+			navigation_clearance,
+			floor_snap_ray_start_height,
+			floor_snap_ray_extra_depth
+		)
+	):
+		_navigation_path_index += 1
+
+	var movement_point := resolved_target
+	if _navigation_path_index < _navigation_path.size():
+		movement_point = _navigation_path[_navigation_path_index]
+
+	var direction: Vector3 = movement_point - global_position
 	direction.y = 0.0
 	if direction.length_squared() <= 0.001:
 		velocity.x = 0.0
 		velocity.z = 0.0
 		_play_animation(&"idle")
 		return
-
 	direction = direction.normalized()
+
+	# Collision tangent is now only a fallback when the shared global path is
+	# temporarily obstructed by a moving body/door.
 	if _detour_remaining > 0.0 and _detour_direction.length_squared() > 0.001:
 		direction = _detour_direction
+
 	_facing_direction = direction
+	var desired_speed := _runtime_chase_speed if use_chase_speed else _runtime_move_speed
 	velocity.x = move_toward(
 		velocity.x,
-		direction.x * _runtime_chase_speed,
+		direction.x * desired_speed,
 		delta * movement_acceleration
 	)
 	velocity.z = move_toward(
 		velocity.z,
-		direction.z * _runtime_chase_speed,
+		direction.z * desired_speed,
 		delta * movement_acceleration
 	)
 	rotation.y = atan2(-direction.x, -direction.z)
 	_play_animation(&"walk")
+
+
+func _reset_navigation_path() -> void:
+	_navigation_path = PackedVector3Array()
+	_navigation_path_index = 0
+	_has_navigation_target = false
+	_navigation_refresh_remaining = 0.0
 
 
 func _update_chase_detour() -> void:
@@ -665,53 +774,46 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		_die()
 		return
 
-	# Hasar tepkisi tamamen sahne ayarlarından yönetilir.
-	if aggro_on_damage:
-		if _player == null or not is_instance_valid(_player):
-			_player = GameState.player as Node3D
-		var retaliation_target := _source as Node3D if _source is Node3D else _player
-		if retaliation_target != null and is_instance_valid(retaliation_target):
-			_aggro = true
-			_damage_reaction_remaining = damage_reaction_duration
-			_last_seen_position = _retaliation_approach_position(retaliation_target.global_position)
-			_lost_sight_remaining = lost_sight_timeout
-			_search_remaining = search_duration
-			_cached_player_visible = false
-			_sight_check_remaining = 0.0
-			_detour_remaining = 0.0
-			_reset_search_probe()
-			_face_position(_last_seen_position)
-			if alert_allies_on_damage:
-				_alert_nearby_allies(_last_seen_position)
+	# Any damage immediately interrupts the current attack and forces pursuit of
+	# the exact source position, independent of sight cone or normal ranges.
+	if _player == null or not is_instance_valid(_player):
+		_player = GameState.player as Node3D
+	_attack_generation += 1
+	_attack_locked = false
+	_attack_lunge_remaining = 0.0
+	_aggro = true
+	_damage_reaction_remaining = damage_reaction_duration
+	var retaliation_target := Vector3.ZERO
+	var has_retaliation_target := false
+	if _source is Node3D:
+		retaliation_target = (_source as Node3D).global_position
+		has_retaliation_target = true
+	elif _player != null and is_instance_valid(_player):
+		retaliation_target = _player.global_position
+		has_retaliation_target = true
+	if has_retaliation_target:
+		retaliation_target.y = global_position.y
+		_forced_damage_target = retaliation_target
+		_has_forced_damage_target = true
+		_forced_damage_best_distance = _horizontal_distance(global_position, retaliation_target)
+		_forced_damage_stall_remaining = 3.0
+		_last_seen_position = retaliation_target
+	_lost_sight_remaining = lost_sight_timeout
+	_search_remaining = search_duration
+	_cached_player_visible = false
+	_sight_check_remaining = 0.0
+	_detour_remaining = 0.0
+	_reset_search_probe()
+	_reset_navigation_path()
+	if has_retaliation_target:
+		_face_position(retaliation_target)
+	if alert_allies_on_damage:
+		_alert_nearby_allies(retaliation_target if has_retaliation_target else global_position)
 
 	if hurt_audio.stream != null and not hurt_audio.playing:
 		hurt_audio.play()
 	_flash_hurt()
 	_play_hurt_feedback()
-
-
-func _retaliation_approach_position(source_position: Vector3) -> Vector3:
-	var flat_source := source_position
-	flat_source.y = global_position.y
-	var toward_source := flat_source - global_position
-	toward_source.y = 0.0
-	var distance := toward_source.length()
-	if distance <= 0.001:
-		return flat_source
-
-	var direction := toward_source / distance
-	var ray_start := global_position + Vector3.UP * maxf(0.55, sight_origin_height)
-	var ray_end := flat_source + Vector3.UP * maxf(0.45, sight_target_height)
-	var query := PhysicsRayQueryParameters3D.create(ray_start, ray_end, 1 | 8, [get_rid()])
-	query.collide_with_areas = false
-	var hit := get_world_3d().direct_space_state.intersect_ray(query)
-	if hit.is_empty():
-		return flat_source
-
-	var hit_position: Vector3 = hit.get("position", flat_source)
-	var result := hit_position - direction * maxf(investigation_reach_distance + 0.45, 0.9)
-	result.y = global_position.y
-	return result
 
 
 func _collision_floor_local_y() -> float:

@@ -43,27 +43,6 @@ var _heatwave_burst_generation := 0
 var _last_heatwave_player_hit_generation := -1
 
 
-func _update_behavior(delta: float) -> void:
-	# Crucible Warden is a close-pressure elite. Partial visibility around cover
-	# must make it push the corner instead of waiting at long range.
-	if (
-		state != State.DEAD
-		and _alerted
-		and not _attack_locked
-		and _player != null
-		and is_instance_valid(_player)
-	):
-		var player_distance := _horizontal_distance(global_position, _player.global_position)
-		if player_distance > heatwave_trigger_range * 0.95:
-			var observer := global_position + Vector3.UP * sight_origin_height
-			var visibility_ratio := _ranged_visibility_ratio_from(observer)
-			if visibility_ratio < 0.85:
-				state = State.CHASE
-				_navigate_to(_player.global_position, delta)
-				return
-	super._update_behavior(delta)
-
-
 func _attempt_attack() -> void:
 	if _attack_locked or _player == null or not is_instance_valid(_player):
 		return
@@ -115,6 +94,7 @@ func _close_for_heatwave(speed_multiplier: float) -> void:
 
 
 func _begin_ground_slam_attack() -> void:
+	var combat_generation := _combat_interrupt_generation
 	_attack_locked = true
 	_attack_windup_active = true
 	_attack_strafe_direction *= -1.0
@@ -127,7 +107,7 @@ func _begin_ground_slam_attack() -> void:
 	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
 	var runtime_windup := maxf(0.01, ground_slam_windup * windup_scale)
 	await get_tree().create_timer(runtime_windup).timeout
-	if not is_inside_tree() or state == State.DEAD:
+	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 
 	_emit_ground_slam()
@@ -147,7 +127,7 @@ func _begin_ground_slam_attack() -> void:
 	var recovery := maxf(0.0, ground_slam_recovery * cooldown_scale)
 	if recovery > 0.0:
 		await get_tree().create_timer(recovery).timeout
-	if not is_inside_tree() or state == State.DEAD:
+	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false
 	_attack_windup_active = false
@@ -155,6 +135,7 @@ func _begin_ground_slam_attack() -> void:
 
 
 func _begin_heatwave_attack() -> void:
+	var combat_generation := _combat_interrupt_generation
 	_attack_locked = true
 	_attack_windup_active = true
 	_attack_strafe_direction *= -1.0
@@ -167,7 +148,7 @@ func _begin_heatwave_attack() -> void:
 	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
 	var runtime_windup := maxf(0.01, heatwave_windup * windup_scale)
 	await get_tree().create_timer(runtime_windup).timeout
-	if not is_inside_tree() or state == State.DEAD:
+	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 
 	_emit_heatwave()
@@ -187,7 +168,7 @@ func _begin_heatwave_attack() -> void:
 	var recovery := maxf(0.0, heatwave_recovery * cooldown_scale)
 	if recovery > 0.0:
 		await get_tree().create_timer(recovery).timeout
-	if not is_inside_tree() or state == State.DEAD:
+	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false
 	_attack_windup_active = false
