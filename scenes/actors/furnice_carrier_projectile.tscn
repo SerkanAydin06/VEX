@@ -63,6 +63,7 @@ speed = 14.0
 lifetime = 5.0
 collision_radius = 0.22
 decal_scene = ExtResource("3_decal")
+impact_light_fade_duration = 0.35
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("Sphere_projectile")

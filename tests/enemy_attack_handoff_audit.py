@@ -5,9 +5,11 @@ profile = (ROOT / "scripts/actors/enemy_combat_profiles.gd").read_text(encoding=
 ravager = (ROOT / "scripts/actors/ravager.gd").read_text(encoding="utf-8")
 red = (ROOT / "scripts/actors/redviper.gd").read_text(encoding="utf-8")
 
-assert "func damage_pursuit_commit_time" in profile
+assert "func damage_pursuit_commit_time" not in profile
 for source in (ravager, red):
+    assert "var damage_pursuit_commit_time" in source
     assert "_forced_damage_commit_remaining" in source
+    assert "_forced_damage_commit_remaining = damage_pursuit_commit_time" in source
     assert "_can_handoff_damage_pursuit_to_combat" in source
     assert "attack_range + attack_range_tolerance" in source
     assert "_check_line_of_sight()" in source

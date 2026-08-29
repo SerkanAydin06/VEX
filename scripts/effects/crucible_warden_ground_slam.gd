@@ -14,6 +14,13 @@ extends Node3D
 @export_category("03 - Visual")
 @export_range(0.05, 1.5, 0.05) var visual_duration := 0.48
 @export_range(0.01, 1.0, 0.01) var visual_start_scale := 0.12
+@export_range(0.5, 2.0, 0.05) var impact_light_range_multiplier := 1.15
+@export_range(0.1, 4.0, 0.1) var impact_light_minimum_range := 1.0
+
+@export_category("04 - Dünya Etkileşimi")
+@export_range(0.0, 2.0, 0.05) var occlusion_origin_height := 0.25
+@export_range(0.0, 2.0, 0.05) var occlusion_target_height := 0.35
+@export_range(0.0, 1.0, 0.05) var shake_minimum_proximity_scale := 0.30
 
 @onready var ring: MeshInstance3D = $Ring
 @onready var impact_light: OmniLight3D = $ImpactLight
@@ -39,7 +46,10 @@ func configure(
 
 func _ready() -> void:
 	ring.scale = Vector3(visual_start_scale, 1.0, visual_start_scale)
-	impact_light.omni_range = maxf(damage_radius * 1.15, 1.0)
+	impact_light.omni_range = maxf(
+		damage_radius * impact_light_range_multiplier,
+		impact_light_minimum_range
+	)
 	call_deferred("_resolve_impact")
 
 	var tween := create_tween()
@@ -80,8 +90,8 @@ func _apply_damage_once() -> void:
 
 
 func _has_clear_path_to_player(player: Node3D) -> bool:
-	var origin := global_position + Vector3.UP * 0.25
-	var target := player.global_position + Vector3.UP * 0.35
+	var origin := global_position + Vector3.UP * occlusion_origin_height
+	var target := player.global_position + Vector3.UP * occlusion_target_height
 	var exclusions: Array[RID] = []
 	if _source is CollisionObject3D:
 		exclusions.append((_source as CollisionObject3D).get_rid())
@@ -109,7 +119,7 @@ func _shake_player_camera() -> void:
 		return
 
 	var proximity := 1.0 - clampf(distance / maxf(shake_radius, 0.001), 0.0, 1.0)
-	var effective_strength := shake_strength * lerpf(0.30, 1.0, proximity)
+	var effective_strength := shake_strength * lerpf(shake_minimum_proximity_scale, 1.0, proximity)
 	var base_h_offset := camera.h_offset
 	var base_v_offset := camera.v_offset
 	var start_msec := Time.get_ticks_msec()

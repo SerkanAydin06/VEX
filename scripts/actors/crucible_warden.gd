@@ -16,6 +16,8 @@ extends "res://scripts/actors/ravager.gd"
 @export_range(0.1, 4.0, 0.1) var ground_probe_height := 1.0
 @export_range(0.5, 6.0, 0.1) var ground_probe_depth := 2.8
 @export_range(0.0, 0.2, 0.01) var ground_effect_surface_offset := 0.035
+@export_range(0.0, 3.0, 0.05) var ground_effect_fallback_drop := 0.90
+@export_range(0.0, 3.0, 0.05) var ground_slam_noise_loudness := 1.50
 
 @export_category("10 - Heatwave")
 @export var heatwave_projectile_scene: PackedScene
@@ -29,8 +31,12 @@ extends "res://scripts/actors/ravager.gd"
 @export_range(0.05, 2.0, 0.01) var heatwave_windup := 0.50
 @export_range(0.0, 3.0, 0.05) var heatwave_recovery := 0.75
 @export_range(0.5, 2.0, 0.05) var heatwave_approach_speed_multiplier := 1.20
+@export_range(0.0, 1.0, 0.05) var heatwave_cooldown_hold_ratio := 0.85
+@export_range(0.1, 2.0, 0.05) var heatwave_cooldown_approach_speed_multiplier := 0.90
 @export_range(0.3, 3.0, 0.05) var heatwave_approach_stall_timeout := 0.90
 @export_range(0.05, 0.5, 0.01) var heatwave_approach_min_progress := 0.12
+@export_range(0.0, 3.0, 0.05) var heatwave_noise_loudness := 1.25
+@export var heatwave_randomize_rotation := true
 @export var heatwave_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
 
 @export_category("11 - Zırhlı Zayıf Nokta")
@@ -90,8 +96,8 @@ func _attempt_attack() -> void:
 
 	# Both attacks can be cooling at once. Keep pressure instead of freezing at
 	# the outer attack radius, but do not push through the player's body.
-	if distance_to_player > heatwave_trigger_range * 0.85:
-		_close_for_heatwave(0.90)
+	if distance_to_player > heatwave_trigger_range * heatwave_cooldown_hold_ratio:
+		_close_for_heatwave(heatwave_cooldown_approach_speed_multiplier)
 	else:
 		_stop_horizontal_motion()
 
@@ -172,7 +178,7 @@ func _begin_ground_slam_attack() -> void:
 	if attack_audio != null and attack_audio.stream != null:
 		attack_audio.stop()
 		attack_audio.play()
-	GameState.emit_noise(global_position, 1.5, self)
+	GameState.emit_noise(global_position, ground_slam_noise_loudness, self)
 
 	var runtime_cooldown := maxf(runtime_windup, ground_slam_cooldown * cooldown_scale)
 	_ground_slam_ready_at_msec = (
@@ -213,7 +219,7 @@ func _begin_heatwave_attack() -> void:
 	if heatwave_audio != null and heatwave_audio.stream != null:
 		heatwave_audio.stop()
 		heatwave_audio.play()
-	GameState.emit_noise(global_position, 1.25, self)
+	GameState.emit_noise(global_position, heatwave_noise_loudness, self)
 
 	var runtime_cooldown := maxf(runtime_windup, heatwave_cooldown * cooldown_scale)
 	_heatwave_ready_at_msec = (
@@ -261,7 +267,7 @@ func _emit_heatwave() -> void:
 	_heatwave_burst_generation += 1
 	_last_heatwave_player_hit_generation = -1
 	var burst_id := _heatwave_burst_generation
-	var projectile_count := maxi(4, heatwave_projectile_count)
+	var projectile_count := maxi(1, heatwave_projectile_count)
 	var runtime_damage := _scaled_special_damage(heatwave_damage)
 	var origin := (
 		heatwave_origin.global_position
@@ -271,7 +277,7 @@ func _emit_heatwave() -> void:
 	# Rotate the ring slightly each cast so repeated waves do not form identical
 	# safe spokes, while preserving perfectly even 360-degree coverage.
 	var angular_step := TAU / float(projectile_count)
-	var angular_offset := randf_range(0.0, angular_step)
+	var angular_offset := randf_range(0.0, angular_step) if heatwave_randomize_rotation else 0.0
 
 	for index in range(projectile_count):
 		var projectile := heatwave_projectile_scene.instantiate() as Node3D
@@ -332,7 +338,7 @@ func _ground_effect_position() -> Vector3:
 	query.collide_with_areas = false
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
 	if hit.is_empty():
-		return global_position + Vector3.DOWN * 0.9
+		return global_position + Vector3.DOWN * ground_effect_fallback_drop
 	var floor_position: Vector3 = hit.get("position", global_position)
 	var floor_normal: Vector3 = hit.get("normal", Vector3.UP)
 	return floor_position + floor_normal * ground_effect_surface_offset
@@ -373,7 +379,8 @@ func _stop_horizontal_motion() -> void:
 			or (
 				not heatwave_ready
 				and not ground_slam_ready
-				and distance_to_player > heatwave_trigger_range * 0.85
+				and distance_to_player
+				> heatwave_trigger_range * heatwave_cooldown_hold_ratio
 			)
 		)
 		if should_keep_closing:

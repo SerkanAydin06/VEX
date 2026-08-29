@@ -121,6 +121,7 @@ def main() -> int:
         ('var _direct_damage := 18', "projectile 18 direct hasar defaultu"),
         ('_spawn_decal_below(impact_position)', "impact sonrası decal"),
         ('decal.call("configure", _decal_tick_damage, _source)', "decal hasar aktarımı"),
+        ('impact_light_fade_duration := 0.35', "impact ışık fade Inspector ayarı"),
     ]:
         require(projectile_script, needle, label)
 
@@ -139,6 +140,8 @@ def main() -> int:
         ('visual_end_scale := 1.20', "thermal görsel telegraph taşması"),
         ('_apply_damage_once()', "thermal tek vuruş"),
         ('_has_clear_path_to_player(player)', "thermal occlusion"),
+        ('occlusion_origin_height := 0.35', "thermal occlusion başlangıç yüksekliği Inspector ayarı"),
+        ('occlusion_target_height := 0.35', "thermal occlusion hedef yüksekliği Inspector ayarı"),
     ]:
         require(shockwave_script, needle, label)
 
@@ -152,12 +155,14 @@ def main() -> int:
         fail("Eski world-space ProjectileMuzzle marker sahnede kalmış")
 
     require(projectile_scene, 'decal_scene = ExtResource("3_decal")', "projectile decal scene bağlantısı")
+    require(projectile_scene, 'impact_light_fade_duration = 0.35', "projectile impact fade scene ayarı")
     require(projectile_scene, 'region = Rect2(0, 0, 512, 512)', "projectile effect row")
     require(projectile_scene, 'region = Rect2(0, 512, 512, 512)', "impact effect row")
     require(decal_scene, 'region = Rect2(0, 1536, 512, 512)', "decal effect row")
     require(shockwave_scene, 'region = Rect2(0, 1024, 512, 512)', "shockwave effect row")
     require(shockwave_scene, 'damage_time_ratio = 0.82', "shockwave scene damage timing")
     require(shockwave_scene, 'visual_end_scale = 1.2', "shockwave scene visual taşma")
+    require(shockwave_scene, 'occlusion_origin_height = 0.35', "shockwave occlusion scene ayarı")
     require(shockwave_scene, 'scale = Vector3(1, 3, 1)', "source-art zemin ekseni telafisi")
 
     if ERRORS:

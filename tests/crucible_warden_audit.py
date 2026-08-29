@@ -107,6 +107,12 @@ def main() -> int:
         ("_close_for_heatwave(heatwave_approach_speed_multiplier)", "Heatwave için oyuncuya kadar kapanma"),
         ("heatwave_approach_stall_timeout := 0.90", "Heatwave yaklaşma tıkanma süresi"),
         ("heatwave_approach_min_progress := 0.12", "Heatwave yaklaşma ilerleme eşiği"),
+        ("ground_effect_fallback_drop := 0.90", "Ground Slam zemin fallback mesafesi Inspector ayarı"),
+        ("ground_slam_noise_loudness := 1.50", "Ground Slam ses yayılımı Inspector ayarı"),
+        ("heatwave_cooldown_hold_ratio := 0.85", "Heatwave cooldown bekleme mesafesi Inspector ayarı"),
+        ("heatwave_cooldown_approach_speed_multiplier := 0.90", "Heatwave cooldown yaklaşma hızı Inspector ayarı"),
+        ("heatwave_noise_loudness := 1.25", "Heatwave ses yayılımı Inspector ayarı"),
+        ("heatwave_randomize_rotation := true", "Heatwave rotasyon rastgeleliği Inspector ayarı"),
         ("func _is_heatwave_approach_stalled(", "Heatwave yaklaşma watchdog"),
         ("_has_heatwave_approach_anchor", "gerçek gövde hareketiyle tıkanma ayrımı"),
         ("moved_since_anchor", "köşe dolaşırken yanlış stall önleme"),
@@ -134,6 +140,10 @@ def main() -> int:
         ("SettingsManager.screen_shake", "accessibility screen shake ayarı"),
         ("camera.h_offset", "yatay kamera sarsıntısı"),
         ("camera.v_offset", "dikey kamera sarsıntısı"),
+        ("impact_light_range_multiplier := 1.15", "impact ışık menzil çarpanı Inspector ayarı"),
+        ("occlusion_origin_height := 0.25", "occlusion başlangıç yüksekliği Inspector ayarı"),
+        ("occlusion_target_height := 0.35", "occlusion hedef yüksekliği Inspector ayarı"),
+        ("shake_minimum_proximity_scale := 0.30", "uzak kamera sarsıntı ölçeği Inspector ayarı"),
     ]:
         require(slam_script, needle, label)
 
@@ -175,6 +185,7 @@ def main() -> int:
     require(slam_scene, '[node name="Ring" type="MeshInstance3D" parent="."]', "Ground Slam görsel halka/disk")
     require(slam_scene, '[node name="ImpactLight" type="OmniLight3D" parent="."]', "Ground Slam impact ışığı")
     require(slam_scene, "shadow_enabled = false", "Ground Slam ucuz geçici ışık")
+    require(slam_scene, "impact_light_range_multiplier = 1.15", "Ground Slam Inspector scene ayarı")
 
     if ERRORS:
         print("Crucible Warden audit FAILED:")
