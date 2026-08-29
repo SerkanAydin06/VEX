@@ -73,6 +73,7 @@ def main() -> int:
         fail(f"Crucible Warden manifest JSON bozuk: {exc}")
 
     warden_script_path = "scripts/actors/crucible_warden.gd"
+    settings_script_path = "scripts/actors/warden_ability_settings.gd"
     projectile_script_path = "scripts/actors/crucible_warden_heatwave_projectile.gd"
     slam_script_path = "scripts/effects/crucible_warden_ground_slam.gd"
     warden_scene_path = "scenes/actors/crucible_warden.tscn"
@@ -80,6 +81,7 @@ def main() -> int:
     slam_scene_path = "scenes/effects/crucible_warden_ground_slam.tscn"
 
     warden_script = read(warden_script_path)
+    settings_script = read(settings_script_path)
     projectile_script = read(projectile_script_path)
     slam_script = read(slam_script_path)
     warden_scene = read(warden_scene_path)
@@ -88,6 +90,7 @@ def main() -> int:
 
     for path, text in [
         (warden_script_path, warden_script),
+        (settings_script_path, settings_script),
         (projectile_script_path, projectile_script),
         (slam_script_path, slam_script),
         (warden_scene_path, warden_scene),
@@ -98,21 +101,9 @@ def main() -> int:
 
     for needle, label in [
         ('extends "res://scripts/actors/enemy_combatant_base.gd"', "standart combatant tabanı"),
-        ("ground_slam_trigger_range := 5.2", "Ground Slam yakın menzil seçimi"),
-        ("ground_slam_radius := 4.6", "Ground Slam AoE radius"),
-        ("ground_slam_damage := 42", "Ground Slam yüksek hasar"),
-        ("heatwave_trigger_range := 1.65", "Heatwave point-blank menzil"),
-        ("heatwave_projectile_count := 12", "12 yönlü radyal Heatwave"),
         ("if heatwave_ready:", "Heatwave önceliği"),
-        ("_close_for_heatwave(heatwave_approach_speed_multiplier)", "Heatwave için oyuncuya kadar kapanma"),
-        ("heatwave_approach_stall_timeout := 0.90", "Heatwave yaklaşma tıkanma süresi"),
-        ("heatwave_approach_min_progress := 0.12", "Heatwave yaklaşma ilerleme eşiği"),
-        ("ground_effect_fallback_drop := 0.90", "Ground Slam zemin fallback mesafesi Inspector ayarı"),
-        ("ground_slam_noise_loudness := 1.50", "Ground Slam ses yayılımı Inspector ayarı"),
-        ("heatwave_cooldown_hold_ratio := 0.85", "Heatwave cooldown bekleme mesafesi Inspector ayarı"),
-        ("heatwave_cooldown_approach_speed_multiplier := 0.90", "Heatwave cooldown yaklaşma hızı Inspector ayarı"),
-        ("heatwave_noise_loudness := 1.25", "Heatwave ses yayılımı Inspector ayarı"),
-        ("heatwave_randomize_rotation := true", "Heatwave rotasyon rastgeleliği Inspector ayarı"),
+        ("_close_for_heatwave(_ability.heatwave_approach_speed_multiplier)", "Heatwave için oyuncuya kadar kapanma"),
+        ("var _ability: VexWardenAbilitySettings", "tip güvenli Warden ayar kaynağı"),
         ("func _is_heatwave_approach_stalled(", "Heatwave yaklaşma watchdog"),
         ("_has_heatwave_approach_anchor", "gerçek gövde hareketiyle tıkanma ayrımı"),
         ("moved_since_anchor", "köşe dolaşırken yanlış stall önleme"),
@@ -128,9 +119,27 @@ def main() -> int:
         ("var angular_step := TAU / float(projectile_count)", "360 derece eşit yayılım"),
         ("apply_heatwave_projectile_hit(", "tek burst hasar dedupe"),
         ("_last_heatwave_player_hit_generation", "Heatwave tek vuruş koruması"),
-        ("headshot_local_height := 1.15", "elit gövdeye uygun zayıf nokta"),
+        ("_ability.headshot_local_height", "elit gövdeye uygun zayıf nokta kullanımı"),
     ]:
         require(warden_script, needle, label)
+
+    for needle, label in [
+        ("ground_slam_trigger_range := 5.2", "Ground Slam yakın menzil seçimi"),
+        ("ground_slam_radius := 4.6", "Ground Slam AoE radius"),
+        ("ground_slam_damage := 42", "Ground Slam yüksek hasar"),
+        ("heatwave_trigger_range := 1.65", "Heatwave point-blank menzil"),
+        ("heatwave_projectile_count := 12", "12 yönlü radyal Heatwave"),
+        ("heatwave_approach_stall_timeout := 0.90", "Heatwave yaklaşma tıkanma süresi"),
+        ("heatwave_approach_min_progress := 0.12", "Heatwave yaklaşma ilerleme eşiği"),
+        ("ground_effect_fallback_drop := 0.90", "Ground Slam zemin fallback mesafesi Inspector ayarı"),
+        ("ground_slam_noise_loudness := 1.50", "Ground Slam ses yayılımı Inspector ayarı"),
+        ("heatwave_cooldown_hold_ratio := 0.85", "Heatwave cooldown bekleme mesafesi Inspector ayarı"),
+        ("heatwave_cooldown_approach_speed_multiplier := 0.90", "Heatwave cooldown yaklaşma hızı Inspector ayarı"),
+        ("heatwave_noise_loudness := 1.25", "Heatwave ses yayılımı Inspector ayarı"),
+        ("heatwave_randomize_rotation := true", "Heatwave rotasyon rastgeleliği Inspector ayarı"),
+        ("headshot_local_height := 1.15", "elit gövdeye uygun zayıf nokta"),
+    ]:
+        require(settings_script, needle, label)
 
     for needle, label in [
         ("damage_radius := 4.6", "Ground Slam effect radius"),
@@ -160,6 +169,7 @@ def main() -> int:
     for animation in ["idle", "walk", "attack", "heatwave", "death", "idle_back", "walk_back", "hurt"]:
         require(warden_scene, f'&"{animation}"', f"character animation {animation}")
     require(warden_scene, 'enemy_id = &"crucible_warden"', "canonical enemy id")
+    require(warden_scene, 'special_ability_settings = SubResource("Resource_warden_ability")', "Warden özel ayar bağlantısı")
     require(warden_scene, "heatwave_approach_stall_timeout = 0.9", "yaklaşma tıkanma scene tuning")
     require(warden_scene, "heatwave_approach_min_progress = 0.12", "yaklaşma ilerleme scene tuning")
     require(warden_scene, 'ground_slam_scene = ExtResource("3_slam")', "Ground Slam scene bağlantısı")

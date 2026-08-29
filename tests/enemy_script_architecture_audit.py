@@ -66,9 +66,13 @@ for shared_setting in [
     "difficulty_cooldown_multipliers",
     "difficulty_windup_multipliers",
 ]:
-    assert re.search(rf"@export[^\n]*\bvar {shared_setting}\b", enemy_base), shared_setting
-    assert not re.search(rf"@export[^\n]*\bvar {shared_setting}\b", combatant_base), shared_setting
-    assert not re.search(rf"@export[^\n]*\bvar {shared_setting}\b", lunge_base), shared_setting
+    assert not re.search(rf"@export[^\n]*\bvar {shared_setting}\b", enemy_base), shared_setting
+    assert re.search(rf"@export[^\n]*\bvar {shared_setting}\b", combatant_base), shared_setting
+    assert re.search(rf"@export[^\n]*\bvar {shared_setting}\b", lunge_base), shared_setting
+
+# Godot türetilmiş script alanlarını taban script alanlarından önce gösterir.
+# Bu nedenle görünür Inspector şeması davranış ailesinde tek katmanda tutulur.
+assert "@export" not in enemy_base
 
 creature_script_paths = {
     enemy: f"res://scripts/actors/{enemy}.gd"

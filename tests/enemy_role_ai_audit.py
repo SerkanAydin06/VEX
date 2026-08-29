@@ -25,7 +25,8 @@ for token in [
 ]:
     assert token in nav, token
 
-assert "combat_role" in enemy_base
+assert "combat_role" in ravager
+assert "combat_role" in red
 assert "EnemyNavigationRuntime" in enemy_base
 assert "EnemyCombatProfiles" in enemy_base
 for source in [ravager, red]:

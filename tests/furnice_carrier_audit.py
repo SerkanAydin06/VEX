@@ -75,6 +75,7 @@ def main() -> int:
         fail(f"Furnice effects manifest JSON bozuk: {exc}")
 
     carrier_script_path = "scripts/actors/furnice_carrier.gd"
+    settings_script_path = "scripts/actors/furnice_carrier_ability_settings.gd"
     projectile_script_path = "scripts/actors/furnice_carrier_projectile.gd"
     decal_script_path = "scripts/effects/furnice_carrier_decal.gd"
     shockwave_script_path = "scripts/effects/furnice_carrier_shockwave.gd"
@@ -84,6 +85,7 @@ def main() -> int:
     shockwave_scene_path = "scenes/effects/furnice_carrier_shockwave.tscn"
 
     carrier_script = read(carrier_script_path)
+    settings_script = read(settings_script_path)
     projectile_script = read(projectile_script_path)
     decal_script = read(decal_script_path)
     shockwave_script = read(shockwave_script_path)
@@ -93,6 +95,7 @@ def main() -> int:
     shockwave_scene = read(shockwave_scene_path)
 
     for path, text in [
+        (settings_script_path, settings_script),
         (carrier_scene_path, carrier_scene),
         (projectile_scene_path, projectile_scene),
         (decal_scene_path, decal_scene),
@@ -101,20 +104,27 @@ def main() -> int:
         check_res_paths(path, text)
 
     for needle, label in [
-        ('close_attack_threshold := 6.0', "6 m saldırı eşiği"),
+        ('var _ability: VexFurniceCarrierAbilitySettings', "tip güvenli Furnice ayar kaynağı"),
         ('var thermal_burst_ready := Time.get_ticks_msec() >= _thermal_burst_ready_at_msec', "thermal ayrı cooldown takibi"),
-        ('var use_thermal_burst := distance_to_player <= close_attack_threshold and thermal_burst_ready', "yakında ve hazırsa thermal seçim"),
+        ('var use_thermal_burst := distance_to_player <= _ability.close_attack_threshold and thermal_burst_ready', "yakında ve hazırsa thermal seçim"),
         ('_thermal_burst_ready_at_msec = Time.get_ticks_msec()', "thermal cooldown yeniden kurma"),
-        ('projectile_attack_cooldown * cooldown_scale', "thermal aralarında projectile saldırı ritmi"),
+        ('_ability.projectile_attack_cooldown * cooldown_scale', "thermal aralarında projectile saldırı ritmi"),
         ('_fire_furnice_projectile()', "projectile saldırısı"),
         ('_emit_thermal_burst()', "thermal saldırısı"),
-        ('projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -139.0)', "furnace ağzı sprite-pixel anchor"),
+        ('_ability.projectile_muzzle_sprite_offset_pixels', "furnace ağzı sprite-pixel anchor kullanımı"),
         ('camera.global_transform.basis.x', "billboard kamera-sağ muzzle ekseni"),
         ('animated_sprite.global_position', "muzzle sprite merkezi tabanı"),
         ('func _projectile_muzzle_world_position()', "sprite-pixel muzzle dönüşümü"),
         ('projectile.call("launch", shot_direction, self, _runtime_attack_damage, decal_damage)', "projectile direct + decal damage aktarımı"),
     ]:
         require(carrier_script, needle, label)
+
+    for needle, label in [
+        ('close_attack_threshold := 6.0', "6 m saldırı eşiği"),
+        ('projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -139.0)', "furnace ağzı sprite-pixel anchor"),
+        ('thermal_burst_damage := 22', "thermal temel hasarı"),
+    ]:
+        require(settings_script, needle, label)
 
     for needle, label in [
         ('speed := 14.0', "projectile 14 m/s"),
@@ -148,6 +158,7 @@ def main() -> int:
     for animation in ["idle", "idle_back", "walk", "walk_back", "attack", "thermal_burst", "death"]:
         require(carrier_scene, f'&"{animation}"', f"body animation {animation}")
     require(carrier_scene, 'enemy_id = &"furnice_carrier"', "canonical enemy id")
+    require(carrier_scene, 'special_ability_settings = SubResource("Resource_furnice_ability")', "Furnice özel ayar bağlantısı")
     require(carrier_scene, 'attack_damage = 18', "scene direct hasar")
     require(carrier_scene, 'projectile_scene = ExtResource("3_projectile")', "scene projectile bağlantısı")
     require(carrier_scene, 'thermal_burst_scene = ExtResource("4_shockwave")', "scene thermal bağlantısı")
