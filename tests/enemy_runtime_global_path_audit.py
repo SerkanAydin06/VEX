@@ -20,12 +20,17 @@ for token in [
 
 for source in (ravager, redviper):
     assert "EnemyNavigationRuntime.build_shortest_path(" in source
-    assert "EnemyCombatProfiles.grid_step(combat_role)" in source
-    assert "EnemyCombatProfiles.grid_max_nodes(combat_role)" in source
-    assert "EnemyCombatProfiles.grid_search_margin(combat_role)" in source
+    assert "var runtime_grid_step" in source
+    assert "var runtime_grid_max_nodes" in source
+    assert "var runtime_grid_search_margin" in source
+    assert "runtime_grid_step," in source
+    assert "runtime_grid_max_nodes," in source
+    assert "runtime_grid_search_margin\n" in source
 
-for token in ["CLOSE", "MID", "LONG", "grid_step", "grid_max_nodes", "grid_search_margin"]:
+for token in ["CLOSE", "MID", "LONG"]:
     assert token in profile, token
+for obsolete in ["grid_step", "grid_max_nodes", "grid_search_margin"]:
+    assert obsolete not in profile, obsolete
 
 assert "func _refresh_warden_collision_detour" not in warden
 assert "var _warden_detour_direction" not in warden
