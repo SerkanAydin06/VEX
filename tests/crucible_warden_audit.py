@@ -97,7 +97,7 @@ def main() -> int:
         check_res_paths(path, text)
 
     for needle, label in [
-        ('extends "res://scripts/actors/ravager.gd"', "Ravager tabanı"),
+        ('extends "res://scripts/actors/enemy_combatant_base.gd"', "standart combatant tabanı"),
         ("ground_slam_trigger_range := 5.2", "Ground Slam yakın menzil seçimi"),
         ("ground_slam_radius := 4.6", "Ground Slam AoE radius"),
         ("ground_slam_damage := 42", "Ground Slam yüksek hasar"),

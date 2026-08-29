@@ -33,8 +33,8 @@ for enemy, (min_detection, min_pursuit, min_dormant) in EXPECTED.items():
     # suppress line-of-sight before that maximum runtime detection radius.
     assert dormant > detection * 1.20, (enemy, "dormant", dormant, detection)
 
-ravager_script = (ROOT / "scripts/actors/ravager.gd").read_text(encoding="utf-8")
-redviper_script = (ROOT / "scripts/actors/redviper.gd").read_text(encoding="utf-8")
+ravager_script = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
+redviper_script = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 assert "var detection_range := 30.0" in ravager_script
 assert "var pursuit_range := 38.0" in ravager_script
 assert "var initial_view_angle := 240.0" in ravager_script

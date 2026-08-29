@@ -1,6 +1,6 @@
 @tool
 class_name VexCinderHound
-extends "res://scripts/actors/redviper.gd"
+extends "res://scripts/actors/enemy_lunge_base.gd"
 
-# Cinder Hound, RedViper'ın kanıtlanmış yakın dövüş/navigasyon omurgasını kullanır.
-# Türün kimliği ve tüm temel tuning değerleri cinderhound.tscn Inspector verisidir.
+# Cinder Hound standart yakın dövüş/hamle ailesini kullanır. Türün hızlı takip
+# ve kısa windup karakteri cinderhound.tscn Inspector verisidir.

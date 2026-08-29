@@ -1,8 +1,8 @@
 from pathlib import Path
 
-ravager = Path("scripts/actors/ravager.gd").read_text(encoding="utf-8")
+ravager = Path("scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
 warden = Path("scripts/actors/crucible_warden.gd").read_text(encoding="utf-8")
-red = Path("scripts/actors/redviper.gd").read_text(encoding="utf-8")
+red = Path("scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 
 assert "retaliation_target = (_source as Node3D).global_position" in ravager
 assert "_last_seen_position = retaliation_target" in ravager

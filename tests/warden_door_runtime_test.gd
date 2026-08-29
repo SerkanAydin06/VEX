@@ -126,7 +126,7 @@ func _run_case(rotation_y: float, label: String) -> void:
 			crossed = true
 			crossed_at = elapsed
 		if crossed and (
-			int(warden.get("state")) == VexRavager.State.ATTACK
+			int(warden.get("state")) == VexEnemyCombatantBase.State.ATTACK
 			or bool(warden.get("_attack_locked"))
 			or player.damage_events > 0
 		):

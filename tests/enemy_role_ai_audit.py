@@ -4,8 +4,9 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 profile = (ROOT / "scripts/actors/enemy_combat_profiles.gd").read_text(encoding="utf-8")
 nav = (ROOT / "scripts/actors/enemy_navigation_runtime.gd").read_text(encoding="utf-8")
-ravager = (ROOT / "scripts/actors/ravager.gd").read_text(encoding="utf-8")
-red = (ROOT / "scripts/actors/redviper.gd").read_text(encoding="utf-8")
+enemy_base = (ROOT / "scripts/actors/enemy_base.gd").read_text(encoding="utf-8")
+ravager = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
+red = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 warden = (ROOT / "scripts/actors/crucible_warden.gd").read_text(encoding="utf-8")
 
 for token in [
@@ -24,12 +25,12 @@ for token in [
 ]:
     assert token in nav, token
 
+assert "combat_role" in enemy_base
+assert "EnemyNavigationRuntime" in enemy_base
+assert "EnemyCombatProfiles" in enemy_base
 for source in [ravager, red]:
-    assert "combat_role" in source
     assert "_forced_damage_target" in source
     assert "_has_forced_damage_target" in source
-    assert "EnemyNavigationRuntime" in source
-    assert "EnemyCombatProfiles" in source
 
 common_inspector_settings = [
     "idle_wander_radius", "idle_wander_attempts", "idle_pause_min", "idle_pause_max",

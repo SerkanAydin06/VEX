@@ -2,8 +2,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 profile = (ROOT / "scripts/actors/enemy_combat_profiles.gd").read_text(encoding="utf-8")
-ravager = (ROOT / "scripts/actors/ravager.gd").read_text(encoding="utf-8")
-red = (ROOT / "scripts/actors/redviper.gd").read_text(encoding="utf-8")
+ravager = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
+red = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 
 assert "func damage_pursuit_commit_time" not in profile
 for source in (ravager, red):
