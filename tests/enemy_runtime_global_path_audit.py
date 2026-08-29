@@ -1,21 +1,33 @@
 from pathlib import Path
 
-r = Path("scripts/actors/ravager.gd").read_text(encoding="utf-8")
-w = Path("scripts/actors/crucible_warden.gd").read_text(encoding="utf-8")
+ROOT = Path(__file__).resolve().parents[1]
+ravager = (ROOT / "scripts/actors/ravager.gd").read_text(encoding="utf-8")
+redviper = (ROOT / "scripts/actors/redviper.gd").read_text(encoding="utf-8")
+warden = (ROOT / "scripts/actors/crucible_warden.gd").read_text(encoding="utf-8")
+nav = (ROOT / "scripts/actors/enemy_navigation_runtime.gd").read_text(encoding="utf-8")
+profile = (ROOT / "scripts/actors/enemy_combat_profiles.gd").read_text(encoding="utf-8")
 
 for token in [
-    "func _build_runtime_shortest_path(destination: Vector3)",
-    "runtime_grid_max_nodes",
-    "runtime_grid_search_margin",
-    "_runtime_grid_heap_push",
-    "_runtime_grid_heap_pop",
-    "_simplify_runtime_grid_path",
-    "if state == State.CHASE:",
-    "_current_path = _build_runtime_shortest_path(destination)",
+    "static func build_shortest_path(",
+    "static func has_walk_segment_clear(",
+    "static func has_reached_walkable_target(",
+    "static func choose_idle_wander_target(",
+    "func _heap_push(",
+    "func _heap_pop(",
+    "func _simplify_path(",
 ]:
-    assert token in r, token
+    assert token in nav, token
 
-assert "func _refresh_warden_collision_detour" not in w
-assert "var _warden_detour_direction" not in w
-assert "_navigate_to(_player.global_position, delta)" in w
-print("enemy runtime global path audit passed")
+for source in (ravager, redviper):
+    assert "EnemyNavigationRuntime.build_shortest_path(" in source
+    assert "EnemyCombatProfiles.grid_step(combat_role)" in source
+    assert "EnemyCombatProfiles.grid_max_nodes(combat_role)" in source
+    assert "EnemyCombatProfiles.grid_search_margin(combat_role)" in source
+
+for token in ["CLOSE", "MID", "LONG", "grid_step", "grid_max_nodes", "grid_search_margin"]:
+    assert token in profile, token
+
+assert "func _refresh_warden_collision_detour" not in warden
+assert "var _warden_detour_direction" not in warden
+assert "func _update_behavior" not in warden
+print("enemy shared runtime global path audit passed")
