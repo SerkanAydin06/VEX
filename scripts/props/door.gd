@@ -464,7 +464,8 @@ func _on_proximity_body_entered(body: Node3D) -> void:
 func get_enemy_navigation_step(
 	from_position: Vector3,
 	target_position: Vector3,
-	agent_clearance: float = 0.6
+	agent_clearance: float = 0.6,
+	agent_reach_distance: float = 0.55
 ) -> Dictionary:
 	if not allow_enemy_open or is_access_locked():
 		return {}
@@ -511,7 +512,10 @@ func get_enemy_navigation_step(
 	).length()
 	var alignment_tolerance := maxf(
 		enemy_portal_alignment_tolerance,
-		minf(safe_clearance * 0.55, 0.65)
+		maxf(
+			maxf(agent_reach_distance, 0.1) + 0.05,
+			minf(safe_clearance * 0.85, 0.85)
+		)
 	)
 	var center_band := maxf(0.55, safe_clearance * 0.85)
 	var centered_inside_portal := (
@@ -530,6 +534,16 @@ func get_enemy_navigation_step(
 
 	var score := from_position.distance_to(near_point) + far_point.distance_to(target_position)
 	return {"valid": true, "point": route_point, "score": score}
+
+
+func request_enemy_open() -> void:
+	# Bir düşman proximity alanına alarm vermeden girmiş olabilir; daha sonra
+	# takibe başladığında body_entered yeniden yayınlanmaz. Aktif rota seçilen
+	# kapıyı doğrudan açtırır, böylece sensör olayına bağımlı kalınmaz.
+	if not allow_enemy_open or is_access_locked():
+		return
+	if _state == DoorState.CLOSED or _state == DoorState.CLOSING:
+		_begin_opening()
 
 
 func _on_safety_body_entered(_body: Node3D) -> void:

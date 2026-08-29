@@ -105,6 +105,14 @@ def main() -> int:
         ("heatwave_projectile_count := 12", "12 yönlü radyal Heatwave"),
         ("if heatwave_ready:", "Heatwave önceliği"),
         ("_close_for_heatwave(heatwave_approach_speed_multiplier)", "Heatwave için oyuncuya kadar kapanma"),
+        ("heatwave_approach_stall_timeout := 0.90", "Heatwave yaklaşma tıkanma süresi"),
+        ("heatwave_approach_min_progress := 0.12", "Heatwave yaklaşma ilerleme eşiği"),
+        ("func _is_heatwave_approach_stalled(", "Heatwave yaklaşma watchdog"),
+        ("_has_heatwave_approach_anchor", "gerçek gövde hareketiyle tıkanma ayrımı"),
+        ("moved_since_anchor", "köşe dolaşırken yanlış stall önleme"),
+        ("_reset_heatwave_approach_progress(distance_to_player)", "tıkanma sonrası watchdog reset"),
+        ("_path_refresh_remaining = 0.0", "tıkanma sonrası rota yenileme"),
+        ("and _check_line_of_sight()", "Slam fallback görüş doğrulaması"),
         ("func _stop_horizontal_motion() -> void:", "yaklaşma sırasında fren override"),
         ("state == State.ATTACK", "yalnız saldırı durumunda fren istisnası"),
         ("var should_keep_closing :=", "Heatwave yaklaşma kararının açık takibi"),
@@ -142,6 +150,8 @@ def main() -> int:
     for animation in ["idle", "walk", "attack", "heatwave", "death", "idle_back", "walk_back", "hurt"]:
         require(warden_scene, f'&"{animation}"', f"character animation {animation}")
     require(warden_scene, 'enemy_id = &"crucible_warden"', "canonical enemy id")
+    require(warden_scene, "heatwave_approach_stall_timeout = 0.9", "yaklaşma tıkanma scene tuning")
+    require(warden_scene, "heatwave_approach_min_progress = 0.12", "yaklaşma ilerleme scene tuning")
     require(warden_scene, 'ground_slam_scene = ExtResource("3_slam")', "Ground Slam scene bağlantısı")
     require(
         warden_scene,

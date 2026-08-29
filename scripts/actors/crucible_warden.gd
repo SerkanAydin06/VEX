@@ -29,6 +29,8 @@ extends "res://scripts/actors/ravager.gd"
 @export_range(0.05, 2.0, 0.01) var heatwave_windup := 0.50
 @export_range(0.0, 3.0, 0.05) var heatwave_recovery := 0.75
 @export_range(0.5, 2.0, 0.05) var heatwave_approach_speed_multiplier := 1.20
+@export_range(0.3, 3.0, 0.05) var heatwave_approach_stall_timeout := 0.90
+@export_range(0.05, 0.5, 0.01) var heatwave_approach_min_progress := 0.12
 @export var heatwave_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
 
 @export_category("11 - Zırhlı Zayıf Nokta")
@@ -41,6 +43,10 @@ var _ground_slam_ready_at_msec := 0
 var _heatwave_ready_at_msec := 0
 var _heatwave_burst_generation := 0
 var _last_heatwave_player_hit_generation := -1
+var _heatwave_approach_best_distance := INF
+var _heatwave_approach_stall_remaining := 0.0
+var _heatwave_approach_anchor_position := Vector3.ZERO
+var _has_heatwave_approach_anchor := false
 
 
 func _attempt_attack() -> void:
@@ -56,10 +62,26 @@ func _attempt_attack() -> void:
 	# the enemy deliberately keeps closing instead of wasting the charge on a slam.
 	if heatwave_ready:
 		if distance_to_player > heatwave_trigger_range:
+			if _is_heatwave_approach_stalled(distance_to_player):
+				# Rota veya kapı ağzı ilerlemiyorsa aynı bitmiş yolu her kare yeniden
+				kullanma. Önce rotayı zorla yenile; oyuncu Slam menzilinde ve gerçekten
+				görünürse elit düşman dimdik beklemek yerine alan baskısına döner.
+				_clear_path()
+				_path_refresh_remaining = 0.0
+				_reset_heatwave_approach_progress(distance_to_player)
+				if (
+					ground_slam_ready
+					and distance_to_player <= ground_slam_trigger_range
+					and _check_line_of_sight()
+				):
+					_begin_ground_slam_attack()
+					return
 			_close_for_heatwave(heatwave_approach_speed_multiplier)
 			return
+		_reset_heatwave_approach_progress()
 		_begin_heatwave_attack()
 		return
+	_reset_heatwave_approach_progress()
 
 	# While Heatwave is cooling down, Ground Slam controls the nearby arena.
 	if ground_slam_ready and distance_to_player <= ground_slam_trigger_range:
@@ -72,6 +94,42 @@ func _attempt_attack() -> void:
 		_close_for_heatwave(0.90)
 	else:
 		_stop_horizontal_motion()
+
+
+func _is_heatwave_approach_stalled(distance_to_player: float) -> bool:
+	var delta := maxf(get_physics_process_delta_time(), 0.001)
+	var moved_since_anchor := (
+		_has_heatwave_approach_anchor
+		and _horizontal_distance(global_position, _heatwave_approach_anchor_position)
+		>= heatwave_approach_min_progress
+	)
+	if (
+		not _has_heatwave_approach_anchor
+		or is_inf(_heatwave_approach_best_distance)
+		or moved_since_anchor
+		or distance_to_player
+		< _heatwave_approach_best_distance - heatwave_approach_min_progress
+	):
+		_heatwave_approach_best_distance = minf(
+			_heatwave_approach_best_distance,
+			distance_to_player
+		)
+		_heatwave_approach_anchor_position = global_position
+		_has_heatwave_approach_anchor = true
+		_heatwave_approach_stall_remaining = heatwave_approach_stall_timeout
+		return false
+	_heatwave_approach_stall_remaining = maxf(
+		0.0,
+		_heatwave_approach_stall_remaining - delta
+	)
+	return _heatwave_approach_stall_remaining <= 0.0
+
+
+func _reset_heatwave_approach_progress(current_distance: float = INF) -> void:
+	_heatwave_approach_best_distance = current_distance
+	_heatwave_approach_stall_remaining = heatwave_approach_stall_timeout
+	_heatwave_approach_anchor_position = global_position
+	_has_heatwave_approach_anchor = not is_inf(current_distance)
 
 
 func _close_for_heatwave(speed_multiplier: float) -> void:
