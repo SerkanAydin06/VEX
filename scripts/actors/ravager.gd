@@ -655,6 +655,7 @@ func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
 	var best_point := target_position
 	var best_score := INF
 	var found := false
+	var best_door: Node = null
 	for node: Node in get_tree().get_nodes_in_group("enemy_navigation_door"):
 		if not node.has_method("get_enemy_navigation_step"):
 			continue
@@ -662,7 +663,8 @@ func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
 			"get_enemy_navigation_step",
 			global_position,
 			target_position,
-			navigation_clearance
+			navigation_clearance,
+			waypoint_reach_distance
 		)
 		if not (route is Dictionary):
 			continue
@@ -677,6 +679,9 @@ func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
 			best_score = score
 			best_point = point
 			found = true
+			best_door = node
+	if found and best_door != null and best_door.has_method("request_enemy_open"):
+		best_door.call("request_enemy_open")
 	return best_point if found else target_position
 
 
