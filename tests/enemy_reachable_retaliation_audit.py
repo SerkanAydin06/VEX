@@ -4,7 +4,8 @@ ravager = Path("scripts/actors/ravager.gd").read_text(encoding="utf-8")
 warden = Path("scripts/actors/crucible_warden.gd").read_text(encoding="utf-8")
 red = Path("scripts/actors/redviper.gd").read_text(encoding="utf-8")
 
-assert "_last_seen_position = source_node.global_position" in ravager
+assert "retaliation_target = (_source as Node3D).global_position" in ravager
+assert "_last_seen_position = retaliation_target" in ravager
 assert "func _furthest_walkable_point_toward" in ravager
 assert "var candidate_path := graph.get_point_path(start_id, point_index)" in ravager
 assert "remaining_distance := _horizontal_distance(approach_point, destination)" in ravager
