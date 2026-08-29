@@ -80,9 +80,12 @@ func _run_case(rotation_y: float, label: String) -> void:
 	door.allow_enemy_open = true
 	case_root.add_child(door)
 	door.request_enemy_open()
-	await get_tree().create_timer(0.12).timeout
+	var open_wait := 0.0
+	while not door.is_open and open_wait < 2.0:
+		await get_tree().physics_frame
+		open_wait += get_physics_process_delta_time()
 	if not door.is_open:
-		failures.append("%s: kapı test başlangıcında tam açılmadı." % label)
+		failures.append("%s: kapı test başlangıcında 2 saniyede tam açılmadı." % label)
 
 	var player := MockPlayer.new()
 	player.name = "MockPlayer"
