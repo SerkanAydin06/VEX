@@ -150,7 +150,7 @@ Kerem, kazadan hemen önce VEX merkezinden gönderilen emri çözer: “Kararsı
 
 ## Bölüm 6 — Cam Deniz
 
-Kıyı araştırma tesisi, fizik kurallarının sürekli değiştiği kristal okyanuslu bir evrene bağlanmıştır. Buradan gelen **Voidweaverlar**, uzayı kısa mesafelerde bükebilen ve enerji mermilerinin yönünü değiştirebilen zeki avcılardır.
+Kıyı araştırma tesisi, **Aether Loom** içindeki “Cam Deniz” bölgesine; fizik kurallarının sürekli değiştiği kristal bir okyanusa bağlanmıştır. Buradan gelen **Voidweaverlar**, uzayı kısa mesafelerde bükebilen ve enerji mermilerinin yönünü değiştirebilen zeki avcılardır.
 
 Voidweaverlar VEX teknolojisini inceleyerek geçitleri kendileri açmayı öğrenmeye başlamıştır. Amaçları yalnız kaybettikleri enerjiyi geri almak değildir; Dünya’yı yeni bir boyutsal ulaşım merkezi hâline getirip bütün ağı kontrol etmektir.
 
@@ -194,7 +194,7 @@ Aras ilk kez insan askerleri ve VEX’e sadık paralı birliklerle savaşmak zor
 
 ### Oyuncunun öğrendiği
 
-Açık alan çatışması, hareketli hedefler, insan düşman taktikleri, ekipman seçimi ve MP90 kullanımı.
+Açık alan çatışması, hareketli hedefler, insan düşman taktikleri, ekipman seçimi ve MP-90 Viper kullanımı.
 
 ### Kurtarılan NPC’ler
 
@@ -207,7 +207,7 @@ VEX Genel Direktörü **Haluk Vardar**, yaşananları başarısızlık değil ko
 
 ## Bölüm 8 — Çöküş Bölgesi
 
-Bir metropolün dış mahallelerinde üç ayrı boyut üst üste binmeye başlamıştır. Korvath birlikleri enerji merkezlerine saldırırken Nhal avcıları tünellere yayılır, Avaris sürüleri ise yüzeyde yuvalar kurar. İnsanların açtığı ağ artık kendi kendine büyümektedir.
+Bir metropolün dış mahallelerinde dört ayrı boyut üst üste binmeye başlamıştır. Korvath birlikleri enerji merkezlerine saldırırken Nhal avcıları tünellere yayılır; Thornwild sürüleri yüzeyde yuvalanır, Vaskari birlikleri ise kırılma hattını askerî bir geçit olarak kullanır. İnsanların açtığı ağ artık kendi kendine büyümektedir.
 
 Aras sivilleri tahliye eder, yerel geçitleri kapatır ve boyutsal çöküşün artık gizlenemeyecek ölçekte olduğunu görür.
 
@@ -286,28 +286,35 @@ Ana hikâye tamamlanır; oyun sonu operasyonları, yeni bölgeler, yaratık vary
 
 # Boyutlar ve yaratık aileleri
 
-## Korvath Boyutu — Sönen Çekirdek
+## Korvath Ocağı — Sönen Çekirdek
 
 - Ortam: siyah bazalt, kızıl magma, donmaya başlayan lav nehirleri.
-- Türler: HellMagma ve ağır kuşatma varyantları.
-- Amaç: çalınan enerjiye karşı savaşmak, ardından Dünya’nın çekirdeğini ele geçirmek.
+- Türler: HellMagma, Cinder Hound, Furnace Carrier ve Crucible Warden.
+- Amaç: çalınan enerji akışını durdurmak ve Dünya'daki yarık altyapısını Korvath lehine devre dışı bırakmak; bazı Warden kastları bunu karşı saldırıya dönüştürür.
 - Oynanış: ağır saldırılar, ısı alanları, patlayıcı çevre ve zırhlı hedefler.
 
-## Nhal Boyutu — Işıksız Av
+## Nhal Veil — Işıksız Av
 
 - Ortam: yoğun sis, karanlık bitki örtüsü ve zayıf biyolüminesans.
 - Türler: Veilmaw ve sese duyarlı sürü avcıları.
 - Amaç: bilinçli bir siyasetten çok kontrolsüz yayılma, yuvalanma ve beslenme.
 - Oynanış: gizlilik, ses, gece görüşü ve yakın takip baskısı.
 
-## Avaris Boyutu — Kızıl Sürü
+## Thornwild Sürüsü — Kızıl Av
 
-- Ortam: pas rengi ovalar, kemiksi yapılar ve parçalanmış gökyüzü.
-- Türler: Ravager, RedViper ve BadRedViper soyları.
-- Amaç: yeni av ve yaşam alanları kazanmak; geçitleri sürü göçü için kullanmak.
-- Oynanış: yakın ve menzilli düşman birlikteliği, çevreleme ve hızlı baskınlar.
+- Ortam: dikenli biyokütle ormanları, kemiksi yapılar ve sert av-avcı döngüsü.
+- Türler: Ravager ve planlanan sürü avcıları.
+- Amaç: VEX'in çektiği biyokütle ile rejeneratif dokunun bozduğu ekolojik dengeyi yeniden kurmak; Dünya'daki geçitleri istemsiz sürü göçü için kullanmak.
+- Oynanış: ani hızlanma, çevreleme, yakın baskı ve sürü koordinasyonu.
 
-## Pelagos-Null — Cam Deniz
+## Vaskari Lejyonu — Kızıl Hat
+
+- Ortam: biyozırhlı savaş yapıları, zehir damarları ve disiplinli kast yerleşimleri.
+- Türler: RedViper ve BadRedViper.
+- Amaç: çalınan biyotoksin ve sinir iletimi örneklerini geri almak; geçitleri askerî bir cephe olarak denetlemek.
+- Oynanış: flank, koordineli hücum, elit baskı ve zehir temelli tehdit.
+
+## Aether Loom — Cam Deniz
 
 - Ortam: kristalleşmiş okyanuslar, havada asılı su kütleleri ve bükülen ufuk.
 - Türler: Voidweaverlar.
@@ -323,9 +330,9 @@ Yarık Ağı yüzlerce zayıf bağlantı üretmiştir. Bunların tamamı ana oyu
 # Silahlar ve gelişim mantığı
 
 - **P-01 Taktik Tabanca:** VEX güvenliğinin standart silahı. Güvenilirlik ve hassasiyet odaklıdır.
-- **Kırıcı Pompalı:** Acil müdahale ekiplerinin yakın alan silahı. Durdurma gücü ve alan kontrolü sağlar.
-- **VX-47 Taarruz Tüfeği:** VEX’in gizli askerî kanadı için geliştirilmiş orta menzil silahı.
-- **MP90:** Yaratık sürülerine karşı yüksek kapasite ve hareketli çatışma için uyarlanmıştır.
+- **SG-04 Breacher:** Acil müdahale ekiplerinin yakın alan silahı. Durdurma gücü ve alan kontrolü sağlar.
+- **VX-47 Striker:** VEX’in gizli askerî kanadı için geliştirilmiş orta menzil silahı.
+- **MP-90 Viper:** Yaratık sürülerine karşı yüksek kapasite ve hareketli çatışma için uyarlanmıştır.
 
 Her geliştirme yalnız sayısal güç artışı değildir. Selin mekanik parçaları, Nadir boyutsal malzemeleri, Cem ise saha ergonomisini geliştirir. Böylece silah ilerlemesi Bastion-7’nin büyümesine ve kurtarılan NPC’lere bağlanır.
 

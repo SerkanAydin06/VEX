@@ -51,6 +51,7 @@
 - Son geliştirme silahın kimliğini güçlendirmeli, başka bir silahın rolüne dönüştürmemelidir.
 - Hasar, atış aralığı, yayılım ve şarjör değerleri Inspector üzerinden düzenlenebilir olmalıdır.
 - Fener, optik, alternatif atış, ısı ve delme gibi sistemler `WeaponDefinition` içindeki özellik bayraklarıyla veri odaklı yönetilmelidir.
+- Oynanabilir bir silah için runtime sayılarının tek kaynağı `resources/weapons/<weapon_id>.tres` dosyasıdır. Bu belgedeki “Plan” tablosu resource ile çelişirse resource düzeltilir veya tablo aynı değişiklikte güncellenir; script içine ikinci bir tuning değeri yazılmaz.
 
 ### 1.5 Uygulanmış runtime mimarisi
 
@@ -237,7 +238,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 | Saçma hasarı | 11 × 8 |
 | Tüp kapasitesi | 6 |
 | Atış aralığı | 0,82 sn |
-| Yeniden doldurma | 1,45 sn |
+| Yeniden doldurma | 0,725 sn / fişek |
 | Yayılım | 5,50° |
 | Etkili menzil | 48 m |
 | Kafa vuruşu | ×1,60 |

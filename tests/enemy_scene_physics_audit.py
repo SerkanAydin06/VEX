@@ -86,7 +86,19 @@ for creature, (expected_radius, expected_height) in CREATURE_CAPSULES.items():
     shadow = node_body(source, "GroundShadow")
     assert re.search(r'^billboard = 2$', shadow, re.M), (creature, "gölge Y-billboard değil")
     assert re.search(r'^cast_shadow = 0$', shadow, re.M), creature
-    assert re.search(r'^render_priority = -1$', shadow, re.M), creature
+    assert re.search(r'^render_priority = -2$', shadow, re.M), creature
+    assert re.search(r'^offset = Vector2\(0, 16\)$', shadow, re.M), (
+        creature,
+        "GroundShadow ayaklardan görüş yönüne ayrılmıyor",
+    )
+    shadow_alpha = re.search(
+        r'^modulate = Color\(1, 1, 1, ([0-9.]+)\)$', shadow, re.M
+    )
+    assert shadow_alpha is not None, creature
+    assert 0.48 <= float(shadow_alpha.group(1)) <= 0.56, (
+        creature,
+        "GroundShadow opaklığı ayak siluetini bozuyor",
+    )
     floor_gap = transform_y(shadow) + height * 0.5
     assert math.isclose(floor_gap, 0.02, abs_tol=0.001), (
         creature,

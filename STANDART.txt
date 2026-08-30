@@ -1,6 +1,6 @@
 VEX — CANONICAL PROJE STANDARDI
 ================================
-Belge sürümü: R39 / vex01-15min-tutorial-combat-gates
+Belge sürümü: R40 / enemy-ground-contact-shadow-doc-sync
 
 Bu dosya yeni level, kapı, silah, HUD, save, Bastion ve localization işleri için tek teknik referanstır.
 Eski BaseTrim/süpürgelik kuralları GEÇERSİZDİR ve projeden kaldırılmıştır.
@@ -43,10 +43,31 @@ EXIT tabela Y    : 4.85 m
 Texture standard : lowercase snake_case; sürüm eki kullanılmaz
 Enemy filtre     : Linear Mipmap; Fixed-Y billboard
 
-Enemy taban Y örnekleri:
-- Hellmagma  : -0.10
-- Ravager    : -0.25
-- Voidweaver : -0.02
+Enemy görsel taban değerleri (AnimatedSprite3D, sahne-otoriteli):
+- Ravager          : Y -0.15000000 / pixel_size 0.003525000
+- HellMagma        : Y -0.10000000 / pixel_size 0.007354700
+- Veilmaw          : Y  0.00000000 / pixel_size 0.004100000
+- Voidweaver       : Y  0.00000000 / pixel_size 0.004100000
+- Furnace Carrier (`furnice_carrier`) : Y 0.44470531 / pixel_size 0.008000000
+- Crucible Warden  : Y  0.44000000 / pixel_size 0.006400000
+- RedViper         : Y  0.00002250 / pixel_size 0.003515713
+- BadRedViper      : Y  0.13330000 / pixel_size 0.006575391
+- Cinder Hound     : Y  0.14540000 / pixel_size 0.003400000
+
+Bu tabanlar tek başına zemin temasını tanımlamaz. Her animasyon karesinin gerçek alfa
+tabanı, ilgili `*_frame_y_offsets` Inspector dizisiyle capsule tabanından 0.008 m
+yukarıda tutulur. Bu diziler `tests/enemy_sprite_contact_audit.py` ölçümüyle korunur.
+
+Enemy zemin teması ve GroundShadow standardı:
+- CharacterBody3D root/pivot kapsül merkezidir; CollisionShape3D local Y = 0 kalır.
+- Kapsül tabanı `-capsule_height / 2` fizik zemin referansıdır. Sprite node'unun alt kenarı referans değildir.
+- Canlı, saldırı, hurt, özel yetenek ve death dahil her kullanılan karede en alt `alpha > 16` piksel hedefi kapsül tabanından 0.008 m yukarıdadır.
+- Kabul toleransı bir sprite pikselinin yarısıdır (minimum 0.0006 m). Yeni veya değişen spritesheet ölçüm denetimini geçmeden birleştirilmez.
+- Frame ofsetleri sahne Inspector'ındaki `idle`, `idle_back`, `walk`, `walk_back`, `attack`, `hurt`, `death` ve varsa özel yetenek dizilerinde tutulur; runtime script alfa taraması yapmaz.
+- GroundShadow local Y değeri `-capsule_height / 2 + 0.02 m` olur. 0.02 m fizik payı z-fighting'i önler; yaratığın havada durduğu anlamına gelmez.
+- GroundShadow `billboard = 2` (Fixed-Y), `cast_shadow = 0`, `render_priority = -2` ve `offset = Vector2(0, 16)` kullanır. 16 px görüş-yönü ayrımı, gölge kütlesini ayak siluetinin altından uzaklaştırır fakat temas noktasını koparmaz.
+- GroundShadow alfa aralığı normal yaratıklarda 0.50–0.52, ağır/elitlerde 0.54–0.56'dır. Opaklığı artırarak ayakları karartmak yasaktır.
+- GroundShadow boyutu yaratığın kapsül yarıçapına/siluetine göre sahnede ayarlanır; gölge node'u runtime'da yeniden ölçeklenmez veya yeniden konumlandırılmaz.
 
 
 2) SÜPÜRGELİK / BASETRIM KURALI
@@ -339,11 +360,11 @@ Yeni silah eklerken HUD'a weapon_id match bloğu yazmak yerine WeaponDefinition 
 - SG-09 presentation: scenes/ui/weapons/sg09_view.tscn
 - SG-15 presentation: scenes/ui/weapons/sg15_view.tscn
 - VX-47 presentation: scenes/ui/weapons/vx47_view.tscn
-- MP90 presentation : scenes/ui/weapons/mp90_view.tscn
+- MP-90 presentation: scenes/ui/weapons/mp90_view.tscn
 - ADS/lowered pose davranışı WeaponDefinition capability alanları ve presentation offsetleri üzerinden yönetilir.
 - HUD weapon view kökü `texture_filter = 2` (Linear, mipmapsiz) kullanır. Yalnız CanvasItem HUD'da kullanılan frame PNG importlarında `mipmaps/generate=false` tutulur; temel 1536x1024 görüntü değişmez. Dünya raf/pickup `*_side.png` dokuları bu kurala dahil değildir ve 3B uzaklık filtrelemesi için mipmap kullanabilir.
 - P-01, P-07, P-14 ve P-20 aynı `bullets` rezervini ve `HUD_AMMO_PISTOL` etiketini kullanır. P-20'nin Magnum adı, hasarı ve geri tepmesi korunur; ayrı `magnum_ammo` pickup/HUD kaynağı yoktur. Eski save içindeki `magnum_ammo` miktarı yüklemede `bullets` rezervine kapasite sınırıyla aktarılır.
-- Silah sesleri şu refactor kapsamının DIŞINDADIR; VX-47/MP90 için özgün sesler daha sonra hazırlanacaktır.
+- Silah sesleri şu refactor kapsamının DIŞINDADIR; VX-47/MP-90 için özgün sesler daha sonra hazırlanacaktır.
 
 
 12) 5. SİLAH YUVASI
