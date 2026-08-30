@@ -1,4 +1,3 @@
-@tool
 class_name VexEnemyBase
 extends CharacterBody3D
 
