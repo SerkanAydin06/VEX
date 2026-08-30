@@ -110,7 +110,7 @@ VEX yönetimi enerji akışının başka gerçekliklerden geldiğini kazadan ayl
 
 Kırık Omurga kayıtları, Yarık Ağı'nın en güçlü emiş düğümlerinden birini işaret eder: kapatılmış bir maden şehrinin altındaki **VEX-03 Kül Madeni**. Tesis bir zamanlar jeotermal araştırma merkezi gibi gösterilmiş, gerçekte ise başka bir boyutun ısı ve basınç enerjisini Dünya'ya aktarmak için kullanılmıştır. Felaketten sonra alt galerilerin otomatik güvenliği devreye girmiş, katlar arasındaki ağır servis kapıları kilitlenmiş ve madenin üst kontrol katında kızıl bir geçit sabitlenmiştir.
 
-Geçidin ötesindeki **Korvathlar**, aşırı sıcak ve basınç altında yaşayan madenci kastlardan oluşur. VEX'in yıllarca çektiği enerji onların ocaklarını soğutmuş, yeraltı şehirlerinde çökmelere yol açmıştır. HellMagma adı verilen iri canlılar aslında kuşatma yaratıkları değil, yüksek basınç galerilerinde kaya kırmak ve lav akışını yönlendirmek için yetiştirilen biyolojik iş makineleridir. Yarık açılınca yönlerini kaybederek Kül Madeni'ne geçmiş ve VEX ekipmanlarını kaynak sömüren düşman makineleri olarak algılamıştır.
+Geçidin ötesindeki **Korvathlar**, aşırı sıcak ve basınç altında yaşayan madenci kastlardan oluşur. VEX'in yıllarca çektiği enerji onların ocaklarını soğutmuş, yeraltı şehirlerinde çökmelere yol açmıştır. Basalt Juggernaut adı verilen iri canlılar aslında kuşatma yaratıkları değil, yüksek basınç galerilerinde kaya kırmak ve lav akışını yönlendirmek için yetiştirilen biyolojik iş makineleridir. Yarık açılınca yönlerini kaybederek Kül Madeni'ne geçmiş ve VEX ekipmanlarını kaynak sömüren düşman makineleri olarak algılamıştır.
 
 Aras alt galeride ilerlerken hasarlı personel kayıtlarından olayın yeni yüzünü öğrenir: VEX yalnızca uzak ve boş dünyalardan enerji çekmemiştir; yaşayan toplumların kentlerini ayakta tutan jeotermal damarları da kurutmuştur. Korvathların saldırganlığı planlı bir Dünya fethi değil, kaynağına ulaşmaya çalışan yaralı bir uygarlığın kontrolsüz ve ölümcül tepkisidir. Bu gerçek Aras'ın görevini değiştirmez, fakat karşısındaki canlıların neden burada olduğunu ilk kez anlamasını sağlar.
 
@@ -289,7 +289,7 @@ Ana hikâye tamamlanır; oyun sonu operasyonları, yeni bölgeler, yaratık vary
 ## Korvath Ocağı — Sönen Çekirdek
 
 - Ortam: siyah bazalt, kızıl magma, donmaya başlayan lav nehirleri.
-- Türler: HellMagma, Cinder Hound, Furnace Carrier ve Crucible Warden.
+- Türler: Basalt Juggernaut, Cinder Hound, Furnace Carrier ve Crucible Warden.
 - Amaç: çalınan enerji akışını durdurmak ve Dünya'daki yarık altyapısını Korvath lehine devre dışı bırakmak; bazı Warden kastları bunu karşı saldırıya dönüştürür.
 - Oynanış: ağır saldırılar, ısı alanları, patlayıcı çevre ve zırhlı hedefler.
 

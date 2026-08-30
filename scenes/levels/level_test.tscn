@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cpdi2qa0vdcq5" path="res://scenes/actors/ravager.tscn" id="13_ravager"]
 [ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/redviper.tscn" id="14_redviper"]
 [ext_resource type="PackedScene" uid="uid://dnj5rfyxbcvek" path="res://scenes/actors/badredviper.tscn" id="15_badredviper"]
-[ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/hellmagma.tscn" id="16_hellmagma"]
+[ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/basalt_juggernaut.tscn" id="16_basalt_juggernaut"]
 [ext_resource type="PackedScene" uid="uid://bf7vnpaj7o8rt" path="res://scenes/actors/veilmaw.tscn" id="17_veilmaw"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="18_voidweaver"]
 [ext_resource type="PackedScene" uid="uid://c2oiuiy5xjdpm" path="res://scenes/actors/cinderhound.tscn" id="19_cinderhound"]
@@ -569,9 +569,9 @@ enemy_id = &"level_test_veilmaw"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.137886, -20)
 enemy_id = &"level_test_voidweaver"
 
-[node name="HellMagma" parent="Enemies" unique_id=1262786008 instance=ExtResource("16_hellmagma")]
+[node name="BasaltJuggernaut" parent="Enemies" unique_id=1262786008 instance=ExtResource("16_basalt_juggernaut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.9010693, -20)
-enemy_id = &"level_test_hellmagma"
+enemy_id = &"level_test_basalt_juggernaut"
 maximum_health = 250
 move_speed = 5.0
 detection_range = 28.0
@@ -581,24 +581,16 @@ attack_damage = 35
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.8653867, -20)
 enemy_id = &"level_test_furnice_carrier"
 maximum_health = 500
-idle_wander_radius = 1.35
-idle_pause_max = 1.2
 
 [node name="CrucibleWarden" parent="Enemies" unique_id=879260090 instance=ExtResource("38_crucible")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.25, -20)
 enemy_id = &"level_test_crucible_warden"
 maximum_health = 500
-idle_wander_radius = 2.8
-idle_pause_min = 0.35
 
 [node name="BriarSkulker" parent="Enemies" unique_id=1297055620 instance=ExtResource("39_briar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7649529, -20)
 enemy_id = &"level_test_briar_skulker"
 maximum_health = 500
-idle_wander_radius = 2.4
-idle_pause_min = 0.35
-idle_pause_max = 0.75
-idle_turn_speed = 0.45
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]
 stream = ExtResource("35_music")

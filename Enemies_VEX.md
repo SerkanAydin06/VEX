@@ -40,7 +40,7 @@ Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
 
 | Evren | Kod adı | Genel kimlik | Mevcut yaratık |
 |---|---|---|---|
-| 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | HellMagma, Cinder Hound, Furnace Carrier, Crucible Warden |
+| 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | Basalt Juggernaut, Cinder Hound, Furnace Carrier, Crucible Warden |
 | 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager, Briar Skulker |
 | 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | RedViper, BadRedViper |
 | 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw |
@@ -66,7 +66,7 @@ Korvath varlıkları saldırırken “istila” yapmaz; daha çok **enerji söm�
 
 ## 4.3 Dört yaratık
 
-### 1. HellMagma
+### 1. Basalt Juggernaut
 
 **Durum:** Mevcut
 
@@ -82,7 +82,7 @@ Korvath varlıkları saldırırken “istila” yapmaz; daha çok **enerji söm�
 - **Rol:** Hızlı flank yaratığı
 - **Hikâye rolü:** Ocak tünellerinde arıza ve sızıntı tespiti yapan avcı canlı.
 - **Savaş kimliği:** Çember çizerek yaklaşır, kısa sıçramalar yapar, oyuncuyu pozisyon değiştirmeye zorlar.
-- **Ayırt edici özellik:** HellMagma’nın aksine küçük ama agresiftir; sürat ile baskı kurar.
+- **Ayırt edici özellik:** Basalt Juggernaut'ın aksine küçük ama agresiftir; sürat ile baskı kurar.
 
 ### 3. Furnace Carrier
 
@@ -339,7 +339,7 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 | RedViper | Vaskari Lejyonu | Hızlı elit hücum birimi |
 | BadRedViper | Vaskari Lejyonu | Ağır hücum varyantı |
 | Veilmaw | Nhal Veil | Pusu avcısı |
-| HellMagma | Korvath Ocağı | Ağır zırhlı kırıcı |
+| Basalt Juggernaut | Korvath Ocağı | Ağır zırhlı kırıcı |
 | Voidweaver | Aether Loom | Uzaysal menzilli tehdit |
 | Cinder Hound | Korvath Ocağı | Hızlı flank avcısı |
 | Furnace Carrier | Korvath Ocağı | Destek ve alan bozucu |
@@ -396,7 +396,7 @@ Düşman tasarım ve üretim sırası için öneri:
 2. RedViper
 3. BadRedViper
 4. Veilmaw
-5. HellMagma
+5. Basalt Juggernaut
 6. Voidweaver
 7. Cinder Hound
 8. Furnace Carrier

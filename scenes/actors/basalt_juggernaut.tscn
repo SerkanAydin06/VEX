@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://d3hv0gr27g6kr"]
 
-[ext_resource type="Script" uid="uid://ceaxa6s7v5v5y" path="res://scripts/actors/hellmagma.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://blk6m6w5p84d2" path="res://assets/enemies/hellmagma/HellMagma_spritesheet.png" id="2_sheet"]
-[ext_resource type="AudioStream" uid="uid://d3d23chsf3l" path="res://assets/audio/hell_magma_attack.wav" id="6_hhf7w"]
-[ext_resource type="AudioStream" uid="uid://cxjxoucjvy13u" path="res://assets/audio/hell_magma_hurt.wav" id="7_hhf7w"]
-[ext_resource type="AudioStream" uid="uid://l03ab26phvuw" path="res://assets/audio/hell_magma_death.wav" id="8_hhf7w"]
-[ext_resource type="PackedScene" path="res://scenes/actors/hellmagma_projectile.tscn" id="26_projectile"]
+[ext_resource type="Script" uid="uid://ceaxa6s7v5v5y" path="res://scripts/actors/basalt_juggernaut.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://blk6m6w5p84d2" path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_spritesheet.png" id="2_sheet"]
+[ext_resource type="AudioStream" uid="uid://d3d23chsf3l" path="res://assets/audio/basalt_juggernaut_attack.wav" id="6_hhf7w"]
+[ext_resource type="AudioStream" uid="uid://cxjxoucjvy13u" path="res://assets/audio/basalt_juggernaut_hurt.wav" id="7_hhf7w"]
+[ext_resource type="AudioStream" uid="uid://l03ab26phvuw" path="res://assets/audio/basalt_juggernaut_death.wav" id="8_hhf7w"]
+[ext_resource type="PackedScene" path="res://scenes/actors/basalt_juggernaut_projectile.tscn" id="26_projectile"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="30_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape_hellmagma"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_basalt_juggernaut"]
 radius = 1.0
 height = 3.6
 
@@ -133,7 +133,7 @@ atlas = ExtResource("2_sheet")
 region = Rect2(1705, 1536, 341, 512)
 filter_clip = true
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_hellmagma"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_basalt_juggernaut"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -246,7 +246,7 @@ animations = [{
 "speed": 5.5
 }]
 
-[node name="HellMagma" type="CharacterBody3D" unique_id=1237264848]
+[node name="BasaltJuggernaut" type="CharacterBody3D" unique_id=1237264848]
 collision_layer = 4
 collision_mask = 15
 floor_snap_length = 0.3
@@ -265,7 +265,7 @@ chase_path_refresh_interval = 0.36
 runtime_grid_step = 0.92
 runtime_grid_max_nodes = 2300
 runtime_grid_search_margin = 15.0
-enemy_id = &"hellmagma"
+enemy_id = &"basalt_juggernaut"
 maximum_health = 240
 difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
 difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
@@ -331,7 +331,7 @@ burn_smoke_duration = 11.0
 burn_smoke_alpha = 0.16
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=998560482]
-shape = SubResource("CapsuleShape_hellmagma")
+shape = SubResource("CapsuleShape_basalt_juggernaut")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1419864760]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
@@ -340,7 +340,7 @@ pixel_size = 0.0073547
 billboard = 2
 shaded = true
 alpha_cut = 1
-sprite_frames = SubResource("SpriteFrames_hellmagma")
+sprite_frames = SubResource("SpriteFrames_basalt_juggernaut")
 animation = &"idle"
 autoplay = "idle"
 

@@ -7,7 +7,7 @@ EXPECTED = {
     "ravager": (30.0, 38.0, 44.0),
     "veilmaw": (28.0, 36.0, 42.0),
     "voidweaver": (30.0, 38.0, 44.0),
-    "hellmagma": (34.0, 44.0, 48.0),
+    "basalt_juggernaut": (34.0, 44.0, 48.0),
     "furnice_carrier": (32.0, 40.0, 46.0),
     "crucible_warden": (34.0, 44.0, 48.0),
     "redviper": (30.0, 38.0, 44.0),
