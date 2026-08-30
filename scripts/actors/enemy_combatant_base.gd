@@ -1,3 +1,4 @@
+@tool
 class_name VexEnemyCombatantBase
 extends "res://scripts/actors/enemy_base.gd"
 
@@ -2249,6 +2250,5 @@ func _place_corpse_on_floor(animated: bool) -> void:
 		target_y,
 		death_fall_time
 	)
-
 
 
