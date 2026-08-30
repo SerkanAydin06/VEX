@@ -9,8 +9,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_cinderhound"]
-radius = 0.44
-height = 1.45
+radius = 0.35986328
+height = 1.690332
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1tqjx"]
 atlas = ExtResource("5_sheet")
@@ -239,37 +239,7 @@ collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
-corpse_visual_y = -0.3217775
-combat_role = 0
 enemy_id = &"cinderhound"
-spawn_min_difficulty = 0
-apply_difficulty_scaling = true
-gravity_scale = 1.0
-floor_stick_velocity = -0.1
-floor_collision_mask = 1
-floor_snap_max_correction = 2.0
-floor_snap_ray_start_height = 0.5
-floor_snap_ray_extra_depth = 2.0
-patrol_reach_distance = 0.35
-investigation_reach_distance = 0.55
-detour_duration = 0.55
-detection_range = 30.0
-pursuit_range = 42.0
-initial_view_angle = 360.0
-lost_sight_timeout = 20.0
-search_duration = 10.0
-sight_target_height = 0.45
-crouch_detection_chance = 0.45
-crouch_guaranteed_detection_distance = 3.0
-aggro_on_damage = true
-alert_allies_on_detection = true
-alert_allies_on_damage = true
-hearing_loudness_scale = 1.0
-headshot_height_ratio = 0.62
-receive_ally_alerts = true
-near_sight_interval = 0.08
-far_sight_interval = 0.20
-dormant_distance = 44.0
 maximum_health = 85
 difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
 difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
@@ -283,6 +253,7 @@ movement_acceleration = 22.0
 braking_acceleration = 18.0
 patrol_offset = Vector3(0, 0, 2.2)
 patrol_pause_duration = 0.45
+pursuit_range = 42.0
 ally_alert_radius = 8.0
 hearing_radius = 18.0
 attack_range = 1.75
@@ -296,6 +267,7 @@ attack_lunge_duration = 0.22
 attack_lunge_stop_distance = 0.9
 hurt_reaction_duration = 0.08
 hurt_flash_duration = 0.08
+corpse_visual_y = -0.3217775
 idle_frame_y_offsets = PackedFloat32Array(0.0012, -0.0022, 0.0012, 0.0012)
 idle_back_frame_y_offsets = PackedFloat32Array(0.0012, -0.0056, 0.0012, -0.0056)
 walk_frame_y_offsets = PackedFloat32Array(-0.0022, 0.0012, -0.0022, 0.0012)
@@ -309,6 +281,7 @@ burn_smoke_duration = 6.5
 burn_smoke_alpha = 0.12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1561553514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.120166, 0)
 shape = SubResource("CapsuleShape_cinderhound")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1000373379]
@@ -326,10 +299,10 @@ frame_progress = 0.12572752
 [node name="GroundShadow" type="Sprite3D" parent="." unique_id=767731571]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.705, 0)
 cast_shadow = 0
-billboard = 2
-modulate = Color(1, 1, 1, 0.52)
 offset = Vector2(0, 16)
+modulate = Color(1, 1, 1, 0.52)
 pixel_size = 0.0052
+billboard = 2
 texture_filter = 5
 render_priority = -2
 texture = ExtResource("29_shadow")
@@ -352,4 +325,3 @@ volume_db = -1.0
 max_distance = 18.0
 max_polyphony = 2
 bus = &"SFX"
-

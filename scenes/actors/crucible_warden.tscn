@@ -12,9 +12,15 @@
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="10_burn"]
 [ext_resource type="Script" uid="uid://cwardenset01a" path="res://scripts/actors/warden_ability_settings.gd" id="11_warden_settings"]
 
+[sub_resource type="Resource" id="Resource_warden_ability"]
+script = ExtResource("11_warden_settings")
+ground_slam_scene = ExtResource("3_slam")
+heatwave_projectile_scene = ExtResource("4_heatwave_projectile")
+heatwave_frame_y_offsets = PackedFloat32Array(-0.0192, 0, -0.0064, 0)
+
 [sub_resource type="CapsuleShape3D" id="Capsule_warden"]
-radius = 0.72
-height = 2.4
+radius = 1.0209961
+height = 3.1873047
 
 [sub_resource type="AtlasTexture" id="Atlas_attack_1"]
 atlas = ExtResource("2_sheet")
@@ -290,63 +296,14 @@ animations = [{
 "speed": 4.5
 }]
 
-[sub_resource type="Resource" id="Resource_warden_ability"]
-script = ExtResource("11_warden_settings")
-ground_slam_scene = ExtResource("3_slam")
-ground_slam_trigger_range = 5.2
-ground_slam_radius = 4.6
-ground_slam_damage = 42
-ground_slam_cooldown = 2.7
-ground_slam_windup = 0.58
-ground_slam_recovery = 0.85
-ground_slam_shake_radius = 8.5
-ground_slam_shake_strength = 0.075
-ground_slam_shake_duration = 0.42
-ground_effect_collision_mask = 1
-ground_probe_height = 1.0
-ground_probe_depth = 2.8
-ground_effect_surface_offset = 0.035
-ground_effect_fallback_drop = 0.9
-ground_slam_noise_loudness = 1.5
-heatwave_projectile_scene = ExtResource("4_heatwave_projectile")
-heatwave_trigger_range = 1.65
-heatwave_projectile_count = 12
-heatwave_damage = 18
-heatwave_projectile_speed = 8.5
-heatwave_projectile_lifetime = 1.45
-heatwave_spawn_radius = 0.35
-heatwave_cooldown = 4.8
-heatwave_windup = 0.5
-heatwave_recovery = 0.75
-heatwave_approach_speed_multiplier = 1.2
-heatwave_cooldown_hold_ratio = 0.85
-heatwave_cooldown_approach_speed_multiplier = 0.9
-heatwave_approach_stall_timeout = 0.9
-heatwave_approach_min_progress = 0.12
-heatwave_noise_loudness = 1.25
-heatwave_randomize_rotation = true
-heatwave_frame_y_offsets = PackedFloat32Array(-0.0192, 0, -0.0064, 0)
-headshot_local_height = 1.15
-
 [node name="CrucibleWarden" type="CharacterBody3D" unique_id=1560979395]
 collision_layer = 4
 collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
-combat_role = 0
-damage_pursuit_commit_time = 0.12
-ranged_visibility_sampling_enabled = false
-cover_reposition_enabled = false
-attack_minimum_distance = 0.0
-attack_recovery_strafe_scale = 0.0
-attack_retreat_speed_scale = 0.0
-chase_path_refresh_interval = 0.3
-path_target_change_distance = 1.2
-runtime_grid_step = 0.78
-runtime_grid_max_nodes = 2600
-runtime_grid_search_margin = 18.0
 enemy_id = &"crucible_warden"
+combat_role = 0
 maximum_health = 260
 move_speed = 2.4
 movement_acceleration = 10.0
@@ -357,14 +314,25 @@ initial_view_angle = 260.0
 ally_alert_radius = 11.0
 sight_origin_height = 0.8
 sight_target_height = 0.55
+damage_pursuit_commit_time = 0.12
 hearing_radius = 16.0
+ranged_visibility_sampling_enabled = false
+cover_reposition_enabled = false
 attack_damage = 1
 attack_range = 5.4
 attack_cooldown = 1.0
 attack_windup = 0.1
 attack_range_tolerance = 0.2
 attack_preferred_distance = 1.4
+attack_minimum_distance = 0.0
+attack_recovery_strafe_scale = 0.0
+attack_retreat_speed_scale = 0.0
+chase_path_refresh_interval = 0.3
 navigation_clearance = 0.75
+path_target_change_distance = 1.2
+runtime_grid_step = 0.78
+runtime_grid_max_nodes = 2600
+runtime_grid_search_margin = 18.0
 dormant_distance = 48.0
 corpse_visual_y = 0.05
 back_corpse_visual_y = 0.05
@@ -381,6 +349,7 @@ burn_smoke_duration = 10.0
 special_ability_settings = SubResource("Resource_warden_ability")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1236223409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39365232, 0)
 shape = SubResource("Capsule_warden")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1382667829]
@@ -397,10 +366,10 @@ autoplay = "idle"
 [node name="GroundShadow" type="Sprite3D" parent="." unique_id=973303206]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -1.18, 0)
 cast_shadow = 0
-billboard = 2
-modulate = Color(1, 1, 1, 0.56)
 offset = Vector2(0, 16)
+modulate = Color(1, 1, 1, 0.56)
 pixel_size = 0.0062
+billboard = 2
 texture_filter = 5
 render_priority = -2
 texture = ExtResource("9_shadow")

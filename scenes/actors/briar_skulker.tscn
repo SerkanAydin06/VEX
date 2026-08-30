@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://b1briarskulkr"]
+[gd_scene format=3 uid="uid://b1briarskulkr"]
 
 [ext_resource type="Script" uid="uid://d1briarskulkr" path="res://scripts/actors/briar_skulker.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://d2briarsheet1" path="res://assets/enemies/briar_skulker/briar_skulker_character_spritesheet.png" id="2_sheet"]
@@ -10,49 +10,19 @@
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="8_burn"]
 [ext_resource type="Script" uid="uid://bdhybridset01" path="res://scripts/actors/enemy_hybrid_ability_settings.gd" id="9_hybrid_settings"]
 
+[sub_resource type="Resource" id="Resource_hybrid_settings"]
+script = ExtResource("9_hybrid_settings")
+melee_damage = 24
+melee_windup = 0.2
+melee_cooldown = 0.8
+melee_range_tolerance = 0.45
+melee_hit_height = 0.7
+melee_noise_loudness = 0.75
+attack_close_frame_y_offsets = PackedFloat32Array(-0.001375, 0.00175, 0.00175, -0.001375)
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
 radius = 0.38
-height = 1.6
-
-[sub_resource type="AtlasTexture" id="Atlas_idle1"]
-atlas = ExtResource("2_sheet")
-region = Rect2(0, 0, 341, 512)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Atlas_idle2"]
-atlas = ExtResource("2_sheet")
-region = Rect2(341, 0, 341, 512)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Atlas_idle3"]
-atlas = ExtResource("2_sheet")
-region = Rect2(682, 0, 341, 512)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Atlas_idle4"]
-atlas = ExtResource("2_sheet")
-region = Rect2(1023, 0, 341, 512)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Atlas_walk1"]
-atlas = ExtResource("2_sheet")
-region = Rect2(0, 512, 341, 512)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Atlas_walk2"]
-atlas = ExtResource("2_sheet")
-region = Rect2(341, 512, 341, 512)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Atlas_walk3"]
-atlas = ExtResource("2_sheet")
-region = Rect2(682, 512, 341, 512)
-filter_clip = true
-
-[sub_resource type="AtlasTexture" id="Atlas_walk4"]
-atlas = ExtResource("2_sheet")
-region = Rect2(1023, 512, 341, 512)
-filter_clip = true
+height = 1.4606445
 
 [sub_resource type="AtlasTexture" id="Atlas_attack1"]
 atlas = ExtResource("2_sheet")
@@ -114,6 +84,26 @@ atlas = ExtResource("2_sheet")
 region = Rect2(1023, 2048, 341, 512)
 filter_clip = true
 
+[sub_resource type="AtlasTexture" id="Atlas_idle1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 0, 341, 512)
+filter_clip = true
+
 [sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
 atlas = ExtResource("2_sheet")
 region = Rect2(0, 2560, 341, 512)
@@ -132,6 +122,26 @@ filter_clip = true
 [sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
 atlas = ExtResource("2_sheet")
 region = Rect2(1023, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 512, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
@@ -155,44 +165,7 @@ region = Rect2(1023, 3072, 341, 512)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
-animations = [
-{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Atlas_idle1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle4")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 3.2
-},
-{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Atlas_walk1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk4")
-}],
-"loop": true,
-"name": &"walk",
-"speed": 6.2
-},
-{
+animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Atlas_attack1")
@@ -206,11 +179,10 @@ animations = [
 "duration": 1.0,
 "texture": SubResource("Atlas_attack4")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack",
 "speed": 8.0
-},
-{
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Atlas_attack_close1")
@@ -224,11 +196,10 @@ animations = [
 "duration": 1.0,
 "texture": SubResource("Atlas_attack_close4")
 }],
-"loop": false,
+"loop": 0,
 "name": &"attack_close",
 "speed": 9.0
-},
-{
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Atlas_death1")
@@ -242,20 +213,35 @@ animations = [
 "duration": 1.0,
 "texture": SubResource("Atlas_death4")
 }],
-"loop": false,
+"loop": 0,
 "name": &"death",
 "speed": 6.0
-},
-{
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Atlas_attack_close1")
 }],
-"loop": false,
+"loop": 0,
 "name": &"hurt",
 "speed": 8.0
-},
-{
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Atlas_idle1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_idle2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_idle3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_idle4")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 3.2
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Atlas_idle_back1")
@@ -269,11 +255,27 @@ animations = [
 "duration": 1.0,
 "texture": SubResource("Atlas_idle_back4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle_back",
 "speed": 3.2
-},
-{
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Atlas_walk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_walk2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_walk3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Atlas_walk4")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 6.2
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("Atlas_walk_back1")
@@ -287,35 +289,19 @@ animations = [
 "duration": 1.0,
 "texture": SubResource("Atlas_walk_back4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"walk_back",
 "speed": 6.2
-}
-]
+}]
 
-[sub_resource type="Resource" id="Resource_hybrid_settings"]
-script = ExtResource("9_hybrid_settings")
-melee_trigger_range = 2.15
-melee_damage = 24
-melee_windup = 0.20
-melee_cooldown = 0.80
-melee_range_tolerance = 0.45
-melee_hit_height = 0.70
-melee_noise_loudness = 0.75
-prefer_melee_when_close = true
-attack_close_frame_y_offsets = PackedFloat32Array(-0.001375, 0.00175, 0.00175, -0.001375)
-
-[node name="BriarSkulker" type="CharacterBody3D"]
+[node name="BriarSkulker" type="CharacterBody3D" unique_id=1312707151]
 collision_layer = 4
 collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
 enemy_id = &"briar_skulker"
-combat_role = 1
 maximum_health = 110
-spawn_min_difficulty = 0
-apply_difficulty_scaling = true
 move_speed = 3.4
 chase_speed = 4.6
 movement_acceleration = 18.0
@@ -327,19 +313,19 @@ lost_sight_timeout = 16.0
 search_duration = 9.0
 ally_alert_radius = 9.0
 sight_origin_height = 0.75
-sight_target_height = 0.60
-hearing_radius = 16.0
-hearing_loudness_scale = 1.10
+sight_target_height = 0.6
 ranged_cover_visibility_threshold = 0.55
 ranged_cover_reposition_distance = 2.2
+hearing_radius = 16.0
+hearing_loudness_scale = 1.1
 attack_damage = 15
 attack_range = 14.0
 attack_cooldown = 1.25
 attack_windup = 0.36
-attack_range_tolerance = 0.70
+attack_range_tolerance = 0.7
 projectile_scene = ExtResource("3_projectile")
-projectile_spawn_height = 0.80
-projectile_spawn_side_offset = 0.10
+projectile_spawn_height = 0.8
+projectile_spawn_side_offset = 0.1
 projectile_spawn_forward_offset = 0.18
 projectile_target_height = 0.55
 projectile_lead_factor = 0.35
@@ -350,25 +336,19 @@ attack_preferred_distance = 7.5
 attack_minimum_distance = 3.4
 attack_recovery_strafe_scale = 0.85
 attack_retreat_speed_scale = 0.68
-path_refresh_interval = 0.30
+path_refresh_interval = 0.3
 chase_path_refresh_interval = 0.28
-waypoint_link_distance = 9.0
 navigation_clearance = 0.52
 waypoint_reach_distance = 0.58
-runtime_grid_step = 0.90
+runtime_grid_step = 0.9
 runtime_grid_max_nodes = 2000
-runtime_grid_search_margin = 12.0
-navigation_collision_mask = 9
-near_sight_interval = 0.10
+near_sight_interval = 0.1
 medium_sight_interval = 0.16
-distant_think_distance = 24.0
 distant_sight_interval = 0.22
 idle_far_sight_interval = 0.34
 dormant_distance = 42.0
 hurt_reaction_duration = 0.14
 death_fall_time = 0.28
-corpse_hold_duration = 2.4
-corpse_floor_clearance = 0.02
 idle_frame_y_offsets = PackedFloat32Array(-0.001375, -0.001375, -0.0045, -0.001375)
 idle_back_frame_y_offsets = PackedFloat32Array(0.00175, 0.004875, 0.00175, 0.004875)
 walk_frame_y_offsets = PackedFloat32Array(-0.0045, -0.001375, -0.001375, -0.001375)
@@ -378,17 +358,16 @@ hurt_frame_y_offsets = PackedFloat32Array(-0.001375)
 death_frame_y_offsets = PackedFloat32Array(0.004875, -0.001375, -0.01075, -0.001375)
 burn_remains_scene = ExtResource("8_burn")
 burn_remains_scale = 0.82
-burn_remains_scale_multiplier = 0.90
-burn_scorch_tint = Color(0.10, 0.19, 0.04, 0.96)
+burn_remains_scale_multiplier = 0.9
+burn_scorch_tint = Color(0.1, 0.19, 0.04, 0.96)
 burn_ember_tint = Color(0.16, 0.42, 0.05, 0.24)
-burn_ember_emission_energy = 0.10
-burn_smoke_enabled = false
 special_ability_settings = SubResource("Resource_hybrid_settings")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=344784395]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06967777, 0)
 shape = SubResource("CapsuleShape_enemy")
 
-[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1487007717]
 cast_shadow = 0
 pixel_size = 0.003125
 billboard = 2
@@ -398,31 +377,30 @@ sprite_frames = SubResource("SpriteFrames_enemy")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="GroundShadow" type="Sprite3D" parent="."]
+[node name="GroundShadow" type="Sprite3D" parent="." unique_id=754680254]
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.78, 0)
 cast_shadow = 0
-billboard = 2
-modulate = Color(1, 1, 1, 0.50)
 offset = Vector2(0, 16)
+modulate = Color(1, 1, 1, 0.5)
 pixel_size = 0.0048
+billboard = 2
 texture_filter = 5
 render_priority = -2
 texture = ExtResource("7_shadow")
 
-[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=1323784966]
 stream = ExtResource("4_attack_audio")
 volume_db = -2.0
 max_distance = 20.0
 bus = &"SFX"
 
-[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=1906007603]
 stream = ExtResource("5_hurt_audio")
 volume_db = -3.0
 max_distance = 18.0
 bus = &"SFX"
 
-[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=1397876317]
 stream = ExtResource("6_death_audio")
-volume_db = 0.0
 max_distance = 20.0
 bus = &"SFX"
