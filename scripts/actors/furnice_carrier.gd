@@ -1,3 +1,4 @@
+@tool
 class_name VexFurniceCarrier
 extends "res://scripts/actors/enemy_combatant_base.gd"
 
