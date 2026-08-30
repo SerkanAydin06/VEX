@@ -20,7 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/redviper.tscn" id="19_redviper"]
 [ext_resource type="PackedScene" path="res://scenes/actors/badredviper.tscn" id="20_badredviper"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="21_voidweaver"]
-[ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/hellmagma.tscn" id="22_hellmagma"]
+[ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/basalt_juggernaut.tscn" id="22_basalt_juggernaut"]
 [ext_resource type="Texture2D" uid="uid://bymwn67grckfj" path="res://assets/pickups/health.png" id="23_health"]
 [ext_resource type="Texture2D" uid="uid://cawc32x5hgb8q" path="res://assets/pickups/armor.png" id="24_armor"]
 [ext_resource type="Texture2D" uid="uid://u351flp6poca" path="res://assets/pickups/ammo_bullets.png" id="25_bullets"]
@@ -983,7 +983,7 @@ enemy_id = &"vex03_upper_voidweaver"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 8.28, -7)
 enemy_id = &"vex03_upper_redviper"
 
-[node name="UpperKorvathA" parent="Enemies" unique_id=645050818 instance=ExtResource("22_hellmagma")]
+[node name="UpperKorvathA" parent="Enemies" unique_id=645050818 instance=ExtResource("22_basalt_juggernaut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.849896, 1.9331654, 6.5563035)
 enemy_id = &"vex03_upper_korvath_a"
 
@@ -1001,7 +1001,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 8.78, -15)
 enemy_id = &"vex03_service_voidweaver"
 spawn_min_difficulty = 2
 
-[node name="CoreKorvathA" parent="Enemies" unique_id=1161054754 instance=ExtResource("22_hellmagma")]
+[node name="CoreKorvathA" parent="Enemies" unique_id=1161054754 instance=ExtResource("22_basalt_juggernaut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9.699403, -5)
 enemy_id = &"vex03_core_korvath_a"
 
@@ -1010,7 +1010,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.634976, 8.28, -14)
 enemy_id = &"vex03_core_redviper"
 spawn_min_difficulty = 1
 
-[node name="KorvathWarden" parent="Enemies" unique_id=1257904597 instance=ExtResource("22_hellmagma")]
+[node name="KorvathWarden" parent="Enemies" unique_id=1257904597 instance=ExtResource("22_basalt_juggernaut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9.786312, -17.235924)
 enemy_id = &"vex03_korvath_warden"
 maximum_health = 520
@@ -1188,7 +1188,7 @@ accent_color = Color(0.22, 0.78, 1, 1)
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6, 8.7, 9.87374)
 log_id = &"vex03_log_korvath"
 log_title = "BİYOLOJİ RAPORU // KORVATH İŞÇİ KASTI"
-log_body = "HellMagma örneğinin uzuv aşınması savaş kullanımına değil, yüksek basınçta kaya kırmaya uyuyor. Zırh sandığımız tabaka doğal ısı kalkanı. Bunlar asker değil. Açtığımız kapıdan geçen, ocağı ve yön duygusu yok edilmiş canlı işçiler."
+log_body = "Basalt Juggernaut örneğinin uzuv aşınması savaş kullanımına değil, yüksek basınçta kaya kırmaya uyuyor. Zırh sandığımız tabaka doğal ısı kalkanı. Bunlar asker değil. Açtığımız kapıdan geçen, ocağı ve yön duygusu yok edilmiş canlı işçiler."
 accent_color = Color(1, 0.34, 0.08, 1)
 
 [node name="EceTanEmergencySignal" parent="LoreTerminals" unique_id=1127023259 instance=ExtResource("17_lore")]
