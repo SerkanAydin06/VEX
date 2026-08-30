@@ -2249,4 +2249,3 @@ func _place_corpse_on_floor(animated: bool) -> void:
 		target_y,
 		death_fall_time
 	)
-
