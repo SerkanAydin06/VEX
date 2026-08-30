@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_redviper"]
-radius = 0.5258789
+radius = 0.42
 height = 1.8
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1tqjx"]
@@ -43,10 +43,6 @@ region = Rect2(0, 512, 341, 512)
 [sub_resource type="AtlasTexture" id="AtlasTexture_0nmdr"]
 atlas = ExtResource("5_sheet")
 region = Rect2(341, 512, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_obeax"]
-atlas = ExtResource("5_sheet")
-region = Rect2(1364, 0, 341, 512)
 
 [sub_resource type="AtlasTexture" id="Atlas_idle1"]
 atlas = ExtResource("5_sheet")
@@ -232,6 +228,7 @@ floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
 enemy_id = &"redviper"
+combat_role = 0
 maximum_health = 140
 difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
 difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
@@ -242,6 +239,8 @@ difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
 move_speed = 3.2
 chase_speed = 6.4
 movement_acceleration = 16.0
+detection_range = 30.0
+pursuit_range = 38.0
 sight_origin_height = 0.78
 attack_range = 2.05
 attack_damage = 22
@@ -252,6 +251,7 @@ attack_lunge_speed = 10.4
 attack_lunge_acceleration = 46.0
 attack_lunge_duration = 0.24
 attack_lunge_stop_distance = 1.0
+dormant_distance = 44.0
 corpse_visual_y = 2.25e-05
 idle_frame_y_offsets = PackedFloat32Array(0.001, -0.0025, -0.0025, -0.0025)
 idle_back_frame_y_offsets = PackedFloat32Array(-0.0025, -0.0025, 0.008, -0.0096)
