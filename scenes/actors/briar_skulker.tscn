@@ -1,7 +1,7 @@
 [gd_scene load_steps=41 format=3 uid="uid://b1briarskulkr"]
 
 [ext_resource type="Script" uid="uid://d1briarskulkr" path="res://scripts/actors/briar_skulker.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/briar_skulker/briar_skulker_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://d2briarsheet1" path="res://assets/enemies/briar_skulker/briar_skulker_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="PackedScene" uid="uid://c1briarprojct" path="res://scenes/actors/briar_skulker_projectile.tscn" id="3_projectile"]
 [ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="4_attack_audio"]
 [ext_resource type="AudioStream" uid="uid://clf1cguvi0ka7" path="res://assets/audio/enemy_hurt_pro.wav" id="5_hurt_audio"]

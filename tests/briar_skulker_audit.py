@@ -84,4 +84,11 @@ assert 'collision_layer = 0' in projectile_scene
 assert 'collision_mask = 11' in projectile_scene
 assert 'shape = SubResource("SphereShape_projectile")' in projectile_scene
 
+import_metadata = read(
+    "assets/enemies/briar_skulker/briar_skulker_character_spritesheet.png.import"
+)
+assert 'uid="uid://d2briarsheet1"' in import_metadata
+assert 'compress/mode=2' in import_metadata
+assert 'mipmaps/generate=true' in import_metadata
+
 print("briar skulker audit passed")
