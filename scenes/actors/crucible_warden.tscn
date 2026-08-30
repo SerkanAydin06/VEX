@@ -16,11 +16,13 @@
 script = ExtResource("11_warden_settings")
 ground_slam_scene = ExtResource("3_slam")
 heatwave_projectile_scene = ExtResource("4_heatwave_projectile")
+heatwave_approach_stall_timeout = 0.9
+heatwave_approach_min_progress = 0.12
 heatwave_frame_y_offsets = PackedFloat32Array(-0.0192, 0, -0.0064, 0)
 
 [sub_resource type="CapsuleShape3D" id="Capsule_warden"]
-radius = 1.0209961
-height = 3.1873047
+radius = 0.72
+height = 2.4
 
 [sub_resource type="AtlasTexture" id="Atlas_attack_1"]
 atlas = ExtResource("2_sheet")
@@ -336,7 +338,6 @@ burn_smoke_duration = 10.0
 special_ability_settings = SubResource("Resource_warden_ability")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1236223409]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39365232, 0)
 shape = SubResource("Capsule_warden")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1382667829]
