@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://l03ab26phvuw"
-path="res://.godot/imported/basalt_juggernaut_death.wav-df927aeab6dd0c1d7f7ef50c27afe7ee.sample"
+path="res://.godot/imported/basalt_juggernaut_death.wav-1298f9e4c9222d74c9abef7b59d6e1b8.sample"
 
 [deps]
 
 source_file="res://assets/audio/basalt_juggernaut_death.wav"
-dest_files=["res://.godot/imported/basalt_juggernaut_death.wav-df927aeab6dd0c1d7f7ef50c27afe7ee.sample"]
+dest_files=["res://.godot/imported/basalt_juggernaut_death.wav-1298f9e4c9222d74c9abef7b59d6e1b8.sample"]
 
 [params]
 

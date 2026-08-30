@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b3kjj7fhvogrk"
-path="res://.godot/imported/basalt_juggernaut_projectile_sheet.png-a643e9f74e0fd2ee9ca2d2d87828e528.ctex"
+path="res://.godot/imported/basalt_juggernaut_projectile_sheet.png-6c55644c5771adeab352e97bf445b449.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_projectile_sheet.png"
-dest_files=["res://.godot/imported/basalt_juggernaut_projectile_sheet.png-a643e9f74e0fd2ee9ca2d2d87828e528.ctex"]
+dest_files=["res://.godot/imported/basalt_juggernaut_projectile_sheet.png-6c55644c5771adeab352e97bf445b449.ctex"]
 
 [params]
 
