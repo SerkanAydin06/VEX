@@ -1,4 +1,3 @@
-@tool
 class_name VexBadRedViper
 extends "res://scripts/actors/enemy_lunge_base.gd"
 

@@ -50,9 +50,9 @@ assert "class_name VexEnemyBase" in enemy_base
 assert "extends CharacterBody3D" in enemy_base
 assert 'extends "res://scripts/actors/enemy_base.gd"' in combatant_base
 assert 'extends "res://scripts/actors/enemy_base.gd"' in lunge_base
-assert enemy_base.startswith("@tool\n"), "enemy_base @tool sözleşmesi eksik"
-assert combatant_base.startswith("@tool\n"), "combatant tabanı @tool zincirini bozuyor"
-assert lunge_base.startswith("@tool\n"), "lunge tabanı @tool zincirini bozuyor"
+assert not enemy_base.startswith("@tool\n"), "runtime enemy tabanı editörde çalışmamalı"
+assert not combatant_base.startswith("@tool\n"), "runtime combatant AI editörde çalışmamalı"
+assert not lunge_base.startswith("@tool\n"), "runtime lunge AI editörde çalışmamalı"
 assert 'return &"combatant"' in combatant_base
 assert 'return &"lunge"' in lunge_base
 
@@ -89,7 +89,10 @@ for family_script, enemies in FAMILIES.items():
     for enemy in enemies:
         script_path = ACTORS / f"{enemy}.gd"
         script = read(script_path)
-        assert script.startswith("@tool\n"), (enemy, "MISSING_TOOL kalıtım hatası")
+        assert not script.startswith("@tool\n"), (
+            enemy,
+            "runtime yaratık scripti GameState'e editörde erişmemeli",
+        )
         assert expected_extends in script, (enemy, family_script)
 
         extends_match = re.search(r'^extends "([^"]+)"$', script, re.M)

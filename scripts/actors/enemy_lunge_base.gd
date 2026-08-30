@@ -1,4 +1,3 @@
-@tool
 class_name VexEnemyLungeBase
 extends "res://scripts/actors/enemy_base.gd"
 
@@ -1404,5 +1403,4 @@ func _alert_nearby_allies(suspected_position: Vector3) -> void:
 		):
 			continue
 		ally.call("receive_ally_alert", suspected_position)
-
 
