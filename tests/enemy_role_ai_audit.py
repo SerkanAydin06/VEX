@@ -78,6 +78,7 @@ expected_roles = {
     "redviper": 0,
     "badredviper": 0,
     "cinderhound": 0,
+    "briar_skulker": 1,
 }
 role_scene_settings = {
     0: ["damage_pursuit_commit_time", "runtime_grid_step", "runtime_grid_max_nodes"],

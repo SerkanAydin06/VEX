@@ -40,6 +40,7 @@
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="36_ambience"]
 [ext_resource type="PackedScene" uid="uid://csh77lhvvhlfs" path="res://scenes/actors/furnice_carrier.tscn" id="37_furnice"]
 [ext_resource type="PackedScene" uid="uid://c5s0tolim1ws2" path="res://scenes/actors/crucible_warden.tscn" id="38_crucible"]
+[ext_resource type="PackedScene" uid="uid://b1briarskulkr" path="res://scenes/actors/briar_skulker.tscn" id="39_briar"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -588,6 +589,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.25, -20)
 ground_slam_trigger_range = 4.0
 heatwave_cooldown = 2.0
 enemy_id = &"level_test_crucible_warden"
+maximum_health = 500
+
+[node name="BriarSkulker" parent="Enemies" instance=ExtResource("39_briar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 1.0, -20)
+enemy_id = &"level_test_briar_skulker"
 maximum_health = 500
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]

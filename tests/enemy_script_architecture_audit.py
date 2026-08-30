@@ -22,6 +22,9 @@ FAMILIES = {
         "badredviper",
         "cinderhound",
     ],
+    "enemy_hybrid_base.gd": [
+        "briar_skulker",
+    ],
 }
 
 CHARACTER_CONTRACTS = {
@@ -34,6 +37,7 @@ CHARACTER_CONTRACTS = {
     "redviper": {"combat_role": "0", "maximum_health": "140", "chase_speed": "6.4"},
     "badredviper": {"combat_role": "0", "maximum_health": "190", "attack_damage": "28"},
     "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.18"},
+    "briar_skulker": {"combat_role": "1", "maximum_health": "110", "attack_range": "14.0"},
 }
 
 
@@ -45,16 +49,21 @@ def read(path: Path) -> str:
 enemy_base = read(ACTORS / "enemy_base.gd")
 combatant_base = read(ACTORS / "enemy_combatant_base.gd")
 lunge_base = read(ACTORS / "enemy_lunge_base.gd")
+hybrid_base = read(ACTORS / "enemy_hybrid_base.gd")
 
 assert "class_name VexEnemyBase" in enemy_base
 assert "extends CharacterBody3D" in enemy_base
 assert 'extends "res://scripts/actors/enemy_base.gd"' in combatant_base
 assert 'extends "res://scripts/actors/enemy_base.gd"' in lunge_base
+assert 'extends "res://scripts/actors/enemy_combatant_base.gd"' in hybrid_base
 assert not enemy_base.startswith("@tool\n"), "runtime enemy tabanı editörde çalışmamalı"
 assert not combatant_base.startswith("@tool\n"), "runtime combatant AI editörde çalışmamalı"
 assert not lunge_base.startswith("@tool\n"), "runtime lunge AI editörde çalışmamalı"
+assert not hybrid_base.startswith("@tool\n"), "runtime hybrid AI editörde çalışmamalı"
 assert 'return &"combatant"' in combatant_base
 assert 'return &"lunge"' in lunge_base
+assert 'return &"hybrid"' in hybrid_base
+assert "@export" not in hybrid_base, "hybrid aile Inspector sırasını bozmamalı"
 
 for shared_setting in [
     "enemy_id",
@@ -129,6 +138,7 @@ for base_name, base_source in [
     ("enemy_base", enemy_base),
     ("enemy_combatant_base", combatant_base),
     ("enemy_lunge_base", lunge_base),
+    ("enemy_hybrid_base", hybrid_base),
 ]:
     assert not re.search(r'class_name Vex(?:Ravager|RedViper)\b', base_source), base_name
 

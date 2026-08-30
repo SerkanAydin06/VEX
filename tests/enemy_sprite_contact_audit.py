@@ -18,12 +18,17 @@ ALPHA_THRESHOLD = 16
 TARGET_CONTACT_GAP = 0.008
 CONTACT_PROPERTIES = {
     "attack": "attack_frame_y_offsets",
+    "attack_close": "attack_close_frame_y_offsets",
     "death": "death_frame_y_offsets",
     "hurt": "hurt_frame_y_offsets",
     "idle": "idle_frame_y_offsets",
     "idle_back": "idle_back_frame_y_offsets",
+    "idle_side": "idle_side_frame_y_offsets",
+    "idle_front_side": "idle_front_side_frame_y_offsets",
     "walk": "walk_frame_y_offsets",
     "walk_back": "walk_back_frame_y_offsets",
+    "walk_side": "walk_side_frame_y_offsets",
+    "walk_front_side": "walk_front_side_frame_y_offsets",
     "thermal_burst": "thermal_burst_frame_y_offsets",
     "heatwave": "heatwave_frame_y_offsets",
 }
@@ -47,6 +52,7 @@ CREATURES = {
     "redviper": CreatureSpec("redviper.tscn", 0.0000225, 0.003515713, 1.80),
     "badredviper": CreatureSpec("badredviper.tscn", 0.1333, 0.0065753907, 3.10),
     "cinderhound": CreatureSpec("cinderhound.tscn", 0.1454, 0.0034, 1.45),
+    "briar_skulker": CreatureSpec("briar_skulker.tscn", 0.0, 0.003125, 1.60),
 }
 
 

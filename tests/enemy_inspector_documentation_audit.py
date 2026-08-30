@@ -42,6 +42,7 @@ DOCUMENTED_EXPORT_FILES = [
     *SCHEMAS,
     "warden_ability_settings.gd",
     "furnice_carrier_ability_settings.gd",
+    "enemy_hybrid_ability_settings.gd",
 ]
 
 
@@ -77,6 +78,12 @@ warden_script = read("crucible_warden.gd")
 furnice_script = read("furnice_carrier.gd")
 assert "@export" not in warden_script
 assert "@export" not in furnice_script
+hybrid_script = read("enemy_hybrid_base.gd")
+briar_script = read("briar_skulker.gd")
+assert "@export" not in hybrid_script
+assert "@export" not in briar_script
+assert not hybrid_script.startswith("@tool\n")
+assert not briar_script.startswith("@tool\n")
 assert "var _ability: VexWardenAbilitySettings" in warden_script
 assert "var _ability: VexFurniceCarrierAbilitySettings" in furnice_script
 
@@ -84,5 +91,7 @@ warden_scene = (ROOT / "scenes/actors/crucible_warden.tscn").read_text(encoding=
 furnice_scene = (ROOT / "scenes/actors/furnice_carrier.tscn").read_text(encoding="utf-8")
 assert 'special_ability_settings = SubResource("Resource_warden_ability")' in warden_scene
 assert 'special_ability_settings = SubResource("Resource_furnice_ability")' in furnice_scene
+briar_scene = (ROOT / "scenes/actors/briar_skulker.tscn").read_text(encoding="utf-8")
+assert 'special_ability_settings = SubResource("Resource_hybrid_settings")' in briar_scene
 
 print("enemy Inspector documentation audit passed")
