@@ -82,10 +82,6 @@ atlas = ExtResource("2_sheet")
 region = Rect2(1023, 1536, 341, 512)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_s8n0b"]
-atlas = ExtResource("2_sheet")
-region = Rect2(0, 2048, 341, 512)
-
 [sub_resource type="AtlasTexture" id="Atlas_idle_1"]
 atlas = ExtResource("2_sheet")
 region = Rect2(0, 0, 341, 512)
