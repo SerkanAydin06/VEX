@@ -1,4 +1,3 @@
-@tool
 class_name VexVoidweaver
 extends "res://scripts/actors/enemy_combatant_base.gd"
 
