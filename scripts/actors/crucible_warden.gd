@@ -1,4 +1,3 @@
-@tool
 class_name VexCrucibleWarden
 extends "res://scripts/actors/enemy_combatant_base.gd"
 
