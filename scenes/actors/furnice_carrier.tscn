@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="8_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="9_burn"]
 [ext_resource type="AudioStream" uid="uid://cffwo85og682d" path="res://assets/audio/furnice_carrier_death.wav" id="9_qi4ce"]
+[ext_resource type="Script" uid="uid://cfurnset01abc" path="res://scripts/actors/furnice_carrier_ability_settings.gd" id="10_furnice_settings"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
 radius = 0.58
@@ -284,6 +285,24 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Resource" id="Resource_furnice_ability"]
+script = ExtResource("10_furnice_settings")
+close_attack_threshold = 6.0
+projectile_attack_cooldown = 1.8
+projectile_attack_windup = 0.45
+projectile_decal_tick_damage = 4
+projectile_muzzle_sprite_offset_pixels = Vector2(0, -139)
+projectile_muzzle_depth_offset = 0.08
+thermal_burst_scene = ExtResource("4_shockwave")
+thermal_burst_damage = 22
+thermal_burst_cooldown = 3.2
+thermal_burst_windup = 0.5
+thermal_burst_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+ground_effect_collision_mask = 1
+ground_probe_height = 1.0
+ground_probe_depth = 2.5
+ground_effect_surface_offset = 0.03
+
 [node name="FurniceCarrier" type="CharacterBody3D" unique_id=960817683]
 collision_layer = 4
 collision_mask = 15
@@ -306,8 +325,6 @@ path_target_change_distance = 2.2
 runtime_grid_step = 1.08
 runtime_grid_max_nodes = 2000
 runtime_grid_search_margin = 13.0
-thermal_burst_scene = ExtResource("4_shockwave")
-thermal_burst_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
 enemy_id = &"furnice_carrier"
 maximum_health = 130
 move_speed = 1.8
@@ -335,6 +352,7 @@ hurt_frame_y_offsets = PackedFloat32Array(0)
 death_frame_y_offsets = PackedFloat32Array(0, -0.01, -0.02, -0.03)
 burn_remains_scene = ExtResource("9_burn")
 burn_remains_scale = 1.1
+special_ability_settings = SubResource("Resource_furnice_ability")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=750182267]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)

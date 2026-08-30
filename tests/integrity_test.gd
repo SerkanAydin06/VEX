@@ -443,6 +443,12 @@ func _check_creature_inspector_contract() -> void:
 			for property_name: StringName in RANGED_CREATURE_INSPECTOR_PROPERTIES:
 				if not editor_properties.has(property_name):
 					failures.append("Ravager ailesi Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
+		if scene_path.ends_with("crucible_warden.tscn"):
+			if not (creature.get("special_ability_settings") is VexWardenAbilitySettings):
+				failures.append("Crucible Warden tip güvenli özel yetenek ayarına bağlı değil.")
+		elif scene_path.ends_with("furnice_carrier.tscn"):
+			if not (creature.get("special_ability_settings") is VexFurniceCarrierAbilitySettings):
+				failures.append("Furnice Carrier tip güvenli özel yetenek ayarına bağlı değil.")
 		creature.free()
 
 

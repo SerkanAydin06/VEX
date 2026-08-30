@@ -1,28 +1,20 @@
 class_name VexFurniceCarrier
 extends "res://scripts/actors/enemy_combatant_base.gd"
 
-@export_category("09 - Furnice Carrier Saldırı Seçimi")
-@export_range(0.5, 12.0, 0.1) var close_attack_threshold := 6.0
-@export_range(0.2, 6.0, 0.05) var projectile_attack_cooldown := 1.80
-@export_range(0.05, 2.0, 0.05) var projectile_attack_windup := 0.45
-@export_range(1, 100, 1) var projectile_decal_tick_damage := 4
-@export var projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -139.0)
-@export_range(0.0, 0.5, 0.01) var projectile_muzzle_depth_offset := 0.08
-
-@export_category("10 - Thermal Burst")
-@export var thermal_burst_scene: PackedScene
-@export_range(1, 100, 1) var thermal_burst_damage := 22
-@export_range(0.2, 8.0, 0.05) var thermal_burst_cooldown := 3.20
-@export_range(0.05, 2.0, 0.05) var thermal_burst_windup := 0.50
-@export var thermal_burst_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
-@export_flags_3d_physics var ground_effect_collision_mask := 1
-@export_range(0.1, 4.0, 0.1) var ground_probe_height := 1.0
-@export_range(0.5, 6.0, 0.1) var ground_probe_depth := 2.5
-@export_range(0.0, 0.2, 0.01) var ground_effect_surface_offset := 0.03
+var _ability: VexFurniceCarrierAbilitySettings
 
 @onready var thermal_burst_origin: Marker3D = $ThermalBurstOrigin
 
 var _thermal_burst_ready_at_msec := 0
+
+
+func _ready() -> void:
+	_ability = special_ability_settings as VexFurniceCarrierAbilitySettings
+	if _ability == null:
+		_ability = VexFurniceCarrierAbilitySettings.new()
+		special_ability_settings = _ability
+		push_warning("Furnice Carrier özel yetenek ayarları eksikti; güvenli varsayılanlar kullanılıyor.")
+	super._ready()
 
 
 func _attempt_attack() -> void:
@@ -32,7 +24,7 @@ func _attempt_attack() -> void:
 
 	var distance_to_player := _horizontal_distance(global_position, _player.global_position)
 	var thermal_burst_ready := Time.get_ticks_msec() >= _thermal_burst_ready_at_msec
-	var use_thermal_burst := distance_to_player <= close_attack_threshold and thermal_burst_ready
+	var use_thermal_burst := distance_to_player <= _ability.close_attack_threshold and thermal_burst_ready
 	_attack_locked = true
 	_attack_windup_active = true
 	_attack_strafe_direction *= -1.0
@@ -47,7 +39,7 @@ func _attempt_attack() -> void:
 
 	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
 	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
-	var selected_windup := thermal_burst_windup if use_thermal_burst else projectile_attack_windup
+	var selected_windup := _ability.thermal_burst_windup if use_thermal_burst else _ability.projectile_attack_windup
 	var runtime_windup := maxf(0.01, selected_windup * windup_scale)
 	await get_tree().create_timer(runtime_windup).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
@@ -55,7 +47,7 @@ func _attempt_attack() -> void:
 
 	if use_thermal_burst:
 		_emit_thermal_burst()
-		var runtime_thermal_cooldown := maxf(0.01, thermal_burst_cooldown * cooldown_scale)
+		var runtime_thermal_cooldown := maxf(0.01, _ability.thermal_burst_cooldown * cooldown_scale)
 		_thermal_burst_ready_at_msec = Time.get_ticks_msec() + int(round(runtime_thermal_cooldown * 1000.0))
 	else:
 		var still_in_range := (
@@ -72,7 +64,7 @@ func _attempt_attack() -> void:
 
 	# Thermal Burst'un kendi cooldown'u ayrı tutulur. Yakında kalındığında burst
 	# hazır değilse Carrier normal projectile saldırısına devam eder.
-	var runtime_attack_cooldown := maxf(runtime_windup, projectile_attack_cooldown * cooldown_scale)
+	var runtime_attack_cooldown := maxf(runtime_windup, _ability.projectile_attack_cooldown * cooldown_scale)
 	var remaining := maxf(0.0, runtime_attack_cooldown - runtime_windup)
 	if remaining > 0.0:
 		await get_tree().create_timer(remaining).timeout
@@ -97,7 +89,7 @@ func _fire_furnice_projectile() -> void:
 	# Atış anında hedef yönü kilitlenir; projectile sonrasında homing yapmaz.
 	var target_position := _player.global_position + Vector3.UP * projectile_target_height
 	var shot_direction := (target_position - projectile.global_position).normalized()
-	var decal_damage := _scaled_special_damage(projectile_decal_tick_damage)
+	var decal_damage := _scaled_special_damage(_ability.projectile_decal_tick_damage)
 	projectile.call("launch", shot_direction, self, _runtime_attack_damage, decal_damage)
 
 
@@ -124,23 +116,23 @@ func _projectile_muzzle_world_position() -> Vector3:
 	else:
 		depth_direction = depth_direction.normalized()
 
-	var pixel_offset := projectile_muzzle_sprite_offset_pixels
+	var pixel_offset := _ability.projectile_muzzle_sprite_offset_pixels
 	var pixel_size := animated_sprite.pixel_size
 	return (
 		animated_sprite.global_position
 		+ billboard_right * pixel_offset.x * pixel_size
 		+ Vector3.UP * -pixel_offset.y * pixel_size
-		+ depth_direction * projectile_muzzle_depth_offset
+		+ depth_direction * _ability.projectile_muzzle_depth_offset
 	)
 
 
 func _emit_thermal_burst() -> void:
-	if thermal_burst_scene == null or get_tree().current_scene == null:
+	if _ability.thermal_burst_scene == null or get_tree().current_scene == null:
 		return
-	var shockwave := thermal_burst_scene.instantiate() as Node3D
+	var shockwave := _ability.thermal_burst_scene.instantiate() as Node3D
 	if shockwave == null:
 		return
-	var runtime_damage := _scaled_special_damage(thermal_burst_damage)
+	var runtime_damage := _scaled_special_damage(_ability.thermal_burst_damage)
 	if shockwave.has_method("configure"):
 		shockwave.call("configure", runtime_damage, self)
 	get_tree().current_scene.add_child(shockwave)
@@ -156,19 +148,19 @@ func _scaled_special_damage(base_damage: int) -> int:
 
 func _ground_effect_position() -> Vector3:
 	var origin := thermal_burst_origin.global_position
-	var ray_start := origin + Vector3.UP * ground_probe_height
-	var ray_end := origin + Vector3.DOWN * ground_probe_depth
-	var query := PhysicsRayQueryParameters3D.create(ray_start, ray_end, ground_effect_collision_mask, [get_rid()])
+	var ray_start := origin + Vector3.UP * _ability.ground_probe_height
+	var ray_end := origin + Vector3.DOWN * _ability.ground_probe_depth
+	var query := PhysicsRayQueryParameters3D.create(ray_start, ray_end, _ability.ground_effect_collision_mask, [get_rid()])
 	query.collide_with_areas = false
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return origin
 	var floor_position: Vector3 = hit.get("position", origin)
 	var floor_normal: Vector3 = hit.get("normal", Vector3.UP)
-	return floor_position + floor_normal * ground_effect_surface_offset
+	return floor_position + floor_normal * _ability.ground_effect_surface_offset
 
 
 func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Array:
 	if animation_name == &"thermal_burst":
-		return thermal_burst_frame_y_offsets
+		return _ability.thermal_burst_frame_y_offsets
 	return super._frame_offsets_for_animation(animation_name)

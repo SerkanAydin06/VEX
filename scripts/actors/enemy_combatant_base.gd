@@ -11,173 +11,352 @@ enum State {
 	DEAD,
 }
 
+@export_category("01 - Kimlik, Can ve Zorluk")
+## Kayıt ve yenilgi takibinde kullanılan benzersiz yaratık kimliğidir.
+@export var enemy_id: StringName = &"enemy"
+## Savaş mesafesi rolüdür: Yakın, Orta veya Uzak.
+@export_enum("Yakın", "Orta", "Uzak") var combat_role: int = EnemyCombatProfiles.Role.MID
+## Zorluk çarpanı uygulanmadan önceki temel can değeridir.
+@export_range(1, 1000, 1) var maximum_health := 75
+## Yaratığın doğabileceği en düşük zorluk seviyesidir; 0 tüm seviyelerdir.
+@export_range(0, 3, 1) var spawn_min_difficulty := 0
+## Açıksa sahnedeki zorluk çarpanları cana, hasara, hıza, algılamaya ve saldırı sürelerine uygulanır.
+@export var apply_difficulty_scaling := true
+
+@export_category("01B - Zorluk Çarpanları (Sahne)")
+## zorluk can çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
+@export var difficulty_health_multipliers := PackedFloat32Array([0.75, 1.0, 1.20, 1.45])
+## zorluk hasar çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
+@export var difficulty_damage_multipliers := PackedFloat32Array([0.65, 1.0, 1.25, 1.55])
+## zorluk hız çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
+@export var difficulty_speed_multipliers := PackedFloat32Array([0.90, 1.0, 1.08, 1.15])
+## zorluk algılama çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
+@export var difficulty_detection_multipliers := PackedFloat32Array([0.90, 1.0, 1.08, 1.20])
+## zorluk bekleme çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
+@export var difficulty_cooldown_multipliers := PackedFloat32Array([1.25, 1.0, 0.85, 0.70])
+## zorluk hazırlık çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
+@export var difficulty_windup_multipliers := PackedFloat32Array([1.20, 1.0, 0.90, 0.75])
+
 @export_category("02 - Hareket ve Boşta Gezinme")
+## Normal gezinme ve devriye hızıdır (metre/saniye).
 @export_range(0.5, 10.0, 0.1) var move_speed := 2.7
+## Oyuncu takip edilirken kullanılan hızdır (metre/saniye); Combatant ailesinde 0 normal hızı kullanır.
 @export_range(0.0, 16.0, 0.1) var chase_speed := 0.0
+## Yaratığın hedef hareket hızına ulaşma ivmesidir.
 @export_range(0.5, 40.0, 0.5) var movement_acceleration := 12.0
+## Durma ve yön değiştirme sırasında kullanılan yavaşlama ivmesidir.
 @export_range(0.5, 40.0, 0.5) var braking_acceleration := 21.0
+## Projenin yerçekimine uygulanan çarpandır; 0 yerçekimini kapatır.
 @export_range(0.0, 4.0, 0.05) var gravity_scale := 1.0
+## Eğimlerde gövdeyi zemine bağlı tutan aşağı yönlü hızdır.
 @export_range(-5.0, 0.0, 0.05) var floor_stick_velocity := -0.1
+## zemin çarpışma katmanları kontrolünde dikkate alınacak fizik katmanlarıdır.
 @export_flags_3d_physics var floor_collision_mask := 1
+## Yaratığın zemin oturtma en yüksek düzeltme mesafesi ayarını belirler.
 @export_range(0.1, 5.0, 0.1) var floor_snap_max_correction := 2.0
+## zemin oturtma ışın başlangıç yükseklik değeridir (metre).
 @export_range(0.0, 2.0, 0.05) var floor_snap_ray_start_height := 0.5
+## Yaratığın zemin oturtma ışın ek derinlik ayarını belirler.
 @export_range(0.0, 4.0, 0.1) var floor_snap_ray_extra_depth := 2.0
+## Başlangıç konumuna göre varsayılan devriye hedefi ofsetidir.
 @export_storage var patrol_offset := Vector3(0, 0, 3.0)
+## boşta gezinme yarıçap değeridir (metre).
 @export_range(0.1, 12.0, 0.1) var idle_wander_radius := 2.0
+## boşta gezinme deneme sayısı değeridir; yükseltmek daha fazla aday veya işlem kullanır.
 @export_range(1, 32, 1) var idle_wander_attempts := 12
+## boşta gezinme en düşük yarıçap oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.0, 0.05) var idle_wander_min_radius_ratio := 0.35
+## boşta bekleme en düşük değeridir (saniye).
 @export_range(0.0, 5.0, 0.05) var idle_pause_min := 0.55
+## boşta bekleme en yüksek değeridir (saniye).
 @export_range(0.0, 5.0, 0.05) var idle_pause_max := 0.95
+## boşta dönüş hız değeridir (metre/saniye).
 @export_range(0.0, 3.0, 0.05) var idle_turn_speed := 0.28
+## boşta hedef en düşük mesafe değeridir (metre).
 @export_range(0.05, 2.0, 0.05) var idle_target_min_distance := 0.25
 
 @export_category("03 - Algılama ve Takip")
+## Oyuncunun ilk kez algılanabileceği azami yatay mesafedir (metre).
 @export_range(1.0, 50.0, 0.5) var detection_range := 30.0
+## Takip başladıktan sonra kovalamaya devam edilen azami mesafedir (metre).
 @export_range(1.0, 60.0, 0.5) var pursuit_range := 38.0
+## İlk algılamada kullanılan yatay görüş açısıdır (derece); 360 tam çevredir.
 @export_range(30.0, 360.0, 5.0) var initial_view_angle := 240.0
+## Görüş kesildikten sonra doğrudan takibin sürdürüleceği süredir (saniye).
 @export_range(1.0, 60.0, 0.5) var lost_sight_timeout := 20.0
+## Oyuncu kaybedildiğinde arama durumunda kalınacak süredir (saniye).
 @export_range(1.0, 30.0, 0.5) var search_duration := 10.0
+## arama yoklama yarıçap değeridir (metre).
 @export_range(0.5, 5.0, 0.1) var search_probe_radius := 2.2
+## arama dönüş hız değeridir (metre/saniye).
 @export_range(15.0, 180.0, 5.0) var search_turn_speed := 45.0
+## Uyarıyı alabilecek müttefiklerin yarıçapıdır (metre).
 @export_range(1.0, 30.0, 0.5) var ally_alert_radius := 10.5
+## görüş başlangıç yükseklik değeridir (metre).
 @export_range(0.0, 3.0, 0.05) var sight_origin_height := 0.55
+## görüş hedef yükseklik değeridir (metre).
 @export_range(0.0, 3.0, 0.05) var sight_target_height := 0.45
+## Çömelmiş oyuncunun normal mesafede algılanma olasılığıdır.
 @export_range(0.0, 1.0, 0.05) var crouch_detection_chance := 0.45
+## Çömelmiş oyuncunun kesin algılanacağı mesafedir (metre).
 @export_range(0.5, 5.0, 0.25) var crouch_guaranteed_detection_distance := 3.0
+## Görüş ışınlarını engelleyebilecek fizik katmanlarıdır.
 @export_flags_3d_physics var sight_collision_mask := 1 | 2
+## Açıksa yaratık hasar aldığında saldırgan duruma geçer.
 @export var aggro_on_damage := true
+## Açıksa hasar alındığında yakındaki müttefikler uyarılır.
 @export var alert_allies_on_damage := true
+## Açıksa oyuncu görüldüğünde yakındaki müttefikler uyarılır.
 @export var alert_allies_on_detection := true
+## Açıksa diğer düşmanlardan gelen uyarılar kabul edilir.
 @export var receive_ally_alerts := true
+## hasar tepki menzil değeridir (metre).
 @export_range(1.0, 120.0, 1.0) var damage_reaction_range := 80.0
+## hasar tepki süre değeridir (saniye).
 @export_range(1.0, 30.0, 0.5) var damage_reaction_duration := 12.0
+## Yaratığın hasar takip en düşük ilerleme ayarını belirler.
 @export_range(0.01, 1.0, 0.01) var damage_pursuit_min_progress := 0.20
+## hasar takip tıkanma timeout değeridir (saniye).
 @export_range(0.1, 10.0, 0.1) var damage_pursuit_stall_timeout := 3.0
+## hasar takip kararlılık süre değeridir (saniye).
 @export_range(0.0, 2.0, 0.01) var damage_pursuit_commit_time := 0.16
+## menzilli siper görünürlük eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.1, 1.0, 0.05) var ranged_cover_visibility_threshold := 0.60
+## menzilli siper yeniden konumlanma mesafe değeridir (metre).
 @export_range(0.8, 6.0, 0.1) var ranged_cover_reposition_distance := 2.6
+## Yaratığın menzilli siper yeniden konumlanma yenileme ayarını belirler.
 @export_range(0.15, 2.0, 0.05) var ranged_cover_reposition_refresh := 0.55
+## hasar yaklaşma ofset değeridir (metre).
 @export_range(0.2, 3.0, 0.1) var damage_approach_offset := 1.4
+## hasar yaklaşma mesafe oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.0, 0.05) var damage_approach_distance_ratio := 0.30
 @export_category("03B - İşitme / Stealth")
+## Ses olaylarının duyulabileceği temel yarıçaptır (metre).
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 14.0
+## Ses yüksekliğine uygulanan çarpandır; yükseldikçe işitme menzili artar.
 @export_range(0.1, 2.0, 0.05) var hearing_loudness_scale := 1.0
+## ses engeli çarpışma katmanları kontrolünde dikkate alınacak fizik katmanlarıdır.
 @export_flags_3d_physics var acoustic_collision_mask := 1
+## ses engeli yoklama yükseklik değeridir (metre).
 @export_range(0.0, 3.0, 0.05) var acoustic_probe_height := 0.8
+## Doğrudan alarm oluşturacak en düşük ses yüksekliğidir.
 @export_range(0.0, 2.0, 0.05) var loud_noise_alert_threshold := 0.9
+## kafa vuruşu yükseklik oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.1, 1.0, 0.05) var headshot_height_ratio := 0.62
+## kafa vuruşu referans yükseklik değeridir (metre).
 @export_range(0.0, 3.0, 0.05) var headshot_reference_height := 0.95
+## Açıksa hasar alındığında vurulma tepkisi oynatılır.
 @export var hurt_reaction_enabled := true
 
 @export_category("03C - Görüş Örnekleme")
+## Açıksa menzilli saldırı görüşü gövdedeki birden fazla noktadan örneklenir.
 @export var ranged_visibility_sampling_enabled := true
+## Açıksa menzilli yaratık görüş kapandığında daha açık bir konuma geçer.
 @export var cover_reposition_enabled := true
+## görünürlük dikey örnekleme açıklığı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.1, 1.0, 0.05) var visibility_vertical_span_scale := 0.55
+## Yaratığın görünürlük dikey örnekleme açıklığı en düşük ayarını belirler.
 @export_range(0.0, 1.0, 0.05) var visibility_vertical_span_min := 0.20
+## Yaratığın görünürlük dikey örnekleme açıklığı en yüksek ayarını belirler.
 @export_range(0.0, 2.0, 0.05) var visibility_vertical_span_max := 0.68
+## görünürlük yan örnekleme açıklığı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.1, 1.0, 0.05) var visibility_lateral_span_scale := 0.82
+## Yaratığın görünürlük yan örnekleme açıklığı en düşük ayarını belirler.
 @export_range(0.0, 1.0, 0.05) var visibility_lateral_span_min := 0.15
+## Yaratığın görünürlük yan örnekleme açıklığı en yüksek ayarını belirler.
 @export_range(0.0, 1.0, 0.05) var visibility_lateral_span_max := 0.38
+## görünürlük omuz yükseklik oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.0, 0.01) var visibility_shoulder_height_ratio := 0.08
+## görünürlük alt gövde oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.0, 0.05) var visibility_lower_body_ratio := 0.45
+## çömelmiş hedef yükseklik çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.5, 0.05) var crouched_target_height_scale := 0.50
+## çömelmiş hedef en düşük yükseklik değeridir (metre).
 @export_range(-1.0, 1.0, 0.05) var crouched_target_min_height := -0.20
+## arama yoklama çapraz ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 2.0, 0.05) var search_probe_diagonal_weight := 0.85
 
 @export_category("04 - Saldırı")
+## Normal saldırının zorluk çarpanından önceki temel hasarıdır.
 @export_range(1, 100, 1) var attack_damage := 12
+## Normal saldırının başlatılabildiği yatay mesafedir (metre).
 @export_range(0.5, 20.0, 0.1) var attack_range := 9.0
+## İki normal saldırı arasındaki temel bekleme süresidir (saniye).
 @export_range(0.2, 5.0, 0.05) var attack_cooldown := 0.80
+## Hasar veya mermi çıkmadan önceki hazırlık süresidir (saniye).
 @export_range(0.05, 2.0, 0.05) var attack_windup := 0.25
+## Yaratığın saldırı menzil tolerans ayarını belirler.
 @export_range(0.0, 8.0, 0.05) var attack_range_tolerance := 0.65
+## Normal menzilli saldırıda üretilecek mermi sahnesidir.
 @export var projectile_scene: PackedScene
+## mermi doğma yükseklik değeridir (metre).
 @export_range(-2.0, 3.0, 0.01) var projectile_spawn_height := 0.55
+## mermi doğma yan ofset değeridir (metre).
 @export_range(-2.0, 2.0, 0.01) var projectile_spawn_side_offset := 0.0
+## mermi doğma ileri ofset değeridir (metre).
 @export_range(0.0, 2.0, 0.01) var projectile_spawn_forward_offset := 0.0
+## mermi hedef yükseklik değeridir (metre).
 @export_range(0.0, 3.0, 0.05) var projectile_target_height := 0.40
+## mermi önden nişan oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.0, 0.05) var projectile_lead_factor := 0.0
+## Yaratığın mermi en yüksek önden nişan süre ayarını belirler.
 @export_range(0.0, 2.0, 0.05) var projectile_max_lead_time := 0.0
+## saldırı yaklaşma hız değeridir (metre/saniye).
 @export_range(0.0, 10.0, 0.1) var attack_approach_speed := 0.0
+## saldırı yana hareket hız değeridir (metre/saniye).
 @export_range(0.0, 10.0, 0.1) var attack_strafe_speed := 0.0
+## Menzilli yaratığın korumaya çalıştığı ideal savaş mesafesidir (metre).
 @export_range(0.5, 20.0, 0.1) var attack_preferred_distance := 6.0
+## Oyuncu bundan yakınsa yaratığın geri çekilmeyi tercih edeceği mesafedir (metre).
 @export_range(0.0, 20.0, 0.1) var attack_minimum_distance := 3.1
+## saldırı toparlanma yana hareket çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 2.0, 0.05) var attack_recovery_strafe_scale := 0.72
+## saldırı geri çekilme hız çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 2.0, 0.05) var attack_retreat_speed_scale := 0.58
+## saldırı yaklaşma mesafe pay değeridir (metre).
 @export_range(0.0, 3.0, 0.05) var attack_approach_distance_margin := 0.35
+## saldırı yaklaşma en düşük hız çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 2.0, 0.05) var attack_approach_min_speed_scale := 0.45
 
 @export_category("05 - Yol Bulma")
+## rota yenileme aralığı değeridir (saniye).
 @export_range(0.1, 1.0, 0.05) var path_refresh_interval := 0.35
+## takip rota yenileme aralığı değeridir (saniye).
 @export_range(0.1, 1.0, 0.05) var chase_path_refresh_interval := 0.36
+## yol noktası bağlantı mesafe değeridir (metre).
 @export_range(4.0, 15.0, 0.5) var waypoint_link_distance := 9.0
+## navigation boşluk değeridir (metre).
 @export_range(0.3, 1.2, 0.05) var navigation_clearance := 0.7
+## yol noktası ulaşma mesafe değeridir (metre).
 @export_range(0.3, 1.5, 0.05) var waypoint_reach_distance := 0.65
+## rota hedef değişim mesafe değeridir (metre).
 @export_range(0.1, 5.0, 0.1) var path_target_change_distance := 1.0
+## devriye rota yenileme aralığı değeridir (saniye).
 @export_range(0.1, 2.0, 0.05) var patrol_path_refresh_interval := 0.5
+## uç nokta bağlantı mesafe çarpanı ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(1.0, 4.0, 0.1) var endpoint_link_distance_multiplier := 1.5
+## uç nokta aday sayısı değeridir; yükseltmek daha fazla aday veya işlem kullanır.
 @export_range(1, 32, 1) var endpoint_candidate_count := 10
+## uç nokta bağlantı sınırı değeridir; yükseltmek daha fazla aday veya işlem kullanır.
 @export_range(1, 16, 1) var endpoint_connection_limit := 5
+## araştırma aday sayısı değeridir; yükseltmek daha fazla aday veya işlem kullanır.
 @export_range(1, 64, 1) var investigation_candidate_count := 18
+## Yaratığın çalışma anı ızgara adım ayarını belirler.
 @export_range(0.6, 2.0, 0.05) var runtime_grid_step := 1.0
+## Çalışma anı yol bulma ızgarasının kullanabileceği en fazla düğüm sayısıdır.
 @export_range(200, 6000, 100) var runtime_grid_max_nodes := 1800
+## çalışma anı ızgara arama pay değeridir (metre).
 @export_range(4.0, 30.0, 0.5) var runtime_grid_search_margin := 12.0
+## Yol bulma ve engel kontrollerinde kullanılan fizik katmanlarıdır.
 @export_flags_3d_physics var navigation_collision_mask := 1 | 8
+## arama rota deneme sayısı değeridir; yükseltmek daha fazla aday veya işlem kullanır.
 @export_range(1, 12, 1) var search_path_attempts := 4
+## devriye uzak mesafe çarpanı ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.5, 4.0, 0.05) var patrol_far_distance_multiplier := 2.0
+## yerel sapma süre değeridir (saniye).
 @export_range(0.0, 3.0, 0.05) var local_detour_duration := 0.90
+## yerel sapma boşluk çarpanı ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.5, 4.0, 0.05) var local_detour_clearance_multiplier := 1.45
+## yerel sapma en düşük adım değeridir (metre).
 @export_range(0.1, 3.0, 0.05) var local_detour_min_step := 0.90
+## yerel sapma yan çarpanları ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export var local_detour_lateral_multipliers := PackedFloat32Array([1.0, 1.8, 2.8, 4.0])
+## yerel sapma ileri çarpanları ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export var local_detour_forward_multipliers := PackedFloat32Array([0.0, 0.75, 1.5])
+## yerel sapma ilerleme ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 4.0, 0.05) var local_detour_progress_weight := 1.5
+## yerel sapma mesafe ceza ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.0, 0.01) var local_detour_distance_penalty := 0.08
+## yerel sapma doğrudan rota bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 20.0, 0.1) var local_detour_direct_path_bonus := 8.0
+## yerel sapma süreklilik bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 3.0, 0.05) var local_detour_persistence_bonus := 0.45
 
 @export_category("05B - Cover Yeniden Konumlanma")
+## siper çapraz mesafe çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(1.0, 3.0, 0.05) var cover_diagonal_distance_scale := 1.35
+## siper ileri mesafe çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 2.0, 0.05) var cover_forward_distance_scale := 0.35
+## siper görünürlük puan ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 10.0, 0.1) var cover_visibility_score_weight := 4.0
+## siper mesafe puan ceza ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.0, 0.01) var cover_distance_score_penalty := 0.08
+## siper eşik puan bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 10.0, 0.1) var cover_threshold_score_bonus := 2.0
+## siper başarısız yeniden deneme aralığı değeridir (saniye).
 @export_range(0.05, 2.0, 0.05) var cover_failed_retry_interval := 0.20
 
 @export_category("06 - Performans")
+## boşta algılama pay değeridir (metre).
 @export_range(0.0, 30.0, 0.5) var idle_detection_margin := 6.0
+## yakın görüş aralığı değeridir (saniye).
 @export_range(0.02, 1.0, 0.01) var near_sight_interval := 0.12
+## orta görüş aralığı değeridir (saniye).
 @export_range(0.02, 1.0, 0.01) var medium_sight_interval := 0.18
+## uzak düşünme mesafe değeridir (metre).
 @export_range(12.0, 80.0, 1.0) var distant_think_distance := 24.0
+## uzak görüş aralığı değeridir (saniye).
 @export_range(0.1, 1.0, 0.05) var distant_sight_interval := 0.2
+## boşta uzak görüş aralığı değeridir (saniye).
 @export_range(0.1, 1.0, 0.05) var idle_far_sight_interval := 0.32
+## uzak rota yenileme aralığı değeridir (saniye).
 @export_range(0.3, 2.0, 0.05) var distant_path_refresh_interval := 0.6
+## Oyuncu bundan uzaktayken pahalı AI işlemlerinin uykuya alınacağı mesafedir (metre).
 @export_range(12.0, 80.0, 1.0) var dormant_distance := 44.0
 
 @export_category("07 - Görsel ve Animasyon")
+## arka görüş eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(-1.0, 1.0, 0.05) var back_view_threshold := -0.15
+## vurulma tepki süre değeridir (saniye).
 @export_range(0.0, 2.0, 0.01) var hurt_reaction_duration := 0.16
+## Yaratığın ceset görsel y ayarını belirler.
 @export_range(-1.0, 2.0, 0.01) var corpse_visual_y := -0.0999775
+## Yaratığın arka ceset görsel y ayarını belirler.
 @export_range(-1.0, 2.0, 0.01) var back_corpse_visual_y := -0.0999775
+## Yaratığın ölüm düşme süre ayarını belirler.
 @export_range(0.05, 1.0, 0.05) var death_fall_time := 0.3
+## ceset kalma süre değeridir (saniye).
 @export_range(0.0, 4.0, 0.05) var corpse_hold_duration := 2.4
+## ceset zemin boşluk değeridir (metre).
 @export_range(0.005, 0.1, 0.005) var corpse_floor_clearance := 0.02
+## boşta kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var idle_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+## boşta arka kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var idle_back_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+## yürüme kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var walk_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+## yürüme arka kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var walk_back_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+## saldırı kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var attack_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+## vurulma kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var hurt_frame_y_offsets := PackedFloat32Array([0.0])
+## ölüm kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var death_frame_y_offsets := PackedFloat32Array([0.0, -0.008, -0.016, -0.025])
 
 @export_category("08 - Ölüm Sonrası İz")
+## Yanarak ölen yaratığın yerine üretilecek kalıntı sahnesidir.
 @export var burn_remains_scene: PackedScene
+## yanık kalıntı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.4, 3.5, 0.05) var burn_remains_scale := 1.0
+## yanık kalıntı çarpan çarpanı ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.1, 2.0, 0.01) var burn_remains_scale_multiplier := 1.0
+## yanık kömür rengi değeridir.
 @export var burn_scorch_tint := Color(0.18, 0.03, 0.06, 0.96)
+## yanık köz rengi değeridir.
 @export var burn_ember_tint := Color(0.44, 0.08, 0.14, 0.22)
+## Yaratığın yanık köz yayım enerjisi ayarını belirler.
 @export_range(0.0, 2.0, 0.01) var burn_ember_emission_energy := 0.10
+## Açıksa yanık kalıntı üzerinde duman efekti oluşturulur.
 @export var burn_smoke_enabled := false
+## yanık duman süre değeridir (saniye).
 @export_range(0.0, 20.0, 0.1) var burn_smoke_duration := 9.0
+## Yaratığın yanık duman saydamlık ayarını belirler.
 @export_range(0.0, 1.0, 0.01) var burn_smoke_alpha := 0.14
+
+@export_category("09 - Özel Yetenekler")
+## Bu yaratığa özgü saldırı ayarlarını içerir; kaynağı genişleterek alt alanları düzenleyin.
+@export var special_ability_settings: VexEnemyAbilitySettings
 
 @onready var animated_sprite: AnimatedSprite3D = $AnimatedSprite3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
@@ -2070,3 +2249,6 @@ func _place_corpse_on_floor(animated: bool) -> void:
 		target_y,
 		death_fall_time
 	)
+
+
+
