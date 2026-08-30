@@ -37,8 +37,8 @@ enum State {
 ## zorluk hazırlık çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
 @export var difficulty_windup_multipliers := PackedFloat32Array([1.20, 1.0, 0.90, 0.75])
 
-@export_category("02 - Hareket ve Boşta Gezinme")
-## Normal gezinme ve devriye hızıdır (metre/saniye).
+@export_category("02 - Hareket ve Sabit Bekleme")
+## Alarmdan sonra hedefe yaklaşırken kullanılan normal hareket hızıdır (metre/saniye).
 @export_range(0.5, 10.0, 0.1) var move_speed := 2.7
 ## Oyuncu takip edilirken kullanılan hızdır (metre/saniye); Combatant ailesinde 0 normal hızı kullanır.
 @export_range(0.0, 16.0, 0.1) var chase_speed := 0.0
@@ -58,22 +58,22 @@ enum State {
 @export_range(0.0, 2.0, 0.05) var floor_snap_ray_start_height := 0.5
 ## Yaratığın zemin oturtma ışın ek derinlik ayarını belirler.
 @export_range(0.0, 4.0, 0.1) var floor_snap_ray_extra_depth := 2.0
-## Başlangıç konumuna göre varsayılan devriye hedefi ofsetidir.
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
 @export_storage var patrol_offset := Vector3(0, 0, 3.0)
-## boşta gezinme yarıçap değeridir (metre).
-@export_range(0.1, 12.0, 0.1) var idle_wander_radius := 2.0
-## boşta gezinme deneme sayısı değeridir; yükseltmek daha fazla aday veya işlem kullanır.
-@export_range(1, 32, 1) var idle_wander_attempts := 12
-## boşta gezinme en düşük yarıçap oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.05) var idle_wander_min_radius_ratio := 0.35
-## boşta bekleme en düşük değeridir (saniye).
-@export_range(0.0, 5.0, 0.05) var idle_pause_min := 0.55
-## boşta bekleme en yüksek değeridir (saniye).
-@export_range(0.0, 5.0, 0.05) var idle_pause_max := 0.95
-## boşta dönüş hız değeridir (metre/saniye).
-@export_range(0.0, 3.0, 0.05) var idle_turn_speed := 0.28
-## boşta hedef en düşük mesafe değeridir (metre).
-@export_range(0.05, 2.0, 0.05) var idle_target_min_distance := 0.25
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_wander_radius := 2.0
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_wander_attempts := 12
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_wander_min_radius_ratio := 0.35
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_pause_min := 0.55
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_pause_max := 0.95
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_turn_speed := 0.28
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_target_min_distance := 0.25
 
 @export_category("03 - Algılama ve Takip")
 ## Oyuncunun ilk kez algılanabileceği azami yatay mesafedir (metre).
@@ -369,10 +369,6 @@ var health := 0
 var state := State.IDLE
 
 var _spawn_position := Vector3.ZERO
-var _idle_anchor_position := Vector3.ZERO
-var _idle_wander_target := Vector3.ZERO
-var _has_idle_wander_target := false
-var _idle_wander_pause_remaining := 0.0
 var _facing_direction := Vector3.FORWARD
 var _alerted := false
 var _attack_locked := false
@@ -448,7 +444,6 @@ func _ready() -> void:
 	_configure_runtime_stats()
 	health = _runtime_maximum_health
 	_spawn_position = global_position
-	_idle_anchor_position = global_position
 	_gravity = (
 		float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 		* gravity_scale
@@ -877,55 +872,17 @@ func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
 		waypoint_reach_distance
 	)
 
-func _patrol(delta: float) -> void:
-	state = State.PATROL
-	if _idle_wander_pause_remaining > 0.0:
-		_idle_wander_pause_remaining = maxf(0.0, _idle_wander_pause_remaining - delta)
-		_stop_horizontal_motion()
-		_facing_direction = _facing_direction.rotated(Vector3.UP, delta * idle_turn_speed).normalized()
-		rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
-		return
-
-	if (
-		not _has_idle_wander_target
-		or _has_reached_walkable_target(_idle_wander_target, waypoint_reach_distance)
-	):
-		_idle_wander_target = EnemyNavigationRuntime.choose_idle_wander_target(
-			self,
-			_idle_anchor_position,
-			idle_wander_radius,
-			navigation_collision_mask,
-			floor_collision_mask,
-			navigation_clearance,
-			floor_snap_ray_start_height,
-			floor_snap_ray_extra_depth,
-			idle_wander_attempts,
-			idle_wander_min_radius_ratio
-		)
-		_has_idle_wander_target = (
-			_horizontal_distance(global_position, _idle_wander_target)
-			> idle_target_min_distance
-		)
-		if not _has_idle_wander_target:
-			_idle_wander_pause_remaining = randf_range(idle_pause_min, maxf(idle_pause_min, idle_pause_max))
-			_stop_horizontal_motion()
-			return
-		_clear_path()
-		_path_refresh_remaining = 0.0
-
-	_navigate_to(_idle_wander_target, delta)
-	if _has_reached_walkable_target(_idle_wander_target, waypoint_reach_distance):
-		_has_idle_wander_target = false
-		_idle_wander_pause_remaining = randf_range(idle_pause_min, maxf(idle_pause_min, idle_pause_max))
+func _patrol(_delta: float) -> void:
+	# Alarm öncesinde rota üretme, dönme veya sahne başlangıcından uzaklaşma yoktur.
+	# Algılama, ses, müttefik alarmı ve hasar normal takip state'lerini başlatır.
+	state = State.IDLE
+	_clear_path()
+	_stop_horizontal_motion()
 
 
 func _return_to_patrol(_delta: float) -> void:
-	# No fixed patrol route: after combat the current position becomes the new
-	# local idle anchor and the creature resumes contextual wandering there.
-	_idle_anchor_position = global_position
-	_has_idle_wander_target = false
-	_idle_wander_pause_remaining = randf_range(idle_pause_min, maxf(idle_pause_min, idle_pause_max))
-	state = State.PATROL
+	# Takip sona erdiğinde bulunduğu noktada sabit beklemeye geçer.
+	state = State.IDLE
 	_clear_path()
 	_stop_horizontal_motion()
 
@@ -997,10 +954,7 @@ func _give_up_chase() -> void:
 	_has_last_seen_position = false
 	_has_forced_damage_target = false
 	_reset_search_probe()
-	_idle_anchor_position = global_position
-	_has_idle_wander_target = false
-	_idle_wander_pause_remaining = randf_range(idle_pause_min, maxf(idle_pause_min, idle_pause_max))
-	state = State.PATROL
+	state = State.IDLE
 	_clear_path()
 	_stop_horizontal_motion()
 

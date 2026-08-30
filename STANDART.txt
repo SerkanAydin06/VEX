@@ -65,17 +65,23 @@ Enemy zemin teması ve GroundShadow standardı:
 - Canlı, saldırı, hurt, özel yetenek ve death dahil her kullanılan karede en alt `alpha > 16` piksel hedefi kapsül tabanından 0.008 m yukarıdadır.
 - Kabul toleransı bir sprite pikselinin yarısıdır (minimum 0.0006 m). Yeni veya değişen spritesheet ölçüm denetimini geçmeden birleştirilmez.
 - Frame ofsetleri sahne Inspector'ındaki `idle`, `idle_back`, `walk`, `walk_back`, `attack`, `hurt`, `death` ve varsa özel yetenek dizilerinde tutulur; runtime script alfa taraması yapmaz.
-- Yönlü sheet kullanan Briar Skulker için `idle_side`, `walk_side`, `idle_front_side`, `walk_front_side` ve `attack_close` ofsetleri 09 - Özel Yetenekler kaynağında sahne-otoriteli tutulur.
+- Briar Skulker'ın ön/arka hareket kareleri ortak ofset dizilerini, `attack_close` kareleri ise 09 - Özel Yetenekler kaynağındaki sahne-otoriteli diziyi kullanır.
 - GroundShadow local Y değeri `-capsule_height / 2 + 0.02 m` olur. 0.02 m fizik payı z-fighting'i önler; yaratığın havada durduğu anlamına gelmez.
 - GroundShadow `billboard = 2` (Fixed-Y), `cast_shadow = 0`, `render_priority = -2` ve `offset = Vector2(0, 16)` kullanır. 16 px görüş-yönü ayrımı, gölge kütlesini ayak siluetinin altından uzaklaştırır fakat temas noktasını koparmaz.
 - GroundShadow alfa aralığı normal yaratıklarda 0.50–0.52, ağır/elitlerde 0.54–0.56'dır. Opaklığı artırarak ayakları karartmak yasaktır.
 - GroundShadow boyutu yaratığın kapsül yarıçapına/siluetine göre sahnede ayarlanır; gölge node'u runtime'da yeniden ölçeklenmez veya yeniden konumlandırılmaz.
 
-Yönlü enemy sprite standardı:
-- Mantıksal hareket yönü ile aktif kamera/oyuncu yönü arasındaki yatay açı kullanılır; görsel seçim fizik gövdesinin rotasyonundan ayrıdır.
-- Ön, ön çapraz, yan ve arka sektörleri Inspector'daki açı sınırlarıyla seçilir. Sheet'te tek tarafı bulunan yan ve ön çapraz kareler `AnimatedSprite3D.flip_h` ile karşı tarafa otomatik aynalanır.
-- Aynalama yeni bir texture veya ikinci sprite node üretmez. Collision, saldırı menzili ve mermi yönü mantıksal `_facing_direction` üzerinden çalışmaya devam eder.
-- Saldırı kararı görünüş yönünden bağımsızdır: oyuncu `melee_trigger_range` içindeyse `attack_close`, dışındaysa görüş ve menzil uygunsa `attack` seçilir.
+Briar Skulker sprite ve saldırı standardı:
+- Sheet 4 sütun x 7 satırdır; sırasıyla `idle`, `walk`, `attack`, `attack_close`, `death`, `idle_back`, `walk_back` kullanılır.
+- Yan/çapraz animasyon, yön aynalama ayarı veya sheet sınırı dışındaki AtlasTexture kaydı bulunmaz.
+- Ön/arka görünüm seçimi ortak Combatant yön mantığını kullanır; saldırı ve mermi yönü `_facing_direction` üzerinden çalışır.
+- Oyuncu `melee_trigger_range` içindeyse `attack_close`, dışındaysa görüş ve menzil uygunsa `attack` seçilir.
+
+Yaratık sabit bekleme standardı:
+- Alarm öncesinde hiçbir yaratık devriye rotası, rastgele gezinme hedefi veya boşta dönüş üretmez; sahnede yerleştirildiği noktada `idle` kalır.
+- Görüş, işitme, müttefik alarmı veya hasar alındığında mevcut takip, arama ve saldırı davranışları normal biçimde devreye girer.
+- Takip ve arama tamamen sona erdiğinde yaratık o an bulunduğu noktada yeniden sabit beklemeye geçer.
+- Eski `patrol_*` ve `idle_wander_*` alanları yalnız eski sahne verisini okuyabilmek için `@export_storage` olarak tutulur; Inspector'da gösterilmez ve runtime kararına katılmaz.
 
 
 2) SÜPÜRGELİK / BASETRIM KURALI

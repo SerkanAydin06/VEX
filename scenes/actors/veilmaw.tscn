@@ -253,7 +253,6 @@ floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
 combat_role = 1
-idle_wander_radius = 2.0
 damage_pursuit_commit_time = 0.16
 ranged_cover_visibility_threshold = 0.45
 ranged_cover_reposition_distance = 2.15

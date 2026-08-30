@@ -17,7 +17,6 @@ const CREATURE_SCENES := [
 ]
 
 const COMMON_CREATURE_INSPECTOR_PROPERTIES := [
-	&"idle_wander_radius", &"idle_wander_attempts", &"idle_pause_min", &"idle_pause_max",
 	&"path_target_change_distance", &"runtime_grid_step", &"runtime_grid_max_nodes",
 	&"runtime_grid_search_margin", &"sight_collision_mask", &"aggro_on_damage",
 	&"damage_pursuit_min_progress", &"damage_pursuit_stall_timeout",
@@ -454,8 +453,10 @@ func _check_creature_inspector_contract() -> void:
 			var hybrid_settings := creature.get("special_ability_settings") as VexEnemyHybridAbilitySettings
 			if hybrid_settings == null:
 				failures.append("Briar Skulker tip güvenli hibrit ayara bağlı değil.")
-			elif not hybrid_settings.mirror_opposite_directions:
-				failures.append("Briar Skulker eksik yan/çapraz yönleri otomatik aynalamıyor.")
+			elif not hybrid_settings.prefer_melee_when_close:
+				failures.append("Briar Skulker yakın mesafede yakın saldırıyı önceliklendirmiyor.")
+			elif hybrid_settings.melee_trigger_range <= 0.0:
+				failures.append("Briar Skulker yakın saldırı menzili geçersiz.")
 		creature.free()
 
 

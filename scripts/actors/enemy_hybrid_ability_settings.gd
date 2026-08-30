@@ -20,26 +20,6 @@ extends VexEnemyAbilitySettings
 ## Açıksa yakın mesafede mermi yerine daima yakın saldırı seçilir.
 @export var prefer_melee_when_close := true
 
-@export_category("02 - Yönlü Görsel Seçimi")
-## Ön görünümün merkezden iki yana kapsadığı yarım açıdır (derece).
-@export_range(5.0, 45.0, 0.5) var front_half_angle_degrees := 22.5
-## Ön çapraz görünümün yan görünüme geçtiği açı sınırıdır (derece).
-@export_range(25.0, 90.0, 0.5) var front_diagonal_limit_degrees := 67.5
-## Yan görünümün arka görünüme geçtiği açı sınırıdır (derece).
-@export_range(70.0, 160.0, 0.5) var side_limit_degrees := 112.5
-## Açıksa sağ/sol yan ve çapraz yönlerden eksik olan taraf yatay aynalama ile otomatik üretilir.
-@export var mirror_opposite_directions := true
-## Sprite sheet'teki yan ve ön çapraz kaynak karelerin sağa baktığını belirtir; yanlışsa kapatın.
-@export var source_frames_face_right := true
-
-@export_category("03 - Yönlü Kare Zemin Hizası")
-## Yan boşta animasyon karelerinin dikey zemin hizalama düzeltmeleridir.
-@export var idle_side_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
-## Yan yürüyüş animasyon karelerinin dikey zemin hizalama düzeltmeleridir.
-@export var walk_side_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
-## Ön çapraz boşta animasyon karelerinin dikey zemin hizalama düzeltmeleridir.
-@export var idle_front_side_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
-## Ön çapraz yürüyüş animasyon karelerinin dikey zemin hizalama düzeltmeleridir.
-@export var walk_front_side_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
+@export_category("02 - Yakın Saldırı Görsel Hizası")
 ## Yakın saldırı animasyon karelerinin dikey zemin hizalama düzeltmeleridir.
 @export var attack_close_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])

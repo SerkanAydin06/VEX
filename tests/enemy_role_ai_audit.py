@@ -21,7 +21,7 @@ for obsolete in [
     assert obsolete not in profile, obsolete
 for token in [
     "func build_shortest_path", "func has_reached_walkable_target",
-    "func choose_idle_wander_target", "func has_walk_segment_clear",
+    "func has_walk_segment_clear",
 ]:
     assert token in nav, token
 
@@ -34,7 +34,6 @@ for source in [ravager, red]:
     assert "_has_forced_damage_target" in source
 
 common_inspector_settings = [
-    "idle_wander_radius", "idle_wander_attempts", "idle_pause_min", "idle_pause_max",
     "path_target_change_distance", "runtime_grid_step", "runtime_grid_max_nodes",
     "runtime_grid_search_margin", "sight_collision_mask", "aggro_on_damage",
     "damage_pursuit_min_progress", "damage_pursuit_stall_timeout",
@@ -88,8 +87,8 @@ role_scene_settings = {
         "runtime_grid_max_nodes", "runtime_grid_search_margin",
     ],
     2: [
-        "idle_wander_radius", "idle_pause_max", "damage_pursuit_commit_time",
-        "ranged_cover_visibility_threshold", "ranged_cover_reposition_distance",
+        "damage_pursuit_commit_time", "ranged_cover_visibility_threshold",
+        "ranged_cover_reposition_distance",
         "attack_minimum_distance", "attack_recovery_strafe_scale",
         "attack_retreat_speed_scale", "chase_path_refresh_interval",
         "path_target_change_distance", "runtime_grid_step", "runtime_grid_max_nodes",

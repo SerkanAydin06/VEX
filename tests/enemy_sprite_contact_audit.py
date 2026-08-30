@@ -23,12 +23,8 @@ CONTACT_PROPERTIES = {
     "hurt": "hurt_frame_y_offsets",
     "idle": "idle_frame_y_offsets",
     "idle_back": "idle_back_frame_y_offsets",
-    "idle_side": "idle_side_frame_y_offsets",
-    "idle_front_side": "idle_front_side_frame_y_offsets",
     "walk": "walk_frame_y_offsets",
     "walk_back": "walk_back_frame_y_offsets",
-    "walk_side": "walk_side_frame_y_offsets",
-    "walk_front_side": "walk_front_side_frame_y_offsets",
     "thermal_burst": "thermal_burst_frame_y_offsets",
     "heatwave": "heatwave_frame_y_offsets",
 }
