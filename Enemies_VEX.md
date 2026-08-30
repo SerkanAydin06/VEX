@@ -137,10 +137,10 @@ Bu evrenin yaratıkları daha “kültürlü medeniyet” değil, **vahşi fakat
 
 **Durum:** Mevcut
 
-- **Rol:** Pusu / yan rota baskısı / hibrit yakın-menzilli avcı
+- **Rol:** Pusu / hibrit yakın-menzilli avcı
 - **Hikâye rolü:** Sürüye görünmeden yaklaşan keşif ve zayıf hedef temizleme organizması.
 - **Savaş kimliği:** Uzakta diken küresi fırlatır; oyuncu yakın saldırı alanına girdiğinde menzilli saldırıyı bırakıp pençe vuruşuna öncelik verir.
-- **Ayırt edici özellik:** Ravager’dan daha kırılgan ve çeviktir. Ön, arka, yan ve ön çapraz hareket görselleriyle yönünü okunabilir biçimde gösterir; eksik sağ/sol yönler yatay aynalanır.
+- **Ayırt edici özellik:** Ravager’dan daha kırılgan ve çeviktir. Ön/arka hareket görselleri kullanır; yakın saldırı menzilini her karar anında yeniden değerlendirir.
 
 ### 3. Gorehorn
 
@@ -335,7 +335,7 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 | Mevcut oyun düşmanı | Bağlı evren | Aile rolü |
 |---|---|---|
 | Ravager | Thornwild Sürüsü | Temel yakın baskı avcısı |
-| Briar Skulker | Thornwild Sürüsü | Hibrit pusu ve yan rota avcısı |
+| Briar Skulker | Thornwild Sürüsü | Hibrit pusu avcısı |
 | RedViper | Vaskari Lejyonu | Hızlı elit hücum birimi |
 | BadRedViper | Vaskari Lejyonu | Ağır hücum varyantı |
 | Veilmaw | Nhal Veil | Pusu avcısı |

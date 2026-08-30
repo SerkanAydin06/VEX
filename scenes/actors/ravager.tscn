@@ -256,8 +256,6 @@ back_corpse_visual_y = 0.0000225
 corpse_visual_y = 0.0000225
 combat_role = 2
 enemy_id = &"ravager"
-idle_wander_radius = 1.35
-idle_pause_max = 1.2
 damage_pursuit_commit_time = 0.2
 ranged_cover_visibility_threshold = 0.65
 ranged_cover_reposition_distance = 3.0
@@ -353,4 +351,3 @@ stream = ExtResource("8_gdv5y")
 volume_db = -19.439
 max_distance = 20.0
 bus = &"SFX"
-

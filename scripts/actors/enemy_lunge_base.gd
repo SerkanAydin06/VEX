@@ -27,8 +27,8 @@ extends "res://scripts/actors/enemy_base.gd"
 ## zorluk hazırlık çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
 @export var difficulty_windup_multipliers := PackedFloat32Array([1.20, 1.0, 0.90, 0.75])
 
-@export_category("02 - Hareket ve Boşta Gezinme")
-## Normal gezinme ve devriye hızıdır (metre/saniye).
+@export_category("02 - Hareket ve Sabit Bekleme")
+## Alarmdan sonra hedefe yaklaşırken kullanılan normal hareket hızıdır (metre/saniye).
 @export_range(0.5, 10.0, 0.1) var move_speed := 2.35
 ## Oyuncu takip edilirken kullanılan hızdır (metre/saniye); Combatant ailesinde 0 normal hızı kullanır.
 @export_range(0.5, 16.0, 0.1) var chase_speed := 5.8
@@ -48,24 +48,24 @@ extends "res://scripts/actors/enemy_base.gd"
 @export_range(0.0, 2.0, 0.05) var floor_snap_ray_start_height := 0.5
 ## Yaratığın zemin oturtma ışın ek derinlik ayarını belirler.
 @export_range(0.0, 4.0, 0.1) var floor_snap_ray_extra_depth := 2.0
-## Başlangıç konumuna göre varsayılan devriye hedefi ofsetidir.
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
 @export_storage var patrol_offset := Vector3(2.0, 0.0, 0.0)
-## devriye bekleme süre değeridir (saniye).
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
 @export_storage var patrol_pause_duration := 0.65
-## boşta gezinme yarıçap değeridir (metre).
-@export_range(0.1, 12.0, 0.1) var idle_wander_radius := 2.8
-## boşta gezinme deneme sayısı değeridir; yükseltmek daha fazla aday veya işlem kullanır.
-@export_range(1, 32, 1) var idle_wander_attempts := 12
-## boşta gezinme en düşük yarıçap oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.05) var idle_wander_min_radius_ratio := 0.35
-## boşta bekleme en düşük değeridir (saniye).
-@export_range(0.0, 5.0, 0.05) var idle_pause_min := 0.35
-## boşta bekleme en yüksek değeridir (saniye).
-@export_range(0.0, 5.0, 0.05) var idle_pause_max := 0.95
-## boşta dönüş hız değeridir (metre/saniye).
-@export_range(0.0, 3.0, 0.05) var idle_turn_speed := 0.32
-## boşta hedef en düşük mesafe değeridir (metre).
-@export_range(0.05, 2.0, 0.05) var idle_target_min_distance := 0.25
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_wander_radius := 2.8
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_wander_attempts := 12
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_wander_min_radius_ratio := 0.35
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_pause_min := 0.35
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_pause_max := 0.95
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_turn_speed := 0.32
+## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
+@export_storage var idle_target_min_distance := 0.25
 @export_category("03 - Algılama ve Takip")
 ## Oyuncunun ilk kez algılanabileceği azami yatay mesafedir (metre).
 @export_range(1.0, 50.0, 0.5) var detection_range := 30.0
@@ -264,10 +264,6 @@ extends "res://scripts/actors/enemy_base.gd"
 
 var health := 0
 var _spawn_position := Vector3.ZERO
-var _idle_anchor_position := Vector3.ZERO
-var _idle_wander_target := Vector3.ZERO
-var _has_idle_wander_target := false
-var _wait_remaining := 0.0
 var _gravity := 20.0
 var _dead := false
 var _hurt_tween: Tween = null
@@ -343,7 +339,6 @@ func _ready() -> void:
 	_configure_runtime_stats()
 	health = _runtime_maximum_health
 	_spawn_position = global_position
-	_idle_anchor_position = global_position
 	_player = GameState.player as Node3D
 	_gravity = (
 		float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
@@ -515,66 +510,19 @@ func _physics_process(delta: float) -> void:
 			_lost_sight_remaining = 0.0
 			_search_remaining = 0.0
 			_reset_search_probe()
-			_idle_anchor_position = global_position
-			_has_idle_wander_target = false
 			_reset_navigation_path()
 
-	_idle_wander(delta)
+	_hold_idle_position(delta)
 	return
 
 
-func _idle_wander(delta: float) -> void:
-	if _wait_remaining > 0.0:
-		_wait_remaining = maxf(_wait_remaining - delta, 0.0)
-		velocity.x = move_toward(velocity.x, 0.0, delta * braking_acceleration)
-		velocity.z = move_toward(velocity.z, 0.0, delta * braking_acceleration)
-		_facing_direction = _facing_direction.rotated(Vector3.UP, delta * idle_turn_speed).normalized()
-		rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
-		_play_animation(&"idle")
-		move_and_slide()
-		return
-
-	if (
-		not _has_idle_wander_target
-		or EnemyNavigationRuntime.has_reached_walkable_target(
-			self,
-			_idle_wander_target,
-			patrol_reach_distance,
-			navigation_collision_mask,
-			floor_collision_mask,
-			navigation_clearance,
-			floor_snap_ray_start_height,
-			floor_snap_ray_extra_depth
-		)
-	):
-		_idle_wander_target = EnemyNavigationRuntime.choose_idle_wander_target(
-			self,
-			_idle_anchor_position,
-			idle_wander_radius,
-			navigation_collision_mask,
-			floor_collision_mask,
-			navigation_clearance,
-			floor_snap_ray_start_height,
-			floor_snap_ray_extra_depth,
-			idle_wander_attempts,
-			idle_wander_min_radius_ratio
-		)
-		_has_idle_wander_target = (
-			_horizontal_distance(global_position, _idle_wander_target)
-			> idle_target_min_distance
-		)
-		if not _has_idle_wander_target:
-			_wait_remaining = randf_range(idle_pause_min, maxf(idle_pause_min, idle_pause_max))
-			velocity.x = 0.0
-			velocity.z = 0.0
-			_play_animation(&"idle")
-			move_and_slide()
-			return
-		_reset_navigation_path()
-
-	_chase_position(delta, _idle_wander_target, false)
+func _hold_idle_position(delta: float) -> void:
+	# Alarm öncesinde rota üretme, dönme veya sahne başlangıcından uzaklaşma yoktur.
+	velocity.x = move_toward(velocity.x, 0.0, delta * braking_acceleration)
+	velocity.z = move_toward(velocity.z, 0.0, delta * braking_acceleration)
+	_reset_navigation_path()
+	_play_animation(&"idle")
 	move_and_slide()
-	_update_chase_detour()
 
 
 func _chase_position(delta: float, target_position: Vector3, use_chase_speed: bool = true) -> void:
@@ -1403,4 +1351,3 @@ func _alert_nearby_allies(suspected_position: Vector3) -> void:
 		):
 			continue
 		ally.call("receive_ally_alert", suspected_position)
-

@@ -11,7 +11,7 @@ SCHEMAS = {
     "enemy_combatant_base.gd": [
         "01 - Kimlik, Can ve Zorluk",
         "01B - Zorluk Çarpanları (Sahne)",
-        "02 - Hareket ve Boşta Gezinme",
+        "02 - Hareket ve Sabit Bekleme",
         "03 - Algılama ve Takip",
         "03B - İşitme / Stealth",
         "03C - Görüş Örnekleme",
@@ -26,7 +26,7 @@ SCHEMAS = {
     "enemy_lunge_base.gd": [
         "01 - Kimlik, Can ve Zorluk",
         "01B - Zorluk Çarpanları (Sahne)",
-        "02 - Hareket ve Boşta Gezinme",
+        "02 - Hareket ve Sabit Bekleme",
         "03 - Algılama ve Takip",
         "03B - İşitme / Stealth",
         "03C - Görüş ve Arama Örnekleme",

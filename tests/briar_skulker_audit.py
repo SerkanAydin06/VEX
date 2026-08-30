@@ -22,12 +22,12 @@ settings = read("scripts/actors/enemy_hybrid_ability_settings.gd")
 projectile = read("scripts/actors/briar_skulker_projectile.gd")
 manifest = json.loads(read("assets/enemies/briar_skulker/spritesheet_manifest.json"))
 
-assert manifest["sheet_size"] == {"width": 1364, "height": 5632}
+assert manifest["sheet_size"] == {"width": 1364, "height": 3584}
 assert manifest["frame_size"] == {"width": 341, "height": 512}
-assert manifest["grid"] == {"columns": 4, "rows": 11}
+assert manifest["grid"] == {"columns": 4, "rows": 7}
 assert [row["animation"] for row in manifest["rows"]] == [
     "idle", "walk", "attack", "attack_close", "death", "idle_back",
-    "walk_back", "idle_side", "walkside", "idle_front_side", "walk_front_side",
+    "walk_back",
 ]
 assert all(row["frame_count"] == 4 for row in manifest["rows"])
 
@@ -42,10 +42,15 @@ assert settings.startswith("@tool\n")
 for token in [
     "prefer_melee_when_close", "_is_player_in_melee_envelope",
     "_resolve_melee_hit", "_resolve_ranged_shot", "attack_close",
-    "mirror_opposite_directions", "animated_sprite.flip_h",
-    "idle_front_side", "walk_front_side", "idle_side", "walk_side",
 ]:
     assert token in hybrid or token in settings, token
+
+for obsolete in [
+    "DirectionalView", "mirror_opposite_directions", "source_frames_face_right",
+    "front_diagonal_limit_degrees", "idle_front_side", "walk_front_side",
+    "idle_side", "walk_side",
+]:
+    assert obsolete not in hybrid + settings + scene, obsolete
 
 assert hybrid.index("prefer_melee_when_close") < hybrid.index("_begin_hybrid_attack(use_melee)")
 assert 'special_ability_settings = SubResource("Resource_hybrid_settings")' in scene
@@ -59,18 +64,17 @@ atlas_regions = re.findall(
     r'region = Rect2\((\d+), (\d+), 341, 512\)',
     scene,
 )
-assert len(atlas_regions) == 44, len(atlas_regions)
+assert len(atlas_regions) == 28, len(atlas_regions)
 assert set(atlas_regions) == {
     (str(column * 341), str(row * 512))
-    for row in range(11)
+    for row in range(7)
     for column in range(4)
 }
 
 animation_names = set(re.findall(r'"name": &"([^"]+)"', scene))
 assert animation_names == {
     "idle", "walk", "attack", "attack_close", "death", "hurt",
-    "idle_back", "walk_back", "idle_side", "walk_side",
-    "idle_front_side", "walk_front_side",
+    "idle_back", "walk_back",
 }
 
 assert 'class_name VexBriarSkulkerProjectile' in projectile

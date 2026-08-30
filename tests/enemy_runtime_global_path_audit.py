@@ -11,7 +11,6 @@ for token in [
     "static func build_shortest_path(",
     "static func has_walk_segment_clear(",
     "static func has_reached_walkable_target(",
-    "static func choose_idle_wander_target(",
     "func _heap_push(",
     "func _heap_pop(",
     "func _simplify_path(",
