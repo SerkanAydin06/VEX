@@ -239,6 +239,7 @@ collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
+corpse_visual_y = -0.3217775
 combat_role = 0
 enemy_id = &"cinderhound"
 spawn_min_difficulty = 0
@@ -308,11 +309,10 @@ burn_smoke_duration = 6.5
 burn_smoke_alpha = 0.12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1561553514]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, 0)
 shape = SubResource("CapsuleShape_cinderhound")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1000373379]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8704, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1454, 0)
 cast_shadow = 0
 pixel_size = 0.0034
 billboard = 2
@@ -324,8 +324,9 @@ autoplay = "idle"
 frame_progress = 0.12572752
 
 [node name="GroundShadow" type="Sprite3D" parent="." unique_id=767731571]
-transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, 0.012, 0)
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.705, 0)
 cast_shadow = 0
+billboard = 2
 modulate = Color(1, 1, 1, 0.72)
 pixel_size = 0.0052
 texture_filter = 5
@@ -350,3 +351,4 @@ volume_db = -1.0
 max_distance = 18.0
 max_polyphony = 2
 bus = &"SFX"
+
