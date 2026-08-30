@@ -428,25 +428,25 @@ func _prepare_fragment_color(source: Color) -> Color:
 func _build_flesh_fragment_burst(color: Color) -> void:
 	_build_fragment_layer(
 		color,
-		13,
-		0.34,
-		1.7,
-		4.9,
+		10,
+		0.31,
+		1.5,
+		4.4,
 		Vector3(0.032, 0.022, 0.014),
-		0.65,
-		1.55,
-		Vector3(0.0, -7.5, 0.0)
+		0.58,
+		1.42,
+		Vector3(0.0, -8.2, 0.0)
 	)
 	var darker := Color(color.r * 0.72, color.g * 0.72, color.b * 0.72, 1.0)
 	_build_droplet_layer(
 		darker,
-		7,
-		0.26,
-		2.4,
-		6.0,
-		0.6,
-		1.35,
-		Vector3(0.0, -9.0, 0.0)
+		6,
+		0.24,
+		2.2,
+		5.4,
+		0.55,
+		1.24,
+		Vector3(0.0, -9.6, 0.0)
 	)
 
 
@@ -462,7 +462,7 @@ func _build_fragment_layer(
 	gravity: Vector3
 ) -> void:
 	var particles := GPUParticles3D.new()
-	particles.name = "Fragments"
+	particles.name = "OrganicSpray"
 	particles.amount = amount
 	particles.lifetime = lifetime
 	particles.one_shot = true
@@ -483,8 +483,14 @@ func _build_fragment_layer(
 	process.color = color
 	particles.process_material = process
 
-	var fragment_mesh := BoxMesh.new()
-	fragment_mesh.size = mesh_size
+	# BoxMesh parçaları kamera karşısında kare konfeti gibi görünüyordu.
+	# Düşük segmentli, uzatılmış küreler küçük sıvı/doku damlaları gibi okunur;
+	# rastgele dönüş ve ölçekleri her vuruşun siluetini doğal biçimde değiştirir.
+	var fragment_mesh := SphereMesh.new()
+	fragment_mesh.radius = maxf(mesh_size.y, mesh_size.z) * 0.45
+	fragment_mesh.height = maxf(mesh_size.x, fragment_mesh.radius * 2.0)
+	fragment_mesh.radial_segments = 8
+	fragment_mesh.rings = 4
 	var fragment_material := StandardMaterial3D.new()
 	fragment_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	fragment_material.albedo_color = color

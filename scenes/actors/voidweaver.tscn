@@ -171,14 +171,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("Atlas_death1")
-}],
-"loop": 0,
-"name": &"hurt",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("Atlas_idle1")
 }, {
 "duration": 1.0,
@@ -308,7 +300,6 @@ idle_back_frame_y_offsets = PackedFloat32Array(0.0748, 0.0748, 0.0748, 0.0748)
 walk_frame_y_offsets = PackedFloat32Array(0.0994, 0.0994, 0.0994, 0.0994)
 walk_back_frame_y_offsets = PackedFloat32Array(0.0789, 0.0789, 0.0789, 0.0789)
 attack_frame_y_offsets = PackedFloat32Array(0.1076, 0.1076, 0.1076, 0.1076)
-hurt_frame_y_offsets = PackedFloat32Array(0.0789)
 death_frame_y_offsets = PackedFloat32Array(0.0789, 0.0789, 0.0789, 0.0789)
 burn_remains_scene = ExtResource("31_burn")
 burn_ember_tint = Color(0.36, 0.06, 0.12, 0.26)

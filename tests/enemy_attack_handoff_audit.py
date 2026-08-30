@@ -16,7 +16,20 @@ for source in (ravager, red):
 
 assert "_refresh_close_combat_visibility()" in ravager
 assert "combat_role == EnemyCombatProfiles.Role.CLOSE" in red
-assert ravager.index("if _has_forced_damage_target:") < ravager.index("if _attack_locked:")
-assert red.index("if _has_forced_damage_target:") < red.index("if _attack_locked:")
+# Başlamış saldırı hasar kaynağına yönelme davranışından önce çözülür.
+assert ravager.index("if _attack_locked:") < ravager.index("if _has_forced_damage_target:")
+assert red.index("if _attack_locked:") < red.index("if _has_forced_damage_target:")
+
+ravager_damage = ravager[
+    ravager.index("func take_damage("):ravager.index("func _on_noise_emitted(")
+]
+red_damage = red[
+    red.index("func take_damage("):red.index("func _collision_floor_local_y(")
+]
+assert "_combat_interrupt_generation += 1" not in ravager_damage
+assert "_attack_locked = false" not in ravager_damage
+assert "_attack_generation += 1" not in red_damage
+assert "_attack_locked = false" not in red_damage
+assert "_attack_lunge_remaining = 0.0" not in red_damage
 
 print("enemy attack handoff audit passed")

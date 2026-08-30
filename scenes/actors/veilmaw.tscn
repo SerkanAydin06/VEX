@@ -171,14 +171,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("Atlas_death1")
-}],
-"loop": 0,
-"name": &"hurt",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("Atlas_idle1")
 }, {
 "duration": 1.0,
@@ -309,7 +301,6 @@ burn_remains_scene = ExtResource("31_burn")
 burn_ember_tint = Color(0.36, 0.06, 0.12, 0.26)
 burn_ember_emission_energy = 0.1
 burn_smoke_enabled = false
-hurt_reaction_enabled = true
 spawn_min_difficulty = 0
 apply_difficulty_scaling = true
 braking_acceleration = 21.0
@@ -336,7 +327,6 @@ distant_sight_interval = 0.2
 idle_far_sight_interval = 0.32
 distant_path_refresh_interval = 0.6
 dormant_distance = 42.0
-hurt_reaction_duration = 0.16
 death_fall_time = 0.3
 corpse_hold_duration = 2.4
 corpse_floor_clearance = 0.02
@@ -345,7 +335,6 @@ idle_back_frame_y_offsets = PackedFloat32Array(0.1076, 0.1076, 0.1035, 0.1076)
 walk_frame_y_offsets = PackedFloat32Array(0.1076, 0.1076, 0.1076, 0.1076)
 walk_back_frame_y_offsets = PackedFloat32Array(0.0871, 0.0871, 0.0871, 0.0871)
 attack_frame_y_offsets = PackedFloat32Array(0.1035, 0.0994, 0.0994, 0.1035)
-hurt_frame_y_offsets = PackedFloat32Array(0.1035)
 death_frame_y_offsets = PackedFloat32Array(0.1035, 0.1035, 0.0871, 0.0256)
 burn_remains_scale = 1.0
 burn_smoke_duration = 9.0
