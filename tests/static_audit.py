@@ -225,7 +225,7 @@ def check_level_02() -> None:
         fail("VEX-02 beyaz ışık sayısı 33 değil")
     if node_count(scene, "Doors") != 5:
         fail("VEX-02 kapı sayısı 5 değil")
-    for contract in ["key_blue", "key_red", "key_yellow", "HellMagma_19", "Voidweaver_30"]:
+    for contract in ["key_blue", "key_red", "key_yellow", "BasaltJuggernaut_19", "Voidweaver_30"]:
         if contract not in scene:
             fail(f"VEX-02 progression/içerik sözleşmesi eksik: {contract}")
 

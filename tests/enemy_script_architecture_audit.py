@@ -11,7 +11,7 @@ SCENES = ROOT / "scenes" / "actors"
 FAMILIES = {
     "enemy_combatant_base.gd": [
         "ravager",
-        "hellmagma",
+        "basalt_juggernaut",
         "veilmaw",
         "voidweaver",
         "furnice_carrier",
@@ -29,7 +29,7 @@ FAMILIES = {
 
 CHARACTER_CONTRACTS = {
     "ravager": {"combat_role": "2", "attack_range": "20.0", "attack_preferred_distance": "8.0"},
-    "hellmagma": {"combat_role": "1", "maximum_health": "240", "attack_range": "15.0"},
+    "basalt_juggernaut": {"combat_role": "1", "maximum_health": "240", "attack_range": "15.0"},
     "veilmaw": {"combat_role": "1", "move_speed": "2.55", "attack_preferred_distance": "7.5"},
     "voidweaver": {"combat_role": "1", "maximum_health": "120", "attack_preferred_distance": "8.5"},
     "furnice_carrier": {"combat_role": "2", "maximum_health": "130", "attack_range": "22.0"},

@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://d3d23chsf3l"
-path="res://.godot/imported/hell_magma_attack.wav-a56dcf12907a4cce2fd1e298cc99336b.sample"
+path="res://.godot/imported/basalt_juggernaut_attack.wav-a56dcf12907a4cce2fd1e298cc99336b.sample"
 
 [deps]
 
-source_file="res://assets/audio/hell_magma_attack.wav"
-dest_files=["res://.godot/imported/hell_magma_attack.wav-a56dcf12907a4cce2fd1e298cc99336b.sample"]
+source_file="res://assets/audio/basalt_juggernaut_attack.wav"
+dest_files=["res://.godot/imported/basalt_juggernaut_attack.wav-a56dcf12907a4cce2fd1e298cc99336b.sample"]
 
 [params]
 

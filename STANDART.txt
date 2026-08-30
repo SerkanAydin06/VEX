@@ -45,7 +45,7 @@ Enemy filtre     : Linear Mipmap; Fixed-Y billboard
 
 Enemy görsel taban değerleri (AnimatedSprite3D, sahne-otoriteli):
 - Ravager          : Y -0.15000000 / pixel_size 0.003525000
-- HellMagma        : Y -0.10000000 / pixel_size 0.007354700
+- Basalt Juggernaut: Y -0.10000000 / pixel_size 0.007354700
 - Veilmaw          : Y  0.00000000 / pixel_size 0.004100000
 - Voidweaver       : Y  0.00000000 / pixel_size 0.004100000
 - Furnace Carrier (`furnice_carrier`) : Y 0.44470531 / pixel_size 0.008000000

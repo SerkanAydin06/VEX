@@ -71,7 +71,7 @@ expected_roles = {
     "ravager": 2,
     "veilmaw": 1,
     "voidweaver": 1,
-    "hellmagma": 1,
+    "basalt_juggernaut": 1,
     "furnice_carrier": 2,
     "crucible_warden": 0,
     "redviper": 0,

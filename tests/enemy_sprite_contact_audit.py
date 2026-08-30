@@ -40,7 +40,7 @@ class CreatureSpec:
 
 CREATURES = {
     "ravager": CreatureSpec("ravager.tscn", -0.15, 0.003525, 1.80),
-    "hellmagma": CreatureSpec("hellmagma.tscn", -0.10, 0.0073547, 3.60),
+    "basalt_juggernaut": CreatureSpec("basalt_juggernaut.tscn", -0.10, 0.0073547, 3.60),
     "veilmaw": CreatureSpec("veilmaw.tscn", 0.0, 0.0041, 1.90),
     "voidweaver": CreatureSpec("voidweaver.tscn", 0.0, 0.0041, 1.90),
     "furnice_carrier": CreatureSpec("furnice_carrier.tscn", 0.44470531, 0.008, 1.50),

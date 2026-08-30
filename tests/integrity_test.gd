@@ -8,7 +8,7 @@ const CREATURE_SCENES := [
 	"res://scenes/actors/badredviper.tscn",
 	"res://scenes/actors/cinderhound.tscn",
 	"res://scenes/actors/ravager.tscn",
-	"res://scenes/actors/hellmagma.tscn",
+	"res://scenes/actors/basalt_juggernaut.tscn",
 	"res://scenes/actors/veilmaw.tscn",
 	"res://scenes/actors/voidweaver.tscn",
 	"res://scenes/actors/furnice_carrier.tscn",
@@ -171,7 +171,7 @@ func _check_level_02() -> void:
 	var doors := level.get_node_or_null("Doors")
 	if doors == null or doors.get_child_count() != 5:
 		failures.append("VEX-02 kapı sayısı 5 değil.")
-	for node_path in ["Enemies/HellMagma_19", "Enemies/Voidweaver_30"]:
+	for node_path in ["Enemies/BasaltJuggernaut_19", "Enemies/Voidweaver_30"]:
 		if level.get_node_or_null(node_path) == null:
 			failures.append("VEX-02 içerik eksik: %s" % node_path)
 	level.free()

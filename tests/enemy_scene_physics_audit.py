@@ -11,7 +11,7 @@ ACTORS = SCENES / "actors"
 
 CREATURE_CAPSULES = {
     "ravager": (0.42, 1.80),
-    "hellmagma": (1.00, 3.60),
+    "basalt_juggernaut": (1.00, 3.60),
     "veilmaw": (0.45, 1.90),
     "voidweaver": (0.45, 1.90),
     "furnice_carrier": (0.58, 1.50),
