@@ -530,13 +530,13 @@ visual_texture = ExtResource("34_armor")
 [node name="Enemies" type="Node3D" parent="." unique_id=1081550565]
 
 [node name="Ravager" parent="Enemies" unique_id=1314898711 instance=ExtResource("13_ravager")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.2, 20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.9074496, 20)
 enemy_id = &"level_test_ravager"
 maximum_health = 100
 move_speed = 5.0
 
 [node name="CinderHound" parent="Enemies" unique_id=139156611 instance=ExtResource("19_cinderhound")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.031110287, 20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.7327161, 20)
 enemy_id = &"level_test_cinderhound"
 maximum_health = 120
 move_speed = 10.0
@@ -546,14 +546,14 @@ pursuit_range = 26.0
 dormant_distance = 30.0
 
 [node name="RedViper" parent="Enemies" unique_id=406336072 instance=ExtResource("14_redviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.5046375, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.96335053, 10)
 enemy_id = &"level_test_redviper"
 maximum_health = 150
 move_speed = 7.0
 detection_range = 25.0
 
 [node name="BadRedViper" parent="Enemies" unique_id=1097403212 instance=ExtResource("15_badredviper")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.5306901, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.5569348, 0)
 enemy_id = &"level_test_badredviper"
 maximum_health = 500
 move_speed = 10.0
@@ -562,7 +562,7 @@ detection_range = 30.0
 dormant_distance = 32.0
 
 [node name="Veilmaw" parent="Enemies" unique_id=1564511686 instance=ExtResource("17_veilmaw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0523984, 0)
 enemy_id = &"level_test_veilmaw"
 
 [node name="Voidweaver" parent="Enemies" unique_id=219460760 instance=ExtResource("18_voidweaver")]
@@ -570,7 +570,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.137886, -20)
 enemy_id = &"level_test_voidweaver"
 
 [node name="HellMagma" parent="Enemies" unique_id=1262786008 instance=ExtResource("16_hellmagma")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.8941709, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.9010693, -20)
 enemy_id = &"level_test_hellmagma"
 maximum_health = 250
 move_speed = 5.0
@@ -578,19 +578,27 @@ detection_range = 28.0
 attack_damage = 35
 
 [node name="FurniceCarrier" parent="Enemies" unique_id=1822641573 instance=ExtResource("37_furnice")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.1341183, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.8653867, -20)
 enemy_id = &"level_test_furnice_carrier"
 maximum_health = 500
+idle_wander_radius = 1.35
+idle_pause_max = 1.2
 
 [node name="CrucibleWarden" parent="Enemies" unique_id=879260090 instance=ExtResource("38_crucible")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.25, -20)
 enemy_id = &"level_test_crucible_warden"
 maximum_health = 500
+idle_wander_radius = 2.8
+idle_pause_min = 0.35
 
 [node name="BriarSkulker" parent="Enemies" unique_id=1297055620 instance=ExtResource("39_briar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7649529, -20)
 enemy_id = &"level_test_briar_skulker"
 maximum_health = 500
+idle_wander_radius = 2.4
+idle_pause_min = 0.35
+idle_pause_max = 0.75
+idle_turn_speed = 0.45
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]
 stream = ExtResource("35_music")
