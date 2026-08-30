@@ -239,6 +239,7 @@ collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
+corpse_visual_y = 0.0000225
 combat_role = 0
 enemy_id = &"redviper"
 maximum_health = 140
@@ -280,11 +281,10 @@ burn_smoke_duration = 7.5
 burn_smoke_alpha = 0.12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2122796633]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4032, 0)
 shape = SubResource("CapsuleShape_redviper")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=627707926]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4032225, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0000225, 0)
 cast_shadow = 0
 pixel_size = 0.003515713
 billboard = 2
@@ -296,8 +296,9 @@ autoplay = "idle"
 frame_progress = 0.031359572
 
 [node name="GroundShadow" type="Sprite3D" parent="." unique_id=466059463]
-transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.4768, 0)
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.88, 0)
 cast_shadow = 0
+billboard = 2
 modulate = Color(1, 1, 1, 0.72)
 pixel_size = 0.0045
 texture_filter = 5
@@ -322,3 +323,4 @@ volume_db = -1.0
 max_distance = 18.0
 max_polyphony = 2
 bus = &"SFX"
+

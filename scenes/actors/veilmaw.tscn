@@ -304,8 +304,8 @@ attack_preferred_distance = 7.5
 waypoint_link_distance = 9.5
 navigation_clearance = 0.55
 back_view_threshold = -0.12
-corpse_visual_y = -0.06
-back_corpse_visual_y = -0.06
+corpse_visual_y = -0.04
+back_corpse_visual_y = -0.04
 burn_remains_scene = ExtResource("31_burn")
 burn_ember_tint = Color(0.36, 0.06, 0.12, 0.26)
 burn_ember_emission_energy = 0.1
@@ -353,11 +353,10 @@ burn_smoke_duration = 9.0
 burn_smoke_alpha = 0.14
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." ]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.02, 0)
 shape = SubResource("CapsuleShape_enemy")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1991264069]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.02, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 cast_shadow = 0
 pixel_size = 0.0041
 billboard = 2
@@ -368,8 +367,9 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="GroundShadow" type="Sprite3D" parent="." unique_id=110478211]
-transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.98, 0)
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.93, 0)
 cast_shadow = 0
+billboard = 2
 modulate = Color(1, 1, 1, 0.72)
 pixel_size = 0.0056
 texture_filter = 5
