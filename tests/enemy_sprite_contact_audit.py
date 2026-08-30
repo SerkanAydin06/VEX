@@ -206,6 +206,8 @@ def packed_float_array(source: str, property_name: str) -> list[float]:
     return [float(value.strip()) for value in match.group(1).split(",")]
 
 
+contact_failures: list[tuple[str, str, list[float], float]] = []
+
 for creature, spec in CREATURES.items():
     scene_path = ACTORS / spec.scene
     source = scene_path.read_text(encoding="utf-8")
@@ -244,10 +246,6 @@ for creature, spec in CREATURES.items():
         assert len(offsets) == len(gaps), (creature, name_match.group(1), offsets, gaps)
         adjusted_gaps = [gap + offset for gap, offset in zip(gaps, offsets)]
         tolerance = max(0.0006, spec.pixel_size * 0.55)
-        assert all(
-            abs(adjusted_gap - TARGET_CONTACT_GAP) <= tolerance
-            for adjusted_gap in adjusted_gaps
-        ), (creature, name_match.group(1), adjusted_gaps, TARGET_CONTACT_GAP)
         print(
             f"  {name_match.group(1):12s} gap="
             + ",".join(f"{gap:+.4f}" for gap in gaps)
@@ -256,6 +254,14 @@ for creature, spec in CREATURES.items():
             + " adjusted="
             + ",".join(f"{gap:+.4f}" for gap in adjusted_gaps)
         )
+        if not all(
+            abs(adjusted_gap - TARGET_CONTACT_GAP) <= tolerance
+            for adjusted_gap in adjusted_gaps
+        ):
+            contact_failures.append(
+                (creature, name_match.group(1), adjusted_gaps, TARGET_CONTACT_GAP)
+            )
     assert used == set(regions), (creature, "unreferenced atlas frames", set(regions) - used)
 
+assert not contact_failures, contact_failures
 print("enemy sprite contact audit passed")
