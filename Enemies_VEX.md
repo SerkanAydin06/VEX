@@ -40,7 +40,7 @@ Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
 
 | Evren | Kod adı | Genel kimlik | Mevcut yaratık |
 |---|---|---|---|
-| 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | HellMagma |
+| 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | HellMagma, Cinder Hound, Furnace Carrier, Crucible Warden |
 | 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager |
 | 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | RedViper, BadRedViper |
 | 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw |
@@ -330,7 +330,7 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 
 ---
 
-## 9. Mevcut düşmanların yeni evren haritası
+## 9. Mevcut düşmanların evren haritası
 
 | Mevcut oyun düşmanı | Bağlı evren | Aile rolü |
 |---|---|---|
@@ -340,6 +340,9 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 | Veilmaw | Nhal Veil | Pusu avcısı |
 | HellMagma | Korvath Ocağı | Ağır zırhlı kırıcı |
 | Voidweaver | Aether Loom | Uzaysal menzilli tehdit |
+| Cinder Hound | Korvath Ocağı | Hızlı flank avcısı |
+| Furnace Carrier | Korvath Ocağı | Destek ve alan bozucu |
+| Crucible Warden | Korvath Ocağı | Elit koruyucu / miniboss |
 
 ---
 
@@ -394,17 +397,17 @@ Düşman tasarım ve üretim sırası için öneri:
 4. Veilmaw
 5. HellMagma
 6. Voidweaver
+7. Cinder Hound
+8. Furnace Carrier
+9. Crucible Warden
 
 ### Sonra aileleri tamamlayacak en gerekli yeni yaratıklar
-7. Cinder Hound
-8. Briar Skulker
-9. Coil Lancer
-10. Murk Stalker
-11. Parallax Drone
+10. Briar Skulker
+11. Coil Lancer
+12. Murk Stalker
+13. Parallax Drone
 
 ### Daha sonra elit / destek / miniboss sınıfları
-12. Furnace Carrier
-13. Crucible Warden
 14. Gorehorn
 15. Spore Matriarch
 16. Venom Marshal
