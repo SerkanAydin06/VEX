@@ -1,10 +1,10 @@
 {
-  "source_zip": "371_512(2).zip",
+  "source_zip": "371_512(3).zip",
   "source_folder": "371_512",
   "sheet_file": "briar_skulker_character_spritesheet.png",
   "sheet_size": {
     "width": 1364,
-    "height": 5632
+    "height": 3584
   },
   "frame_size": {
     "width": 341,
@@ -12,13 +12,8 @@
   },
   "grid": {
     "columns": 4,
-    "rows": 11
+    "rows": 7
   },
-  "notes": [
-    "Spritesheet was generated without scaling.",
-    "Transparent RGBA background preserved.",
-    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
-  ],
   "rows": [
     {
       "row_index": 0,
@@ -102,54 +97,6 @@
         "briar_skulker_walk_back_2_result.png",
         "briar_skulker_walk_back_3_result.png",
         "briar_skulker_walk_back_4_result.png"
-      ]
-    },
-    {
-      "row_index": 7,
-      "animation": "idle_side",
-      "source_prefix": "briar_skulker_idle_side",
-      "frame_count": 4,
-      "frames": [
-        "briar_skulker_idle_side_1_result.png",
-        "briar_skulker_idle_side_2_result.png",
-        "briar_skulker_idle_side_3_result.png",
-        "briar_skulker_idle_side_4_result.png"
-      ]
-    },
-    {
-      "row_index": 8,
-      "animation": "walkside",
-      "source_prefix": "briar_skulker_walkside",
-      "frame_count": 4,
-      "frames": [
-        "briar_skulker_walkside_1_result.png",
-        "briar_skulker_walkside_2_result.png",
-        "briar_skulker_walkside_3_result.png",
-        "briar_skulker_walkside_4_result.png"
-      ]
-    },
-    {
-      "row_index": 9,
-      "animation": "idle_front_side",
-      "source_prefix": "briar_skulker_idle_front_side",
-      "frame_count": 4,
-      "frames": [
-        "briar_skulker_idle_front_side_1_result.png",
-        "briar_skulker_idle_front_side_2_result.png",
-        "briar_skulker_idle_front_side_3_result.png",
-        "briar_skulker_idle_front_side_4_result.png"
-      ]
-    },
-    {
-      "row_index": 10,
-      "animation": "walk_front_side",
-      "source_prefix": "briar_skulker_walk_front_side",
-      "frame_count": 4,
-      "frames": [
-        "briar_skulker_walk_front_side_1_result.png",
-        "briar_skulker_walk_front_side_2_result.png",
-        "briar_skulker_walk_front_side_3_result.png",
-        "briar_skulker_walk_front_side_4_result.png"
       ]
     }
   ]

@@ -579,20 +579,16 @@ attack_damage = 35
 
 [node name="FurniceCarrier" parent="Enemies" unique_id=1822641573 instance=ExtResource("37_furnice")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.1341183, -20)
-projectile_attack_windup = 0.5
-thermal_burst_cooldown = 3.0
 enemy_id = &"level_test_furnice_carrier"
 maximum_health = 500
 
 [node name="CrucibleWarden" parent="Enemies" unique_id=879260090 instance=ExtResource("38_crucible")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.25, -20)
-ground_slam_trigger_range = 4.0
-heatwave_cooldown = 2.0
 enemy_id = &"level_test_crucible_warden"
 maximum_health = 500
 
-[node name="BriarSkulker" parent="Enemies" instance=ExtResource("39_briar")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 1.0, -20)
+[node name="BriarSkulker" parent="Enemies" unique_id=1297055620 instance=ExtResource("39_briar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7649529, -20)
 enemy_id = &"level_test_briar_skulker"
 maximum_health = 500
 
