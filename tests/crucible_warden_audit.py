@@ -166,7 +166,7 @@ def main() -> int:
     ]:
         require(projectile_script, needle, label)
 
-    for animation in ["idle", "walk", "attack", "heatwave", "death", "idle_back", "walk_back", "hurt"]:
+    for animation in ["idle", "walk", "attack", "heatwave", "death", "idle_back", "walk_back"]:
         require(warden_scene, f'&"{animation}"', f"character animation {animation}")
     require(warden_scene, 'enemy_id = &"crucible_warden"', "canonical enemy id")
     require(warden_scene, 'special_ability_settings = SubResource("Resource_warden_ability")', "Warden özel ayar bağlantısı")
