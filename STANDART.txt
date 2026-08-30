@@ -53,6 +53,7 @@ Enemy görsel taban değerleri (AnimatedSprite3D, sahne-otoriteli):
 - RedViper         : Y  0.00002250 / pixel_size 0.003515713
 - BadRedViper      : Y  0.13330000 / pixel_size 0.006575391
 - Cinder Hound     : Y  0.14540000 / pixel_size 0.003400000
+- Briar Skulker    : Y  0.00000000 / pixel_size 0.003125000
 
 Bu tabanlar tek başına zemin temasını tanımlamaz. Her animasyon karesinin gerçek alfa
 tabanı, ilgili `*_frame_y_offsets` Inspector dizisiyle capsule tabanından 0.008 m
@@ -64,10 +65,17 @@ Enemy zemin teması ve GroundShadow standardı:
 - Canlı, saldırı, hurt, özel yetenek ve death dahil her kullanılan karede en alt `alpha > 16` piksel hedefi kapsül tabanından 0.008 m yukarıdadır.
 - Kabul toleransı bir sprite pikselinin yarısıdır (minimum 0.0006 m). Yeni veya değişen spritesheet ölçüm denetimini geçmeden birleştirilmez.
 - Frame ofsetleri sahne Inspector'ındaki `idle`, `idle_back`, `walk`, `walk_back`, `attack`, `hurt`, `death` ve varsa özel yetenek dizilerinde tutulur; runtime script alfa taraması yapmaz.
+- Yönlü sheet kullanan Briar Skulker için `idle_side`, `walk_side`, `idle_front_side`, `walk_front_side` ve `attack_close` ofsetleri 09 - Özel Yetenekler kaynağında sahne-otoriteli tutulur.
 - GroundShadow local Y değeri `-capsule_height / 2 + 0.02 m` olur. 0.02 m fizik payı z-fighting'i önler; yaratığın havada durduğu anlamına gelmez.
 - GroundShadow `billboard = 2` (Fixed-Y), `cast_shadow = 0`, `render_priority = -2` ve `offset = Vector2(0, 16)` kullanır. 16 px görüş-yönü ayrımı, gölge kütlesini ayak siluetinin altından uzaklaştırır fakat temas noktasını koparmaz.
 - GroundShadow alfa aralığı normal yaratıklarda 0.50–0.52, ağır/elitlerde 0.54–0.56'dır. Opaklığı artırarak ayakları karartmak yasaktır.
 - GroundShadow boyutu yaratığın kapsül yarıçapına/siluetine göre sahnede ayarlanır; gölge node'u runtime'da yeniden ölçeklenmez veya yeniden konumlandırılmaz.
+
+Yönlü enemy sprite standardı:
+- Mantıksal hareket yönü ile aktif kamera/oyuncu yönü arasındaki yatay açı kullanılır; görsel seçim fizik gövdesinin rotasyonundan ayrıdır.
+- Ön, ön çapraz, yan ve arka sektörleri Inspector'daki açı sınırlarıyla seçilir. Sheet'te tek tarafı bulunan yan ve ön çapraz kareler `AnimatedSprite3D.flip_h` ile karşı tarafa otomatik aynalanır.
+- Aynalama yeni bir texture veya ikinci sprite node üretmez. Collision, saldırı menzili ve mermi yönü mantıksal `_facing_direction` üzerinden çalışmaya devam eder.
+- Saldırı kararı görünüş yönünden bağımsızdır: oyuncu `melee_trigger_range` içindeyse `attack_close`, dışındaysa görüş ve menzil uygunsa `attack` seçilir.
 
 
 2) SÜPÜRGELİK / BASETRIM KURALI

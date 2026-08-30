@@ -13,6 +13,7 @@ const CREATURE_SCENES := [
 	"res://scenes/actors/voidweaver.tscn",
 	"res://scenes/actors/furnice_carrier.tscn",
 	"res://scenes/actors/crucible_warden.tscn",
+	"res://scenes/actors/briar_skulker.tscn",
 ]
 
 const COMMON_CREATURE_INSPECTOR_PROPERTIES := [
@@ -449,6 +450,12 @@ func _check_creature_inspector_contract() -> void:
 		elif scene_path.ends_with("furnice_carrier.tscn"):
 			if not (creature.get("special_ability_settings") is VexFurniceCarrierAbilitySettings):
 				failures.append("Furnice Carrier tip güvenli özel yetenek ayarına bağlı değil.")
+		elif scene_path.ends_with("briar_skulker.tscn"):
+			var hybrid_settings := creature.get("special_ability_settings") as VexEnemyHybridAbilitySettings
+			if hybrid_settings == null:
+				failures.append("Briar Skulker tip güvenli hibrit ayara bağlı değil.")
+			elif not hybrid_settings.mirror_opposite_directions:
+				failures.append("Briar Skulker eksik yan/çapraz yönleri otomatik aynalamıyor.")
 		creature.free()
 
 

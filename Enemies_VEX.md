@@ -41,7 +41,7 @@ Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
 | Evren | Kod adı | Genel kimlik | Mevcut yaratık |
 |---|---|---|---|
 | 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | HellMagma, Cinder Hound, Furnace Carrier, Crucible Warden |
-| 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager |
+| 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager, Briar Skulker |
 | 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | RedViper, BadRedViper |
 | 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw |
 | 5 | **Aether Loom** | Boşluk, yarık dokusu, akıllı enerji organizmaları ve uzamsal örüntüler | Voidweaver |
@@ -135,12 +135,12 @@ Bu evrenin yaratıkları daha “kültürlü medeniyet” değil, **vahşi fakat
 
 ### 2. Briar Skulker
 
-**Durum:** Planlandı
+**Durum:** Mevcut
 
-- **Rol:** Pusu / yan rota baskısı
+- **Rol:** Pusu / yan rota baskısı / hibrit yakın-menzilli avcı
 - **Hikâye rolü:** Sürüye görünmeden yaklaşan keşif ve zayıf hedef temizleme organizması.
-- **Savaş kimliği:** Gölge hatlarında kalır, kısa süreli kamuflaj benzeri perdeleme yapar.
-- **Ayırt edici özellik:** Ravager’dan daha kırılgan, ama daha sinsi.
+- **Savaş kimliği:** Uzakta diken küresi fırlatır; oyuncu yakın saldırı alanına girdiğinde menzilli saldırıyı bırakıp pençe vuruşuna öncelik verir.
+- **Ayırt edici özellik:** Ravager’dan daha kırılgan ve çeviktir. Ön, arka, yan ve ön çapraz hareket görselleriyle yönünü okunabilir biçimde gösterir; eksik sağ/sol yönler yatay aynalanır.
 
 ### 3. Gorehorn
 
@@ -335,6 +335,7 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 | Mevcut oyun düşmanı | Bağlı evren | Aile rolü |
 |---|---|---|
 | Ravager | Thornwild Sürüsü | Temel yakın baskı avcısı |
+| Briar Skulker | Thornwild Sürüsü | Hibrit pusu ve yan rota avcısı |
 | RedViper | Vaskari Lejyonu | Hızlı elit hücum birimi |
 | BadRedViper | Vaskari Lejyonu | Ağır hücum varyantı |
 | Veilmaw | Nhal Veil | Pusu avcısı |
@@ -400,9 +401,9 @@ Düşman tasarım ve üretim sırası için öneri:
 7. Cinder Hound
 8. Furnace Carrier
 9. Crucible Warden
+10. Briar Skulker
 
 ### Sonra aileleri tamamlayacak en gerekli yeni yaratıklar
-10. Briar Skulker
 11. Coil Lancer
 12. Murk Stalker
 13. Parallax Drone
