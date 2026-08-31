@@ -335,6 +335,7 @@ navigation_clearance = 0.52
 waypoint_reach_distance = 0.58
 runtime_grid_step = 0.9
 runtime_grid_max_nodes = 2000
+runtime_grid_search_margin = 12.0
 near_sight_interval = 0.1
 medium_sight_interval = 0.16
 distant_sight_interval = 0.22
