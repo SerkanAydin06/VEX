@@ -40,6 +40,7 @@ assert 'return &"charge"' in script
 assert settings.startswith("@tool\n")
 assert "class_name VexGorehornChargeSettings" in settings
 assert "extends VexEnemyAbilitySettings" in settings
+assert "vertical_hit_tolerance" in settings
 assert "special_ability_settings: VexEnemyAbilitySettings" in lunge_base
 assert "@export_range(0.5, 16.0, 0.05) var attack_range" in lunge_base
 
@@ -47,6 +48,11 @@ for token in [
     "_charge_direction = _player.global_position - global_position",
     "await get_tree().physics_frame",
     "func _resolve_charge_contact()",
+    "func _is_player_within_charge_hit_volume(",
+    "settings.vertical_hit_tolerance",
+    "func _cancel_charge_attack()",
+    "func _has_valid_player()",
+    "_attack_generation += 1",
     "func _apply_charge_hit(",
     '"apply_external_impulse"',
     '"request_camera_shake"',
@@ -55,6 +61,10 @@ for token in [
     "blocked_recovery_duration",
 ]:
     assert token in script, token
+
+current_attack = script[script.index("func _is_current_charge_attack("):]
+current_attack = current_attack[:current_attack.index("\n\nfunc ", 5)]
+assert "_player" not in current_attack, current_attack
 
 for token in [
     "func apply_external_impulse(",
@@ -114,4 +124,3 @@ assert "Gorehorn şarj saldırısı standardı" in standard
 assert "### 3. Gorehorn\n\n**Durum:** Mevcut" in enemy_guide
 
 print("gorehorn audit passed")
-
