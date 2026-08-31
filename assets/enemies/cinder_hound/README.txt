@@ -5,9 +5,9 @@ Files:
 - spritesheet_manifest.json
 - README.txt
 
-Source: cinder_hound.zip
-Sheet size: 1364x3072
-Frame size: 341x512
+Source: 512_371.zip
+Sheet size: 2048x2046
+Frame size: 512x341
 Layout: 4 columns x 6 rows
 
 Row order:

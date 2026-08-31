@@ -1,14 +1,14 @@
 {
-  "source_zip": "cinder_hound.zip",
-  "source_folder": "341_512",
+  "source_zip": "512_371.zip",
+  "source_folder": "512_371",
   "sheet_file": "cinder_hound_character_spritesheet.png",
   "sheet_size": {
-    "width": 1364,
-    "height": 3072
+    "width": 2048,
+    "height": 2046
   },
   "frame_size": {
-    "width": 341,
-    "height": 512
+    "width": 512,
+    "height": 341
   },
   "grid": {
     "columns": 4,
