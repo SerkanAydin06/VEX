@@ -35,6 +35,7 @@ SCHEMAS = {
         "06 - Performans",
         "07 - Görsel ve Animasyon",
         "08 - Ölüm Sonrası İz",
+        "09 - Özel Yetenekler",
     ],
 }
 
@@ -43,6 +44,7 @@ DOCUMENTED_EXPORT_FILES = [
     "warden_ability_settings.gd",
     "furnice_carrier_ability_settings.gd",
     "enemy_hybrid_ability_settings.gd",
+    "gorehorn_charge_settings.gd",
 ]
 
 
@@ -80,10 +82,13 @@ assert "@export" not in warden_script
 assert "@export" not in furnice_script
 hybrid_script = read("enemy_hybrid_base.gd")
 briar_script = read("briar_skulker.gd")
+gorehorn_script = read("gorehorn.gd")
 assert "@export" not in hybrid_script
 assert "@export" not in briar_script
+assert "@export" not in gorehorn_script
 assert not hybrid_script.startswith("@tool\n")
 assert not briar_script.startswith("@tool\n")
+assert not gorehorn_script.startswith("@tool\n")
 assert "var _ability: VexWardenAbilitySettings" in warden_script
 assert "var _ability: VexFurniceCarrierAbilitySettings" in furnice_script
 
