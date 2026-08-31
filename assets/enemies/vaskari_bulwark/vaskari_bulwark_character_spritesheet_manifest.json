@@ -1,0 +1,96 @@
+{
+  "source_zip": "512_512(3).zip",
+  "source_folder": "512_512",
+  "sheet_file": "vaskari_bulwark_character_spritesheet.png",
+  "sheet_size": {
+    "width": 2048,
+    "height": 3072
+  },
+  "frame_size": {
+    "width": 512,
+    "height": 512
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 6
+  },
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "animation": "idle",
+      "source_prefix": "vaskari_bulwark_idle",
+      "frame_count": 4,
+      "frames": [
+        "vaskari_bulwark_idle_1_result.png",
+        "vaskari_bulwark_idle_2_result.png",
+        "vaskari_bulwark_idle_3_result.png",
+        "vaskari_bulwark_idle_4_result.png"
+      ]
+    },
+    {
+      "row_index": 1,
+      "animation": "walk",
+      "source_prefix": "vaskari_bulwark_walk",
+      "frame_count": 4,
+      "frames": [
+        "vaskari_bulwark_walk_1_result.png",
+        "vaskari_bulwark_walk_2_result.png",
+        "vaskari_bulwark_walk_3_result.png",
+        "vaskari_bulwark_walk_4_result.png"
+      ]
+    },
+    {
+      "row_index": 2,
+      "animation": "attack",
+      "source_prefix": "vaskari_bulwark_attack",
+      "frame_count": 4,
+      "frames": [
+        "vaskari_bulwark_attack_1_result.png",
+        "vaskari_bulwark_attack_2_result.png",
+        "vaskari_bulwark_attack_3_result.png",
+        "vaskari_bulwark_attack_4_result.png"
+      ]
+    },
+    {
+      "row_index": 3,
+      "animation": "death",
+      "source_prefix": "vaskari_bulwark_death",
+      "frame_count": 4,
+      "frames": [
+        "vaskari_bulwark_death_1_result.png",
+        "vaskari_bulwark_death_2_result.png",
+        "vaskari_bulwark_death_3_result.png",
+        "vaskari_bulwark_death_4_result.png"
+      ]
+    },
+    {
+      "row_index": 4,
+      "animation": "idle_back",
+      "source_prefix": "vaskari_bulwark_idle_back",
+      "frame_count": 4,
+      "frames": [
+        "vaskari_bulwark_idle_back_1_result.png",
+        "vaskari_bulwark_idle_back_2_result.png",
+        "vaskari_bulwark_idle_back_3_result.png",
+        "vaskari_bulwark_idle_back_4_result.png"
+      ]
+    },
+    {
+      "row_index": 5,
+      "animation": "walk_back",
+      "source_prefix": "vaskari_bulwark_walk_back",
+      "frame_count": 4,
+      "frames": [
+        "vaskari_bulwark_walk_back_1_result.png",
+        "vaskari_bulwark_walk_back_2_result.png",
+        "vaskari_bulwark_walk_back_3_result.png",
+        "vaskari_bulwark_walk_back_4_result.png"
+      ]
+    }
+  ]
+}
