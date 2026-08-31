@@ -77,6 +77,7 @@ expected_roles = {
     "redviper": 0,
     "badredviper": 0,
     "cinderhound": 0,
+    "gorehorn": 0,
     "briar_skulker": 1,
 }
 role_scene_settings = {
