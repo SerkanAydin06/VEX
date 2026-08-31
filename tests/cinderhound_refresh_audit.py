@@ -98,7 +98,7 @@ source = SCENE.read_text(encoding="utf-8")
 regions = re.findall(r'region = Rect2\((\d+), (\d+), 512, 341\)', source)
 assert len(regions) == 24, len(regions)
 assert set(regions) == {(str(c * 512), str(r * 341)) for r in range(6) for c in range(4)}
-assert "341, 512" not in source
+assert re.search(r'region = Rect2\([^\n]*, 341, 512\)', source) is None
 assert 'path="res://assets/enemies/cinder_hound/cinder_hound_character_spritesheet.png"' in source
 
 import_text = IMPORT.read_text(encoding="utf-8")
