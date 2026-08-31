@@ -506,7 +506,7 @@ def check_save_recovery_and_runtime_ci() -> None:
         "Godot clean import log contains an error or invalid UID",
         "godot --headless --path . tests/integrity_test.tscn",
         "godot --headless --path . tests/warden_door_runtime_test.tscn",
-        "godot --headless --path . tests/gorehorn_charge_runtime_test.tscn",
+        "godot --headless --verbose --path . tests/gorehorn_charge_runtime_test.tscn",
         '--export-release "Windows Desktop"',
         "actions/checkout@v7",
         "actions/setup-python@v7",
