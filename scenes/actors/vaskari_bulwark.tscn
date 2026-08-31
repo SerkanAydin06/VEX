@@ -1,0 +1,265 @@
+[gd_scene format=3 uid="uid://bvaskaribulwk1"]
+
+[ext_resource type="Script" uid="uid://cvaskaribulwks1" path="res://scripts/actors/vaskari_bulwark.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://brcm2knf8hn6k" path="res://assets/enemies/vaskari_bulwark/vaskari_bulwark_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/red_viper_attack.wav" id="3_attack"]
+[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/red_viper_hurt.wav" id="4_hurt"]
+[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/red_viper_death.wav" id="5_death"]
+[ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="6_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="7_burn"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_vaskari_bulwark"]
+radius = 0.72
+height = 2.4
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 0, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1536, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 1536, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 1536, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 1536, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2048, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 2048, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 2048, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 2048, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2560, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 2560, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1024, 2560, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1536, 2560, 512, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vaskari_bulwark"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_4")}],
+"loop": false,
+"name": &"attack",
+"speed": 6.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death_1")}, {"duration": 1.0, "texture": SubResource("Atlas_death_2")}, {"duration": 1.0, "texture": SubResource("Atlas_death_3")}, {"duration": 1.0, "texture": SubResource("Atlas_death_4")}],
+"loop": false,
+"name": &"death",
+"speed": 4.5
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_4")}],
+"loop": true,
+"name": &"idle",
+"speed": 2.6
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_back_1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_4")}],
+"loop": true,
+"name": &"idle_back",
+"speed": 2.6
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_4")}],
+"loop": true,
+"name": &"walk",
+"speed": 4.6
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_back_1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_4")}],
+"loop": true,
+"name": &"walk_back",
+"speed": 4.6
+}]
+
+[node name="VaskariBulwark" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 15
+floor_snap_length = 0.3
+safe_margin = 0.06
+script = ExtResource("1_script")
+enemy_id = &"vaskari_bulwark"
+combat_role = 0
+maximum_health = 300
+move_speed = 2.2
+chase_speed = 3.8
+movement_acceleration = 11.0
+braking_acceleration = 22.0
+detection_range = 32.0
+pursuit_range = 42.0
+initial_view_angle = 320.0
+lost_sight_timeout = 20.0
+search_duration = 10.0
+ally_alert_radius = 12.0
+sight_origin_height = 1.10
+sight_target_height = 0.55
+damage_pursuit_commit_time = 0.18
+hearing_radius = 17.0
+attack_range = 2.15
+attack_damage = 30
+attack_cooldown = 1.55
+attack_windup = 0.40
+attack_range_tolerance = 0.45
+attack_lunge_speed = 6.0
+attack_lunge_acceleration = 30.0
+attack_lunge_duration = 0.24
+attack_lunge_stop_distance = 1.25
+navigation_clearance = 0.72
+path_target_change_distance = 1.30
+runtime_grid_step = 0.90
+runtime_grid_max_nodes = 3000
+runtime_grid_search_margin = 18.0
+dormant_distance = 48.0
+hurt_shake_duration = 0.10
+hurt_shake_amount_pixels = 1.5
+hurt_shake_frequency = 24.0
+corpse_visual_y = 1.3312
+idle_frame_y_offsets = PackedFloat32Array(0.0144, 0.0092, 0.0196, -0.0064)
+idle_back_frame_y_offsets = PackedFloat32Array(-0.0584, -0.0584, -0.0636, -0.0532)
+walk_frame_y_offsets = PackedFloat32Array(0.0248, -0.0064, -0.0064, -0.0064)
+walk_back_frame_y_offsets = PackedFloat32Array(-0.0012, -0.0168, 0.0092, -0.0064)
+attack_frame_y_offsets = PackedFloat32Array(0.0352, 0.03, 0.03, 0.0352)
+death_frame_y_offsets = PackedFloat32Array(0.0352, 0.0508, 0.0404, 0.0508)
+burn_remains_scene = ExtResource("7_burn")
+burn_remains_scale = 1.2
+burn_smoke_duration = 9.0
+burn_smoke_alpha = 0.14
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape_vaskari_bulwark")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+position = Vector3(0, 0.0884, 0)
+cast_shadow = 0
+pixel_size = 0.0052
+billboard = 2
+shaded = true
+alpha_cut = 1
+sprite_frames = SubResource("SpriteFrames_vaskari_bulwark")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="GroundShadow" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -1.18, 0)
+cast_shadow = 0
+offset = Vector2(0, 16)
+modulate = Color(1, 1, 1, 0.54)
+pixel_size = 0.0072
+billboard = 2
+texture_filter = 5
+render_priority = -2
+texture = ExtResource("6_shadow")
+
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_attack")
+volume_db = -3.0
+pitch_scale = 0.78
+max_distance = 22.0
+bus = &"SFX"
+
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_hurt")
+volume_db = -3.0
+pitch_scale = 0.74
+max_distance = 22.0
+bus = &"SFX"
+
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_death")
+volume_db = -1.5
+pitch_scale = 0.70
+max_distance = 24.0
+bus = &"SFX"

@@ -17,6 +17,7 @@ const CREATURE_SCENES := [
 	"res://scenes/actors/gorehorn.tscn",
 	"res://scenes/actors/cinder_spitter.tscn",
 	"res://scenes/actors/coil_lancer.tscn",
+	"res://scenes/actors/vaskari_bulwark.tscn",
 ]
 
 const COMMON_CREATURE_INSPECTOR_PROPERTIES := [
@@ -463,6 +464,7 @@ func _check_creature_inspector_contract() -> void:
 			not scene_path.ends_with("redviper.tscn")
 			and not scene_path.ends_with("cinderhound.tscn")
 			and not scene_path.ends_with("gorehorn.tscn")
+			and not scene_path.ends_with("vaskari_bulwark.tscn")
 		):
 			for property_name: StringName in RANGED_CREATURE_INSPECTOR_PROPERTIES:
 				if not editor_properties.has(property_name):

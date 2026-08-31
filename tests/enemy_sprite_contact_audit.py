@@ -50,6 +50,7 @@ CREATURES = {
     "cinderhound": CreatureSpec("cinderhound.tscn", -0.024, 0.0042, 1.45),
     "briar_skulker": CreatureSpec("briar_skulker.tscn", 0.0, 0.003125, 1.60),
     "gorehorn": CreatureSpec("gorehorn.tscn", 0.0, 0.0052, 2.40),
+    "vaskari_bulwark": CreatureSpec("vaskari_bulwark.tscn", 0.0884, 0.0052, 2.40),
 }
 
 
