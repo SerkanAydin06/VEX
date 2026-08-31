@@ -868,6 +868,10 @@ func _attempt_attack() -> void:
 		if still_in_range and _check_line_of_sight() and _player.has_method("take_damage"):
 			_player.call("take_damage", _runtime_attack_damage, global_position, self)
 
+	# Darbe penceresi bittiğinde saldırı karesini cooldown boyunca dondurma.
+	# Lunge ailesi toparlanma sırasında yerinde beklediği için nötr idle pozu kullanır.
+	_play_animation(&"idle")
+
 	var remaining: float = maxf(
 		0.0,
 		_runtime_attack_cooldown - _runtime_attack_windup
