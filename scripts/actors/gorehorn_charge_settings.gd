@@ -5,6 +5,9 @@ extends VexEnemyAbilitySettings
 @export_category("Boynuz Şarjı")
 ## Şarj sırasında oyuncuyla temasın kesin vuruş sayılacağı yatay mesafedir (metre).
 @export_range(0.5, 2.5, 0.05) var hit_distance := 1.10
+## Yakınlık tabanlı boynuz temasının geçerli sayılacağı en yüksek dikey kök farkıdır (metre).
+## Gerçek CharacterBody3D çarpışmaları bu toleranstan bağımsızdır; bu ayar yalnız katlar arasından yanlış vuruşu engeller.
+@export_range(0.5, 3.0, 0.05) var vertical_hit_tolerance := 1.50
 ## Başarılı veya boşa giden şarjdan sonra Gorehorn'un yeniden hareket etmeden önce beklediği süredir (saniye).
 @export_range(0.0, 2.0, 0.05) var recovery_duration := 0.75
 ## Duvara çarpan şarjdan sonra uygulanan daha uzun sersemleme süresidir (saniye).
@@ -31,4 +34,3 @@ extends VexEnemyAbilitySettings
 @export_range(0.0, 0.75, 0.01) var impact_shock_peak_alpha := 0.38
 ## Darbe perdesinin hızlı yükselip kaybolacağı toplam süredir (saniye).
 @export_range(0.05, 0.8, 0.01) var impact_shock_duration := 0.24
-
