@@ -91,6 +91,9 @@ def check_core_files() -> None:
         "scenes/world/door_status_light.tscn", "scripts/world/door_status_light.gd",
         "scenes/hub/bastion_7.tscn", "translations/vex.csv",
         "tests/integrity_test.gd", "tests/integrity_test.tscn",
+        "tests/gorehorn_charge_runtime_test.gd",
+        "tests/gorehorn_charge_runtime_test.gd.uid",
+        "tests/gorehorn_charge_runtime_test.tscn",
         "tests/fixtures/save_invalid_version.cfg",
         "tests/fixtures/save_valid_backup.cfg",
         ".github/workflows/validate.yml",
@@ -414,6 +417,20 @@ def check_unique_progression_ids() -> None:
 
 
 def check_localization() -> None:
+    project = read("project.godot")
+    settings = read("scripts/autoload/settings_manager.gd")
+    if "locale/translations=" in project:
+        fail("Çeviri kaynakları temiz importtan önce project.godot üzerinden yükleniyor")
+    for contract in [
+        "TRANSLATION_RESOURCE_PATHS",
+        "func _register_imported_translations() -> void:",
+        "TranslationServer.add_translation(translation)",
+        "res://translations/vex.tr.translation",
+        "res://translations/vex.en.translation",
+    ]:
+        if contract not in settings:
+            fail(f"Runtime çeviri bootstrap sözleşmesi eksik: {contract}")
+
     csv_path = ROOT / "translations/vex.csv"
     if not csv_path.exists():
         fail("Çeviri CSV eksik")
@@ -485,9 +502,11 @@ def check_save_recovery_and_runtime_ci() -> None:
     workflow = read(".github/workflows/validate.yml")
     for contract in [
         "Godot_v4.7-stable_linux.x86_64.zip",
-        "godot --headless --editor --path . --quit",
+        "godot --headless --editor --path . --quit 2>&1 | tee",
+        "Godot clean import log contains an error or invalid UID",
         "godot --headless --path . tests/integrity_test.tscn",
         "godot --headless --path . tests/warden_door_runtime_test.tscn",
+        "godot --headless --path . tests/gorehorn_charge_runtime_test.tscn",
         '--export-release "Windows Desktop"',
         "actions/checkout@v7",
         "actions/setup-python@v7",
