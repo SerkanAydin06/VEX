@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bgorehorn01vex"]
 
-[ext_resource type="Script" path="res://scripts/actors/gorehorn.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cgorehornscr1" path="res://scripts/actors/gorehorn.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://de8pocibc4fol" path="res://assets/enemies/gorehorn/gorehorn_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/red_viper_attack.wav" id="3_attack_audio"]
 [ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/red_viper_hurt.wav" id="4_hurt_audio"]
@@ -8,7 +8,7 @@
 [ext_resource type="AudioStream" uid="uid://r1pitif5hig1" path="res://assets/audio/barrel_explosion_pro.wav" id="6_impact_audio"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="7_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="8_burn"]
-[ext_resource type="Script" path="res://scripts/actors/gorehorn_charge_settings.gd" id="9_settings"]
+[ext_resource type="Script" uid="uid://cgorehornset1" path="res://scripts/actors/gorehorn_charge_settings.gd" id="9_settings"]
 
 [sub_resource type="Resource" id="Resource_gorehorn_charge"]
 script = ExtResource("9_settings")
@@ -220,13 +220,13 @@ dormant_distance = 48.0
 hurt_shake_duration = 0.09
 hurt_shake_amount_pixels = 1.75
 hurt_shake_frequency = 28.0
-corpse_visual_y = 0.0
-idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
-death_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+corpse_visual_y = 0.1236
+idle_frame_y_offsets = PackedFloat32Array(0.1236, 0.1236, 0.1288, 0.1236)
+idle_back_frame_y_offsets = PackedFloat32Array(0.134, 0.1236, 0.1288, 0.1392)
+walk_frame_y_offsets = PackedFloat32Array(0.1184, 0.1184, 0.1236, 0.1288)
+walk_back_frame_y_offsets = PackedFloat32Array(0.1236, 0.1132, 0.1392, 0.1392)
+attack_frame_y_offsets = PackedFloat32Array(0.1392, 0.1236, 0.134, 0.1288)
+death_frame_y_offsets = PackedFloat32Array(0.1392, 0.1184, 0.134, 0.1236)
 burn_remains_scene = ExtResource("8_burn")
 burn_remains_scale = 1.25
 burn_smoke_duration = 9.0
