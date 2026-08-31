@@ -16,6 +16,7 @@ EXPECTED = {
     "badredviper": (32.0, 42.0, 46.0),
     "cinderhound": (30.0, 42.0, 44.0),
     "gorehorn": (32.0, 42.0, 48.0),
+    "vaskari_bulwark": (32.0, 42.0, 48.0),
 }
 
 def root_value(text: str, key: str) -> float:
