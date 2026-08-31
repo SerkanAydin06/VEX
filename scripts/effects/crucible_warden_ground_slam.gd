@@ -112,14 +112,16 @@ func _shake_player_camera() -> void:
 	var distance := VexEnemyRuntimeUtils.horizontal_distance(global_position, player.global_position)
 	if distance > shake_radius:
 		return
+	var proximity := 1.0 - clampf(distance / maxf(shake_radius, 0.001), 0.0, 1.0)
+	var effective_strength := shake_strength * lerpf(shake_minimum_proximity_scale, 1.0, proximity)
+	if player.has_method("request_camera_shake"):
+		player.call("request_camera_shake", effective_strength, shake_duration)
+		return
 	if not player.has_method("get_view_camera"):
 		return
 	var camera := player.call("get_view_camera") as Camera3D
 	if camera == null or not is_instance_valid(camera):
 		return
-
-	var proximity := 1.0 - clampf(distance / maxf(shake_radius, 0.001), 0.0, 1.0)
-	var effective_strength := shake_strength * lerpf(shake_minimum_proximity_scale, 1.0, proximity)
 	var base_h_offset := camera.h_offset
 	var base_v_offset := camera.v_offset
 	var start_msec := Time.get_ticks_msec()

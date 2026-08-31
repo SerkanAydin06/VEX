@@ -20,6 +20,7 @@ CREATURE_CAPSULES = {
     "badredviper": (0.82, 3.10),
     "cinderhound": (0.44, 1.45),
     "briar_skulker": (0.38, 1.60),
+    "gorehorn": (0.72, 2.40),
 }
 
 

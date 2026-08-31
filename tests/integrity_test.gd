@@ -14,6 +14,7 @@ const CREATURE_SCENES := [
 	"res://scenes/actors/furnice_carrier.tscn",
 	"res://scenes/actors/crucible_warden.tscn",
 	"res://scenes/actors/briar_skulker.tscn",
+	"res://scenes/actors/gorehorn.tscn",
 ]
 
 const COMMON_CREATURE_INSPECTOR_PROPERTIES := [
@@ -439,7 +440,11 @@ func _check_creature_inspector_contract() -> void:
 		for property_name: StringName in COMMON_CREATURE_INSPECTOR_PROPERTIES:
 			if not editor_properties.has(property_name):
 				failures.append("Yaratık Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
-		if not scene_path.ends_with("redviper.tscn") and not scene_path.ends_with("cinderhound.tscn"):
+		if (
+			not scene_path.ends_with("redviper.tscn")
+			and not scene_path.ends_with("cinderhound.tscn")
+			and not scene_path.ends_with("gorehorn.tscn")
+		):
 			for property_name: StringName in RANGED_CREATURE_INSPECTOR_PROPERTIES:
 				if not editor_properties.has(property_name):
 					failures.append("Ravager ailesi Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
@@ -449,6 +454,14 @@ func _check_creature_inspector_contract() -> void:
 		elif scene_path.ends_with("furnice_carrier.tscn"):
 			if not (creature.get("special_ability_settings") is VexFurniceCarrierAbilitySettings):
 				failures.append("Furnice Carrier tip güvenli özel yetenek ayarına bağlı değil.")
+		elif scene_path.ends_with("gorehorn.tscn"):
+			var charge_settings := creature.get("special_ability_settings") as VexGorehornChargeSettings
+			if charge_settings == null:
+				failures.append("Gorehorn tip güvenli şarj ayarına bağlı değil.")
+			elif charge_settings.knockback_horizontal_speed <= 0.0:
+				failures.append("Gorehorn boynuz itme kuvveti geçersiz.")
+			elif charge_settings.impact_shake_enabled and charge_settings.impact_shake_duration <= 0.0:
+				failures.append("Gorehorn temas sarsıntısı süresi geçersiz.")
 		elif scene_path.ends_with("briar_skulker.tscn"):
 			var hybrid_settings := creature.get("special_ability_settings") as VexEnemyHybridAbilitySettings
 			if hybrid_settings == null:

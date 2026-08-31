@@ -144,12 +144,12 @@ Bu evrenin yaratıkları daha “kültürlü medeniyet” değil, **vahşi fakat
 
 ### 3. Gorehorn
 
-**Durum:** Planlandı
+**Durum:** Mevcut
 
 - **Rol:** Orta-ağır şarj birimi
 - **Hikâye rolü:** Thornwild’da kalın kabuklu avları devirmek için kullanılan koçbaşı türü avcı.
-- **Savaş kimliği:** Kısa hazırlık sonrası düz hat şarj yapar, çarpınca oyuncunun ritmini bozar.
-- **Ayırt edici özellik:** Saf hız yerine ivmelenme tehdidi yaratır.
+- **Savaş kimliği:** Kısa hazırlık sonrası yönünü kilitleyip çok hızlı düz hat şarjı yapar; boynuz teması hasar, oyuncu itmesi ve erişilebilirlik ayarına bağlı kamera sarsıntısı uygular.
+- **Ayırt edici özellik:** Şarj sırasında dönemediği için okunabilir ama yüksek ivmeli bir koridor tehdididir; duvara çarptığında daha uzun açık verir.
 
 ### 4. Spore Matriarch
 
@@ -336,6 +336,7 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 |---|---|---|
 | Ravager | Thornwild Sürüsü | Temel yakın baskı avcısı |
 | Briar Skulker | Thornwild Sürüsü | Hibrit pusu avcısı |
+| Gorehorn | Thornwild Sürüsü | Orta-ağır şarj ve ritim bozma birimi |
 | RedViper | Vaskari Lejyonu | Hızlı elit hücum birimi |
 | BadRedViper | Vaskari Lejyonu | Ağır hücum varyantı |
 | Veilmaw | Nhal Veil | Pusu avcısı |
@@ -402,14 +403,14 @@ Düşman tasarım ve üretim sırası için öneri:
 8. Furnace Carrier
 9. Crucible Warden
 10. Briar Skulker
+11. Gorehorn
 
 ### Sonra aileleri tamamlayacak en gerekli yeni yaratıklar
-11. Coil Lancer
-12. Murk Stalker
-13. Parallax Drone
+12. Coil Lancer
+13. Murk Stalker
+14. Parallax Drone
 
 ### Daha sonra elit / destek / miniboss sınıfları
-14. Gorehorn
 15. Spore Matriarch
 16. Venom Marshal
 17. Hush Leech
