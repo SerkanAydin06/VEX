@@ -97,7 +97,7 @@ func _run_player_hit_case() -> void:
 	var gorehorn := _spawn_test_gorehorn(case_root, "runtime_gorehorn_hit")
 	if gorehorn == null:
 		GameState.player = null
-		case_root.queue_free()
+		case_root.free()
 		await get_tree().process_frame
 		return
 
@@ -158,7 +158,7 @@ func _run_player_hit_case() -> void:
 		failures.append("Başarılı şarj cooldown sonunda saldırı kilidini bırakmadı.")
 
 	GameState.player = null
-	case_root.queue_free()
+	case_root.free()
 	await get_tree().process_frame
 
 
@@ -178,7 +178,7 @@ func _run_wall_block_case() -> void:
 	var gorehorn := _spawn_test_gorehorn(case_root, "runtime_gorehorn_wall")
 	if gorehorn == null:
 		GameState.player = null
-		case_root.queue_free()
+		case_root.free()
 		await get_tree().process_frame
 		return
 
@@ -221,7 +221,7 @@ func _run_wall_block_case() -> void:
 		failures.append("Duvara çarpan şarj toparlanma sonunda kilidi bırakmadı.")
 
 	GameState.player = null
-	case_root.queue_free()
+	case_root.free()
 	await get_tree().process_frame
 
 
