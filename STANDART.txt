@@ -434,6 +434,8 @@ Yeni silah eklerken HUD'a weapon_id match bloğu yazmak yerine WeaponDefinition 
 - Uzun, tek sahneye özgü briefing/lore metni Inspector Türkçe kaynak metni olabilir; runtime tr() ile çözülür ve CSV'de karşılığı bulunur.
 - Yeni oyuncu metni doğrudan hard-code UI label'a yazılmaz.
 - Format placeholder (%s vb.) TR/EN satırlarında aynı sayıda ve sırada tutulur.
+- CSV importer tarafından üretilen vex.tr.translation / vex.en.translation yolları project.godot içinde erken referanslanmaz; SettingsManager import tamamlandıktan sonra bu kaynakları TranslationServer'a kaydeder.
+- Temiz klonun ilk Godot import logu CI'da ERROR ve invalid UID için doğrulanır; ilk tarama hataları geçici kabul edilip gizlenmez.
 
 
 15) AYARLAR / PC UX
@@ -485,3 +487,4 @@ Temel gamepad desteği sol stick hareket, sağ stick bakış, trigger aim/fire v
   * Stage 2 Bastion Workshop/Engineering + Selin presence doğru açılıyor mu?
   * 1–5 weapon slot input ve rebind/gamepad çakışmasız mı?
   * Nightmare encounter baskısı gerçek playtestte dengeli mi?
+- Gorehorn şarjı tests/gorehorn_charge_runtime_test.tscn ile gerçek CharacterBody3D fiziğinde doğrulanır: tek temas hasarı, Inspector itmesi, sarsıntı/perde çağrıları, duvar bloklaması, hız sıfırlama ve cooldown sırasında idle toparlanması.
