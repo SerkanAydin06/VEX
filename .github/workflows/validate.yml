@@ -89,6 +89,16 @@ jobs:
             echo "::error::Gorehorn charge runtime log contains an error or invalid UID"
             exit 1
           fi
+      - name: Run Gorehorn edge runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/gorehorn-edge-runtime.log"
+          godot --headless --verbose --path . tests/gorehorn_charge_edge_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Gorehorn edge runtime log contains an error or invalid UID"
+            exit 1
+          fi
       - name: Install Windows export templates
         env:
           TEMPLATE_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz
