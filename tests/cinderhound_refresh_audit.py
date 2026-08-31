@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import json
+import math
 import re
 import struct
 import zlib
@@ -14,6 +15,9 @@ MANIFEST = ROOT / "assets/enemies/cinder_hound/cinder_hound_character_spriteshee
 IMPORT = ROOT / "assets/enemies/cinder_hound/cinder_hound_character_spritesheet.png.import"
 ALPHA_THRESHOLD = 16
 ANIM_ROWS = ["idle", "walk", "attack", "death", "idle_back", "walk_back"]
+TARGET_CONTACT_GAP = 0.008
+CAPSULE_HEIGHT = 1.45
+CORPSE_FLOOR_CLEARANCE = 0.02
 
 
 def paeth(a: int, b: int, c: int) -> int:
@@ -110,8 +114,13 @@ width, height, alpha = decode_rgba_alpha(SHEET)
 assert (width, height) == (2048, 2046)
 pixel_size = scene_float(source, "pixel_size")
 base_y = sprite_y(source)
+corpse_visual_y = scene_float(source, "corpse_visual_y")
+assert math.isclose(pixel_size, 0.0042, abs_tol=0.000001)
+assert math.isclose(base_y, -0.024, abs_tol=0.000001)
+assert math.isclose(corpse_visual_y, -0.0335, abs_tol=0.000001)
 print(f"CINDER HOUND SCALE pixel_size={pixel_size:.6f} sprite_y={base_y:+.4f}")
 
+death_final_max_y = None
 for row_index, animation in enumerate(ANIM_ROWS):
     for column in range(4):
         x0 = column * 512
@@ -131,6 +140,8 @@ for row_index, animation in enumerate(ANIM_ROWS):
         bbox_w = max_x - min_x + 1
         bbox_h = max_y - min_y + 1
         bottom_world = base_y + (341 * 0.5 - (max_y + 1)) * pixel_size
+        if animation == "death" and column == 3:
+            death_final_max_y = max_y
         print(
             f"CINDER HOUND BBOX {animation:9s} frame={column + 1} "
             f"px=({bbox_w}x{bbox_h}) x={min_x}:{max_x} y={min_y}:{max_y} "
@@ -138,4 +149,14 @@ for row_index, animation in enumerate(ANIM_ROWS):
             f"bottom_local={bottom_world:+.4f}"
         )
 
+assert death_final_max_y is not None
+final_bottom_from_origin = (341 * 0.5 - (death_final_max_y + 1)) * pixel_size
+final_corpse_gap = (
+    corpse_visual_y
+    + CORPSE_FLOOR_CLEARANCE
+    + final_bottom_from_origin
+    + CAPSULE_HEIGHT * 0.5
+)
+assert math.isclose(final_corpse_gap, TARGET_CONTACT_GAP, abs_tol=0.0006), final_corpse_gap
+print(f"CINDER HOUND CORPSE final_gap={final_corpse_gap:+.4f}")
 print("cinder hound refresh audit passed")
