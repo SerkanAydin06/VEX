@@ -97,7 +97,7 @@ func _run_player_hit_case() -> void:
 	var gorehorn := _spawn_test_gorehorn(case_root, "runtime_gorehorn_hit")
 	if gorehorn == null:
 		GameState.player = null
-		case_root.free()
+		_dispose_case(case_root)
 		await get_tree().process_frame
 		return
 
@@ -158,7 +158,7 @@ func _run_player_hit_case() -> void:
 		failures.append("Başarılı şarj cooldown sonunda saldırı kilidini bırakmadı.")
 
 	GameState.player = null
-	case_root.free()
+	_dispose_case(case_root)
 	await get_tree().process_frame
 
 
@@ -178,7 +178,7 @@ func _run_wall_block_case() -> void:
 	var gorehorn := _spawn_test_gorehorn(case_root, "runtime_gorehorn_wall")
 	if gorehorn == null:
 		GameState.player = null
-		case_root.free()
+		_dispose_case(case_root)
 		await get_tree().process_frame
 		return
 
@@ -221,7 +221,7 @@ func _run_wall_block_case() -> void:
 		failures.append("Duvara çarpan şarj toparlanma sonunda kilidi bırakmadı.")
 
 	GameState.player = null
-	case_root.free()
+	_dispose_case(case_root)
 	await get_tree().process_frame
 
 
@@ -284,6 +284,15 @@ func _add_wall(case_root: Node3D, wall_position: Vector3) -> void:
 	shape_node.shape = shape
 	wall_body.add_child(shape_node)
 	case_root.add_child(wall_body)
+
+
+func _dispose_case(case_root: Node3D) -> void:
+	# Headless AudioStreamPlaybackWAV nesnesi, oynatma sürerken sahne doğrudan
+	# kapatılırsa bir kare daha kaynak tutabilir. Test fixture'ını silmeden önce
+	# gerçek sahnedeki tüm 3B oynatıcıları durdurarak temiz çıkışı doğrula.
+	for node: Node in case_root.find_children("*", "AudioStreamPlayer3D", true, false):
+		(node as AudioStreamPlayer3D).stop()
+	case_root.free()
 
 
 func _wait_seconds(duration: float) -> void:
