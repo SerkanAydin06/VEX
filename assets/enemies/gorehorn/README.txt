@@ -1,11 +1,5 @@
 Gorehorn Character Spritesheet
 
-Files:
-- gorehorn_character_spritesheet.png
-- spritesheet_manifest.json
-- README.txt
-
-Source: gorehorn.zip
 Sheet size: 1364x3072
 Frame size: 341x512
 Layout: 4 columns x 6 rows
