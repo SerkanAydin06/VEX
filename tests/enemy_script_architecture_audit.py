@@ -24,6 +24,7 @@ FAMILIES = {
         "badredviper",
         "cinderhound",
         "gorehorn",
+        "vaskari_bulwark",
     ],
     "enemy_hybrid_base.gd": [
         "briar_skulker",
@@ -43,6 +44,7 @@ CHARACTER_CONTRACTS = {
     "badredviper": {"combat_role": "0", "maximum_health": "190", "attack_damage": "28"},
     "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.18"},
     "gorehorn": {"combat_role": "0", "maximum_health": "180", "attack_range": "12.0"},
+    "vaskari_bulwark": {"combat_role": "0", "maximum_health": "300", "attack_damage": "30"},
     "briar_skulker": {"combat_role": "1", "maximum_health": "110", "attack_range": "14.0"},
 }
 
