@@ -21,7 +21,14 @@ func get_behavior_family() -> StringName:
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
-	if Engine.is_editor_hint() or _dead or not _charge_active:
+	if Engine.is_editor_hint() or _dead:
+		return
+	# Oyuncu sahneden silinirse windup/recovery await'leri saldırı kilidini
+	# açık bırakamaz. Ortak physics turundan sonra state'i tek noktadan iptal et.
+	if _attack_locked and not _has_valid_player():
+		_cancel_charge_attack()
+		return
+	if not _charge_active:
 		return
 	_resolve_charge_contact()
 
@@ -29,7 +36,7 @@ func _physics_process(delta: float) -> void:
 func _attempt_attack() -> void:
 	if _attack_locked or _dead:
 		return
-	if _player == null or not is_instance_valid(_player):
+	if not _has_valid_player():
 		return
 	if _horizontal_distance(global_position, _player.global_position) > attack_range:
 		return
@@ -59,6 +66,9 @@ func _attempt_attack() -> void:
 	await get_tree().create_timer(_runtime_attack_windup).timeout
 	if not _is_current_charge_attack(attack_generation):
 		return
+	if not _has_valid_player():
+		_cancel_charge_attack()
+		return
 	_charge_direction = _player.global_position - global_position
 	_charge_direction.y = 0.0
 	if _charge_direction.length_squared() <= 0.001:
@@ -73,6 +83,9 @@ func _attempt_attack() -> void:
 
 	var charge_started_msec := Time.get_ticks_msec()
 	while _is_current_charge_attack(attack_generation) and _charge_active:
+		if not _has_valid_player():
+			_cancel_charge_attack()
+			return
 		var elapsed := float(Time.get_ticks_msec() - charge_started_msec) / 1000.0
 		if elapsed >= attack_lunge_duration:
 			break
@@ -132,12 +145,9 @@ func _resolve_charge_contact() -> void:
 	if settings == null:
 		_stop_charge_motion(true)
 		return
-	if (
-		_player != null
-		and is_instance_valid(_player)
-		and _horizontal_distance(global_position, _player.global_position)
-		<= settings.hit_distance
-	):
+	# Mesafe fallback'ı gerçek gövde çarpışmasından önce çalıştığı için katlar
+	# arası yanlış temas üretmemesi adına yatay + dikey hacimle sınırlandırılır.
+	if _is_player_within_charge_hit_volume(settings):
 		_apply_charge_hit(settings)
 		return
 
@@ -146,6 +156,8 @@ func _resolve_charge_contact() -> void:
 		if collision == null:
 			continue
 		var collider := collision.get_collider() as Node
+		# Gerçek fizik çarpışması zaten temas kanıtıdır; dikey fallback toleransı
+		# burada uygulanmaz.
 		if _is_player_collider(collider):
 			_apply_charge_hit(settings)
 			return
@@ -155,8 +167,19 @@ func _resolve_charge_contact() -> void:
 			return
 
 
+func _is_player_within_charge_hit_volume(settings: VexGorehornChargeSettings) -> bool:
+	if not _has_valid_player():
+		return false
+	if absf(_player.global_position.y - global_position.y) > settings.vertical_hit_tolerance:
+		return false
+	return (
+		_horizontal_distance(global_position, _player.global_position)
+		<= settings.hit_distance
+	)
+
+
 func _apply_charge_hit(settings: VexGorehornChargeSettings) -> void:
-	if _charge_hit_player or _player == null or not is_instance_valid(_player):
+	if _charge_hit_player or not _has_valid_player():
 		return
 	_charge_hit_player = true
 	if _player.has_method("take_damage"):
@@ -201,14 +224,27 @@ func _stop_charge_motion(blocked: bool) -> void:
 	velocity.z = 0.0
 
 
+func _cancel_charge_attack() -> void:
+	# Await eden eski coroutine'leri generation değişimiyle geçersiz kıl.
+	_attack_generation += 1
+	_stop_charge_motion(false)
+	_attack_locked = false
+	_charge_hit_player = false
+	_charge_blocked = false
+	if is_inside_tree() and not _dead:
+		_play_animation(&"idle")
+
+
 func _is_current_charge_attack(generation: int) -> bool:
 	return (
 		is_inside_tree()
 		and not _dead
 		and generation == _attack_generation
-		and _player != null
-		and is_instance_valid(_player)
 	)
+
+
+func _has_valid_player() -> bool:
+	return _player != null and is_instance_valid(_player)
 
 
 func _get_charge_settings() -> VexGorehornChargeSettings:
