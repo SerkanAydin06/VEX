@@ -73,7 +73,7 @@ assert set(atlas_regions) == {
 
 animation_names = set(re.findall(r'"name": &"([^"]+)"', scene))
 assert animation_names == {
-    "idle", "walk", "attack", "attack_close", "death", "hurt",
+    "idle", "walk", "attack", "attack_close", "death",
     "idle_back", "walk_back",
 }
 
