@@ -70,6 +70,9 @@ func _ready() -> void:
 	GameState.active_difficulty = 1
 	await _run_player_hit_case()
 	await _run_wall_block_case()
+	# Headless ses sunucusunun stop/stream ayırma komutlarını işlemesine fırsat ver.
+	for _frame: int in range(4):
+		await get_tree().process_frame
 	GameState.player = null
 	if failures.is_empty():
 		print("GOREHORN CHARGE RUNTIME: tek vuruş, itme, geri bildirim, duvar duruşu ve idle toparlanması geçti.")
@@ -291,7 +294,9 @@ func _dispose_case(case_root: Node3D) -> void:
 	# kapatılırsa bir kare daha kaynak tutabilir. Test fixture'ını silmeden önce
 	# gerçek sahnedeki tüm 3B oynatıcıları durdurarak temiz çıkışı doğrula.
 	for node: Node in case_root.find_children("*", "AudioStreamPlayer3D", true, false):
-		(node as AudioStreamPlayer3D).stop()
+		var audio := node as AudioStreamPlayer3D
+		audio.stop()
+		audio.stream = null
 	case_root.free()
 
 
