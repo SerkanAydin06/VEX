@@ -84,7 +84,7 @@ jobs:
         run: |
           set -o pipefail
           log="$RUNNER_TEMP/gorehorn-charge-runtime.log"
-          godot --headless --path . tests/gorehorn_charge_runtime_test.tscn 2>&1 | tee "$log"
+          godot --headless --verbose --path . tests/gorehorn_charge_runtime_test.tscn 2>&1 | tee "$log"
           if grep -E 'ERROR:|invalid UID' "$log"; then
             echo "::error::Gorehorn charge runtime log contains an error or invalid UID"
             exit 1
