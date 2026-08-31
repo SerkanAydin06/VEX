@@ -83,6 +83,15 @@ Yaratık sabit bekleme standardı:
 - Takip ve arama tamamen sona erdiğinde yaratık o an bulunduğu noktada yeniden sabit beklemeye geçer.
 - Eski `patrol_*` ve `idle_wander_*` alanları yalnız eski sahne verisini okuyabilmek için `@export_storage` olarak tutulur; Inspector'da gösterilmez ve runtime kararına katılmaz.
 
+Gorehorn şarj saldırısı standardı:
+- Gorehorn standart lunge hareket/algılama ailesini kullanır; yaratığa özgü şarj mantığı gorehorn.gd içinde kalır.
+- Şarjın hasar, menzil, hız ve hazırlık değerleri sahne kökünden; temas/itme/sarsıntı ve toparlanma değerleri 09 - Özel Yetenekler kaynağından Inspector-authoritative düzenlenir.
+- Hazırlık bittiğinde yön oyuncunun son konumuna bir kez kilitlenir; şarj sırasında hedefe doğru yapay dönüş uygulanmaz.
+- Bir şarj oyuncuya en fazla bir kez hasar verir. Başarılı temas yatay itme, sınırlı yukarı kaldırma ve SettingsManager.screen_shake ayarına bağlı kamera sarsıntısı uygular.
+- Duvar veya engel teması şarjı bitirir ve normal temastan daha uzun toparlanma açıklığı oluşturur.
+- Oyuncu itmesi doğrudan transform taşımak yerine VexPlayer.apply_external_impulse üzerinden CharacterBody3D hızına uygulanır.
+- Gorehorn alarm öncesinde diğer yaratıklar gibi başlangıç konumunda sabit bekler.
+
 Yaratık hasar tepkisi standardı:
 - Canlı düşmanlar hasar aldığında `hurt` animasyonu veya tek karelik hurt görseli oynatılmaz.
 - Hasar almak başlamış saldırıyı, saldırı zamanlayıcısını, lunge/mermi üretimini veya normal AI hareketini kesmez.
