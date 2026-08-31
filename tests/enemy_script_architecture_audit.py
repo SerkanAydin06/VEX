@@ -17,6 +17,7 @@ FAMILIES = {
         "furnice_carrier",
         "crucible_warden",
         "cinder_spitter",
+        "coil_lancer",
     ],
     "enemy_lunge_base.gd": [
         "redviper",
@@ -37,6 +38,7 @@ CHARACTER_CONTRACTS = {
     "furnice_carrier": {"combat_role": "2", "maximum_health": "130", "attack_range": "22.0"},
     "crucible_warden": {"combat_role": "0", "maximum_health": "260", "attack_preferred_distance": "1.4"},
     "cinder_spitter": {"combat_role": "1", "maximum_health": "95", "attack_range": "14.0"},
+    "coil_lancer": {"combat_role": "2", "maximum_health": "105", "attack_range": "22.0"},
     "redviper": {"combat_role": "0", "maximum_health": "140", "chase_speed": "6.4"},
     "badredviper": {"combat_role": "0", "maximum_health": "190", "attack_damage": "28"},
     "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.18"},
@@ -86,8 +88,6 @@ for shared_setting in [
     assert re.search(rf"@export[^\n]*\bvar {shared_setting}\b", combatant_base), shared_setting
     assert re.search(rf"@export[^\n]*\bvar {shared_setting}\b", lunge_base), shared_setting
 
-# Godot türetilmiş script alanlarını taban script alanlarından önce gösterir.
-# Bu nedenle görünür Inspector şeması davranış ailesinde tek katmanda tutulur.
 assert "@export" not in enemy_base
 
 creature_script_paths = {
