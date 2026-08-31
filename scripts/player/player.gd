@@ -96,6 +96,16 @@ var _night_vision_rect: ColorRect = null
 var _recoil_pitch_degrees := 0.0
 var _recoil_yaw_degrees := 0.0
 var _recoil_recovery_degrees_per_second := 7.0
+var _external_impulse_velocity := Vector3.ZERO
+var _external_impulse_remaining := 0.0
+var _external_impulse_decay_speed := 0.0
+var _external_impulse_vertical_pending := 0.0
+var _impact_shake_remaining := 0.0
+var _impact_shake_duration := 0.0
+var _impact_shake_strength := 0.0
+var _impact_shake_base_h_offset := 0.0
+var _impact_shake_base_v_offset := 0.0
+var _impact_shake_active := false
 
 
 func _ready() -> void:
@@ -118,6 +128,7 @@ func _physics_process(delta: float) -> void:
 		0.0,
 		_hurt_audio_cooldown_remaining - delta
 	)
+	_update_impact_camera_shake(delta)
 	if is_dead:
 		velocity = Vector3.ZERO
 		return
@@ -138,6 +149,7 @@ func _physics_process(delta: float) -> void:
 		and is_on_floor()
 		and not is_crouching
 		and not is_aiming
+		and _external_impulse_remaining <= 0.0
 	)
 	is_sprinting = wants_to_sprint
 	_update_stamina(delta)
@@ -148,8 +160,19 @@ func _physics_process(delta: float) -> void:
 	)
 	var target_velocity := world_direction * target_speed
 	var rate := acceleration if world_direction != Vector3.ZERO else deceleration
-	velocity.x = move_toward(velocity.x, target_velocity.x, rate * delta)
-	velocity.z = move_toward(velocity.z, target_velocity.z, rate * delta)
+	if _external_impulse_remaining > 0.0:
+		velocity.x = _external_impulse_velocity.x
+		velocity.z = _external_impulse_velocity.z
+		_external_impulse_remaining = maxf(0.0, _external_impulse_remaining - delta)
+		_external_impulse_velocity = _external_impulse_velocity.move_toward(
+			Vector3.ZERO,
+			_external_impulse_decay_speed * delta
+		)
+		if _external_impulse_remaining <= 0.0:
+			_external_impulse_velocity = Vector3.ZERO
+	else:
+		velocity.x = move_toward(velocity.x, target_velocity.x, rate * delta)
+		velocity.z = move_toward(velocity.z, target_velocity.z, rate * delta)
 	var stepped_up := false
 	if is_on_floor() and not _jump_requested and not is_crouching:
 		stepped_up = _try_step_up(Vector3(velocity.x, 0.0, velocity.z) * delta)
@@ -158,6 +181,9 @@ func _physics_process(delta: float) -> void:
 		# floor-stick velocity cannot overwrite the jump impulse.
 		_jump_requested = false
 		velocity.y = jump_velocity
+	elif _external_impulse_vertical_pending > 0.0:
+		velocity.y = maxf(velocity.y, _external_impulse_vertical_pending)
+		_external_impulse_vertical_pending = 0.0
 	elif not is_on_floor():
 		velocity.y -= _gravity * delta
 	else:
@@ -447,6 +473,78 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 	broadcast_state()
 	if health <= 0:
 		_die()
+
+
+func apply_external_impulse(
+	direction: Vector3,
+	horizontal_speed: float,
+	upward_speed: float,
+	duration: float
+) -> void:
+	if is_dead:
+		return
+	var horizontal_direction := direction
+	horizontal_direction.y = 0.0
+	if horizontal_direction.length_squared() <= 0.001:
+		return
+	horizontal_direction = horizontal_direction.normalized()
+	var safe_speed := maxf(0.0, horizontal_speed)
+	var safe_duration := maxf(0.05, duration)
+	_external_impulse_velocity = horizontal_direction * safe_speed
+	_external_impulse_remaining = safe_duration
+	_external_impulse_decay_speed = safe_speed / safe_duration
+	_external_impulse_vertical_pending = maxf(
+		_external_impulse_vertical_pending,
+		maxf(0.0, upward_speed)
+	)
+	is_sprinting = false
+
+
+func request_camera_shake(strength: float, duration: float) -> void:
+	if is_dead or not SettingsManager.screen_shake:
+		return
+	var safe_strength := maxf(0.0, strength)
+	var safe_duration := maxf(0.0, duration)
+	if safe_strength <= 0.0 or safe_duration <= 0.0:
+		return
+	if not _impact_shake_active:
+		_impact_shake_base_h_offset = camera.h_offset
+		_impact_shake_base_v_offset = camera.v_offset
+	_impact_shake_active = true
+	_impact_shake_strength = maxf(_impact_shake_strength, safe_strength)
+	_impact_shake_duration = maxf(_impact_shake_duration, safe_duration)
+	_impact_shake_remaining = maxf(_impact_shake_remaining, safe_duration)
+
+
+func _update_impact_camera_shake(delta: float) -> void:
+	if not _impact_shake_active:
+		return
+	if not SettingsManager.screen_shake:
+		_clear_impact_camera_shake()
+		return
+	_impact_shake_remaining = maxf(0.0, _impact_shake_remaining - delta)
+	if _impact_shake_remaining <= 0.0:
+		_clear_impact_camera_shake()
+		return
+	var fade := _impact_shake_remaining / maxf(_impact_shake_duration, 0.001)
+	camera.h_offset = (
+		_impact_shake_base_h_offset
+		+ randf_range(-_impact_shake_strength, _impact_shake_strength) * fade
+	)
+	camera.v_offset = (
+		_impact_shake_base_v_offset
+		+ randf_range(-_impact_shake_strength, _impact_shake_strength) * fade
+	)
+
+
+func _clear_impact_camera_shake() -> void:
+	if _impact_shake_active and camera != null and is_instance_valid(camera):
+		camera.h_offset = _impact_shake_base_h_offset
+		camera.v_offset = _impact_shake_base_v_offset
+	_impact_shake_remaining = 0.0
+	_impact_shake_duration = 0.0
+	_impact_shake_strength = 0.0
+	_impact_shake_active = false
 
 
 func has_key(key_id: StringName) -> bool:
