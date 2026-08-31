@@ -17,6 +17,7 @@ CREATURE_CAPSULES = {
     "furnice_carrier": (0.58, 1.50),
     "crucible_warden": (0.72, 2.40),
     "cinder_spitter": (0.44, 1.75),
+    "coil_lancer": (0.46, 1.90),
     "redviper": (0.42, 1.80),
     "badredviper": (0.82, 3.10),
     "cinderhound": (0.44, 1.45),
@@ -109,8 +110,6 @@ for creature, (expected_radius, expected_height) in CREATURE_CAPSULES.items():
         floor_gap,
     )
 
-# Projedeki hiçbir fizik şekli kaynaksız bırakılmamalı. Bu genel kontrol,
-# yaratık dışındaki prop/projectile collision kazalarını da yakalar.
 for scene_path in SCENES.rglob("*.tscn"):
     source = scene_path.read_text(encoding="utf-8")
     for match in re.finditer(

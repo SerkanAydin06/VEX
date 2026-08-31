@@ -15,6 +15,8 @@ const CREATURE_SCENES := [
 	"res://scenes/actors/crucible_warden.tscn",
 	"res://scenes/actors/briar_skulker.tscn",
 	"res://scenes/actors/gorehorn.tscn",
+	"res://scenes/actors/cinder_spitter.tscn",
+	"res://scenes/actors/coil_lancer.tscn",
 ]
 
 const COMMON_CREATURE_INSPECTOR_PROPERTIES := [

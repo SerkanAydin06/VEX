@@ -11,6 +11,7 @@ EXPECTED = {
     "furnice_carrier": (32.0, 40.0, 46.0),
     "crucible_warden": (34.0, 44.0, 48.0),
     "cinder_spitter": (30.0, 40.0, 46.0),
+    "coil_lancer": (34.0, 44.0, 50.0),
     "redviper": (30.0, 38.0, 44.0),
     "badredviper": (32.0, 42.0, 46.0),
     "cinderhound": (30.0, 42.0, 44.0),
@@ -31,8 +32,6 @@ for enemy, (min_detection, min_pursuit, min_dormant) in EXPECTED.items():
     dormant = root_value(text, "dormant_distance")
     assert detection >= min_detection, (enemy, "detection", detection)
     assert pursuit >= min_pursuit, (enemy, "pursuit", pursuit)
-    # Hard difficulty uses a 1.20 detection multiplier. Dormant mode must not
-    # suppress line-of-sight before that maximum runtime detection radius.
     assert dormant > detection * 1.20, (enemy, "dormant", dormant, detection)
 
 ravager_script = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
@@ -57,7 +56,6 @@ assert "allow_enemy_open := true" in door_script
 assert 'proximity_sensor.collision_mask = 2 | (4 if allow_enemy_open else 0)' in door_script
 
 print("Enemy detection audit passed")
-
 
 utils_script = (ROOT / "scripts/actors/enemy_runtime_utils.gd").read_text(encoding="utf-8")
 for needle in [
