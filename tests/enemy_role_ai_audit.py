@@ -62,7 +62,7 @@ for obsolete_call in re.findall(r"EnemyCombatProfiles\.([A-Za-z_][A-Za-z0-9_]*)"
 assert ravager.index("if _attack_locked:") < ravager.index("if _has_forced_damage_target:")
 assert red.index("if _attack_locked:") < red.index("if _has_forced_damage_target:")
 assert "func _update_behavior" not in warden
-assert "_navigate_to(_player.global_position, delta)" in warden  # only visible close-for-heatwave path
+assert "_navigate_to(_player.global_position, delta)" in warden
 assert "patrol_offset if _patrol_forward" not in ravager
 assert "patrol_offset if _patrol_forward" not in red
 assert "_retaliation_approach_position" not in red
@@ -75,6 +75,7 @@ expected_roles = {
     "furnice_carrier": 2,
     "crucible_warden": 0,
     "cinder_spitter": 1,
+    "coil_lancer": 2,
     "redviper": 0,
     "badredviper": 0,
     "cinderhound": 0,
@@ -109,8 +110,6 @@ for enemy, role in expected_roles.items():
     keys = re.findall(r"(?m)^([A-Za-z_][A-Za-z0-9_]*)\s*=", root.group(1))
     duplicates = sorted({key for key in keys if keys.count(key) > 1})
     assert not duplicates, (enemy, duplicates)
-    # RedViper ailesi CLOSE varsayılanlarını doğrudan kendi base scriptinden alır.
-    # Ravager ailesinin rol tabanlı eski gizli profil değerleri artık sahnede saklanır.
     if enemy not in {"redviper", "badredviper", "cinderhound"}:
         for setting in role_scene_settings[role]:
             assert setting in keys, (enemy, setting)
