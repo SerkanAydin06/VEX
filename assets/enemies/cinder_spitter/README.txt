@@ -11,3 +11,13 @@ Row order:
 - 3: death
 - 4: idle_back
 - 5: walk_back
+
+Cinder Spitter Effects Spritesheet
+
+Sheet size: 2048x1024
+Frame size: 512x512
+Layout: 4 columns x 2 rows
+
+Row order:
+- 0: projectile
+- 1: impact

@@ -1,0 +1,41 @@
+{
+  "source_zip": "512_512.zip",
+  "source_folder": "512_512",
+  "sheet_file": "cinder_spitter_effects_spritesheet.png",
+  "sheet_size": {
+    "width": 2048,
+    "height": 1024
+  },
+  "frame_size": {
+    "width": 512,
+    "height": 512
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 2
+  },
+  "rows": [
+    {
+      "row_index": 0,
+      "animation": "projectile",
+      "frame_count": 4,
+      "frames": [
+        "cinder_spitter_projectile_1_result.png",
+        "cinder_spitter_projectile_2_result.png",
+        "cinder_spitter_projectile_3_result.png",
+        "cinder_spitter_projectile_4_result.png"
+      ]
+    },
+    {
+      "row_index": 1,
+      "animation": "impact",
+      "frame_count": 4,
+      "frames": [
+        "cinder_spitter_impact_1_result.png",
+        "cinder_spitter_impact_2_result.png",
+        "cinder_spitter_impact_3_result.png",
+        "cinder_spitter_impact_4_result.png"
+      ]
+    }
+  ]
+}
