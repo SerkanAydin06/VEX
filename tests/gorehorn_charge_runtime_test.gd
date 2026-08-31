@@ -246,6 +246,14 @@ func _spawn_test_gorehorn(case_root: Node3D, runtime_id: String) -> VexGorehorn:
 	gorehorn.attack_lunge_duration = 0.65
 	gorehorn.dormant_distance = 100.0
 
+	# Bu test hareket/temas fiziğini doğrular. Headless dummy ses sürücüsü kısa
+	# test çıkışında aktif WAV playback nesnesini tuttuğu için ses yan etkisini
+	# örnek ağaca girmeden izole et; canonical Gorehorn sahnesi değişmeden kalır.
+	for audio_name: StringName in [&"AttackAudio", &"ChargeImpactAudio", &"HurtAudio", &"DeathAudio"]:
+		var audio := gorehorn.get_node_or_null(NodePath(audio_name)) as AudioStreamPlayer3D
+		if audio != null:
+			audio.stream = null
+
 	var settings := gorehorn.special_ability_settings as VexGorehornChargeSettings
 	if settings == null:
 		failures.append("%s: Inspector şarj ayarı okunamadı." % runtime_id)
