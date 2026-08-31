@@ -9,8 +9,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_cinderhound"]
-radius = 0.35986328
-height = 1.690332
+radius = 0.44
+height = 1.45
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1tqjx"]
 atlas = ExtResource("5_sheet")
@@ -43,10 +43,6 @@ region = Rect2(0, 512, 341, 512)
 [sub_resource type="AtlasTexture" id="AtlasTexture_0nmdr"]
 atlas = ExtResource("5_sheet")
 region = Rect2(341, 512, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_obeax"]
-atlas = ExtResource("5_sheet")
-region = Rect2(1364, 0, 341, 512)
 
 [sub_resource type="AtlasTexture" id="Atlas_idle1"]
 atlas = ExtResource("5_sheet")
@@ -158,14 +154,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_obeax")
-}],
-"loop": 0,
-"name": &"hurt",
-"speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("Atlas_idle1")
 }, {
 "duration": 1.0,
@@ -240,6 +228,7 @@ floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
 enemy_id = &"cinderhound"
+combat_role = 0
 maximum_health = 85
 difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
 difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
@@ -253,6 +242,7 @@ movement_acceleration = 22.0
 braking_acceleration = 18.0
 patrol_offset = Vector3(0, 0, 2.2)
 patrol_pause_duration = 0.45
+detection_range = 30.0
 pursuit_range = 42.0
 ally_alert_radius = 8.0
 hearing_radius = 18.0
@@ -265,15 +255,13 @@ attack_lunge_speed = 11.5
 attack_lunge_acceleration = 55.0
 attack_lunge_duration = 0.22
 attack_lunge_stop_distance = 0.9
-hurt_reaction_duration = 0.08
-hurt_flash_duration = 0.08
+dormant_distance = 44.0
 corpse_visual_y = -0.3217775
 idle_frame_y_offsets = PackedFloat32Array(0.0012, -0.0022, 0.0012, 0.0012)
 idle_back_frame_y_offsets = PackedFloat32Array(0.0012, -0.0056, 0.0012, -0.0056)
 walk_frame_y_offsets = PackedFloat32Array(-0.0022, 0.0012, -0.0022, 0.0012)
 walk_back_frame_y_offsets = PackedFloat32Array(0.0012, 0.0012, 0.0012, 0.0012)
 attack_frame_y_offsets = PackedFloat32Array(0.0012, 0.0012, 0.0012, 0.0012)
-hurt_frame_y_offsets = PackedFloat32Array(-0.0022)
 death_frame_y_offsets = PackedFloat32Array(-0.0022, 0.0012, 0.0012, 0.0012)
 burn_remains_scene = ExtResource("31_burn")
 burn_remains_scale = 0.8
@@ -281,7 +269,6 @@ burn_smoke_duration = 6.5
 burn_smoke_alpha = 0.12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1561553514]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.120166, 0)
 shape = SubResource("CapsuleShape_cinderhound")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1000373379]

@@ -145,9 +145,6 @@ enum State {
 @export_range(0.1, 1.0, 0.05) var headshot_height_ratio := 0.62
 ## kafa vuruşu referans yükseklik değeridir (metre).
 @export_range(0.0, 3.0, 0.05) var headshot_reference_height := 0.95
-## Açıksa hasar alındığında vurulma tepkisi oynatılır.
-@export var hurt_reaction_enabled := true
-
 @export_category("03C - Görüş Örnekleme")
 ## Açıksa menzilli saldırı görüşü gövdedeki birden fazla noktadan örneklenir.
 @export var ranged_visibility_sampling_enabled := true
@@ -307,8 +304,14 @@ enum State {
 @export_category("07 - Görsel ve Animasyon")
 ## arka görüş eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(-1.0, 1.0, 0.05) var back_view_threshold := -0.15
-## vurulma tepki süre değeridir (saniye).
-@export_range(0.0, 2.0, 0.01) var hurt_reaction_duration := 0.16
+## Açıksa hasar alan yaratığın görseline kısa ve hafif bir sarsıntı uygulanır.
+@export var hurt_shake_enabled := true
+## Hasar sarsıntısının toplam süresidir (saniye); saldırı ve hareketi durdurmaz.
+@export_range(0.02, 0.3, 0.01) var hurt_shake_duration := 0.10
+## Sarsıntının sprite üzerindeki en yüksek uzaklığıdır (piksel).
+@export_range(0.0, 8.0, 0.25) var hurt_shake_amount_pixels := 2.0
+## Sarsıntının saniyedeki titreşim hızıdır.
+@export_range(4.0, 60.0, 1.0) var hurt_shake_frequency := 28.0
 ## Yaratığın ceset görsel y ayarını belirler.
 @export_range(-1.0, 2.0, 0.01) var corpse_visual_y := -0.0999775
 ## Yaratığın arka ceset görsel y ayarını belirler.
@@ -329,8 +332,6 @@ enum State {
 @export var walk_back_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
 ## saldırı kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var attack_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
-## vurulma kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
-@export var hurt_frame_y_offsets := PackedFloat32Array([0.0])
 ## ölüm kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var death_frame_y_offsets := PackedFloat32Array([0.0, -0.008, -0.016, -0.025])
 
@@ -374,7 +375,6 @@ var _alerted := false
 var _attack_locked := false
 var _attack_windup_active := false
 var _attack_strafe_direction := -1.0
-var _hurt_reaction_locked := false
 var _gravity := 20.0
 var _player: Node3D = null
 
@@ -491,6 +491,7 @@ func _configure_runtime_stats() -> void:
 func _physics_process(delta: float) -> void:
 	if state == State.DEAD:
 		return
+	_update_damage_shake(animated_sprite, delta, hurt_shake_frequency)
 
 	if _player == null or not is_instance_valid(_player):
 		_player = GameState.player as Node3D
@@ -536,10 +537,8 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		has_retaliation_target = true
 	if aggro_on_damage:
 		_alerted = true
-		_combat_interrupt_generation += 1
-		_attack_locked = false
-		_attack_windup_active = false
-		state = State.CHASE
+		if not _attack_locked:
+			state = State.CHASE
 		_damage_reaction_remaining = damage_reaction_duration
 		_seconds_without_sight = 0.0
 		_search_remaining = 0.0
@@ -559,26 +558,19 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		_local_detour_remaining = 0.0
 		_local_detour_side = 0.0
 		_clear_path()
-		if _has_last_seen_position:
+		if _has_last_seen_position and not _attack_locked:
 			_face_toward_position(_last_seen_position)
 	if alert_allies_on_damage:
 		_alert_nearby_allies(retaliation_target if has_retaliation_target else global_position)
 
 	if hurt_audio.stream != null and not hurt_audio.playing:
 		hurt_audio.play()
-	# Saldırı başlamışsa vurulma animasyonu saldırı animasyonunu ezmesin.
-	# Diğer durumlarda da kısa bir reaksiyon kilidi, pompalı gibi çok saçmalı
-	# silahların aynı karede art arda flinch başlatmasını engeller.
-	if (
-		hurt_reaction_enabled
-		and not _attack_locked
-		and not _hurt_reaction_locked
-		and _has_animation(&"hurt")
-	):
-		_hurt_reaction_locked = true
-		animated_sprite.play(&"hurt")
-		_apply_frame_ground_offset()
-		_resume_animation_after_hurt()
+	if hurt_shake_enabled:
+		_trigger_damage_shake(
+			animated_sprite,
+			hurt_shake_duration,
+			hurt_shake_amount_pixels
+		)
 
 
 func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -> void:
@@ -706,8 +698,31 @@ func _update_perception(delta: float) -> void:
 
 
 func _update_behavior(delta: float) -> void:
-	# A hit immediately overrides normal combat. Reach the exact source position,
-	# or the closest reachable point, before resuming normal role tactics.
+	# Başlamış saldırı hasar tepkisinden önceliklidir. Vurulmak saldırı zamanlayıcısını,
+	# animasyonunu veya saldırı sonrası hareketini kesmez.
+	if _attack_locked:
+		state = State.ATTACK
+		var attack_target := global_position
+		var has_attack_target := false
+		if _player_visible and _player != null and is_instance_valid(_player):
+			attack_target = _player.global_position
+			has_attack_target = true
+		elif _has_last_seen_position:
+			attack_target = _last_seen_position
+			has_attack_target = true
+
+		if not has_attack_target:
+			_stop_horizontal_motion()
+		elif _attack_windup_active:
+			_face_toward_position(attack_target)
+			_stop_horizontal_motion()
+		elif _uses_cover_reposition_tactics() and _last_visibility_ratio < _cover_visibility_threshold():
+			_reposition_for_clear_shot(delta)
+		else:
+			_move_during_attack_recovery(attack_target, delta)
+		return
+
+	# Saldırı yokken hasar kaynağına ulaş veya en yakın erişilebilir noktaya ilerle.
 	if _has_forced_damage_target:
 		# Hasar geldiği anda önce kaynağa yönel; fakat oyuncu artık gerçekten
 		# saldırı menzilindeyse ve arada duvar yoksa exact eski koordinata
@@ -743,35 +758,6 @@ func _update_behavior(delta: float) -> void:
 				_has_last_seen_position = true
 				_begin_search()
 			return
-	# Atış başladıktan sonra kısa hazırlık penceresi tamamlanır. Oyuncunun
-	# yalnız geri yürümesi atışı iptal etmez; duvar arkasına geçmek hâlâ
-	# görüş kontrolü sayesinde mermiyi engeller.
-	if _attack_locked:
-		state = State.ATTACK
-		var attack_target := global_position
-		var has_attack_target := false
-		if _player_visible and _player != null and is_instance_valid(_player):
-			attack_target = _player.global_position
-			has_attack_target = true
-		elif _has_last_seen_position:
-			attack_target = _last_seen_position
-			has_attack_target = true
-
-		if not has_attack_target:
-			_stop_horizontal_motion()
-		elif _attack_windup_active:
-			# Hazırlık karesi zeminde kaymasın; mermi çıkar çıkmaz yürüyüş
-			# animasyonuyla yeniden konumlanmaya başlanır.
-			_face_toward_position(attack_target)
-			_stop_horizontal_motion()
-		elif _uses_cover_reposition_tactics() and _last_visibility_ratio < _cover_visibility_threshold():
-			# Yalnız gerçek projectile shooter'lar kısmi görüşte yan/çapraz atış açısı arar.
-			# Warden gibi geniş attack_range kullanan yakın baskı elitleri burada strafe etmez.
-			_reposition_for_clear_shot(delta)
-		else:
-			_move_during_attack_recovery(attack_target, delta)
-		return
-
 	# CLOSE rolünde point-blank saldırı kararı cache'lenmiş görüş sonucunu
 	# beklemez. Oyuncu menzildeyse LOS'u bu fizik karesinde doğrula.
 	_refresh_close_combat_visibility()
@@ -1446,7 +1432,7 @@ func _move_toward_point(target: Vector3, delta: float) -> void:
 		direction.z * travel_speed,
 		delta * movement_acceleration
 	)
-	if animated_sprite.animation != &"hurt" and animated_sprite.animation != &"attack":
+	if animated_sprite.animation != &"attack":
 		_play_directional_animation(&"walk", &"walk_back")
 
 
@@ -1512,15 +1498,14 @@ func _move_during_attack_recovery(target: Vector3, delta: float) -> void:
 
 	velocity.x = move_toward(velocity.x, desired_velocity.x, delta * movement_acceleration)
 	velocity.z = move_toward(velocity.z, desired_velocity.z, delta * movement_acceleration)
-	if animated_sprite.animation != &"hurt":
-		_play_directional_animation(&"walk", &"walk_back")
+	_play_directional_animation(&"walk", &"walk_back")
 
 
 func _stop_horizontal_motion() -> void:
 	var braking_step := braking_acceleration * get_physics_process_delta_time()
 	velocity.x = move_toward(velocity.x, 0.0, braking_step)
 	velocity.z = move_toward(velocity.z, 0.0, braking_step)
-	if not _attack_locked and animated_sprite.animation != &"hurt":
+	if not _attack_locked:
 		_play_directional_animation(&"idle", &"idle_back")
 
 
@@ -1595,7 +1580,7 @@ func _apply_gravity(delta: float) -> void:
 func _should_use_dormant_mode() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
-	if _alerted or _attack_locked or _hurt_reaction_locked:
+	if _alerted or _attack_locked:
 		return false
 	if state != State.IDLE and state != State.PATROL:
 		return false
@@ -2006,21 +1991,6 @@ func _calculate_intercept_time(
 	return intercept_time if intercept_time > 0.0 else fallback_time
 
 
-func _resume_animation_after_hurt() -> void:
-	await get_tree().create_timer(hurt_reaction_duration).timeout
-	_hurt_reaction_locked = false
-	if not is_inside_tree() or state == State.DEAD:
-		return
-	# Bu arada saldırı başlamışsa attack animasyonunu ve saldırı zamanlayıcısını
-	# kesinlikle bozma.
-	if _attack_locked:
-		return
-	if _alerted:
-		_play_directional_animation(&"walk", &"walk_back")
-	else:
-		_play_directional_animation(&"idle", &"idle_back")
-
-
 func _clear_path() -> void:
 	_current_path = PackedVector3Array()
 	_path_index = 0
@@ -2081,8 +2051,6 @@ func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Ar
 			return walk_back_frame_y_offsets
 		&"attack":
 			return attack_frame_y_offsets
-		&"hurt":
-			return hurt_frame_y_offsets
 		&"death":
 			return death_frame_y_offsets
 	return PackedFloat32Array()
@@ -2121,6 +2089,7 @@ func _show_burn_remains() -> void:
 func _die() -> void:
 	var death_animation := _directional_animation(&"death", &"death_back")
 	state = State.DEAD
+	_clear_damage_shake(animated_sprite)
 	velocity = Vector3.ZERO
 	_snap_body_to_floor(floor_snap_max_correction)
 	_attack_locked = true
@@ -2152,6 +2121,7 @@ func _die() -> void:
 
 func _restore_defeated_state() -> void:
 	state = State.DEAD
+	_clear_damage_shake(animated_sprite)
 	velocity = Vector3.ZERO
 	_attack_locked = true
 	_attack_windup_active = false

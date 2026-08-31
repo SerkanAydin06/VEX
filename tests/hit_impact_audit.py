@@ -39,6 +39,8 @@ for needle in [
     "func _build_flesh_fragment_burst(",
     "func _build_fragment_layer(",
     "func _build_droplet_layer(",
+    'particles.name = "OrganicSpray"',
+    "fragment_mesh := SphereMesh.new()",
     "PhysicsShapeQueryParameters3D.new()",
     'get_nodes_in_group("enemy")',
     "texture.get_image()",
@@ -71,6 +73,7 @@ for forbidden in [
     "func _build_flesh_visual(",
     'splash.name = "FleshSplash"',
     "material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED",
+    "BoxMesh.new()",
 ]:
     if forbidden in effect:
         errors.append(f"Enemy impact artık kalıcı/billboard görsel üretmemeli: {forbidden}")

@@ -16,11 +16,13 @@
 script = ExtResource("11_warden_settings")
 ground_slam_scene = ExtResource("3_slam")
 heatwave_projectile_scene = ExtResource("4_heatwave_projectile")
+heatwave_approach_stall_timeout = 0.9
+heatwave_approach_min_progress = 0.12
 heatwave_frame_y_offsets = PackedFloat32Array(-0.0192, 0, -0.0064, 0)
 
 [sub_resource type="CapsuleShape3D" id="Capsule_warden"]
-radius = 1.0209961
-height = 3.1873047
+radius = 0.72
+height = 2.4
 
 [sub_resource type="AtlasTexture" id="Atlas_attack_1"]
 atlas = ExtResource("2_sheet")
@@ -81,10 +83,6 @@ filter_clip = true
 atlas = ExtResource("2_sheet")
 region = Rect2(1023, 1536, 341, 512)
 filter_clip = true
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_s8n0b"]
-atlas = ExtResource("2_sheet")
-region = Rect2(0, 2048, 341, 512)
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_1"]
 atlas = ExtResource("2_sheet")
@@ -221,14 +219,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_s8n0b")
-}],
-"loop": 0,
-"name": &"hurt",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("Atlas_idle_1")
 }, {
 "duration": 1.0,
@@ -341,7 +331,6 @@ idle_back_frame_y_offsets = PackedFloat32Array(-0.0256, -0.032, -0.0192, -0.0128
 walk_frame_y_offsets = PackedFloat32Array(-0.0128, -0.0192, 0, -0.0256)
 walk_back_frame_y_offsets = PackedFloat32Array(-0.0448, -0.0064, -0.0256, -0.032)
 attack_frame_y_offsets = PackedFloat32Array(-0.0576, -0.1024, 0, 0)
-hurt_frame_y_offsets = PackedFloat32Array(-0.0128)
 death_frame_y_offsets = PackedFloat32Array(-0.0128, -0.0192, -0.0064, -0.0064)
 burn_remains_scene = ExtResource("10_burn")
 burn_remains_scale = 1.35
@@ -349,7 +338,6 @@ burn_smoke_duration = 10.0
 special_ability_settings = SubResource("Resource_warden_ability")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1236223409]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39365232, 0)
 shape = SubResource("Capsule_warden")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1382667829]

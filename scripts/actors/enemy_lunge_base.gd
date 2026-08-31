@@ -204,14 +204,14 @@ extends "res://scripts/actors/enemy_base.gd"
 @export_category("07 - Görsel ve Animasyon")
 ## arka görüş eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(-1.0, 1.0, 0.05) var back_view_threshold := -0.15
-## vurulma tepki süre değeridir (saniye).
-@export_range(0.0, 2.0, 0.01) var hurt_reaction_duration := 0.12
-## Açıksa vurulma tepkisi sırasında yatay hareket durur.
-@export var hurt_stops_movement := false
-## vurulma flash color değeridir.
-@export var hurt_flash_color := Color(1.0, 0.3, 0.25, 1.0)
-## vurulma flash süre değeridir (saniye).
-@export_range(0.0, 2.0, 0.01) var hurt_flash_duration := 0.12
+## Açıksa hasar alan yaratığın görseline kısa ve hafif bir sarsıntı uygulanır.
+@export var hurt_shake_enabled := true
+## Hasar sarsıntısının toplam süresidir (saniye); saldırı ve hareketi durdurmaz.
+@export_range(0.02, 0.3, 0.01) var hurt_shake_duration := 0.08
+## Sarsıntının sprite üzerindeki en yüksek uzaklığıdır (piksel).
+@export_range(0.0, 8.0, 0.25) var hurt_shake_amount_pixels := 2.0
+## Sarsıntının saniyedeki titreşim hızıdır.
+@export_range(4.0, 60.0, 1.0) var hurt_shake_frequency := 32.0
 ## Yaratığın ceset görsel y ayarını belirler.
 @export_range(-2.0, 2.0, 0.01) var corpse_visual_y := 0.4032225
 ## ölüm oturma süre değeridir (saniye).
@@ -230,8 +230,6 @@ extends "res://scripts/actors/enemy_base.gd"
 @export var walk_back_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
 ## saldırı kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var attack_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
-## vurulma kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
-@export var hurt_frame_y_offsets := PackedFloat32Array([0.0])
 ## ölüm kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var death_frame_y_offsets := PackedFloat32Array([0.0, -0.008, -0.016, -0.024])
 
@@ -266,10 +264,8 @@ var health := 0
 var _spawn_position := Vector3.ZERO
 var _gravity := 20.0
 var _dead := false
-var _hurt_tween: Tween = null
 var _player: Node3D = null
 var _attack_locked := false
-var _hurt_anim_locked := false
 var _aggro := false
 var _lost_sight_remaining := 0.0
 var _search_remaining := 0.0
@@ -360,6 +356,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if _dead:
 		return
+	_update_damage_shake(animated_sprite, delta, hurt_shake_frequency)
 
 	if _player == null or not is_instance_valid(_player):
 		_player = GameState.player as Node3D
@@ -376,7 +373,14 @@ func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
 	_detour_remaining = maxf(0.0, _detour_remaining - delta)
 
-	# Damage direction has absolute priority, even over an attack windup.
+	# Başlamış saldırı hasar tepkisinden önceliklidir; vurulmak hamleyi veya
+	# saldırı zamanlayıcısını kesmez.
+	if _attack_locked:
+		_update_attack_lunge(delta)
+		move_and_slide()
+		return
+
+	# Saldırı yokken hasar kaynağına ulaş veya en yakın erişilebilir noktaya ilerle.
 	if _has_forced_damage_target:
 		if _can_handoff_damage_pursuit_to_combat():
 			_has_forced_damage_target = false
@@ -419,20 +423,6 @@ func _physics_process(delta: float) -> void:
 					_search_remaining = search_duration
 					_reset_search_probe()
 			return
-
-	# Saldırı hazırlığında oyuncuyu kısa bir ileri hamleyle takip et. Böylece
-	# normal geri yürüyüş, başlamış her yakın dövüş saldırısını otomatik olarak
-	# boşa çıkarmaz. Hızlı koşan oyuncu hâlâ menzilden kaçabilir.
-	if _attack_locked:
-		_update_attack_lunge(delta)
-		move_and_slide()
-		return
-
-	if _hurt_anim_locked and hurt_stops_movement:
-		velocity.x = 0.0
-		velocity.z = 0.0
-		move_and_slide()
-		return
 
 	if _player != null and is_instance_valid(_player):
 		var player_distance: float = _horizontal_distance(
@@ -912,9 +902,6 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		retaliation_target = _player.global_position
 		has_retaliation_target = true
 	if aggro_on_damage:
-		_attack_generation += 1
-		_attack_locked = false
-		_attack_lunge_remaining = 0.0
 		_aggro = true
 		_damage_reaction_remaining = damage_reaction_duration
 		if has_retaliation_target:
@@ -939,8 +926,12 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 
 	if hurt_audio.stream != null and not hurt_audio.playing:
 		hurt_audio.play()
-	_flash_hurt()
-	_play_hurt_feedback()
+	if hurt_shake_enabled:
+		_trigger_damage_shake(
+			animated_sprite,
+			hurt_shake_duration,
+			hurt_shake_amount_pixels
+		)
 
 
 func _collision_floor_local_y() -> float:
@@ -997,8 +988,6 @@ func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Ar
 			return walk_back_frame_y_offsets
 		&"attack":
 			return attack_frame_y_offsets
-		&"hurt":
-			return hurt_frame_y_offsets
 		&"death":
 			return death_frame_y_offsets
 	return PackedFloat32Array()
@@ -1019,10 +1008,10 @@ func _get_animation_duration(animation_name: StringName) -> float:
 
 func _restore_defeated_state() -> void:
 	_dead = true
+	_clear_damage_shake(animated_sprite)
 	_attack_generation += 1
 	_attack_locked = false
 	_attack_lunge_remaining = 0.0
-	_hurt_anim_locked = false
 	_aggro = false
 	_lost_sight_remaining = 0.0
 	_search_remaining = 0.0
@@ -1069,10 +1058,10 @@ func _die() -> void:
 	if _dead:
 		return
 	_dead = true
+	_clear_damage_shake(animated_sprite)
 	_attack_generation += 1
 	_attack_locked = false
 	_attack_lunge_remaining = 0.0
-	_hurt_anim_locked = false
 	_aggro = false
 	_lost_sight_remaining = 0.0
 	_search_remaining = 0.0
@@ -1121,47 +1110,6 @@ func _place_corpse_visual_on_floor() -> void:
 	animated_sprite.position.y = corpse_visual_y + corpse_floor_clearance
 
 
-func _play_hurt_feedback() -> void:
-	# Başlamış saldırı hasarla kesilmez. Böylece seri atış Viper'ı saldırı
-	# animasyonundan ve hamlesinden çıkararak tamamen etkisiz bırakamaz.
-	if _dead or _attack_locked:
-		return
-	if animated_sprite.sprite_frames == null:
-		return
-	if not animated_sprite.sprite_frames.has_animation(&"hurt"):
-		return
-	if animated_sprite.sprite_frames.get_frame_count(&"hurt") <= 0:
-		return
-	if _hurt_anim_locked:
-		return
-
-	_hurt_anim_locked = true
-	_play_animation(&"hurt")
-	await get_tree().create_timer(hurt_reaction_duration).timeout
-	if not is_inside_tree() or _dead:
-		return
-	_hurt_anim_locked = false
-	if _attack_locked:
-		_play_animation(&"attack")
-	elif velocity.length_squared() > 0.04:
-		_play_animation(&"walk")
-	else:
-		_play_animation(&"idle")
-
-
-func _flash_hurt() -> void:
-	if _hurt_tween != null and _hurt_tween.is_valid():
-		_hurt_tween.kill()
-	animated_sprite.modulate = hurt_flash_color
-	_hurt_tween = create_tween()
-	_hurt_tween.tween_property(
-		animated_sprite,
-		"modulate",
-		_base_sprite_modulate,
-		hurt_flash_duration
-	)
-
-
 func _apply_gravity(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
@@ -1172,7 +1120,7 @@ func _apply_gravity(delta: float) -> void:
 func _should_use_dormant_mode() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
-	if _aggro or _attack_locked or _hurt_anim_locked:
+	if _aggro or _attack_locked:
 		return false
 	return (
 		_horizontal_distance(global_position, _player.global_position)
@@ -1239,15 +1187,6 @@ func _configure_runtime_stats() -> void:
 
 func _play_animation(animation_name: StringName) -> void:
 	if not _has_animation(animation_name):
-		return
-	# Hurt görseli oynarken yapay zekâ hareket etmeye devam eder; normal
-	# yürüyüş/idle çağrıları yalnız kısa görsel reaksiyonu ezmez. Saldırı
-	# başladığında ise attack animasyonu öncelik alır.
-	if (
-		_hurt_anim_locked
-		and not _attack_locked
-		and animation_name != &"hurt"
-	):
 		return
 	var target_animation := animation_name
 	var observer_is_behind := _is_observer_behind_enemy()

@@ -59,8 +59,8 @@ for setting in [
 for obsolete_call in re.findall(r"EnemyCombatProfiles\.([A-Za-z_][A-Za-z0-9_]*)", ravager + red):
     assert obsolete_call == "Role", obsolete_call
 
-assert ravager.index("if _has_forced_damage_target:") < ravager.index("if _attack_locked:")
-assert red.index("if _has_forced_damage_target:") < red.index("if _attack_locked:")
+assert ravager.index("if _attack_locked:") < ravager.index("if _has_forced_damage_target:")
+assert red.index("if _attack_locked:") < red.index("if _has_forced_damage_target:")
 assert "func _update_behavior" not in warden
 assert "_navigate_to(_player.global_position, delta)" in warden  # only visible close-for-heatwave path
 assert "patrol_offset if _patrol_forward" not in ravager

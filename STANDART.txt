@@ -62,9 +62,9 @@ yukarıda tutulur. Bu diziler `tests/enemy_sprite_contact_audit.py` ölçümüyl
 Enemy zemin teması ve GroundShadow standardı:
 - CharacterBody3D root/pivot kapsül merkezidir; CollisionShape3D local Y = 0 kalır.
 - Kapsül tabanı `-capsule_height / 2` fizik zemin referansıdır. Sprite node'unun alt kenarı referans değildir.
-- Canlı, saldırı, hurt, özel yetenek ve death dahil her kullanılan karede en alt `alpha > 16` piksel hedefi kapsül tabanından 0.008 m yukarıdadır.
+- Canlı, saldırı, özel yetenek ve death dahil her kullanılan karede en alt `alpha > 16` piksel hedefi kapsül tabanından 0.008 m yukarıdadır.
 - Kabul toleransı bir sprite pikselinin yarısıdır (minimum 0.0006 m). Yeni veya değişen spritesheet ölçüm denetimini geçmeden birleştirilmez.
-- Frame ofsetleri sahne Inspector'ındaki `idle`, `idle_back`, `walk`, `walk_back`, `attack`, `hurt`, `death` ve varsa özel yetenek dizilerinde tutulur; runtime script alfa taraması yapmaz.
+- Frame ofsetleri sahne Inspector'ındaki `idle`, `idle_back`, `walk`, `walk_back`, `attack`, `death` ve varsa özel yetenek dizilerinde tutulur; runtime script alfa taraması yapmaz.
 - Briar Skulker'ın ön/arka hareket kareleri ortak ofset dizilerini, `attack_close` kareleri ise 09 - Özel Yetenekler kaynağındaki sahne-otoriteli diziyi kullanır.
 - GroundShadow local Y değeri `-capsule_height / 2 + 0.02 m` olur. 0.02 m fizik payı z-fighting'i önler; yaratığın havada durduğu anlamına gelmez.
 - GroundShadow `billboard = 2` (Fixed-Y), `cast_shadow = 0`, `render_priority = -2` ve `offset = Vector2(0, 16)` kullanır. 16 px görüş-yönü ayrımı, gölge kütlesini ayak siluetinin altından uzaklaştırır fakat temas noktasını koparmaz.
@@ -82,6 +82,14 @@ Yaratık sabit bekleme standardı:
 - Görüş, işitme, müttefik alarmı veya hasar alındığında mevcut takip, arama ve saldırı davranışları normal biçimde devreye girer.
 - Takip ve arama tamamen sona erdiğinde yaratık o an bulunduğu noktada yeniden sabit beklemeye geçer.
 - Eski `patrol_*` ve `idle_wander_*` alanları yalnız eski sahne verisini okuyabilmek için `@export_storage` olarak tutulur; Inspector'da gösterilmez ve runtime kararına katılmaz.
+
+Yaratık hasar tepkisi standardı:
+- Canlı düşmanlar hasar aldığında `hurt` animasyonu veya tek karelik hurt görseli oynatılmaz.
+- Hasar almak başlamış saldırıyı, saldırı zamanlayıcısını, lunge/mermi üretimini veya normal AI hareketini kesmez.
+- Tek görsel tepki, AnimatedSprite3D `offset` değerine uygulanan kısa ve sönümlenen hafif sarsıntıdır; root/collision/pivot hareket ettirilmez.
+- `hurt_shake_enabled`, `hurt_shake_duration`, `hurt_shake_amount_pixels` ve `hurt_shake_frequency` temel tuning değerleri Inspector'dan düzenlenir.
+- Çoklu saçma veya seri vuruş sarsıntıyı yeniden başlatabilir; yeni bir animasyon kilidi ya da saldırı kesintisi oluşturamaz.
+- Canlı hedef impact parçaları `BoxMesh` kullanmaz. Küçük, düzensiz ölçeklenen damla/spray parçaları, kısa ömür ve yerçekimiyle doğal biçimde dağılır.
 
 
 2) SÜPÜRGELİK / BASETRIM KURALI
