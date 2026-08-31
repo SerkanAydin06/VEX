@@ -1,0 +1,96 @@
+{
+  "source_zip": "cinder_hound.zip",
+  "source_folder": "341_512",
+  "sheet_file": "cinder_hound_character_spritesheet.png",
+  "sheet_size": {
+    "width": 1364,
+    "height": 3072
+  },
+  "frame_size": {
+    "width": 341,
+    "height": 512
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 6
+  },
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "animation": "idle",
+      "source_prefix": "cinder_hound_idle",
+      "frame_count": 4,
+      "frames": [
+        "cinder_hound_idle_1_result.png",
+        "cinder_hound_idle_2_result.png",
+        "cinder_hound_idle_3_result.png",
+        "cinder_hound_idle_4_result.png"
+      ]
+    },
+    {
+      "row_index": 1,
+      "animation": "walk",
+      "source_prefix": "cinder_hound_walk",
+      "frame_count": 4,
+      "frames": [
+        "cinder_hound_walk_1_result.png",
+        "cinder_hound_walk_2_result.png",
+        "cinder_hound_walk_3_result.png",
+        "cinder_hound_walk_4_result.png"
+      ]
+    },
+    {
+      "row_index": 2,
+      "animation": "attack",
+      "source_prefix": "cinder_hound_attack",
+      "frame_count": 4,
+      "frames": [
+        "cinder_hound_attack_1_result.png",
+        "cinder_hound_attack_2_result.png",
+        "cinder_hound_attack_3_result.png",
+        "cinder_hound_attack_4_result.png"
+      ]
+    },
+    {
+      "row_index": 3,
+      "animation": "death",
+      "source_prefix": "cinder_hound_death",
+      "frame_count": 4,
+      "frames": [
+        "cinder_hound_death_1_result.png",
+        "cinder_hound_death_2_result.png",
+        "cinder_hound_death_3_result.png",
+        "cinder_hound_death_4_result.png"
+      ]
+    },
+    {
+      "row_index": 4,
+      "animation": "idle_back",
+      "source_prefix": "cinder_hound_idle_back",
+      "frame_count": 4,
+      "frames": [
+        "cinder_hound_idle_back_1_result.png",
+        "cinder_hound_idle_back_2_result.png",
+        "cinder_hound_idle_back_3_result.png",
+        "cinder_hound_idle_back_4_result.png"
+      ]
+    },
+    {
+      "row_index": 5,
+      "animation": "walk_back",
+      "source_prefix": "cinder_hound_walk_back",
+      "frame_count": 4,
+      "frames": [
+        "cinder_hound_walk_back_1_result.png",
+        "cinder_hound_walk_back_2_result.png",
+        "cinder_hound_walk_back_3_result.png",
+        "cinder_hound_walk_back_4_result.png"
+      ]
+    }
+  ]
+}
