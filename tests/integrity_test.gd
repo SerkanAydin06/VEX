@@ -388,18 +388,16 @@ func _check_localization_contract() -> void:
 	var early_translation_paths: PackedStringArray = ProjectSettings.get_setting(
 		"internationalization/locale/translations",
 		PackedStringArray()
-	) as PackedStringArray
+	)
 	if not early_translation_paths.is_empty():
 		failures.append("Çeviriler temiz importtan önce project.godot üzerinden erken yükleniyor.")
 
 	var original_locale := TranslationServer.get_locale()
-	for locale_and_expected: Array[String] in [
-		["tr", "TÜRKÇE"],
-		["en", "TURKISH"],
-	]:
-		TranslationServer.set_locale(locale_and_expected[0])
-		if tr("LANGUAGE_TURKISH") != locale_and_expected[1]:
-			failures.append("Runtime çeviri kaydı çalışmıyor: %s." % locale_and_expected[0])
+	for locale_code: String in ["tr", "en"]:
+		var expected_name := "TÜRKÇE" if locale_code == "tr" else "TURKISH"
+		TranslationServer.set_locale(locale_code)
+		if tr("LANGUAGE_TURKISH") != expected_name:
+			failures.append("Runtime çeviri kaydı çalışmıyor: %s." % locale_code)
 	TranslationServer.set_locale(original_locale)
 
 	var csv_text := FileAccess.get_file_as_string("res://translations/vex.csv")
