@@ -42,6 +42,7 @@
 [ext_resource type="PackedScene" uid="uid://c5s0tolim1ws2" path="res://scenes/actors/crucible_warden.tscn" id="38_crucible"]
 [ext_resource type="PackedScene" uid="uid://b1briarskulkr" path="res://scenes/actors/briar_skulker.tscn" id="39_briar"]
 [ext_resource type="PackedScene" uid="uid://bgorehorn01vex" path="res://scenes/actors/gorehorn.tscn" id="40_gorehorn"]
+[ext_resource type="PackedScene" uid="uid://bcindspitter1" path="res://scenes/actors/cinder_spitter.tscn" id="41_cinder_spitter"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -545,6 +546,11 @@ chase_speed = 10.0
 detection_range = 15.0
 pursuit_range = 26.0
 dormant_distance = 30.0
+
+[node name="CinderSpitter" parent="Enemies" instance=ExtResource("41_cinder_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.883, 10)
+enemy_id = &"level_test_cinder_spitter"
+maximum_health = 180
 
 [node name="RedViper" parent="Enemies" unique_id=406336072 instance=ExtResource("14_redviper")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.96335053, 10)

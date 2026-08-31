@@ -16,6 +16,7 @@ CREATURE_CAPSULES = {
     "voidweaver": (0.45, 1.90),
     "furnice_carrier": (0.58, 1.50),
     "crucible_warden": (0.72, 2.40),
+    "cinder_spitter": (0.44, 1.75),
     "redviper": (0.42, 1.80),
     "badredviper": (0.82, 3.10),
     "cinderhound": (0.44, 1.45),

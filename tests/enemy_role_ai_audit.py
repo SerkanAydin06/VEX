@@ -74,6 +74,7 @@ expected_roles = {
     "basalt_juggernaut": 1,
     "furnice_carrier": 2,
     "crucible_warden": 0,
+    "cinder_spitter": 1,
     "redviper": 0,
     "badredviper": 0,
     "cinderhound": 0,
