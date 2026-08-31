@@ -58,6 +58,8 @@ const REQUIRED_RESOURCES := [
 	"res://resources/weapons/vx47.tres",
 	"res://resources/weapons/mp90.tres",
 	"res://translations/vex.csv",
+	"res://translations/vex.tr.translation",
+	"res://translations/vex.en.translation",
 ]
 
 var failures: Array[String] = []
@@ -383,6 +385,23 @@ func _check_input_map() -> void:
 
 
 func _check_localization_contract() -> void:
+	var early_translation_paths: PackedStringArray = ProjectSettings.get_setting(
+		"internationalization/locale/translations",
+		PackedStringArray()
+	) as PackedStringArray
+	if not early_translation_paths.is_empty():
+		failures.append("Çeviriler temiz importtan önce project.godot üzerinden erken yükleniyor.")
+
+	var original_locale := TranslationServer.get_locale()
+	for locale_and_expected: Array[String] in [
+		["tr", "TÜRKÇE"],
+		["en", "TURKISH"],
+	]:
+		TranslationServer.set_locale(locale_and_expected[0])
+		if tr("LANGUAGE_TURKISH") != locale_and_expected[1]:
+			failures.append("Runtime çeviri kaydı çalışmıyor: %s." % locale_and_expected[0])
+	TranslationServer.set_locale(original_locale)
+
 	var csv_text := FileAccess.get_file_as_string("res://translations/vex.csv")
 	if not csv_text.begins_with("keys,tr,en"):
 		failures.append("Çeviri CSV başlığı keys,tr,en değil.")
