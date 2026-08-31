@@ -50,7 +50,15 @@ jobs:
       - name: Verify Godot version
         run: godot --version | grep '^4.7'
       - name: Import project headlessly
-        run: godot --headless --editor --path . --quit
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/godot-import.log"
+          godot --headless --editor --path . --quit 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Godot clean import log contains an error or invalid UID"
+            exit 1
+          fi
       - name: Run Godot integrity scene
         shell: bash
         run: |
@@ -69,6 +77,16 @@ jobs:
           godot --headless --path . tests/warden_door_runtime_test.tscn 2>&1 | tee "$log"
           if grep -E 'ERROR:|invalid UID' "$log"; then
             echo "::error::Warden doorway runtime log contains an error or invalid UID"
+            exit 1
+          fi
+      - name: Run Gorehorn charge runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/gorehorn-charge-runtime.log"
+          godot --headless --path . tests/gorehorn_charge_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Gorehorn charge runtime log contains an error or invalid UID"
             exit 1
           fi
       - name: Install Windows export templates
