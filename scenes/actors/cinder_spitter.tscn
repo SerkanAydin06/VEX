@@ -1,0 +1,282 @@
+[gd_scene format=3 uid="uid://bcindspitter1"]
+
+[ext_resource type="Script" uid="uid://bcindspitscr1" path="res://scripts/actors/cinder_spitter.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bcindspittex1" path="res://assets/enemies/cinder_spitter/cinder_spitter_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="PackedScene" uid="uid://bcindspitprj1" path="res://scenes/actors/cinder_spitter_projectile.tscn" id="3_projectile"]
+[ext_resource type="AudioStream" uid="uid://y0d3apk5yonj" path="res://assets/audio/cinder_hound_attack.wav" id="4_attack"]
+[ext_resource type="AudioStream" uid="uid://c3y6p5ej1oa1e" path="res://assets/audio/cinder_hound_hurt.wav" id="5_hurt"]
+[ext_resource type="AudioStream" uid="uid://bgmaicfe6x3tw" path="res://assets/audio/cinder_hound_death.wav" id="6_death"]
+[ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="7_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="8_burn"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_cinder_spitter"]
+radius = 0.44
+height = 1.75
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cinder_spitter"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_4")}],
+"loop": false,
+"name": &"attack",
+"speed": 7.5
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death_1")}, {"duration": 1.0, "texture": SubResource("Atlas_death_2")}, {"duration": 1.0, "texture": SubResource("Atlas_death_3")}, {"duration": 1.0, "texture": SubResource("Atlas_death_4")}],
+"loop": false,
+"name": &"death",
+"speed": 5.5
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_4")}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_back_1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_4")}],
+"loop": true,
+"name": &"idle_back",
+"speed": 3.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_4")}],
+"loop": true,
+"name": &"walk",
+"speed": 5.8
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_back_1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_4")}],
+"loop": true,
+"name": &"walk_back",
+"speed": 5.8
+}]
+
+[node name="CinderSpitter" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 15
+floor_snap_length = 0.3
+safe_margin = 0.06
+script = ExtResource("1_script")
+enemy_id = &"cinder_spitter"
+combat_role = 1
+maximum_health = 95
+difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
+difficulty_damage_multipliers = PackedFloat32Array(0.65, 1, 1.25, 1.55)
+difficulty_speed_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.15)
+difficulty_detection_multipliers = PackedFloat32Array(0.9, 1, 1.08, 1.2)
+difficulty_cooldown_multipliers = PackedFloat32Array(1.25, 1, 0.85, 0.7)
+difficulty_windup_multipliers = PackedFloat32Array(1.2, 1, 0.9, 0.75)
+move_speed = 2.8
+chase_speed = 3.4
+movement_acceleration = 14.0
+braking_acceleration = 20.0
+detection_range = 30.0
+pursuit_range = 40.0
+initial_view_angle = 260.0
+lost_sight_timeout = 18.0
+search_duration = 9.0
+search_turn_speed = 50.0
+ally_alert_radius = 10.0
+sight_origin_height = 0.7
+sight_target_height = 0.45
+crouch_detection_chance = 0.35
+crouch_guaranteed_detection_distance = 2.5
+hearing_radius = 16.0
+ranged_cover_visibility_threshold = 0.55
+ranged_cover_reposition_distance = 2.4
+ranged_visibility_sampling_enabled = true
+cover_reposition_enabled = true
+attack_damage = 15
+attack_range = 14.0
+attack_cooldown = 1.4
+attack_windup = 0.35
+attack_range_tolerance = 2.5
+attack_minimum_distance = 4.0
+attack_preferred_distance = 8.0
+attack_recovery_strafe_scale = 0.65
+attack_retreat_speed_scale = 0.65
+projectile_scene = ExtResource("3_projectile")
+projectile_spawn_height = 0.72
+projectile_spawn_forward_offset = 0.20
+projectile_target_height = 0.5
+projectile_lead_factor = 0.45
+projectile_max_lead_time = 1.0
+attack_approach_speed = 1.2
+attack_strafe_speed = 1.1
+chase_path_refresh_interval = 0.36
+runtime_grid_step = 0.92
+runtime_grid_max_nodes = 2300
+runtime_grid_search_margin = 15.0
+waypoint_link_distance = 9.5
+navigation_clearance = 0.55
+back_view_threshold = -0.12
+dormant_distance = 46.0
+corpse_visual_y = 0.0
+idle_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+idle_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+walk_back_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+attack_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+death_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
+burn_remains_scene = ExtResource("8_burn")
+burn_remains_scale = 0.9
+burn_smoke_duration = 7.0
+burn_smoke_alpha = 0.12
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape_cinder_spitter")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+position = Vector3(0, 0, 0)
+cast_shadow = 0
+pixel_size = 0.0037
+billboard = 2
+shaded = true
+alpha_cut = 1
+sprite_frames = SubResource("SpriteFrames_cinder_spitter")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="GroundShadow" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.855, 0)
+cast_shadow = 0
+offset = Vector2(0, 16)
+modulate = Color(1, 1, 1, 0.52)
+pixel_size = 0.0052
+billboard = 2
+texture_filter = 5
+render_priority = -2
+texture = ExtResource("7_shadow")
+
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_attack")
+volume_db = -2.0
+max_distance = 20.0
+bus = &"SFX"
+
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_hurt")
+volume_db = -2.5
+max_distance = 18.0
+bus = &"SFX"
+
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_death")
+volume_db = -1.0
+max_distance = 20.0
+bus = &"SFX"
