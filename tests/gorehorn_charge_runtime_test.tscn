@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgorehornrtscene1"]
+
+[ext_resource type="Script" uid="uid://cgorehornrt1" path="res://tests/gorehorn_charge_runtime_test.gd" id="1_test"]
+
+[node name="GorehornChargeRuntimeTest" type="Node3D"]
+script = ExtResource("1_test")

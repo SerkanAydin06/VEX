@@ -1,6 +1,10 @@
 extends Node
 
 const SETTINGS_SCHEMA_VERSION := 2
+const TRANSLATION_RESOURCE_PATHS := [
+	"res://translations/vex.tr.translation",
+	"res://translations/vex.en.translation",
+]
 
 signal settings_applied
 signal difficulty_changed(difficulty: int)
@@ -108,9 +112,11 @@ var controller_look_sensitivity := 2.6
 var difficulty: int = Difficulty.NORMAL
 var graphics_quality: int = GraphicsQuality.HIGH
 var _default_keycodes: Dictionary = {}
+var _registered_translations: Array[Translation] = []
 
 
 func _ready() -> void:
+	_register_imported_translations()
 	_ensure_required_input_actions()
 	_capture_default_keybindings()
 	_ensure_default_gamepad_bindings()
@@ -118,6 +124,19 @@ func _ready() -> void:
 	load_settings()
 	_apply_language(false)
 	call_deferred("apply_settings")
+
+
+## CSV çevirileri import sırasında .translation kaynaklarına dönüşür. Bu kaynakları
+## proje ayarlarında erken bağlamak temiz klonun ilk taramasında bulunamadı hatası
+## ürettiği için, import tamamlandıktan sonra autoload başlangıcında kaydederiz.
+func _register_imported_translations() -> void:
+	for path: String in TRANSLATION_RESOURCE_PATHS:
+		var translation := load(path) as Translation
+		if translation == null:
+			push_error("VEX çeviri kaynağı yüklenemedi: %s" % path)
+			continue
+		TranslationServer.add_translation(translation)
+		_registered_translations.append(translation)
 
 
 ## Eski proje paketlerinde sonradan eklenen aksiyonlar project.godot içinde

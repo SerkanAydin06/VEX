@@ -158,7 +158,9 @@ weapon_flashlight={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://translations/vex.en.translation", "res://translations/vex.tr.translation")
+; CSV'nin ürettiği .translation kaynakları SettingsManager tarafından import
+; tamamlandıktan sonra kaydedilir. Burada erken referans vermek temiz klonda
+; ilk dosya taramasından önce bulunamadı hatası üretir.
 locale/fallback="tr"
 
 [layer_names]
