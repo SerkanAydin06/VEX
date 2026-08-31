@@ -1,10 +1,10 @@
 extends Node
 
 const SETTINGS_SCHEMA_VERSION := 2
-const TRANSLATION_RESOURCE_PATHS := PackedStringArray([
+const TRANSLATION_RESOURCE_PATHS := [
 	"res://translations/vex.tr.translation",
 	"res://translations/vex.en.translation",
-])
+]
 
 signal settings_applied
 signal difficulty_changed(difficulty: int)
