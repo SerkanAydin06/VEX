@@ -15,12 +15,16 @@ script = ExtResource("9_settings")
 hit_distance = 1.1
 recovery_duration = 0.75
 blocked_recovery_duration = 1.1
-knockback_horizontal_speed = 9.5
-knockback_upward_speed = 2.2
-knockback_duration = 0.32
+knockback_horizontal_speed = 13.5
+knockback_upward_speed = 2.8
+knockback_duration = 0.44
 impact_shake_enabled = true
-impact_shake_strength = 0.09
-impact_shake_duration = 0.26
+impact_shake_strength = 0.135
+impact_shake_duration = 0.34
+impact_shock_enabled = true
+impact_shock_color = Color(0.055, 0, 0, 1)
+impact_shock_peak_alpha = 0.38
+impact_shock_duration = 0.24
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_gorehorn"]
 radius = 0.72

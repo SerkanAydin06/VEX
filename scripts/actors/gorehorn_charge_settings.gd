@@ -20,5 +20,15 @@ extends VexEnemyAbilitySettings
 ## Kamera sarsıntısının şiddetidir; genel ekran sarsıntısı ayarı kapalıysa uygulanmaz.
 @export_range(0.0, 0.3, 0.005) var impact_shake_strength := 0.09
 ## Kamera sarsıntısının toplam süresidir (saniye).
-@export_range(0.0, 1.0, 0.01) var impact_shake_duration := 0.26
+@export_range(0.0, 1.0, 0.01) var impact_shake_duration := 0.34
+
+@export_category("Darbe Perdesi")
+## Başarılı boynuz darbesinde kısa, koyu bir ekran darbe perdesi gösterilip gösterilmeyeceğini belirler.
+@export var impact_shock_enabled := true
+## Darbe perdesinin rengidir; koyu kırmızı-siyah tonlar göz yormadan ağır çarpışma hissi verir.
+@export var impact_shock_color := Color(0.055, 0.0, 0.0, 1.0)
+## Darbe perdesinin en yüksek görünürlüğüdür; 1 ekranı tamamen kapatır.
+@export_range(0.0, 0.75, 0.01) var impact_shock_peak_alpha := 0.38
+## Darbe perdesinin hızlı yükselip kaybolacağı toplam süredir (saniye).
+@export_range(0.05, 0.8, 0.01) var impact_shock_duration := 0.24
 

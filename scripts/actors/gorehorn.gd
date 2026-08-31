@@ -80,6 +80,9 @@ func _attempt_attack() -> void:
 	_stop_charge_motion(false)
 	if not _is_current_charge_attack(attack_generation):
 		return
+	# Şarj koşusu biter bitmez nötr poza dön; sersemleme ve cooldown saldırının
+	# son karesini ekranda dondurmamalıdır.
+	_play_animation(&"idle")
 
 	var recovery := (
 		settings.blocked_recovery_duration
@@ -176,6 +179,13 @@ func _apply_charge_hit(settings: VexGorehornChargeSettings) -> void:
 			"request_camera_shake",
 			settings.impact_shake_strength,
 			settings.impact_shake_duration
+		)
+	if settings.impact_shock_enabled and _player.has_method("request_impact_shock"):
+		_player.call(
+			"request_impact_shock",
+			settings.impact_shock_color,
+			settings.impact_shock_peak_alpha,
+			settings.impact_shock_duration
 		)
 	if charge_impact_audio != null and charge_impact_audio.stream != null:
 		charge_impact_audio.play()

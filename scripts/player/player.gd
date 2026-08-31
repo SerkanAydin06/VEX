@@ -106,6 +106,10 @@ var _impact_shake_strength := 0.0
 var _impact_shake_base_h_offset := 0.0
 var _impact_shake_base_v_offset := 0.0
 var _impact_shake_active := false
+var _impact_shock_layer: CanvasLayer = null
+var _impact_shock_rect: ColorRect = null
+var _impact_shock_tween: Tween = null
+var _impact_shock_generation := 0
 
 
 func _ready() -> void:
@@ -514,6 +518,79 @@ func request_camera_shake(strength: float, duration: float) -> void:
 	_impact_shake_strength = maxf(_impact_shake_strength, safe_strength)
 	_impact_shake_duration = maxf(_impact_shake_duration, safe_duration)
 	_impact_shake_remaining = maxf(_impact_shake_remaining, safe_duration)
+
+
+func request_impact_shock(tint: Color, peak_alpha: float, duration: float) -> void:
+	if not is_inside_tree():
+		return
+	var safe_peak_alpha := clampf(peak_alpha, 0.0, 0.75)
+	var safe_duration := maxf(0.05, duration)
+	if safe_peak_alpha <= 0.0:
+		return
+	_ensure_impact_shock_overlay()
+	if _impact_shock_rect == null:
+		return
+	if _impact_shock_tween != null and _impact_shock_tween.is_valid():
+		_impact_shock_tween.kill()
+
+	_impact_shock_generation += 1
+	var shock_generation := _impact_shock_generation
+	_impact_shock_rect.color = Color(tint.r, tint.g, tint.b, 1.0)
+	_impact_shock_rect.modulate = Color(1.0, 1.0, 1.0, 0.0)
+	_impact_shock_rect.visible = true
+
+	# Tek bir koyu darbe darbesi kullanılır: parlak flaş veya tekrarlayan titreşim yoktur.
+	var rise_duration := minf(0.045, safe_duration * 0.25)
+	var fade_duration := maxf(0.01, safe_duration - rise_duration)
+	_impact_shock_tween = create_tween()
+	_impact_shock_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_impact_shock_tween.tween_property(
+		_impact_shock_rect,
+		"modulate:a",
+		safe_peak_alpha,
+		rise_duration
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_impact_shock_tween.tween_property(
+		_impact_shock_rect,
+		"modulate:a",
+		0.0,
+		fade_duration
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_impact_shock_tween.finished.connect(
+		_finish_impact_shock.bind(shock_generation),
+		CONNECT_ONE_SHOT
+	)
+
+
+func _ensure_impact_shock_overlay() -> void:
+	if (
+		_impact_shock_layer != null
+		and is_instance_valid(_impact_shock_layer)
+		and _impact_shock_rect != null
+		and is_instance_valid(_impact_shock_rect)
+	):
+		return
+	_impact_shock_layer = CanvasLayer.new()
+	_impact_shock_layer.name = "ImpactShockOverlay"
+	_impact_shock_layer.layer = 120
+	_impact_shock_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_impact_shock_layer)
+
+	_impact_shock_rect = ColorRect.new()
+	_impact_shock_rect.name = "ImpactShockTint"
+	_impact_shock_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_impact_shock_layer.add_child(_impact_shock_rect)
+	_impact_shock_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_impact_shock_rect.visible = false
+
+
+func _finish_impact_shock(shock_generation: int) -> void:
+	if shock_generation != _impact_shock_generation:
+		return
+	if _impact_shock_rect != null and is_instance_valid(_impact_shock_rect):
+		_impact_shock_rect.modulate = Color(1.0, 1.0, 1.0, 0.0)
+		_impact_shock_rect.visible = false
+	_impact_shock_tween = null
 
 
 func _update_impact_camera_shake(delta: float) -> void:

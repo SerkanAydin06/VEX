@@ -50,6 +50,7 @@ for token in [
     "func _apply_charge_hit(",
     '"apply_external_impulse"',
     '"request_camera_shake"',
+    '"request_impact_shock"',
     "_charge_hit_player",
     "blocked_recovery_duration",
 ]:
@@ -58,6 +59,9 @@ for token in [
 for token in [
     "func apply_external_impulse(",
     "func request_camera_shake(",
+    "func request_impact_shock(",
+    "func _ensure_impact_shock_overlay(",
+    "ImpactShockOverlay",
     "SettingsManager.screen_shake",
     "_update_impact_camera_shake(delta)",
 ]:
@@ -69,6 +73,11 @@ assert "maximum_health = 180" in scene
 assert "attack_range = 12.0" in scene
 assert "attack_lunge_speed = 18.0" in scene
 assert "attack_lunge_duration = 0.82" in scene
+assert "knockback_horizontal_speed = 13.5" in scene
+assert "knockback_duration = 0.44" in scene
+assert "impact_shake_strength = 0.135" in scene
+assert "impact_shock_peak_alpha = 0.38" in scene
+assert "impact_shock_duration = 0.24" in scene
 assert 'special_ability_settings = SubResource("Resource_gorehorn_charge")' in scene
 assert 'billboard = 2' in scene
 assert 'offset = Vector2(0, 16)' in scene
