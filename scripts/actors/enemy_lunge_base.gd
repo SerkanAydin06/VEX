@@ -151,7 +151,7 @@ extends "res://scripts/actors/enemy_base.gd"
 
 @export_category("04 - Saldırı")
 ## Normal saldırının başlatılabildiği yatay mesafedir (metre).
-@export_range(0.5, 4.0, 0.05) var attack_range := 1.45
+@export_range(0.5, 16.0, 0.05) var attack_range := 1.45
 ## Normal saldırının zorluk çarpanından önceki temel hasarıdır.
 @export_range(1, 100, 1) var attack_damage := 10
 ## İki normal saldırı arasındaki temel bekleme süresidir (saniye).
@@ -252,6 +252,10 @@ extends "res://scripts/actors/enemy_base.gd"
 @export_range(0.0, 20.0, 0.1) var burn_smoke_duration := 8.5
 ## Yaratığın yanık duman saydamlık ayarını belirler.
 @export_range(0.0, 1.0, 0.01) var burn_smoke_alpha := 0.14
+
+@export_category("09 - Özel Yetenekler")
+## Bu yaratığa özgü saldırı ayarlarını içerir; kaynağı genişleterek alt alanları düzenleyin.
+@export var special_ability_settings: VexEnemyAbilitySettings
 
 @onready var animated_sprite: AnimatedSprite3D = $AnimatedSprite3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
