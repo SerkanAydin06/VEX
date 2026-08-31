@@ -243,9 +243,9 @@ func _spawn_test_gorehorn(case_root: Node3D, runtime_id: String) -> VexGorehorn:
 	gorehorn.attack_lunge_duration = 0.65
 	gorehorn.dormant_distance = 100.0
 
-	var settings := gorehorn.special_ability_settings.duplicate(true) as VexGorehornChargeSettings
+	var settings := gorehorn.special_ability_settings as VexGorehornChargeSettings
 	if settings == null:
-		failures.append("%s: şarj ayarı duplicate edilemedi." % runtime_id)
+		failures.append("%s: Inspector şarj ayarı okunamadı." % runtime_id)
 		gorehorn.free()
 		return null
 	settings.hit_distance = 1.15
