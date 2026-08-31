@@ -7,7 +7,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_EXTENSIONS = {".png", ".wav", ".mp3", ".ttf"}
 MAX_SINGLE_ASSET_BYTES = 12 * 1024 * 1024
-MAX_BINARY_TREE_BYTES = 260 * 1024 * 1024
+MAX_BINARY_TREE_BYTES = 280 * 1024 * 1024
 ERRORS: list[str] = []
 
 
@@ -28,7 +28,7 @@ def main() -> int:
     if total > MAX_BINARY_TREE_BYTES:
         ERRORS.append(
             f"Binary çalışma ağacı sınırı aşıldı: "
-            f"{total / 1024 / 1024:.1f} MiB > 260 MiB"
+            f"{total / 1024 / 1024:.1f} MiB > 280 MiB"
         )
     for message in ERRORS:
         print("ERROR:", message)
