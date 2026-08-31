@@ -200,6 +200,7 @@ search_duration = 9.0
 ally_alert_radius = 10.0
 sight_origin_height = 1.05
 sight_target_height = 0.55
+damage_pursuit_commit_time = 0.12
 hearing_radius = 18.0
 attack_range = 12.0
 attack_damage = 32
