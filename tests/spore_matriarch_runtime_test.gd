@@ -27,11 +27,11 @@ func _ready() -> void:
 	var status := POISON_STATUS.new() as VexSporePoisonStatus
 	status.name = "SporePoisonStatus"
 	target.add_child(status)
-	status.refresh_poison(0.24, 5, 0.05, null)
+	status.refresh_poison(0.34, 5, 0.10, null)
 	assert(status.get_remaining_time() > 0.0)
 	assert(status.get_tick_damage() == 5)
 
-	await get_tree().create_timer(0.18).timeout
+	await get_tree().create_timer(0.26).timeout
 	assert(target.damage_taken >= 10)
 	print("Spore Matriarch poison runtime test passed")
 	get_tree().quit(0)
