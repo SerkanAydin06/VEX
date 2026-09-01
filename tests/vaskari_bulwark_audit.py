@@ -13,8 +13,10 @@ SCRIPT = ROOT / "scripts/actors/vaskari_bulwark.gd"
 SHEET = ROOT / "assets/enemies/vaskari_bulwark/vaskari_bulwark_character_spritesheet.png"
 MANIFEST = ROOT / "assets/enemies/vaskari_bulwark/vaskari_bulwark_character_spritesheet_manifest.json"
 IMPORT = ROOT / "assets/enemies/vaskari_bulwark/vaskari_bulwark_character_spritesheet.png.import"
+LUNGE_BASE = ROOT / "scripts/actors/enemy_lunge_base.gd"
 ANIM_ROWS = ["idle", "walk", "attack", "death", "idle_back", "walk_back"]
 ALPHA_THRESHOLD = 16
+TARGET_CONTACT_GAP = 0.008
 
 
 def paeth(a: int, b: int, c: int) -> int:
@@ -126,6 +128,12 @@ assert "compress/mode=2" in import_text
 assert "mipmaps/generate=true" in import_text
 assert '"vram_texture": true' in import_text
 
+lunge_base = LUNGE_BASE.read_text(encoding="utf-8")
+clearance_match = re.search(r"var corpse_floor_clearance := ([0-9.]+)", lunge_base)
+assert clearance_match is not None
+corpse_floor_clearance = float(clearance_match.group(1))
+assert "animated_sprite.position.y = corpse_visual_y + corpse_floor_clearance" in lunge_base
+
 width, height, alpha = decode_alpha(SHEET)
 assert (width, height) == (2048, 3072)
 sprite = node_body(scene, "AnimatedSprite3D")
@@ -135,8 +143,10 @@ pixel_size = float(pixel_match.group(1))
 position_match = re.search(r'^position = Vector3\([^,]+, ([^,]+), [^)]+\)$', sprite, re.M)
 sprite_y = float(position_match.group(1)) if position_match else 0.0
 capsule_height = property_float(scene, "height")
+corpse_visual_y = property_float(scene, "corpse_visual_y")
 print(f"VASKARI SCALE pixel_size={pixel_size:.6f} sprite_y={sprite_y:+.4f} capsule={capsule_height:.3f}")
 
+final_death_bottom_pixel: int | None = None
 for row_index, animation in enumerate(ANIM_ROWS):
     gaps: list[float] = []
     for column in range(4):
@@ -154,6 +164,8 @@ for row_index, animation in enumerate(ANIM_ROWS):
                 min_y = local_y if min_y is None else min(min_y, local_y)
                 max_y = local_y if max_y is None else max(max_y, local_y)
         assert min_x is not None and min_y is not None and max_x is not None and max_y is not None
+        if animation == "death" and column == 3:
+            final_death_bottom_pixel = max_y
         bbox_w = max_x - min_x + 1
         bbox_h = max_y - min_y + 1
         bottom_local = sprite_y + (256.0 - (max_y + 1)) * pixel_size
@@ -166,5 +178,21 @@ for row_index, animation in enumerate(ANIM_ROWS):
             f"raw_gap={gap:+.4f}"
         )
     print(f"VASKARI CONTACT {animation:9s} " + ",".join(f"{gap:+.4f}" for gap in gaps))
+
+assert final_death_bottom_pixel is not None
+final_death_local_bottom = (256.0 - (final_death_bottom_pixel + 1)) * pixel_size
+corpse_gap = (
+    corpse_visual_y
+    + corpse_floor_clearance
+    + final_death_local_bottom
+    + capsule_height * 0.5
+)
+tolerance = max(0.0006, pixel_size * 0.55)
+print(f"VASKARI CORPSE final_gap={corpse_gap:+.4f}")
+assert abs(corpse_gap - TARGET_CONTACT_GAP) <= tolerance, (
+    "Vaskari final corpse floor gap",
+    corpse_gap,
+    TARGET_CONTACT_GAP,
+)
 
 print("vaskari bulwark audit passed")
