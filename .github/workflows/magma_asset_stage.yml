@@ -1,0 +1,43 @@
+name: Stage Magma Mauler Asset
+
+on:
+  push:
+    branches: [feat/magma-mauler]
+    paths:
+      - ".asset_staging/magma_mauler/READY"
+
+permissions:
+  contents: write
+
+jobs:
+  assemble-asset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          ref: feat/magma-mauler
+          fetch-depth: 0
+      - name: Assemble and verify PNG
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/enemies/magma_mauler
+          find .asset_staging/magma_mauler -maxdepth 1 -name 'part_*' -print0 \
+            | sort -z \
+            | xargs -0 cat \
+            | base64 --decode \
+            > assets/enemies/magma_mauler/magma_mauler_character_spritesheet.png
+          echo "19e6fea22f1e6feeed6b98df46e1d55edfcb0abb04b0c06afb4a907dec95432b  assets/enemies/magma_mauler/magma_mauler_character_spritesheet.png" | sha256sum --check
+      - name: Commit assembled asset and cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/enemies/magma_mauler/magma_mauler_character_spritesheet.png
+          git rm -r .asset_staging/magma_mauler
+          git rm .github/workflows/magma_asset_stage.yml
+          git commit -m "Add Magma Mauler spritesheet asset"
+          git push origin HEAD:feat/magma-mauler
