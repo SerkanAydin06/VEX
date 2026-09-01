@@ -1,0 +1,1 @@
+Magma Mauler sprite alpha bottoms are authored 8 px above each 341x512 frame bottom. With pixel_size 0.005, capsule height 2.4 and frame offsets 0.048, the adjusted alpha-bottom gap is exactly 0.008 m for all 24 frames.
