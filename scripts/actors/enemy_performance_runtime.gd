@@ -8,6 +8,7 @@ const NEAR_PRIORITY_DISTANCE := 14.0
 const MID_DISTANCE := 28.0
 const PATH_RETRY_DELAY := 0.05
 const COVER_RETRY_DELAY := 0.10
+const DOOR_CACHE_REFRESH_FRAMES := 120
 
 const FAR_SIGHT_CLAIMS_PER_FRAME := 3
 const NEAR_SIGHT_CLAIMS_PER_FRAME := 7
@@ -22,6 +23,7 @@ static var _path_claims := 0
 static var _cover_claims := 0
 
 static var _door_scene_id := -1
+static var _door_refresh_frame := -1000000
 static var _door_nodes: Array[Node] = []
 
 
@@ -128,7 +130,11 @@ static func resolve_enemy_door_step_cached(
 static func _refresh_door_cache_if_needed(host: Node3D) -> void:
 	var current_scene := host.get_tree().current_scene
 	var scene_id := current_scene.get_instance_id() if current_scene != null else 0
-	var needs_refresh := scene_id != _door_scene_id
+	var physics_frame := Engine.get_physics_frames()
+	var needs_refresh := (
+		scene_id != _door_scene_id
+		or physics_frame - _door_refresh_frame >= DOOR_CACHE_REFRESH_FRAMES
+	)
 	if not needs_refresh:
 		for node: Node in _door_nodes:
 			if node == null or not is_instance_valid(node):
@@ -138,6 +144,7 @@ static func _refresh_door_cache_if_needed(host: Node3D) -> void:
 		return
 
 	_door_scene_id = scene_id
+	_door_refresh_frame = physics_frame
 	_door_nodes.clear()
 	for node: Node in host.get_tree().get_nodes_in_group("enemy_navigation_door"):
 		if node != null and is_instance_valid(node):
