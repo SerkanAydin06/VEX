@@ -1,7 +1,8 @@
 shader_type spatial;
-render_mode blend_mix, depth_draw_opaque, cull_disabled;
+render_mode depth_draw_opaque, cull_disabled;
 
 uniform sampler2D albedo_texture : source_color, filter_linear_mipmap;
+uniform vec4 uv_rect = vec4(0.0, 0.0, 1.0, 1.0);
 uniform float normal_strength : hint_range(0.0, 4.0) = 1.35;
 uniform float cavity_strength : hint_range(0.0, 1.0) = 0.24;
 uniform float edge_darkening : hint_range(0.0, 1.0) = 0.12;
@@ -18,6 +19,19 @@ uniform vec4 emission_tint : source_color = vec4(1.0, 0.82, 0.62, 1.0);
 
 float luminance(vec3 color) {
 	return dot(color, vec3(0.2126, 0.7152, 0.0722));
+}
+
+vec2 atlas_uv(vec2 local_uv) {
+	vec2 atlas_size = vec2(textureSize(albedo_texture, 0));
+	vec2 atlas_texel = 1.0 / max(atlas_size, vec2(1.0));
+	vec2 mapped = uv_rect.xy + local_uv * uv_rect.zw;
+	vec2 min_uv = uv_rect.xy + atlas_texel * 0.5;
+	vec2 max_uv = uv_rect.xy + uv_rect.zw - atlas_texel * 0.5;
+	return clamp(mapped, min_uv, max_uv);
+}
+
+vec4 sample_sprite(vec2 local_uv) {
+	return texture(albedo_texture, atlas_uv(local_uv));
 }
 
 void vertex() {
@@ -37,15 +51,18 @@ void vertex() {
 }
 
 void fragment() {
-	vec4 tex = texture(albedo_texture, UV);
-	ALPHA = tex.a;
-	ALPHA_SCISSOR_THRESHOLD = 0.025;
+	vec4 tex = sample_sprite(UV);
+	if (tex.a < 0.035) {
+		discard;
+	}
 
-	vec2 texel = 1.0 / vec2(textureSize(albedo_texture, 0));
-	vec4 left_tex = texture(albedo_texture, UV - vec2(texel.x, 0.0));
-	vec4 right_tex = texture(albedo_texture, UV + vec2(texel.x, 0.0));
-	vec4 up_tex = texture(albedo_texture, UV - vec2(0.0, texel.y));
-	vec4 down_tex = texture(albedo_texture, UV + vec2(0.0, texel.y));
+	vec2 atlas_size = vec2(textureSize(albedo_texture, 0));
+	vec2 frame_size = max(atlas_size * max(uv_rect.zw, vec2(0.0001)), vec2(1.0));
+	vec2 texel = 1.0 / frame_size;
+	vec4 left_tex = sample_sprite(UV - vec2(texel.x, 0.0));
+	vec4 right_tex = sample_sprite(UV + vec2(texel.x, 0.0));
+	vec4 up_tex = sample_sprite(UV - vec2(0.0, texel.y));
+	vec4 down_tex = sample_sprite(UV + vec2(0.0, texel.y));
 
 	float left_height = luminance(left_tex.rgb) * left_tex.a;
 	float right_height = luminance(right_tex.rgb) * right_tex.a;
@@ -62,7 +79,11 @@ void fragment() {
 		+ luminance(up_tex.rgb) + luminance(down_tex.rgb)
 	);
 	float cavity = clamp((neighbor_luma - base_luma) * 2.5 + 0.5, 0.0, 1.0);
-	float alpha_edge = clamp(abs(left_tex.a - right_tex.a) + abs(up_tex.a - down_tex.a), 0.0, 1.0);
+	float alpha_edge = clamp(
+		abs(left_tex.a - right_tex.a) + abs(up_tex.a - down_tex.a),
+		0.0,
+		1.0
+	);
 
 	vec3 color = tex.rgb;
 	float gray = luminance(color);
