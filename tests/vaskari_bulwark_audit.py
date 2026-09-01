@@ -104,7 +104,7 @@ assert all(row["frame_count"] == 4 for row in manifest["rows"])
 
 script = SCRIPT.read_text(encoding="utf-8")
 assert "class_name VexVaskariBulwark" in script
-assert 'extends "res://scripts/actors/enemy_lunge_base.gd"' in script
+assert 'extends "res://scripts/actors/enemy_lunge_performance_base.gd"' in script
 
 scene = SCENE.read_text(encoding="utf-8")
 assert 'enemy_id = &"vaskari_bulwark"' in scene
