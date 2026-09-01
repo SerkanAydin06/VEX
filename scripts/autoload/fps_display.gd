@@ -25,7 +25,8 @@ func _process(delta: float) -> void:
 	if _sample_remaining > 0.0:
 		return
 	_sample_remaining = SAMPLE_INTERVAL
-	_fps_label.text = "FPS: %d" % int(round(Engine.get_frames_per_second()))
+	var suffix := " • VSYNC" if SettingsManager.vsync else ""
+	_fps_label.text = "FPS: %d%s" % [int(round(Engine.get_frames_per_second())), suffix]
 
 
 func set_enabled(value: bool) -> void:
@@ -45,7 +46,7 @@ func _build_ui() -> void:
 	_fps_label = Label.new()
 	_fps_label.name = "FpsLabel"
 	_fps_label.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	_fps_label.offset_left = -150.0
+	_fps_label.offset_left = -210.0
 	_fps_label.offset_top = 14.0
 	_fps_label.offset_right = -18.0
 	_fps_label.offset_bottom = 46.0

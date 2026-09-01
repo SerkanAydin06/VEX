@@ -126,6 +126,7 @@ func _sync_from_settings() -> void:
 	fov_slider.value = SettingsManager.field_of_view
 	head_bob_check.button_pressed = SettingsManager.head_bob
 	_update_value_labels()
+	_update_toggle_labels()
 	_syncing = false
 
 
@@ -137,6 +138,20 @@ func _update_value_labels() -> void:
 	sensitivity_value.text = "%.2f" % (sensitivity_slider.value / 1000.0)
 	controller_sensitivity_value.text = "%.1f" % (controller_sensitivity_slider.value / 100.0)
 	fov_value.text = "%d°" % int(round(fov_slider.value))
+
+
+func _update_toggle_labels() -> void:
+	fullscreen_check.text = _toggle_text(fullscreen_check.button_pressed)
+	vsync_check.text = _toggle_text(vsync_check.button_pressed)
+	fps_check.text = _toggle_text(fps_check.button_pressed)
+	shake_check.text = _toggle_text(shake_check.button_pressed)
+	head_bob_check.text = _toggle_text(head_bob_check.button_pressed)
+
+
+func _toggle_text(value: bool) -> String:
+	if value:
+		return tr("UI_ENABLED")
+	return "KAPALI" if TranslationServer.get_locale().begins_with("tr") else "OFF"
 
 
 func _on_resolution_selected(index: int) -> void:
@@ -167,18 +182,24 @@ func _on_graphics_quality_selected(index: int) -> void:
 
 
 func _on_fullscreen_toggled(value: bool) -> void:
-	if not _syncing:
-		SettingsManager.set_fullscreen(value)
+	if _syncing:
+		return
+	_update_toggle_labels()
+	SettingsManager.set_fullscreen(value)
 
 
 func _on_vsync_toggled(value: bool) -> void:
-	if not _syncing:
-		SettingsManager.set_vsync(value)
+	if _syncing:
+		return
+	_update_toggle_labels()
+	SettingsManager.set_vsync(value)
 
 
 func _on_fps_toggled(value: bool) -> void:
-	if not _syncing:
-		FpsDisplay.set_enabled(value)
+	if _syncing:
+		return
+	_update_toggle_labels()
+	FpsDisplay.set_enabled(value)
 
 
 func _on_master_changed(value: float) -> void:
@@ -218,8 +239,10 @@ func _on_controller_sensitivity_changed(value: float) -> void:
 
 
 func _on_shake_toggled(value: bool) -> void:
-	if not _syncing:
-		SettingsManager.set_screen_shake(value)
+	if _syncing:
+		return
+	_update_toggle_labels()
+	SettingsManager.set_screen_shake(value)
 
 
 func _on_fov_changed(value: float) -> void:
@@ -229,8 +252,10 @@ func _on_fov_changed(value: float) -> void:
 
 
 func _on_head_bob_toggled(value: bool) -> void:
-	if not _syncing:
-		SettingsManager.set_head_bob(value)
+	if _syncing:
+		return
+	_update_toggle_labels()
+	SettingsManager.set_head_bob(value)
 
 
 func _on_close_pressed() -> void:
