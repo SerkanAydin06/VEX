@@ -77,6 +77,8 @@ expected_regions = [
 ]
 assert regions == expected_regions, regions
 
+# Scene defaults remain explicit while the exported field_radius is the runtime
+# authority for collision, visible disc and light range.
 for contract in [
     "field_radius = 5.2",
     "field_duration = 5.8",
@@ -95,19 +97,31 @@ for contract in [
     "Phase.FIELD",
     "func _deploy_field(",
     "get_overlapping_bodies()",
-    'target.call("take_damage", damage, global_position, source)',
+    "func _apply_field_radius() -> void:",
+    "unique_shape.radius = field_radius",
+    "unique_mesh.top_radius = field_radius",
+    "unique_mesh.bottom_radius = field_radius",
+    "field_light.omni_range = maxf(field_radius + 1.0, 1.0)",
+    "func _valid_source() -> Node:",
+    "var damage_source := _valid_source()",
+    'target.call("take_damage", damage, global_position, damage_source)',
     'target.get_node_or_null("SporePoisonStatus")',
-    'status.call(',
     '"refresh_poison"',
+    "_valid_source()",
     "EnemyProjectilePool.recycle(self)",
 ]:
     assert contract in projectile_script, contract
 
+# The old unsafe source forwarding must not return.
+assert 'target.call("take_damage", damage, global_position, source)' not in projectile_script
+
 for contract in [
     "class_name VexSporePoisonStatus",
     "func refresh_poison(",
-    'target.call("take_damage"' if False else '_target.call("take_damage"',
-    'SporePoisonOverlay',
+    "_source = source if is_instance_valid(source) else null",
+    "if is_instance_valid(_source):",
+    '_target.call("take_damage", _tick_damage, hit_position, damage_source)',
+    "SporePoisonOverlay",
     "queue_free()",
 ]:
     assert contract in poison_script, contract
