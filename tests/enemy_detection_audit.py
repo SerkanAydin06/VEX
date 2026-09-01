@@ -12,6 +12,7 @@ EXPECTED = {
     "crucible_warden": (34.0, 44.0, 48.0),
     "cinder_spitter": (30.0, 40.0, 46.0),
     "coil_lancer": (34.0, 44.0, 50.0),
+    "spore_matriarch": (32.0, 42.0, 48.0),
     "redviper": (30.0, 38.0, 44.0),
     "badredviper": (32.0, 42.0, 46.0),
     "cinderhound": (30.0, 42.0, 44.0),
