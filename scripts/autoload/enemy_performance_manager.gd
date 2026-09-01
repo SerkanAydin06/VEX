@@ -26,10 +26,12 @@ func _process(delta: float) -> void:
 
 
 func _update_enemy_lod() -> void:
+	var enemies := get_tree().get_nodes_in_group("enemy")
+	_prune_stale_profiles(enemies)
+
 	var player := GameState.player as Node3D
 	if player == null or not is_instance_valid(player):
 		return
-	var enemies := get_tree().get_nodes_in_group("enemy")
 	if enemies.is_empty():
 		return
 
@@ -54,15 +56,30 @@ func _update_enemy_lod() -> void:
 		var family := _enemy_family(enemy)
 		if family.is_empty():
 			continue
-		var profile := _ensure_profile(enemy, family)
 		if _is_enemy_dead(enemy):
-			_restore_enemy(enemy, profile)
+			var dead_key := enemy.get_instance_id()
+			if _profiles.has(dead_key):
+				_restore_enemy(enemy, _profiles[dead_key] as Dictionary)
+				_profiles.erase(dead_key)
 			continue
+		var profile := _ensure_profile(enemy, family)
 
 		var distance := _horizontal_distance(enemy.global_position, player.global_position)
 		_apply_runtime_tuning(enemy, family, profile, distance, crowd_factor)
 		_apply_physics_sleep(enemy, profile, distance)
 		_apply_visual_lod(enemy, profile, distance, camera, viewport_rect)
+
+
+func _prune_stale_profiles(enemies: Array[Node]) -> void:
+	if _profiles.is_empty():
+		return
+	var active_ids: Dictionary = {}
+	for node: Node in enemies:
+		if node is Node3D and is_instance_valid(node):
+			active_ids[node.get_instance_id()] = true
+	for key: Variant in _profiles.keys():
+		if not active_ids.has(key):
+			_profiles.erase(key)
 
 
 func _enemy_family(enemy: Node3D) -> StringName:

@@ -61,10 +61,24 @@ var _field_visuals: Array[AnimatedSprite3D] = []
 
 func _ready() -> void:
 	_field_visuals = [field_visual_center, field_visual_left, field_visual_right]
+	_apply_field_radius()
 	if field_disc.material_override is StandardMaterial3D:
 		_field_material = (field_disc.material_override as StandardMaterial3D).duplicate() as StandardMaterial3D
 		field_disc.material_override = _field_material
 	activate_from_pool()
+
+
+func _apply_field_radius() -> void:
+	if field_collision.shape is CylinderShape3D:
+		var unique_shape := (field_collision.shape as CylinderShape3D).duplicate() as CylinderShape3D
+		unique_shape.radius = field_radius
+		field_collision.shape = unique_shape
+	if field_disc.mesh is CylinderMesh:
+		var unique_mesh := (field_disc.mesh as CylinderMesh).duplicate() as CylinderMesh
+		unique_mesh.top_radius = field_radius
+		unique_mesh.bottom_radius = field_radius
+		field_disc.mesh = unique_mesh
+	field_light.omni_range = maxf(field_radius + 1.0, 1.0)
 
 
 func activate_from_pool() -> void:
@@ -129,7 +143,7 @@ func deactivate_for_pool() -> void:
 
 func launch(new_direction: Vector3, new_source: Node, new_damage: int) -> void:
 	direction = new_direction.normalized()
-	source = new_source
+	source = new_source if is_instance_valid(new_source) else null
 	damage = maxi(1, new_damage)
 
 
@@ -175,8 +189,9 @@ func _update_flight(delta: float) -> void:
 	var start_position := global_position
 	var end_position := start_position + direction * speed * delta
 	var exclusions: Array[RID] = [get_rid()]
-	if source is CollisionObject3D:
-		exclusions.append((source as CollisionObject3D).get_rid())
+	var damage_source := _valid_source()
+	if damage_source is CollisionObject3D:
+		exclusions.append((damage_source as CollisionObject3D).get_rid())
 	var query := PhysicsRayQueryParameters3D.create(
 		start_position,
 		end_position,
@@ -217,9 +232,10 @@ func _deploy_field(origin: Vector3, impact_target: Node) -> void:
 	field_collision.set_deferred("disabled", false)
 	if deploy_audio.stream != null:
 		deploy_audio.play()
-	if impact_target != null and impact_target != source and impact_target.is_in_group("player"):
+	var damage_source := _valid_source()
+	if impact_target != null and impact_target != damage_source and impact_target.is_in_group("player"):
 		var impact_damage := maxi(1, int(round(float(damage) * impact_damage_ratio)))
-		impact_target.call("take_damage", impact_damage, global_position, source)
+		impact_target.call("take_damage", impact_damage, global_position, damage_source)
 		_apply_poison(impact_target)
 
 
@@ -232,11 +248,12 @@ func _update_field(delta: float) -> void:
 	if _field_tick_remaining > 0.0:
 		return
 	_field_tick_remaining += field_tick_interval
+	var damage_source := _valid_source()
 	for body in get_overlapping_bodies():
 		var target := _resolve_damage_target(body)
-		if target == null or target == source or not target.is_in_group("player"):
+		if target == null or target == damage_source or not target.is_in_group("player"):
 			continue
-		target.call("take_damage", damage, global_position, source)
+		target.call("take_damage", damage, global_position, damage_source)
 		_apply_poison(target)
 
 
@@ -252,7 +269,7 @@ func _apply_poison(target: Node) -> void:
 		poison_duration,
 		poison_damage,
 		poison_tick_interval,
-		source
+		_valid_source()
 	)
 
 
@@ -260,8 +277,9 @@ func _ground_field_position(origin: Vector3) -> Vector3:
 	var query_start := origin + Vector3.UP * floor_probe_height
 	var query_end := origin - Vector3.UP * floor_probe_depth
 	var exclusions: Array[RID] = [get_rid()]
-	if source is CollisionObject3D:
-		exclusions.append((source as CollisionObject3D).get_rid())
+	var damage_source := _valid_source()
+	if damage_source is CollisionObject3D:
+		exclusions.append((damage_source as CollisionObject3D).get_rid())
 	var query := PhysicsRayQueryParameters3D.create(
 		query_start,
 		query_end,
@@ -275,6 +293,13 @@ func _ground_field_position(origin: Vector3) -> Vector3:
 	if result.is_empty():
 		return origin
 	return (result.get("position", origin) as Vector3) + Vector3.UP * 0.03
+
+
+func _valid_source() -> Node:
+	if is_instance_valid(source):
+		return source
+	source = null
+	return null
 
 
 func _resolve_damage_target(collider: Object) -> Node:
