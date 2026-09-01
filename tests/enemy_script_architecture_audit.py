@@ -16,6 +16,7 @@ FAMILIES = {
         "voidweaver",
         "cinder_spitter",
         "coil_lancer",
+        "spore_matriarch",
     ],
     # Özel büyük saldırı state machine'leri core combatant'ta kalır; global
     # EnemyPerformance manager mesafe/crowd LOD'unu bunlara da uygular.
@@ -48,6 +49,7 @@ CHARACTER_CONTRACTS = {
     "crucible_warden": {"combat_role": "0", "maximum_health": "260", "attack_preferred_distance": "1.4"},
     "cinder_spitter": {"combat_role": "1", "maximum_health": "95", "attack_range": "14.0"},
     "coil_lancer": {"combat_role": "2", "maximum_health": "105", "attack_range": "22.0"},
+    "spore_matriarch": {"combat_role": "1", "maximum_health": "165", "attack_range": "18.0"},
     "redviper": {"combat_role": "0", "maximum_health": "140", "chase_speed": "6.4"},
     "badredviper": {"combat_role": "0", "maximum_health": "190", "attack_damage": "28"},
     "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.18"},
