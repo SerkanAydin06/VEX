@@ -15,6 +15,15 @@ func _ready() -> void:
 	var projectile := PROJECTILE_SCENE.instantiate() as VexSporeMatriarchProjectile
 	assert(projectile != null)
 	add_child(projectile)
+
+	# Bu regression alan/zehir lifecycle'ını doğrular. Headless dummy ses sürücüsü
+	# çok kısa test çıkışında aktif WAV playback kaynağını bir kare daha tuttuğu
+	# için ses yan etkisini fixture'da izole et; canonical projectile sahnesi değişmez.
+	var deploy_audio := projectile.get_node_or_null("DeployAudio") as AudioStreamPlayer3D
+	if deploy_audio != null:
+		deploy_audio.stop()
+		deploy_audio.stream = null
+
 	projectile.launch(Vector3.FORWARD, self, 12)
 	assert(is_equal_approx(projectile.get_field_radius(), 5.2))
 	projectile.call("_deploy_field", Vector3.ZERO, null)
@@ -34,13 +43,12 @@ func _ready() -> void:
 	await get_tree().create_timer(0.26).timeout
 	assert(target.damage_taken >= 10)
 
-	# Runtime doğrulaması bittikten sonra testin oluşturduğu sahne nesnelerini
-	# tamamen temizle. Aksi halde Godot çıkışında canlı projectile/material
-	# referansları leak uyarısı üretip CI'ın ERROR filtresini tetikliyor.
-	projectile.queue_free()
-	target.queue_free()
-	await get_tree().process_frame
-	await get_tree().process_frame
+	# Test fixture'larını synchronous temizle; çıkışta sahne/material/status
+	# referansı bırakma.
+	projectile.free()
+	target.free()
+	for _frame: int in range(4):
+		await get_tree().process_frame
 
 	print("Spore Matriarch poison runtime test passed")
 	get_tree().quit(0)
