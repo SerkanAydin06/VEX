@@ -1,0 +1,36 @@
+{
+  "source_zip": "512_512(5).zip",
+  "source_folder": "512_512",
+  "sheet_file": "spore_matriarch_effects_spritesheet.png",
+  "sheet_size": {
+    "width": 2048,
+    "height": 512
+  },
+  "frame_size": {
+    "width": 512,
+    "height": 512
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 1
+  },
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "animation": "projectile",
+      "source_prefix": "spore_matriarch_projectile",
+      "frame_count": 4,
+      "frames": [
+        "spore_matriarch_projectile_1_result.png",
+        "spore_matriarch_projectile_2_result.png",
+        "spore_matriarch_projectile_3_result.png",
+        "spore_matriarch_projectile_4_result.png"
+      ]
+    }
+  ]
+}
