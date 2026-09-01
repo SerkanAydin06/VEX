@@ -76,6 +76,7 @@ expected_roles = {
     "crucible_warden": 0,
     "cinder_spitter": 1,
     "coil_lancer": 2,
+    "spore_matriarch": 1,
     "redviper": 0,
     "badredviper": 0,
     "cinderhound": 0,

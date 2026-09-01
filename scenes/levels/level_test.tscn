@@ -45,6 +45,7 @@
 [ext_resource type="PackedScene" uid="uid://bcindspitter1" path="res://scenes/actors/cinder_spitter.tscn" id="41_cinder_spitter"]
 [ext_resource type="PackedScene" uid="uid://bcoillancer01" path="res://scenes/actors/coil_lancer.tscn" id="42_coil_lancer"]
 [ext_resource type="PackedScene" uid="uid://bvaskaribulwk1" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
+[ext_resource type="PackedScene" uid="uid://bsporematriarch1" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -157,7 +158,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 20)
 
 [node name="Room_C4_R4" parent="Geometry" unique_id=160090678 instance=ExtResource("2_room")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, 20)
-
 [node name="Outer_West" parent="Geometry" unique_id=1363014584 instance=ExtResource("7_outer_v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 0)
 
@@ -614,6 +614,11 @@ maximum_health = 500
 [node name="VaskariBulwark" parent="Enemies" instance=ExtResource("43_vaskari_bulwark")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.22, -10)
 enemy_id = &"level_test_vaskari_bulwark"
+maximum_health = 500
+
+[node name="SporeMatriarch" parent="Enemies" instance=ExtResource("44_spore_matriarch")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -10)
+enemy_id = &"level_test_spore_matriarch"
 maximum_health = 500
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]

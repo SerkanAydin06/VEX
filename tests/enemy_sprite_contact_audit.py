@@ -51,6 +51,7 @@ CREATURES = {
     "briar_skulker": CreatureSpec("briar_skulker.tscn", 0.0, 0.003125, 1.60),
     "gorehorn": CreatureSpec("gorehorn.tscn", 0.0, 0.0052, 2.40),
     "vaskari_bulwark": CreatureSpec("vaskari_bulwark.tscn", 0.0884, 0.0052, 2.40),
+    "spore_matriarch": CreatureSpec("spore_matriarch.tscn", 0.0, 0.0045, 1.90),
 }
 
 
