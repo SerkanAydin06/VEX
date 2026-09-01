@@ -1,5 +1,5 @@
 class_name VexEnemyHybridBase
-extends "res://scripts/actors/enemy_combatant_base.gd"
+extends "res://scripts/actors/enemy_combatant_performance_base.gd"
 
 # Menzilli saldırı ile yakın saldırıyı aynı state machine içinde güvenli biçimde
 # seçen ortak aile. Görünür Inspector şeması üst sınıfta kalır; hibrit ayarlar
