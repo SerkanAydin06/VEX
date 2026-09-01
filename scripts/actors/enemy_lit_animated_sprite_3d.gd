@@ -1,43 +1,63 @@
-class_name VexEnemyLitAnimatedSprite3D
-extends AnimatedSprite3D
+class_name VexEnemySpriteLightingController
+extends Node
 
 const LIT_SHADER: Shader = preload("res://shaders/enemy_sprite_lit.gdshader")
 
-@export var visual_profile: VexEnemySpriteVisualProfile
-
+var _target: AnimatedSprite3D
+var _profile: VexEnemySpriteVisualProfile
 var _lit_material: ShaderMaterial
+var _configured := false
+
+
+func setup(target: AnimatedSprite3D, profile: VexEnemySpriteVisualProfile) -> void:
+	_target = target
+	_profile = profile
+	if is_node_ready():
+		_configure()
 
 
 func _ready() -> void:
+	_configure()
+
+
+func _configure() -> void:
+	if _configured or _target == null or not is_instance_valid(_target):
+		return
+	_configured = true
 	_lit_material = ShaderMaterial.new()
 	_lit_material.shader = LIT_SHADER
-	material_override = _lit_material
-	frame_changed.connect(_sync_frame_texture)
-	animation_changed.connect(_sync_frame_texture)
-	sprite_frames_changed.connect(_sync_frame_texture)
+	_target.material_override = _lit_material
+	if not _target.frame_changed.is_connected(_sync_frame_texture):
+		_target.frame_changed.connect(_sync_frame_texture)
+	if not _target.animation_changed.is_connected(_sync_frame_texture):
+		_target.animation_changed.connect(_sync_frame_texture)
+	if not _target.sprite_frames_changed.is_connected(_sync_frame_texture):
+		_target.sprite_frames_changed.connect(_sync_frame_texture)
 	_apply_visual_profile()
 	_sync_frame_texture()
 
 
 func _sync_frame_texture() -> void:
-	if _lit_material == null or sprite_frames == null:
+	if _lit_material == null or _target == null or not is_instance_valid(_target):
 		return
-	if not sprite_frames.has_animation(animation):
+	if _target.sprite_frames == null:
 		return
-	var frame_count := sprite_frames.get_frame_count(animation)
+	if not _target.sprite_frames.has_animation(_target.animation):
+		return
+	var frame_count := _target.sprite_frames.get_frame_count(_target.animation)
 	if frame_count <= 0:
 		return
-	var safe_frame := clampi(frame, 0, frame_count - 1)
+	var safe_frame := clampi(_target.frame, 0, frame_count - 1)
 	_lit_material.set_shader_parameter(
 		&"albedo_texture",
-		sprite_frames.get_frame_texture(animation, safe_frame)
+		_target.sprite_frames.get_frame_texture(_target.animation, safe_frame)
 	)
 
 
 func _apply_visual_profile() -> void:
 	if _lit_material == null:
 		return
-	var profile := visual_profile
+	var profile := _profile
 	if profile == null:
 		profile = VexEnemySpriteVisualProfile.new()
 	_lit_material.set_shader_parameter(&"normal_strength", profile.normal_strength)
