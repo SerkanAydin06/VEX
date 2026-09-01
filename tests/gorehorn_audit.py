@@ -22,7 +22,7 @@ player = read("scripts/player/player.gd")
 level_test = read("scenes/levels/level_test.tscn")
 standard = read("STANDART.txt")
 enemy_guide = read("Enemies_VEX.md")
-manifest = json.loads(read("assets/enemies/gorehorn/spritesheet_manifest.json"))
+manifest = json.loads(read("assets/enemies/gorehorn/gorehorn_character_spritesheet_manifest.json"))
 
 assert (ROOT / "assets/enemies/gorehorn/gorehorn_character_spritesheet.png").exists()
 assert manifest["sheet_size"] == {"width": 1364, "height": 3072}
