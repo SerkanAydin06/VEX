@@ -1,0 +1,265 @@
+[gd_scene format=3 uid="uid://dmagmamaul001"]
+
+[ext_resource type="Script" uid="uid://cmagmamaul001" path="res://scripts/actors/magma_mauler.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bmagmamaul001" path="res://assets/enemies/magma_mauler/magma_mauler_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="AudioStream" uid="uid://y0d3apk5yonj" path="res://assets/audio/cinder_hound_attack.wav" id="3_attack_audio"]
+[ext_resource type="AudioStream" uid="uid://c3y6p5ej1oa1e" path="res://assets/audio/cinder_hound_hurt.wav" id="4_hurt_audio"]
+[ext_resource type="AudioStream" uid="uid://bgmaicfe6x3tw" path="res://assets/audio/cinder_hound_death.wav" id="5_death_audio"]
+[ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="6_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="7_burn"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_magma_mauler"]
+radius = 0.72
+height = 2.4
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 0, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 1024, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_death_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 1536, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(341, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(682, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(1023, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_magma_mauler"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_4")}],
+"loop": false,
+"name": &"attack",
+"speed": 7.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death_1")}, {"duration": 1.0, "texture": SubResource("Atlas_death_2")}, {"duration": 1.0, "texture": SubResource("Atlas_death_3")}, {"duration": 1.0, "texture": SubResource("Atlas_death_4")}],
+"loop": false,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_4")}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_back_1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back_4")}],
+"loop": true,
+"name": &"idle_back",
+"speed": 3.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_4")}],
+"loop": true,
+"name": &"walk",
+"speed": 5.5
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_back_1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back_4")}],
+"loop": true,
+"name": &"walk_back",
+"speed": 5.5
+}]
+
+[node name="MagmaMauler" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 15
+floor_snap_length = 0.3
+safe_margin = 0.06
+script = ExtResource("1_script")
+enemy_id = &"magma_mauler"
+combat_role = 0
+maximum_health = 220
+move_speed = 2.8
+chase_speed = 4.8
+movement_acceleration = 14.0
+braking_acceleration = 20.0
+detection_range = 32.0
+pursuit_range = 42.0
+initial_view_angle = 300.0
+lost_sight_timeout = 18.0
+search_duration = 9.0
+ally_alert_radius = 10.0
+sight_origin_height = 1.0
+sight_target_height = 0.55
+damage_pursuit_commit_time = 0.12
+hearing_radius = 18.0
+attack_range = 2.2
+attack_damage = 24
+attack_cooldown = 1.45
+attack_windup = 0.3
+attack_range_tolerance = 0.55
+attack_lunge_speed = 9.0
+attack_lunge_acceleration = 46.0
+attack_lunge_duration = 0.28
+attack_lunge_stop_distance = 0.75
+navigation_clearance = 0.72
+path_target_change_distance = 1.3
+runtime_grid_step = 0.9
+runtime_grid_max_nodes = 3000
+runtime_grid_search_margin = 20.0
+dormant_distance = 48.0
+hurt_shake_duration = 0.1
+hurt_shake_amount_pixels = 2.0
+hurt_shake_frequency = 28.0
+corpse_visual_y = 0.048
+idle_frame_y_offsets = PackedFloat32Array(0.048, 0.048, 0.048, 0.048)
+idle_back_frame_y_offsets = PackedFloat32Array(0.048, 0.048, 0.048, 0.048)
+walk_frame_y_offsets = PackedFloat32Array(0.048, 0.048, 0.048, 0.048)
+walk_back_frame_y_offsets = PackedFloat32Array(0.048, 0.048, 0.048, 0.048)
+attack_frame_y_offsets = PackedFloat32Array(0.048, 0.048, 0.048, 0.048)
+death_frame_y_offsets = PackedFloat32Array(0.048, 0.048, 0.048, 0.048)
+burn_remains_scene = ExtResource("7_burn")
+burn_remains_scale = 1.15
+burn_smoke_enabled = true
+burn_smoke_duration = 8.0
+burn_smoke_alpha = 0.14
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape_magma_mauler")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+cast_shadow = 0
+pixel_size = 0.005
+billboard = 2
+shaded = true
+alpha_cut = 1
+sprite_frames = SubResource("SpriteFrames_magma_mauler")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="GroundShadow" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -1.18, 0)
+cast_shadow = 0
+offset = Vector2(0, 16)
+modulate = Color(1, 1, 1, 0.53)
+pixel_size = 0.0065
+billboard = 2
+texture_filter = 5
+render_priority = -2
+texture = ExtResource("6_shadow")
+
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_attack_audio")
+volume_db = -2.0
+pitch_scale = 0.72
+max_distance = 24.0
+bus = &"SFX"
+
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_hurt_audio")
+volume_db = -3.0
+pitch_scale = 0.72
+max_distance = 22.0
+bus = &"SFX"
+
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_death_audio")
+volume_db = -1.0
+pitch_scale = 0.68
+max_distance = 26.0
+bus = &"SFX"
