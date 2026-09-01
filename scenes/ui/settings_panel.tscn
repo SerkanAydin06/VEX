@@ -97,6 +97,15 @@ text = "SETTINGS_VSYNC"
 unique_name_in_owner = true
 text = "UI_ENABLED"
 
+[node name="FpsLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
+custom_minimum_size = Vector2(250, 0)
+text_overrun_behavior = 3
+text = "FPS"
+
+[node name="FpsCheck" type="CheckButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
+unique_name_in_owner = true
+text = "UI_ENABLED"
+
 [node name="MasterLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 custom_minimum_size = Vector2(250, 0)
 text_overrun_behavior = 3

@@ -9,6 +9,7 @@ signal close_requested
 @onready var graphics_quality_option: OptionButton = %GraphicsQualityOption
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
 @onready var vsync_check: CheckButton = %VsyncCheck
+@onready var fps_check: CheckButton = %FpsCheck
 @onready var master_slider: HSlider = %MasterSlider
 @onready var master_value: Label = %MasterValue
 @onready var music_slider: HSlider = %MusicSlider
@@ -40,6 +41,7 @@ func _ready() -> void:
 	graphics_quality_option.item_selected.connect(_on_graphics_quality_selected)
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 	vsync_check.toggled.connect(_on_vsync_toggled)
+	fps_check.toggled.connect(_on_fps_toggled)
 	master_slider.value_changed.connect(_on_master_changed)
 	music_slider.value_changed.connect(_on_music_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
@@ -113,6 +115,7 @@ func _sync_from_settings() -> void:
 	graphics_quality_option.select(SettingsManager.graphics_quality)
 	fullscreen_check.button_pressed = SettingsManager.fullscreen
 	vsync_check.button_pressed = SettingsManager.vsync
+	fps_check.button_pressed = FpsDisplay.enabled
 	master_slider.value = SettingsManager.master_volume * 100.0
 	music_slider.value = SettingsManager.music_volume * 100.0
 	sfx_slider.value = SettingsManager.sfx_volume * 100.0
@@ -171,6 +174,11 @@ func _on_fullscreen_toggled(value: bool) -> void:
 func _on_vsync_toggled(value: bool) -> void:
 	if not _syncing:
 		SettingsManager.set_vsync(value)
+
+
+func _on_fps_toggled(value: bool) -> void:
+	if not _syncing:
+		FpsDisplay.set_enabled(value)
 
 
 func _on_master_changed(value: float) -> void:
