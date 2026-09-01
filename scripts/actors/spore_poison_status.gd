@@ -42,7 +42,7 @@ func refresh_poison(
 		_tick_damage = safe_damage
 		_tick_interval = safe_interval
 		_tick_remaining = _tick_interval
-	_source = source
+	_source = source if is_instance_valid(source) else null
 	if _target != null and _target.is_in_group("player"):
 		_ensure_overlay()
 
@@ -67,7 +67,12 @@ func _process(delta: float) -> void:
 	var hit_position := Vector3.ZERO
 	if _target is Node3D:
 		hit_position = (_target as Node3D).global_position
-	_target.call("take_damage", _tick_damage, hit_position, _source)
+	var damage_source: Node = null
+	if is_instance_valid(_source):
+		damage_source = _source
+	else:
+		_source = null
+	_target.call("take_damage", _tick_damage, hit_position, damage_source)
 
 
 func get_remaining_time() -> float:
