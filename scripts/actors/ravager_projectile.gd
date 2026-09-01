@@ -1,6 +1,8 @@
 class_name VexRavagerProjectile
 extends Area3D
 
+const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.gd")
+
 @export_category("01 - Uçuş")
 @export_range(1.0, 40.0, 0.5) var speed := 11.0
 @export_range(0.2, 10.0, 0.1) var lifetime := 4.0
@@ -28,25 +30,68 @@ extends Area3D
 var damage := 10
 var direction := Vector3.FORWARD
 var source: Node = null
-var _active := true
+var _active := false
 var _base_light_energy := 0.0
 var _base_impact_scale := Vector3.ONE
 var _base_impact_modulate := Color.WHITE
 var _pulse_time := 0.0
+var _lifecycle_generation := 0
 
 
 func _ready() -> void:
-	body_entered.connect(_on_body_entered)
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
 	_base_light_energy = projectile_light.light_energy
 	_base_impact_scale = impact_visual.scale
 	_base_impact_modulate = impact_visual.modulate
+	activate_from_pool()
+
+
+func activate_from_pool() -> void:
+	_lifecycle_generation += 1
+	var generation := _lifecycle_generation
+	_active = true
+	direction = Vector3.FORWARD
+	source = null
+	damage = 10
+	_pulse_time = 0.0
+	visible = true
+	set_process(true)
+	set_physics_process(true)
+	set_deferred("monitoring", true)
+	collision_shape.set_deferred("disabled", false)
+	visual.visible = true
+	impact_visual.visible = false
+	impact_visual.modulate = _base_impact_modulate
+	impact_visual.scale = _base_impact_scale
+	projectile_light.light_energy = _base_light_energy
+	if impact_audio.playing:
+		impact_audio.stop()
 	if visual is AnimatedSprite3D:
-		(visual as AnimatedSprite3D).play(&"default")
+		var animated_visual := visual as AnimatedSprite3D
+		animated_visual.frame = 0
+		animated_visual.play(&"default")
 	if impact_visual is AnimatedSprite3D:
 		var animated_impact := impact_visual as AnimatedSprite3D
 		animated_impact.stop()
 		animated_impact.frame = 0
-	_expire_later()
+	_expire_later(generation)
+
+
+func deactivate_for_pool() -> void:
+	_lifecycle_generation += 1
+	_active = false
+	source = null
+	set_process(false)
+	set_physics_process(false)
+	set_deferred("monitoring", false)
+	collision_shape.set_deferred("disabled", true)
+	visual.visible = false
+	impact_visual.visible = false
+	projectile_light.light_energy = 0.0
+	if impact_audio.playing:
+		impact_audio.stop()
+	visible = false
 
 
 func launch(new_direction: Vector3, new_source: Node, new_damage: int) -> void:
@@ -120,8 +165,10 @@ func _resolve_damage_target(collider: Object) -> Node:
 func _impact() -> void:
 	if not _active:
 		return
+	var generation := _lifecycle_generation
 	_active = false
 	set_process(false)
+	set_physics_process(false)
 	set_deferred("monitoring", false)
 	collision_shape.set_deferred("disabled", true)
 	visual.visible = false
@@ -158,15 +205,26 @@ func _impact() -> void:
 		animated_impact.frame = 0
 		animated_impact.play(&"default")
 		await animated_impact.animation_finished
+	if not is_inside_tree() or generation != _lifecycle_generation:
+		return
 	await impact_tween.finished
+	if not is_inside_tree() or generation != _lifecycle_generation:
+		return
 
 	if impact_audio.stream != null and impact_audio.playing:
 		await impact_audio.finished
-	if is_inside_tree():
-		queue_free()
+	if is_inside_tree() and generation == _lifecycle_generation:
+		_recycle_or_free()
 
 
-func _expire_later() -> void:
+func _expire_later(generation: int) -> void:
 	await get_tree().create_timer(lifetime).timeout
-	if is_inside_tree() and _active:
+	if is_inside_tree() and _active and generation == _lifecycle_generation:
+		_recycle_or_free()
+
+
+func _recycle_or_free() -> void:
+	if has_meta("vex_projectile_pool_key"):
+		EnemyProjectilePool.recycle(self)
+	else:
 		queue_free()
