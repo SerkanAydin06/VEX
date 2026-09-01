@@ -34,7 +34,7 @@ assert all(row["frame_count"] == 4 for row in manifest["rows"])
 assert not script.startswith("@tool\n")
 assert not hybrid.startswith("@tool\n")
 assert 'extends "res://scripts/actors/enemy_hybrid_base.gd"' in script
-assert 'extends "res://scripts/actors/enemy_combatant_base.gd"' in hybrid
+assert 'extends "res://scripts/actors/enemy_combatant_performance_base.gd"' in hybrid
 assert 'return &"hybrid"' in hybrid
 assert "@export" not in hybrid
 assert settings.startswith("@tool\n")

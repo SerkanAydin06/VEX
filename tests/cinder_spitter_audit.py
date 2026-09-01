@@ -35,7 +35,7 @@ assert [row["animation"] for row in effects_manifest["rows"]] == ["projectile", 
 assert all(row["frame_count"] == 4 for row in effects_manifest["rows"])
 
 assert "class_name VexCinderSpitter" in script
-assert 'extends "res://scripts/actors/enemy_combatant_base.gd"' in script
+assert 'extends "res://scripts/actors/enemy_combatant_performance_base.gd"' in script
 assert "@export" not in script
 
 for token in [
