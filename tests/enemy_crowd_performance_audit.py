@@ -53,7 +53,9 @@ for token in [
     "try_claim_cover",
     "NEAR_SIGHT_CLAIMS_PER_FRAME",
     "FAR_PATH_CLAIMS_PER_FRAME",
+    "DOOR_CACHE_REFRESH_FRAMES",
     'get_nodes_in_group("enemy_navigation_door")',
+    "_door_refresh_frame",
     "_door_nodes",
 ]:
     assert token in runtime, token
