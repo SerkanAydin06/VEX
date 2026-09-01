@@ -8,13 +8,8 @@ const Chunk03 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chu
 const Chunk04 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chunk_04.gd")
 const Chunk05 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chunk_05.gd")
 const Chunk06 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chunk_06.gd")
-const Chunk07 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chunk_07.gd")
-const Chunk08 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chunk_08.gd")
-const Chunk09 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chunk_09.gd")
-const Chunk10 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chunk_10.gd")
-const Chunk11 = preload("res://assets/enemies/magma_mauler/data/magma_mauler_chunk_11.gd")
 
-const FRAME_SIZE := Vector2i(341, 512)
+const FRAME_SIZE := Vector2i(85, 128)
 const FRAME_COUNT := 4
 
 static var _cached_frames: SpriteFrames = null
@@ -24,12 +19,18 @@ static func get_sprite_frames() -> SpriteFrames:
 	if _cached_frames != null:
 		return _cached_frames
 
-	var encoded := PackedStringArray([
-		Chunk00.DATA, Chunk01.DATA, Chunk02.DATA, Chunk03.DATA,
-		Chunk04.DATA, Chunk05.DATA, Chunk06.DATA, Chunk07.DATA,
-		Chunk08.DATA, Chunk09.DATA, Chunk10.DATA, Chunk11.DATA,
-	]).join("")
-	var png_bytes := Marshalls.base64_to_raw(encoded)
+	var png_bytes := PackedByteArray()
+	for encoded_chunk: String in [
+		Chunk00.DATA,
+		Chunk01.DATA,
+		Chunk02.DATA,
+		Chunk03.DATA,
+		Chunk04.DATA,
+		Chunk05.DATA,
+		Chunk06.DATA,
+	]:
+		png_bytes.append_array(Marshalls.base64_to_raw(encoded_chunk))
+
 	var image := Image.new()
 	var error := image.load_png_from_buffer(png_bytes)
 	if error != OK:
@@ -37,6 +38,8 @@ static func get_sprite_frames() -> SpriteFrames:
 		_cached_frames = SpriteFrames.new()
 		return _cached_frames
 
+	if image.get_format() != Image.FORMAT_RGBA8:
+		image.convert(Image.FORMAT_RGBA8)
 	# Runtime texture da diskten import edilen düşman sheet'leri gibi uzakta
 	# titreşim üretmesin; mipmap yalnız bir kez, ilk Magma Mauler'da oluşturulur.
 	image.generate_mipmaps()
