@@ -99,6 +99,16 @@ jobs:
             echo "::error::Gorehorn edge runtime log contains an error or invalid UID"
             exit 1
           fi
+      - name: Run Spore Matriarch poison runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/spore-matriarch-runtime.log"
+          godot --headless --path . tests/spore_matriarch_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Spore Matriarch runtime log contains an error or invalid UID"
+            exit 1
+          fi
       - name: Install Windows export templates
         env:
           TEMPLATE_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz
