@@ -9,22 +9,30 @@ ACTORS = ROOT / "scripts" / "actors"
 SCENES = ROOT / "scenes" / "actors"
 
 FAMILIES = {
-    "enemy_combatant_base.gd": [
+    "enemy_combatant_performance_base.gd": [
         "ravager",
         "basalt_juggernaut",
         "veilmaw",
         "voidweaver",
-        "furnice_carrier",
-        "crucible_warden",
         "cinder_spitter",
         "coil_lancer",
     ],
-    "enemy_lunge_base.gd": [
+    # Özel büyük saldırı state machine'leri core combatant'ta kalır; global
+    # EnemyPerformance manager mesafe/crowd LOD'unu bunlara da uygular.
+    "enemy_combatant_base.gd": [
+        "furnice_carrier",
+        "crucible_warden",
+    ],
+    "enemy_lunge_performance_base.gd": [
         "redviper",
         "badredviper",
         "cinderhound",
-        "gorehorn",
         "vaskari_bulwark",
+    ],
+    # Gorehorn özel charge physics override'ını korur; global manager charge'ı
+    # lunge ailesi olarak normalize eder.
+    "enemy_lunge_base.gd": [
+        "gorehorn",
     ],
     "enemy_hybrid_base.gd": [
         "briar_skulker",
@@ -56,21 +64,29 @@ def read(path: Path) -> str:
 
 enemy_base = read(ACTORS / "enemy_base.gd")
 combatant_base = read(ACTORS / "enemy_combatant_base.gd")
+combatant_performance = read(ACTORS / "enemy_combatant_performance_base.gd")
 lunge_base = read(ACTORS / "enemy_lunge_base.gd")
+lunge_performance = read(ACTORS / "enemy_lunge_performance_base.gd")
 hybrid_base = read(ACTORS / "enemy_hybrid_base.gd")
 
 assert "class_name VexEnemyBase" in enemy_base
 assert "extends CharacterBody3D" in enemy_base
 assert 'extends "res://scripts/actors/enemy_base.gd"' in combatant_base
 assert 'extends "res://scripts/actors/enemy_base.gd"' in lunge_base
-assert 'extends "res://scripts/actors/enemy_combatant_base.gd"' in hybrid_base
+assert 'extends "res://scripts/actors/enemy_combatant_base.gd"' in combatant_performance
+assert 'extends "res://scripts/actors/enemy_lunge_base.gd"' in lunge_performance
+assert 'extends "res://scripts/actors/enemy_combatant_performance_base.gd"' in hybrid_base
 assert not enemy_base.startswith("@tool\n"), "runtime enemy tabanı editörde çalışmamalı"
 assert not combatant_base.startswith("@tool\n"), "runtime combatant AI editörde çalışmamalı"
+assert not combatant_performance.startswith("@tool\n"), "performance combatant editörde çalışmamalı"
 assert not lunge_base.startswith("@tool\n"), "runtime lunge AI editörde çalışmamalı"
+assert not lunge_performance.startswith("@tool\n"), "performance lunge editörde çalışmamalı"
 assert not hybrid_base.startswith("@tool\n"), "runtime hybrid AI editörde çalışmamalı"
 assert 'return &"combatant"' in combatant_base
 assert 'return &"lunge"' in lunge_base
 assert 'return &"hybrid"' in hybrid_base
+assert "@export" not in combatant_performance, "performance wrapper Inspector şemasını değiştirmemeli"
+assert "@export" not in lunge_performance, "performance wrapper Inspector şemasını değiştirmemeli"
 assert "@export" not in hybrid_base, "hybrid aile Inspector sırasını bozmamalı"
 
 for shared_setting in [
@@ -143,7 +159,9 @@ for family_script, enemies in FAMILIES.items():
 for base_name, base_source in [
     ("enemy_base", enemy_base),
     ("enemy_combatant_base", combatant_base),
+    ("enemy_combatant_performance_base", combatant_performance),
     ("enemy_lunge_base", lunge_base),
+    ("enemy_lunge_performance_base", lunge_performance),
     ("enemy_hybrid_base", hybrid_base),
 ]:
     assert not re.search(r'class_name Vex(?:Ravager|RedViper)\b', base_source), base_name
