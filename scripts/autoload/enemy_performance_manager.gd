@@ -68,7 +68,12 @@ func _update_enemy_lod() -> void:
 func _enemy_family(enemy: Node3D) -> StringName:
 	if not enemy.has_method("get_behavior_family"):
 		return &""
-	return StringName(enemy.call("get_behavior_family"))
+	var family := StringName(enemy.call("get_behavior_family"))
+	# Gorehorn özel charge davranışı lunge tabanının bütün performans alanlarını
+	# miras alır; manager tuning'inde aynı aile olarak değerlendirilir.
+	if family == &"charge":
+		return &"lunge"
+	return family
 
 
 func _ensure_profile(enemy: Node3D, family: StringName) -> Dictionary:
