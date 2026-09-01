@@ -37,9 +37,9 @@ static func acquire(projectile_scene: PackedScene, parent: Node) -> Node3D:
 		return null
 	var projectile := instance as Node3D
 	projectile.set_meta("vex_projectile_pool_key", key)
+	# add_child() _ready() çağırır; yeni mermi kendi _ready() akışında bir kez
+	# aktive olur. activate_from_pool() yalnız geri dönüştürülen örnekler içindir.
 	parent.add_child(projectile)
-	if projectile.has_method("activate_from_pool"):
-		projectile.call("activate_from_pool")
 	return projectile
 
 
