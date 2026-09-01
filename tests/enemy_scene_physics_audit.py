@@ -18,6 +18,7 @@ CREATURE_CAPSULES = {
     "crucible_warden": (0.72, 2.40),
     "cinder_spitter": (0.44, 1.75),
     "coil_lancer": (0.46, 1.90),
+    "spore_matriarch": (0.55, 1.90),
     "redviper": (0.42, 1.80),
     "badredviper": (0.82, 3.10),
     "cinderhound": (0.44, 1.45),
