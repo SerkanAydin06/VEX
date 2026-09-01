@@ -1,9 +1,6 @@
 class_name VexGorehorn
 extends "res://scripts/actors/enemy_lunge_base.gd"
 
-const EnemySpriteLightingController = preload("res://scripts/actors/enemy_lit_animated_sprite_3d.gd")
-const GOREHORN_VISUAL_PROFILE = preload("res://resources/enemies/gorehorn_visual_profile.tres")
-
 # Gorehorn standart yakın dövüş hareket/algılama omurgasını kullanır; saldırı
 # sırasında oyuncunun o anki konumuna kilitlenen düz hatlı özel bir şarj uygular.
 # Tüm karakter ayarları gorehorn.tscn Inspector verisidir.
@@ -16,18 +13,6 @@ var _charge_active := false
 var _charge_direction := Vector3.ZERO
 var _charge_hit_player := false
 var _charge_blocked := false
-var _visual_lighting_controller: Node = null
-
-
-func _ready() -> void:
-	super._ready()
-	var animated_sprite := get_node_or_null("AnimatedSprite3D") as AnimatedSprite3D
-	if animated_sprite == null:
-		return
-	_visual_lighting_controller = EnemySpriteLightingController.new()
-	_visual_lighting_controller.name = "SpriteLighting"
-	_visual_lighting_controller.setup(animated_sprite, GOREHORN_VISUAL_PROFILE)
-	add_child(_visual_lighting_controller)
 
 
 func get_behavior_family() -> StringName:
@@ -274,3 +259,4 @@ func _die() -> void:
 func _restore_defeated_state() -> void:
 	_stop_charge_motion(false)
 	super._restore_defeated_state()
+
