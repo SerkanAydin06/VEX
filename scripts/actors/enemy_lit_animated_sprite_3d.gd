@@ -48,10 +48,34 @@ func _sync_frame_texture() -> void:
 	if frame_count <= 0:
 		return
 	var safe_frame := clampi(_target.frame, 0, frame_count - 1)
-	_lit_material.set_shader_parameter(
-		&"albedo_texture",
-		_target.sprite_frames.get_frame_texture(_target.animation, safe_frame)
-	)
+	var frame_texture := _target.sprite_frames.get_frame_texture(_target.animation, safe_frame)
+	if frame_texture is AtlasTexture:
+		var atlas_texture := frame_texture as AtlasTexture
+		var atlas := atlas_texture.atlas
+		if atlas == null:
+			return
+		var atlas_size := Vector2(atlas.get_size())
+		if atlas_size.x <= 0.0 or atlas_size.y <= 0.0:
+			return
+		var region := atlas_texture.region
+		var region_size := region.size
+		if region_size.x <= 0.0:
+			region_size.x = atlas_size.x
+		if region_size.y <= 0.0:
+			region_size.y = atlas_size.y
+		_lit_material.set_shader_parameter(&"albedo_texture", atlas)
+		_lit_material.set_shader_parameter(
+			&"uv_rect",
+			Vector4(
+				region.position.x / atlas_size.x,
+				region.position.y / atlas_size.y,
+				region_size.x / atlas_size.x,
+				region_size.y / atlas_size.y
+			)
+		)
+		return
+	_lit_material.set_shader_parameter(&"albedo_texture", frame_texture)
+	_lit_material.set_shader_parameter(&"uv_rect", Vector4(0.0, 0.0, 1.0, 1.0))
 
 
 func _apply_visual_profile() -> void:
