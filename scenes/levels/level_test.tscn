@@ -41,12 +41,12 @@
 [ext_resource type="PackedScene" uid="uid://csh77lhvvhlfs" path="res://scenes/actors/furnice_carrier.tscn" id="37_furnice"]
 [ext_resource type="PackedScene" uid="uid://c5s0tolim1ws2" path="res://scenes/actors/crucible_warden.tscn" id="38_crucible"]
 [ext_resource type="PackedScene" uid="uid://b1briarskulkr" path="res://scenes/actors/briar_skulker.tscn" id="39_briar"]
-[ext_resource type="PackedScene" uid="uid://bgorehorn01vex" path="res://scenes/actors/gorehorn.tscn" id="40_gorehorn"]
+[ext_resource type="PackedScene" uid="uid://b1ook4k5d04tb" path="res://scenes/actors/gorehorn.tscn" id="40_gorehorn"]
 [ext_resource type="PackedScene" uid="uid://bcindspitter1" path="res://scenes/actors/cinder_spitter.tscn" id="41_cinder_spitter"]
 [ext_resource type="PackedScene" uid="uid://bcoillancer01" path="res://scenes/actors/coil_lancer.tscn" id="42_coil_lancer"]
-[ext_resource type="PackedScene" uid="uid://bvaskaribulwk1" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
-[ext_resource type="PackedScene" uid="uid://bsporematriarch1" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
-[ext_resource type="PackedScene" uid="uid://bvenommarshall01" path="res://scenes/actors/venom_marshall.tscn" id="45_venom_marshall"]
+[ext_resource type="PackedScene" uid="uid://53d0ymrxrnyc" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
+[ext_resource type="PackedScene" uid="uid://dlhh0brl5gqdc" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
+[ext_resource type="PackedScene" uid="uid://oxeh1jsrbxvs" path="res://scenes/actors/venom_marshall.tscn" id="45_venom_marshall"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -623,8 +623,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -10)
 enemy_id = &"level_test_spore_matriarch"
 maximum_health = 500
 
-[node name="VenomMarshall" parent="Enemies" instance=ExtResource("45_venom_marshall")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, -30)
+[node name="VenomMarshall" parent="Enemies" unique_id=342178243 instance=ExtResource("45_venom_marshall")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.792728, 1.0006597, -0.0829978)
 enemy_id = &"level_test_venom_marshall"
 maximum_health = 500
 
