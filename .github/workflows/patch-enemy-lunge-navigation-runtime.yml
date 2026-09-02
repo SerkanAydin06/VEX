@@ -1,0 +1,31 @@
+name: Patch Enemy Lunge Navigation Runtime
+
+on:
+  push:
+    branches: [refactor/enemy-lunge-navigation-runtime]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout refactor branch
+        uses: actions/checkout@v7
+        with:
+          ref: refactor/enemy-lunge-navigation-runtime
+      - name: Patch lunge navigation integration
+        run: python tools/patch_enemy_lunge_navigation_runtime.py
+      - name: Commit integration
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/actors/enemy_navigation_runtime.gd scripts/actors/enemy_lunge_base.gd tests/enemy_navigation_runtime_test.gd tests/enemy_navigation_architecture_audit.py
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Delegate lunge navigation movement decisions"
+          git push origin HEAD:refactor/enemy-lunge-navigation-runtime
