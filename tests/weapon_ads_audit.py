@@ -30,6 +30,7 @@ def numeric_property(text: str, key: str) -> float | None:
 def main() -> int:
     definition = read("scripts/player/weapon_definition.gd")
     player = read("scripts/player/player.gd")
+    view_runtime = read("scripts/player/player_view_runtime.gd")
     controller = read("scripts/player/weapon_controller.gd")
     hitscan_runtime = read("scripts/player/weapon_hitscan_runtime.gd")
     presenter = read("scripts/ui/hud_weapon_presenter.gd")
@@ -71,10 +72,17 @@ def main() -> int:
         ("current_weapon != null and current_weapon.supports_ads_pose", "Player ADS desteğini silah verisinden doğrulamıyor"),
         ('is_aiming = supports_ads and Input.is_action_pressed("aim")', "ADS durumu desteklemeyen silahlarda engellenmiyor"),
         ("_default_fov * current_weapon.ads_fov_multiplier", "Kamera FOV'u normal FOV'a göre silah çarpanı kullanmıyor"),
-        ("Vector2.ZERO", "ADS sırasında HUD recoil ofseti sıfırlanmıyor"),
-        ('GameState.hud.call("set_weapon_recoil_offset", hud_recoil)', "HUD recoil/optik merkez senkronu eksik"),
+        ('_view_runtime.get_hud_recoil(is_aiming)', "HUD recoil/optik merkez senkronu view runtime üzerinden yapılmıyor"),
+        ('"set_weapon_recoil_offset",', "Player HUD recoil offset çağrısını kaybetmiş"),
     ]:
         require(player, contract, message)
+
+    for contract, message in [
+        ("func get_hud_recoil(is_aiming: bool) -> Vector2:", "View runtime HUD recoil API'sini taşımıyor"),
+        ("if is_aiming:\n\t\treturn Vector2.ZERO", "ADS sırasında HUD recoil ofseti sıfırlanmıyor"),
+        ("return Vector2(_recoil_yaw_degrees, _recoil_pitch_degrees)", "Hip-fire HUD recoil ofseti gerçek recoil state'inden üretilmiyor"),
+    ]:
+        require(view_runtime, contract, message)
 
     require(
         controller,
