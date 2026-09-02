@@ -41,11 +41,11 @@
 [ext_resource type="PackedScene" uid="uid://csh77lhvvhlfs" path="res://scenes/actors/furnice_carrier.tscn" id="37_furnice"]
 [ext_resource type="PackedScene" uid="uid://c5s0tolim1ws2" path="res://scenes/actors/crucible_warden.tscn" id="38_crucible"]
 [ext_resource type="PackedScene" uid="uid://b1briarskulkr" path="res://scenes/actors/briar_skulker.tscn" id="39_briar"]
-[ext_resource type="PackedScene" uid="uid://bgorehorn01vex" path="res://scenes/actors/gorehorn.tscn" id="40_gorehorn"]
+[ext_resource type="PackedScene" uid="uid://b1ook4k5d04tb" path="res://scenes/actors/gorehorn.tscn" id="40_gorehorn"]
 [ext_resource type="PackedScene" uid="uid://bcindspitter1" path="res://scenes/actors/cinder_spitter.tscn" id="41_cinder_spitter"]
 [ext_resource type="PackedScene" uid="uid://bcoillancer01" path="res://scenes/actors/coil_lancer.tscn" id="42_coil_lancer"]
-[ext_resource type="PackedScene" uid="uid://bvaskaribulwk1" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
-[ext_resource type="PackedScene" uid="uid://bsporematriarch1" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
+[ext_resource type="PackedScene" uid="uid://53d0ymrxrnyc" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
+[ext_resource type="PackedScene" uid="uid://dlhh0brl5gqdc" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -158,6 +158,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 20)
 
 [node name="Room_C4_R4" parent="Geometry" unique_id=160090678 instance=ExtResource("2_room")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, 20)
+
 [node name="Outer_West" parent="Geometry" unique_id=1363014584 instance=ExtResource("7_outer_v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 0)
 
@@ -549,12 +550,12 @@ detection_range = 15.0
 pursuit_range = 26.0
 dormant_distance = 30.0
 
-[node name="CinderSpitter" parent="Enemies" instance=ExtResource("41_cinder_spitter")]
+[node name="CinderSpitter" parent="Enemies" unique_id=1803186983 instance=ExtResource("41_cinder_spitter")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.883, 10)
 enemy_id = &"level_test_cinder_spitter"
 maximum_health = 180
 
-[node name="CoilLancer" parent="Enemies" instance=ExtResource("42_coil_lancer")]
+[node name="CoilLancer" parent="Enemies" unique_id=99385466 instance=ExtResource("42_coil_lancer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 10)
 enemy_id = &"level_test_coil_lancer"
 maximum_health = 180
@@ -606,17 +607,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7649529, -20)
 enemy_id = &"level_test_briar_skulker"
 maximum_health = 500
 
-[node name="Gorehorn" parent="Enemies" instance=ExtResource("40_gorehorn")]
+[node name="Gorehorn" parent="Enemies" unique_id=1621256487 instance=ExtResource("40_gorehorn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 1.22, -10)
 enemy_id = &"level_test_gorehorn"
 maximum_health = 500
 
-[node name="VaskariBulwark" parent="Enemies" instance=ExtResource("43_vaskari_bulwark")]
+[node name="VaskariBulwark" parent="Enemies" unique_id=356253491 instance=ExtResource("43_vaskari_bulwark")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.22, -10)
 enemy_id = &"level_test_vaskari_bulwark"
 maximum_health = 500
 
-[node name="SporeMatriarch" parent="Enemies" instance=ExtResource("44_spore_matriarch")]
+[node name="SporeMatriarch" parent="Enemies" unique_id=606212745 instance=ExtResource("44_spore_matriarch")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -10)
 enemy_id = &"level_test_spore_matriarch"
 maximum_health = 500

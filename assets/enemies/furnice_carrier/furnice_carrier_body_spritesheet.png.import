@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c6pvy1xlbe5dg"
-path.s3tc="res://.godot/imported/furnice_carrier_body_spritesheet.png-6d6376356cbd355c19e3df2ab1a613e2.s3tc.ctex"
+path="res://.godot/imported/furnice_carrier_body_spritesheet.png-6d6376356cbd355c19e3df2ab1a613e2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/enemies/furnice_carrier/furnice_carrier_body_spritesheet.png"
-dest_files=["res://.godot/imported/furnice_carrier_body_spritesheet.png-6d6376356cbd355c19e3df2ab1a613e2.s3tc.ctex"]
+dest_files=["res://.godot/imported/furnice_carrier_body_spritesheet.png-6d6376356cbd355c19e3df2ab1a613e2.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
