@@ -103,7 +103,7 @@ for name, forbidden in [
     if forbidden in function_body(BASE, name):
         errors.append(f"Navigation hesabı hâlâ combatant içinde: {name} -> {forbidden}")
 
-# Scene/state side effects and actual movement remain in the orchestrator.
+# Scene/state side effects and actual movement remain in the orchestrators.
 for token in [
     'get_tree().get_nodes_in_group("enemy_navigation_waypoint")',
     "_shared_navigation_caches",
@@ -116,6 +116,18 @@ for token in [
 ]:
     require(BASE, token, "Combatant orchestrator ownership eksik")
 
+for token in [
+    "func _chase_position(delta: float, target_position: Vector3, use_chase_speed: bool = true) -> void:",
+    "func _update_chase_detour() -> void:",
+    "get_slide_collision_count()",
+    "get_slide_collision(collision_index)",
+    "velocity.x = move_toward(",
+    "velocity.z = move_toward(",
+    "rotation.y = atan2(",
+    "move_and_slide()",
+]:
+    require(LUNGE, token, "Lunge orchestrator ownership eksik")
+
 # Navigation helper must not own gameplay state-machine or CharacterBody movement.
 for forbidden in [
     "GameState",
@@ -123,6 +135,8 @@ for forbidden in [
     "move_and_slide()",
     "velocity.x =",
     "velocity.z =",
+    "get_slide_collision_count()",
+    "get_slide_collision(",
     'get_nodes_in_group("enemy_navigation_waypoint")',
     "_shared_navigation_caches",
 ]:
