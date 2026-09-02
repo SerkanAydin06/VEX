@@ -363,10 +363,16 @@ func reload() -> void:
 	if not is_inside_tree() or _player.is_dead:
 		is_reloading = false
 		return
-	var required: int = magazine_size - magazine
-	var loaded: int = mini(required, reserve)
-	magazines[current_weapon_id] = magazine + loaded
-	reserve_ammo[weapon.ammo_type] = reserve - loaded
+	# Reload sürerken ammo pickup alınmış olabilir. Başlangıçta snapshot alınan
+	# reserve değerini geri yazmak yeni toplanan mermileri silebilir; bitişte
+	# her iki değeri de canlı state'ten tekrar oku.
+	var live_magazine := int(magazines.get(weapon.weapon_id, 0))
+	var live_reserve := int(reserve_ammo.get(weapon.ammo_type, 0))
+	var live_magazine_size := _effective_magazine_size(weapon)
+	var required: int = maxi(0, live_magazine_size - live_magazine)
+	var loaded: int = mini(required, live_reserve)
+	magazines[weapon.weapon_id] = live_magazine + loaded
+	reserve_ammo[weapon.ammo_type] = live_reserve - loaded
 	is_reloading = false
 	broadcast_state()
 
@@ -480,12 +486,15 @@ func equip_world_weapon(weapon_id: StringName, bonus_ammo: int) -> Dictionary:
 	if definition == null or is_reloading:
 		return {"success": false}
 
-	if not acquired_weapons.has(canonical_id):
+	var first_acquisition := not acquired_weapons.has(canonical_id)
+	if first_acquisition:
 		acquired_weapons.append(canonical_id)
 	var displaced_weapon_id := _make_room_for_loadout_group(canonical_id, definition)
 	if not unlocked_weapons.has(canonical_id):
 		unlocked_weapons.append(canonical_id)
-	if int(magazines.get(canonical_id, 0)) <= 0:
+	# Yalnız ilk dünya pickup'ı tam şarjör verir. Daha önce taşınıp yere bırakılmış
+	# boş silah tekrar alınırken eski şarjör state'i korunur; ammo çoğaltılmaz.
+	if first_acquisition and int(magazines.get(canonical_id, 0)) <= 0:
 		magazines[canonical_id] = definition.magazine_size
 	add_ammo(definition.ammo_type, bonus_ammo)
 	switch_to(canonical_id)
