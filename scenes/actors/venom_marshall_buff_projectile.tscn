@@ -1,0 +1,184 @@
+[gd_scene load_steps=22 format=3 uid="uid://bvenombufffield1"]
+
+[ext_resource type="Script" uid="uid://bvenombuffproject1" path="res://scripts/actors/venom_marshall_buff_projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bvenomeffectsheet1" path="res://assets/enemies/venom_marshall/venom_marshall_effects_spritesheet.png" id="2_effects"]
+[ext_resource type="AudioStream" uid="uid://qts3nsfvylq2" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="3_deploy_audio"]
+
+[sub_resource type="AtlasTexture" id="Atlas_flight_1"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_flight_2"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_flight_3"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1024, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_flight_4"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1536, 0, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_flight"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_flight_1")}, {"duration": 1.0, "texture": SubResource("Atlas_flight_2")}, {"duration": 1.0, "texture": SubResource("Atlas_flight_3")}, {"duration": 1.0, "texture": SubResource("Atlas_flight_4")}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="Atlas_field_1"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_field_2"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_field_3"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1024, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_field_4"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1536, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_field"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_field_1")}, {"duration": 1.0, "texture": SubResource("Atlas_field_2")}, {"duration": 1.0, "texture": SubResource("Atlas_field_3")}, {"duration": 1.0, "texture": SubResource("Atlas_field_4")}],
+"loop": true,
+"name": &"default",
+"speed": 7.0
+}]
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_1"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(0, 1024, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_2"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(512, 1024, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_3"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1024, 1024, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_4"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1536, 1024, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_impact"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_impact_1")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_2")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_3")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_4")}],
+"loop": false,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape_buff_field"]
+radius = 5.6
+height = 2.8
+
+[sub_resource type="StandardMaterial3D" id="Material_buff_field"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.55, 0.08, 0.92, 0.16)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_buff_field"]
+top_radius = 5.6
+bottom_radius = 5.6
+height = 0.025
+radial_segments = 64
+rings = 1
+
+[node name="VenomMarshallBuffProjectile" type="Area3D"]
+collision_layer = 0
+collision_mask = 0
+monitorable = false
+monitoring = false
+script = ExtResource("1_script")
+speed = 13.0
+flight_lifetime = 4.0
+field_radius = 5.6
+field_duration = 7.0
+field_tick_interval = 1.0
+field_fade_duration = 1.1
+heal_ratio_per_tick = 0.04
+damage_multiplier = 1.25
+buff_duration = 8.0
+flight_light_energy = 2.6
+field_light_energy = 2.2
+pulse_speed = 4.8
+field_visual_alpha = 0.72
+
+[node name="FieldCollision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.4, 0)
+shape = SubResource("CylinderShape_buff_field")
+disabled = true
+
+[node name="FlightVisual" type="AnimatedSprite3D" parent="."]
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_flight")
+autoplay = "default"
+pixel_size = 0.0013
+texture_filter = 3
+alpha_cut = 1
+
+[node name="GroundFieldVisual" type="AnimatedSprite3D" parent="."]
+visible = false
+position = Vector3(0, 0.045, 0)
+rotation = Vector3(-1.5708, 0, 0)
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_field")
+pixel_size = 0.021875
+texture_filter = 3
+alpha_cut = 1
+modulate = Color(1, 1, 1, 0.72)
+render_priority = 2
+
+[node name="DeployImpact" type="AnimatedSprite3D" parent="."]
+visible = false
+position = Vector3(0, 0.75, 0)
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_impact")
+pixel_size = 0.0034
+texture_filter = 3
+alpha_cut = 1
+
+[node name="FieldDisc" type="MeshInstance3D" parent="."]
+visible = false
+position = Vector3(0, 0.025, 0)
+cast_shadow = 0
+material_override = SubResource("Material_buff_field")
+mesh = SubResource("CylinderMesh_buff_field")
+
+[node name="FieldLight" type="OmniLight3D" parent="."]
+light_color = Color(0.68, 0.16, 1, 1)
+light_energy = 2.6
+omni_range = 6.6
+shadow_enabled = false
+distance_fade_enabled = true
+distance_fade_begin = 21.0
+distance_fade_length = 6.0
+
+[node name="DeployAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_deploy_audio")
+volume_db = -3.0
+pitch_scale = 0.72
+max_distance = 26.0
+bus = &"SFX"

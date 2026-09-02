@@ -46,6 +46,7 @@
 [ext_resource type="PackedScene" uid="uid://bcoillancer01" path="res://scenes/actors/coil_lancer.tscn" id="42_coil_lancer"]
 [ext_resource type="PackedScene" uid="uid://53d0ymrxrnyc" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
 [ext_resource type="PackedScene" uid="uid://dlhh0brl5gqdc" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
+[ext_resource type="PackedScene" uid="uid://bvenommarshall01" path="res://scenes/actors/venom_marshall.tscn" id="45_venom_marshall"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -620,6 +621,11 @@ maximum_health = 500
 [node name="SporeMatriarch" parent="Enemies" unique_id=606212745 instance=ExtResource("44_spore_matriarch")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -10)
 enemy_id = &"level_test_spore_matriarch"
+maximum_health = 500
+
+[node name="VenomMarshall" parent="Enemies" instance=ExtResource("45_venom_marshall")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, -30)
+enemy_id = &"level_test_venom_marshall"
 maximum_health = 500
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]

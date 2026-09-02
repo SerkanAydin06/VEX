@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvenomruntimescn1"]
+
+[ext_resource type="Script" uid="uid://bvenomruntimetest1" path="res://tests/venom_marshall_runtime_test.gd" id="1_script"]
+
+[node name="VenomMarshallRuntimeTest" type="Node"]
+script = ExtResource("1_script")
