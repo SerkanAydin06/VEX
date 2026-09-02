@@ -12,7 +12,7 @@ static func reload_magazine(
 	weapon: WeaponDefinition,
 	magazines: Dictionary,
 	reserve_ammo: Dictionary,
-	magazine_size: int,
+	get_magazine_size: Callable,
 	reload_time_multiplier: float
 ) -> bool:
 	if owner == null or weapon == null:
@@ -24,11 +24,12 @@ static func reload_magazine(
 	if not owner.is_inside_tree() or player == null or player.is_dead:
 		return false
 
-	# Reload sürerken ammo pickup alınmış olabilir. Başlangıç snapshot'ını değil,
-	# bitiş anındaki canlı magazine/reserve state'ini kullan.
+	# Reload sürerken ammo pickup veya kapasite upgrade'i oluşmuş olabilir.
+	# Başlangıç snapshot'ını değil, bitiş anındaki canlı state'i kullan.
 	var live_magazine := int(magazines.get(weapon.weapon_id, 0))
 	var live_reserve := int(reserve_ammo.get(weapon.ammo_type, 0))
-	var required := maxi(0, magazine_size - live_magazine)
+	var live_magazine_size := maxi(0, int(get_magazine_size.call()))
+	var required := maxi(0, live_magazine_size - live_magazine)
 	var loaded := mini(required, live_reserve)
 	magazines[weapon.weapon_id] = live_magazine + loaded
 	reserve_ammo[weapon.ammo_type] = live_reserve - loaded
