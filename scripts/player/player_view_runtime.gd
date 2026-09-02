@@ -8,10 +8,53 @@ var _recoil_recovery_degrees_per_second := 7.0
 var _bob_time := 0.0
 var _footstep_remaining := 0.0
 var _camera_rest_position := Vector3.ZERO
+var _bob_activation_threshold := 0.05
+var _bob_speed_multiplier := 1.0
+var _bob_horizontal_frequency_multiplier := 0.5
+var _bob_horizontal_amplitude := 0.0
+var _bob_vertical_amplitude := 0.0
+var _bob_lerp_speed := 1.0
+var _bob_return_lerp_speed := 1.0
+var _footstep_pitch_min := 1.0
+var _footstep_pitch_max := 1.0
+var _sprint_footstep_interval := 0.34
+var _walk_footstep_interval := 0.46
+var _walk_speed := 4.0
+var _sprint_detection_margin := 0.1
 
 
 func initialize(camera_rest_position: Vector3) -> void:
 	_camera_rest_position = camera_rest_position
+
+
+func configure_bob(
+	activation_threshold: float,
+	speed_multiplier: float,
+	horizontal_frequency_multiplier: float,
+	horizontal_amplitude: float,
+	vertical_amplitude: float,
+	lerp_speed: float,
+	return_lerp_speed: float,
+	footstep_pitch_min: float,
+	footstep_pitch_max: float,
+	sprint_footstep_interval: float,
+	walk_footstep_interval: float,
+	walk_speed: float,
+	sprint_detection_margin: float
+) -> void:
+	_bob_activation_threshold = maxf(0.0, activation_threshold)
+	_bob_speed_multiplier = maxf(0.0, speed_multiplier)
+	_bob_horizontal_frequency_multiplier = maxf(0.0, horizontal_frequency_multiplier)
+	_bob_horizontal_amplitude = maxf(0.0, horizontal_amplitude)
+	_bob_vertical_amplitude = maxf(0.0, vertical_amplitude)
+	_bob_lerp_speed = maxf(0.0, lerp_speed)
+	_bob_return_lerp_speed = maxf(0.0, return_lerp_speed)
+	_footstep_pitch_min = footstep_pitch_min
+	_footstep_pitch_max = maxf(footstep_pitch_min, footstep_pitch_max)
+	_sprint_footstep_interval = maxf(0.01, sprint_footstep_interval)
+	_walk_footstep_interval = maxf(0.01, walk_footstep_interval)
+	_walk_speed = maxf(0.0, walk_speed)
+	_sprint_detection_margin = maxf(0.0, sprint_detection_margin)
 
 
 func apply_mouse_look(
@@ -107,39 +150,31 @@ func update_view_bob(
 	head_bob_enabled: bool,
 	footstep_available: bool,
 	is_crouching: bool,
-	is_sprinting: bool,
-	tuning: Dictionary
+	is_sprinting: bool
 ) -> Dictionary:
 	_footstep_remaining = maxf(0.0, _footstep_remaining - delta)
-	var activation_threshold := float(tuning.get("activation_threshold", 0.05))
-	if on_floor and movement_amount > activation_threshold:
-		_bob_time += delta * movement_speed * float(tuning.get("speed_multiplier", 1.0))
+	if on_floor and movement_amount > _bob_activation_threshold:
+		_bob_time += delta * movement_speed * _bob_speed_multiplier
 		var bob_offset := Vector3.ZERO
 		if head_bob_enabled:
 			bob_offset = Vector3(
-				cos(_bob_time * float(tuning.get("horizontal_frequency_multiplier", 0.5)))
-				* float(tuning.get("horizontal_amplitude", 0.0)),
-				sin(_bob_time) * float(tuning.get("vertical_amplitude", 0.0)),
+				cos(_bob_time * _bob_horizontal_frequency_multiplier) * _bob_horizontal_amplitude,
+				sin(_bob_time) * _bob_vertical_amplitude,
 				0.0
 			)
 		var camera_position := current_camera_position.lerp(
 			_camera_rest_position + bob_offset,
-			delta * float(tuning.get("lerp_speed", 1.0))
+			delta * _bob_lerp_speed
 		)
 		var play_footstep := footstep_available and _footstep_remaining <= 0.0
 		var footstep_pitch := 1.0
 		var footstep_loudness := 0.0
 		if play_footstep:
-			footstep_pitch = randf_range(
-				float(tuning.get("footstep_pitch_min", 1.0)),
-				float(tuning.get("footstep_pitch_max", 1.0))
-			)
+			footstep_pitch = randf_range(_footstep_pitch_min, _footstep_pitch_max)
 			_footstep_remaining = (
-				float(tuning.get("sprint_footstep_interval", 0.34))
-				if movement_speed
-				> float(tuning.get("walk_speed", 4.0))
-				+ float(tuning.get("sprint_detection_margin", 0.1))
-				else float(tuning.get("walk_footstep_interval", 0.46))
+				_sprint_footstep_interval
+				if movement_speed > _walk_speed + _sprint_detection_margin
+				else _walk_footstep_interval
 			)
 			footstep_loudness = 0.18 if is_crouching else (0.95 if is_sprinting else 0.45)
 		return {
@@ -152,7 +187,7 @@ func update_view_bob(
 	return {
 		"camera_position": current_camera_position.lerp(
 			_camera_rest_position,
-			delta * float(tuning.get("return_lerp_speed", 1.0))
+			delta * _bob_return_lerp_speed
 		),
 		"play_footstep": false,
 		"footstep_pitch": 1.0,
