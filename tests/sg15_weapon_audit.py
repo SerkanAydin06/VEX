@@ -27,6 +27,7 @@ def main() -> int:
     view = read("scenes/ui/weapons/sg15_view.tscn")
     definition = read("scripts/player/weapon_definition.gd")
     controller = read("scripts/player/weapon_controller.gd")
+    heat_runtime = read("scripts/player/weapon_heat_runtime.gd")
     upgrades = read("scripts/player/weapon_upgrade_catalog.gd")
     player_scene = read("scenes/player/player.tscn")
     player_script = read("scripts/player/player.gd")
@@ -86,10 +87,17 @@ def main() -> int:
         require(definition, contract, f"WeaponDefinition ısı alanı eksik: {contract}")
     for contract in [
         "weapon_heat", "weapon_overheated", "_heat_cooldown_remaining",
-        "_effective_heat_capacity", "_update_weapon_heat", "heat_unlock_ratio",
+        "_effective_heat_capacity", "_update_weapon_heat",
+        "VexWeaponHeatRuntime.can_fire(", "VexWeaponHeatRuntime.register_shot(",
         "WEAPON_OVERHEATED", "WEAPON_COOLED",
     ]:
-        require(controller, contract, f"WeaponController ısı davranışı eksik: {contract}")
+        require(controller, contract, f"WeaponController ısı orkestrasyonu eksik: {contract}")
+    for contract in [
+        "class_name VexWeaponHeatRuntime", "heat_unlock_ratio",
+        "heat_cooling_per_second", "heat_cooldown_delay",
+        "static func can_fire(", "static func register_shot(",
+    ]:
+        require(heat_runtime, contract, f"Weapon heat runtime sözleşmesi eksik: {contract}")
     for text, contract, message in [
         (game_state, "signal weapon_heat_changed", "GameState ısı sinyali eksik"),
         (hud_script, "_on_weapon_heat_changed", "HUD ısı sinyalini işlemiyor"),
