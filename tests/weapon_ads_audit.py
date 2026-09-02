@@ -70,14 +70,16 @@ def main() -> int:
         ('@export_range(0.0, 1.0, 0.01) var ads_spread_multiplier := 0.0', "ADS spread sıfır değil"),
         ('current_weapon = weapon_controller.call("get_current_weapon") as WeaponDefinition', "Player mevcut silah tanımını ADS için okumuyor"),
         ("current_weapon != null and current_weapon.supports_ads_pose", "Player ADS desteğini silah verisinden doğrulamıyor"),
-        ('is_aiming = supports_ads and Input.is_action_pressed("aim")', "ADS durumu desteklemeyen silahlarda engellenmiyor"),
-        ("_default_fov * current_weapon.ads_fov_multiplier", "Kamera FOV'u normal FOV'a göre silah çarpanı kullanmıyor"),
+        ("_view_runtime.update_aiming(", "Player ADS/FOV hesabini view runtimea devretmiyor"),
         ('_view_runtime.get_hud_recoil(is_aiming)', "HUD recoil/optik merkez senkronu view runtime üzerinden yapılmıyor"),
         ('"set_weapon_recoil_offset",', "Player HUD recoil offset çağrısını kaybetmiş"),
     ]:
         require(player, contract, message)
 
     for contract, message in [
+        ("func update_aiming(", "View runtime ADS/FOV API'sini taşımıyor"),
+        ("var aiming := supports_ads and aim_pressed", "ADS durumu desteklemeyen silahlarda runtime tarafindan engellenmiyor"),
+        ("default_fov * ads_fov_multiplier", "Kamera FOV normal FOV ve silah carpanini kullanmiyor"),
         ("func get_hud_recoil(is_aiming: bool) -> Vector2:", "View runtime HUD recoil API'sini taşımıyor"),
         ("if is_aiming:\n\t\treturn Vector2.ZERO", "ADS sırasında HUD recoil ofseti sıfırlanmıyor"),
         ("return Vector2(_recoil_yaw_degrees, _recoil_pitch_degrees)", "Hip-fire HUD recoil ofseti gerçek recoil state'inden üretilmiyor"),

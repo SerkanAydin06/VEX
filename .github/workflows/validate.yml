@@ -89,6 +89,16 @@ jobs:
             echo "::error::Player view runtime log contains an error or invalid UID"
             exit 1
           fi
+      - name: Run player impact feedback runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/player-impact-feedback-runtime.log"
+          godot --headless --path . tests/player_impact_feedback_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Player impact feedback runtime log contains an error or invalid UID"
+            exit 1
+          fi
       - name: Run player survivability runtime regression
         shell: bash
         run: |

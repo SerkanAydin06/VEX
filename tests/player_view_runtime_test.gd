@@ -7,6 +7,7 @@ func _ready() -> void:
 	_test_mouse_look()
 	_test_controller_look()
 	_test_recoil_state()
+	_test_ads_fov()
 	_test_view_bob_and_footsteps()
 	if not _failures.is_empty():
 		for failure in _failures:
@@ -56,6 +57,46 @@ func _test_recoil_state() -> void:
 	rotation = runtime.get_view_rotation(82.0)
 	_expect_close(rotation.x, 0.0, 0.0001, "Recoil pitch temizlenmiyor")
 	_expect_close(rotation.y, 0.0, 0.0001, "Recoil yaw temizlenmiyor")
+
+
+func _test_ads_fov() -> void:
+	var runtime := VexPlayerViewRuntime.new()
+	var unsupported := runtime.update_aiming(
+		78.0,
+		90.0,
+		200.0,
+		0.1,
+		true,
+		false,
+		0.5
+	)
+	_expect(not bool(unsupported.get("is_aiming", true)), "ADS desteklemeyen silah aim state'e giriyor")
+	_expect_close(float(unsupported.get("target_fov", 0.0)), 90.0, 0.0001, "Hip-fire target FOV değişti")
+	_expect_close(float(unsupported.get("camera_fov", 0.0)), 90.0, 0.0001, "Hip-fire FOV geçişi default FOV'a dönmüyor")
+
+	var aiming := runtime.update_aiming(
+		90.0,
+		90.0,
+		200.0,
+		0.1,
+		true,
+		true,
+		0.5
+	)
+	_expect(bool(aiming.get("is_aiming", false)), "ADS destekleyen silah aim state'e girmiyor")
+	_expect_close(float(aiming.get("target_fov", 0.0)), 45.0, 0.0001, "ADS target FOV multiplier değişti")
+	_expect_close(float(aiming.get("camera_fov", 0.0)), 70.0, 0.0001, "ADS transition hızı değişti")
+
+	var clamped := runtime.update_aiming(
+		78.0,
+		78.0,
+		200.0,
+		0.1,
+		true,
+		true,
+		0.1
+	)
+	_expect_close(float(clamped.get("target_fov", 0.0)), 30.0, 0.0001, "ADS minimum FOV clamp değişti")
 
 
 func _test_view_bob_and_footsteps() -> void:

@@ -81,6 +81,7 @@ var _view_runtime := VexPlayerViewRuntime.new()
 var _survivability_runtime := VexPlayerSurvivabilityRuntime.new()
 var _interaction_runtime := VexPlayerInteractionRuntime.new()
 var _pickup_runtime := VexPlayerPickupRuntime.new()
+var _impact_feedback_runtime := VexPlayerImpactFeedbackRuntime.new()
 var _standing_capsule_height := 0.0
 var _standing_collision_shape_y := 0.0
 var _standing_view_pivot_height := 0.0
@@ -91,16 +92,9 @@ var _night_vision_enabled := false
 var _night_vision_layer: CanvasLayer = null
 var _night_vision_rect: ColorRect = null
 
-var _impact_shake_remaining := 0.0
-var _impact_shake_duration := 0.0
-var _impact_shake_strength := 0.0
-var _impact_shake_base_h_offset := 0.0
-var _impact_shake_base_v_offset := 0.0
-var _impact_shake_active := false
 var _impact_shock_layer: CanvasLayer = null
 var _impact_shock_rect: ColorRect = null
 var _impact_shock_tween: Tween = null
-var _impact_shock_generation := 0
 
 
 func _ready() -> void:
@@ -476,25 +470,17 @@ func apply_external_impulse(
 func request_camera_shake(strength: float, duration: float) -> void:
 	if is_dead or not SettingsManager.screen_shake:
 		return
-	var safe_strength := maxf(0.0, strength)
-	var safe_duration := maxf(0.0, duration)
-	if safe_strength <= 0.0 or safe_duration <= 0.0:
-		return
-	if not _impact_shake_active:
-		_impact_shake_base_h_offset = camera.h_offset
-		_impact_shake_base_v_offset = camera.v_offset
-	_impact_shake_active = true
-	_impact_shake_strength = maxf(_impact_shake_strength, safe_strength)
-	_impact_shake_duration = maxf(_impact_shake_duration, safe_duration)
-	_impact_shake_remaining = maxf(_impact_shake_remaining, safe_duration)
-
+	_impact_feedback_runtime.request_camera_shake(
+		strength,
+		duration,
+		Vector2(camera.h_offset, camera.v_offset)
+	)
 
 func request_impact_shock(tint: Color, peak_alpha: float, duration: float) -> void:
 	if not is_inside_tree():
 		return
-	var safe_peak_alpha := clampf(peak_alpha, 0.0, 0.75)
-	var safe_duration := maxf(0.05, duration)
-	if safe_peak_alpha <= 0.0:
+	var shock_plan := _impact_feedback_runtime.begin_impact_shock(peak_alpha, duration)
+	if not bool(shock_plan.get("accepted", false)):
 		return
 	_ensure_impact_shock_overlay()
 	if _impact_shock_rect == null:
@@ -502,15 +488,15 @@ func request_impact_shock(tint: Color, peak_alpha: float, duration: float) -> vo
 	if _impact_shock_tween != null and _impact_shock_tween.is_valid():
 		_impact_shock_tween.kill()
 
-	_impact_shock_generation += 1
-	var shock_generation := _impact_shock_generation
+	var shock_generation := int(shock_plan.get("generation", 0))
+	var safe_peak_alpha := float(shock_plan.get("peak_alpha", 0.0))
+	var rise_duration := float(shock_plan.get("rise_duration", 0.0))
+	var fade_duration := float(shock_plan.get("fade_duration", 0.0))
 	_impact_shock_rect.color = Color(tint.r, tint.g, tint.b, 1.0)
 	_impact_shock_rect.modulate = Color(1.0, 1.0, 1.0, 0.0)
 	_impact_shock_rect.visible = true
 
 	# Tek bir koyu darbe darbesi kullanılır: parlak flaş veya tekrarlayan titreşim yoktur.
-	var rise_duration := minf(0.045, safe_duration * 0.25)
-	var fade_duration := maxf(0.01, safe_duration - rise_duration)
 	_impact_shock_tween = create_tween()
 	_impact_shock_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_impact_shock_tween.tween_property(
@@ -529,7 +515,6 @@ func request_impact_shock(tint: Color, peak_alpha: float, duration: float) -> vo
 		_finish_impact_shock.bind(shock_generation),
 		CONNECT_ONE_SHOT
 	)
-
 
 func _ensure_impact_shock_overlay() -> void:
 	if (
@@ -554,44 +539,38 @@ func _ensure_impact_shock_overlay() -> void:
 
 
 func _finish_impact_shock(shock_generation: int) -> void:
-	if shock_generation != _impact_shock_generation:
+	if not _impact_feedback_runtime.is_impact_shock_generation_current(shock_generation):
 		return
 	if _impact_shock_rect != null and is_instance_valid(_impact_shock_rect):
 		_impact_shock_rect.modulate = Color(1.0, 1.0, 1.0, 0.0)
 		_impact_shock_rect.visible = false
 	_impact_shock_tween = null
 
-
 func _update_impact_camera_shake(delta: float) -> void:
-	if not _impact_shake_active:
-		return
-	if not SettingsManager.screen_shake:
-		_clear_impact_camera_shake()
-		return
-	_impact_shake_remaining = maxf(0.0, _impact_shake_remaining - delta)
-	if _impact_shake_remaining <= 0.0:
-		_clear_impact_camera_shake()
-		return
-	var fade := _impact_shake_remaining / maxf(_impact_shake_duration, 0.001)
-	camera.h_offset = (
-		_impact_shake_base_h_offset
-		+ randf_range(-_impact_shake_strength, _impact_shake_strength) * fade
+	var shake_result := _impact_feedback_runtime.update_camera_shake(
+		delta,
+		SettingsManager.screen_shake
 	)
-	camera.v_offset = (
-		_impact_shake_base_v_offset
-		+ randf_range(-_impact_shake_strength, _impact_shake_strength) * fade
-	)
-
+	if not bool(shake_result.get("apply_offset", false)):
+		return
+	var camera_offset := shake_result.get(
+		"camera_offset",
+		Vector2(camera.h_offset, camera.v_offset)
+	) as Vector2
+	camera.h_offset = camera_offset.x
+	camera.v_offset = camera_offset.y
 
 func _clear_impact_camera_shake() -> void:
-	if _impact_shake_active and camera != null and is_instance_valid(camera):
-		camera.h_offset = _impact_shake_base_h_offset
-		camera.v_offset = _impact_shake_base_v_offset
-	_impact_shake_remaining = 0.0
-	_impact_shake_duration = 0.0
-	_impact_shake_strength = 0.0
-	_impact_shake_active = false
-
+	var clear_result := _impact_feedback_runtime.clear_camera_shake()
+	if not bool(clear_result.get("apply_offset", false)):
+		return
+	if camera != null and is_instance_valid(camera):
+		var camera_offset := clear_result.get(
+			"camera_offset",
+			Vector2(camera.h_offset, camera.v_offset)
+		) as Vector2
+		camera.h_offset = camera_offset.x
+		camera.v_offset = camera_offset.y
 
 func has_key(key_id: StringName) -> bool:
 	_sync_pickup_runtime_from_public()
@@ -916,16 +895,20 @@ func _update_aiming(delta: float) -> void:
 	if weapon_controller != null and weapon_controller.has_method("get_current_weapon"):
 		current_weapon = weapon_controller.call("get_current_weapon") as WeaponDefinition
 	var supports_ads := current_weapon != null and current_weapon.supports_ads_pose
-	is_aiming = supports_ads and Input.is_action_pressed("aim")
-	var target_fov := _default_fov
-	if is_aiming:
-		target_fov = clampf(
-			_default_fov * current_weapon.ads_fov_multiplier,
-			30.0,
-			_default_fov
-		)
-	camera.fov = move_toward(camera.fov, target_fov, ads_transition_speed * delta)
-
+	var ads_fov_multiplier := 1.0
+	if supports_ads:
+		ads_fov_multiplier = current_weapon.ads_fov_multiplier
+	var aiming_result := _view_runtime.update_aiming(
+		camera.fov,
+		_default_fov,
+		ads_transition_speed,
+		delta,
+		Input.is_action_pressed("aim"),
+		supports_ads,
+		ads_fov_multiplier
+	)
+	is_aiming = bool(aiming_result.get("is_aiming", false))
+	camera.fov = float(aiming_result.get("camera_fov", camera.fov))
 
 func _die() -> void:
 	_survivability_runtime.force_dead()

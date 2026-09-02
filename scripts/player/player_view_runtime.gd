@@ -141,6 +141,34 @@ func get_hud_recoil(is_aiming: bool) -> Vector2:
 	return Vector2(_recoil_yaw_degrees, _recoil_pitch_degrees)
 
 
+func update_aiming(
+	current_fov: float,
+	default_fov: float,
+	ads_transition_speed: float,
+	delta: float,
+	aim_pressed: bool,
+	supports_ads: bool,
+	ads_fov_multiplier: float
+) -> Dictionary:
+	var aiming := supports_ads and aim_pressed
+	var target_fov := default_fov
+	if aiming:
+		target_fov = clampf(
+			default_fov * ads_fov_multiplier,
+			30.0,
+			default_fov
+		)
+	return {
+		"is_aiming": aiming,
+		"target_fov": target_fov,
+		"camera_fov": move_toward(
+			current_fov,
+			target_fov,
+			ads_transition_speed * delta
+		),
+	}
+
+
 func update_view_bob(
 	delta: float,
 	current_camera_position: Vector3,
