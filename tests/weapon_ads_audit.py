@@ -31,6 +31,7 @@ def main() -> int:
     definition = read("scripts/player/weapon_definition.gd")
     player = read("scripts/player/player.gd")
     controller = read("scripts/player/weapon_controller.gd")
+    hitscan_runtime = read("scripts/player/weapon_hitscan_runtime.gd")
     presenter = read("scripts/ui/hud_weapon_presenter.gd")
     reticle_script = read("scripts/ui/ads_reticle.gd")
     reticle_scene = read("scenes/ui/ads_reticle.tscn")
@@ -75,14 +76,19 @@ def main() -> int:
     ]:
         require(player, contract, message)
 
+    require(
+        controller,
+        "VexWeaponHitscanRuntime.shoot(",
+        "WeaponController hitscan çözümünü runtime helper'a devretmiyor",
+    )
     for contract, message in [
-        ("var uses_ads_optical_center := _player.is_aiming and weapon.supports_ads_pose", "Hitscan ADS optik-merkez koşulu eksik"),
+        ("var uses_ads_optical_center := player.is_aiming and weapon.supports_ads_pose", "Hitscan ADS optik-merkez koşulu eksik"),
         ("not uses_ads_optical_center", "Hip-fire/ADS hedef ayrımı eksik"),
         ('GameState.hud.has_method("get_crosshair_screen_position")', "Hip-fire HUD crosshair hedeflemesi kaybolmuş"),
         ("camera.get_viewport().get_visible_rect().size * 0.5", "ADS için kamera ekran merkezi hesaplanmıyor"),
         ("spread_multiplier = weapon.ads_spread_multiplier", "Silah-bazlı ADS spread override eksik"),
     ]:
-        require(controller, contract, message)
+        require(hitscan_runtime, contract, message)
 
     for contract, message in [
         ("return player != null and is_instance_valid(player) and player.is_aiming", "HUD zoom pozu gerçek player.is_aiming durumuna bağlı değil"),
