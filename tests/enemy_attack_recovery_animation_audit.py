@@ -35,7 +35,7 @@ assert_order(
     combatant,
     "_fire_projectile()",
     '_play_directional_animation(&"idle", &"idle_back")',
-    "var remaining := maxf(",
+    "var remaining := EnemyCombatRuntime.remaining_attack_cooldown(",
 )
 
 hybrid = function_block(read("scripts/actors/enemy_hybrid_base.gd"), "_begin_hybrid_attack")
