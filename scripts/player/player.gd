@@ -75,13 +75,10 @@ var is_dead := false
 var is_sprinting := false
 var is_crouching := false
 var is_aiming := false
-var _pitch := 0.0
-var _bob_time := 0.0
-var _camera_rest_position := Vector3.ZERO
 var _gravity := 20.0
-var _footstep_remaining := 0.0
 var _hurt_audio_cooldown_remaining := 0.0
 var _movement_runtime := VexPlayerMovementRuntime.new()
+var _view_runtime := VexPlayerViewRuntime.new()
 var _standing_capsule_height := 0.0
 var _standing_collision_shape_y := 0.0
 var _standing_view_pivot_height := 0.0
@@ -92,9 +89,6 @@ var _night_vision_enabled := false
 var _night_vision_layer: CanvasLayer = null
 var _night_vision_rect: ColorRect = null
 
-var _recoil_pitch_degrees := 0.0
-var _recoil_yaw_degrees := 0.0
-var _recoil_recovery_degrees_per_second := 7.0
 var _impact_shake_remaining := 0.0
 var _impact_shake_duration := 0.0
 var _impact_shake_strength := 0.0
@@ -109,7 +103,22 @@ var _impact_shock_generation := 0
 
 func _ready() -> void:
 	add_to_group("player")
-	_camera_rest_position = camera.position
+	_view_runtime.initialize(camera.position)
+	_view_runtime.configure_bob(
+		bob_activation_threshold,
+		bob_speed_multiplier,
+		bob_horizontal_frequency_multiplier,
+		bob_horizontal_amplitude,
+		bob_vertical_amplitude,
+		bob_lerp_speed,
+		bob_return_lerp_speed,
+		footstep_pitch_min,
+		footstep_pitch_max,
+		sprint_footstep_interval,
+		walk_footstep_interval,
+		walk_speed,
+		sprint_detection_margin
+	)
 	_default_fov = SettingsManager.field_of_view
 	camera.fov = _default_fov
 	_setup_crouch_dimensions()
@@ -218,11 +227,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var mouse_event := event as InputEventMouseMotion
-		rotate_y(deg_to_rad(-mouse_event.relative.x * SettingsManager.mouse_sensitivity))
-		_pitch = clampf(
-			_pitch - deg_to_rad(mouse_event.relative.y * SettingsManager.mouse_sensitivity),
-			deg_to_rad(-pitch_limit_degrees),
-			deg_to_rad(pitch_limit_degrees)
+		rotate_y(
+			_view_runtime.apply_mouse_look(
+				mouse_event.relative,
+				SettingsManager.mouse_sensitivity,
+				pitch_limit_degrees
+			)
 		)
 		_apply_view_rotation()
 	elif event.is_action_pressed("night_vision"):
@@ -623,60 +633,41 @@ func apply_weapon_recoil(
 ) -> void:
 	if is_dead:
 		return
-	_recoil_pitch_degrees = clampf(
-		_recoil_pitch_degrees + maxf(0.0, vertical_degrees),
-		0.0,
-		maxf(0.0, max_vertical_degrees)
+	_view_runtime.apply_recoil(
+		vertical_degrees,
+		horizontal_degrees,
+		max_vertical_degrees,
+		max_horizontal_degrees,
+		recovery_degrees_per_second
 	)
-	_recoil_yaw_degrees = clampf(
-		_recoil_yaw_degrees + horizontal_degrees,
-		-maxf(0.0, max_horizontal_degrees),
-		maxf(0.0, max_horizontal_degrees)
-	)
-	_recoil_recovery_degrees_per_second = maxf(0.1, recovery_degrees_per_second)
 	_apply_view_rotation()
 	_publish_recoil_to_hud()
 
 
 func clear_weapon_recoil() -> void:
-	_recoil_pitch_degrees = 0.0
-	_recoil_yaw_degrees = 0.0
+	_view_runtime.clear_recoil()
 	_apply_view_rotation()
 	_publish_recoil_to_hud()
 
 
 func _update_recoil(delta: float) -> void:
-	_recoil_pitch_degrees = move_toward(
-		_recoil_pitch_degrees,
-		0.0,
-		_recoil_recovery_degrees_per_second * delta
-	)
-	_recoil_yaw_degrees = move_toward(
-		_recoil_yaw_degrees,
-		0.0,
-		_recoil_recovery_degrees_per_second * recoil_yaw_recovery_multiplier * delta
-	)
+	_view_runtime.update_recoil(delta, recoil_yaw_recovery_multiplier)
 	_apply_view_rotation()
 	_publish_recoil_to_hud()
 
 
 func _apply_view_rotation() -> void:
-	view_pivot.rotation.x = clampf(
-		_pitch + deg_to_rad(_recoil_pitch_degrees),
-		deg_to_rad(-pitch_limit_degrees),
-		deg_to_rad(pitch_limit_degrees)
-	)
-	view_pivot.rotation.y = deg_to_rad(_recoil_yaw_degrees)
+	var view_rotation := _view_runtime.get_view_rotation(pitch_limit_degrees)
+	view_pivot.rotation.x = view_rotation.x
+	view_pivot.rotation.y = view_rotation.y
 
 
 func _publish_recoil_to_hud() -> void:
 	if GameState.hud != null and is_instance_valid(GameState.hud) and GameState.hud.has_method("set_weapon_recoil_offset"):
-		var hud_recoil := (
-			Vector2.ZERO
-			if is_aiming
-			else Vector2(_recoil_yaw_degrees, _recoil_pitch_degrees)
+		GameState.hud.call(
+			"set_weapon_recoil_offset",
+			_view_runtime.get_hud_recoil(is_aiming)
 		)
-		GameState.hud.call("set_weapon_recoil_offset", hud_recoil)
 
 
 func broadcast_state() -> void:
@@ -783,41 +774,37 @@ func _update_controller_look(delta: float) -> void:
 	var look := Vector2(Input.get_joy_axis(device, JOY_AXIS_RIGHT_X), Input.get_joy_axis(device, JOY_AXIS_RIGHT_Y))
 	if look.length() < 0.16:
 		return
-	var sensitivity := SettingsManager.controller_look_sensitivity * delta
-	rotate_y(-look.x * sensitivity)
-	_pitch = clampf(_pitch - look.y * sensitivity, deg_to_rad(-pitch_limit_degrees), deg_to_rad(pitch_limit_degrees))
+	rotate_y(
+		_view_runtime.apply_controller_look(
+			look,
+			SettingsManager.controller_look_sensitivity,
+			delta,
+			pitch_limit_degrees
+		)
+	)
 	_apply_view_rotation()
 
 
 func _update_view_bob(delta: float, movement_amount: float, movement_speed: float) -> void:
-	_footstep_remaining = maxf(0.0, _footstep_remaining - delta)
-	if is_on_floor() and movement_amount > bob_activation_threshold:
-		_bob_time += delta * movement_speed * bob_speed_multiplier
-		var bob_offset := Vector3.ZERO
-		if SettingsManager.head_bob:
-			bob_offset = Vector3(
-				cos(_bob_time * bob_horizontal_frequency_multiplier) * bob_horizontal_amplitude,
-				sin(_bob_time) * bob_vertical_amplitude,
-				0.0
-			)
-		camera.position = camera.position.lerp(
-			_camera_rest_position + bob_offset,
-			delta * bob_lerp_speed
-		)
-		if footstep_audio.stream != null and _footstep_remaining <= 0.0:
-			footstep_audio.pitch_scale = randf_range(footstep_pitch_min, footstep_pitch_max)
-			footstep_audio.play()
-			_footstep_remaining = (
-				sprint_footstep_interval
-				if movement_speed > walk_speed + sprint_detection_margin
-				else walk_footstep_interval
-			)
-			var footstep_loudness := 0.18 if is_crouching else (0.95 if is_sprinting else 0.45)
-			GameState.emit_noise(global_position, footstep_loudness, self)
-	else:
-		camera.position = camera.position.lerp(
-			_camera_rest_position,
-			delta * bob_return_lerp_speed
+	var bob_result := _view_runtime.update_view_bob(
+		delta,
+		camera.position,
+		is_on_floor(),
+		movement_amount,
+		movement_speed,
+		SettingsManager.head_bob,
+		footstep_audio.stream != null,
+		is_crouching,
+		is_sprinting
+	)
+	camera.position = bob_result.get("camera_position", camera.position) as Vector3
+	if bool(bob_result.get("play_footstep", false)):
+		footstep_audio.pitch_scale = float(bob_result.get("footstep_pitch", 1.0))
+		footstep_audio.play()
+		GameState.emit_noise(
+			global_position,
+			float(bob_result.get("footstep_loudness", 0.0)),
+			self
 		)
 
 
