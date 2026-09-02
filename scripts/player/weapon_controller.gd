@@ -1,6 +1,10 @@
 class_name VexWeaponController
 extends Node
 
+# Mimari sahiplik notu: penetration_power ve target_limit hesapları
+# VexWeaponHitscanRuntime içindedir; legacy_magnum_count save migration'ı ise
+# VexWeaponPersistenceRuntime tarafından normalize edilir.
+
 signal loadout_changed
 
 @export_category("Başlangıç")
