@@ -4,8 +4,8 @@ extends Node
 # Mimari sahiplik notu: penetration_power ve target_limit hesapları
 # VexWeaponHitscanRuntime içindedir; legacy_magnum_count save migration'ı ise
 # VexWeaponPersistenceRuntime tarafından normalize edilir. Heat/overheat state
-# geçişleri VexWeaponHeatRuntime, fener node uygulaması VexWeaponFlashlightRuntime
-# tarafından yönetilir.
+# geçişleri VexWeaponHeatRuntime, fener node uygulaması VexWeaponFlashlightRuntime,
+# async reload zamanlama ve ammo transferi VexWeaponReloadRuntime tarafından yönetilir.
 
 signal loadout_changed
 
@@ -348,75 +348,56 @@ func reload() -> void:
 	var magazine_size := _effective_magazine_size(weapon)
 	if magazine >= magazine_size or reserve <= 0:
 		return
+	var reload_time_multiplier := float(_modifiers(weapon).reload)
+	is_reloading = true
 	if weapon.weapon_id == &"sg04":
-		await _reload_sg04_shells(weapon, magazine_size, magazine, reserve)
-		return
-	is_reloading = true
-	_play_hud_action(&"reload")
-	await get_tree().create_timer(weapon.reload_duration * float(_modifiers(weapon).reload), false).timeout
-	if not is_inside_tree() or _player.is_dead:
+		_sg04_reload_fire_queued = false
+		_sg04_reload_generation += 1
+		var reload_generation := _sg04_reload_generation
+		var result := await VexWeaponReloadRuntime.reload_sg04_shells(
+			self,
+			_player,
+			weapon,
+			magazines,
+			reserve_ammo,
+			magazine_size,
+			magazine,
+			reserve,
+			reload_time_multiplier,
+			reload_generation,
+			Callable(self, "_get_sg04_reload_generation"),
+			Callable(self, "_play_hud_action"),
+			Callable(self, "broadcast_state")
+		)
+		if result == VexWeaponReloadRuntime.RESULT_INTERRUPTED:
+			return
 		is_reloading = false
+		if result == VexWeaponReloadRuntime.RESULT_COMPLETED:
+			broadcast_state()
 		return
-	# Reload sürerken ammo pickup alınmış olabilir. Başlangıçta snapshot alınan
-	# reserve değerini geri yazmak yeni toplanan mermileri silebilir; bitişte
-	# her iki değeri de canlı state'ten tekrar oku.
-	var live_magazine := int(magazines.get(weapon.weapon_id, 0))
-	var live_reserve := int(reserve_ammo.get(weapon.ammo_type, 0))
-	var live_magazine_size := _effective_magazine_size(weapon)
-	var required: int = maxi(0, live_magazine_size - live_magazine)
-	var loaded: int = mini(required, live_reserve)
-	magazines[weapon.weapon_id] = live_magazine + loaded
-	reserve_ammo[weapon.ammo_type] = live_reserve - loaded
+
+	_play_hud_action(&"reload")
+	var completed := await VexWeaponReloadRuntime.reload_magazine(
+		self,
+		_player,
+		weapon,
+		magazines,
+		reserve_ammo,
+		Callable(self, "_get_current_reload_magazine_size"),
+		reload_time_multiplier
+	)
 	is_reloading = false
-	broadcast_state()
-
-
-func _reload_sg04_shells(
-	weapon: WeaponDefinition,
-	magazine_size: int,
-	starting_magazine: int,
-	starting_reserve: int
-) -> void:
-	is_reloading = true
-	_sg04_reload_fire_queued = false
-	_sg04_reload_generation += 1
-	var reload_generation := _sg04_reload_generation
-	var rounds_to_load := mini(magazine_size - starting_magazine, starting_reserve)
-	var reload_time_multiplier := maxf(0.01, float(_modifiers(weapon).reload))
-	# SG04 reload art has four equal-duration authored frames. Frames 1-2-3 are
-	# one shell insertion cycle; frame 4 is the single final close/ready pose.
-	var shell_cycle_duration := weapon.reload_duration * 0.75 * reload_time_multiplier
-	var finish_duration := weapon.reload_duration * 0.25 * reload_time_multiplier
-
-	for _round_index: int in range(rounds_to_load):
-		_play_hud_action(&"reload_shell")
-		await get_tree().create_timer(shell_cycle_duration, false).timeout
-		if reload_generation != _sg04_reload_generation:
-			return
-		if not is_inside_tree() or _player == null or _player.is_dead:
-			is_reloading = false
-			return
-
-		var current_magazine := int(magazines.get(weapon.weapon_id, 0))
-		var current_reserve := int(reserve_ammo.get(weapon.ammo_type, 0))
-		if current_magazine >= magazine_size or current_reserve <= 0:
-			break
-		magazines[weapon.weapon_id] = current_magazine + 1
-		reserve_ammo[weapon.ammo_type] = current_reserve - 1
+	if completed:
 		broadcast_state()
 
-	if not is_inside_tree() or _player == null or _player.is_dead:
-		is_reloading = false
-		return
-	_play_hud_action(&"reload_finish")
-	await get_tree().create_timer(finish_duration, false).timeout
-	if reload_generation != _sg04_reload_generation:
-		return
-	if not is_inside_tree() or _player == null or _player.is_dead:
-		is_reloading = false
-		return
-	is_reloading = false
-	broadcast_state()
+
+func _get_current_reload_magazine_size() -> int:
+	var weapon := get_current_weapon()
+	return _effective_magazine_size(weapon) if weapon != null else 0
+
+
+func _get_sg04_reload_generation() -> int:
+	return _sg04_reload_generation
 
 
 func _interrupt_sg04_reload_and_fire() -> void:
