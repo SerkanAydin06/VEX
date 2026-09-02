@@ -57,6 +57,7 @@ def main() -> int:
     player_scene = read("scenes/player/player.tscn")
     pickup_script = read("scripts/props/pickup.gd")
     player_script = read("scripts/player/player.gd")
+    pickup_runtime = read("scripts/player/player_pickup_runtime.gd")
     level_test = read("scenes/levels/level_test.tscn")
 
     for name in assets:
@@ -148,13 +149,12 @@ def main() -> int:
 
     require(player_scene, 'path="res://resources/weapons/sg04.tres"', "Player weapon definitions içinde SG04")
     require(pickup_script, '"sg04"', "pickup enum içinde SG04")
-    require(
-        player_script,
-        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09", &"sg15":',
-        "player SG04/SG09 ortak fiziksel pickup handler",
-    )
-    require(player_script, 'func _collect_loadout_weapon_pickup(', "loadout pickup swap helper")
-    require(player_script, '"equip_world_weapon"', "loadout grup displacement çağrısı")
+    require(pickup_runtime, "const WORLD_WEAPON_PICKUPS", "ortak fiziksel pickup routing listesi")
+    for weapon_id in ['&"sg04"', '&"sg09"', '&"sg15"']:
+        require(pickup_runtime, weapon_id, f"world pickup routing {weapon_id}")
+    require(pickup_runtime, '"equip_world_weapon",', "loadout grup displacement çağrısı")
+    require(pickup_runtime, '"displaced_weapon_id"', "displaced weapon sonucu")
+    require(player_script, 'func _apply_world_weapon_pickup_feedback(', "loadout pickup feedback facade")
     require(player_script, '"_spawn_dropped_weapon_pickup"', "yerinden çıkan shotgun pickup spawn")
     require(level_test, 'pickup_type = "sg04"', "Level Test SG04 pickup")
     require(level_test, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "Level Test SG04 side art")

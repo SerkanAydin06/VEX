@@ -29,6 +29,7 @@ def forbid(text: str, contract: str, message: str) -> None:
 def main() -> int:
     player = read("scripts/player/player.gd")
     runtime = read("scripts/player/player_survivability_runtime.gd")
+    pickup_runtime = read("scripts/player/player_pickup_runtime.gd")
 
     for contract, message in [
         ("class_name VexPlayerSurvivabilityRuntime", "Survivability helper class_name eksik"),
@@ -69,8 +70,6 @@ def main() -> int:
         ("health = _survivability_runtime.get_health()", "Player helper health state'ini facade'a geri taşımıyor"),
         ("armor = _survivability_runtime.get_armor()", "Player helper armor state'ini facade'a geri taşımıyor"),
         ("is_dead = _survivability_runtime.get_is_dead()", "Player helper dead state'ini facade'a geri taşımıyor"),
-        ("_survivability_runtime.collect_health(amount)", "Player health pickup'ı helper'a devretmiyor"),
-        ("_survivability_runtime.collect_armor(amount)", "Player armor pickup'ı helper'a devretmiyor"),
         ("_survivability_runtime.apply_damage(", "Player damage çözümünü helper'a devretmiyor"),
         ("_survivability_runtime.restore_state(", "Player save restore survivability helper kullanmıyor"),
         ("_survivability_runtime.force_dead()", "Player death state helper ile senkron değil"),
@@ -80,9 +79,17 @@ def main() -> int:
     ]:
         require(player, contract, message)
 
+    for contract, message in [
+        ("survivability.collect_health(amount)", "Pickup runtime health pickup'ını survivability helper'a devretmiyor"),
+        ("survivability.collect_armor(amount)", "Pickup runtime armor pickup'ını survivability helper'a devretmiyor"),
+    ]:
+        require(pickup_runtime, contract, message)
+
     for forbidden, message in [
         ("_hurt_audio_cooldown_remaining", "Hurt cooldown state hâlâ Player'da tutuluyor"),
         ("int(round(float(amount) * armor_absorption_ratio))", "Armor absorption hesabı hâlâ Player'da"),
+        ("_survivability_runtime.collect_health(amount)", "Health pickup routing yeniden Player'a dönmüş"),
+        ("_survivability_runtime.collect_armor(amount)", "Armor pickup routing yeniden Player'a dönmüş"),
     ]:
         forbid(player, forbidden, message)
 

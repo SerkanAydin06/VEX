@@ -385,17 +385,25 @@ def check_weapons() -> None:
         fail("Bastion SG-15 rafı authored side görselini kullanmıyor")
     pickup_script = read("scripts/props/pickup.gd")
     player_script = read("scripts/player/player.gd")
+    pickup_runtime = read("scripts/player/player_pickup_runtime.gd")
     if '"sg04", "sg09", "sg15", "vx47"' not in pickup_script:
         fail("Pickup tipi SG-09/SG-15'i silah olarak tanımıyor")
     for contract in [
-        '&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09", &"sg15":',
-        "func _collect_loadout_weapon_pickup(",
-        '"equip_world_weapon"',
+        "const WORLD_WEAPON_PICKUPS",
+        '&"sg04"', '&"sg09"', '&"sg15"',
+        '"equip_world_weapon",',
+        '"displaced_weapon_id"',
+    ]:
+        if contract not in pickup_runtime:
+            fail(f"PickupRuntime fiziksel loadout silah swap sözleşmesi eksik: {contract}")
+    for contract in [
+        "func _apply_world_weapon_pickup_feedback(",
         '"_spawn_dropped_weapon_pickup"',
-        'displaced_weapon_id',
+        "displaced_weapon_id",
     ]:
         if contract not in player_script:
-            fail(f"Player fiziksel loadout silah swap sözleşmesi eksik: {contract}")
+            fail(f"Player fiziksel loadout feedback/spawn sözleşmesi eksik: {contract}")
+    loadout_flow = player_script + "\n" + pickup_runtime
     for obsolete in [
         'unlock_weapon", &"sg04"',
         'unlock_weapon", &"sg09"',
@@ -403,7 +411,7 @@ def check_weapons() -> None:
         "func _collect_sidearm_pickup(",
         '"_spawn_dropped_sidearm_pickup"',
     ]:
-        if obsolete in player_script:
+        if obsolete in loadout_flow:
             fail(f"Shotgun pickup eski kaybolan-silah akışını kullanıyor: {obsolete}")
 
 

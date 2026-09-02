@@ -56,7 +56,7 @@ def main() -> int:
         ("func has_key(", "Key ownership runtime'da değil"),
         ("func owns_night_vision(", "Night vision ownership runtime'da değil"),
         ("weapon_controller.call(\"add_ammo\"", "Ammo pickup WeaponController'a runtime üzerinden gitmiyor"),
-        ("weapon_controller.call(\"equip_world_weapon\"", "World weapon pickup runtime üzerinden gitmiyor"),
+        ('"equip_world_weapon",', "World weapon pickup runtime üzerinden gitmiyor"),
         ("weapon_controller.call(\"unlock_weapon\"", "Direct weapon pickup runtime üzerinden gitmiyor"),
         ("survivability.collect_health(amount)", "Health pickup survivability runtime'a delege edilmiyor"),
         ("survivability.collect_armor(amount)", "Armor pickup survivability runtime'a delege edilmiyor"),

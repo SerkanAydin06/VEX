@@ -356,15 +356,23 @@ func _check_weapon_contracts() -> void:
 		if contract not in controller:
 			failures.append("WeaponController P-20/save migration sözleşmesi eksik: %s" % contract)
 	var player_script := FileAccess.get_file_as_string("res://scripts/player/player.gd")
+	var pickup_runtime := FileAccess.get_file_as_string("res://scripts/player/player_pickup_runtime.gd")
 	for contract in [
-		'&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09", &"sg15":',
-		"func _collect_loadout_weapon_pickup(",
-		'"equip_world_weapon"',
+		"const WORLD_WEAPON_PICKUPS",
+		'&"sg04"', '&"sg09"', '&"sg15"',
+		'"equip_world_weapon",',
+		'"displaced_weapon_id"',
+	]:
+		if contract not in pickup_runtime:
+			failures.append("PickupRuntime SG-04/SG-09 fiziksel swap sözleşmesi eksik: %s" % contract)
+	for contract in [
+		"func _apply_world_weapon_pickup_feedback(",
 		'"_spawn_dropped_weapon_pickup"',
 		"displaced_weapon_id",
 	]:
 		if contract not in player_script:
-			failures.append("SG-04/SG-09 fiziksel swap sözleşmesi eksik: %s" % contract)
+			failures.append("Player SG-04/SG-09 feedback/spawn sözleşmesi eksik: %s" % contract)
+	var loadout_flow := player_script + "\n" + pickup_runtime
 	for obsolete in [
 		'unlock_weapon", &"sg04"',
 		'unlock_weapon", &"sg09"',
@@ -372,7 +380,7 @@ func _check_weapon_contracts() -> void:
 		"func _collect_sidearm_pickup(",
 		'"_spawn_dropped_sidearm_pickup"',
 	]:
-		if obsolete in player_script:
+		if obsolete in loadout_flow:
 			failures.append("Shotgun pickup eski kaybolan-silah akışını kullanıyor: %s" % obsolete)
 
 
