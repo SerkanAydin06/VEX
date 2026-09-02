@@ -50,6 +50,7 @@ def main() -> int:
     view = read("scenes/ui/weapons/sg04_view.tscn")
     weapon = read("resources/weapons/sg04.tres")
     controller = read("scripts/player/weapon_controller.gd")
+    hitscan = read("scripts/player/weapon_hitscan_runtime.gd")
     presenter = read("scripts/ui/hud_weapon_presenter.gd")
     hud = read("scripts/ui/hud.gd")
     player_scene = read("scenes/player/player.tscn")
@@ -119,10 +120,15 @@ def main() -> int:
         ('_sg04_reload_fire_queued = true', "cooldown sırasında ateş tıklaması queue"),
         ('_play_hud_action(&"equip")', "reload görselini anında kesme"),
         ('_sg04_reload_generation += 1', "async reload iptal tokeni"),
-        ('spread_multiplier = weapon.ads_spread_multiplier', "silah-bazlı ADS spread"),
-        ('func _get_distance_damage_multiplier(', "mesafe hasar düşüşü"),
+        ('VexWeaponHitscanRuntime.shoot(', "hitscan runtime delegasyonu"),
     ]:
         require(controller, needle, label)
+
+    for needle, label in [
+        ('spread_multiplier = weapon.ads_spread_multiplier', "silah-bazlı ADS spread"),
+        ('static func _get_distance_damage_multiplier(', "mesafe hasar düşüşü"),
+    ]:
+        require(hitscan, needle, label)
 
     for needle, label in [
         ('&"reload_shell", &"reload_finish"', "presenter custom reload animasyonları"),
