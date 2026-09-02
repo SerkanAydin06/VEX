@@ -79,6 +79,8 @@ var _gravity := 20.0
 var _movement_runtime := VexPlayerMovementRuntime.new()
 var _view_runtime := VexPlayerViewRuntime.new()
 var _survivability_runtime := VexPlayerSurvivabilityRuntime.new()
+var _interaction_runtime := VexPlayerInteractionRuntime.new()
+var _pickup_runtime := VexPlayerPickupRuntime.new()
 var _standing_capsule_height := 0.0
 var _standing_collision_shape_y := 0.0
 var _standing_view_pivot_height := 0.0
@@ -131,6 +133,7 @@ func _ready() -> void:
 		hurt_audio_cooldown
 	)
 	_sync_survivability_state()
+	_pickup_runtime.initialize(keys, _has_night_vision)
 	stamina = maximum_stamina
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GameState.register_player(self)
@@ -266,19 +269,17 @@ func try_interact() -> void:
 	interaction_ray.force_raycast_update()
 	if not interaction_ray.is_colliding():
 		return
-	var target := _resolve_interactable(interaction_ray.get_collider())
-	if target != null and target.has_method("interact"):
-		target.call("interact", self)
+	_interaction_runtime.try_interact(interaction_ray.get_collider(), self)
 
 
 func get_interaction_prompt() -> String:
 	interaction_ray.force_raycast_update()
 	if not interaction_ray.is_colliding():
 		return ""
-	var target := _resolve_interactable(interaction_ray.get_collider())
-	if target != null and target.has_method("get_interaction_text"):
-		return str(target.call("get_interaction_text", self))
-	return ""
+	return _interaction_runtime.get_interaction_prompt(
+		interaction_ray.get_collider(),
+		self
+	)
 
 
 func collect_pickup(
@@ -286,89 +287,74 @@ func collect_pickup(
 	amount: int,
 	source_pickup: Node3D = null
 ) -> bool:
-	match pickup_type:
-		&"health":
-			_sync_survivability_runtime_from_public()
-			var collected_health := _survivability_runtime.collect_health(amount)
-			_sync_survivability_state()
-			if collected_health <= 0:
-				return false
-			GameState.notify_pickup(tr("PICKUP_HEALTH_FORMAT") % collected_health, &"health")
-		&"armor":
-			_sync_survivability_runtime_from_public()
-			var collected_armor := _survivability_runtime.collect_armor(amount)
-			_sync_survivability_state()
-			if collected_armor <= 0:
-				return false
-			GameState.notify_pickup(tr("PICKUP_ARMOR_FORMAT") % collected_armor, &"armor")
-		&"bullets", &"shells", &"rifle_ammo", &"mp90_ammo":
-			var collected_ammo := int(weapon_controller.call("add_ammo", pickup_type, amount))
-			if collected_ammo <= 0:
-				return false
-			var ammo_name := tr("AMMO_9X19")
-			if pickup_type == &"shells":
-				ammo_name = tr("AMMO_12GA")
-			elif pickup_type == &"rifle_ammo":
-				ammo_name = tr("AMMO_762")
-			elif pickup_type == &"mp90_ammo":
-				ammo_name = tr("AMMO_57")
-			GameState.notify_pickup(tr("PICKUP_AMMO_FORMAT") % [ammo_name, collected_ammo], &"ammo")
-		&"p01", &"p07", &"p14", &"p20", &"sg04", &"sg09", &"sg15":
-			if not _collect_loadout_weapon_pickup(pickup_type, amount, source_pickup):
-				return false
-		&"vx47":
-			weapon_controller.call("unlock_weapon", &"vx47", amount)
-			GameState.notify_pickup(tr("PICKUP_RIFLE_ACTIVE"), &"weapon")
-		&"mp90":
-			weapon_controller.call("unlock_weapon", &"mp90", amount)
-			GameState.notify_pickup(tr("PICKUP_MP90_ACTIVE"), &"weapon")
-		&"night_vision":
-			if _has_night_vision:
-				return false
-			_has_night_vision = true
-			_set_night_vision_enabled(false, false)
-			GameState.notify_pickup(
-				tr("PICKUP_NIGHT_VISION"),
-				&"equipment"
-			)
-		&"key_blue":
-			if has_key(&"blue"):
-				return false
-			keys.append(&"blue")
-			GameState.publish_keys(keys)
-			GameState.notify_pickup(tr("KEY_BLUE"), &"key")
-		&"key_red":
-			if has_key(&"red"):
-				return false
-			keys.append(&"red")
-			GameState.publish_keys(keys)
-			GameState.notify_pickup(tr("KEY_RED"), &"key")
-			# Anahtar toplama artık görev metnini değiştirmez; ilerleme kapı/oyun akışı üzerinden gösterilir.
-		&"key_yellow":
-			if has_key(&"yellow"):
-				return false
-			keys.append(&"yellow")
-			GameState.publish_keys(keys)
-			GameState.notify_pickup(tr("KEY_YELLOW"), &"key")
-		_:
-			return false
+	_sync_pickup_runtime_from_public()
+	_sync_survivability_runtime_from_public()
+	var result := _pickup_runtime.collect_pickup(
+		pickup_type,
+		amount,
+		_survivability_runtime,
+		weapon_controller
+	)
+	_sync_pickup_state()
+	_sync_survivability_state()
+	if not bool(result.get("success", false)):
+		return false
+	_apply_pickup_feedback(result, source_pickup)
 	broadcast_state()
 	return true
 
 
-func _collect_loadout_weapon_pickup(
-	weapon_id: StringName,
-	bonus_ammo: int,
-	source_pickup: Node3D
-) -> bool:
-	var result := weapon_controller.call(
-		"equip_world_weapon",
-		weapon_id,
-		bonus_ammo
-	) as Dictionary
-	if not bool(result.get("success", false)):
-		return false
+func _apply_pickup_feedback(result: Dictionary, source_pickup: Node3D) -> void:
+	var kind := StringName(str(result.get("kind", "")))
+	var pickup_type := StringName(str(result.get("pickup_type", "")))
+	var collected_amount := int(result.get("collected_amount", 0))
+	match kind:
+		&"health":
+			GameState.notify_pickup(tr("PICKUP_HEALTH_FORMAT") % collected_amount, &"health")
+		&"armor":
+			GameState.notify_pickup(tr("PICKUP_ARMOR_FORMAT") % collected_amount, &"armor")
+		&"ammo":
+			GameState.notify_pickup(
+				tr("PICKUP_AMMO_FORMAT") % [_ammo_display_name(pickup_type), collected_amount],
+				&"ammo"
+			)
+		&"world_weapon":
+			_apply_world_weapon_pickup_feedback(result, source_pickup)
+		&"direct_weapon":
+			if pickup_type == &"vx47":
+				GameState.notify_pickup(tr("PICKUP_RIFLE_ACTIVE"), &"weapon")
+			elif pickup_type == &"mp90":
+				GameState.notify_pickup(tr("PICKUP_MP90_ACTIVE"), &"weapon")
+		&"equipment":
+			_set_night_vision_enabled(false, false)
+			GameState.notify_pickup(tr("PICKUP_NIGHT_VISION"), &"equipment")
+		&"key":
+			GameState.publish_keys(keys)
+			match StringName(str(result.get("key_id", ""))):
+				&"blue":
+					GameState.notify_pickup(tr("KEY_BLUE"), &"key")
+				&"red":
+					GameState.notify_pickup(tr("KEY_RED"), &"key")
+				&"yellow":
+					GameState.notify_pickup(tr("KEY_YELLOW"), &"key")
 
+
+func _ammo_display_name(ammo_type: StringName) -> String:
+	match ammo_type:
+		&"shells":
+			return tr("AMMO_12GA")
+		&"rifle_ammo":
+			return tr("AMMO_762")
+		&"mp90_ammo":
+			return tr("AMMO_57")
+	return tr("AMMO_9X19")
+
+
+func _apply_world_weapon_pickup_feedback(
+	result: Dictionary,
+	source_pickup: Node3D
+) -> void:
+	var weapon_id := StringName(str(result.get("weapon_id", "")))
 	var displaced_weapon_id := StringName(str(result.get("displaced_weapon_id", "")))
 	var selected_definition := weapon_controller.call(
 		"get_weapon_definition",
@@ -379,11 +365,10 @@ func _collect_loadout_weapon_pickup(
 		selected_name = tr(selected_definition.display_name)
 
 	if displaced_weapon_id != &"":
-		var drop_position := _get_weapon_drop_position(source_pickup)
 		call_deferred(
 			"_spawn_dropped_weapon_pickup",
 			displaced_weapon_id,
-			drop_position
+			_get_weapon_drop_position(source_pickup)
 		)
 		var displaced_definition := weapon_controller.call(
 			"get_weapon_definition",
@@ -396,7 +381,7 @@ func _collect_loadout_weapon_pickup(
 			tr("PICKUP_SIDEARM_SWAP_FORMAT") % [selected_name, displaced_name],
 			&"weapon"
 		)
-		return true
+		return
 
 	match weapon_id:
 		&"p01":
@@ -409,7 +394,6 @@ func _collect_loadout_weapon_pickup(
 			GameState.notify_pickup(tr("PICKUP_P20_ACTIVE"), &"weapon")
 		&"sg04", &"sg09", &"sg15":
 			GameState.notify_pickup(tr("PICKUP_SHOTGUN_ACTIVE"), &"weapon")
-	return true
 
 
 func _get_weapon_drop_position(source_pickup: Node3D) -> Vector3:
@@ -610,7 +594,8 @@ func _clear_impact_camera_shake() -> void:
 
 
 func has_key(key_id: StringName) -> bool:
-	return keys.has(key_id)
+	_sync_pickup_runtime_from_public()
+	return _pickup_runtime.has_key(key_id)
 
 
 func get_view_camera() -> Camera3D:
@@ -671,6 +656,15 @@ func _publish_recoil_to_hud() -> void:
 		)
 
 
+func _sync_pickup_runtime_from_public() -> void:
+	_pickup_runtime.sync_state(keys, _has_night_vision)
+
+
+func _sync_pickup_state() -> void:
+	keys = _pickup_runtime.get_keys()
+	_has_night_vision = _pickup_runtime.owns_night_vision()
+
+
 func _sync_survivability_runtime_from_public() -> void:
 	_survivability_runtime.sync_state(health, armor, is_dead)
 
@@ -715,16 +709,17 @@ func restore_run_state(state: Dictionary) -> void:
 	is_sprinting = false
 	_movement_runtime.reset_stamina_recovery_delay()
 	_set_crouching(bool(state.get("is_crouching", false)))
-	keys.clear()
 	var stored_keys: Array = state.get("keys", []) as Array
-	for stored_key: Variant in stored_keys:
-		keys.append(StringName(str(stored_key)))
+	_pickup_runtime.restore_state(
+		stored_keys,
+		bool(state.get("night_vision_owned", false))
+	)
+	_sync_pickup_state()
 	if state.has("position"):
 		global_position = state["position"] as Vector3
 	rotation.y = float(state.get("rotation_y", rotation.y))
 	var weapon_state: Dictionary = state.get("weapon_state", {}) as Dictionary
 	weapon_controller.call("restore_state", weapon_state)
-	_has_night_vision = bool(state.get("night_vision_owned", false))
 	_set_night_vision_enabled(
 		bool(state.get("night_vision_enabled", false)),
 		false
@@ -930,16 +925,6 @@ func _update_aiming(delta: float) -> void:
 			_default_fov
 		)
 	camera.fov = move_toward(camera.fov, target_fov, ads_transition_speed * delta)
-
-
-func _resolve_interactable(collider: Object) -> Node:
-	if collider is Node and collider.has_method("interact"):
-		return collider as Node
-	if collider is Node:
-		var parent := (collider as Node).get_parent()
-		if parent != null and parent.has_method("interact"):
-			return parent
-	return null
 
 
 func _die() -> void:

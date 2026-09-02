@@ -99,6 +99,16 @@ jobs:
             echo "::error::Player survivability runtime log contains an error or invalid UID"
             exit 1
           fi
+      - name: Run player interaction pickup runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/player-interaction-pickup-runtime.log"
+          godot --headless --path . tests/player_interaction_pickup_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Player interaction/pickup runtime log contains an error or invalid UID"
+            exit 1
+          fi
       - name: Run Warden doorway runtime regression
         shell: bash
         run: |
