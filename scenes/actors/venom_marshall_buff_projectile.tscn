@@ -1,7 +1,7 @@
 [gd_scene load_steps=22 format=3 uid="uid://bvenombufffield1"]
 
 [ext_resource type="Script" uid="uid://bvenombuffproject1" path="res://scripts/actors/venom_marshall_buff_projectile.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bvenomeffectsheet1" path="res://assets/enemies/venom_marshall/venom_marshall_effects_spritesheet.png" id="2_effects"]
+[ext_resource type="Texture2D" uid="uid://k0e1eq0x583e" path="res://assets/enemies/venom_marshall/venom_marshall_effects_spritesheet.png" id="2_effects"]
 [ext_resource type="AudioStream" uid="uid://qts3nsfvylq2" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="3_deploy_audio"]
 
 [sub_resource type="AtlasTexture" id="Atlas_flight_1"]
