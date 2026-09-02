@@ -32,13 +32,13 @@ jobs:
             echo "::endgroup::"
           done < <(find tests -maxdepth 1 -name '*_audit.py' -print | sort)
           exit "$status"
-      - name: Commit fixes and remove one-shot helpers
+      - name: Commit gameplay fixes
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .github/workflows/apply-vex-fixes-once.yml .github/apply_vex_fixes_once.py
-          git add scripts/player/weapon_controller.gd scripts/player/player.gd scripts/autoload/game_state.gd scripts/levels/base_level.gd Enemies_VEX.md tests/static_audit.py tests/weapon_pause_reload_runtime_test.gd tests/weapon_pause_reload_runtime_test.gd.uid tests/weapon_pause_reload_runtime_test.tscn .github/workflows/validate.yml
+          git rm .github/apply_vex_fixes_once.py
+          git add scripts/player/weapon_controller.gd scripts/player/player.gd scripts/autoload/game_state.gd scripts/levels/base_level.gd Enemies_VEX.md tests/static_audit.py tests/weapon_pause_reload_runtime_test.gd tests/weapon_pause_reload_runtime_test.gd.uid tests/weapon_pause_reload_runtime_test.tscn
           git diff --cached --check
           git commit -m "Fix pause reload and sync player contracts"
           git push origin HEAD:main
