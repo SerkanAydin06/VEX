@@ -1,6 +1,8 @@
 class_name VexEnemyLungeBase
 extends "res://scripts/actors/enemy_base.gd"
 
+const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
+
 @export_category("01 - Kimlik, Can ve Zorluk")
 ## Kayıt ve yenilgi takibinde kullanılan benzersiz yaratık kimliğidir.
 @export var enemy_id: StringName = &"enemy"
@@ -393,11 +395,20 @@ func _physics_process(delta: float) -> void:
 			_reset_navigation_path()
 		else:
 			var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
-			if forced_distance < _forced_damage_best_distance - damage_pursuit_min_progress:
-				_forced_damage_best_distance = forced_distance
-				_forced_damage_stall_remaining = damage_pursuit_stall_timeout
-			else:
-				_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
+			var pursuit_progress := EnemyCombatRuntime.damage_pursuit_progress(
+				forced_distance,
+				_forced_damage_best_distance,
+				damage_pursuit_min_progress,
+				_forced_damage_stall_remaining,
+				damage_pursuit_stall_timeout,
+				delta
+			)
+			_forced_damage_best_distance = float(
+				pursuit_progress.get("best_distance", _forced_damage_best_distance)
+			)
+			_forced_damage_stall_remaining = float(
+				pursuit_progress.get("stall_remaining", _forced_damage_stall_remaining)
+			)
 			if EnemyNavigationRuntime.has_reached_walkable_target(
 				self,
 				_forced_damage_target,
@@ -417,9 +428,11 @@ func _physics_process(delta: float) -> void:
 				_chase_position(delta, _forced_damage_target)
 				move_and_slide()
 				_update_chase_detour()
-				if (
-					_forced_damage_stall_remaining <= 0.0
-					and (_navigation_path.is_empty() or _navigation_path_index >= _navigation_path.size())
+				if EnemyCombatRuntime.should_abandon_damage_pursuit(
+					_forced_damage_stall_remaining,
+					_navigation_path.is_empty(),
+					_navigation_path_index,
+					_navigation_path.size()
 				):
 					_has_forced_damage_target = false
 					_damage_reaction_remaining = 0.0
@@ -446,9 +459,12 @@ func _physics_process(delta: float) -> void:
 			active_sight_range
 		)
 		# Yakın dövüşçü oyuncunun dibindeyken cache yüzünden saldırı kaçıramaz.
-		if (
-			combat_role == EnemyCombatProfiles.Role.CLOSE
-			and player_distance <= attack_range + attack_range_tolerance
+		if EnemyCombatRuntime.should_check_close_combat_visibility(
+			combat_role == EnemyCombatProfiles.Role.CLOSE,
+			true,
+			player_distance,
+			attack_range,
+			attack_range_tolerance
 		):
 			can_see_player = _check_line_of_sight()
 			_cached_player_visible = can_see_player
@@ -467,7 +483,7 @@ func _physics_process(delta: float) -> void:
 			if not was_aggro and alert_allies_on_detection:
 				_alert_nearby_allies(_last_seen_position)
 
-			if player_distance <= attack_range:
+			if EnemyCombatRuntime.should_start_attack(player_distance, attack_range):
 				_face_player()
 				_attempt_attack()
 				move_and_slide()
@@ -778,11 +794,17 @@ func _get_cached_player_visibility(
 
 
 func _can_handoff_damage_pursuit_to_combat() -> bool:
-	if _forced_damage_commit_remaining > 0.0:
-		return false
-	if _player == null or not is_instance_valid(_player):
-		return false
-	if _horizontal_distance(global_position, _player.global_position) > attack_range + attack_range_tolerance:
+	var player_valid := _player != null and is_instance_valid(_player)
+	var player_distance := INF
+	if player_valid:
+		player_distance = _horizontal_distance(global_position, _player.global_position)
+	if not EnemyCombatRuntime.can_attempt_damage_handoff(
+		_forced_damage_commit_remaining,
+		player_valid,
+		player_distance,
+		attack_range,
+		attack_range_tolerance
+	):
 		return false
 	if not _check_line_of_sight():
 		return false
@@ -795,48 +817,50 @@ func _can_handoff_damage_pursuit_to_combat() -> bool:
 	_search_remaining = search_duration
 	return true
 
-
 func _update_attack_lunge(delta: float) -> void:
-	if (
-		_attack_lunge_remaining <= 0.0
-		or _runtime_attack_lunge_speed <= 0.0
-		or _player == null
-		or not is_instance_valid(_player)
-	):
-		_attack_lunge_remaining = 0.0
-		velocity.x = move_toward(velocity.x, 0.0, delta * braking_acceleration)
-		velocity.z = move_toward(velocity.z, 0.0, delta * braking_acceleration)
-		return
-
-	_attack_lunge_remaining = maxf(0.0, _attack_lunge_remaining - delta)
-	var direction := _player.global_position - global_position
-	direction.y = 0.0
-	var distance := direction.length()
-	if distance <= attack_lunge_stop_distance or distance <= 0.001:
-		velocity.x = 0.0
-		velocity.z = 0.0
-		return
-
-	_face_position(_player.global_position)
-	direction /= distance
-	velocity.x = move_toward(
-		velocity.x,
-		direction.x * _runtime_attack_lunge_speed,
-		delta * attack_lunge_acceleration
+	var player_valid := _player != null and is_instance_valid(_player)
+	var player_position := _player.global_position if player_valid else Vector3.ZERO
+	var plan := EnemyLungeRuntime.attack_lunge_plan(
+		global_position,
+		player_position,
+		player_valid,
+		_attack_lunge_remaining,
+		_runtime_attack_lunge_speed,
+		attack_lunge_stop_distance,
+		delta
 	)
-	velocity.z = move_toward(
-		velocity.z,
-		direction.z * _runtime_attack_lunge_speed,
-		delta * attack_lunge_acceleration
-	)
-
+	_attack_lunge_remaining = float(plan.get("remaining", 0.0))
+	var mode := int(plan.get("mode", EnemyLungeRuntime.MODE_BRAKE))
+	match mode:
+		EnemyLungeRuntime.MODE_STOP:
+			velocity.x = 0.0
+			velocity.z = 0.0
+		EnemyLungeRuntime.MODE_MOVE:
+			var facing_direction: Vector3 = plan.get("facing_direction", Vector3.ZERO)
+			var desired_velocity: Vector3 = plan.get("desired_velocity", Vector3.ZERO)
+			_facing_direction = facing_direction
+			rotation.y = atan2(-facing_direction.x, -facing_direction.z)
+			velocity.x = move_toward(
+				velocity.x,
+				desired_velocity.x,
+				delta * attack_lunge_acceleration
+			)
+			velocity.z = move_toward(
+				velocity.z,
+				desired_velocity.z,
+				delta * attack_lunge_acceleration
+			)
+		_:
+			velocity.x = move_toward(velocity.x, 0.0, delta * braking_acceleration)
+			velocity.z = move_toward(velocity.z, 0.0, delta * braking_acceleration)
 
 func _attempt_attack() -> void:
 	if _attack_locked or _dead:
 		return
 	if _player == null or not is_instance_valid(_player):
 		return
-	if _horizontal_distance(global_position, _player.global_position) > attack_range:
+	var player_distance := _horizontal_distance(global_position, _player.global_position)
+	if not EnemyCombatRuntime.should_start_attack(player_distance, attack_range):
 		return
 	if not _check_line_of_sight():
 		return
@@ -844,7 +868,7 @@ func _attempt_attack() -> void:
 	_attack_generation += 1
 	var attack_generation := _attack_generation
 	_attack_locked = true
-	_attack_lunge_remaining = minf(
+	_attack_lunge_remaining = EnemyLungeRuntime.initial_attack_lunge_duration(
 		attack_lunge_duration,
 		_runtime_attack_windup
 	)
@@ -861,20 +885,31 @@ func _attempt_attack() -> void:
 	velocity.z = 0.0
 
 	if _player != null and is_instance_valid(_player):
-		var still_in_range: bool = (
-			_horizontal_distance(global_position, _player.global_position)
-			<= attack_range + attack_range_tolerance
-		)
-		if still_in_range and _check_line_of_sight() and _player.has_method("take_damage"):
-			_player.call("take_damage", _runtime_attack_damage, global_position, self)
+		player_distance = _horizontal_distance(global_position, _player.global_position)
+		if EnemyCombatRuntime.is_within_attack_range(
+			player_distance,
+			attack_range,
+			attack_range_tolerance
+		):
+			var has_line_of_sight := _check_line_of_sight()
+			if (
+				EnemyCombatRuntime.should_resolve_attack_after_windup(
+					player_distance,
+					attack_range,
+					attack_range_tolerance,
+					has_line_of_sight
+				)
+				and _player.has_method("take_damage")
+			):
+				_player.call("take_damage", _runtime_attack_damage, global_position, self)
 
 	# Darbe penceresi bittiğinde saldırı karesini cooldown boyunca dondurma.
 	# Lunge ailesi toparlanma sırasında yerinde beklediği için nötr idle pozu kullanır.
 	_play_animation(&"idle")
 
-	var remaining: float = maxf(
-		0.0,
-		_runtime_attack_cooldown - _runtime_attack_windup
+	var remaining := EnemyCombatRuntime.remaining_attack_cooldown(
+		_runtime_attack_cooldown,
+		_runtime_attack_windup
 	)
 	await get_tree().create_timer(remaining).timeout
 	if not is_inside_tree() or _dead or attack_generation != _attack_generation:
@@ -882,12 +917,12 @@ func _attempt_attack() -> void:
 	_attack_locked = false
 
 	if _player != null and is_instance_valid(_player):
-		if _horizontal_distance(global_position, _player.global_position) <= attack_range:
+		player_distance = _horizontal_distance(global_position, _player.global_position)
+		if EnemyCombatRuntime.should_start_attack(player_distance, attack_range):
 			_face_player()
 			_play_animation(&"idle")
 			return
 	_play_animation(&"walk")
-
 
 func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = null) -> void:
 	if _dead or amount <= 0:

@@ -17,8 +17,32 @@ static func resolve_attack_target(
 	return {"valid": false, "position": enemy_position}
 
 
+static func is_within_attack_range(
+	distance_to_target: float,
+	attack_range: float,
+	attack_range_tolerance: float = 0.0
+) -> bool:
+	return distance_to_target <= attack_range + attack_range_tolerance
+
+
 static func should_start_attack(distance_to_target: float, attack_range: float) -> bool:
-	return distance_to_target <= attack_range
+	return is_within_attack_range(distance_to_target, attack_range)
+
+
+static func should_resolve_attack_after_windup(
+	distance_to_player: float,
+	attack_range: float,
+	attack_range_tolerance: float,
+	has_line_of_sight: bool
+) -> bool:
+	return (
+		is_within_attack_range(
+			distance_to_player,
+			attack_range,
+			attack_range_tolerance
+		)
+		and has_line_of_sight
+	)
 
 
 static func should_fire_after_windup(
@@ -27,9 +51,11 @@ static func should_fire_after_windup(
 	attack_range_tolerance: float,
 	has_line_of_sight: bool
 ) -> bool:
-	return (
-		distance_to_player <= attack_range + attack_range_tolerance
-		and has_line_of_sight
+	return should_resolve_attack_after_windup(
+		distance_to_player,
+		attack_range,
+		attack_range_tolerance,
+		has_line_of_sight
 	)
 
 
