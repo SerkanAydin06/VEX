@@ -557,12 +557,16 @@ func restore_state(state: Dictionary) -> void:
 				if unlocked_weapons.is_empty():
 					unlocked_weapons.append(weapon_id)
 				break
+	for carried_weapon_id: StringName in unlocked_weapons:
+		if not acquired_weapons.has(carried_weapon_id):
+			acquired_weapons.append(carried_weapon_id)
 	magazines = _canonicalize_weapon_dictionary((state.get("magazines", magazines) as Dictionary).duplicate(true))
 	reserve_ammo = _migrate_legacy_ammo_dictionary(
 		(state.get("reserve_ammo", reserve_ammo) as Dictionary).duplicate(true)
 	)
 	current_weapon_id = canonical_weapon_id(StringName(str(state.get("current_weapon_id", initial_weapon_id))))
 	upgrade_levels = _canonicalize_weapon_dictionary((state.get("upgrade_levels", upgrade_levels) as Dictionary).duplicate(true))
+	_sanitize_restored_weapon_state()
 	flashlight_enabled = bool(state.get("flashlight_enabled", false))
 	if not unlocked_weapons.has(current_weapon_id):
 		current_weapon_id = (
@@ -593,6 +597,42 @@ func _migrate_legacy_ammo_dictionary(source: Dictionary) -> Dictionary:
 		if definition != null and not migrated.has(definition.ammo_type):
 			migrated[definition.ammo_type] = 0
 	return migrated
+
+
+func _sanitize_restored_weapon_state() -> void:
+	var sanitized_upgrade_levels: Dictionary = {}
+	for definition: WeaponDefinition in weapon_definitions:
+		if definition == null:
+			continue
+		var maximum_upgrade_level := get_weapon_upgrade_track(definition.weapon_id).size()
+		sanitized_upgrade_levels[definition.weapon_id] = clampi(
+			int(upgrade_levels.get(definition.weapon_id, 0)),
+			0,
+			maximum_upgrade_level
+		)
+	upgrade_levels = sanitized_upgrade_levels
+
+	var sanitized_magazines: Dictionary = {}
+	for definition: WeaponDefinition in weapon_definitions:
+		if definition == null:
+			continue
+		sanitized_magazines[definition.weapon_id] = clampi(
+			int(magazines.get(definition.weapon_id, 0)),
+			0,
+			_effective_magazine_size(definition)
+		)
+	magazines = sanitized_magazines
+
+	var sanitized_reserve_ammo: Dictionary = {}
+	for definition: WeaponDefinition in weapon_definitions:
+		if definition == null or sanitized_reserve_ammo.has(definition.ammo_type):
+			continue
+		sanitized_reserve_ammo[definition.ammo_type] = clampi(
+			int(reserve_ammo.get(definition.ammo_type, 0)),
+			0,
+			_get_reserve_ammo_capacity(definition.ammo_type)
+		)
+	reserve_ammo = sanitized_reserve_ammo
 
 
 func toggle_weapon_flashlight() -> void:
