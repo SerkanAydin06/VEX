@@ -29,13 +29,14 @@ extends Control
 
 var _ambient_time := 0.0
 var _last_clock_second := -1
+var _continue_error_visible := false
 
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().paused = false
 	new_game_button.pressed.connect(_on_new_game_pressed)
-	continue_button.pressed.connect(GameState.continue_game)
+	continue_button.pressed.connect(_on_continue_pressed)
 	settings_button.pressed.connect(_open_settings)
 	credits_button.pressed.connect(_open_credits)
 	quit_button.pressed.connect(_quit_game)
@@ -99,6 +100,15 @@ func _on_new_game_pressed() -> void:
 		confirm_no_button.grab_focus()
 	else:
 		GameState.start_new_game()
+
+
+func _on_continue_pressed() -> void:
+	if GameState.continue_game():
+		return
+	_continue_error_visible = true
+	continue_button.disabled = true
+	_update_mission_data(SettingsManager.difficulty)
+	continue_button.grab_focus()
 
 
 func _confirm_new_game() -> void:
@@ -186,6 +196,9 @@ func _update_clock(force: bool) -> void:
 
 
 func _update_mission_data(_difficulty: int) -> void:
+	if _continue_error_visible:
+		mission_data.text = GameState.get_continue_failure_message()
+		return
 	mission_data.text = tr("MAIN_MISSION_DATA") % [
 		campaign_level_count,
 		campaign_secret_count,
