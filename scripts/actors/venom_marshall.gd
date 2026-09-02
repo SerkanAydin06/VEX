@@ -61,7 +61,8 @@ func _attempt_attack() -> void:
 		return
 
 	if use_buff:
-		_fire_buff_projectile(support_plan.get("position", global_position) as Vector3)
+		var support_position: Vector3 = support_plan.get("position", global_position)
+		_fire_buff_projectile(support_position)
 		var runtime_buff_cooldown := maxf(0.1, buff_skill_cooldown * cooldown_scale)
 		_buff_ready_at_msec = Time.get_ticks_msec() + int(round(runtime_buff_cooldown * 1000.0))
 	elif _player != null and is_instance_valid(_player):
