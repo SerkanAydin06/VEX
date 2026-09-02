@@ -69,6 +69,16 @@ jobs:
             echo "::error::Godot integrity log contains an error or invalid UID"
             exit 1
           fi
+      - name: Run player movement runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/player-movement-runtime.log"
+          godot --headless --path . tests/player_movement_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Player movement runtime log contains an error or invalid UID"
+            exit 1
+          fi
       - name: Run Warden doorway runtime regression
         shell: bash
         run: |
