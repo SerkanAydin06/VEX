@@ -50,6 +50,7 @@ def main() -> int:
     view = read("scenes/ui/weapons/sg04_view.tscn")
     weapon = read("resources/weapons/sg04.tres")
     controller = read("scripts/player/weapon_controller.gd")
+    reload_runtime = read("scripts/player/weapon_reload_runtime.gd")
     hitscan = read("scripts/player/weapon_hitscan_runtime.gd")
     presenter = read("scripts/ui/hud_weapon_presenter.gd")
     hud = read("scripts/ui/hud.gd")
@@ -106,15 +107,11 @@ def main() -> int:
         require(weapon, needle, label)
     require(weapon, 'uid="uid://88g0maxqulm" path="res://assets/weapons/sg04/sg04_side.png"', "SG04 side UID/path")
 
+    # Controller owns orchestration/interrupt state; reload runtime owns shell
+    # timing, per-shell ammo transfer and reload HUD action sequencing.
     for needle, label in [
         ('if weapon.weapon_id == &"sg04":', "SG04 özel reload dalı"),
-        ('await _reload_sg04_shells(weapon, magazine_size, magazine, reserve)', "shell reload çağrısı"),
-        ('_play_hud_action(&"reload_shell")', "1-2-3 shell cycle aksiyonu"),
-        ('_play_hud_action(&"reload_finish")', "4. kare final aksiyonu"),
-        ('weapon.reload_duration * 0.75 * reload_time_multiplier', "1-2-3 süre oranı"),
-        ('weapon.reload_duration * 0.25 * reload_time_multiplier', "4. kare süre oranı"),
-        ('magazines[weapon.weapon_id] = current_magazine + 1', "her döngüde tek fişek yükleme"),
-        ('reserve_ammo[weapon.ammo_type] = current_reserve - 1', "her döngüde tek rezerv azaltma"),
+        ('VexWeaponReloadRuntime.reload_sg04_shells(', "shell reload runtime çağrısı"),
         ('func get_reload_animation_speed_multiplier(', "reload upgrade görsel hız senkronu"),
         ('func _interrupt_sg04_reload_and_fire()', "ateşle reload kesme"),
         ('_sg04_reload_fire_queued = true', "cooldown sırasında ateş tıklaması queue"),
@@ -123,6 +120,17 @@ def main() -> int:
         ('VexWeaponHitscanRuntime.shoot(', "hitscan runtime delegasyonu"),
     ]:
         require(controller, needle, label)
+    for needle, label in [
+        ('play_action.call(&"reload_shell")', "1-2-3 shell cycle aksiyonu"),
+        ('play_action.call(&"reload_finish")', "4. kare final aksiyonu"),
+        ('weapon.reload_duration * 0.75 * multiplier', "1-2-3 süre oranı"),
+        ('weapon.reload_duration * 0.25 * multiplier', "4. kare süre oranı"),
+        ('magazines[weapon.weapon_id] = current_magazine + 1', "her döngüde tek fişek yükleme"),
+        ('reserve_ammo[weapon.ammo_type] = current_reserve - 1', "her döngüde tek rezerv azaltma"),
+        ('RESULT_INTERRUPTED', "generation tabanlı async iptal sonucu"),
+        ('int(get_generation.call()) != reload_generation', "generation guard"),
+    ]:
+        require(reload_runtime, needle, label)
 
     for needle, label in [
         ('spread_multiplier = weapon.ads_spread_multiplier', "silah-bazlı ADS spread"),
