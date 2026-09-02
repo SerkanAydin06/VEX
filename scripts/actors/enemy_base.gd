@@ -6,6 +6,7 @@ extends CharacterBody3D
 # burada tutulur. Hareket state machine'i bu sınıfta bulunmaz.
 const EnemyCombatProfiles = preload("res://scripts/actors/enemy_combat_profiles.gd")
 const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_runtime.gd")
+const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd")
 
 var _damage_shake_remaining := 0.0
 var _damage_shake_duration := 0.0

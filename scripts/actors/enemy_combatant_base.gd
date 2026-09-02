@@ -726,14 +726,18 @@ func _update_behavior(delta: float) -> void:
 	# animasyonunu veya saldırı sonrası hareketini kesmez.
 	if _attack_locked:
 		state = State.ATTACK
-		var attack_target := global_position
-		var has_attack_target := false
-		if _player_visible and _player != null and is_instance_valid(_player):
-			attack_target = _player.global_position
-			has_attack_target = true
-		elif _has_last_seen_position:
-			attack_target = _last_seen_position
-			has_attack_target = true
+		var player_valid := _player != null and is_instance_valid(_player)
+		var player_position := _player.global_position if player_valid else Vector3.ZERO
+		var attack_target_result := EnemyCombatRuntime.resolve_attack_target(
+			global_position,
+			_player_visible,
+			player_valid,
+			player_position,
+			_has_last_seen_position,
+			_last_seen_position
+		)
+		var has_attack_target := bool(attack_target_result.get("valid", false))
+		var attack_target: Vector3 = attack_target_result.get("position", global_position)
 
 		if not has_attack_target:
 			_stop_horizontal_motion()
@@ -758,11 +762,20 @@ func _update_behavior(delta: float) -> void:
 			_clear_path()
 		else:
 			var forced_distance := _horizontal_distance(global_position, _forced_damage_target)
-			if forced_distance < _forced_damage_best_distance - damage_pursuit_min_progress:
-				_forced_damage_best_distance = forced_distance
-				_forced_damage_stall_remaining = damage_pursuit_stall_timeout
-			else:
-				_forced_damage_stall_remaining = maxf(0.0, _forced_damage_stall_remaining - delta)
+			var pursuit_progress := EnemyCombatRuntime.damage_pursuit_progress(
+				forced_distance,
+				_forced_damage_best_distance,
+				damage_pursuit_min_progress,
+				_forced_damage_stall_remaining,
+				damage_pursuit_stall_timeout,
+				delta
+			)
+			_forced_damage_best_distance = float(
+				pursuit_progress.get("best_distance", _forced_damage_best_distance)
+			)
+			_forced_damage_stall_remaining = float(
+				pursuit_progress.get("stall_remaining", _forced_damage_stall_remaining)
+			)
 			if _has_reached_walkable_target(_forced_damage_target, waypoint_reach_distance):
 				_has_forced_damage_target = false
 				_damage_reaction_remaining = 0.0
@@ -772,9 +785,11 @@ func _update_behavior(delta: float) -> void:
 				return
 			state = State.CHASE
 			_navigate_to(_forced_damage_target, delta)
-			if (
-				_forced_damage_stall_remaining <= 0.0
-				and (_current_path.is_empty() or _path_index >= _current_path.size())
+			if EnemyCombatRuntime.should_abandon_damage_pursuit(
+				_forced_damage_stall_remaining,
+				_current_path.is_empty(),
+				_path_index,
+				_current_path.size()
 			):
 				_has_forced_damage_target = false
 				_damage_reaction_remaining = 0.0
@@ -801,7 +816,7 @@ func _update_behavior(delta: float) -> void:
 			_reposition_for_clear_shot(delta)
 			return
 		var distance_to_player := _horizontal_distance(global_position, _last_seen_position)
-		if distance_to_player <= attack_range:
+		if EnemyCombatRuntime.should_start_attack(distance_to_player, attack_range):
 			state = State.ATTACK
 			_face_toward_position(_last_seen_position)
 			_stop_horizontal_motion()
@@ -836,11 +851,17 @@ func _update_behavior(delta: float) -> void:
 
 
 func _refresh_close_combat_visibility() -> void:
-	if combat_role != EnemyCombatProfiles.Role.CLOSE:
-		return
-	if _player == null or not is_instance_valid(_player):
-		return
-	if _horizontal_distance(global_position, _player.global_position) > attack_range + attack_range_tolerance:
+	var player_valid := _player != null and is_instance_valid(_player)
+	var player_distance := INF
+	if player_valid:
+		player_distance = _horizontal_distance(global_position, _player.global_position)
+	if not EnemyCombatRuntime.should_check_close_combat_visibility(
+		combat_role == EnemyCombatProfiles.Role.CLOSE,
+		player_valid,
+		player_distance,
+		attack_range,
+		attack_range_tolerance
+	):
 		return
 	if not _check_line_of_sight():
 		return
@@ -851,13 +872,18 @@ func _refresh_close_combat_visibility() -> void:
 	_last_seen_position.y = global_position.y
 	_has_last_seen_position = true
 
-
 func _can_handoff_damage_pursuit_to_combat() -> bool:
-	if _forced_damage_commit_remaining > 0.0:
-		return false
-	if _player == null or not is_instance_valid(_player):
-		return false
-	if _horizontal_distance(global_position, _player.global_position) > attack_range + attack_range_tolerance:
+	var player_valid := _player != null and is_instance_valid(_player)
+	var player_distance := INF
+	if player_valid:
+		player_distance = _horizontal_distance(global_position, _player.global_position)
+	if not EnemyCombatRuntime.can_attempt_damage_handoff(
+		_forced_damage_commit_remaining,
+		player_valid,
+		player_distance,
+		attack_range,
+		attack_range_tolerance
+	):
 		return false
 	if not _check_line_of_sight():
 		return false
@@ -868,7 +894,6 @@ func _can_handoff_damage_pursuit_to_combat() -> bool:
 	_last_seen_position.y = global_position.y
 	_has_last_seen_position = true
 	return true
-
 
 func is_pursuing_player() -> bool:
 	return state != State.DEAD and _alerted
@@ -1310,50 +1335,29 @@ func _face_toward_position(target: Vector3) -> void:
 
 
 func _move_during_attack_recovery(target: Vector3, delta: float) -> void:
-	var direction_to_target := target - global_position
-	direction_to_target.y = 0.0
-	var distance_to_target := direction_to_target.length()
-	if distance_to_target <= 0.001:
+	var plan := EnemyCombatRuntime.attack_recovery_plan(
+		global_position,
+		target,
+		combat_role == EnemyCombatProfiles.Role.CLOSE,
+		move_speed,
+		_runtime_move_speed,
+		_runtime_chase_speed,
+		attack_approach_speed,
+		attack_strafe_speed,
+		_attack_strafe_direction,
+		attack_preferred_distance,
+		attack_minimum_distance,
+		attack_recovery_strafe_scale,
+		attack_retreat_speed_scale,
+		attack_approach_distance_margin,
+		attack_approach_min_speed_scale
+	)
+	if not bool(plan.get("valid", false)):
 		_stop_horizontal_motion()
 		return
 
-	var forward_direction := direction_to_target / distance_to_target
-	var right_direction := forward_direction.cross(Vector3.UP).normalized()
-	var preferred_distance := attack_preferred_distance
-	var minimum_distance := minf(attack_minimum_distance, preferred_distance)
-	var speed_scale := _runtime_move_speed / maxf(move_speed, 0.001)
-	var desired_velocity := Vector3.ZERO
-
-	var strafe_scale := attack_recovery_strafe_scale
-	if strafe_scale > 0.0 and attack_strafe_speed > 0.0:
-		desired_velocity += (
-			right_direction
-			* attack_strafe_speed
-			* _attack_strafe_direction
-			* speed_scale
-			* strafe_scale
-		)
-
-	if combat_role == EnemyCombatProfiles.Role.CLOSE:
-		if distance_to_target > preferred_distance:
-			desired_velocity = forward_direction * _runtime_chase_speed
-	elif distance_to_target > preferred_distance + attack_approach_distance_margin:
-		var approach_speed := maxf(
-			attack_approach_speed * speed_scale,
-			_runtime_move_speed * attack_approach_min_speed_scale
-		)
-		desired_velocity += forward_direction * approach_speed
-	elif distance_to_target < minimum_distance:
-		desired_velocity -= (
-			forward_direction
-			* _runtime_move_speed
-			* attack_retreat_speed_scale
-		)
-
-	var maximum_speed := _runtime_chase_speed if combat_role == EnemyCombatProfiles.Role.CLOSE else _runtime_move_speed
-	if desired_velocity.length() > maximum_speed:
-		desired_velocity = desired_velocity.normalized() * maximum_speed
-
+	var forward_direction: Vector3 = plan.get("facing_direction", Vector3.ZERO)
+	var desired_velocity: Vector3 = plan.get("desired_velocity", Vector3.ZERO)
 	_facing_direction = forward_direction
 	rotation.y = atan2(-_facing_direction.x, -_facing_direction.z)
 	if desired_velocity.length_squared() <= 0.001:
@@ -1363,7 +1367,6 @@ func _move_during_attack_recovery(target: Vector3, delta: float) -> void:
 	velocity.x = move_toward(velocity.x, desired_velocity.x, delta * movement_acceleration)
 	velocity.z = move_toward(velocity.z, desired_velocity.z, delta * movement_acceleration)
 	_play_directional_animation(&"walk", &"walk_back")
-
 
 func _stop_horizontal_motion() -> void:
 	var braking_step := braking_acceleration * get_physics_process_delta_time()
@@ -1568,19 +1571,12 @@ func _cover_visibility_threshold() -> float:
 
 
 func _damage_source_approach_position(source_position: Vector3) -> Vector3:
-	# Oyuncu duvar kenarından ateş ettiğinde karakter merkezi fiziksel olarak
-	# düşmanın sığamayacağı kadar duvara yakın olabilir. Tam merkeze rota vermek
-	# yerine merminin geldiği açık koridora doğru küçük bir adım öne hedefle.
-	var result := source_position
-	result.y = global_position.y
-	var toward_enemy := global_position - result
-	toward_enemy.y = 0.0
-	var distance := toward_enemy.length()
-	if distance > 0.001:
-		var offset := minf(damage_approach_offset, distance * damage_approach_distance_ratio)
-		result += (toward_enemy / distance) * offset
-	return result
-
+	return EnemyCombatRuntime.damage_source_approach_position(
+		global_position,
+		source_position,
+		damage_approach_offset,
+		damage_approach_distance_ratio
+	)
 
 func _ranged_visibility_ratio_from(observer_position: Vector3) -> float:
 	return VexEnemyPerceptionRuntime.ranged_visibility_ratio_from(
@@ -1679,21 +1675,25 @@ func _attempt_attack() -> void:
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	if _player != null and is_instance_valid(_player):
-		var still_in_range := (
-			_horizontal_distance(global_position, _player.global_position)
-			<= attack_range + attack_range_tolerance
-		)
-		if still_in_range and _check_line_of_sight():
-			_fire_projectile()
+		var player_distance := _horizontal_distance(global_position, _player.global_position)
+		if player_distance <= attack_range + attack_range_tolerance:
+			var has_line_of_sight := _check_line_of_sight()
+			if EnemyCombatRuntime.should_fire_after_windup(
+				player_distance,
+				attack_range,
+				attack_range_tolerance,
+				has_line_of_sight
+			):
+				_fire_projectile()
 	_attack_windup_active = false
 	if attack_approach_speed > 0.0 or attack_strafe_speed > 0.0:
 		_play_directional_animation(&"walk", &"walk_back")
 	else:
 		_play_directional_animation(&"idle", &"idle_back")
 
-	var remaining := maxf(
-		0.0,
-		_runtime_attack_cooldown - _runtime_attack_windup
+	var remaining := EnemyCombatRuntime.remaining_attack_cooldown(
+		_runtime_attack_cooldown,
+		_runtime_attack_windup
 	)
 	await get_tree().create_timer(remaining).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
@@ -1701,7 +1701,6 @@ func _attempt_attack() -> void:
 	_attack_locked = false
 	_attack_windup_active = false
 	_play_directional_animation(&"idle", &"idle_back")
-
 
 func _fire_projectile() -> void:
 	if projectile_scene == null or _player == null or not is_instance_valid(_player):
@@ -1756,36 +1755,12 @@ func _calculate_intercept_time(
 	target_velocity: Vector3,
 	projectile_speed: float
 ) -> float:
-	var displacement := target_position - projectile_position
-	var fallback_time := displacement.length() / maxf(projectile_speed, 0.1)
-	var quadratic_a := target_velocity.length_squared() - projectile_speed * projectile_speed
-	var quadratic_b := 2.0 * displacement.dot(target_velocity)
-	var quadratic_c := displacement.length_squared()
-	if quadratic_c <= 0.0001:
-		return 0.0
-	if absf(quadratic_a) <= 0.0001:
-		if absf(quadratic_b) <= 0.0001:
-			return fallback_time
-		var linear_time := -quadratic_c / quadratic_b
-		return linear_time if linear_time > 0.0 else fallback_time
-
-	var discriminant := (
-		quadratic_b * quadratic_b
-		- 4.0 * quadratic_a * quadratic_c
+	return EnemyCombatRuntime.calculate_intercept_time(
+		projectile_position,
+		target_position,
+		target_velocity,
+		projectile_speed
 	)
-	if discriminant < 0.0:
-		return fallback_time
-	var discriminant_root := sqrt(discriminant)
-	var denominator := 2.0 * quadratic_a
-	var first_time := (-quadratic_b - discriminant_root) / denominator
-	var second_time := (-quadratic_b + discriminant_root) / denominator
-	var intercept_time := -1.0
-	if first_time > 0.0:
-		intercept_time = first_time
-	if second_time > 0.0 and (intercept_time < 0.0 or second_time < intercept_time):
-		intercept_time = second_time
-	return intercept_time if intercept_time > 0.0 else fallback_time
-
 
 func _clear_path() -> void:
 	_current_path = PackedVector3Array()
