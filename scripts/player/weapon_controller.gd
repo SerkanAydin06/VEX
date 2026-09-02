@@ -5,7 +5,8 @@ extends Node
 # VexWeaponHitscanRuntime içindedir; legacy_magnum_count save migration'ı ise
 # VexWeaponPersistenceRuntime tarafından normalize edilir. Heat/overheat state
 # geçişleri VexWeaponHeatRuntime, fener node uygulaması VexWeaponFlashlightRuntime,
-# async reload zamanlama ve ammo transferi VexWeaponReloadRuntime tarafından yönetilir.
+# async reload zamanlama ve ammo transferi VexWeaponReloadRuntime, recoil/burst
+# state ve sekme hesapları VexWeaponRecoilRuntime tarafından yönetilir.
 
 signal loadout_changed
 
@@ -54,8 +55,7 @@ var _cooldown_remaining := 0.0
 var _definitions_by_id: Dictionary = {}
 var _player: VexPlayer
 var _weapon_flashlight: SpotLight3D
-var _burst_shots := 0
-var _burst_reset_remaining := 0.0
+var _recoil_runtime := VexWeaponRecoilRuntime.new()
 var _sg04_reload_generation := 0
 var _sg04_reload_fire_queued := false
 var weapon_heat: Dictionary = {}
@@ -112,9 +112,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_cooldown_remaining = maxf(0.0, _cooldown_remaining - delta)
-	_burst_reset_remaining = maxf(0.0, _burst_reset_remaining - delta)
-	if _burst_reset_remaining <= 0.0:
-		_burst_shots = 0
+	_recoil_runtime.tick(delta)
 	if get_tree().paused or _player == null or _player.is_dead:
 		return
 	_update_weapon_heat(delta)
@@ -247,8 +245,7 @@ func switch_to(weapon_id: StringName) -> void:
 		return
 	current_weapon_id = weapon_id
 	_cooldown_remaining = equip_cooldown
-	_burst_shots = 0
-	_burst_reset_remaining = 0.0
+	_recoil_runtime.reset_burst()
 	broadcast_state()
 	_play_hud_action(&"equip")
 
@@ -280,8 +277,7 @@ func toggle_armory_weapon(weapon_id: StringName) -> Dictionary:
 	unlocked_weapons.append(weapon_id)
 	current_weapon_id = weapon_id
 	_cooldown_remaining = equip_cooldown
-	_burst_shots = 0
-	_burst_reset_remaining = 0.0
+	_recoil_runtime.reset_burst()
 	broadcast_state()
 	_play_hud_action(&"equip")
 	loadout_changed.emit()
@@ -680,50 +676,25 @@ func _try_fire() -> void:
 	broadcast_state()
 
 
+func _recoil_tuning() -> Dictionary:
+	return {
+		"burst_reset_min_time": burst_reset_min_time,
+		"burst_reset_fire_interval_multiplier": burst_reset_fire_interval_multiplier,
+		"automatic_vertical_base_multiplier": automatic_vertical_base_multiplier,
+		"automatic_vertical_per_shot": automatic_vertical_per_shot,
+		"automatic_vertical_max_multiplier": automatic_vertical_max_multiplier,
+		"automatic_horizontal_base_multiplier": automatic_horizontal_base_multiplier,
+		"automatic_horizontal_per_shot": automatic_horizontal_per_shot,
+		"automatic_horizontal_max_multiplier": automatic_horizontal_max_multiplier,
+	}
+
+
 func _apply_recoil(weapon: WeaponDefinition) -> void:
-	if _player == null or not is_instance_valid(_player):
-		return
-
-	_burst_shots += 1
-	_burst_reset_remaining = maxf(
-		burst_reset_min_time,
-		weapon.fire_interval * float(_modifiers(weapon).fire_rate) * burst_reset_fire_interval_multiplier
-	)
-
-	var vertical_multiplier := 1.0
-	var horizontal_multiplier := 1.0
-	if weapon.automatic:
-		vertical_multiplier = minf(
-			automatic_vertical_max_multiplier,
-			automatic_vertical_base_multiplier
-			+ float(_burst_shots) * automatic_vertical_per_shot
-		)
-		horizontal_multiplier = minf(
-			automatic_horizontal_max_multiplier,
-			automatic_horizontal_base_multiplier
-			+ float(_burst_shots) * automatic_horizontal_per_shot
-		)
-
-	var vertical_kick: float = (
-		float(weapon.recoil_vertical_degrees) * float(_modifiers(weapon).recoil)
-		* vertical_multiplier
-		* _player.get_weapon_recoil_multiplier()
-	)
-	var horizontal_kick: float = randf_range(
-		-float(weapon.recoil_horizontal_degrees) * float(_modifiers(weapon).recoil)
-		* horizontal_multiplier
-		* _player.get_weapon_recoil_multiplier(),
-		float(weapon.recoil_horizontal_degrees) * float(_modifiers(weapon).recoil)
-		* horizontal_multiplier
-		* _player.get_weapon_recoil_multiplier()
-	)
-
-	_player.apply_weapon_recoil(
-		vertical_kick,
-		horizontal_kick,
-		weapon.recoil_max_vertical_degrees,
-		weapon.recoil_max_horizontal_degrees,
-		weapon.recoil_recovery_degrees_per_second * float(_modifiers(weapon).recoil_recovery)
+	_recoil_runtime.apply(
+		_player,
+		weapon,
+		_modifiers(weapon),
+		_recoil_tuning()
 	)
 
 
