@@ -846,3 +846,65 @@ static func build_local_detour_path(
         "side": best_side if not best_path.is_empty() else local_detour_side,
         "remaining": local_detour_duration if not best_path.is_empty() else local_detour_remaining,
     }
+
+
+static func should_refresh_path(
+    has_navigation_target: bool,
+    navigation_refresh_remaining: float,
+    navigation_target: Vector3,
+    resolved_target: Vector3,
+    target_change_distance: float
+) -> bool:
+    if not has_navigation_target or navigation_refresh_remaining <= 0.0:
+        return true
+    return _horizontal_distance(navigation_target, resolved_target) > target_change_distance
+
+
+static func active_movement_direction(
+    current_position: Vector3,
+    movement_point: Vector3,
+    detour_remaining: float,
+    detour_direction: Vector3
+) -> Vector3:
+    var direction := movement_point - current_position
+    direction.y = 0.0
+    if direction.length_squared() <= 0.001:
+        return Vector3.ZERO
+    direction = direction.normalized()
+    if detour_remaining > 0.0 and detour_direction.length_squared() > 0.001:
+        return detour_direction
+    return direction
+
+
+static func movement_speed(
+    use_chase_speed: bool,
+    runtime_move_speed: float,
+    runtime_chase_speed: float
+) -> float:
+    return runtime_chase_speed if use_chase_speed else runtime_move_speed
+
+
+static func detour_direction_from_collision_normal(
+    collision_normal: Vector3,
+    current_position: Vector3,
+    movement_target: Vector3,
+    wall_normal_y_threshold: float
+) -> Vector3:
+    var normal := collision_normal
+    if absf(normal.y) >= wall_normal_y_threshold:
+        return Vector3.ZERO
+    normal.y = 0.0
+    if normal.length_squared() <= 0.001:
+        return Vector3.ZERO
+    normal = normal.normalized()
+    var tangent_a := Vector3(-normal.z, 0.0, normal.x)
+    var tangent_b: Vector3 = -tangent_a
+    var target_direction := movement_target - current_position
+    target_direction.y = 0.0
+    if target_direction.length_squared() > 0.001:
+        target_direction = target_direction.normalized()
+    return (
+        tangent_a
+        if tangent_a.dot(target_direction) >= tangent_b.dot(target_direction)
+        else tangent_b
+    )

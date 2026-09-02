@@ -3,6 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
+LUNGE = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 RUNTIME = (ROOT / "scripts/actors/enemy_navigation_runtime.gd").read_text(encoding="utf-8")
 
 errors: list[str] = []
@@ -34,6 +35,10 @@ for token in [
     "static func furthest_clearance_point_toward(",
     "static func find_investigation_path(",
     "static func build_local_detour_path(",
+    "static func should_refresh_path(",
+    "static func active_movement_direction(",
+    "static func movement_speed(",
+    "static func detour_direction_from_collision_normal(",
 ]:
     require(RUNTIME, token, "Navigation runtime contract eksik")
 
@@ -50,6 +55,22 @@ for token in [
     "EnemyNavigationRuntime.build_local_detour_path(",
 ]:
     require(BASE, token, "Combatant navigation delegation eksik")
+
+for token in [
+    "EnemyNavigationRuntime.should_refresh_path(",
+    "EnemyNavigationRuntime.active_movement_direction(",
+    "EnemyNavigationRuntime.movement_speed(",
+    "EnemyNavigationRuntime.detour_direction_from_collision_normal(",
+]:
+    require(LUNGE, token, "Lunge navigation delegation eksik")
+
+for forbidden in [
+    "var target_changed := (",
+    "var tangent_a := Vector3(-normal.z, 0.0, normal.x)",
+    "_runtime_chase_speed if use_chase_speed else _runtime_move_speed",
+]:
+    if forbidden in LUNGE:
+        errors.append(f"Navigation hesabı hâlâ lunge base içinde: {forbidden}")
 
 # Public/protected compatibility wrappers must remain available to subclasses.
 for name in [

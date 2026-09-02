@@ -540,11 +540,13 @@ func _chase_position(delta: float, target_position: Vector3, use_chase_speed: bo
 	resolved_target.y = global_position.y
 	_movement_target = resolved_target
 
-	var target_changed := (
-		not _has_navigation_target
-		or _horizontal_distance(_navigation_target, resolved_target) > path_target_change_distance
-	)
-	if _navigation_refresh_remaining <= 0.0 or target_changed:
+	if EnemyNavigationRuntime.should_refresh_path(
+		_has_navigation_target,
+		_navigation_refresh_remaining,
+		_navigation_target,
+		resolved_target,
+		path_target_change_distance
+	):
 		_navigation_path = EnemyNavigationRuntime.build_shortest_path(
 			self,
 			resolved_target,
@@ -581,22 +583,24 @@ func _chase_position(delta: float, target_position: Vector3, use_chase_speed: bo
 	if _navigation_path_index < _navigation_path.size():
 		movement_point = _navigation_path[_navigation_path_index]
 
-	var direction: Vector3 = movement_point - global_position
-	direction.y = 0.0
+	var direction := EnemyNavigationRuntime.active_movement_direction(
+		global_position,
+		movement_point,
+		_detour_remaining,
+		_detour_direction
+	)
 	if direction.length_squared() <= 0.001:
 		velocity.x = 0.0
 		velocity.z = 0.0
 		_play_animation(&"idle")
 		return
-	direction = direction.normalized()
-
-	# Collision tangent is now only a fallback when the shared global path is
-	# temporarily obstructed by a moving body/door.
-	if _detour_remaining > 0.0 and _detour_direction.length_squared() > 0.001:
-		direction = _detour_direction
 
 	_facing_direction = direction
-	var desired_speed := _runtime_chase_speed if use_chase_speed else _runtime_move_speed
+	var desired_speed := EnemyNavigationRuntime.movement_speed(
+		use_chase_speed,
+		_runtime_move_speed,
+		_runtime_chase_speed
+	)
 	velocity.x = move_toward(
 		velocity.x,
 		direction.x * desired_speed,
@@ -623,24 +627,15 @@ func _update_chase_detour() -> void:
 		var collision := get_slide_collision(collision_index)
 		if collision == null:
 			continue
-		var normal := collision.get_normal()
-		if absf(normal.y) >= wall_normal_y_threshold:
-			continue
-		normal.y = 0.0
-		if normal.length_squared() <= 0.001:
-			continue
-		normal = normal.normalized()
-		var tangent_a := Vector3(-normal.z, 0.0, normal.x)
-		var tangent_b: Vector3 = -tangent_a
-		var target_direction := _movement_target - global_position
-		target_direction.y = 0.0
-		if target_direction.length_squared() > 0.001:
-			target_direction = target_direction.normalized()
-		_detour_direction = (
-			tangent_a
-			if tangent_a.dot(target_direction) >= tangent_b.dot(target_direction)
-			else tangent_b
+		var detour_direction := EnemyNavigationRuntime.detour_direction_from_collision_normal(
+			collision.get_normal(),
+			global_position,
+			_movement_target,
+			wall_normal_y_threshold
 		)
+		if detour_direction.length_squared() <= 0.001:
+			continue
+		_detour_direction = detour_direction
 		_detour_remaining = detour_duration
 		return
 
