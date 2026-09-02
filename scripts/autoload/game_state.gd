@@ -54,6 +54,7 @@ var current_level_start_state: Dictionary = {}
 var campaign_stage := 0
 var hub_selected_mission_path := ""
 var hub_selected_mission_label := ""
+var last_campaign_save_failed := false
 var _loaded_save_from_backup := false
 
 
@@ -79,12 +80,13 @@ func start_new_game() -> void:
 	get_tree().change_scene_to_file(current_level_path)
 
 
-func continue_game() -> void:
+func continue_game() -> bool:
 	# VEX keeps no mid-level checkpoints. Continue resumes the last safe campaign
 	# boundary (hub or mission entrance) and never restores world/position state.
+	# Invalid primary+backup saves are never deleted here. Only an explicit
+	# New Game action may clear an existing campaign save.
 	if not _load_campaign_save():
-		start_new_game()
-		return
+		return false
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	loading_saved_state = false
@@ -92,12 +94,24 @@ func continue_game() -> void:
 	_reset_level_counters()
 	current_level_path = str(saved_run_state.get("current_level_path", LEVEL_01_PATH))
 	if not ResourceLoader.exists(current_level_path):
-		start_new_game()
-		return
+		return false
 	pending_player_restore_state = (saved_run_state.get("resume_player_state", {}) as Dictionary).duplicate(true)
 	current_level_start_state = pending_player_restore_state.duplicate(true)
 	run_started_msec = Time.get_ticks_msec()
 	get_tree().change_scene_to_file(current_level_path)
+	return true
+
+
+func get_continue_failure_message() -> String:
+	if TranslationServer.get_locale().begins_with("tr"):
+		return "KAYIT VERİSİ OKUNAMADI // MEVCUT KAYIT DOSYALARI KORUNDU"
+	return "SAVE DATA COULD NOT BE READ // EXISTING SAVE FILES WERE KEPT"
+
+
+func get_save_failure_message() -> String:
+	if TranslationServer.get_locale().begins_with("tr"):
+		return "KAYIT YAZILAMADI // İLERLEMEDEN ÖNCE TEKRAR DENE"
+	return "SAVE FAILED // RETRY BEFORE CONTINUING"
 
 
 func restart_level(_restore_full_health: bool = false) -> void:
@@ -332,7 +346,9 @@ func save_campaign_progress(
 	var config := ConfigFile.new()
 	for key: String in state.keys():
 		config.set_value("campaign", key, state[key])
-	return _write_save_config(config)
+	var save_succeeded := _write_save_config(config)
+	last_campaign_save_failed = not save_succeeded
+	return save_succeeded
 
 
 func save_current_safe_progress(reason: String = "safe_point") -> bool:
@@ -445,10 +461,17 @@ func has_pending_next_level() -> bool:
 	return pending_next_level_path != ""
 
 
-func continue_to_next_level() -> void:
+func continue_to_next_level() -> bool:
 	if pending_next_level_path == "":
 		restart_level()
-		return
+		return true
+	if last_campaign_save_failed:
+		if not save_campaign_progress(
+			pending_next_level_path,
+			pending_player_restore_state,
+			"level_complete_retry"
+		):
+			return false
 	var next_path := pending_next_level_path
 	var carry_state := pending_player_restore_state.duplicate(true)
 	pending_next_level_path = ""
@@ -462,6 +485,7 @@ func continue_to_next_level() -> void:
 	run_started_msec = Time.get_ticks_msec()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	get_tree().change_scene_to_file(current_level_path)
+	return true
 
 
 func pending_next_is_hub() -> bool:
@@ -515,16 +539,28 @@ func deploy_selected_hub_mission() -> bool:
 		carry_state["keys"] = []
 
 	var next_path := hub_selected_mission_path
+	var previous_current_level_path := current_level_path
+	var previous_mission_path := hub_selected_mission_path
+	var previous_mission_label := hub_selected_mission_label
+	# The persisted mission boundary must contain an empty hub selection, but the
+	# in-memory hub state is rolled back if disk writing fails.
 	hub_selected_mission_path = ""
 	hub_selected_mission_label = ""
+	current_level_path = next_path
+	if not save_campaign_progress(current_level_path, carry_state, "mission_deploy"):
+		current_level_path = previous_current_level_path
+		hub_selected_mission_path = previous_mission_path
+		hub_selected_mission_label = previous_mission_label
+		hub_mission_changed.emit(hub_selected_mission_path, hub_selected_mission_label)
+		notification_requested.emit(get_save_failure_message())
+		return false
+
 	loading_saved_state = false
 	saved_run_state = {}
-	current_level_path = next_path
 	_reset_level_counters()
 	current_level_start_state = carry_state.duplicate(true)
 	pending_player_restore_state = carry_state
 	run_started_msec = Time.get_ticks_msec()
-	save_campaign_progress(current_level_path, carry_state, "mission_deploy")
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	get_tree().change_scene_to_file(current_level_path)
 	return true
@@ -561,6 +597,7 @@ func _load_campaign_save_from_paths(primary_path: String, backup_path: String) -
 		_loaded_save_from_backup = true
 	saved_run_state = loaded_state
 	_apply_loaded_campaign_state()
+	last_campaign_save_failed = false
 	return true
 
 
