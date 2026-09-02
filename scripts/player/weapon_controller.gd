@@ -3,7 +3,9 @@ extends Node
 
 # Mimari sahiplik notu: penetration_power ve target_limit hesapları
 # VexWeaponHitscanRuntime içindedir; legacy_magnum_count save migration'ı ise
-# VexWeaponPersistenceRuntime tarafından normalize edilir.
+# VexWeaponPersistenceRuntime tarafından normalize edilir. Heat/overheat state
+# geçişleri VexWeaponHeatRuntime, fener node uygulaması VexWeaponFlashlightRuntime
+# tarafından yönetilir.
 
 signal loadout_changed
 
@@ -64,17 +66,19 @@ var _heat_cooldown_remaining: Dictionary = {}
 func _ready() -> void:
 	_player = get_parent() as VexPlayer
 	_weapon_flashlight = get_node_or_null(weapon_flashlight_path) as SpotLight3D
-	if _weapon_flashlight != null:
-		_weapon_flashlight.visible = false
+	VexWeaponFlashlightRuntime.initialize_light(_weapon_flashlight)
 	for definition: WeaponDefinition in weapon_definitions:
 		if definition == null:
 			continue
 		_definitions_by_id[definition.weapon_id] = definition
 		upgrade_levels[definition.weapon_id] = 0
 		magazines[definition.weapon_id] = 0
-		weapon_heat[definition.weapon_id] = 0.0
-		weapon_overheated[definition.weapon_id] = false
-		_heat_cooldown_remaining[definition.weapon_id] = 0.0
+		VexWeaponHeatRuntime.initialize_weapon_state(
+			definition,
+			weapon_heat,
+			weapon_overheated,
+			_heat_cooldown_remaining
+		)
 		if not reserve_ammo.has(definition.ammo_type):
 			reserve_ammo[definition.ammo_type] = 0
 
@@ -596,67 +600,54 @@ func toggle_weapon_flashlight() -> void:
 
 
 func _sync_weapon_flashlight() -> void:
-	if _weapon_flashlight == null or not is_instance_valid(_weapon_flashlight):
-		return
 	var weapon := get_current_weapon()
-	var active := weapon != null and weapon.supports_flashlight and flashlight_enabled
-	_weapon_flashlight.visible = active
-	if weapon == null or not weapon.supports_flashlight:
-		return
-	var modifiers := _modifiers(weapon)
-	_weapon_flashlight.light_color = weapon.flashlight_color
-	_weapon_flashlight.light_energy = weapon.flashlight_energy * float(modifiers.flashlight_energy)
-	_weapon_flashlight.spot_range = weapon.flashlight_range * float(modifiers.flashlight_range)
-	_weapon_flashlight.spot_angle = weapon.flashlight_angle_degrees
+	var modifiers := _modifiers(weapon) if weapon != null else {}
+	VexWeaponFlashlightRuntime.sync(
+		_weapon_flashlight,
+		weapon,
+		flashlight_enabled,
+		modifiers
+	)
 
 
 func _is_weapon_flashlight_active(weapon: WeaponDefinition) -> bool:
-	return (
-		weapon != null
-		and weapon.supports_flashlight
-		and flashlight_enabled
-		and _weapon_flashlight != null
-		and _weapon_flashlight.visible
+	return VexWeaponFlashlightRuntime.is_active(
+		_weapon_flashlight,
+		weapon,
+		flashlight_enabled
 	)
 
 
 func _effective_heat_capacity(weapon: WeaponDefinition) -> float:
-	return weapon.heat_capacity * float(_modifiers(weapon).heat_capacity)
+	return VexWeaponHeatRuntime.effective_capacity(weapon, _modifiers(weapon))
 
 
 func _publish_current_weapon_heat() -> void:
 	var weapon := get_current_weapon()
-	if weapon == null or not weapon.uses_heat:
-		GameState.publish_weapon_heat(0.0, 0.0, false, false)
-		return
-	GameState.publish_weapon_heat(
-		float(weapon_heat.get(current_weapon_id, 0.0)),
-		_effective_heat_capacity(weapon),
-		bool(weapon_overheated.get(current_weapon_id, false)),
-		true
+	var modifiers := _modifiers(weapon) if weapon != null else {}
+	VexWeaponHeatRuntime.publish_current(
+		weapon,
+		current_weapon_id,
+		weapon_heat,
+		weapon_overheated,
+		modifiers
 	)
 
 
 func _update_weapon_heat(delta: float) -> void:
-	for weapon_id: StringName in _definitions_by_id.keys():
-		var weapon := _definitions_by_id.get(weapon_id) as WeaponDefinition
-		if weapon == null or not weapon.uses_heat:
-			continue
-		var cooldown := maxf(0.0, float(_heat_cooldown_remaining.get(weapon_id, 0.0)) - delta)
-		_heat_cooldown_remaining[weapon_id] = cooldown
-		var current_heat := float(weapon_heat.get(weapon_id, 0.0))
-		if cooldown <= 0.0:
-			var cooling := weapon.heat_cooling_per_second * float(_modifiers(weapon).heat_cooling)
-			current_heat = maxf(0.0, current_heat - cooling * delta)
-			weapon_heat[weapon_id] = current_heat
-		if (
-			bool(weapon_overheated.get(weapon_id, false))
-			and current_heat <= _effective_heat_capacity(weapon) * weapon.heat_unlock_ratio
-		):
-			weapon_overheated[weapon_id] = false
-			if weapon_id == current_weapon_id:
-				GameState.notify(tr("WEAPON_COOLED"))
-	if get_current_weapon() != null and get_current_weapon().uses_heat:
+	var current_weapon_cooled := VexWeaponHeatRuntime.update(
+		delta,
+		_definitions_by_id,
+		current_weapon_id,
+		weapon_heat,
+		weapon_overheated,
+		_heat_cooldown_remaining,
+		upgrade_levels
+	)
+	if current_weapon_cooled:
+		GameState.notify(tr("WEAPON_COOLED"))
+	var weapon := get_current_weapon()
+	if weapon != null and weapon.uses_heat:
 		_publish_current_weapon_heat()
 
 
@@ -664,17 +655,22 @@ func _try_fire() -> void:
 	var weapon := get_current_weapon()
 	if weapon == null or _cooldown_remaining > 0.0 or is_reloading:
 		return
-	if weapon.uses_heat:
-		var heat_capacity := _effective_heat_capacity(weapon)
-		var current_heat := float(weapon_heat.get(current_weapon_id, 0.0))
-		if current_heat >= heat_capacity:
-			weapon_overheated[current_weapon_id] = true
-		if bool(weapon_overheated.get(current_weapon_id, false)):
-			_play_hud_action(&"empty")
-			GameState.notify(tr("WEAPON_OVERHEATED"))
-			_cooldown_remaining = empty_trigger_cooldown
-			_publish_current_weapon_heat()
-			return
+	var modifiers := _modifiers(weapon)
+	if (
+		weapon.uses_heat
+		and not VexWeaponHeatRuntime.can_fire(
+			weapon,
+			current_weapon_id,
+			weapon_heat,
+			weapon_overheated,
+			modifiers
+		)
+	):
+		_play_hud_action(&"empty")
+		GameState.notify(tr("WEAPON_OVERHEATED"))
+		_cooldown_remaining = empty_trigger_cooldown
+		_publish_current_weapon_heat()
+		return
 	var magazine := int(magazines.get(current_weapon_id, 0))
 	if magazine <= 0:
 		_play_hud_action(&"empty")
@@ -682,23 +678,21 @@ func _try_fire() -> void:
 		_cooldown_remaining = empty_trigger_cooldown
 		return
 	magazines[current_weapon_id] = magazine - 1
-	if weapon.uses_heat:
-		var shot_heat_capacity := _effective_heat_capacity(weapon)
-		var next_heat := minf(
-			shot_heat_capacity,
-			float(weapon_heat.get(current_weapon_id, 0.0)) + weapon.heat_per_shot
-		)
-		weapon_heat[current_weapon_id] = next_heat
-		_heat_cooldown_remaining[current_weapon_id] = weapon.heat_cooldown_delay
-		if next_heat >= shot_heat_capacity:
-			weapon_overheated[current_weapon_id] = true
-			GameState.notify(tr("WEAPON_OVERHEATED"))
-	_cooldown_remaining = weapon.fire_interval * float(_modifiers(weapon).fire_rate)
+	if VexWeaponHeatRuntime.register_shot(
+		weapon,
+		current_weapon_id,
+		weapon_heat,
+		weapon_overheated,
+		_heat_cooldown_remaining,
+		modifiers
+	):
+		GameState.notify(tr("WEAPON_OVERHEATED"))
+	_cooldown_remaining = weapon.fire_interval * float(modifiers.fire_rate)
 	_play_hud_action(&"fire")
 	_shoot_hitscan(weapon)
 	GameState.emit_gunshot(
 		_player.global_position,
-		weapon.gunshot_noise_multiplier * float(_modifiers(weapon).gunshot_noise),
+		weapon.gunshot_noise_multiplier * float(modifiers.gunshot_noise),
 		_player
 	)
 	_apply_recoil(weapon)
