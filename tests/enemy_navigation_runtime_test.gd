@@ -55,10 +55,8 @@ func _test_graph_helpers() -> void:
 	if nearest.size() == 2:
 		_expect(nearest[0] == 1 and nearest[1] == 0, "Nearest waypoint ordering changed")
 
-	var graph := VexEnemyNavigationRuntime.build_astar_graph(
-		points,
-		[Vector2i(0, 1), Vector2i(1, 2)]
-	)
+	var edges: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 2)]
+	var graph := VexEnemyNavigationRuntime.build_astar_graph(points, edges)
 	_expect(graph.get_point_count() == 3, "AStar graph point count changed")
 	_expect(graph.are_points_connected(0, 1), "AStar graph edge 0-1 missing")
 	_expect(graph.are_points_connected(1, 2), "AStar graph edge 1-2 missing")
@@ -118,10 +116,8 @@ func _test_investigation_helpers(host: CharacterBody3D) -> void:
 		Vector3(1.0, 0.0, 0.0),
 		Vector3(2.0, 0.0, 0.0),
 	]
-	var graph := VexEnemyNavigationRuntime.build_astar_graph(
-		points,
-		[Vector2i(0, 1)]
-	)
+	var edges: Array[Vector2i] = [Vector2i(0, 1)]
+	var graph := VexEnemyNavigationRuntime.build_astar_graph(points, edges)
 	var start_id := 2
 	graph.add_point(start_id, host.global_position)
 	VexEnemyNavigationRuntime.connect_endpoint_to_graph(
