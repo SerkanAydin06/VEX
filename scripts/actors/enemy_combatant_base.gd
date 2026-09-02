@@ -576,9 +576,13 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -> void:
 	if state == State.DEAD or source == self:
 		return
-	var distance := _horizontal_distance(global_position, noise_position)
-	var effective_range := hearing_radius * maxf(loudness * hearing_loudness_scale, 0.1)
-	if distance > effective_range:
+	if not VexEnemyPerceptionRuntime.should_hear_noise(
+		global_position,
+		noise_position,
+		hearing_radius,
+		loudness,
+		hearing_loudness_scale
+	):
 		return
 	var hearing_origin := global_position + Vector3.UP * acoustic_probe_height
 	var hearing_target := noise_position + Vector3.UP * acoustic_probe_height
@@ -597,9 +601,10 @@ func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -
 	state = State.CHASE
 	_clear_path()
 	_path_refresh_remaining = 0.0
-	if loudness >= loud_noise_alert_threshold:
+	if VexEnemyPerceptionRuntime.should_broadcast_noise_alert(
+		loudness, loud_noise_alert_threshold
+	):
 		_alert_nearby_allies(noise_position)
-
 
 func get_weapon_hit_multiplier(hit_position: Vector3, base_headshot_multiplier: float) -> float:
 	var local_y := hit_position.y - global_position.y
@@ -608,7 +613,11 @@ func get_weapon_hit_multiplier(hit_position: Vector3, base_headshot_multiplier: 
 
 
 func receive_ally_alert(suspected_position: Vector3) -> void:
-	if state == State.DEAD or _player_visible or not receive_ally_alerts:
+	if not VexEnemyPerceptionRuntime.should_accept_ally_alert(
+		state == State.DEAD,
+		_player_visible,
+		receive_ally_alerts
+	):
 		return
 
 	_exit_dormant_mode()
@@ -622,12 +631,11 @@ func receive_ally_alert(suspected_position: Vector3) -> void:
 	state = State.CHASE
 	_clear_path()
 	_path_refresh_remaining = 0.0
-
-	var alert_direction := _last_seen_position - global_position
-	alert_direction.y = 0.0
-	if alert_direction.length_squared() > 0.001:
-		_facing_direction = alert_direction.normalized()
-
+	_facing_direction = VexEnemyPerceptionRuntime.ally_alert_facing_direction(
+		global_position,
+		_last_seen_position,
+		_facing_direction
+	)
 
 func _alert_nearby_allies(suspected_position: Vector3) -> void:
 	for node: Node in get_tree().get_nodes_in_group("enemy"):
@@ -637,7 +645,11 @@ func _alert_nearby_allies(suspected_position: Vector3) -> void:
 			continue
 
 		var ally := node as Node3D
-		if _horizontal_distance(global_position, ally.global_position) > ally_alert_radius:
+		if not VexEnemyPerceptionRuntime.is_within_horizontal_range(
+			global_position,
+			ally.global_position,
+			ally_alert_radius
+		):
 			continue
 		if not VexEnemyRuntimeUtils.has_clear_acoustic_path(
 			get_world_3d(),
@@ -647,7 +659,6 @@ func _alert_nearby_allies(suspected_position: Vector3) -> void:
 		):
 			continue
 		ally.call("receive_ally_alert", suspected_position)
-
 
 func _update_perception(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
@@ -660,25 +671,39 @@ func _update_perception(delta: float) -> void:
 	# Oyuncu çok uzaktaysa ve düşman zaten alarm durumunda değilse her kare
 	# görüş ışını atmaya gerek yok. Bu erken çıkış özellikle geniş haritada
 	# 20+ düşman varken fizik raycast yükünü hissedilir biçimde düşürür.
-	if (
-		not _alerted
-		and player_distance > _runtime_detection_range + idle_detection_margin
+	if VexEnemyPerceptionRuntime.should_skip_idle_sight(
+		_alerted,
+		player_distance,
+		_runtime_detection_range,
+		idle_detection_margin
 	):
 		_player_visible = false
-		_sight_check_remaining = maxf(_sight_check_remaining - delta, 0.0)
-		if _sight_check_remaining <= 0.0:
-			_sight_check_remaining = idle_far_sight_interval
+		_sight_check_remaining = VexEnemyPerceptionRuntime.next_sight_check_remaining(
+			_sight_check_remaining,
+			delta,
+			idle_far_sight_interval
+		)
 		return
 
-	var sight_interval := near_sight_interval
-	if player_distance > distant_think_distance:
-		sight_interval = distant_sight_interval if _alerted else idle_far_sight_interval
-	elif player_distance > _runtime_detection_range:
-		sight_interval = medium_sight_interval
-
-	_sight_check_remaining -= delta
-	if _sight_check_remaining <= 0.0:
-		_sight_check_remaining = sight_interval
+	var sight_interval := VexEnemyPerceptionRuntime.sight_interval(
+		player_distance,
+		_alerted,
+		_runtime_detection_range,
+		distant_think_distance,
+		near_sight_interval,
+		medium_sight_interval,
+		distant_sight_interval,
+		idle_far_sight_interval
+	)
+	var sight_check_due := VexEnemyPerceptionRuntime.is_sight_check_due(
+		_sight_check_remaining, delta
+	)
+	_sight_check_remaining = VexEnemyPerceptionRuntime.next_sight_check_remaining(
+		_sight_check_remaining,
+		delta,
+		sight_interval
+	)
+	if sight_check_due:
 		_player_visible = _can_see_player()
 		# Son görülen konumu yalnızca yeni bir görüş ışını gerçekten oyuncuya
 		# ulaştığında güncelle. Önceki görüş sonucunu ara karelerde kullanmak,
@@ -695,7 +720,6 @@ func _update_perception(delta: float) -> void:
 			_alert_nearby_allies(_last_seen_position)
 	elif _alerted:
 		_seconds_without_sight += delta
-
 
 func _update_behavior(delta: float) -> void:
 	# Başlamış saldırı hasar tepkisinden önceliklidir. Vurulmak saldırı zamanlayıcısını,

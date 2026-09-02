@@ -194,3 +194,102 @@ static func ranged_visibility_ratio_from(
 		if is_player_collider(player, collider):
 			visible_samples += 1
 	return float(visible_samples) / float(samples.size())
+
+
+static func horizontal_distance(first_position: Vector3, second_position: Vector3) -> float:
+	var offset := second_position - first_position
+	offset.y = 0.0
+	return offset.length()
+
+
+static func is_within_horizontal_range(
+	first_position: Vector3,
+	second_position: Vector3,
+	maximum_range: float
+) -> bool:
+	return horizontal_distance(first_position, second_position) <= maximum_range
+
+
+static func effective_hearing_range(
+	hearing_radius: float,
+	loudness: float,
+	hearing_loudness_scale: float
+) -> float:
+	return hearing_radius * maxf(loudness * hearing_loudness_scale, 0.1)
+
+
+static func should_hear_noise(
+	enemy_position: Vector3,
+	noise_position: Vector3,
+	hearing_radius: float,
+	loudness: float,
+	hearing_loudness_scale: float
+) -> bool:
+	return is_within_horizontal_range(
+		enemy_position,
+		noise_position,
+		effective_hearing_range(hearing_radius, loudness, hearing_loudness_scale)
+	)
+
+
+static func should_broadcast_noise_alert(loudness: float, alert_threshold: float) -> bool:
+	return loudness >= alert_threshold
+
+
+static func should_accept_ally_alert(
+	is_dead: bool,
+	player_visible: bool,
+	receive_ally_alerts: bool
+) -> bool:
+	return not is_dead and not player_visible and receive_ally_alerts
+
+
+static func ally_alert_facing_direction(
+	enemy_position: Vector3,
+	suspected_position: Vector3,
+	current_facing_direction: Vector3
+) -> Vector3:
+	var alert_direction := suspected_position - enemy_position
+	alert_direction.y = 0.0
+	if alert_direction.length_squared() <= 0.001:
+		return current_facing_direction
+	return alert_direction.normalized()
+
+
+static func should_skip_idle_sight(
+	alerted: bool,
+	player_distance: float,
+	runtime_detection_range: float,
+	idle_detection_margin: float
+) -> bool:
+	return not alerted and player_distance > runtime_detection_range + idle_detection_margin
+
+
+static func sight_interval(
+	player_distance: float,
+	alerted: bool,
+	runtime_detection_range: float,
+	distant_think_distance: float,
+	near_sight_interval: float,
+	medium_sight_interval: float,
+	distant_sight_interval: float,
+	idle_far_sight_interval: float
+) -> float:
+	if player_distance > distant_think_distance:
+		return distant_sight_interval if alerted else idle_far_sight_interval
+	if player_distance > runtime_detection_range:
+		return medium_sight_interval
+	return near_sight_interval
+
+
+static func is_sight_check_due(sight_check_remaining: float, delta: float) -> bool:
+	return sight_check_remaining - delta <= 0.0
+
+
+static func next_sight_check_remaining(
+	sight_check_remaining: float,
+	delta: float,
+	reset_interval: float
+) -> float:
+	var next_remaining := sight_check_remaining - delta
+	return reset_interval if next_remaining <= 0.0 else next_remaining

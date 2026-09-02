@@ -36,6 +36,15 @@ for contract in [
     "VexEnemyPerceptionRuntime.ranged_visibility_ratio_from(",
     "VexEnemyPerceptionRuntime.crouched_sight_target_height(",
     "VexEnemyPerceptionRuntime.is_player_collider(",
+    "VexEnemyPerceptionRuntime.should_hear_noise(",
+    "VexEnemyPerceptionRuntime.should_broadcast_noise_alert(",
+    "VexEnemyPerceptionRuntime.should_accept_ally_alert(",
+    "VexEnemyPerceptionRuntime.ally_alert_facing_direction(",
+    "VexEnemyPerceptionRuntime.is_within_horizontal_range(",
+    "VexEnemyPerceptionRuntime.should_skip_idle_sight(",
+    "VexEnemyPerceptionRuntime.sight_interval(",
+    "VexEnemyPerceptionRuntime.is_sight_check_due(",
+    "VexEnemyPerceptionRuntime.next_sight_check_remaining(",
 ]:
     if contract not in base:
         errors.append(f"Combatant perception delegation eksik: {contract}")
@@ -50,6 +59,16 @@ for contract in [
     "PhysicsRayQueryParameters3D.create(",
     "var visible_samples := 0",
     "func is_player_collider(",
+    "func horizontal_distance(",
+    "func effective_hearing_range(",
+    "func should_hear_noise(",
+    "func should_broadcast_noise_alert(",
+    "func should_accept_ally_alert(",
+    "func ally_alert_facing_direction(",
+    "func should_skip_idle_sight(",
+    "func sight_interval(",
+    "func is_sight_check_due(",
+    "func next_sight_check_remaining(",
 ]:
     if contract not in runtime:
         errors.append(f"Perception runtime contract eksik: {contract}")
@@ -59,6 +78,10 @@ initial_view = function_body(base, "_is_player_inside_initial_view(")
 line_of_sight = function_body(base, "_check_line_of_sight(")
 ranged_ratio = function_body(base, "_ranged_visibility_ratio_from(")
 player_collider = function_body(base, "_is_player_collider(")
+noise_handler = function_body(base, "_on_noise_emitted(")
+ally_receiver = function_body(base, "receive_ally_alert(")
+ally_broadcast = function_body(base, "_alert_nearby_allies(")
+perception_update = function_body(base, "_update_perception(")
 
 if "randf()" in can_see:
     errors.append("Crouch detection RNG hâlâ combatant base içinde")
@@ -70,6 +93,41 @@ if "visible_samples" in ranged_ratio or "PhysicsRayQueryParameters3D.create(" in
     errors.append("Ranged visibility sampling hâlâ combatant base içinde")
 if "while current != null" in player_collider:
     errors.append("Player collider ancestry çözümü hâlâ combatant base içinde")
+
+if "hearing_radius * maxf(" in noise_handler:
+    errors.append("Hearing effective-range hesabı hâlâ combatant base içinde")
+if "loudness >= loud_noise_alert_threshold" in noise_handler:
+    errors.append("Noise ally-alert threshold kararı hâlâ combatant base içinde")
+if "state == State.DEAD or _player_visible or not receive_ally_alerts" in ally_receiver:
+    errors.append("Ally alert kabul kararı hâlâ combatant base içinde")
+if "alert_direction.normalized()" in ally_receiver:
+    errors.append("Ally alert facing hesabı hâlâ combatant base içinde")
+if "_horizontal_distance(global_position, ally.global_position) > ally_alert_radius" in ally_broadcast:
+    errors.append("Ally alert yatay menzil hesabı hâlâ combatant base içinde")
+if "player_distance > distant_think_distance" in perception_update:
+    errors.append("Sight interval tier hesabı hâlâ combatant base içinde")
+if "player_distance > _runtime_detection_range + idle_detection_margin" in perception_update:
+    errors.append("Idle sight skip kararı hâlâ combatant base içinde")
+if "_sight_check_remaining -= delta" in perception_update:
+    errors.append("Sight timer countdown hesabı hâlâ combatant base içinde")
+
+# Scene/world side effects remain orchestrator-owned.
+for contract in [
+    'GameState.noise_emitted.is_connected(_on_noise_emitted)',
+    'get_tree().get_nodes_in_group("enemy")',
+    "VexEnemyRuntimeUtils.has_clear_acoustic_path(",
+    'ally.call("receive_ally_alert", suspected_position)',
+]:
+    if contract not in base:
+        errors.append(f"Combatant side-effect ownership kayboldu: {contract}")
+
+for forbidden in [
+    "GameState",
+    'get_nodes_in_group("enemy")',
+    'ally.call("receive_ally_alert"',
+]:
+    if forbidden in runtime:
+        errors.append(f"Perception runtime scene side-effect aldı: {forbidden}")
 
 if errors:
     for error in errors:

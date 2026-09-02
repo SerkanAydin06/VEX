@@ -8,6 +8,9 @@ func _ready() -> void:
 	_test_initial_view()
 	_test_crouch_detection()
 	_test_crouched_target_height()
+	_test_hearing()
+	_test_ally_alert_decisions()
+	_test_sight_scheduling()
 	if _errors.is_empty():
 		print("ENEMY PERCEPTION RUNTIME TEST: OK")
 		get_tree().quit(0)
@@ -124,3 +127,148 @@ func _test_crouched_target_height() -> void:
 		"Crouched sight target clamp changed"
 	)
 	player.queue_free()
+
+
+func _test_hearing() -> void:
+	_expect(
+		is_equal_approx(
+			VexEnemyPerceptionRuntime.effective_hearing_range(14.0, 0.5, 1.0),
+			7.0
+		),
+		"Hearing loudness scaling changed"
+	)
+	_expect(
+		is_equal_approx(
+			VexEnemyPerceptionRuntime.effective_hearing_range(14.0, 0.0, 1.0),
+			1.4
+		),
+		"Minimum hearing loudness floor changed"
+	)
+	_expect(
+		VexEnemyPerceptionRuntime.should_hear_noise(
+			Vector3.ZERO,
+			Vector3(6.0, 100.0, 0.0),
+			14.0,
+			0.5,
+			1.0
+		),
+		"Horizontal hearing range no longer ignores vertical offset"
+	)
+	_expect(
+		not VexEnemyPerceptionRuntime.should_hear_noise(
+			Vector3.ZERO,
+			Vector3(8.0, 0.0, 0.0),
+			14.0,
+			0.5,
+			1.0
+		),
+		"Noise outside effective hearing range is accepted"
+	)
+	_expect(
+		VexEnemyPerceptionRuntime.should_broadcast_noise_alert(0.9, 0.9),
+		"Noise at ally alert threshold no longer broadcasts"
+	)
+	_expect(
+		not VexEnemyPerceptionRuntime.should_broadcast_noise_alert(0.89, 0.9),
+		"Quiet noise now broadcasts ally alert"
+	)
+
+
+func _test_ally_alert_decisions() -> void:
+	_expect(
+		VexEnemyPerceptionRuntime.should_accept_ally_alert(false, false, true),
+		"Valid ally alert is rejected"
+	)
+	_expect(
+		not VexEnemyPerceptionRuntime.should_accept_ally_alert(true, false, true),
+		"Dead enemy accepts ally alert"
+	)
+	_expect(
+		not VexEnemyPerceptionRuntime.should_accept_ally_alert(false, true, true),
+		"Visible player can be overwritten by ally alert"
+	)
+	_expect(
+		not VexEnemyPerceptionRuntime.should_accept_ally_alert(false, false, false),
+		"Enemy with ally alerts disabled accepts alert"
+	)
+	var facing := VexEnemyPerceptionRuntime.ally_alert_facing_direction(
+		Vector3.ZERO,
+		Vector3(3.0, 50.0, 0.0),
+		Vector3.FORWARD
+	)
+	_expect(facing.is_equal_approx(Vector3.RIGHT), "Ally alert facing direction changed")
+	var unchanged := VexEnemyPerceptionRuntime.ally_alert_facing_direction(
+		Vector3.ZERO,
+		Vector3.ZERO,
+		Vector3.FORWARD
+	)
+	_expect(unchanged.is_equal_approx(Vector3.FORWARD), "Zero-distance ally alert changes facing")
+
+
+func _test_sight_scheduling() -> void:
+	_expect(
+		VexEnemyPerceptionRuntime.should_skip_idle_sight(false, 37.0, 30.0, 6.0),
+		"Far unaware enemy no longer skips expensive sight check"
+	)
+	_expect(
+		not VexEnemyPerceptionRuntime.should_skip_idle_sight(true, 50.0, 30.0, 6.0),
+		"Alerted enemy incorrectly skips sight checks"
+	)
+	_expect(
+		is_equal_approx(
+			VexEnemyPerceptionRuntime.sight_interval(
+				10.0, false, 30.0, 24.0, 0.12, 0.18, 0.2, 0.32
+			),
+			0.12
+		),
+		"Near sight interval changed"
+	)
+	_expect(
+		is_equal_approx(
+			VexEnemyPerceptionRuntime.sight_interval(
+				32.0, true, 30.0, 40.0, 0.12, 0.18, 0.2, 0.32
+			),
+			0.18
+		),
+		"Medium sight interval changed"
+	)
+	_expect(
+		is_equal_approx(
+			VexEnemyPerceptionRuntime.sight_interval(
+				50.0, true, 30.0, 24.0, 0.12, 0.18, 0.2, 0.32
+			),
+			0.2
+		),
+		"Distant alerted sight interval changed"
+	)
+	_expect(
+		is_equal_approx(
+			VexEnemyPerceptionRuntime.sight_interval(
+				50.0, false, 30.0, 24.0, 0.12, 0.18, 0.2, 0.32
+			),
+			0.32
+		),
+		"Distant idle sight interval changed"
+	)
+	_expect(
+		VexEnemyPerceptionRuntime.is_sight_check_due(0.05, 0.10),
+		"Elapsed sight timer is not due"
+	)
+	_expect(
+		not VexEnemyPerceptionRuntime.is_sight_check_due(0.20, 0.05),
+		"Active sight timer becomes due too early"
+	)
+	_expect(
+		is_equal_approx(
+			VexEnemyPerceptionRuntime.next_sight_check_remaining(0.05, 0.10, 0.18),
+			0.18
+		),
+		"Elapsed sight timer no longer resets to interval"
+	)
+	_expect(
+		is_equal_approx(
+			VexEnemyPerceptionRuntime.next_sight_check_remaining(0.20, 0.05, 0.18),
+			0.15
+		),
+		"Sight timer countdown changed"
+	)
