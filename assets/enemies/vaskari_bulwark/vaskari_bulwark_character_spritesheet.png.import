@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://brcm2knf8hn6k"
-path="res://.godot/imported/vaskari_bulwark_character_spritesheet.png-1f17d3eadc1ee203d946a641d1c47c87.ctex"
+path.s3tc="res://.godot/imported/vaskari_bulwark_character_spritesheet.png-1f17d3eadc1ee203d946a641d1c47c87.s3tc.ctex"
 metadata={
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/enemies/vaskari_bulwark/vaskari_bulwark_character_spritesheet.png"
-dest_files=["res://.godot/imported/vaskari_bulwark_character_spritesheet.png-1f17d3eadc1ee203d946a641d1c47c87.ctex"]
+dest_files=["res://.godot/imported/vaskari_bulwark_character_spritesheet.png-1f17d3eadc1ee203d946a641d1c47c87.s3tc.ctex"]
 
 [params]
 

@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bpujgbnli8o57"
-path="res://.godot/imported/coil_lancer_character_spritesheet.png-aac73b07f2049b7b34139e278a41fcba.ctex"
+path.s3tc="res://.godot/imported/coil_lancer_character_spritesheet.png-aac73b07f2049b7b34139e278a41fcba.s3tc.ctex"
 metadata={
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/enemies/coil_lancer/coil_lancer_character_spritesheet.png"
-dest_files=["res://.godot/imported/coil_lancer_character_spritesheet.png-aac73b07f2049b7b34139e278a41fcba.ctex"]
+dest_files=["res://.godot/imported/coil_lancer_character_spritesheet.png-aac73b07f2049b7b34139e278a41fcba.s3tc.ctex"]
 
 [params]
 

@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bcindspittex1"
-path="res://.godot/imported/cinder_spitter_character_spritesheet.png-c67b57d34ab29446e8634f63c6c7de17.ctex"
+path.s3tc="res://.godot/imported/cinder_spitter_character_spritesheet.png-c67b57d34ab29446e8634f63c6c7de17.s3tc.ctex"
 metadata={
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/enemies/cinder_spitter/cinder_spitter_character_spritesheet.png"
-dest_files=["res://.godot/imported/cinder_spitter_character_spritesheet.png-c67b57d34ab29446e8634f63c6c7de17.ctex"]
+dest_files=["res://.godot/imported/cinder_spitter_character_spritesheet.png-c67b57d34ab29446e8634f63c6c7de17.s3tc.ctex"]
 
 [params]
 

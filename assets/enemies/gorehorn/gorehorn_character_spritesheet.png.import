@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://de8pocibc4fol"
-path="res://.godot/imported/gorehorn_character_spritesheet.png-17ee222c06b4fe5d117ec2bc24dde3ff.ctex"
+path.s3tc="res://.godot/imported/gorehorn_character_spritesheet.png-17ee222c06b4fe5d117ec2bc24dde3ff.s3tc.ctex"
 metadata={
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/enemies/gorehorn/gorehorn_character_spritesheet.png"
-dest_files=["res://.godot/imported/gorehorn_character_spritesheet.png-17ee222c06b4fe5d117ec2bc24dde3ff.ctex"]
+dest_files=["res://.godot/imported/gorehorn_character_spritesheet.png-17ee222c06b4fe5d117ec2bc24dde3ff.s3tc.ctex"]
 
 [params]
 

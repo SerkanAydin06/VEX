@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bpyi287frth02"
-path="res://.godot/imported/cinder_hound_character_spritesheet.png-9fd2736c816f75adb9b22ff57d67729a.ctex"
+path.s3tc="res://.godot/imported/cinder_hound_character_spritesheet.png-9fd2736c816f75adb9b22ff57d67729a.s3tc.ctex"
 metadata={
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/enemies/cinder_hound/cinder_hound_character_spritesheet.png"
-dest_files=["res://.godot/imported/cinder_hound_character_spritesheet.png-9fd2736c816f75adb9b22ff57d67729a.ctex"]
+dest_files=["res://.godot/imported/cinder_hound_character_spritesheet.png-9fd2736c816f75adb9b22ff57d67729a.s3tc.ctex"]
 
 [params]
 

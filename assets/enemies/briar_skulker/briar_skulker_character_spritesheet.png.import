@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d2briarsheet1"
-path="res://.godot/imported/briar_skulker_character_spritesheet.png-3c5fcc9758b4b0d704f49692749e09af.ctex"
+path.s3tc="res://.godot/imported/briar_skulker_character_spritesheet.png-3c5fcc9758b4b0d704f49692749e09af.s3tc.ctex"
 metadata={
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/enemies/briar_skulker/briar_skulker_character_spritesheet.png"
-dest_files=["res://.godot/imported/briar_skulker_character_spritesheet.png-3c5fcc9758b4b0d704f49692749e09af.ctex"]
+dest_files=["res://.godot/imported/briar_skulker_character_spritesheet.png-3c5fcc9758b4b0d704f49692749e09af.s3tc.ctex"]
 
 [params]
 
