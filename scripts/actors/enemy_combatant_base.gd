@@ -1089,242 +1089,109 @@ func _build_runtime_shortest_path(destination: Vector3) -> PackedVector3Array:
 
 
 func _build_local_detour_path(destination: Vector3) -> PackedVector3Array:
-	var toward_target := destination - global_position
-	toward_target.y = 0.0
-	if toward_target.length_squared() <= 0.001:
-		return PackedVector3Array()
-
-	var forward := toward_target.normalized()
-	var side := Vector3(-forward.z, 0.0, forward.x)
-	var base_step := maxf(
-		navigation_clearance * local_detour_clearance_multiplier,
-		local_detour_min_step
+	var result := EnemyNavigationRuntime.build_local_detour_path(
+		self,
+		destination,
+		navigation_clearance,
+		local_detour_clearance_multiplier,
+		local_detour_min_step,
+		local_detour_lateral_multipliers,
+		local_detour_forward_multipliers,
+		local_detour_progress_weight,
+		local_detour_distance_penalty,
+		local_detour_direct_path_bonus,
+		local_detour_persistence_bonus,
+		_local_detour_side,
+		_local_detour_remaining,
+		local_detour_duration,
+		waypoint_reach_distance,
+		navigation_collision_mask,
+		floor_collision_mask,
+		floor_snap_ray_start_height,
+		floor_snap_ray_extra_depth
 	)
-	var lateral_steps := PackedFloat32Array()
-	for multiplier: float in local_detour_lateral_multipliers:
-		lateral_steps.append(base_step * multiplier)
-	var forward_steps := PackedFloat32Array()
-	for multiplier: float in local_detour_forward_multipliers:
-		forward_steps.append(base_step * multiplier)
-	var side_signs := PackedFloat32Array([-1.0, 1.0])
-	if _local_detour_remaining > 0.0 and absf(_local_detour_side) > 0.5:
-		side_signs = PackedFloat32Array([_local_detour_side, -_local_detour_side])
-
-	var best_path := PackedVector3Array()
-	var best_score := -INF
-	var best_side := 0.0
-	var current_remaining := _horizontal_distance(global_position, destination)
-
-	for side_sign: float in side_signs:
-		for lateral_distance: float in lateral_steps:
-			for forward_distance: float in forward_steps:
-				var candidate := (
-					global_position
-					+ side * side_sign * lateral_distance
-					+ forward * forward_distance
-				)
-				candidate.y = global_position.y
-				if not _has_navigation_floor(candidate):
-					continue
-				if not _is_walk_segment_clear(global_position, candidate):
-					continue
-
-				var approach_point := _furthest_walkable_point_toward(candidate, destination)
-				var remaining := _horizontal_distance(approach_point, destination)
-				var progress := current_remaining - remaining
-				var direct_open := _is_walk_segment_clear(candidate, destination)
-				var score := (
-					-remaining
-					+ progress * local_detour_progress_weight
-					- lateral_distance * local_detour_distance_penalty
-				)
-				if direct_open:
-					score += local_detour_direct_path_bonus
-				if _local_detour_remaining > 0.0 and side_sign == _local_detour_side:
-					score += local_detour_persistence_bonus
-
-				if score <= best_score:
-					continue
-				best_score = score
-				best_side = side_sign
-				best_path = PackedVector3Array([global_position, candidate])
-				if (
-					_horizontal_distance(candidate, approach_point)
-					> waypoint_reach_distance * 0.35
-				):
-					best_path.append(approach_point)
-
-	if not best_path.is_empty():
-		_local_detour_side = best_side
-		_local_detour_remaining = local_detour_duration
-	return best_path
-
+	var path: PackedVector3Array = result.get("path", PackedVector3Array())
+	if not path.is_empty():
+		_local_detour_side = float(result.get("side", _local_detour_side))
+		_local_detour_remaining = float(result.get("remaining", local_detour_duration))
+	return path
 
 func _has_navigation_floor(probe_position: Vector3) -> bool:
-	var ray_start := probe_position + Vector3.UP * maxf(floor_snap_ray_start_height, 0.65)
-	var ray_end := probe_position + Vector3.DOWN * maxf(floor_snap_ray_extra_depth, 2.0)
-	var query := PhysicsRayQueryParameters3D.create(
-		ray_start,
-		ray_end,
+	return EnemyNavigationRuntime.has_navigation_floor(
+		self,
+		probe_position,
 		floor_collision_mask,
-		[get_rid()]
+		floor_snap_ray_start_height,
+		floor_snap_ray_extra_depth
 	)
-	query.collide_with_areas = false
-	return not get_world_3d().direct_space_state.intersect_ray(query).is_empty()
-
 
 func _has_reached_walkable_target(target: Vector3, reach_distance: float) -> bool:
-	if _horizontal_distance(global_position, target) > reach_distance:
-		return false
-
-	var direction := target - global_position
-	direction.y = 0.0
-	if direction.length_squared() <= 0.000001:
-		return true
-	var perpendicular := Vector3(-direction.z, 0.0, direction.x).normalized()
-	perpendicular *= navigation_clearance
-	var offsets: Array[Vector3] = [Vector3.ZERO, perpendicular, -perpendicular]
-	var space_state := get_world_3d().direct_space_state
-	for offset: Vector3 in offsets:
-		var ray_start := global_position + offset
-		var ray_end := target + offset
-		ray_start.y = global_position.y
-		ray_end.y = global_position.y
-		var query := PhysicsRayQueryParameters3D.create(
-			ray_start,
-			ray_end,
-			navigation_collision_mask,
-			[get_rid()]
-		)
-		query.collide_with_areas = false
-		if not space_state.intersect_ray(query).is_empty():
-			return false
-	return true
-
+	return EnemyNavigationRuntime.has_reached_clearance_target(
+		self,
+		target,
+		reach_distance,
+		navigation_collision_mask,
+		navigation_clearance
+	)
 
 func _build_astar_graph() -> AStar3D:
-	var graph := AStar3D.new()
-	for point_index: int in range(_navigation_points.size()):
-		graph.add_point(point_index, _navigation_points[point_index])
-	for edge: Vector2i in _valid_edges:
-		graph.connect_points(edge.x, edge.y, true)
-	return graph
-
+	return EnemyNavigationRuntime.build_astar_graph(
+		_navigation_points,
+		_valid_edges
+	)
 
 func _find_investigation_path(
 	graph: AStar3D,
 	start_id: int,
 	destination: Vector3
 ) -> PackedVector3Array:
-	# Hedef (özellikle oyuncunun duvar kenarındaki merkezi) doğrudan erişilemez
-	# olabilir. Hedefe düz görüş şartı aramak boş rota üretip AI'ı donduruyordu.
-	# Erişilebilir waypoint'lerden hedefe fiziksel olarak en çok yaklaşılabilen
-	# noktayı seç; dolaşma yolu varsa hedefe tamamen ulaşan aday doğal olarak kazanır.
-	var nearby_indices := _nearest_waypoint_indices(
+	return EnemyNavigationRuntime.find_investigation_path(
+		self,
+		graph,
+		start_id,
 		destination,
-		INF,
-		_navigation_points.size()
+		_navigation_points,
+		investigation_candidate_count,
+		search_probe_radius,
+		waypoint_reach_distance,
+		navigation_collision_mask,
+		navigation_clearance
 	)
-	var best_path := PackedVector3Array()
-	var best_remaining_distance := INF
-	var reachable_candidates := 0
-
-	for point_index: int in nearby_indices:
-		var candidate_path := graph.get_point_path(start_id, point_index)
-		if candidate_path.is_empty():
-			continue
-		reachable_candidates += 1
-		var waypoint := _navigation_points[point_index]
-		var approach_point := _furthest_walkable_point_toward(waypoint, destination)
-		var remaining_distance := _horizontal_distance(approach_point, destination)
-
-		if remaining_distance < best_remaining_distance:
-			best_remaining_distance = remaining_distance
-			best_path = candidate_path.duplicate()
-			if (
-				best_path.is_empty()
-				or _horizontal_distance(best_path[best_path.size() - 1], approach_point)
-				> waypoint_reach_distance * 0.25
-			):
-				best_path.append(approach_point)
-
-		if best_remaining_distance <= waypoint_reach_distance * 0.25:
-			break
-		if (
-			reachable_candidates >= investigation_candidate_count
-			and best_remaining_distance <= search_probe_radius * 1.5
-		):
-			break
-
-	return best_path
-
 
 func _furthest_walkable_point_toward(from_position: Vector3, destination: Vector3) -> Vector3:
-	var start := from_position
-	start.y = global_position.y
-	var target := destination
-	target.y = global_position.y
-	if _is_walk_segment_clear(start, target):
-		return target
-
-	# Gövde açıklığını hesaba katarak hedef yönünde yürünebilen son noktayı bul.
-	var low := 0.0
-	var high := 1.0
-	for _step: int in range(8):
-		var middle := (low + high) * 0.5
-		var probe := start.lerp(target, middle)
-		probe.y = global_position.y
-		if _is_walk_segment_clear(start, probe):
-			low = middle
-		else:
-			high = middle
-
-	var result := start.lerp(target, low)
-	result.y = global_position.y
-	return result
-
+	return EnemyNavigationRuntime.furthest_clearance_point_toward(
+		self,
+		from_position,
+		destination,
+		navigation_collision_mask,
+		navigation_clearance
+	)
 
 func _connect_endpoint_to_graph(graph: AStar3D, endpoint_id: int, endpoint: Vector3) -> void:
-	var maximum_distance := waypoint_link_distance * endpoint_link_distance_multiplier
-	var nearby_indices := _nearest_waypoint_indices(
+	EnemyNavigationRuntime.connect_endpoint_to_graph(
+		self,
+		graph,
+		endpoint_id,
 		endpoint,
-		maximum_distance,
-		endpoint_candidate_count
+		_navigation_points,
+		waypoint_link_distance * endpoint_link_distance_multiplier,
+		endpoint_candidate_count,
+		endpoint_connection_limit,
+		navigation_collision_mask,
+		navigation_clearance
 	)
-	var connected_count := 0
-	for point_index: int in nearby_indices:
-		if _is_walk_segment_clear(endpoint, _navigation_points[point_index]):
-			graph.connect_points(endpoint_id, point_index, true)
-			connected_count += 1
-			if connected_count >= endpoint_connection_limit:
-				break
-
 
 func _nearest_waypoint_indices(
 	endpoint: Vector3,
 	maximum_distance: float,
 	maximum_count: int
 ) -> Array[int]:
-	var indices: Array[int] = []
-	var distances: Array[float] = []
-
-	for point_index: int in range(_navigation_points.size()):
-		var distance := _horizontal_distance(endpoint, _navigation_points[point_index])
-		if distance > maximum_distance:
-			continue
-
-		var insert_at := distances.size()
-		while insert_at > 0 and distance < distances[insert_at - 1]:
-			insert_at -= 1
-		distances.insert(insert_at, distance)
-		indices.insert(insert_at, point_index)
-
-		if indices.size() > maximum_count:
-			indices.pop_back()
-			distances.pop_back()
-
-	return indices
-
+	return EnemyNavigationRuntime.nearest_waypoint_indices(
+		_navigation_points,
+		endpoint,
+		maximum_distance,
+		maximum_count
+	)
 
 func _cache_navigation_waypoints() -> void:
 	var current_scene := get_tree().current_scene
@@ -1386,48 +1253,21 @@ func _cache_navigation_waypoints() -> void:
 
 
 func _is_walk_segment_clear(from_position: Vector3, to_position: Vector3) -> bool:
-	var direction := to_position - from_position
-	direction.y = 0.0
-	if direction.length_squared() <= 0.01:
-		return true
-
-	var perpendicular := Vector3(-direction.z, 0.0, direction.x).normalized()
-	perpendicular *= navigation_clearance
-	var offsets: Array[Vector3] = [Vector3.ZERO, perpendicular, -perpendicular]
-	var space_state := get_world_3d().direct_space_state
-
-	for offset: Vector3 in offsets:
-		var ray_start := from_position + offset
-		var ray_end := to_position + offset
-		var query := PhysicsRayQueryParameters3D.create(
-			ray_start,
-			ray_end,
-			navigation_collision_mask,
-			[get_rid()]
-		)
-		if not space_state.intersect_ray(query).is_empty():
-			return false
-	return true
-
+	return EnemyNavigationRuntime.has_clearance_segment(
+		self,
+		from_position,
+		to_position,
+		navigation_collision_mask,
+		navigation_clearance
+	)
 
 func _is_center_segment_clear(from_position: Vector3, to_position: Vector3) -> bool:
-	var direction := to_position - from_position
-	direction.y = 0.0
-	if direction.length_squared() <= 0.01:
-		return true
-
-	var ray_start := from_position
-	var ray_end := to_position
-	ray_start.y = global_position.y
-	ray_end.y = global_position.y
-	var query := PhysicsRayQueryParameters3D.create(
-		ray_start,
-		ray_end,
-		navigation_collision_mask,
-		[get_rid()]
+	return EnemyNavigationRuntime.is_center_segment_clear(
+		self,
+		from_position,
+		to_position,
+		navigation_collision_mask
 	)
-	return get_world_3d().direct_space_state.intersect_ray(query).is_empty()
-
 
 func _move_toward_point(target: Vector3, delta: float) -> void:
 	var direction := target - global_position
