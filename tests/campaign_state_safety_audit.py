@@ -7,6 +7,7 @@ main_menu = (ROOT / "scripts/ui/main_menu.gd").read_text(encoding="utf-8")
 settings_panel = (ROOT / "scripts/ui/settings_panel.gd").read_text(encoding="utf-8")
 level_complete = (ROOT / "scripts/ui/level_complete.gd").read_text(encoding="utf-8")
 weapon_controller = (ROOT / "scripts/player/weapon_controller.gd").read_text(encoding="utf-8")
+weapon_persistence = (ROOT / "scripts/player/weapon_persistence_runtime.gd").read_text(encoding="utf-8")
 
 
 def function_block(source: str, name: str, next_name: str) -> str:
@@ -53,18 +54,21 @@ assert "difficulty_option.disabled = _is_difficulty_locked()" in settings_panel
 assert "current_scene.scene_file_path != GameState.MAIN_MENU_PATH" in settings_panel
 assert "not _is_difficulty_locked()" in settings_panel
 
-# Restored weapon dictionaries are treated as untrusted persistence data. Only
-# canonical definitions remain and numeric values are clamped to runtime limits.
+# Restored weapon dictionaries are treated as untrusted persistence data. The
+# controller orchestrates restore, while the persistence helper owns canonical
+# ids, legacy ammo migration and numeric clamping.
 restore_block = function_block(weapon_controller, "restore_state", "_migrate_legacy_ammo_dictionary")
 assert "_sanitize_restored_weapon_state()" in restore_block
-assert "func _sanitize_restored_weapon_state() -> void:" in weapon_controller
-sanitize_start = weapon_controller.index("func _sanitize_restored_weapon_state() -> void:")
-sanitize_end = weapon_controller.index("func toggle_weapon_flashlight(", sanitize_start)
-sanitize_block = weapon_controller[sanitize_start:sanitize_end]
+assert "VexWeaponPersistenceRuntime.sanitize_restored_weapon_state(" in weapon_controller
+assert "static func sanitize_restored_weapon_state(" in weapon_persistence
+sanitize_start = weapon_persistence.index("static func sanitize_restored_weapon_state(")
+sanitize_block = weapon_persistence[sanitize_start:]
 assert "maximum_upgrade_level" in sanitize_block
-assert "_effective_magazine_size(definition)" in sanitize_block
-assert "_get_reserve_ammo_capacity(definition.ammo_type)" in sanitize_block
+assert "maximum_magazine" in sanitize_block
+assert "get_reserve_ammo_capacity(weapon_definitions, definition.ammo_type)" in sanitize_block
 assert sanitize_block.count("clampi(") >= 3
+assert "static func canonical_weapon_id(" in weapon_persistence
+assert "static func migrate_legacy_ammo_dictionary(" in weapon_persistence
 
 # Gameplay reload timers must remain pause-aware while touching this area.
 assert "create_timer(weapon.reload_duration * float(_modifiers(weapon).reload), false)" in weapon_controller
