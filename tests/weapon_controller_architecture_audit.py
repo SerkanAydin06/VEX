@@ -6,10 +6,11 @@ hitscan = (ROOT / "scripts/player/weapon_hitscan_runtime.gd").read_text(encoding
 persistence = (ROOT / "scripts/player/weapon_persistence_runtime.gd").read_text(encoding="utf-8")
 heat = (ROOT / "scripts/player/weapon_heat_runtime.gd").read_text(encoding="utf-8")
 flashlight = (ROOT / "scripts/player/weapon_flashlight_runtime.gd").read_text(encoding="utf-8")
+reload_runtime = (ROOT / "scripts/player/weapon_reload_runtime.gd").read_text(encoding="utf-8")
 
 # WeaponController remains the gameplay-facing orchestrator, but raycast combat,
-# persistence normalization, heat transitions and flashlight-node application
-# must not grow back into it.
+# persistence normalization, heat transitions, flashlight-node application and
+# async reload timing/ammo transfer must not grow back into it.
 assert "class_name VexWeaponController" in controller
 assert "VexWeaponHitscanRuntime.shoot(" in controller
 assert "VexWeaponPersistenceRuntime.canonical_weapon_id(" in controller
@@ -20,6 +21,8 @@ assert "VexWeaponHeatRuntime.can_fire(" in controller
 assert "VexWeaponHeatRuntime.register_shot(" in controller
 assert "VexWeaponFlashlightRuntime.sync(" in controller
 assert "VexWeaponFlashlightRuntime.is_active(" in controller
+assert "VexWeaponReloadRuntime.reload_magazine(" in controller
+assert "VexWeaponReloadRuntime.reload_sg04_shells(" in controller
 assert "PhysicsRayQueryParameters3D.create(" not in controller
 assert "HIT_IMPACT_V1" not in controller
 assert "func _get_distance_damage_multiplier(" not in controller
@@ -27,7 +30,9 @@ assert "func _resolve_damage_target(" not in controller
 assert "heat_cooling_per_second *" not in controller
 assert "light_energy = weapon.flashlight_energy" not in controller
 assert "spot_range = weapon.flashlight_range" not in controller
-assert len(controller.splitlines()) < 780
+assert "create_timer(" not in controller
+assert "func _reload_sg04_shells(" not in controller
+assert len(controller.splitlines()) < 720
 
 assert "class_name VexWeaponHitscanRuntime" in hitscan
 assert "static func shoot(" in hitscan
@@ -64,5 +69,16 @@ assert "static func is_active(" in flashlight
 assert "light.light_energy" in flashlight
 assert "light.spot_range" in flashlight
 assert "light.spot_angle" in flashlight
+
+assert "class_name VexWeaponReloadRuntime" in reload_runtime
+assert "static func reload_magazine(" in reload_runtime
+assert "static func reload_sg04_shells(" in reload_runtime
+assert "create_timer(" in reload_runtime
+assert "false" in reload_runtime
+assert "live_magazine" in reload_runtime
+assert "live_reserve" in reload_runtime
+assert "reload_shell" in reload_runtime
+assert "reload_finish" in reload_runtime
+assert "RESULT_INTERRUPTED" in reload_runtime
 
 print("weapon controller architecture audit passed")
