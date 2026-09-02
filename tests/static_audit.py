@@ -561,10 +561,10 @@ def check_repository_hygiene() -> None:
             fail(f"Geliştirme içeriği release export filtresinden çıkarılmıyor: {excluded}")
 
 
-
 def check_player_gameplay_regressions() -> None:
     player = read("scripts/player/player.gd")
     weapon = read("scripts/player/weapon_controller.gd")
+    reload_runtime = read("scripts/player/weapon_reload_runtime.gd")
     game_state = read("scripts/autoload/game_state.gd")
     base_level = read("scripts/levels/base_level.gd")
     workflow = read(".github/workflows/validate.yml")
@@ -573,12 +573,18 @@ def check_player_gameplay_regressions() -> None:
     if "maximum_health := 10000000" in player:
         fail("Player debug maximum_health default'u geri gelmiş")
     for contract in [
-        'create_timer(weapon.reload_duration * float(_modifiers(weapon).reload), false)',
-        'create_timer(shell_cycle_duration, false)',
-        'create_timer(finish_duration, false)',
+        "VexWeaponReloadRuntime.reload_magazine(",
+        "VexWeaponReloadRuntime.reload_sg04_shells(",
     ]:
         if contract not in weapon:
-            fail(f"Pause-aware reload sözleşmesi eksik: {contract}")
+            fail(f"WeaponController reload runtime delegasyonu eksik: {contract}")
+    for contract in [
+        "weapon.reload_duration * maxf(0.01, reload_time_multiplier)",
+        "create_timer(shell_cycle_duration, false)",
+        "create_timer(finish_duration, false)",
+    ]:
+        if contract not in reload_runtime:
+            fail(f"Pause-aware reload runtime sözleşmesi eksik: {contract}")
     if 'pending_player_restore_state["health"] = 100 if _restore_full_health' in game_state:
         fail("Restart full-health hâlâ 100'e hardcode")
     if 'restart_health = int(player.get("maximum_health"))' not in game_state:
@@ -605,6 +611,7 @@ def check_canonical_documentation() -> None:
     for actor in ["coil_lancer", "spore_matriarch", "vaskari_bulwark", "venom_marshall"]:
         exists(f"scripts/actors/{actor}.gd")
         exists(f"scenes/actors/{actor}.tscn")
+
 
 def check_stale_contracts() -> None:
     project_text = "\n".join(text for _path, text in text_files())
