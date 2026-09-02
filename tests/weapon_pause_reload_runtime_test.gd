@@ -16,6 +16,7 @@ func _ready() -> void:
 	await _test_standard_reload_preserves_mid_reload_pickup(controller)
 	await _test_sg04_reload_pause(controller)
 	await _test_sg04_reload_interrupt_generation(controller)
+	_test_recoil_runtime_burst_state(controller)
 	_test_world_weapon_repickup_preserves_empty_magazine(controller)
 
 	get_tree().paused = false
@@ -128,6 +129,48 @@ func _test_sg04_reload_interrupt_generation(controller: VexWeaponController) -> 
 	controller._sg04_reload_fire_queued = false
 	controller._cooldown_remaining = 0.0
 	weapon.reload_duration = original_duration
+
+
+func _test_recoil_runtime_burst_state(controller: VexWeaponController) -> void:
+	var runtime := controller._recoil_runtime as VexWeaponRecoilRuntime
+	assert(runtime != null)
+	runtime.reset_burst()
+	assert(runtime.burst_shots == 0)
+	assert(is_zero_approx(runtime.burst_reset_remaining))
+
+	# Reset timer dolmadan burst sayısı korunur; süre dolunca sıfırlanır.
+	runtime.burst_shots = 2
+	runtime.burst_reset_remaining = 0.05
+	runtime.tick(0.02)
+	assert(runtime.burst_shots == 2)
+	assert(runtime.burst_reset_remaining > 0.0)
+	runtime.tick(0.04)
+	assert(runtime.burst_shots == 0)
+	assert(is_zero_approx(runtime.burst_reset_remaining))
+
+	# Automatic silah atışları state'i helper içinde biriktirir.
+	var automatic_weapon := controller.get_weapon_definition(&"mp90")
+	assert(automatic_weapon != null)
+	runtime.apply(
+		controller._player,
+		automatic_weapon,
+		controller._modifiers(automatic_weapon),
+		controller._recoil_tuning()
+	)
+	assert(runtime.burst_shots == 1)
+	assert(runtime.burst_reset_remaining >= controller.burst_reset_min_time)
+	runtime.apply(
+		controller._player,
+		automatic_weapon,
+		controller._modifiers(automatic_weapon),
+		controller._recoil_tuning()
+	)
+	assert(runtime.burst_shots == 2)
+
+	# Equip/switch sınırı yeni silaha eski burst birikimini taşımamalı.
+	controller.switch_to(controller.current_weapon_id)
+	assert(runtime.burst_shots == 0)
+	assert(is_zero_approx(runtime.burst_reset_remaining))
 
 
 func _test_world_weapon_repickup_preserves_empty_magazine(controller: VexWeaponController) -> void:
