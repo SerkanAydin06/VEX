@@ -32,14 +32,45 @@ def number(text: str, pattern: str, message: str) -> float | None:
 
 def main() -> int:
     script = read("scripts/player/player.gd")
+    runtime = read("scripts/player/player_movement_runtime.gd")
     scene = read("scenes/player/player.tscn")
 
     for contract, message in [
         ('@export_range(0.0, 1.8, 0.01) var crouch_view_pivot_height', "Crouch kamera yüksekliği 1 metrenin altına inemiyor"),
         ('if is_crouching:\n\t\t# Crouch + jump önce ayağa kalkma isteğidir.', "Jump crouch durumunu özel ele almıyor"),
         ('if _can_stand_up():\n\t\t\t_set_crouching(false)\n\t\treturn', "Crouch + jump güvenli şekilde ayağa kalkmıyor"),
+        ('var _movement_runtime := VexPlayerMovementRuntime.new()', "Player movement runtime helper kullanmıyor"),
+        ('_movement_runtime.wants_to_sprint(', "Sprint gate movement runtime üzerinden yürümüyor"),
+        ('_movement_runtime.update_horizontal_velocity(', "Yatay movement integration helper üzerinden yürümüyor"),
+        ('_movement_runtime.resolve_vertical_velocity(', "Dikey movement integration helper üzerinden yürümüyor"),
+        ('_movement_runtime.queue_jump(stamina_recovery_delay)', "Jump runtime state helper üzerinden yürümüyor"),
+        ('_movement_runtime.apply_external_impulse(', "External impulse helper üzerinden yürümüyor"),
+        ('_movement_runtime.update_stamina(', "Stamina runtime state helper üzerinden yürümüyor"),
     ]:
         require(script, contract, message)
+
+    for forbidden, message in [
+        ('var _jump_requested :=', "Jump runtime state Player içinde kaldı"),
+        ('var _stamina_recovery_delay_remaining :=', "Stamina recovery runtime state Player içinde kaldı"),
+        ('var _external_impulse_velocity :=', "External impulse velocity Player içinde kaldı"),
+        ('var _external_impulse_remaining :=', "External impulse timer Player içinde kaldı"),
+        ('var _external_impulse_decay_speed :=', "External impulse decay Player içinde kaldı"),
+        ('var _external_impulse_vertical_pending :=', "External impulse vertical state Player içinde kaldı"),
+    ]:
+        if forbidden in script:
+            ERRORS.append(message)
+
+    for contract, message in [
+        ('class_name VexPlayerMovementRuntime', "Movement runtime class_name eksik"),
+        ('var _jump_requested := false', "Movement runtime jump state sahibi değil"),
+        ('var _stamina_recovery_delay_remaining := 0.0', "Movement runtime stamina delay sahibi değil"),
+        ('var _external_impulse_velocity := Vector3.ZERO', "Movement runtime impulse velocity sahibi değil"),
+        ('func wants_to_sprint(', "Movement runtime sprint gate sunmuyor"),
+        ('func update_stamina(', "Movement runtime stamina integration sunmuyor"),
+        ('func update_horizontal_velocity(', "Movement runtime horizontal integration sunmuyor"),
+        ('func resolve_vertical_velocity(', "Movement runtime vertical integration sunmuyor"),
+    ]:
+        require(runtime, contract, message)
 
     standing_height = number(scene, r'^height\s*=\s*([0-9.]+)$', "Player standing capsule yüksekliği bulunamadı")
     crouch_height = number(scene, r'^crouch_capsule_height\s*=\s*([0-9.]+)$', "Player crouch capsule yüksekliği scene-authority değil")
