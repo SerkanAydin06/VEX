@@ -1,0 +1,119 @@
+[gd_scene load_steps=12 format=3 uid="uid://bvenommarshalb1"]
+
+[ext_resource type="Script" path="res://scripts/actors/venom_marshall_buff_projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/enemies/venom_marshall/venom_marshall_effects_spritesheet.png" id="2_effects"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape_buff_field"]
+radius = 6.5
+height = 3.0
+
+[sub_resource type="AtlasTexture" id="Atlas_second_1"]
+atlas = ExtResource("2_effects")
+region = Rect2(0, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_second_2"]
+atlas = ExtResource("2_effects")
+region = Rect2(512, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_second_3"]
+atlas = ExtResource("2_effects")
+region = Rect2(1024, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_second_4"]
+atlas = ExtResource("2_effects")
+region = Rect2(1536, 512, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_1"]
+atlas = ExtResource("2_effects")
+region = Rect2(0, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_2"]
+atlas = ExtResource("2_effects")
+region = Rect2(512, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_3"]
+atlas = ExtResource("2_effects")
+region = Rect2(1024, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_4"]
+atlas = ExtResource("2_effects")
+region = Rect2(1536, 1024, 512, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_buff_projectile"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_second_1")}, {"duration": 1.0, "texture": SubResource("Atlas_second_2")}, {"duration": 1.0, "texture": SubResource("Atlas_second_3")}, {"duration": 1.0, "texture": SubResource("Atlas_second_4")}],
+"loop": true,
+"name": &"2nd_projectile",
+"speed": 9.0
+}, {
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_impact_1")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_2")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_3")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_4")}],
+"loop": true,
+"name": &"impact",
+"speed": 5.0
+}]
+
+[node name="VenomMarshallBuffProjectile" type="Area3D"]
+collision_layer = 0
+collision_mask = 0
+monitorable = false
+monitoring = false
+script = ExtResource("1_script")
+speed = 12.0
+flight_lifetime = 4.0
+field_radius = 6.5
+field_duration = 8.0
+field_tick_interval = 0.3
+field_height = 3.0
+heal_ratio = 0.3
+damage_multiplier = 1.25
+speed_multiplier = 1.2
+buff_grace_duration = 1.25
+field_fade_duration = 1.0
+flight_light_energy = 2.2
+field_light_energy = 2.6
+pulse_speed = 4.5
+field_visual_alpha = 0.7
+
+[node name="FieldCollision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.5, 0)
+shape = SubResource("CylinderShape_buff_field")
+disabled = true
+
+[node name="FlightVisual" type="AnimatedSprite3D" parent="."]
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_buff_projectile")
+animation = &"2nd_projectile"
+autoplay = "2nd_projectile"
+pixel_size = 0.00155
+texture_filter = 3
+alpha_cut = 1
+
+[node name="FieldVisual" type="AnimatedSprite3D" parent="."]
+visible = false
+position = Vector3(0, 0.025, 0)
+rotation_degrees = Vector3(-90, 0, 0)
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_buff_projectile")
+animation = &"impact"
+pixel_size = 0.025390625
+texture_filter = 3
+alpha_cut = 1
+modulate = Color(1, 1, 1, 0.7)
+
+[node name="FieldLight" type="OmniLight3D" parent="."]
+light_color = Color(0.66, 0.24, 1, 1)
+light_energy = 2.2
+omni_range = 7.5
+shadow_enabled = false
+distance_fade_enabled = true
+distance_fade_begin = 24.0
+distance_fade_length = 8.0
