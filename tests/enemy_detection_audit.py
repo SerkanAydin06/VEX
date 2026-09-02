@@ -82,7 +82,7 @@ for needle in [
 
 for needle in [
     "search_probe_radius := 2.0",
-    "VexEnemyRuntimeUtils.has_visual_contact(",
+    "VexEnemyPerceptionRuntime.has_visual_contact(",
     "func _investigate_last_seen(delta: float)",
     "VexEnemyRuntimeUtils.investigation_probe(",
     "_lost_sight_remaining = 0.0",

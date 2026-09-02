@@ -446,13 +446,13 @@ func _physics_process(delta: float) -> void:
 			global_position,
 			_player.global_position
 		)
-		var active_sight_range: float = (
-			_runtime_pursuit_range
-			if _aggro
-			else _runtime_detection_range
+		var active_sight_range := VexEnemyPerceptionRuntime.active_detection_range(
+			_aggro,
+			_runtime_detection_range,
+			_runtime_pursuit_range,
+			_damage_reaction_remaining,
+			damage_reaction_range
 		)
-		if _damage_reaction_remaining > 0.0:
-			active_sight_range = maxf(active_sight_range, damage_reaction_range)
 		var can_see_player := _get_cached_player_visibility(
 			delta,
 			player_distance,
@@ -704,27 +704,23 @@ func _investigate_last_seen(delta: float) -> void:
 func _is_player_inside_initial_view() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
-	if initial_view_angle >= 359.9:
-		return true
-	var player_direction := _player.global_position - global_position
-	player_direction.y = 0.0
-	if player_direction.length_squared() <= 0.001:
-		return true
-	player_direction = player_direction.normalized()
-	var view_threshold := cos(deg_to_rad(initial_view_angle * 0.5))
-	return _facing_direction.dot(player_direction) >= view_threshold
+	return VexEnemyPerceptionRuntime.is_player_inside_initial_view(
+		global_position,
+		_facing_direction,
+		_player.global_position,
+		initial_view_angle
+	)
 
 
 func _check_line_of_sight() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
 	var origin := global_position + Vector3.UP * sight_origin_height
-	if not VexEnemyRuntimeUtils.has_visual_contact(
-		get_world_3d(),
-		origin,
+	if not VexEnemyPerceptionRuntime.has_visual_contact(
+		self,
 		_player,
+		origin,
 		sight_collision_mask,
-		get_rid(),
 		sight_target_height,
 		visibility_vertical_span_scale,
 		visibility_vertical_span_min,
@@ -738,27 +734,22 @@ func _check_line_of_sight() -> bool:
 		return false
 
 	var player_distance := _horizontal_distance(global_position, _player.global_position)
-	if (
-		not _aggro
-		and _player.get("is_crouching") == true
-		and player_distance > crouch_guaranteed_detection_distance
-	):
-		return randf() <= crouch_detection_chance
-	return true
+	return VexEnemyPerceptionRuntime.passes_crouch_detection(
+		_aggro,
+		_player.get("is_crouching") == true,
+		player_distance,
+		crouch_guaranteed_detection_distance,
+		crouch_detection_chance
+	)
 
 
 func _get_crouched_sight_target_height() -> float:
-	var shape_node := _player.get_node_or_null("CollisionShape3D") as CollisionShape3D
-	if shape_node != null:
-		var capsule := shape_node.shape as CapsuleShape3D
-		if capsule != null:
-			var top_height := shape_node.position.y + (capsule.height * 0.5)
-			return clampf(
-				top_height * crouched_target_height_scale,
-				crouched_target_min_height,
-				sight_target_height
-			)
-	return 0.0
+	return VexEnemyPerceptionRuntime.crouched_sight_target_height(
+		_player,
+		sight_target_height,
+		crouched_target_height_scale,
+		crouched_target_min_height
+	)
 
 
 func _is_player_collider(collider: Node) -> bool:
@@ -1286,9 +1277,13 @@ func receive_ally_alert(suspected_position: Vector3) -> void:
 func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -> void:
 	if _dead or source == self:
 		return
-	var distance := _horizontal_distance(global_position, noise_position)
-	var effective_range := hearing_radius * maxf(loudness * hearing_loudness_scale, 0.1)
-	if distance > effective_range:
+	if not VexEnemyPerceptionRuntime.should_hear_noise(
+		global_position,
+		noise_position,
+		hearing_radius,
+		loudness,
+		hearing_loudness_scale
+	):
 		return
 	var hearing_origin := global_position + Vector3.UP * acoustic_probe_height
 	var hearing_target := noise_position + Vector3.UP * acoustic_probe_height
@@ -1303,7 +1298,9 @@ func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -
 	_search_remaining = search_duration
 	_reset_search_probe()
 	_path_refresh_remaining = 0.0
-	if loudness >= loud_noise_alert_threshold:
+	if VexEnemyPerceptionRuntime.should_broadcast_noise_alert(
+		loudness, loud_noise_alert_threshold
+	):
 		_alert_nearby_allies(noise_position)
 
 

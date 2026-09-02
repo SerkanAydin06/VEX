@@ -3,6 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "scripts" / "actors" / "enemy_combatant_base.gd"
+LUNGE = ROOT / "scripts" / "actors" / "enemy_lunge_base.gd"
 RUNTIME = ROOT / "scripts" / "actors" / "enemy_perception_runtime.gd"
 
 errors: list[str] = []
@@ -26,6 +27,7 @@ def function_body(source: str, name: str) -> str:
 
 
 base = read(BASE)
+lunge = read(LUNGE)
 runtime = read(RUNTIME)
 
 for contract in [
@@ -48,6 +50,18 @@ for contract in [
 ]:
     if contract not in base:
         errors.append(f"Combatant perception delegation eksik: {contract}")
+
+for contract in [
+    "VexEnemyPerceptionRuntime.active_detection_range(",
+    "VexEnemyPerceptionRuntime.is_player_inside_initial_view(",
+    "VexEnemyPerceptionRuntime.passes_crouch_detection(",
+    "VexEnemyPerceptionRuntime.has_visual_contact(",
+    "VexEnemyPerceptionRuntime.crouched_sight_target_height(",
+    "VexEnemyPerceptionRuntime.should_hear_noise(",
+    "VexEnemyPerceptionRuntime.should_broadcast_noise_alert(",
+]:
+    if contract not in lunge:
+        errors.append(f"Lunge perception delegation eksik: {contract}")
 
 for contract in [
     "class_name VexEnemyPerceptionRuntime",
@@ -73,6 +87,11 @@ for contract in [
     if contract not in runtime:
         errors.append(f"Perception runtime contract eksik: {contract}")
 
+lunge_initial_view = function_body(lunge, "_is_player_inside_initial_view(")
+lunge_line_of_sight = function_body(lunge, "_check_line_of_sight(")
+lunge_crouched_height = function_body(lunge, "_get_crouched_sight_target_height(")
+lunge_noise_handler = function_body(lunge, "_on_noise_emitted(")
+
 can_see = function_body(base, "_can_see_player(")
 initial_view = function_body(base, "_is_player_inside_initial_view(")
 line_of_sight = function_body(base, "_check_line_of_sight(")
@@ -93,6 +112,19 @@ if "visible_samples" in ranged_ratio or "PhysicsRayQueryParameters3D.create(" in
     errors.append("Ranged visibility sampling hâlâ combatant base içinde")
 if "while current != null" in player_collider:
     errors.append("Player collider ancestry çözümü hâlâ combatant base içinde")
+
+if "cos(deg_to_rad" in lunge_initial_view:
+    errors.append("Initial view cone hesabı hâlâ lunge base içinde")
+if "VexEnemyRuntimeUtils.has_visual_contact(" in lunge_line_of_sight:
+    errors.append("Visual contact çözümü hâlâ lunge base içinde")
+if "randf()" in lunge_line_of_sight:
+    errors.append("Crouch detection RNG hâlâ lunge base içinde")
+if 'get_node_or_null("CollisionShape3D")' in lunge_crouched_height:
+    errors.append("Crouched target-height çözümü hâlâ lunge base içinde")
+if "hearing_radius * maxf(" in lunge_noise_handler:
+    errors.append("Hearing effective-range hesabı hâlâ lunge base içinde")
+if "loudness >= loud_noise_alert_threshold" in lunge_noise_handler:
+    errors.append("Noise ally-alert threshold kararı hâlâ lunge base içinde")
 
 if "hearing_radius * maxf(" in noise_handler:
     errors.append("Hearing effective-range hesabı hâlâ combatant base içinde")
