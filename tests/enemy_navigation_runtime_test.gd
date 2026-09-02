@@ -24,6 +24,7 @@ func _ready() -> void:
 	_test_clearance_helpers(host)
 	_test_investigation_helpers(host)
 	_test_local_detour(host)
+	_test_path_motion_helpers()
 
 	if _errors.is_empty():
 		print("ENEMY NAVIGATION RUNTIME TEST: OK")
@@ -178,3 +179,64 @@ func _test_local_detour(host: CharacterBody3D) -> void:
 	_expect(not path.is_empty(), "Local detour helper produced no open-space candidate")
 	if not path.is_empty():
 		_expect(absf(float(result.get("side", 0.0))) > 0.5, "Local detour side selection missing")
+
+
+func _test_path_motion_helpers() -> void:
+	_expect(
+		VexEnemyNavigationRuntime.should_refresh_path(
+			false, 1.0, Vector3.ZERO, Vector3.ZERO, 1.2
+		),
+		"Missing navigation target no longer refreshes path"
+	)
+	_expect(
+		not VexEnemyNavigationRuntime.should_refresh_path(
+			true, 0.2, Vector3.ZERO, Vector3(0.5, 5.0, 0.0), 1.2
+		),
+		"Small horizontal target change refreshes path early"
+	)
+	_expect(
+		VexEnemyNavigationRuntime.should_refresh_path(
+			true, 0.2, Vector3.ZERO, Vector3(2.0, 0.0, 0.0), 1.2
+		),
+		"Large target change no longer refreshes path"
+	)
+	_expect(
+		VexEnemyNavigationRuntime.should_refresh_path(
+			true, 0.0, Vector3.ZERO, Vector3.ZERO, 1.2
+		),
+		"Expired refresh timer no longer rebuilds path"
+	)
+
+	var direct := VexEnemyNavigationRuntime.active_movement_direction(
+		Vector3.ZERO, Vector3(4.0, 9.0, 0.0), 0.0, Vector3.ZERO
+	)
+	_expect(direct.is_equal_approx(Vector3.RIGHT), "Direct movement direction changed")
+	var detour := VexEnemyNavigationRuntime.active_movement_direction(
+		Vector3.ZERO, Vector3(4.0, 0.0, 0.0), 0.5, Vector3(0.0, 0.0, 1.0)
+	)
+	_expect(detour.is_equal_approx(Vector3(0.0, 0.0, 1.0)), "Active detour direction ignored")
+	_expect(
+		is_zero_approx(
+			VexEnemyNavigationRuntime.active_movement_direction(
+				Vector3.ZERO, Vector3(0.01, 5.0, 0.01), 0.0, Vector3.ZERO
+			).length()
+		),
+		"Near-zero movement target no longer stops"
+	)
+	_expect(
+		is_equal_approx(VexEnemyNavigationRuntime.movement_speed(true, 2.0, 5.0), 5.0),
+		"Chase movement speed selection changed"
+	)
+	_expect(
+		is_equal_approx(VexEnemyNavigationRuntime.movement_speed(false, 2.0, 5.0), 2.0),
+		"Normal movement speed selection changed"
+	)
+
+	var tangent := VexEnemyNavigationRuntime.detour_direction_from_collision_normal(
+		Vector3.RIGHT, Vector3.ZERO, Vector3(0.0, 0.0, 5.0), 0.55
+	)
+	_expect(tangent.is_equal_approx(Vector3(0.0, 0.0, 1.0)), "Detour tangent selection changed")
+	var floor_normal := VexEnemyNavigationRuntime.detour_direction_from_collision_normal(
+		Vector3.UP, Vector3.ZERO, Vector3(0.0, 0.0, 5.0), 0.55
+	)
+	_expect(floor_normal.is_equal_approx(Vector3.ZERO), "Floor-like collision now creates detour")
