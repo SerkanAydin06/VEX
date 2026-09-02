@@ -1,6 +1,7 @@
 extends Node
 
 const BUFF_PROJECTILE_SCENE := preload("res://scenes/actors/venom_marshall_buff_projectile.tscn")
+const ACTOR_SCENE := preload("res://scenes/actors/venom_marshall.tscn")
 
 class DummyEnemy:
 	extends Node3D
@@ -13,6 +14,10 @@ class DummyEnemy:
 
 
 func _ready() -> void:
+	var actor := ACTOR_SCENE.instantiate()
+	assert(actor is VexVenomMarshall)
+	actor.free()
+
 	var projectile := BUFF_PROJECTILE_SCENE.instantiate() as VexVenomMarshallBuffProjectile
 	assert(projectile != null)
 	projectile.field_radius = 4.8

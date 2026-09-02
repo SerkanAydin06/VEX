@@ -5,7 +5,7 @@ type="CompressedTexture2D"
 uid="uid://deik72rcf51cx"
 path="res://.godot/imported/coil_lancer_effects_spritesheet.png-b176390a74b299639ffe4f710d7420df.ctex"
 metadata={
-"vram_texture": false
+"vram_texture": true
 }
 
 [deps]
@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/coil_lancer_effects_spritesheet.png-b176390a7
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

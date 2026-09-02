@@ -1,8 +1,6 @@
 class_name VexVenomMarshall
 extends "res://scripts/actors/enemy_combatant_performance_base.gd"
 
-const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.gd")
-
 @export_category("10 - Venom Marshall Alan Desteği")
 ## Zeminde güçlendirme alanı kuran ikinci skill mermisidir.
 @export var buff_projectile_scene: PackedScene

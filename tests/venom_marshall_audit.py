@@ -51,8 +51,9 @@ for import_name in [
     "venom_marshall_effects_spritesheet.png.import",
 ]:
     import_text = (ASSET / import_name).read_text(encoding="utf-8")
-    assert "compress/mode=0" in import_text, import_name
+    assert "compress/mode=2" in import_text, import_name
     assert "mipmaps/generate=true" in import_text, import_name
+    assert '"vram_texture": true' in import_text, import_name
 
 actor = ACTOR.read_text(encoding="utf-8")
 actor_script = ACTOR_SCRIPT.read_text(encoding="utf-8")
