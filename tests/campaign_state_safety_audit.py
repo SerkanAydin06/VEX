@@ -8,6 +8,7 @@ settings_panel = (ROOT / "scripts/ui/settings_panel.gd").read_text(encoding="utf
 level_complete = (ROOT / "scripts/ui/level_complete.gd").read_text(encoding="utf-8")
 weapon_controller = (ROOT / "scripts/player/weapon_controller.gd").read_text(encoding="utf-8")
 weapon_persistence = (ROOT / "scripts/player/weapon_persistence_runtime.gd").read_text(encoding="utf-8")
+weapon_reload = (ROOT / "scripts/player/weapon_reload_runtime.gd").read_text(encoding="utf-8")
 
 
 def function_block(source: str, name: str, next_name: str) -> str:
@@ -70,9 +71,13 @@ assert sanitize_block.count("clampi(") >= 3
 assert "static func canonical_weapon_id(" in weapon_persistence
 assert "static func migrate_legacy_ammo_dictionary(" in weapon_persistence
 
-# Gameplay reload timers must remain pause-aware while touching this area.
-assert "create_timer(weapon.reload_duration * float(_modifiers(weapon).reload), false)" in weapon_controller
-assert "create_timer(shell_cycle_duration, false)" in weapon_controller
-assert "create_timer(finish_duration, false)" in weapon_controller
+# Gameplay reload timers remain pause-aware after async timing moved out of the
+# controller. SceneTree.create_timer(..., false) must live in the reload helper.
+assert "VexWeaponReloadRuntime.reload_magazine(" in weapon_controller
+assert "VexWeaponReloadRuntime.reload_sg04_shells(" in weapon_controller
+assert "create_timer(" not in weapon_controller
+assert "weapon.reload_duration * maxf(0.01, reload_time_multiplier)" in weapon_reload
+assert "create_timer(shell_cycle_duration, false)" in weapon_reload
+assert "create_timer(finish_duration, false)" in weapon_reload
 
 print("campaign state safety audit passed")
