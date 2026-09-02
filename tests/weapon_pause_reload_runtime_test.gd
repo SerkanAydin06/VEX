@@ -15,6 +15,7 @@ func _ready() -> void:
 	await _test_standard_reload_pause(controller)
 	await _test_standard_reload_preserves_mid_reload_pickup(controller)
 	await _test_sg04_reload_pause(controller)
+	await _test_sg04_reload_interrupt_generation(controller)
 	_test_world_weapon_repickup_preserves_empty_magazine(controller)
 
 	get_tree().paused = false
@@ -93,6 +94,39 @@ func _test_sg04_reload_pause(controller: VexWeaponController) -> void:
 	await get_tree().create_timer(0.24, true).timeout
 	assert(not controller.is_reloading)
 	assert(int(controller.magazines.get(&"sg04", 0)) == 1)
+	weapon.reload_duration = original_duration
+
+
+func _test_sg04_reload_interrupt_generation(controller: VexWeaponController) -> void:
+	var weapon := controller.get_weapon_definition(&"sg04")
+	assert(weapon != null)
+	var original_duration := weapon.reload_duration
+	weapon.reload_duration = 0.16
+	if not controller.unlocked_weapons.has(&"sg04"):
+		controller.unlocked_weapons.append(&"sg04")
+	controller.current_weapon_id = &"sg04"
+	controller.magazines[&"sg04"] = 0
+	controller.reserve_ammo[weapon.ammo_type] = 2
+	controller._cooldown_remaining = 0.0
+	controller._sg04_reload_fire_queued = false
+	controller.reload()
+	assert(controller.is_reloading)
+
+	# İlk shell cycle 0.12s. Bir shell yerleştikten sonra reload'u ateşle kes.
+	await get_tree().create_timer(0.14, true).timeout
+	assert(int(controller.magazines.get(&"sg04", -1)) == 1)
+	assert(int(controller.reserve_ammo.get(weapon.ammo_type, -1)) == 1)
+	controller._cooldown_remaining = 1.0
+	controller._interrupt_sg04_reload_and_fire()
+	assert(not controller.is_reloading)
+	assert(controller._sg04_reload_fire_queued)
+
+	# Eski async reload generation'ı ikinci shell'i sonradan ekleyememeli.
+	await get_tree().create_timer(0.22, true).timeout
+	assert(int(controller.magazines.get(&"sg04", -1)) == 1)
+	assert(int(controller.reserve_ammo.get(weapon.ammo_type, -1)) == 1)
+	controller._sg04_reload_fire_queued = false
+	controller._cooldown_remaining = 0.0
 	weapon.reload_duration = original_duration
 
 
