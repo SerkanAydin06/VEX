@@ -38,6 +38,7 @@ for enemy, (min_detection, min_pursuit, min_dormant) in EXPECTED.items():
 
 ravager_script = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
 redviper_script = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
+perception_script = (ROOT / "scripts/actors/enemy_perception_runtime.gd").read_text(encoding="utf-8")
 assert "var detection_range := 30.0" in ravager_script
 assert "var pursuit_range := 38.0" in ravager_script
 assert "var initial_view_angle := 240.0" in ravager_script
@@ -68,10 +69,11 @@ for needle in [
 ]:
     assert needle in utils_script, needle
 
+assert "VexEnemyRuntimeUtils.has_visual_contact(" in perception_script
 for needle in [
     "search_probe_radius := 2.2",
     "alert_allies_on_detection := true",
-    "VexEnemyRuntimeUtils.has_visual_contact(",
+    "VexEnemyPerceptionRuntime.has_visual_contact(",
     "func _advance_search_probe()",
     "VexEnemyRuntimeUtils.investigation_probe(",
     "_begin_search()",

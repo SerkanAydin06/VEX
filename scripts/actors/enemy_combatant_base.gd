@@ -1622,13 +1622,13 @@ func _apply_dormant_physics(delta: float) -> void:
 func _can_see_player() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
-	var active_range := (
-		_runtime_pursuit_range
-		if _alerted
-		else _runtime_detection_range
+	var active_range := VexEnemyPerceptionRuntime.active_detection_range(
+		_alerted,
+		_runtime_detection_range,
+		_runtime_pursuit_range,
+		_damage_reaction_remaining,
+		damage_reaction_range
 	)
-	if _damage_reaction_remaining > 0.0:
-		active_range = maxf(active_range, damage_reaction_range)
 	var player_distance := _horizontal_distance(global_position, _player.global_position)
 	if player_distance > active_range:
 		return false
@@ -1636,27 +1636,23 @@ func _can_see_player() -> bool:
 		return false
 	if not _check_line_of_sight():
 		return false
-
-	# Crouch only makes an unaware enemy less likely to notice the player.
-	# Once the enemy is already alerted, crouching must not cancel its target
-	# or cause an attack windup to play without actually firing.
-	if not _alerted and _player.get("is_crouching") == true:
-		if player_distance > crouch_guaranteed_detection_distance:
-			return randf() <= crouch_detection_chance
-	return true
-
+	return VexEnemyPerceptionRuntime.passes_crouch_detection(
+		_alerted,
+		_player.get("is_crouching") == true,
+		player_distance,
+		crouch_guaranteed_detection_distance,
+		crouch_detection_chance
+	)
 
 func _is_player_inside_initial_view() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
-	var player_direction := _player.global_position - global_position
-	player_direction.y = 0.0
-	if player_direction.length_squared() <= 0.001:
-		return true
-	player_direction = player_direction.normalized()
-	var view_threshold := cos(deg_to_rad(initial_view_angle * 0.5))
-	return _facing_direction.dot(player_direction) >= view_threshold
-
+	return VexEnemyPerceptionRuntime.is_player_inside_initial_view(
+		global_position,
+		_facing_direction,
+		_player.global_position,
+		initial_view_angle
+	)
 
 func _check_line_of_sight() -> bool:
 	if _player == null or not is_instance_valid(_player):
@@ -1666,12 +1662,11 @@ func _check_line_of_sight() -> bool:
 	if _uses_ranged_tactics():
 		_last_visibility_ratio = _ranged_visibility_ratio_from(origin)
 		return _last_visibility_ratio > 0.0
-	var has_contact := VexEnemyRuntimeUtils.has_visual_contact(
-		get_world_3d(),
-		origin,
+	var has_contact := VexEnemyPerceptionRuntime.has_visual_contact(
+		self,
 		_player,
+		origin,
 		sight_collision_mask,
-		get_rid(),
 		sight_target_height,
 		visibility_vertical_span_scale,
 		visibility_vertical_span_min,
@@ -1685,31 +1680,16 @@ func _check_line_of_sight() -> bool:
 	_last_visibility_ratio = 1.0 if has_contact else 0.0
 	return has_contact
 
-
 func _get_crouched_sight_target_height() -> float:
-	var shape_node := _player.get_node_or_null("CollisionShape3D") as CollisionShape3D
-	if shape_node != null:
-		var capsule := shape_node.shape as CapsuleShape3D
-		if capsule != null:
-			var top_height := shape_node.position.y + (capsule.height * 0.5)
-			return clampf(
-				top_height * crouched_target_height_scale,
-				crouched_target_min_height,
-				sight_target_height
-			)
-	return 0.0
-
+	return VexEnemyPerceptionRuntime.crouched_sight_target_height(
+		_player,
+		sight_target_height,
+		crouched_target_height_scale,
+		crouched_target_min_height
+	)
 
 func _is_player_collider(collider: Node) -> bool:
-	var current := collider
-	var depth := 0
-	while current != null and depth < 6:
-		if current == _player:
-			return true
-		current = current.get_parent()
-		depth += 1
-	return false
-
+	return VexEnemyPerceptionRuntime.is_player_collider(_player, collider)
 
 func _uses_ranged_tactics() -> bool:
 	return ranged_visibility_sampling_enabled
@@ -1739,69 +1719,21 @@ func _damage_source_approach_position(source_position: Vector3) -> Vector3:
 
 
 func _ranged_visibility_ratio_from(observer_position: Vector3) -> float:
-	if _player == null or not is_instance_valid(_player):
-		return 0.0
-
-	var target_center := _player.global_position + Vector3.UP * sight_target_height
-	var half_height := maxf(sight_target_height, 0.45)
-	var lateral_radius := 0.28
-	var shape_node := _player.get_node_or_null("CollisionShape3D") as CollisionShape3D
-	if shape_node != null and shape_node.shape != null and not shape_node.disabled:
-		target_center = shape_node.global_position
-		var capsule := shape_node.shape as CapsuleShape3D
-		if capsule != null:
-			half_height = maxf(capsule.height * 0.5, capsule.radius)
-			lateral_radius = capsule.radius
-		else:
-			var box := shape_node.shape as BoxShape3D
-			if box != null:
-				half_height = box.size.y * 0.5
-				lateral_radius = minf(box.size.x, box.size.z) * 0.5
-
-	var toward_target := _player.global_position - observer_position
-	toward_target.y = 0.0
-	if toward_target.length_squared() <= 0.0001:
-		toward_target = Vector3.FORWARD
-	else:
-		toward_target = toward_target.normalized()
-	var side := Vector3.UP.cross(toward_target).normalized()
-	var vertical_span := clampf(
-		half_height * visibility_vertical_span_scale,
+	return VexEnemyPerceptionRuntime.ranged_visibility_ratio_from(
+		self,
+		_player,
+		observer_position,
+		sight_collision_mask,
+		sight_target_height,
+		visibility_vertical_span_scale,
 		visibility_vertical_span_min,
-		maxf(visibility_vertical_span_min, visibility_vertical_span_max)
-	)
-	var lateral_span := clampf(
-		lateral_radius * visibility_lateral_span_scale,
+		visibility_vertical_span_max,
+		visibility_lateral_span_scale,
 		visibility_lateral_span_min,
-		maxf(visibility_lateral_span_min, visibility_lateral_span_max)
+		visibility_lateral_span_max,
+		visibility_shoulder_height_ratio,
+		visibility_lower_body_ratio
 	)
-	var samples: Array[Vector3] = [
-		target_center,
-		target_center + Vector3.UP * vertical_span,
-		target_center + side * lateral_span
-			+ Vector3.UP * (vertical_span * visibility_shoulder_height_ratio),
-		target_center - side * lateral_span
-			+ Vector3.UP * (vertical_span * visibility_shoulder_height_ratio),
-		target_center - Vector3.UP * (vertical_span * visibility_lower_body_ratio),
-	]
-	var visible_samples := 0
-	var space_state := get_world_3d().direct_space_state
-	for sample: Vector3 in samples:
-		var query := PhysicsRayQueryParameters3D.create(
-			observer_position,
-			sample,
-			sight_collision_mask,
-			[get_rid()]
-		)
-		query.collide_with_areas = true
-		var result := space_state.intersect_ray(query)
-		if result.is_empty():
-			continue
-		var collider := result.get("collider") as Node
-		if _is_player_collider(collider):
-			visible_samples += 1
-	return float(visible_samples) / float(samples.size())
-
 
 func _reposition_for_clear_shot(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
