@@ -76,9 +76,9 @@ var is_sprinting := false
 var is_crouching := false
 var is_aiming := false
 var _gravity := 20.0
-var _hurt_audio_cooldown_remaining := 0.0
 var _movement_runtime := VexPlayerMovementRuntime.new()
 var _view_runtime := VexPlayerViewRuntime.new()
+var _survivability_runtime := VexPlayerSurvivabilityRuntime.new()
 var _standing_capsule_height := 0.0
 var _standing_collision_shape_y := 0.0
 var _standing_view_pivot_height := 0.0
@@ -123,8 +123,14 @@ func _ready() -> void:
 	camera.fov = _default_fov
 	_setup_crouch_dimensions()
 	_gravity = float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
-	health = maximum_health
-	armor = clampi(initial_armor, 0, maximum_armor)
+	_survivability_runtime.initialize(
+		maximum_health,
+		maximum_armor,
+		initial_armor,
+		armor_absorption_ratio,
+		hurt_audio_cooldown
+	)
+	_sync_survivability_state()
 	stamina = maximum_stamina
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	GameState.register_player(self)
@@ -132,10 +138,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	_hurt_audio_cooldown_remaining = maxf(
-		0.0,
-		_hurt_audio_cooldown_remaining - delta
-	)
+	_survivability_runtime.update(delta)
 	_update_impact_camera_shake(delta)
 	if is_dead:
 		velocity = Vector3.ZERO
@@ -285,16 +288,18 @@ func collect_pickup(
 ) -> bool:
 	match pickup_type:
 		&"health":
-			if health >= maximum_health:
+			_sync_survivability_runtime_from_public()
+			var collected_health := _survivability_runtime.collect_health(amount)
+			_sync_survivability_state()
+			if collected_health <= 0:
 				return false
-			var collected_health := mini(amount, maximum_health - health)
-			health = mini(maximum_health, health + amount)
 			GameState.notify_pickup(tr("PICKUP_HEALTH_FORMAT") % collected_health, &"health")
 		&"armor":
-			if armor >= maximum_armor:
+			_sync_survivability_runtime_from_public()
+			var collected_armor := _survivability_runtime.collect_armor(amount)
+			_sync_survivability_state()
+			if collected_armor <= 0:
 				return false
-			var collected_armor := mini(amount, maximum_armor - armor)
-			armor = mini(maximum_armor, armor + amount)
 			GameState.notify_pickup(tr("PICKUP_ARMOR_FORMAT") % collected_armor, &"armor")
 		&"bullets", &"shells", &"rifle_ammo", &"mp90_ammo":
 			var collected_ammo := int(weapon_controller.call("add_ammo", pickup_type, amount))
@@ -446,28 +451,24 @@ func _spawn_dropped_weapon_pickup(
 	pickup.block_pickup_for(0.5)
 
 func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = null) -> void:
-	if is_dead or amount <= 0:
+	_sync_survivability_runtime_from_public()
+	var damage_result := _survivability_runtime.apply_damage(
+		amount,
+		hurt_audio.stream != null
+	)
+	if not bool(damage_result.get("applied", false)):
 		return
-	var absorbed := mini(armor, int(round(float(amount) * armor_absorption_ratio)))
-	armor -= absorbed
-	var health_damage := amount - absorbed
-	health = maxi(0, health - health_damage)
+	_sync_survivability_state()
+	var health_damage := int(damage_result.get("health_damage", 0))
 	GameState.report_damage(health_damage)
 
-	# Oyuncu gerçekten can kaybettiğinde hurt sesi çal.
-	# Sürekli hasarda sesin üst üste binmesini engellemek için 0.9 sn cooldown.
-	if (
-		health_damage > 0
-		and _hurt_audio_cooldown_remaining <= 0.0
-		and hurt_audio.stream != null
-	):
+	if bool(damage_result.get("play_hurt_feedback", false)):
 		if hurt_audio.playing:
 			hurt_audio.stop()
 		hurt_audio.play()
-		_hurt_audio_cooldown_remaining = hurt_audio_cooldown
 
 	broadcast_state()
-	if health <= 0:
+	if bool(damage_result.get("died", false)):
 		_die()
 
 
@@ -670,6 +671,16 @@ func _publish_recoil_to_hud() -> void:
 		)
 
 
+func _sync_survivability_runtime_from_public() -> void:
+	_survivability_runtime.sync_state(health, armor, is_dead)
+
+
+func _sync_survivability_state() -> void:
+	health = _survivability_runtime.get_health()
+	armor = _survivability_runtime.get_armor()
+	is_dead = _survivability_runtime.get_is_dead()
+
+
 func broadcast_state() -> void:
 	GameState.publish_player_stats(health, maximum_health, armor)
 	GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
@@ -695,8 +706,11 @@ func capture_run_state() -> Dictionary:
 
 
 func restore_run_state(state: Dictionary) -> void:
-	health = clampi(int(state.get("health", maximum_health)), 1, maximum_health)
-	armor = clampi(int(state.get("armor", 0)), 0, maximum_armor)
+	_survivability_runtime.restore_state(
+		int(state.get("health", maximum_health)),
+		int(state.get("armor", 0))
+	)
+	_sync_survivability_state()
 	stamina = clampf(float(state.get("stamina", maximum_stamina)), 0.0, maximum_stamina)
 	is_sprinting = false
 	_movement_runtime.reset_stamina_recovery_delay()
@@ -929,7 +943,8 @@ func _resolve_interactable(collider: Object) -> Node:
 
 
 func _die() -> void:
-	is_dead = true
+	_survivability_runtime.force_dead()
+	_sync_survivability_state()
 	_set_night_vision_enabled(false, false)
 	velocity = Vector3.ZERO
 	clear_weapon_recoil()
