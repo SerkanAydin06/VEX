@@ -16,6 +16,7 @@ def read(path):
 
 effect = read("scripts/effects/hit_impact_v1.gd")
 controller = read("scripts/player/weapon_controller.gd")
+hitscan = read("scripts/player/weapon_hitscan_runtime.gd")
 door = read("scripts/props/door.gd")
 
 for needle in [
@@ -78,6 +79,9 @@ for forbidden in [
     if forbidden in effect:
         errors.append(f"Enemy impact artık kalıcı/billboard görsel üretmemeli: {forbidden}")
 
+if "VexWeaponHitscanRuntime.shoot(" not in controller:
+    errors.append("WeaponController impact çözümünü hitscan runtime'a devretmiyor")
+
 for needle in [
     'preload("res://scripts/effects/hit_impact_v1.gd")',
     "MAX_WORLD_IMPACTS_PER_TRIGGER := 4",
@@ -89,8 +93,8 @@ for needle in [
     "HIT_IMPACT_V1.spawn_flesh(",
     'damage_target.is_in_group("enemy")',
 ]:
-    if needle not in controller:
-        errors.append(f"WeaponController impact sözleşmesi eksik: {needle}")
+    if needle not in hitscan:
+        errors.append(f"WeaponHitscanRuntime impact sözleşmesi eksik: {needle}")
 
 if errors:
     print("HIT IMPACT V1 AUDIT FAILED:")
