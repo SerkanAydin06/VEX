@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bvenommarshall01"]
 
 [ext_resource type="Script" uid="uid://bvenommarshallscr1" path="res://scripts/actors/venom_marshall.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bvenomcharsheet01" path="res://assets/enemies/venom_marshall/venom_marshall_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://dcu2rdd7e43iq" path="res://assets/enemies/venom_marshall/venom_marshall_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="PackedScene" uid="uid://bvenommarshallpr1" path="res://scenes/actors/venom_marshall_projectile.tscn" id="3_projectile"]
 [ext_resource type="PackedScene" uid="uid://bvenombufffield1" path="res://scenes/actors/venom_marshall_buff_projectile.tscn" id="4_buff_projectile"]
 [ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="5_attack"]
