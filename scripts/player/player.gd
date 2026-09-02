@@ -81,8 +81,7 @@ var _camera_rest_position := Vector3.ZERO
 var _gravity := 20.0
 var _footstep_remaining := 0.0
 var _hurt_audio_cooldown_remaining := 0.0
-var _stamina_recovery_delay_remaining := 0.0
-var _jump_requested := false
+var _movement_runtime := VexPlayerMovementRuntime.new()
 var _standing_capsule_height := 0.0
 var _standing_collision_shape_y := 0.0
 var _standing_view_pivot_height := 0.0
@@ -96,10 +95,6 @@ var _night_vision_rect: ColorRect = null
 var _recoil_pitch_degrees := 0.0
 var _recoil_yaw_degrees := 0.0
 var _recoil_recovery_degrees_per_second := 7.0
-var _external_impulse_velocity := Vector3.ZERO
-var _external_impulse_remaining := 0.0
-var _external_impulse_decay_speed := 0.0
-var _external_impulse_vertical_pending := 0.0
 var _impact_shake_remaining := 0.0
 var _impact_shake_duration := 0.0
 var _impact_shake_strength := 0.0
@@ -146,16 +141,15 @@ func _physics_process(delta: float) -> void:
 		_try_jump()
 	# Sprint is only active while actually moving on the ground. This prevents
 	# stamina from draining while standing still or airborne.
-	var wants_to_sprint := (
-		Input.is_action_pressed("sprint")
-		and input_vector.length() >= sprint_input_threshold
-		and stamina > 0.0
-		and is_on_floor()
-		and not is_crouching
-		and not is_aiming
-		and _external_impulse_remaining <= 0.0
+	is_sprinting = _movement_runtime.wants_to_sprint(
+		Input.is_action_pressed("sprint"),
+		input_vector.length(),
+		stamina,
+		is_on_floor(),
+		is_crouching,
+		is_aiming,
+		sprint_input_threshold
 	)
-	is_sprinting = wants_to_sprint
 	_update_stamina(delta)
 	var target_speed := (
 		crouch_speed
@@ -164,34 +158,23 @@ func _physics_process(delta: float) -> void:
 	)
 	var target_velocity := world_direction * target_speed
 	var rate := acceleration if world_direction != Vector3.ZERO else deceleration
-	if _external_impulse_remaining > 0.0:
-		velocity.x = _external_impulse_velocity.x
-		velocity.z = _external_impulse_velocity.z
-		_external_impulse_remaining = maxf(0.0, _external_impulse_remaining - delta)
-		_external_impulse_velocity = _external_impulse_velocity.move_toward(
-			Vector3.ZERO,
-			_external_impulse_decay_speed * delta
-		)
-		if _external_impulse_remaining <= 0.0:
-			_external_impulse_velocity = Vector3.ZERO
-	else:
-		velocity.x = move_toward(velocity.x, target_velocity.x, rate * delta)
-		velocity.z = move_toward(velocity.z, target_velocity.z, rate * delta)
+	velocity = _movement_runtime.update_horizontal_velocity(
+		velocity,
+		target_velocity,
+		rate,
+		delta
+	)
 	var stepped_up := false
-	if is_on_floor() and not _jump_requested and not is_crouching:
+	if is_on_floor() and not _movement_runtime.has_jump_request() and not is_crouching:
 		stepped_up = _try_step_up(Vector3(velocity.x, 0.0, velocity.z) * delta)
-	if _jump_requested:
-		# Consume the jump request before floor/gravity handling so the
-		# floor-stick velocity cannot overwrite the jump impulse.
-		_jump_requested = false
-		velocity.y = jump_velocity
-	elif _external_impulse_vertical_pending > 0.0:
-		velocity.y = maxf(velocity.y, _external_impulse_vertical_pending)
-		_external_impulse_vertical_pending = 0.0
-	elif not is_on_floor():
-		velocity.y -= _gravity * delta
-	else:
-		velocity.y = floor_stick_velocity
+	velocity.y = _movement_runtime.resolve_vertical_velocity(
+		velocity.y,
+		is_on_floor(),
+		jump_velocity,
+		_gravity,
+		floor_stick_velocity,
+		delta
+	)
 	move_and_slide()
 	if stepped_up and not is_on_floor():
 		apply_floor_snap()
@@ -264,8 +247,7 @@ func _try_jump() -> void:
 	if stamina < jump_stamina_cost:
 		return
 	stamina -= jump_stamina_cost
-	_stamina_recovery_delay_remaining = stamina_recovery_delay
-	_jump_requested = true
+	_movement_runtime.queue_jump(stamina_recovery_delay)
 
 func try_interact() -> void:
 	interaction_ray.force_raycast_update()
@@ -487,21 +469,13 @@ func apply_external_impulse(
 ) -> void:
 	if is_dead:
 		return
-	var horizontal_direction := direction
-	horizontal_direction.y = 0.0
-	if horizontal_direction.length_squared() <= 0.001:
-		return
-	horizontal_direction = horizontal_direction.normalized()
-	var safe_speed := maxf(0.0, horizontal_speed)
-	var safe_duration := maxf(0.05, duration)
-	_external_impulse_velocity = horizontal_direction * safe_speed
-	_external_impulse_remaining = safe_duration
-	_external_impulse_decay_speed = safe_speed / safe_duration
-	_external_impulse_vertical_pending = maxf(
-		_external_impulse_vertical_pending,
-		maxf(0.0, upward_speed)
-	)
-	is_sprinting = false
+	if _movement_runtime.apply_external_impulse(
+		direction,
+		horizontal_speed,
+		upward_speed,
+		duration
+	):
+		is_sprinting = false
 
 
 func request_camera_shake(strength: float, duration: float) -> void:
@@ -734,7 +708,7 @@ func restore_run_state(state: Dictionary) -> void:
 	armor = clampi(int(state.get("armor", 0)), 0, maximum_armor)
 	stamina = clampf(float(state.get("stamina", maximum_stamina)), 0.0, maximum_stamina)
 	is_sprinting = false
-	_stamina_recovery_delay_remaining = 0.0
+	_movement_runtime.reset_stamina_recovery_delay()
 	_set_crouching(bool(state.get("is_crouching", false)))
 	keys.clear()
 	var stored_keys: Array = state.get("keys", []) as Array
@@ -848,23 +822,17 @@ func _update_view_bob(delta: float, movement_amount: float, movement_speed: floa
 
 
 func _update_stamina(delta: float) -> void:
-	if is_sprinting:
-		stamina = maxf(0.0, stamina - sprint_stamina_drain_per_second * delta)
-		_stamina_recovery_delay_remaining = stamina_recovery_delay
-		if stamina <= 0.0:
-			is_sprinting = false
-		GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
-		return
-
-	_stamina_recovery_delay_remaining = maxf(
-		0.0,
-		_stamina_recovery_delay_remaining - delta
+	var stamina_result := _movement_runtime.update_stamina(
+		delta,
+		stamina,
+		is_sprinting,
+		maximum_stamina,
+		sprint_stamina_drain_per_second,
+		stamina_recovery_per_second,
+		stamina_recovery_delay
 	)
-	if _stamina_recovery_delay_remaining <= 0.0:
-		stamina = minf(
-			maximum_stamina,
-			stamina + stamina_recovery_per_second * delta
-		)
+	stamina = float(stamina_result.get("stamina", stamina))
+	is_sprinting = bool(stamina_result.get("is_sprinting", is_sprinting))
 	GameState.publish_player_stamina(stamina, maximum_stamina, is_sprinting)
 
 
