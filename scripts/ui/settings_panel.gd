@@ -112,6 +112,7 @@ func _sync_from_settings() -> void:
 	var resolution_index := SettingsManager.supported_resolutions.find(SettingsManager.resolution)
 	resolution_option.select(maxi(0, resolution_index))
 	difficulty_option.select(SettingsManager.difficulty)
+	difficulty_option.disabled = _is_difficulty_locked()
 	graphics_quality_option.select(SettingsManager.graphics_quality)
 	fullscreen_check.button_pressed = SettingsManager.fullscreen
 	vsync_check.button_pressed = SettingsManager.vsync
@@ -128,6 +129,13 @@ func _sync_from_settings() -> void:
 	_update_value_labels()
 	_update_toggle_labels()
 	_syncing = false
+
+
+func _is_difficulty_locked() -> bool:
+	var current_scene := get_tree().current_scene
+	if current_scene == null:
+		return false
+	return current_scene.scene_file_path != GameState.MAIN_MENU_PATH
 
 
 func _update_value_labels() -> void:
@@ -172,7 +180,7 @@ func _on_language_changed(_locale: String) -> void:
 
 
 func _on_difficulty_selected(index: int) -> void:
-	if not _syncing:
+	if not _syncing and not _is_difficulty_locked():
 		SettingsManager.set_difficulty(index)
 
 
