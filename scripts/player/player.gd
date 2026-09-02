@@ -28,7 +28,7 @@ const DROPPED_WEAPON_PICKUP_SCENE := preload("res://scenes/props/pickup.tscn")
 @export_range(0.0, 5.0, 0.05) var stamina_recovery_delay := 0.65
 @export_range(0.0, 1.0, 0.01) var sprint_input_threshold := 0.10
 @export_category("Dayanıklılık")
-@export_range(1, 500, 1) var maximum_health := 10000000
+@export_range(1, 500, 1) var maximum_health := 100
 @export_range(1, 500, 1) var maximum_armor := 100
 @export_range(0, 500, 1) var initial_armor := 0
 @export_range(0.0, 1.0, 0.01) var armor_absorption_ratio := 0.60

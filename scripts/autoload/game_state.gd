@@ -110,7 +110,10 @@ func restart_level(_restore_full_health: bool = false) -> void:
 	pending_player_restore_state = {}
 	_reset_level_counters()
 	pending_player_restore_state = current_level_start_state.duplicate(true)
-	pending_player_restore_state["health"] = 100 if _restore_full_health else int(pending_player_restore_state.get("health", 100))
+	var restart_health := int(pending_player_restore_state.get("health", 100))
+	if _restore_full_health and player != null and is_instance_valid(player):
+		restart_health = int(player.get("maximum_health"))
+	pending_player_restore_state["health"] = restart_health
 	run_started_msec = Time.get_ticks_msec()
 	get_tree().change_scene_to_file(current_level_path)
 

@@ -30,7 +30,7 @@ Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
 | Ortak biyoloji / teknoloji | Canlı, yarı-organik, biyomekanik, enerji temelli vb. |
 | Ana savaş özelliği | Oyuncuya karşı aileyi ayırt eden ana oynanış davranışı |
 | Hikâye nedeni | VEX’in o dünyadan ne çektiği ve neden çatışma çıktığı |
-| Bireysel rol farkı | Aynı evrendeki 4 yaratığın birbirinden nasıl ayrıldığı |
+| Bireysel rol farkı | Aynı evrendeki yaratıkların birbirinden nasıl ayrıldığı |
 
 ---
 
@@ -41,8 +41,8 @@ Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
 | Evren | Kod adı | Genel kimlik | Mevcut yaratık |
 |---|---|---|---|
 | 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | Basalt Juggernaut, Cinder Hound, Furnace Carrier, Crucible Warden |
-| 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager, Briar Skulker |
-| 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | RedViper, BadRedViper |
+| 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager, Briar Skulker, Gorehorn, Spore Matriarch |
+| 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | RedViper, BadRedViper, Coil Lancer, Vaskari Bulwark, Venom Marshall |
 | 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw |
 | 5 | **Aether Loom** | Boşluk, yarık dokusu, akıllı enerji organizmaları ve uzamsal örüntüler | Voidweaver |
 
@@ -153,7 +153,7 @@ Bu evrenin yaratıkları daha “kültürlü medeniyet” değil, **vahşi fakat
 
 ### 4. Spore Matriarch
 
-**Durum:** Planlandı
+**Durum:** Mevcut
 
 - **Rol:** Destek / bölge kontrolü
 - **Hikâye rolü:** Ekosistemde sürü feromonlarını ve rejeneratif sporları dağıtan çoğaltıcı kast.
@@ -178,7 +178,7 @@ Bu evrenin yaratıkları “vahşi canavar” değildir; **çatışmayı bilen, 
 - **Doğal avantaj:** Orta dayanıklılık, iyi takip, agresif hücum kararları.
 - **Genel zayıflık:** Kafa, boyun altı, iç karın segmentleri; çevresel patlayıcılar.
 
-## 6.3 Dört yaratık
+## 6.3 Beş yaratık
 
 ### 1. RedViper
 
@@ -200,21 +200,30 @@ Bu evrenin yaratıkları “vahşi canavar” değildir; **çatışmayı bilen, 
 
 ### 3. Coil Lancer
 
-**Durum:** Planlandı
+**Durum:** Mevcut
 
 - **Rol:** Orta menzilli baskı / sıçrama hücumu
 - **Hikâye rolü:** Düşman hattını kırmak için biyolojik mızrak bezleri geliştirilmiş savaşçı.
 - **Savaş kimliği:** Oyuncuya çizgisel zehirli diken atar veya ani mızrak sıçrayışı yapar.
 - **Ayırt edici özellik:** Aileye ilk gerçek menzilli tehdit hissini getirir.
 
-### 4. Venom Marshal
+### 4. Vaskari Bulwark
 
-**Durum:** Planlandı
+**Durum:** Mevcut
 
-- **Rol:** Komutan / aura destekli elit
+- **Rol:** Ağır yakın menzil baskı / ön hat tutucu
+- **Hikâye rolü:** Vaskari hücum kollarında ilerleme hattını koruyan kalın biyozırhlı kırma kastı.
+- **Savaş kimliği:** Yavaş yaklaşır, yüksek dayanıklılıkla alan kapatır ve kısa lunge ile ağır yakın darbe uygular.
+- **Ayırt edici özellik:** RedViper ailesinin hız baskısını tersine çevirir; süratten çok dayanıklılık ve tek darbe tehdidiyle alan kazanır.
+
+### 5. Venom Marshall
+
+**Durum:** Mevcut
+
+- **Rol:** Komutan / menzilli destek eliti
 - **Hikâye rolü:** Küçük Vaskari saldırı kollarını sahada yöneten subay kastı.
-- **Savaş kimliği:** Yakındaki Vaskari yaratıklara hız ve saldırı cesareti verir; oyuncuyu sürekli yer değiştirmeye zorlar.
-- **Ayırt edici özellik:** Tek başına çok tehlikeli olmak yerine grubu ölümcül hale getirir.
+- **Savaş kimliği:** Normal menzilli saldırısına ek olarak yakındaki uygun müttefik kümelerine güçlendirme alanı gönderir ve savaş hattını destekler.
+- **Ayırt edici özellik:** Tek başına salt hasar tehdidi olmak yerine takımın dayanıklılığını ve baskısını yükselten öncelikli destek hedefidir.
 
 ---
 
@@ -337,8 +346,12 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 | Ravager | Thornwild Sürüsü | Temel yakın baskı avcısı |
 | Briar Skulker | Thornwild Sürüsü | Hibrit pusu avcısı |
 | Gorehorn | Thornwild Sürüsü | Orta-ağır şarj ve ritim bozma birimi |
+| Spore Matriarch | Thornwild Sürüsü | Zehir ve bölge kontrolü destek birimi |
 | RedViper | Vaskari Lejyonu | Hızlı elit hücum birimi |
 | BadRedViper | Vaskari Lejyonu | Ağır hücum varyantı |
+| Coil Lancer | Vaskari Lejyonu | Orta menzilli çizgisel baskı birimi |
+| Vaskari Bulwark | Vaskari Lejyonu | Ağır yakın menzil ön hat birimi |
+| Venom Marshall | Vaskari Lejyonu | Menzilli destek ve müttefik güçlendirme birimi |
 | Veilmaw | Nhal Veil | Pusu avcısı |
 | Basalt Juggernaut | Korvath Ocağı | Ağır zırhlı kırıcı |
 | Voidweaver | Aether Loom | Uzaysal menzilli tehdit |

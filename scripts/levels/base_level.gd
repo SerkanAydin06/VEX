@@ -210,6 +210,9 @@ func _show_briefing() -> void:
 			actor.set_process_unhandled_key_input(false)
 			actor.process_mode = Node.PROCESS_MODE_DISABLED
 
+	# Scene değişiminden taşınan basılı hareket/ateş girdisini yeni bir briefing
+	# basışı sayma. Oyuncu önce tuşu bırakmalı; sonraki basış normal şekilde işler.
+	await _wait_for_continue_release()
 	await get_tree().create_timer(briefing_start_delay, true, false, true).timeout
 	await _type_text(story, briefing_character_delay)
 	if not _briefing_reveal_requested:

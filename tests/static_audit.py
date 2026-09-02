@@ -79,6 +79,7 @@ def check_res_paths() -> None:
 def check_core_files() -> None:
     required = [
         "project.godot", "README.md", "STANDART.txt", "Story_VEX.md",
+        "Weapons_VEX.md", "Enemies_VEX.md",
         "scenes/player/player.tscn", "scripts/player/player.gd",
         "scripts/player/weapon_controller.gd", "scripts/autoload/game_state.gd",
         "scripts/autoload/settings_manager.gd", "scripts/levels/base_level.gd",
@@ -560,6 +561,51 @@ def check_repository_hygiene() -> None:
             fail(f"Geliştirme içeriği release export filtresinden çıkarılmıyor: {excluded}")
 
 
+
+def check_player_gameplay_regressions() -> None:
+    player = read("scripts/player/player.gd")
+    weapon = read("scripts/player/weapon_controller.gd")
+    game_state = read("scripts/autoload/game_state.gd")
+    base_level = read("scripts/levels/base_level.gd")
+    workflow = read(".github/workflows/validate.yml")
+    if '@export_range(1, 500, 1) var maximum_health := 100' not in player:
+        fail("Player canonical maximum_health default 100 değil")
+    if "maximum_health := 10000000" in player:
+        fail("Player debug maximum_health default'u geri gelmiş")
+    for contract in [
+        'create_timer(weapon.reload_duration * float(_modifiers(weapon).reload), false)',
+        'create_timer(shell_cycle_duration, false)',
+        'create_timer(finish_duration, false)',
+    ]:
+        if contract not in weapon:
+            fail(f"Pause-aware reload sözleşmesi eksik: {contract}")
+    if 'pending_player_restore_state["health"] = 100 if _restore_full_health' in game_state:
+        fail("Restart full-health hâlâ 100'e hardcode")
+    if 'restart_health = int(player.get("maximum_health"))' not in game_state:
+        fail("Restart full-health canlı player maximum_health değerini kullanmıyor")
+    if "Scene değişiminden taşınan basılı hareket/ateş girdisini" not in base_level:
+        fail("Briefing held-input geçiş koruması eksik")
+    for relative in [
+        "tests/weapon_pause_reload_runtime_test.gd",
+        "tests/weapon_pause_reload_runtime_test.tscn",
+    ]:
+        exists(relative)
+    if "Run weapon pause reload runtime regression" not in workflow:
+        fail("Weapon pause/reload runtime regression CI'a bağlı değil")
+
+
+def check_canonical_documentation() -> None:
+    enemies = read("Enemies_VEX.md")
+    for name in ["Spore Matriarch", "Coil Lancer", "Vaskari Bulwark", "Venom Marshall"]:
+        pattern = rf"^### \d+\. {re.escape(name)}\n\n\*\*Durum:\*\* Mevcut$"
+        if re.search(pattern, enemies, re.M) is None:
+            fail(f"Enemies_VEX canonical durum drift'i: {name} Mevcut değil")
+    if re.search(r"^### \d+\. Venom Marshal$", enemies, re.M):
+        fail("Eski Venom Marshal adı canonical belgede geri gelmiş")
+    for actor in ["coil_lancer", "spore_matriarch", "vaskari_bulwark", "venom_marshall"]:
+        exists(f"scripts/actors/{actor}.gd")
+        exists(f"scenes/actors/{actor}.tscn")
+
 def check_stale_contracts() -> None:
     project_text = "\n".join(text for _path, text in text_files())
     for token in ["door_side_slide_bastion.tscn", "CargoElevator_Main"]:
@@ -573,8 +619,8 @@ def main() -> int:
         check_automap, check_level_02, check_level_03, check_bastion,
         check_door_contract, check_weapons, check_unique_progression_ids,
         check_localization, check_scene_authority,
-        check_save_recovery_and_runtime_ci, check_repository_hygiene,
-        check_stale_contracts,
+        check_save_recovery_and_runtime_ci, check_player_gameplay_regressions,
+        check_canonical_documentation, check_repository_hygiene, check_stale_contracts,
     ]
     for check in checks:
         check()

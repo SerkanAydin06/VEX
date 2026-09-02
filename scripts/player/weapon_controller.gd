@@ -359,7 +359,7 @@ func reload() -> void:
 		return
 	is_reloading = true
 	_play_hud_action(&"reload")
-	await get_tree().create_timer(weapon.reload_duration * float(_modifiers(weapon).reload)).timeout
+	await get_tree().create_timer(weapon.reload_duration * float(_modifiers(weapon).reload), false).timeout
 	if not is_inside_tree() or _player.is_dead:
 		is_reloading = false
 		return
@@ -390,7 +390,7 @@ func _reload_sg04_shells(
 
 	for _round_index: int in range(rounds_to_load):
 		_play_hud_action(&"reload_shell")
-		await get_tree().create_timer(shell_cycle_duration).timeout
+		await get_tree().create_timer(shell_cycle_duration, false).timeout
 		if reload_generation != _sg04_reload_generation:
 			return
 		if not is_inside_tree() or _player == null or _player.is_dead:
@@ -409,7 +409,7 @@ func _reload_sg04_shells(
 		is_reloading = false
 		return
 	_play_hud_action(&"reload_finish")
-	await get_tree().create_timer(finish_duration).timeout
+	await get_tree().create_timer(finish_duration, false).timeout
 	if reload_generation != _sg04_reload_generation:
 		return
 	if not is_inside_tree() or _player == null or _player.is_dead:
