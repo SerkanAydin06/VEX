@@ -29,7 +29,7 @@ func _ready() -> void:
 	kills_value.text = "%d / %d" % [kills, total_enemies]
 	secrets_value.text = "%d / %d" % [secrets, total_secrets]
 	difficulty_value.text = tr(str(summary.get("difficulty", "DIFFICULTY_NORMAL")))
-	subtitle_label.text = tr(str(summary.get("level_label", "VEX")))
+	_refresh_subtitle()
 	var completion := float(kills) / float(total_enemies)
 	if total_secrets > 0:
 		completion = (completion + float(secrets) / float(total_secrets)) * 0.5
@@ -40,13 +40,28 @@ func _ready() -> void:
 			if GameState.pending_next_is_hub()
 			else tr("COMPLETE_NEXT_LEVEL")
 		)
-		replay_button.pressed.connect(GameState.continue_to_next_level)
+		replay_button.pressed.connect(_on_continue_pressed)
 	else:
 		replay_button.text = tr("COMPLETE_REPLAY_LEVEL")
 		replay_button.pressed.connect(GameState.restart_level)
 	main_menu_button.pressed.connect(GameState.return_to_main_menu)
 	quit_button.pressed.connect(get_tree().quit)
 	replay_button.grab_focus()
+
+
+func _on_continue_pressed() -> void:
+	if GameState.continue_to_next_level():
+		return
+	_refresh_subtitle()
+	replay_button.grab_focus()
+
+
+func _refresh_subtitle() -> void:
+	var level_label := tr(str(GameState.last_level_summary.get("level_label", "VEX")))
+	if GameState.last_campaign_save_failed:
+		subtitle_label.text = "%s\n%s" % [level_label, GameState.get_save_failure_message()]
+		return
+	subtitle_label.text = level_label
 
 
 func _format_time(milliseconds: int) -> String:
