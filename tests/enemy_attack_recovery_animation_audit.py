@@ -27,7 +27,7 @@ assert_order(
     lunge,
     '_player.call("take_damage"',
     '_play_animation(&"idle")',
-    "var remaining: float",
+    "var remaining := EnemyCombatRuntime.remaining_attack_cooldown(",
 )
 
 combatant = function_block(read("scripts/actors/enemy_combatant_base.gd"), "_attempt_attack")

@@ -14,11 +14,10 @@ for source in (ravager, red):
     assert "_can_handoff_damage_pursuit_to_combat" in source
     assert "_check_line_of_sight()" in source
 
-assert "EnemyCombatRuntime.can_attempt_damage_handoff(" in ravager
-assert "EnemyCombatRuntime.should_check_close_combat_visibility(" in ravager
-assert "attack_range + attack_range_tolerance" in ravager
+for source in (ravager, red):
+    assert "EnemyCombatRuntime.can_attempt_damage_handoff(" in source
+    assert "EnemyCombatRuntime.should_check_close_combat_visibility(" in source
 assert "attack_range + attack_range_tolerance" in combat
-assert "attack_range + attack_range_tolerance" in red
 assert "_refresh_close_combat_visibility()" in ravager
 assert "combat_role == EnemyCombatProfiles.Role.CLOSE" in red
 # Başlamış saldırı hasar kaynağına yönelme davranışından önce çözülür.

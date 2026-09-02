@@ -129,6 +129,16 @@ jobs:
             echo "::error::Enemy combat runtime log contains an error or invalid UID"
             exit 1
           fi
+      - name: Run enemy lunge runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/enemy-lunge-runtime.log"
+          godot --headless --path . tests/enemy_lunge_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Enemy lunge runtime log contains an error or invalid UID"
+            exit 1
+          fi
       - name: Run player survivability runtime regression
         shell: bash
         run: |
