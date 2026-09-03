@@ -24,10 +24,8 @@ const COMMON_CREATURE_INSPECTOR_PROPERTIES := [
 	&"path_target_change_distance", &"runtime_grid_step", &"runtime_grid_max_nodes",
 	&"runtime_grid_search_margin", &"sight_collision_mask", &"aggro_on_damage",
 	&"damage_pursuit_min_progress", &"damage_pursuit_stall_timeout",
-	&"damage_pursuit_commit_time", &"acoustic_collision_mask", &"acoustic_probe_height",
-	&"loud_noise_alert_threshold", &"headshot_reference_height",
-	&"visibility_vertical_span_scale", &"visibility_lateral_span_scale",
-	&"crouched_target_height_scale", &"search_probe_diagonal_weight",
+	&"damage_pursuit_commit_time", &"loud_noise_alert_threshold",
+	&"headshot_reference_height",
 ]
 
 const RANGED_CREATURE_INSPECTOR_PROPERTIES := [
@@ -36,7 +34,6 @@ const RANGED_CREATURE_INSPECTOR_PROPERTIES := [
 	&"attack_preferred_distance", &"attack_minimum_distance",
 	&"attack_recovery_strafe_scale", &"attack_retreat_speed_scale",
 	&"chase_path_refresh_interval", &"local_detour_duration",
-	&"cover_visibility_score_weight",
 ]
 
 const REQUIRED_RESOURCES := [
