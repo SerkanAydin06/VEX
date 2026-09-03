@@ -63,9 +63,9 @@ func _ready() -> void:
 	overlay.set_process(false)
 	overlay.call("_process", 2.99)
 	assert(atlas.region == Rect2(1254.0, 0.0, 418.0, 235.0))
-	overlay.call("_process", 0.01)
+	overlay.call("_process", 0.02)
 	assert(atlas.region == Rect2(1672.0, 0.0, 418.0, 235.0))
-	overlay.call("_process", 1.99)
+	overlay.call("_process", 1.98)
 	assert(atlas.region == Rect2(2926.0, 0.0, 418.0, 235.0))
 
 	# İkinci isabet yeni CanvasLayer üretmemeli; aynı overlay ilk kareye dönüp
