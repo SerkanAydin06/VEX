@@ -32,7 +32,7 @@ const RANGED_CREATURE_INSPECTOR_PROPERTIES := [
 	&"ranged_cover_visibility_threshold", &"ranged_cover_reposition_distance",
 	&"attack_preferred_distance", &"attack_minimum_distance",
 	&"attack_recovery_strafe_scale", &"attack_retreat_speed_scale",
-	&"chase_path_refresh_interval", &"local_detour_duration",
+	&"chase_path_refresh_interval",
 ]
 
 const REQUIRED_RESOURCES := [
