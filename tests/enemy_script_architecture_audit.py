@@ -91,12 +91,18 @@ assert "@export" not in combatant_performance, "performance wrapper Inspector ş
 assert "@export" not in lunge_performance, "performance wrapper Inspector şemasını değiştirmemeli"
 assert "@export" not in hybrid_base, "hybrid aile Inspector sırasını bozmamalı"
 
-for shared_setting in [
+for subclass_setting in [
     "enemy_id",
     "combat_role",
     "maximum_health",
     "spawn_min_difficulty",
     "apply_difficulty_scaling",
+]:
+    assert not re.search(rf"@export[^\n]*\bvar {subclass_setting}\b", enemy_base), subclass_setting
+    assert re.search(rf"@export[^\n]*\bvar {subclass_setting}\b", combatant_base), subclass_setting
+    assert re.search(rf"@export[^\n]*\bvar {subclass_setting}\b", lunge_base), subclass_setting
+
+for shared_difficulty_setting in [
     "difficulty_health_multipliers",
     "difficulty_damage_multipliers",
     "difficulty_speed_multipliers",
@@ -104,11 +110,20 @@ for shared_setting in [
     "difficulty_cooldown_multipliers",
     "difficulty_windup_multipliers",
 ]:
-    assert not re.search(rf"@export[^\n]*\bvar {shared_setting}\b", enemy_base), shared_setting
-    assert re.search(rf"@export[^\n]*\bvar {shared_setting}\b", combatant_base), shared_setting
-    assert re.search(rf"@export[^\n]*\bvar {shared_setting}\b", lunge_base), shared_setting
+    assert re.search(
+        rf"@export[^\n]*\bvar {shared_difficulty_setting}\b",
+        enemy_base,
+    ), shared_difficulty_setting
+    assert not re.search(
+        rf"@export[^\n]*\bvar {shared_difficulty_setting}\b",
+        combatant_base,
+    ), shared_difficulty_setting
+    assert not re.search(
+        rf"@export[^\n]*\bvar {shared_difficulty_setting}\b",
+        lunge_base,
+    ), shared_difficulty_setting
 
-assert "@export" not in enemy_base
+assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
 
 creature_script_paths = {
     enemy: f"res://scripts/actors/{enemy}.gd"
