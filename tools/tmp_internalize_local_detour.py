@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-path = Path("scripts/actors/enemy_combatant_base.gd")
-text = path.read_text(encoding="utf-8")
+combatant_path = Path("scripts/actors/enemy_combatant_base.gd")
+combatant = combatant_path.read_text(encoding="utf-8")
 replacements = {
     "@export_range(0.0, 3.0, 0.05) var local_detour_duration := 0.90":
         "var local_detour_duration := 0.90",
@@ -16,8 +16,41 @@ replacements = {
         "var local_detour_forward_multipliers := PackedFloat32Array([0.0, 0.75, 1.5])",
 }
 for old, new in replacements.items():
-    count = text.count(old)
+    count = combatant.count(old)
     if count != 1:
         raise SystemExit(f"expected one match for {old!r}, found {count}")
-    text = text.replace(old, new, 1)
-path.write_text(text, encoding="utf-8")
+    combatant = combatant.replace(old, new, 1)
+combatant_path.write_text(combatant, encoding="utf-8")
+
+audit_path = Path("tests/enemy_role_ai_audit.py")
+audit = audit_path.read_text(encoding="utf-8")
+old_export_block = '''for setting in [
+    "ranged_visibility_sampling_enabled", "cover_reposition_enabled",
+    "ranged_cover_visibility_threshold", "ranged_cover_reposition_distance",
+    "attack_preferred_distance", "attack_minimum_distance",
+    "attack_recovery_strafe_scale", "attack_retreat_speed_scale",
+    "chase_path_refresh_interval", "local_detour_duration",
+]:
+    assert re.search(rf"@export[^\\n]*\\bvar {setting}\\b", ravager), setting
+'''
+new_export_block = '''for setting in [
+    "ranged_visibility_sampling_enabled", "cover_reposition_enabled",
+    "ranged_cover_visibility_threshold", "ranged_cover_reposition_distance",
+    "attack_preferred_distance", "attack_minimum_distance",
+    "attack_recovery_strafe_scale", "attack_retreat_speed_scale",
+    "chase_path_refresh_interval",
+]:
+    assert re.search(rf"@export[^\\n]*\\bvar {setting}\\b", ravager), setting
+
+for setting in [
+    "local_detour_duration", "local_detour_clearance_multiplier",
+    "local_detour_min_step", "local_detour_lateral_multipliers",
+    "local_detour_forward_multipliers",
+]:
+    assert re.search(rf"^var {setting}\\b", ravager, re.M), setting
+    assert not re.search(rf"@export[^\\n]*\\bvar {setting}\\b", ravager), setting
+'''
+count = audit.count(old_export_block)
+if count != 1:
+    raise SystemExit(f"expected one enemy_role_ai export block, found {count}")
+audit_path.write_text(audit.replace(old_export_block, new_export_block, 1), encoding="utf-8")
