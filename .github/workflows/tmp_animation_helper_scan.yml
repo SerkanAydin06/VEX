@@ -1,0 +1,79 @@
+name: Temporary Animation Helper Scan
+
+on:
+  push:
+    branches:
+      - chatgpt/animation-helper-scan-20260903
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Compare common enemy helpers
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = {
+              'combatant': Path('scripts/actors/enemy_combatant_base.gd'),
+              'lunge': Path('scripts/actors/enemy_lunge_base.gd'),
+          }
+          candidates = [
+              '_has_animation',
+              '_apply_frame_ground_offset',
+              '_frame_offsets_for_animation',
+              '_collision_floor_local_y',
+              '_snap_body_to_floor',
+              '_finalize_death_visual',
+              '_show_burn_remains',
+              '_get_crouched_sight_target_height',
+          ]
+
+          def function_body(text: str, name: str):
+              lines = text.splitlines()
+              start = None
+              for i, line in enumerate(lines):
+                  if re.match(rf'^func {re.escape(name)}\b', line):
+                      start = i
+                      break
+              if start is None:
+                  return None
+              end = len(lines)
+              for j in range(start + 1, len(lines)):
+                  if lines[j].startswith('func '):
+                      end = j
+                      break
+              return '\n'.join(lines[start:end]).rstrip()
+
+          texts = {k: p.read_text(encoding='utf-8') for k, p in files.items()}
+          for name in candidates:
+              print(f'===== {name} =====')
+              bodies = {}
+              for family, text in texts.items():
+                  body = function_body(text, name)
+                  bodies[family] = body
+                  print(f'--- {family} ---')
+                  print(body if body else '<missing>')
+              if bodies['combatant'] and bodies['lunge']:
+                  norm = lambda s: re.sub(r'\s+', ' ', s).strip()
+                  print('NORMALIZED_IDENTICAL=', norm(bodies['combatant']) == norm(bodies['lunge']))
+              print()
+
+          print('===== DEFINITIONS / SUPER CALLS ACROSS ACTOR SCRIPTS =====')
+          for path in sorted(Path('scripts/actors').glob('*.gd')):
+              text = path.read_text(encoding='utf-8')
+              hits = []
+              for name in candidates:
+                  if re.search(rf'^func {re.escape(name)}\b', text, re.M):
+                      hits.append(f'def:{name}')
+                  if f'super.{name}(' in text:
+                      hits.append(f'super:{name}')
+              if hits:
+                  print(path, ' '.join(hits))
+          PY
