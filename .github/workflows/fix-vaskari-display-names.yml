@@ -1,0 +1,38 @@
+name: Fix Vaskari Display Names
+
+on:
+  push:
+    branches:
+      - cleanup/vaskari-legacy-final
+    paths:
+      - .github/workflows/fix-vaskari-display-names.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Normalize Vaskari Ravager prose name
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          for p in list(Path('.').rglob('*.md')) + list(Path('.').rglob('*.txt')):
+              if '.git' in p.parts:
+                  continue
+              text = p.read_text(encoding='utf-8')
+              new = text.replace('VaskariRavager', 'Vaskari Ravager')
+              if new != text:
+                  p.write_text(new, encoding='utf-8')
+          PY
+          rm -f .github/workflows/fix-vaskari-display-names.yml
+          git add -A
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Normalize Vaskari Ravager display name"
+          git push origin HEAD:cleanup/vaskari-legacy-final
