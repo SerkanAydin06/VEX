@@ -1,0 +1,201 @@
+name: Enemy Runtime State Refactor Once
+
+on:
+  push:
+    branches:
+      - chatgpt/enemy-runtime-state-dedupe-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Apply focused refactor
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path('.')
+          base_path = root / 'scripts/actors/enemy_base.gd'
+          subclass_paths = [
+              root / 'scripts/actors/enemy_combatant_base.gd',
+              root / 'scripts/actors/enemy_lunge_base.gd',
+          ]
+          audit_path = root / 'tests/enemy_script_architecture_audit.py'
+
+          shared_declarations = [
+              'var health := 0',
+              'var _spawn_position := Vector3.ZERO',
+              'var _facing_direction := Vector3.FORWARD',
+              'var _attack_locked := false',
+              'var _gravity := 20.0',
+              'var _player: Node3D = null',
+              'var _sight_check_remaining := 0.0',
+              'var _last_seen_position := Vector3.ZERO',
+              'var _search_remaining := 0.0',
+              'var _search_probe_index := 0',
+              'var _search_probe_target := Vector3.ZERO',
+              'var _has_search_probe := false',
+              'var _damage_reaction_remaining := 0.0',
+              'var _forced_damage_target := Vector3.ZERO',
+              'var _has_forced_damage_target := false',
+              'var _forced_damage_best_distance := INF',
+              'var _forced_damage_stall_remaining := 0.0',
+              'var _forced_damage_commit_remaining := 0.0',
+              'var _runtime_maximum_health := 1',
+              'var _runtime_attack_damage := 1',
+              'var _runtime_move_speed := 0.5',
+              'var _runtime_chase_speed := 0.5',
+              'var _runtime_detection_range := 1.0',
+              'var _runtime_pursuit_range := 1.0',
+              'var _runtime_attack_cooldown := 1.0',
+              'var _runtime_attack_windup := 0.1',
+              'var _dormant_active := false',
+              'var _burn_remains: Node3D = null',
+              'var _visual_base_y := 0.0',
+          ]
+
+          base = base_path.read_text(encoding='utf-8')
+          state_block = '''# Combatant ve Lunge ailelerinin birebir ortak runtime state'i burada tek kez tanımlanır.
+          # Aileye özgü state-machine alanları alt sınıflarda kalır.
+          var health := 0
+          var _spawn_position := Vector3.ZERO
+          var _facing_direction := Vector3.FORWARD
+          var _attack_locked := false
+          var _gravity := 20.0
+          var _player: Node3D = null
+          var _sight_check_remaining := 0.0
+          var _last_seen_position := Vector3.ZERO
+          var _search_remaining := 0.0
+          var _search_probe_index := 0
+          var _search_probe_target := Vector3.ZERO
+          var _has_search_probe := false
+          var _damage_reaction_remaining := 0.0
+          var _forced_damage_target := Vector3.ZERO
+          var _has_forced_damage_target := false
+          var _forced_damage_best_distance := INF
+          var _forced_damage_stall_remaining := 0.0
+          var _forced_damage_commit_remaining := 0.0
+          var _runtime_maximum_health := 1
+          var _runtime_attack_damage := 1
+          var _runtime_move_speed := 0.5
+          var _runtime_chase_speed := 0.5
+          var _runtime_detection_range := 1.0
+          var _runtime_pursuit_range := 1.0
+          var _runtime_attack_cooldown := 1.0
+          var _runtime_attack_windup := 0.1
+          var _dormant_active := false
+          var _burn_remains: Node3D = null
+          var _visual_base_y := 0.0'''.strip()
+          anchor = 'var _damage_shake_remaining := 0.0\n'
+          assert state_block not in base
+          assert base.count(anchor) == 1
+          base = base.replace(anchor, state_block + '\n\n' + anchor, 1)
+          base_path.write_text(base, encoding='utf-8')
+
+          for path in subclass_paths:
+              source = path.read_text(encoding='utf-8')
+              for declaration in shared_declarations:
+                  line = declaration + '\n'
+                  assert source.count(line) == 1, f'{path}: expected exactly one declaration: {declaration}'
+                  source = source.replace(line, '', 1)
+              path.write_text(source, encoding='utf-8')
+
+          audit = audit_path.read_text(encoding='utf-8')
+          anchor = '''assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
+          '''
+          ownership = '''
+          shared_runtime_state = [
+              "health",
+              "_spawn_position",
+              "_facing_direction",
+              "_attack_locked",
+              "_gravity",
+              "_player",
+              "_sight_check_remaining",
+              "_last_seen_position",
+              "_search_remaining",
+              "_search_probe_index",
+              "_search_probe_target",
+              "_has_search_probe",
+              "_damage_reaction_remaining",
+              "_forced_damage_target",
+              "_has_forced_damage_target",
+              "_forced_damage_best_distance",
+              "_forced_damage_stall_remaining",
+              "_forced_damage_commit_remaining",
+              "_runtime_maximum_health",
+              "_runtime_attack_damage",
+              "_runtime_move_speed",
+              "_runtime_chase_speed",
+              "_runtime_detection_range",
+              "_runtime_pursuit_range",
+              "_runtime_attack_cooldown",
+              "_runtime_attack_windup",
+              "_dormant_active",
+              "_burn_remains",
+              "_visual_base_y",
+          ]
+          for state_name in shared_runtime_state:
+              pattern = rf"^var {re.escape(state_name)}(?:\\b|:)"
+              assert re.search(pattern, enemy_base, re.M), state_name
+              assert not re.search(pattern, combatant_base, re.M), ("combatant duplicate", state_name)
+              assert not re.search(pattern, lunge_base, re.M), ("lunge duplicate", state_name)
+          '''
+          assert audit.count(anchor) == 1
+          assert 'shared_runtime_state = [' not in audit
+          audit = audit.replace(anchor, anchor + ownership, 1)
+          audit_path.write_text(audit, encoding='utf-8')
+
+          workflow = root / '.github/workflows/enemy_runtime_state_refactor_once.yml'
+          assert workflow.exists()
+          workflow.unlink()
+          PY
+
+      - name: Run every Python audit
+        shell: bash
+        run: |
+          status=0
+          while IFS= read -r audit; do
+            echo "::group::$audit"
+            python "$audit" || status=1
+            echo "::endgroup::"
+          done < <(find tests -maxdepth 1 -name '*_audit.py' -print | sort)
+          exit "$status"
+
+      - name: Verify patch scope
+        shell: bash
+        run: |
+          git diff --check
+          changed="$(git diff --name-only | sort)"
+          expected="$(printf '%s\n' \
+            '.github/workflows/enemy_runtime_state_refactor_once.yml' \
+            'scripts/actors/enemy_base.gd' \
+            'scripts/actors/enemy_combatant_base.gd' \
+            'scripts/actors/enemy_lunge_base.gd' \
+            'tests/enemy_script_architecture_audit.py' | sort)"
+          test "$changed" = "$expected"
+
+      - name: Commit focused refactor
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Centralize shared enemy runtime state"
+          git push origin HEAD:${{ github.ref_name }}
