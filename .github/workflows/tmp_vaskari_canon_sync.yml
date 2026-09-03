@@ -1,0 +1,72 @@
+name: Temporary Vaskari Canon Sync
+
+on:
+  push:
+    branches:
+      - chatgpt/vaskari-canon-sync-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Sync Vaskari canon
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          doc_path = Path("Enemies_VEX.md")
+          doc = doc_path.read_text(encoding="utf-8")
+          doc, rename_count = re.subn(
+              r"(?<![A-Za-z0-9_])RedViper(?![A-Za-z0-9_])",
+              "Vaskari Raptor",
+              doc,
+          )
+          assert rename_count >= 5, rename_count
+          old_color = "- **Görsel dil:** Koyu kırmızı, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler."
+          new_color = "- **Görsel dil:** Koyu mor, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler."
+          assert old_color in doc
+          doc = doc.replace(old_color, new_color, 1)
+          doc_path.write_text(doc, encoding="utf-8")
+
+          audit_path = Path("tests/vaskari_raptor_rename_audit.py")
+          audit = audit_path.read_text(encoding="utf-8")
+          needle = 'print("vaskari raptor rename audit passed")\n'
+          assert needle in audit
+          assert "enemies_doc =" not in audit
+          checks = '''enemies_doc = (ROOT / "Enemies_VEX.md").read_text(encoding="utf-8")
+assert re.search(r"(?<![A-Za-z0-9_])RedViper(?![A-Za-z0-9_])", enemies_doc) is None
+assert "Vaskari Raptor" in enemies_doc
+assert "BadRedViper" in enemies_doc
+assert "- **Görsel dil:** Koyu mor, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler." in enemies_doc
+
+'''
+          audit = audit.replace(needle, checks + needle, 1)
+          audit_path.write_text(audit, encoding="utf-8")
+          PY
+      - name: Run every Python audit
+        shell: bash
+        run: |
+          status=0
+          while IFS= read -r audit; do
+            echo "::group::$audit"
+            python "$audit" || status=1
+            echo "::endgroup::"
+          done < <(find tests -maxdepth 1 -name '*_audit.py' -print | sort)
+          exit "$status"
+      - name: Commit clean branch result
+        shell: bash
+        run: |
+          rm .github/workflows/tmp_vaskari_canon_sync.yml
+          git config user.name "SerkanAydin06"
+          git config user.email "srknydn88@gmail.com"
+          git add Enemies_VEX.md tests/vaskari_raptor_rename_audit.py .github/workflows/tmp_vaskari_canon_sync.yml
+          git commit -m "Sync Vaskari Raptor canon documentation"
+          git push origin HEAD:chatgpt/vaskari-canon-sync-20260903
