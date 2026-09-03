@@ -4,14 +4,18 @@ extends CanvasLayer
 const DECAL_SHEET = preload("res://assets/enemies/husk_leech/husk_leech_decal_spritesheet.png")
 const FRAME_SIZE := Vector2i(418, 235)
 const FRAME_COUNT := 8
-const FRAME_TIME := 0.085
-const FADE_DURATION := 0.75
+const FIRST_PHASE_FRAME_COUNT := 4
+const FIRST_PHASE_DURATION := 3.0
+const SECOND_PHASE_DURATION := 2.0
+const TOTAL_FRAME_DURATION := FIRST_PHASE_DURATION + SECOND_PHASE_DURATION
+const FADE_DURATION := 0.5
 const NODE_NAME := "HuskLeechVenomOverlay"
 
 var _shade_rect: ColorRect = null
 var _texture_rect: TextureRect = null
 var _atlas: AtlasTexture = null
 var _remaining := 0.0
+var _effect_duration := TOTAL_FRAME_DURATION
 var _frame_elapsed := 0.0
 var _frame_index := 0
 var _peak_alpha := 0.95
@@ -57,7 +61,8 @@ func _ready() -> void:
 
 
 func refresh_effect(duration: float, peak_alpha: float) -> void:
-	_remaining = maxf(duration, 0.5)
+	_effect_duration = maxf(duration, 0.5)
+	_remaining = _effect_duration
 	_peak_alpha = clampf(peak_alpha, 0.2, 1.0)
 	_frame_elapsed = 0.0
 	_frame_index = 0
@@ -73,19 +78,37 @@ func _process(delta: float) -> void:
 	_remaining = maxf(0.0, _remaining - delta)
 	_frame_elapsed += delta
 
-	while _frame_elapsed >= FRAME_TIME and _frame_index < FRAME_COUNT - 1:
-		_frame_elapsed -= FRAME_TIME
+	while _frame_index < FRAME_COUNT - 1:
+		var frame_duration := _frame_duration(_frame_index)
+		if _frame_elapsed < frame_duration:
+			break
+		_frame_elapsed -= frame_duration
 		_frame_index += 1
 		_apply_frame()
 
+	var runtime_fade_duration := minf(FADE_DURATION, _effect_duration * 0.1)
 	var fade := 1.0
-	if _remaining < FADE_DURATION:
-		fade = clampf(_remaining / FADE_DURATION, 0.0, 1.0)
+	if _remaining < runtime_fade_duration:
+		fade = clampf(_remaining / maxf(runtime_fade_duration, 0.01), 0.0, 1.0)
 	_texture_rect.modulate.a = _peak_alpha * fade
 	_shade_rect.modulate.a = fade
 
 	if _remaining <= 0.0:
 		queue_free()
+
+
+func _frame_duration(frame_index: int) -> float:
+	if frame_index < FIRST_PHASE_FRAME_COUNT:
+		return (
+			_effect_duration
+			* (FIRST_PHASE_DURATION / TOTAL_FRAME_DURATION)
+			/ float(FIRST_PHASE_FRAME_COUNT)
+		)
+	return (
+		_effect_duration
+		* (SECOND_PHASE_DURATION / TOTAL_FRAME_DURATION)
+		/ float(FRAME_COUNT - FIRST_PHASE_FRAME_COUNT)
+	)
 
 
 func _apply_frame() -> void:
