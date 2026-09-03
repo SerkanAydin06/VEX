@@ -1,4 +1,4 @@
-name: Temporary Enemy Identical Helper Scan
+name: Temporary Combatant Technical Export Scan
 
 on:
   push:
@@ -13,44 +13,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Find identical Combatant/Lunge functions
+      - name: Scan detour and cover export overrides
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
 
-          files = {
-              "combatant": Path("scripts/actors/enemy_combatant_base.gd"),
-              "lunge": Path("scripts/actors/enemy_lunge_base.gd"),
-          }
+          combatant = Path("scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
+          candidates = []
+          for match in re.finditer(r"(?m)^@export(?:_[^\n]*)?[^\n]*\n(?:#.*\n)*var\s+([A-Za-z0-9_]+)", combatant):
+              name = match.group(1)
+              if "detour" in name or "cover" in name:
+                  candidates.append(name)
 
-          def funcs(path):
-              text = path.read_text(encoding="utf-8")
-              matches = list(re.finditer(r"(?m)^func\s+([A-Za-z0-9_]+)\b", text))
-              out = {}
-              for i, m in enumerate(matches):
-                  end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
-                  body = text[m.start():end].strip()
-                  normalized = "\n".join(line.rstrip() for line in body.splitlines() if line.strip())
-                  out[m.group(1)] = normalized
-              return out
+          serialized = []
+          for path in list(Path("scenes").rglob("*.tscn")) + list(Path("resources").rglob("*.tres")):
+              try:
+                  serialized.append((path, path.read_text(encoding="utf-8")))
+              except UnicodeDecodeError:
+                  pass
 
-          parsed = {name: funcs(path) for name, path in files.items()}
-          common = sorted(set(parsed["combatant"]) & set(parsed["lunge"]))
-          all_scripts = "\n".join(p.read_text(encoding="utf-8") for p in Path("scripts").rglob("*.gd"))
+          print("===== DETOUR/COVER EXPORTED CANDIDATES =====")
+          for name in sorted(set(candidates)):
+              hits = []
+              pattern = re.compile(rf"(?m)^\s*{re.escape(name)}\s*=")
+              for path, text in serialized:
+                  if pattern.search(text):
+                      hits.append(str(path))
+              print(f"{name}: overrides={len(hits)}")
+              for hit in hits:
+                  print(f"  {hit}")
 
-          print("===== EXACT IDENTICAL COMMON FUNCTIONS =====")
-          for name in common:
-              if parsed["combatant"][name] != parsed["lunge"][name]:
-                  continue
-              occurrences = len(re.findall(rf"\b{re.escape(name)}\s*\(", all_scripts))
-              print(f"{name} | script call/def occurrences={occurrences}")
-              print(parsed["combatant"][name])
-              print("---")
-
-          print("===== COMMON NAMES WITH DIFFERENT BODIES =====")
-          for name in common:
-              if parsed["combatant"][name] == parsed["lunge"][name]:
-                  continue
-              print(name)
+          print("===== SOURCE LINES =====")
+          for i, line in enumerate(combatant.splitlines(), 1):
+              if ("detour" in line or "cover" in line) and ("@export" in line or "var " in line):
+                  print(f"{i}: {line}")
           PY
