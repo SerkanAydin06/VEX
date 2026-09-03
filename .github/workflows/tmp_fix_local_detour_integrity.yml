@@ -1,0 +1,50 @@
+name: Temporary Fix Local Detour Integrity
+
+on:
+  push:
+    branches:
+      - chatgpt/fix-local-detour-integrity-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Align integrity contract
+        run: python tools/tmp_align_local_detour_integrity.py
+      - name: Verify focused architecture audit
+        run: python tests/enemy_role_ai_audit.py
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Clean import and integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          import_log="$RUNNER_TEMP/godot-import.log"
+          godot --headless --editor --path . --quit 2>&1 | tee "$import_log"
+          ! grep -E 'ERROR:|invalid UID' "$import_log"
+          integrity_log="$RUNNER_TEMP/godot-integrity.log"
+          godot --headless --path . tests/integrity_test.tscn 2>&1 | tee "$integrity_log"
+          ! grep -E 'ERROR:|invalid UID' "$integrity_log"
+      - name: Commit clean fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm tools/tmp_align_local_detour_integrity.py .github/workflows/tmp_fix_local_detour_integrity.yml
+          git config user.name "SerkanAydin06"
+          git config user.email "srknydn88@gmail.com"
+          git add tests/integrity_test.gd tools/tmp_align_local_detour_integrity.py .github/workflows/tmp_fix_local_detour_integrity.yml
+          git diff --cached --check
+          git commit -m "Align integrity with internal local detour tuning"
+          git push
