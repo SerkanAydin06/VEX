@@ -2,7 +2,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ravager = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
-redviper = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
+vaskari_raptor = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 warden = (ROOT / "scripts/actors/crucible_warden.gd").read_text(encoding="utf-8")
 nav = (ROOT / "scripts/actors/enemy_navigation_runtime.gd").read_text(encoding="utf-8")
 profile = (ROOT / "scripts/actors/enemy_combat_profiles.gd").read_text(encoding="utf-8")
@@ -17,7 +17,7 @@ for token in [
 ]:
     assert token in nav, token
 
-for source in (ravager, redviper):
+for source in (ravager, vaskari_raptor):
     assert "EnemyNavigationRuntime.build_shortest_path(" in source
     assert "var runtime_grid_step" in source
     assert "var runtime_grid_max_nodes" in source

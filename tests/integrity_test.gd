@@ -4,8 +4,8 @@ const INVALID_SAVE_FIXTURE := "res://tests/fixtures/save_invalid_version.cfg"
 const VALID_BACKUP_FIXTURE := "res://tests/fixtures/save_valid_backup.cfg"
 
 const CREATURE_SCENES := [
-	"res://scenes/actors/redviper.tscn",
-	"res://scenes/actors/badredviper.tscn",
+	"res://scenes/actors/vaskari_raptor.tscn",
+	"res://scenes/actors/vaskari_ravager.tscn",
 	"res://scenes/actors/cinderhound.tscn",
 	"res://scenes/actors/ravager.tscn",
 	"res://scenes/actors/basalt_juggernaut.tscn",
@@ -465,7 +465,7 @@ func _check_creature_inspector_contract() -> void:
 			if not editor_properties.has(property_name):
 				failures.append("Yaratık Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
 		if (
-			not scene_path.ends_with("redviper.tscn")
+			not scene_path.ends_with("vaskari_raptor.tscn")
 			and not scene_path.ends_with("cinderhound.tscn")
 			and not scene_path.ends_with("gorehorn.tscn")
 			and not scene_path.ends_with("vaskari_bulwark.tscn")

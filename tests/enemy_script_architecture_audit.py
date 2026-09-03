@@ -26,7 +26,7 @@ FAMILIES = {
     ],
     "enemy_lunge_performance_base.gd": [
         "vaskari_raptor",
-        "badredviper",
+        "vaskari_ravager",
         "cinderhound",
         "vaskari_bulwark",
     ],
@@ -42,9 +42,9 @@ FAMILIES = {
 
 # Vaskari Raptor kanonik script/kimlik adını kullanır. Büyük level sahnelerindeki
 # eski PackedScene yollarını ve instance kimliklerini kırmamak için actor scene
-# dosya yolu bu geçişte uyumluluk alias'ı olarak redviper.tscn kalır.
+# dosya yolu bu geçişte uyumluluk alias'ı olarak vaskari_raptor.tscn kalır.
 SCENE_FILE_OVERRIDES = {
-    "vaskari_raptor": "redviper.tscn",
+    "vaskari_raptor": "vaskari_raptor.tscn",
 }
 
 CHARACTER_CONTRACTS = {
@@ -58,7 +58,7 @@ CHARACTER_CONTRACTS = {
     "coil_lancer": {"combat_role": "2", "maximum_health": "105", "attack_range": "22.0"},
     "spore_matriarch": {"combat_role": "1", "maximum_health": "165", "attack_range": "18.0"},
     "vaskari_raptor": {"combat_role": "0", "maximum_health": "140", "chase_speed": "6.4"},
-    "badredviper": {"combat_role": "0", "maximum_health": "190", "attack_damage": "28"},
+    "vaskari_ravager": {"combat_role": "0", "maximum_health": "190", "attack_damage": "28"},
     "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.18"},
     "gorehorn": {"combat_role": "0", "maximum_health": "180", "attack_range": "12.0"},
     "vaskari_bulwark": {"combat_role": "0", "maximum_health": "300", "attack_damage": "30"},
@@ -290,6 +290,6 @@ for base_name, base_source in [
     ("enemy_lunge_performance_base", lunge_performance),
     ("enemy_hybrid_base", hybrid_base),
 ]:
-    assert not re.search(r'class_name Vex(?:Ravager|RedViper|VaskariRaptor)\b', base_source), base_name
+    assert not re.search(r'class_name Vex(?:Ravager|VaskariRaptor|VaskariRaptor)\b', base_source), base_name
 
 print("enemy script architecture audit passed")

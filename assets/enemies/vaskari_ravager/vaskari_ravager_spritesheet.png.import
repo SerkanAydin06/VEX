@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://di5wuthxnjfoc"
-path="res://.godot/imported/badredviper_spritesheet.png-60d570bcab874cff97168d994c3f1ea6.ctex"
+path="res://.godot/imported/vaskari_ravager_spritesheet.png-60d570bcab874cff97168d994c3f1ea6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/badredviper/badredviper_spritesheet.png"
-dest_files=["res://.godot/imported/badredviper_spritesheet.png-60d570bcab874cff97168d994c3f1ea6.ctex"]
+source_file="res://assets/enemies/vaskari_ravager/vaskari_ravager_spritesheet.png"
+dest_files=["res://.godot/imported/vaskari_ravager_spritesheet.png-60d570bcab874cff97168d994c3f1ea6.ctex"]
 
 [params]
 

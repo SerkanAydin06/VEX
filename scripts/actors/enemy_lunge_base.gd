@@ -228,7 +228,7 @@ func _ready() -> void:
 	if not animated_sprite.frame_changed.is_connected(_on_visual_frame_changed):
 		animated_sprite.frame_changed.connect(_on_visual_frame_changed)
 	_apply_frame_ground_offset()
-	# Editörde de RedViper görünsün ve idle animasyonu oynasın.
+	# Editörde de VaskariRaptor görünsün ve idle animasyonu oynasın.
 	# AI, GameState ve devriye kodları editör modunda çalıştırılmaz.
 	if Engine.is_editor_hint():
 		_play_animation(&"idle")

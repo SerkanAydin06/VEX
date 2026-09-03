@@ -29,8 +29,8 @@
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="21_ambience"]
 [ext_resource type="PackedScene" uid="uid://dao3phjjleug0" path="res://scenes/world/exit_sign.tscn" id="22_exit_sign"]
 [ext_resource type="PackedScene" path="res://scenes/props/secret_trigger.tscn" id="23_secret"]
-[ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/redviper.tscn" id="24_redviper"]
-[ext_resource type="PackedScene" path="res://scenes/actors/badredviper.tscn" id="25_badredviper"]
+[ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/vaskari_raptor.tscn" id="24_vaskari_raptor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/vaskari_ravager.tscn" id="25_vaskari_ravager"]
 [ext_resource type="PackedScene" path="res://scenes/world/ceiling_light_white_horror.tscn" id="26_room_light"]
 [ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/basalt_juggernaut.tscn" id="27_basalt_juggernaut"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="28_voidweaver"]
@@ -1422,9 +1422,9 @@ enemy_id = &"v2_ravager_02"
 patrol_offset = Vector3(0, 0, 2)
 waypoint_link_distance = 13.0
 
-[node name="RedViper_03" parent="Enemies" unique_id=1279498942 instance=ExtResource("24_redviper")]
+[node name="VaskariRaptor_03" parent="Enemies" unique_id=1279498942 instance=ExtResource("24_vaskari_raptor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.725, 0.4968, 20.9375)
-enemy_id = &"v2_redviper_03"
+enemy_id = &"v2_vaskari_raptor_03"
 
 [node name="Ravager_04" parent="Enemies" unique_id=659624271 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.275, 1, -0.9375)
@@ -1462,9 +1462,9 @@ enemy_id = &"v2_ravager_09"
 patrol_offset = Vector3(0, 0, 2)
 waypoint_link_distance = 13.0
 
-[node name="RedViper_10" parent="Enemies" unique_id=593500906 instance=ExtResource("24_redviper")]
+[node name="VaskariRaptor_10" parent="Enemies" unique_id=593500906 instance=ExtResource("24_vaskari_raptor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.725, 0.4968, -20.9375)
-enemy_id = &"v2_redviper_10"
+enemy_id = &"v2_vaskari_raptor_10"
 
 [node name="Ravager_11" parent="Enemies" unique_id=988092664 instance=ExtResource("7_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.275, 1, -0.9375)
@@ -1485,9 +1485,9 @@ spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, 2)
 waypoint_link_distance = 13.0
 
-[node name="BadRedViper_FinalGuard" parent="Enemies" unique_id=414624950 instance=ExtResource("25_badredviper")]
+[node name="VaskariRavager_FinalGuard" parent="Enemies" unique_id=414624950 instance=ExtResource("25_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.725, 0.4968, 29.0625)
-enemy_id = &"v2_badredviper_final_guard"
+enemy_id = &"v2_vaskari_ravager_final_guard"
 maximum_health = 260
 patrol_offset = Vector3(0, 0, 0)
 detection_range = 18.0
@@ -1510,15 +1510,15 @@ spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, 2)
 waypoint_link_distance = 13.0
 
-[node name="BadRedViper_17" parent="Enemies" unique_id=1994129066 instance=ExtResource("25_badredviper")]
+[node name="VaskariRavager_17" parent="Enemies" unique_id=1994129066 instance=ExtResource("25_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.725, 0.4968, -20.9375)
-enemy_id = &"v2_badredviper_17"
+enemy_id = &"v2_vaskari_ravager_17"
 spawn_min_difficulty = 1
 patrol_offset = Vector3(0, 0, 2)
 
-[node name="RedViper_18" parent="Enemies" unique_id=850149784 instance=ExtResource("24_redviper")]
+[node name="VaskariRaptor_18" parent="Enemies" unique_id=850149784 instance=ExtResource("24_vaskari_raptor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.725, 0.4968, 0.9375)
-enemy_id = &"v2_redviper_18"
+enemy_id = &"v2_vaskari_raptor_18"
 spawn_min_difficulty = 1
 
 [node name="BasaltJuggernaut_19" parent="Enemies" unique_id=2064632821 instance=ExtResource("27_basalt_juggernaut")]
@@ -1569,9 +1569,9 @@ spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2)
 waypoint_link_distance = 13.0
 
-[node name="BadRedViper_26" parent="Enemies" unique_id=837751028 instance=ExtResource("25_badredviper")]
+[node name="VaskariRavager_26" parent="Enemies" unique_id=837751028 instance=ExtResource("25_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.725, 0.4968, 19.0625)
-enemy_id = &"v2_badredviper_26"
+enemy_id = &"v2_vaskari_ravager_26"
 spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, 2)
 
@@ -1602,9 +1602,9 @@ enemy_id = &"v2_voidweaver_30"
 patrol_offset = Vector3(0, 0, 2)
 waypoint_link_distance = 13.0
 
-[node name="BadRedViper_31" parent="Enemies" unique_id=1749528517 instance=ExtResource("25_badredviper")]
+[node name="VaskariRavager_31" parent="Enemies" unique_id=1749528517 instance=ExtResource("25_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.275, 0.4968, 29.0625)
-enemy_id = &"v2_badredviper_31"
+enemy_id = &"v2_vaskari_ravager_31"
 spawn_min_difficulty = 3
 patrol_offset = Vector3(0, 0, 2)
 
@@ -1834,7 +1834,7 @@ secret_id = &"v2_secret_mp90"
 [node name="FinishSwitch" parent="Triggers" unique_id=992371168 instance=ExtResource("11_finish")]
 transform = Transform3D(-4e-06, 0, -1, 0, 1, 0, 1, 0, -4e-06, 53.58, 1.6, 30)
 display_name = "DR. SELİN ERDEM // TAHLİYE KONTROLÜ"
-required_enemy_id = &"v2_badredviper_final_guard"
+required_enemy_id = &"v2_vaskari_ravager_final_guard"
 next_level_path = "res://scenes/hub/bastion_7.tscn"
 
 [node name="ExitSign" parent="Triggers" unique_id=1952030602 instance=ExtResource("22_exit_sign")]

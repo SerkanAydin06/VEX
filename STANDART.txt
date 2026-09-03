@@ -50,8 +50,8 @@ Enemy görsel taban değerleri (AnimatedSprite3D, sahne-otoriteli):
 - Voidweaver       : Y  0.00000000 / pixel_size 0.004100000
 - Furnace Carrier (`furnice_carrier`) : Y 0.44470531 / pixel_size 0.008000000
 - Crucible Warden  : Y  0.44000000 / pixel_size 0.006400000
-- RedViper         : Y  0.00002250 / pixel_size 0.003515713
-- BadRedViper      : Y  0.13330000 / pixel_size 0.006575391
+- VaskariRaptor         : Y  0.00002250 / pixel_size 0.003515713
+- VaskariRavager      : Y  0.13330000 / pixel_size 0.006575391
 - Cinder Hound     : Y  0.14540000 / pixel_size 0.003400000
 - Briar Skulker    : Y  0.00000000 / pixel_size 0.003125000
 
