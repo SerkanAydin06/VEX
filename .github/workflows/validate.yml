@@ -209,6 +209,16 @@ jobs:
             echo "::error::Venom Marshall runtime log contains an error or invalid UID"
             exit 1
           fi
+      - name: Run Husk Leech vision poison runtime regression
+        shell: bash
+        run: |
+          set -o pipefail
+          log="$RUNNER_TEMP/husk-leech-runtime.log"
+          godot --headless --path . tests/husk_leech_runtime_test.tscn 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then
+            echo "::error::Husk Leech runtime log contains an error or invalid UID"
+            exit 1
+          fi
       - name: Run weapon pause reload runtime regression
         shell: bash
         run: |
