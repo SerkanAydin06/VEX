@@ -1,0 +1,36 @@
+name: Apply enemy common floor contact patch
+
+on:
+  push:
+    branches:
+      - refactor/enemy-common-floor-contact
+    paths:
+      - .github/workflows/temp_enemy_floor_contact_patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          ref: refactor/enemy-common-floor-contact
+          fetch-depth: 0
+
+      - name: Apply exact floor-contact patch
+        run: python .github/temp_apply_enemy_floor_contact_patch.py
+
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/actors/enemy_base.gd scripts/actors/enemy_combatant_base.gd scripts/actors/enemy_lunge_base.gd
+          if git diff --cached --quiet; then
+            echo "No patch changes to commit."
+            exit 0
+          fi
+          git commit -m "Centralize common enemy floor contact helpers"
+          git push origin HEAD:refactor/enemy-common-floor-contact
