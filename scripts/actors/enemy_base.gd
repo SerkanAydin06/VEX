@@ -185,6 +185,35 @@ func _apply_gravity(delta: float, floor_stick_velocity_value: float) -> void:
 		velocity.y = floor_stick_velocity_value
 
 
+func _collision_floor_local_y() -> float:
+	return VexEnemyRuntimeUtils.collision_floor_local_y(collision_shape)
+
+
+func _snap_body_to_floor(
+	max_correction: float,
+	floor_stick_velocity_value: float
+) -> void:
+	if not is_inside_tree() or collision_shape == null or collision_shape.shape == null:
+		return
+	var ray_origin := global_position + Vector3.UP * floor_snap_ray_start_height
+	var ray_end := global_position + Vector3.DOWN * (max_correction + floor_snap_ray_extra_depth)
+	var query := PhysicsRayQueryParameters3D.create(
+		ray_origin,
+		ray_end,
+		floor_collision_mask,
+		[get_rid()]
+	)
+	query.collide_with_areas = false
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var target_root_y := float(hit["position"].y) - _collision_floor_local_y()
+	if absf(target_root_y - global_position.y) > max_correction:
+		return
+	global_position.y = target_root_y
+	velocity.y = floor_stick_velocity_value
+
+
 func _is_player_inside_initial_view(initial_view_angle_value: float) -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false

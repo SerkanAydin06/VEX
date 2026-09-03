@@ -1617,30 +1617,6 @@ func _clear_path() -> void:
 	_has_path_target = false
 
 
-func _collision_floor_local_y() -> float:
-	return VexEnemyRuntimeUtils.collision_floor_local_y(collision_shape)
-
-
-func _snap_body_to_floor(max_correction: float) -> void:
-	if not is_inside_tree() or collision_shape == null or collision_shape.shape == null:
-		return
-	var ray_origin := global_position + Vector3.UP * floor_snap_ray_start_height
-	var ray_end := global_position + Vector3.DOWN * (max_correction + floor_snap_ray_extra_depth)
-	var query := PhysicsRayQueryParameters3D.create(
-		ray_origin,
-		ray_end,
-		floor_collision_mask,
-		[get_rid()]
-	)
-	query.collide_with_areas = false
-	var hit := get_world_3d().direct_space_state.intersect_ray(query)
-	if hit.is_empty():
-		return
-	var target_root_y := float(hit["position"].y) - _collision_floor_local_y()
-	if absf(target_root_y - global_position.y) > max_correction:
-		return
-	global_position.y = target_root_y
-	velocity.y = floor_stick_velocity
 
 
 
@@ -1711,7 +1687,7 @@ func _die() -> void:
 	state = State.DEAD
 	_clear_damage_shake(animated_sprite)
 	velocity = Vector3.ZERO
-	_snap_body_to_floor(floor_snap_max_correction)
+	_snap_body_to_floor(floor_snap_max_correction, floor_stick_velocity)
 	_attack_locked = true
 	_attack_windup_active = false
 	_clear_path()
