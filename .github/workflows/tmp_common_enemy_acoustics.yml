@@ -1,0 +1,113 @@
+name: Temporary Common Enemy Acoustics
+
+on:
+  push:
+    branches:
+      - chatgpt/common-enemy-acoustics-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - name: Apply common acoustic helpers
+        run: python tools/apply_common_enemy_acoustics.py
+      - name: Verify Python architecture audits
+        shell: bash
+        run: |
+          status=0
+          while IFS= read -r audit; do
+            echo "::group::$audit"
+            python "$audit" || status=1
+            echo "::endgroup::"
+          done < <(find tests -maxdepth 1 -name '*_audit.py' -print | sort)
+          exit "$status"
+      - name: Verify focused acoustic structure
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          parent = Path('scripts/actors/enemy_base.gd').read_text(encoding='utf-8')
+          combatant = Path('scripts/actors/enemy_combatant_base.gd').read_text(encoding='utf-8')
+          lunge = Path('scripts/actors/enemy_lunge_base.gd').read_text(encoding='utf-8')
+
+          assert parent.count('func _can_hear_noise_event(') == 1
+          assert parent.count('func _broadcast_ally_alert(') == 1
+          assert 'EnemyPerceptionRuntime.should_hear_noise(' in parent
+          assert 'EnemyPerceptionRuntime.is_within_horizontal_range(' in parent
+          assert 'get_tree().get_nodes_in_group("enemy")' in parent
+          assert 'VexEnemyRuntimeUtils.has_clear_acoustic_path(' in parent
+          assert 'ally.call("receive_ally_alert", suspected_position)' in parent
+
+          def body(source: str, name: str) -> str:
+              match = re.search(rf'(?ms)^func {re.escape(name)}\b.*?(?=^func |\Z)', source)
+              assert match, name
+              return match.group(0)
+
+          combatant_noise = body(combatant, '_on_noise_emitted')
+          lunge_noise = body(lunge, '_on_noise_emitted')
+          combatant_alert = body(combatant, '_alert_nearby_allies')
+          lunge_alert = body(lunge, '_alert_nearby_allies')
+
+          assert '_can_hear_noise_event(' in combatant_noise
+          assert '_can_hear_noise_event(' in lunge_noise
+          assert 'should_hear_noise(' not in combatant_noise
+          assert 'should_hear_noise(' not in lunge_noise
+          assert 'has_clear_acoustic_path(' not in combatant_noise
+          assert 'has_clear_acoustic_path(' not in lunge_noise
+          assert '_broadcast_ally_alert(suspected_position, ally_alert_radius, true)' in combatant_alert
+          assert '_broadcast_ally_alert(suspected_position, ally_alert_radius, false)' in lunge_alert
+
+          for source in (combatant, lunge):
+              assert re.search(r'@export_range\([^\n]+\) var ally_alert_radius\b', source)
+              assert re.search(r'@export_range\([^\n]+\) var hearing_radius\b', source)
+              assert re.search(r'@export_range\([^\n]+\) var hearing_loudness_scale\b', source)
+          print('focused common acoustic structure passed')
+          PY
+          if git diff --name-only | grep -E '^(scenes|resources)/'; then
+            echo '::error::Common acoustic package changed scene/resource serialization'
+            exit 1
+          fi
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Godot parse and focused regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          godot --version | grep '^4.7'
+          log="$RUNNER_TEMP/godot-import.log"
+          godot --headless --editor --path . --quit 2>&1 | tee "$log"
+          if grep -E 'ERROR:|invalid UID' "$log"; then exit 1; fi
+          for scene in \
+            tests/integrity_test.tscn \
+            tests/enemy_perception_runtime_test.tscn \
+            tests/enemy_combat_runtime_test.tscn \
+            tests/enemy_lunge_runtime_test.tscn; do
+            log="$RUNNER_TEMP/$(basename "$scene").log"
+            godot --headless --path . "$scene" 2>&1 | tee "$log"
+            if grep -E 'ERROR:|invalid UID' "$log"; then exit 1; fi
+          done
+      - name: Commit clean package
+        shell: bash
+        run: |
+          git rm tools/apply_common_enemy_acoustics.py .github/workflows/tmp_common_enemy_acoustics.yml
+          git add scripts/actors/enemy_base.gd scripts/actors/enemy_combatant_base.gd scripts/actors/enemy_lunge_base.gd tests/enemy_perception_architecture_audit.py
+          git diff --cached --check
+          git config user.name "SerkanAydin06"
+          git config user.email "srknydn88@gmail.com"
+          git commit -m "Centralize common enemy acoustic helpers"
+          git push
