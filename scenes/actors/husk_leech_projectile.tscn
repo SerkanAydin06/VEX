@@ -60,7 +60,7 @@ impact_end_scale_multiplier = 1.1
 impact_scale_duration = 0.2
 impact_fade_delay = 0.12
 impact_fade_duration = 0.13
-venom_overlay_duration = 2.8
+venom_overlay_duration = 5.0
 venom_overlay_peak_alpha = 0.95
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
