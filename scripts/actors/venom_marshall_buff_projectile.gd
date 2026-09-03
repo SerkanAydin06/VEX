@@ -20,7 +20,7 @@ enum Phase {
 @export_range(0.1, 8.0, 0.1) var floor_probe_depth := 5.0
 
 @export_category("02 - Güçlendirme Alanı")
-@export_range(1.0, 10.0, 0.1) var field_radius := 5.6
+@export_range(1.0, 12.0, 0.1) var field_radius := 7.0
 @export_range(1.0, 15.0, 0.1) var field_duration := 7.0
 @export_range(0.1, 2.0, 0.05) var field_tick_interval := 1.0
 @export_range(0.2, 3.0, 0.05) var field_fade_duration := 1.1
@@ -135,6 +135,13 @@ func launch_to(new_target_position: Vector3, new_source: Node) -> void:
 	direction = (aim_position - global_position).normalized()
 	if direction.length_squared() <= 0.001:
 		direction = Vector3.DOWN
+
+
+func deploy_at(new_origin: Vector3, new_source: Node) -> void:
+	source = new_source if is_instance_valid(new_source) else null
+	_target_position = new_origin
+	global_position = new_origin
+	_deploy_field(new_origin)
 
 
 func _process(delta: float) -> void:
