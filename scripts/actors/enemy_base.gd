@@ -7,6 +7,7 @@ extends CharacterBody3D
 const EnemyCombatProfiles = preload("res://scripts/actors/enemy_combat_profiles.gd")
 const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_runtime.gd")
 const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd")
+const EnemyPerceptionRuntime = preload("res://scripts/actors/enemy_perception_runtime.gd")
 
 @export_category("01B - Zorluk Çarpanları (Sahne)")
 ## zorluk can çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
@@ -122,6 +123,37 @@ func _apply_gravity(delta: float, floor_stick_velocity_value: float) -> void:
 		velocity.y -= _gravity * delta
 	else:
 		velocity.y = floor_stick_velocity_value
+
+
+func _is_player_inside_initial_view(initial_view_angle_value: float) -> bool:
+	if _player == null or not is_instance_valid(_player):
+		return false
+	return EnemyPerceptionRuntime.is_player_inside_initial_view(
+		global_position,
+		_facing_direction,
+		_player.global_position,
+		initial_view_angle_value
+	)
+
+
+func _is_observer_behind_enemy(back_view_threshold_value: float) -> bool:
+	var observer_position := Vector3.ZERO
+	var camera := get_viewport().get_camera_3d()
+	if camera != null:
+		observer_position = camera.global_position
+	elif _player != null and is_instance_valid(_player):
+		observer_position = _player.global_position
+	else:
+		return false
+
+	var direction_to_observer := observer_position - global_position
+	direction_to_observer.y = 0.0
+	if direction_to_observer.length_squared() <= 0.001:
+		return false
+	return (
+		_facing_direction.dot(direction_to_observer.normalized())
+		< back_view_threshold_value
+	)
 
 
 func _trigger_damage_shake(

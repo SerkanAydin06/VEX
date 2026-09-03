@@ -1317,7 +1317,7 @@ func _directional_animation(
 	back_animation: StringName
 ) -> StringName:
 	if (
-		_is_observer_behind_enemy()
+		_is_observer_behind_enemy(back_view_threshold)
 		and _has_animation(back_animation)
 	):
 		return back_animation
@@ -1329,29 +1329,6 @@ func _has_animation(animation_name: StringName) -> bool:
 		animated_sprite.sprite_frames != null
 		and animated_sprite.sprite_frames.has_animation(animation_name)
 		and animated_sprite.sprite_frames.get_frame_count(animation_name) > 0
-	)
-
-
-func _is_observer_behind_enemy() -> bool:
-	var observer_position := Vector3.ZERO
-	var camera := get_viewport().get_camera_3d()
-	if camera != null:
-		observer_position = camera.global_position
-	elif _player != null and is_instance_valid(_player):
-		observer_position = _player.global_position
-	else:
-		return false
-
-	var direction_to_observer := observer_position - global_position
-	direction_to_observer.y = 0.0
-	if direction_to_observer.length_squared() <= 0.001:
-		return false
-
-	# Oyuncu yaratığın baktığı yönün ters tarafındaysa arka kareleri göster.
-	# Küçük eşik, tam yandan geçerken ön/arka görselinin titremesini engeller.
-	return (
-		_facing_direction.dot(direction_to_observer.normalized())
-		< back_view_threshold
 	)
 
 
@@ -1410,7 +1387,7 @@ func _can_see_player() -> bool:
 	var player_distance := _horizontal_distance(global_position, _player.global_position)
 	if player_distance > active_range:
 		return false
-	if (not _alerted or state == State.SEARCH) and not _is_player_inside_initial_view():
+	if (not _alerted or state == State.SEARCH) and not _is_player_inside_initial_view(initial_view_angle):
 		return false
 	if not _check_line_of_sight():
 		return false
@@ -1420,16 +1397,6 @@ func _can_see_player() -> bool:
 		player_distance,
 		crouch_guaranteed_detection_distance,
 		crouch_detection_chance
-	)
-
-func _is_player_inside_initial_view() -> bool:
-	if _player == null or not is_instance_valid(_player):
-		return false
-	return VexEnemyPerceptionRuntime.is_player_inside_initial_view(
-		global_position,
-		_facing_direction,
-		_player.global_position,
-		initial_view_angle
 	)
 
 func _check_line_of_sight() -> bool:
