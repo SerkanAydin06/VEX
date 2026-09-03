@@ -12,8 +12,14 @@ Row order:
 - 4: idle_back
 - 5: walk_back
 
-Husk Leech Impact Spritesheet
+Husk Leech Projectile Spritesheet
 
-Sheet size: 6688x941
-Frame size: 1672x941
+Sheet size: 5016x1254
+Frame size: 1254x1254
 Layout: 4 columns x 1 row
+
+Husk Leech Decal Spritesheet
+
+Sheet size: 3344x235
+Frame size: 418x235
+Layout: 8 columns x 1 row
