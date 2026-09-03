@@ -47,6 +47,7 @@
 [ext_resource type="PackedScene" uid="uid://bvaskaribulwk1" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
 [ext_resource type="PackedScene" uid="uid://bsporematriarch1" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
 [ext_resource type="PackedScene" uid="uid://bvenommarshall01" path="res://scenes/actors/venom_marshall.tscn" id="45_venom_marshall"]
+[ext_resource type="PackedScene" uid="uid://bhuskleechact1" path="res://scenes/actors/husk_leech.tscn" id="46_husk_leech"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -626,6 +627,10 @@ maximum_health = 500
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.792728, 1.0006597, -0.0829978)
 enemy_id = &"level_test_venom_marshall"
 maximum_health = 500
+
+[node name="HuskLeech" parent="Enemies" instance=ExtResource("46_husk_leech")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.9, 0)
+enemy_id = &"level_test_husk_leech"
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]
 stream = ExtResource("35_music")
