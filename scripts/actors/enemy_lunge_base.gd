@@ -76,10 +76,6 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 @export_range(1.0, 120.0, 1.0) var damage_reaction_range := 80.0
 ## hasar tepki süre değeridir (saniye).
 @export_range(1.0, 30.0, 0.5) var damage_reaction_duration := 12.0
-## Yaratığın hasar takip en düşük ilerleme ayarını belirler.
-@export_range(0.01, 1.0, 0.01) var damage_pursuit_min_progress := 0.20
-## hasar takip tıkanma timeout değeridir (saniye).
-@export_range(0.1, 10.0, 0.1) var damage_pursuit_stall_timeout := 3.0
 ## hasar takip kararlılık süre değeridir (saniye).
 @export_range(0.0, 2.0, 0.01) var damage_pursuit_commit_time := 0.12
 @export_category("03B - İşitme / Stealth")
