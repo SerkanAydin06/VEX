@@ -4,7 +4,7 @@ extends Area3D
 @export_category("01 - Uçuş")
 @export_range(1.0, 30.0, 0.5) var speed := 8.5
 @export_range(0.2, 5.0, 0.05) var lifetime := 1.45
-@export_range(0.05, 1.0, 0.01) var collision_radius := 0.32
+@export_range(0.05, 1.0, 0.01) var collision_radius := 0.20
 
 @export_category("02 - Impact")
 @export_range(0.02, 0.5, 0.01) var impact_fade_time := 0.12

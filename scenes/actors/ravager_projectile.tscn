@@ -6,7 +6,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="4_impact_audio"]
 
 [sub_resource type="SphereShape3D" id="SphereShape_projectile"]
-radius = 0.38
+radius = 0.20
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_projectile_1"]
 atlas = ExtResource("2_projectile_sheet")
@@ -96,6 +96,7 @@ script = ExtResource("1_script")
 speed = 17.0
 lifetime = 4.0
 impact_surface_offset = 0.32
+player_impact_surface_offset = 0.04
 impact_light_fade_duration = 0.26
 impact_start_scale_multiplier = 0.92
 impact_end_scale_multiplier = 1.08

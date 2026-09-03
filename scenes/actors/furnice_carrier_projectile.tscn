@@ -51,7 +51,7 @@ animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_projec
 animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_impact1")}, {"duration": 1.0, "texture": SubResource("Atlas_impact2")}, {"duration": 1.0, "texture": SubResource("Atlas_impact3")}, {"duration": 1.0, "texture": SubResource("Atlas_impact4")}], "loop": false, "name": &"default", "speed": 12.0}]
 
 [sub_resource type="SphereShape3D" id="Sphere_projectile"]
-radius = 0.22
+radius = 0.18
 
 [node name="FurniceCarrierProjectile" type="Area3D"]
 collision_layer = 0
@@ -61,7 +61,7 @@ monitorable = false
 script = ExtResource("1_script")
 speed = 14.0
 lifetime = 5.0
-collision_radius = 0.22
+collision_radius = 0.18
 decal_scene = ExtResource("3_decal")
 impact_light_fade_duration = 0.35
 

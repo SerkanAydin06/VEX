@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" path="res://assets/enemies/crucible_warden/crucible_warden_effects_spritesheet.png" id="2_sheet"]
 
 [sub_resource type="SphereShape3D" id="Sphere_heatwave"]
-radius = 0.32
+radius = 0.20
 
 [sub_resource type="AtlasTexture" id="Atlas_heatwave_1"]
 atlas = ExtResource("2_sheet")
@@ -37,7 +37,7 @@ monitorable = false
 script = ExtResource("1_script")
 speed = 8.5
 lifetime = 1.45
-collision_radius = 0.32
+collision_radius = 0.20
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("Sphere_heatwave")

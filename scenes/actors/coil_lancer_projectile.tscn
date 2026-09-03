@@ -71,6 +71,7 @@ script = ExtResource("1_script")
 speed = 28.0
 lifetime = 3.5
 impact_surface_offset = 0.20
+player_impact_surface_offset = 0.04
 light_pulse_amplitude = 0.30
 light_pulse_speed = 12.0
 impact_light_energy = 6.0

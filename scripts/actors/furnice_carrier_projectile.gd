@@ -4,7 +4,7 @@ extends Area3D
 @export_category("01 - Uçuş")
 @export_range(1.0, 40.0, 0.5) var speed := 14.0
 @export_range(0.5, 10.0, 0.1) var lifetime := 5.0
-@export_range(0.05, 1.0, 0.01) var collision_radius := 0.22
+@export_range(0.05, 1.0, 0.01) var collision_radius := 0.18
 
 @export_category("02 - Impact ve Decal")
 @export var decal_scene: PackedScene

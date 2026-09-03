@@ -5,7 +5,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="3_impact_audio"]
 
 [sub_resource type="SphereShape3D" id="SphereShape_husk_leech_projectile"]
-radius = 0.26
+radius = 0.18
 
 [sub_resource type="AtlasTexture" id="Atlas_projectile_1"]
 atlas = ExtResource("2_projectile")
@@ -51,6 +51,7 @@ script = ExtResource("1_script")
 speed = 13.5
 lifetime = 4.0
 impact_surface_offset = 0.24
+player_impact_surface_offset = 0.04
 light_pulse_amplitude = 0.34
 light_pulse_speed = 8.5
 impact_light_energy = 4.6

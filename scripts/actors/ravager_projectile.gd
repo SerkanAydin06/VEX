@@ -7,6 +7,7 @@ const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.
 @export_range(1.0, 40.0, 0.5) var speed := 11.0
 @export_range(0.2, 10.0, 0.1) var lifetime := 4.0
 @export_range(0.0, 1.0, 0.01) var impact_surface_offset := 0.32
+@export_range(0.0, 0.2, 0.01) var player_impact_surface_offset := 0.04
 
 @export_category("02 - Işık")
 @export_range(0.0, 6.0, 0.05) var light_pulse_amplitude := 0.32
@@ -135,8 +136,11 @@ func _physics_process(delta: float) -> void:
 	var hit_normal: Vector3 = result.get("normal", -direction)
 	if hit_normal.length_squared() <= 0.001:
 		hit_normal = -direction
-	global_position = hit_position + hit_normal.normalized() * impact_surface_offset
 	var damage_target := _resolve_damage_target(result.get("collider") as Object)
+	global_position = (
+		hit_position
+		+ hit_normal.normalized() * _impact_offset_for_target(damage_target)
+	)
 	if damage_target != null:
 		damage_target.call("take_damage", damage, global_position, source)
 	_impact()
@@ -145,11 +149,17 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node3D) -> void:
 	if not _active or body == source:
 		return
-	global_position -= direction * impact_surface_offset
 	var damage_target := _resolve_damage_target(body)
+	global_position -= direction * _impact_offset_for_target(damage_target)
 	if damage_target != null:
 		damage_target.call("take_damage", damage, global_position, source)
 	_impact()
+
+
+func _impact_offset_for_target(target: Node) -> float:
+	if target != null and target.is_in_group("player"):
+		return player_impact_surface_offset
+	return impact_surface_offset
 
 
 func _resolve_damage_target(collider: Object) -> Node:
