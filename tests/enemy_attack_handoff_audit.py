@@ -28,7 +28,7 @@ ravager_damage = ravager[
     ravager.index("func take_damage("):ravager.index("func _on_noise_emitted(")
 ]
 red_damage = red[
-    red.index("func take_damage("):red.index("func _collision_floor_local_y(")
+    red.index("func take_damage("):red.index("func _on_visual_frame_changed()")
 ]
 assert "_combat_interrupt_generation += 1" not in ravager_damage
 assert "_attack_locked = false" not in ravager_damage
