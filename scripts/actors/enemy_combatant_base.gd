@@ -194,15 +194,15 @@ enum State {
 ## devriye uzak mesafe çarpanı ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.5, 4.0, 0.05) var patrol_far_distance_multiplier := 2.0
 ## yerel sapma süre değeridir (saniye).
-@export_range(0.0, 3.0, 0.05) var local_detour_duration := 0.90
+var local_detour_duration := 0.90
 ## yerel sapma boşluk çarpanı ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.5, 4.0, 0.05) var local_detour_clearance_multiplier := 1.45
+var local_detour_clearance_multiplier := 1.45
 ## yerel sapma en düşük adım değeridir (metre).
-@export_range(0.1, 3.0, 0.05) var local_detour_min_step := 0.90
+var local_detour_min_step := 0.90
 ## yerel sapma yan çarpanları ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export var local_detour_lateral_multipliers := PackedFloat32Array([1.0, 1.8, 2.8, 4.0])
+var local_detour_lateral_multipliers := PackedFloat32Array([1.0, 1.8, 2.8, 4.0])
 ## yerel sapma ileri çarpanları ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export var local_detour_forward_multipliers := PackedFloat32Array([0.0, 0.75, 1.5])
+var local_detour_forward_multipliers := PackedFloat32Array([0.0, 0.75, 1.5])
 # yerel sapma ilerleme ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var local_detour_progress_weight := 1.5
 # yerel sapma mesafe ceza ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
