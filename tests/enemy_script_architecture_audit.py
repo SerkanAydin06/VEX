@@ -91,16 +91,22 @@ assert "@export" not in combatant_performance, "performance wrapper Inspector ş
 assert "@export" not in lunge_performance, "performance wrapper Inspector şemasını değiştirmemeli"
 assert "@export" not in hybrid_base, "hybrid aile Inspector sırasını bozmamalı"
 
-for subclass_setting in [
+for shared_contract_setting in [
     "enemy_id",
-    "combat_role",
-    "maximum_health",
     "spawn_min_difficulty",
     "apply_difficulty_scaling",
 ]:
-    assert not re.search(rf"@export[^\n]*\bvar {subclass_setting}\b", enemy_base), subclass_setting
-    assert re.search(rf"@export[^\n]*\bvar {subclass_setting}\b", combatant_base), subclass_setting
-    assert re.search(rf"@export[^\n]*\bvar {subclass_setting}\b", lunge_base), subclass_setting
+    assert re.search(rf"@export[^\n]*\bvar {shared_contract_setting}\b", enemy_base), shared_contract_setting
+    assert not re.search(rf"@export[^\n]*\bvar {shared_contract_setting}\b", combatant_base), shared_contract_setting
+    assert not re.search(rf"@export[^\n]*\bvar {shared_contract_setting}\b", lunge_base), shared_contract_setting
+
+for family_setting in [
+    "combat_role",
+    "maximum_health",
+]:
+    assert not re.search(rf"@export[^\n]*\bvar {family_setting}\b", enemy_base), family_setting
+    assert re.search(rf"@export[^\n]*\bvar {family_setting}\b", combatant_base), family_setting
+    assert re.search(rf"@export[^\n]*\bvar {family_setting}\b", lunge_base), family_setting
 
 for shared_difficulty_setting in [
     "difficulty_health_multipliers",
@@ -123,6 +129,7 @@ for shared_difficulty_setting in [
         lunge_base,
     ), shared_difficulty_setting
 
+assert enemy_base.count('@export_category("01A - Ortak Kimlik ve Zorluk")') == 1
 assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
 
 shared_runtime_state = [

@@ -54,8 +54,9 @@ def read(name: str) -> str:
 
 enemy_base = read("enemy_base.gd")
 assert re.findall(r'@export_category\("([^"]+)"\)', enemy_base) == [
-    "01B - Zorluk Çarpanları (Sahne)"
-], "enemy_base yalnız ortak zorluk tuning kategorisini sahiplenmeli"
+    "01A - Ortak Kimlik ve Zorluk",
+    "01B - Zorluk Çarpanları (Sahne)",
+], "enemy_base yalnız ortak kimlik/zorluk sözleşmesini sahiplenmeli"
 
 for filename, expected_categories in SCHEMAS.items():
     source = read(filename)

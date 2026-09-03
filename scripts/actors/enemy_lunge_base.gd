@@ -4,16 +4,10 @@ extends "res://scripts/actors/enemy_base.gd"
 const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 
 @export_category("01 - Kimlik, Can ve Zorluk")
-## Kayıt ve yenilgi takibinde kullanılan benzersiz yaratık kimliğidir.
-@export var enemy_id: StringName = &"enemy"
 ## Savaş mesafesi rolüdür: Yakın, Orta veya Uzak.
 @export_enum("Yakın", "Orta", "Uzak") var combat_role: int = EnemyCombatProfiles.Role.CLOSE
 ## Zorluk çarpanı uygulanmadan önceki temel can değeridir.
 @export_range(1, 1000, 1) var maximum_health := 90
-## Yaratığın doğabileceği en düşük zorluk seviyesidir; 0 tüm seviyelerdir.
-@export_range(0, 3, 1) var spawn_min_difficulty := 0
-## Açıksa sahnedeki zorluk çarpanları cana, hasara, hıza, algılamaya ve saldırı sürelerine uygulanır.
-@export var apply_difficulty_scaling := true
 
 
 @export_category("02 - Hareket ve Sabit Bekleme")
@@ -210,13 +204,6 @@ var wall_normal_y_threshold := 0.55
 @export_category("09 - Özel Yetenekler")
 ## Bu yaratığa özgü saldırı ayarlarını içerir; kaynağı genişleterek alt alanları düzenleyin.
 @export var special_ability_settings: VexEnemyAbilitySettings
-
-@onready var animated_sprite: AnimatedSprite3D = $AnimatedSprite3D
-@onready var collision_shape: CollisionShape3D = $CollisionShape3D
-@onready var hurt_audio: AudioStreamPlayer3D = $HurtAudio
-@onready var death_audio: AudioStreamPlayer3D = $DeathAudio
-@onready var attack_audio: AudioStreamPlayer3D = $AttackAudio
-@onready var ground_shadow: Sprite3D = get_node_or_null("GroundShadow") as Sprite3D
 
 var _dead := false
 var _aggro := false

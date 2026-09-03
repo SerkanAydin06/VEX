@@ -9,6 +9,14 @@ const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_ru
 const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd")
 const EnemyPerceptionRuntime = preload("res://scripts/actors/enemy_perception_runtime.gd")
 
+@export_category("01A - Ortak Kimlik ve Zorluk")
+## Kayıt ve yenilgi takibinde kullanılan benzersiz yaratık kimliğidir.
+@export var enemy_id: StringName = &"enemy"
+## Yaratığın doğabileceği en düşük zorluk seviyesidir; 0 tüm seviyelerdir.
+@export_range(0, 3, 1) var spawn_min_difficulty := 0
+## Açıksa sahnedeki zorluk çarpanları cana, hasara, hıza, algılamaya ve saldırı sürelerine uygulanır.
+@export var apply_difficulty_scaling := true
+
 @export_category("01B - Zorluk Çarpanları (Sahne)")
 ## zorluk can çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
 @export var difficulty_health_multipliers := PackedFloat32Array([0.75, 1.0, 1.20, 1.45])
@@ -59,6 +67,15 @@ var crouched_target_height_scale := 0.50
 var crouched_target_min_height := -0.20
 # arama yoklama çapraz ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var search_probe_diagonal_weight := 0.85
+
+# Combatant ve Lunge sahne köklerinin ortak zorunlu node sözleşmesi.
+# Node adları iki davranış ailesinde de aynıdır; tek kaynaktan çözülür.
+@onready var animated_sprite: AnimatedSprite3D = $AnimatedSprite3D
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
+@onready var attack_audio: AudioStreamPlayer3D = $AttackAudio
+@onready var hurt_audio: AudioStreamPlayer3D = $HurtAudio
+@onready var death_audio: AudioStreamPlayer3D = $DeathAudio
+@onready var ground_shadow: Sprite3D = get_node_or_null("GroundShadow") as Sprite3D
 
 # Combatant ve Lunge ailelerinin birebir ortak runtime state'i burada tek kez tanımlanır.
 # Aileye özgü state-machine alanları alt sınıflarda kalır.
