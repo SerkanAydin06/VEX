@@ -139,6 +139,13 @@ for shared_difficulty_setting in [
 assert enemy_base.count('@export_category("01A - Ortak Kimlik ve Zorluk")') == 1
 assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
 
+
+for shared_animation_helper in ["_has_animation", "_get_animation_duration"]:
+    needle = f"func {shared_animation_helper}("
+    assert needle in enemy_base, shared_animation_helper
+    assert needle not in combatant_base, ("combatant duplicate", shared_animation_helper)
+    assert needle not in lunge_base, ("lunge duplicate", shared_animation_helper)
+
 shared_runtime_state = [
     "health",
     "_spawn_position",
