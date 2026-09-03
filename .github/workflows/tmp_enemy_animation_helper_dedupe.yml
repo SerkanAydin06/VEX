@@ -44,29 +44,31 @@ jobs:
           assert "func _get_animation_duration(" not in base
           marker = "func _horizontal_distance(first: Vector3, second: Vector3) -> float:\n"
           assert marker in base
-          common_helpers = '''func _has_animation(animation_name: StringName) -> bool:
-\treturn (
-\t\tanimated_sprite.sprite_frames != null
-\t\tand animated_sprite.sprite_frames.has_animation(animation_name)
-\t\tand animated_sprite.sprite_frames.get_frame_count(animation_name) > 0
-\t)
-
-
-func _get_animation_duration(animation_name: StringName) -> float:
-\tif animated_sprite.sprite_frames == null:
-\t\treturn 0.0
-\tif not animated_sprite.sprite_frames.has_animation(animation_name):
-\t\treturn 0.0
-\tvar frame_count := animated_sprite.sprite_frames.get_frame_count(animation_name)
-\tif frame_count <= 0:
-\t\treturn 0.0
-\tvar speed := animated_sprite.sprite_frames.get_animation_speed(animation_name)
-\tif speed <= 0.001:
-\t\treturn 0.0
-\treturn float(frame_count) / speed
-
-
-'''
+          helper_lines = [
+              "func _has_animation(animation_name: StringName) -> bool:",
+              "\\treturn (",
+              "\\t\\tanimated_sprite.sprite_frames != null",
+              "\\t\\tand animated_sprite.sprite_frames.has_animation(animation_name)",
+              "\\t\\tand animated_sprite.sprite_frames.get_frame_count(animation_name) > 0",
+              "\\t)",
+              "",
+              "",
+              "func _get_animation_duration(animation_name: StringName) -> float:",
+              "\\tif animated_sprite.sprite_frames == null:",
+              "\\t\\treturn 0.0",
+              "\\tif not animated_sprite.sprite_frames.has_animation(animation_name):",
+              "\\t\\treturn 0.0",
+              "\\tvar frame_count := animated_sprite.sprite_frames.get_frame_count(animation_name)",
+              "\\tif frame_count <= 0:",
+              "\\t\\treturn 0.0",
+              "\\tvar speed := animated_sprite.sprite_frames.get_animation_speed(animation_name)",
+              "\\tif speed <= 0.001:",
+              "\\t\\treturn 0.0",
+              "\\treturn float(frame_count) / speed",
+              "",
+              "",
+          ]
+          common_helpers = "\n".join(helper_lines).replace("\\t", "\t")
           base = base.replace(marker, common_helpers + marker, 1)
           base_path.write_text(base, encoding="utf-8")
 
@@ -79,14 +81,16 @@ func _get_animation_duration(animation_name: StringName) -> float:
           audit = audit_path.read_text(encoding="utf-8")
           anchor = 'assert enemy_base.count(\'@export_category("01B - Zorluk Çarpanları (Sahne)")\') == 1\n'
           assert anchor in audit
-          addition = '''
-
-for shared_animation_helper in ["_has_animation", "_get_animation_duration"]:
-    pattern = rf"(?m)^func {re.escape(shared_animation_helper)}\\b"
-    assert re.search(pattern, enemy_base), shared_animation_helper
-    assert not re.search(pattern, combatant_base), ("combatant duplicate", shared_animation_helper)
-    assert not re.search(pattern, lunge_base), ("lunge duplicate", shared_animation_helper)
-'''
+          addition_lines = [
+              "",
+              "",
+              'for shared_animation_helper in ["_has_animation", "_get_animation_duration"]:',
+              '    pattern = rf"(?m)^func {re.escape(shared_animation_helper)}\\\\b"',
+              "    assert re.search(pattern, enemy_base), shared_animation_helper",
+              '    assert not re.search(pattern, combatant_base), ("combatant duplicate", shared_animation_helper)',
+              '    assert not re.search(pattern, lunge_base), ("lunge duplicate", shared_animation_helper)',
+          ]
+          addition = "\n".join(addition_lines) + "\n"
           audit = audit.replace(anchor, anchor + addition, 1)
           audit_path.write_text(audit, encoding="utf-8")
           PY
