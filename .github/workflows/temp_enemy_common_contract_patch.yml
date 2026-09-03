@@ -34,3 +34,5 @@ jobs:
           fi
           git commit -m "Centralize common enemy contract"
           git push origin HEAD:refactor/enemy-common-contract-exports
+
+# Trigger marker: workflow already exists on this branch.
