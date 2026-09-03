@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://di0tx7433deim"
-path="res://.godot/imported/vaskari_raptor_hurt.wav-d8f1cf5940550e1a8635c248cb171f2b.sample"
+path="res://.godot/imported/vaskari_raptor_hurt.wav-f716dd20a1dac1e86e414909c10379ca.sample"
 
 [deps]
 
 source_file="res://assets/audio/vaskari_raptor_hurt.wav"
-dest_files=["res://.godot/imported/vaskari_raptor_hurt.wav-d8f1cf5940550e1a8635c248cb171f2b.sample"]
+dest_files=["res://.godot/imported/vaskari_raptor_hurt.wav-f716dd20a1dac1e86e414909c10379ca.sample"]
 
 [params]
 

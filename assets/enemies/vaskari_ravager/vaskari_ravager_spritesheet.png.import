@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://di5wuthxnjfoc"
-path="res://.godot/imported/vaskari_ravager_spritesheet.png-60d570bcab874cff97168d994c3f1ea6.ctex"
+path="res://.godot/imported/vaskari_ravager_spritesheet.png-6287a4d99facd8ec425f1992666451d9.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/enemies/vaskari_ravager/vaskari_ravager_spritesheet.png"
-dest_files=["res://.godot/imported/vaskari_ravager_spritesheet.png-60d570bcab874cff97168d994c3f1ea6.ctex"]
+dest_files=["res://.godot/imported/vaskari_ravager_spritesheet.png-6287a4d99facd8ec425f1992666451d9.ctex"]
 
 [params]
 
