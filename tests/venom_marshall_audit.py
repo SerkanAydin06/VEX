@@ -61,6 +61,7 @@ normal_projectile = NORMAL_PROJECTILE.read_text(encoding="utf-8")
 buff_projectile = BUFF_PROJECTILE.read_text(encoding="utf-8")
 buff_script = BUFF_PROJECTILE_SCRIPT.read_text(encoding="utf-8")
 status_script = BUFF_STATUS_SCRIPT.read_text(encoding="utf-8")
+runtime_test = RUNTIME_TEST.read_text(encoding="utf-8")
 
 for contract in [
     'enemy_id = &"venom_marshall"',
@@ -70,6 +71,7 @@ for contract in [
     "attack_range = 20.0",
     'projectile_scene = ExtResource("3_projectile")',
     'buff_projectile_scene = ExtResource("4_buff_projectile")',
+    "buff_cast_range = 7.0",
     "buff_cooldown = 11.5",
     '"name": &"2nd_attack"',
     "pixel_size = 0.0042",
@@ -77,6 +79,13 @@ for contract in [
     "shaded = true",
 ]:
     assert contract in actor, contract
+
+for retired_contract in [
+    "buff_cluster_radius =",
+    "buff_spawn_height =",
+    "buff_spawn_forward_offset =",
+]:
+    assert retired_contract not in actor, retired_contract
 
 regions = re.findall(r"region = Rect2\((\d+), (\d+), (\d+), (\d+)\)", actor)
 assert len(regions) == 28, len(regions)
@@ -88,22 +97,39 @@ expected_regions = [
 assert regions == expected_regions, regions
 
 for contract in [
-    "func _select_buff_target() -> Node3D:",
-    "func _buff_cluster_score(",
+    "func _has_buff_candidate_in_self_field() -> bool:",
+    "_horizontal_distance(global_position, ally.global_position) <= buff_cast_range",
     'animated_sprite.play(&"2nd_attack")',
-    "func _fire_buff_projectile(",
-    'projectile.call("launch_to", target_position, self)',
+    "func _deploy_buff_field() -> void:",
+    "projectile.global_position = global_position",
+    'projectile.call("deploy_at", global_position, self)',
     'animation_name == &"2nd_attack"',
 ]:
     assert contract in actor_script, contract
 
+for retired_contract in [
+    "func _select_buff_target() -> Node3D:",
+    "func _buff_cluster_score(",
+    "func _fire_buff_projectile(",
+    'projectile.call("launch_to", target_position, self)',
+    "buff_cluster_radius",
+    "buff_spawn_height",
+    "buff_spawn_forward_offset",
+]:
+    assert retired_contract not in actor_script, retired_contract
+
 for contract in [
-    "field_radius = 5.6",
+    "field_radius = 7.0",
     "field_duration = 7.0",
     "field_tick_interval = 1.0",
     "heal_ratio_per_tick = 0.04",
     "damage_multiplier = 1.25",
     "buff_duration = 8.0",
+    "radius = 7.0",
+    "top_radius = 7.0",
+    "bottom_radius = 7.0",
+    "pixel_size = 0.02734375",
+    "omni_range = 8.0",
     'shape = SubResource("CylinderShape_buff_field")',
     'sprite_frames = SubResource("SpriteFrames_field")',
 ]:
@@ -114,6 +140,9 @@ for contract in [
     "Phase.FLIGHT",
     "Phase.FIELD",
     "func launch_to(",
+    "func deploy_at(new_origin: Vector3, new_source: Node) -> void:",
+    "global_position = new_origin",
+    "_deploy_field(new_origin)",
     "func _deploy_field(",
     "get_overlapping_bodies()",
     "func _apply_support_pulse(target: Node) -> void:",
@@ -133,6 +162,16 @@ for contract in [
 ]:
     assert contract in status_script, contract
 
+for contract in [
+    "actor.buff_cast_range, 7.0",
+    'actor.call("_has_buff_candidate_in_self_field")',
+    "projectile.field_radius, 7.0",
+    "projectile.deploy_at(actor.global_position, actor)",
+    "projectile.global_position.x, actor.global_position.x",
+    "projectile.global_position.z, actor.global_position.z",
+]:
+    assert contract in runtime_test, contract
+
 assert "region = Rect2(0, 0, 512, 512)" in normal_projectile
 assert "region = Rect2(0, 1024, 512, 512)" in normal_projectile
 
@@ -140,4 +179,4 @@ level_test = LEVEL_TEST.read_text(encoding="utf-8")
 assert 'path="res://scenes/actors/venom_marshall.tscn"' in level_test
 assert 'enemy_id = &"level_test_venom_marshall"' in level_test
 
-print("Venom Marshall ranged/support audit passed")
+print("Venom Marshall self-centered ranged/support audit passed")
