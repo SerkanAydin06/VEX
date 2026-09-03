@@ -10,6 +10,7 @@ projectile_script = ROOT / "scripts/actors/husk_leech_projectile.gd"
 overlay_script = ROOT / "scripts/effects/husk_leech_venom_overlay.gd"
 actor_scene = ROOT / "scenes/actors/husk_leech.tscn"
 projectile_scene = ROOT / "scenes/actors/husk_leech_projectile.tscn"
+canonical_test_scene = ROOT / "scenes/levels/level_test.tscn"
 test_scene = ROOT / "scenes/levels/husk_leech_test.tscn"
 
 for path in (
@@ -18,6 +19,7 @@ for path in (
     overlay_script,
     actor_scene,
     projectile_scene,
+    canonical_test_scene,
     test_scene,
 ):
     assert path.is_file(), path
@@ -99,9 +101,15 @@ assert "refresh_effect(duration, peak_alpha)" in overlay_source
 assert "STRETCH_KEEP_ASPECT_COVERED" in overlay_source
 assert "mouse_filter = Control.MOUSE_FILTER_IGNORE" in overlay_source
 
+canonical_test_source = canonical_test_scene.read_text(encoding="utf-8")
+assert 'path="res://scenes/actors/husk_leech.tscn"' in canonical_test_source
+assert '[node name="HuskLeech" parent="Enemies" instance=ExtResource("46_husk_leech")]' in canonical_test_source
+assert 'enemy_id = &"level_test_husk_leech"' in canonical_test_source
+
 test_source = test_scene.read_text(encoding="utf-8")
 assert 'path="res://scenes/levels/level_test.tscn"' in test_source
-assert 'path="res://scenes/actors/husk_leech.tscn"' in test_source
-assert 'enemy_id = &"level_test_husk_leech"' in test_source
+assert 'path="res://scenes/actors/husk_leech.tscn"' not in test_source
+assert '[node name="HuskLeech" parent="Enemies"]' in test_source
+assert "maximum_health = 500" in test_source
 
 print("husk leech architecture audit passed")
