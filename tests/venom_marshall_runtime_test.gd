@@ -16,16 +16,16 @@ class DummyEnemy:
 func _ready() -> void:
 	var actor := ACTOR_SCENE.instantiate() as VexVenomMarshall
 	assert(actor != null)
-	actor.global_position = Vector3(3.0, 0.0, 4.0)
 	add_child(actor)
+	actor.global_position = Vector3(3.0, 0.0, 4.0)
 	actor.set_physics_process(false)
 	assert(is_equal_approx(actor.buff_cast_range, 7.0))
 
 	var candidate := DummyEnemy.new()
 	candidate.name = "BuffCandidate"
 	candidate.add_to_group("enemy")
-	candidate.global_position = actor.global_position + Vector3(6.5, 0.0, 0.0)
 	add_child(candidate)
+	candidate.global_position = actor.global_position + Vector3(6.5, 0.0, 0.0)
 	assert(bool(actor.call("_has_buff_candidate_in_self_field")))
 	candidate.global_position = actor.global_position + Vector3(7.5, 0.0, 0.0)
 	assert(not bool(actor.call("_has_buff_candidate_in_self_field")))
