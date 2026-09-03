@@ -68,6 +68,9 @@ assert "maximum_health = 90" in scene_source
 assert "attack_damage = 13" in scene_source
 assert "attack_range = 16.0" in scene_source
 assert "attack_cooldown = 2.0" in scene_source
+assert "sight_origin_height = 1.25" in scene_source
+assert "projectile_spawn_height = 1.15" in scene_source
+assert "position = Vector3(0, 0.65, 0)" in scene_source
 
 regions = [
     tuple(map(int, match))
@@ -87,7 +90,7 @@ assert "VenomOverlay.apply_to" in projectile_source
 
 projectile_scene_source = projectile_scene.read_text(encoding="utf-8")
 assert 'path="res://assets/enemies/husk_leech/husk_leech_projectile_spritesheet.png"' in projectile_scene_source
-assert "venom_overlay_duration = 2.8" in projectile_scene_source
+assert "venom_overlay_duration = 5.0" in projectile_scene_source
 assert "venom_overlay_peak_alpha = 0.95" in projectile_scene_source
 for x in (0, 1254, 2508, 3762):
     assert f"region = Rect2({x}, 0, 1254, 1254)" in projectile_scene_source
@@ -96,6 +99,9 @@ overlay_source = overlay_script.read_text(encoding="utf-8")
 assert 'preload("res://assets/enemies/husk_leech/husk_leech_decal_spritesheet.png")' in overlay_source
 assert "const FRAME_SIZE := Vector2i(418, 235)" in overlay_source
 assert "const FRAME_COUNT := 8" in overlay_source
+assert "const FIRST_PHASE_FRAME_COUNT := 4" in overlay_source
+assert "const FIRST_PHASE_DURATION := 3.0" in overlay_source
+assert "const SECOND_PHASE_DURATION := 2.0" in overlay_source
 assert 'target.get_node_or_null(NODE_NAME)' in overlay_source
 assert "refresh_effect(duration, peak_alpha)" in overlay_source
 assert "STRETCH_KEEP_ASPECT_COVERED" in overlay_source
