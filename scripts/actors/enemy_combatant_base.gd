@@ -1375,14 +1375,6 @@ func _check_line_of_sight() -> bool:
 	_last_visibility_ratio = 1.0 if has_contact else 0.0
 	return has_contact
 
-func _get_crouched_sight_target_height() -> float:
-	return VexEnemyPerceptionRuntime.crouched_sight_target_height(
-		_player,
-		sight_target_height,
-		crouched_target_height_scale,
-		crouched_target_min_height
-	)
-
 func _is_player_collider(collider: Node) -> bool:
 	return VexEnemyPerceptionRuntime.is_player_collider(_player, collider)
 
