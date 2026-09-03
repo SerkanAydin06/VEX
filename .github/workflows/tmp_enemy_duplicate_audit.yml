@@ -1,0 +1,69 @@
+name: Temporary Enemy Duplicate Audit
+
+on:
+  push:
+    branches:
+      - chatgpt/enemy-base-duplicate-audit-20260903
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Compare Combatant and Lunge functions
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import difflib
+          import re
+
+          paths = {
+              "combatant": Path("scripts/actors/enemy_combatant_base.gd"),
+              "lunge": Path("scripts/actors/enemy_lunge_base.gd"),
+          }
+
+          def functions(text: str) -> dict[str, str]:
+              matches = list(re.finditer(r"(?m)^func\s+([A-Za-z0-9_]+)\b", text))
+              result = {}
+              for index, match in enumerate(matches):
+                  end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+                  result[match.group(1)] = text[match.start():end].rstrip()
+              return result
+
+          source = {name: path.read_text(encoding="utf-8") for name, path in paths.items()}
+          funcs = {name: functions(text) for name, text in source.items()}
+          print("SIZES")
+          for name, text in source.items():
+              print(name, "lines=", len(text.splitlines()), "chars=", len(text), "funcs=", len(funcs[name]))
+
+          common_names = sorted(set(funcs["combatant"]) & set(funcs["lunge"]))
+          exact = []
+          similar = []
+          for name in common_names:
+              left = funcs["combatant"][name]
+              right = funcs["lunge"][name]
+              if left == right:
+                  exact.append(name)
+              else:
+                  ratio = difflib.SequenceMatcher(None, left, right).ratio()
+                  similar.append((ratio, name, len(left.splitlines()), len(right.splitlines())))
+
+          print("EXACT_COMMON_FUNCTIONS", len(exact))
+          for name in exact:
+              print("EXACT", name, "lines=", len(funcs["combatant"][name].splitlines()))
+
+          print("SAME_NAME_NONEXACT", len(similar))
+          for ratio, name, left_lines, right_lines in sorted(similar, reverse=True):
+              print(f"SIMILAR {ratio:.3f} {name} combatant_lines={left_lines} lunge_lines={right_lines}")
+
+          print("COMBATANT_ONLY")
+          for name in sorted(set(funcs["combatant"]) - set(funcs["lunge"])):
+              print(name)
+          print("LUNGE_ONLY")
+          for name in sorted(set(funcs["lunge"]) - set(funcs["combatant"])):
+              print(name)
+          PY
