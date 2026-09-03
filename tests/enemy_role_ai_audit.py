@@ -36,7 +36,6 @@ for source in [ravager, red]:
 common_inspector_settings = [
     "path_target_change_distance", "runtime_grid_step", "runtime_grid_max_nodes",
     "runtime_grid_search_margin", "sight_collision_mask", "aggro_on_damage",
-    "damage_pursuit_min_progress", "damage_pursuit_stall_timeout",
     "damage_pursuit_commit_time", "loud_noise_alert_threshold",
     "headshot_reference_height",
 ]
@@ -44,6 +43,7 @@ internal_role_settings = [
     "acoustic_collision_mask", "acoustic_probe_height",
     "visibility_vertical_span_scale", "visibility_lateral_span_scale",
     "crouched_target_height_scale", "search_probe_diagonal_weight",
+    "damage_pursuit_min_progress", "damage_pursuit_stall_timeout",
 ]
 for setting in internal_role_settings:
     assert re.search(rf"^var {setting}\b", enemy_base, re.M), setting
