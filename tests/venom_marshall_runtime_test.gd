@@ -14,13 +14,26 @@ class DummyEnemy:
 
 
 func _ready() -> void:
-	var actor := ACTOR_SCENE.instantiate()
-	assert(actor is VexVenomMarshall)
-	actor.free()
+	var actor := ACTOR_SCENE.instantiate() as VexVenomMarshall
+	assert(actor != null)
+	actor.global_position = Vector3(3.0, 0.0, 4.0)
+	add_child(actor)
+	actor.set_physics_process(false)
+	assert(is_equal_approx(actor.buff_cast_range, 7.0))
+
+	var candidate := DummyEnemy.new()
+	candidate.name = "BuffCandidate"
+	candidate.add_to_group("enemy")
+	candidate.global_position = actor.global_position + Vector3(6.5, 0.0, 0.0)
+	add_child(candidate)
+	assert(bool(actor.call("_has_buff_candidate_in_self_field")))
+	candidate.global_position = actor.global_position + Vector3(7.5, 0.0, 0.0)
+	assert(not bool(actor.call("_has_buff_candidate_in_self_field")))
+	candidate.global_position = actor.global_position + Vector3(3.0, 0.0, 0.0)
 
 	var projectile := BUFF_PROJECTILE_SCENE.instantiate() as VexVenomMarshallBuffProjectile
 	assert(projectile != null)
-	projectile.field_radius = 4.8
+	assert(is_equal_approx(projectile.field_radius, 7.0))
 	projectile.field_duration = 0.4
 	projectile.buff_duration = 0.18
 	add_child(projectile)
@@ -29,42 +42,44 @@ func _ready() -> void:
 		deploy_audio.stop()
 		deploy_audio.stream = null
 
-	assert(is_equal_approx(projectile.get_field_radius(), 4.8))
+	assert(is_equal_approx(projectile.get_field_radius(), 7.0))
 	var field_shape := (projectile.get_node("FieldCollision") as CollisionShape3D).shape as CylinderShape3D
 	assert(field_shape != null)
-	assert(is_equal_approx(field_shape.radius, 4.8))
+	assert(is_equal_approx(field_shape.radius, 7.0))
 	var field_mesh := (projectile.get_node("FieldDisc") as MeshInstance3D).mesh as CylinderMesh
 	assert(field_mesh != null)
-	assert(is_equal_approx(field_mesh.top_radius, 4.8))
+	assert(is_equal_approx(field_mesh.top_radius, 7.0))
+	var ground_visual := projectile.get_node("GroundFieldVisual") as AnimatedSprite3D
+	assert(is_equal_approx(ground_visual.pixel_size, 14.0 / 512.0))
+	var field_light := projectile.get_node("FieldLight") as OmniLight3D
+	assert(is_equal_approx(field_light.omni_range, 8.0))
 
-	var source := Node3D.new()
-	add_child(source)
-	var target := DummyEnemy.new()
-	target.add_to_group("enemy")
-	add_child(target)
-	projectile.launch_to(Vector3.ZERO, source)
-	projectile.call("_deploy_field", Vector3.ZERO)
+	# Buff artık bir müttefik konumuna uçmaz; doğrudan Venom Marshall'ın bulunduğu
+	# noktada açılır ve alan merkezi kaynak yaratığın X/Z konumuyla aynıdır.
+	projectile.deploy_at(actor.global_position, actor)
 	assert(projectile.is_field_active())
+	assert(is_equal_approx(projectile.global_position.x, actor.global_position.x))
+	assert(is_equal_approx(projectile.global_position.z, actor.global_position.z))
 
-	projectile.call("_apply_support_pulse", target)
-	assert(target.health == 54)
-	assert(target._runtime_attack_damage == 25)
-	var status := target.get_node_or_null("VenomMarshallBuffStatus") as VexVenomMarshallBuffStatus
+	projectile.call("_apply_support_pulse", candidate)
+	assert(candidate.health == 54)
+	assert(candidate._runtime_attack_damage == 25)
+	var status := candidate.get_node_or_null("VenomMarshallBuffStatus") as VexVenomMarshallBuffStatus
 	assert(status != null)
 	assert(status.get_damage_bonus() == 5)
 
 	# Yenilenen nabız canı artırır fakat hasar bonusunu katlayarak biriktirmez.
-	projectile.call("_apply_support_pulse", target)
-	assert(target.health == 58)
-	assert(target._runtime_attack_damage == 25)
+	projectile.call("_apply_support_pulse", candidate)
+	assert(candidate.health == 58)
+	assert(candidate._runtime_attack_damage == 25)
 
 	await get_tree().create_timer(0.24).timeout
-	assert(target._runtime_attack_damage == 20)
-	assert(target.get_node_or_null("VenomMarshallBuffStatus") == null)
+	assert(candidate._runtime_attack_damage == 20)
+	assert(candidate.get_node_or_null("VenomMarshallBuffStatus") == null)
 
 	projectile.free()
-	target.free()
-	source.free()
+	candidate.free()
+	actor.free()
 	for _frame: int in range(3):
 		await get_tree().process_frame
 	print("Venom Marshall support runtime test passed")
