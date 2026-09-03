@@ -1,0 +1,49 @@
+{
+  "source_zip": "512_512(10).zip",
+  "source_folder": "512_512",
+  "sheet_file": "veilmaw_effects_spritesheet.png",
+  "sheet_size": {
+    "width": 2048,
+    "height": 1024
+  },
+  "frame_size": {
+    "width": 512,
+    "height": 512
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 2
+  },
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom.",
+    "Projectile source files are named without the veilmaw prefix."
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "animation": "projectile",
+      "source_prefix": "projectile",
+      "frame_count": 4,
+      "frames": [
+        "projectile_01_result.png",
+        "projectile_02_result.png",
+        "projectile_03_result.png",
+        "projectile_04_result.png"
+      ]
+    },
+    {
+      "row_index": 1,
+      "animation": "impact",
+      "source_prefix": "veilmaw_impact",
+      "frame_count": 4,
+      "frames": [
+        "veilmaw_impact_1_result.png",
+        "veilmaw_impact_2_result.png",
+        "veilmaw_impact_3_result.png",
+        "veilmaw_impact_4_result.png"
+      ]
+    }
+  ]
+}
