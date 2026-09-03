@@ -85,10 +85,10 @@ jobs:
               "",
               "",
               'for shared_animation_helper in ["_has_animation", "_get_animation_duration"]:',
-              '    pattern = rf"(?m)^func {re.escape(shared_animation_helper)}\\\\b"',
-              "    assert re.search(pattern, enemy_base), shared_animation_helper",
-              '    assert not re.search(pattern, combatant_base), ("combatant duplicate", shared_animation_helper)',
-              '    assert not re.search(pattern, lunge_base), ("lunge duplicate", shared_animation_helper)',
+              '    needle = f"func {shared_animation_helper}("',
+              "    assert needle in enemy_base, shared_animation_helper",
+              '    assert needle not in combatant_base, ("combatant duplicate", shared_animation_helper)',
+              '    assert needle not in lunge_base, ("lunge duplicate", shared_animation_helper)',
           ]
           addition = "\n".join(addition_lines) + "\n"
           audit = audit.replace(anchor, anchor + addition, 1)
