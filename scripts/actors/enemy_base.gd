@@ -111,6 +111,19 @@ func _horizontal_distance(first: Vector3, second: Vector3) -> float:
 	return VexEnemyRuntimeUtils.horizontal_distance(first, second)
 
 
+func _reset_search_probe() -> void:
+	_search_probe_index = 0
+	_search_probe_target = Vector3.ZERO
+	_has_search_probe = false
+
+
+func _apply_gravity(delta: float, floor_stick_velocity_value: float) -> void:
+	if not is_on_floor():
+		velocity.y -= _gravity * delta
+	else:
+		velocity.y = floor_stick_velocity_value
+
+
 func _trigger_damage_shake(
 	visual: SpriteBase3D,
 	duration: float,
