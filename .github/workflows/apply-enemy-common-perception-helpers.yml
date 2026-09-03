@@ -1,0 +1,32 @@
+name: Apply Enemy Common Perception Helpers
+
+on:
+  push:
+    branches:
+      - "refactor/enemy-common-perception-helpers"
+
+permissions:
+  contents: write
+
+jobs:
+  apply-refactor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+
+      - name: Apply deterministic refactor
+        run: python tools/apply_enemy_common_perception_helpers.py
+
+      - name: Commit refactor
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/actors/enemy_base.gd scripts/actors/enemy_combatant_base.gd scripts/actors/enemy_lunge_base.gd tests/enemy_common_perception_helper_architecture_audit.py
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Centralize common perception helpers"
+          git push origin HEAD:refactor/enemy-common-perception-helpers
