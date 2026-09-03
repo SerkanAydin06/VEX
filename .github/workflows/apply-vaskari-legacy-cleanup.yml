@@ -1,0 +1,149 @@
+name: Apply Vaskari Legacy Cleanup
+
+on:
+  push:
+    branches:
+      - cleanup/vaskari-legacy-final
+    paths:
+      - .github/workflows/apply-vaskari-legacy-cleanup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rename legacy Red Viper resources and references
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          move_if_present() {
+            local src="$1"
+            local dst="$2"
+            if [ -e "$src" ]; then
+              if [ -e "$dst" ]; then
+                echo "Destination already exists: $dst" >&2
+                exit 1
+              fi
+              mkdir -p "$(dirname "$dst")"
+              git mv "$src" "$dst"
+            fi
+          }
+
+          move_if_present "scenes/actors/redviper.tscn" "scenes/actors/vaskari_raptor.tscn"
+          move_if_present "scenes/actors/badredviper.tscn" "scenes/actors/vaskari_ravager.tscn"
+          move_if_present "scripts/actors/badredviper.gd" "scripts/actors/vaskari_ravager.gd"
+          move_if_present "scripts/actors/badredviper.gd.uid" "scripts/actors/vaskari_ravager.gd.uid"
+
+          if [ -d "assets/enemies/badredviper" ]; then
+            if [ -e "assets/enemies/vaskari_ravager" ]; then
+              echo "Destination already exists: assets/enemies/vaskari_ravager" >&2
+              exit 1
+            fi
+            git mv "assets/enemies/badredviper" "assets/enemies/vaskari_ravager"
+          fi
+          move_if_present "assets/enemies/vaskari_ravager/badredviper_spritesheet.png" "assets/enemies/vaskari_ravager/vaskari_ravager_spritesheet.png"
+          move_if_present "assets/enemies/vaskari_ravager/badredviper_spritesheet.png.import" "assets/enemies/vaskari_ravager/vaskari_ravager_spritesheet.png.import"
+
+          move_if_present "assets/audio/red_viper_attack.wav" "assets/audio/vaskari_raptor_attack.wav"
+          move_if_present "assets/audio/red_viper_attack.wav.import" "assets/audio/vaskari_raptor_attack.wav.import"
+          move_if_present "assets/audio/red_viper_hurt.wav" "assets/audio/vaskari_raptor_hurt.wav"
+          move_if_present "assets/audio/red_viper_hurt.wav.import" "assets/audio/vaskari_raptor_hurt.wav.import"
+          move_if_present "assets/audio/red_viper_death.wav" "assets/audio/vaskari_raptor_death.wav"
+          move_if_present "assets/audio/red_viper_death.wav.import" "assets/audio/vaskari_raptor_death.wav.import"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import subprocess
+
+          replacements = [
+              ("VexBadRedViper", "VexVaskariRavager"),
+              ("BadRedViper", "VaskariRavager"),
+              ("badredviper", "vaskari_ravager"),
+              ("BADREDVIPER", "VASKARI_RAVAGER"),
+              ("bad_red_viper", "vaskari_ravager"),
+              ("BAD_RED_VIPER", "VASKARI_RAVAGER"),
+              ("Bad Red Viper", "Vaskari Ravager"),
+              ("bad red viper", "Vaskari Ravager"),
+              ("VexRedViper", "VexVaskariRaptor"),
+              ("RedViper", "VaskariRaptor"),
+              ("redviper", "vaskari_raptor"),
+              ("REDVIPER", "VASKARI_RAPTOR"),
+              ("red_viper", "vaskari_raptor"),
+              ("RED_VIPER", "VASKARI_RAPTOR"),
+              ("Red Viper", "Vaskari Raptor"),
+              ("red viper", "Vaskari Raptor"),
+          ]
+
+          tracked = subprocess.check_output(["git", "ls-files", "-z"]).split(b"\0")
+          for raw in tracked:
+              if not raw:
+                  continue
+              path = Path(raw.decode())
+              if not path.is_file():
+                  continue
+              data = path.read_bytes()
+              if b"\0" in data:
+                  continue
+              try:
+                  text = data.decode("utf-8")
+              except UnicodeDecodeError:
+                  continue
+              new = text
+              for old, replacement in replacements:
+                  new = new.replace(old, replacement)
+              if new != text:
+                  path.write_text(new, encoding="utf-8")
+
+          legacy = re.compile(r"(?i)(?:bad[ _-]?)?red[ _-]?viper")
+          leftovers = []
+          tracked = subprocess.check_output(["git", "ls-files", "-z"]).split(b"\0")
+          for raw in tracked:
+              if not raw:
+                  continue
+              rel = raw.decode()
+              if rel == ".github/workflows/apply-vaskari-legacy-cleanup.yml":
+                  continue
+              if legacy.search(rel):
+                  leftovers.append(f"path: {rel}")
+                  continue
+              path = Path(rel)
+              if not path.is_file():
+                  continue
+              data = path.read_bytes()
+              if b"\0" in data:
+                  continue
+              try:
+                  text = data.decode("utf-8")
+              except UnicodeDecodeError:
+                  continue
+              for line_no, line in enumerate(text.splitlines(), 1):
+                  if legacy.search(line):
+                      leftovers.append(f"{rel}:{line_no}: {line[:240]}")
+
+          if leftovers:
+              print("Legacy Red Viper references remain:")
+              print("\n".join(leftovers[:200]))
+              raise SystemExit(1)
+          PY
+
+          rm -f .github/workflows/apply-vaskari-legacy-cleanup.yml
+          git add -A
+          git diff --cached --check
+
+          if git diff --cached --quiet; then
+            echo "No migration changes found."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Finish Vaskari enemy naming migration"
+          git push origin HEAD:cleanup/vaskari-legacy-final
