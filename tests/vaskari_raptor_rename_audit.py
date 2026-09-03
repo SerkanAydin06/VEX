@@ -92,4 +92,10 @@ level_02 = (ROOT / "scenes/levels/level_02.tscn").read_text(encoding="utf-8")
 assert 'enemy_id = &"v2_badredviper_final_guard"' in level_02
 assert 'required_enemy_id = &"v2_badredviper_final_guard"' in level_02
 
+enemies_doc = (ROOT / "Enemies_VEX.md").read_text(encoding="utf-8")
+assert re.search(r"(?<![A-Za-z0-9_])RedViper(?![A-Za-z0-9_])", enemies_doc) is None
+assert "Vaskari Raptor" in enemies_doc
+assert "BadRedViper" in enemies_doc
+assert "- **Görsel dil:** Koyu mor, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler." in enemies_doc
+
 print("vaskari raptor rename audit passed")

@@ -42,7 +42,7 @@ Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
 |---|---|---|---|
 | 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | Basalt Juggernaut, Cinder Hound, Furnace Carrier, Crucible Warden |
 | 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager, Briar Skulker, Gorehorn, Spore Matriarch |
-| 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | RedViper, BadRedViper, Coil Lancer, Vaskari Bulwark, Venom Marshall |
+| 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | Vaskari Raptor, BadRedViper, Coil Lancer, Vaskari Bulwark, Venom Marshall |
 | 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw |
 | 5 | **Aether Loom** | Boşluk, yarık dokusu, akıllı enerji organizmaları ve uzamsal örüntüler | Voidweaver |
 
@@ -172,7 +172,7 @@ Bu evrenin yaratıkları “vahşi canavar” değildir; **çatışmayı bilen, 
 
 ## 6.2 Ortak özellikler
 
-- **Görsel dil:** Koyu kırmızı, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler.
+- **Görsel dil:** Koyu mor, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler.
 - **Beden yapısı:** Kaslı ama kontrollü; organik zırh plakaları taşır.
 - **Ana oynanış özelliği:** Takım baskısı, flank, zehir/kanama, hücum düzeni.
 - **Doğal avantaj:** Orta dayanıklılık, iyi takip, agresif hücum kararları.
@@ -180,7 +180,7 @@ Bu evrenin yaratıkları “vahşi canavar” değildir; **çatışmayı bilen, 
 
 ## 6.3 Beş yaratık
 
-### 1. RedViper
+### 1. Vaskari Raptor
 
 **Durum:** Mevcut
 
@@ -195,7 +195,7 @@ Bu evrenin yaratıkları “vahşi canavar” değildir; **çatışmayı bilen, 
 
 - **Rol:** Ağırlaştırılmış hücum varyantı
 - **Hikâye rolü:** Lejyonun daha saldırgan, daha acımasız kırma birimi.
-- **Savaş kimliği:** RedViper’dan daha dirençli ve daha sert vurur; koridor baskısında öne çıkar.
+- **Savaş kimliği:** Vaskari Raptor’dan daha dirençli ve daha sert vurur; koridor baskısında öne çıkar.
 - **Ayırt edici özellik:** Aynı aile içinde “brute” varyantı görevi görür.
 
 ### 3. Coil Lancer
@@ -214,7 +214,7 @@ Bu evrenin yaratıkları “vahşi canavar” değildir; **çatışmayı bilen, 
 - **Rol:** Ağır yakın menzil baskı / ön hat tutucu
 - **Hikâye rolü:** Vaskari hücum kollarında ilerleme hattını koruyan kalın biyozırhlı kırma kastı.
 - **Savaş kimliği:** Yavaş yaklaşır, yüksek dayanıklılıkla alan kapatır ve kısa lunge ile ağır yakın darbe uygular.
-- **Ayırt edici özellik:** RedViper ailesinin hız baskısını tersine çevirir; süratten çok dayanıklılık ve tek darbe tehdidiyle alan kazanır.
+- **Ayırt edici özellik:** Vaskari Raptor ailesinin hız baskısını tersine çevirir; süratten çok dayanıklılık ve tek darbe tehdidiyle alan kazanır.
 
 ### 5. Venom Marshall
 
@@ -347,7 +347,7 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 | Briar Skulker | Thornwild Sürüsü | Hibrit pusu avcısı |
 | Gorehorn | Thornwild Sürüsü | Orta-ağır şarj ve ritim bozma birimi |
 | Spore Matriarch | Thornwild Sürüsü | Zehir ve bölge kontrolü destek birimi |
-| RedViper | Vaskari Lejyonu | Hızlı elit hücum birimi |
+| Vaskari Raptor | Vaskari Lejyonu | Hızlı elit hücum birimi |
 | BadRedViper | Vaskari Lejyonu | Ağır hücum varyantı |
 | Coil Lancer | Vaskari Lejyonu | Orta menzilli çizgisel baskı birimi |
 | Vaskari Bulwark | Vaskari Lejyonu | Ağır yakın menzil ön hat birimi |
@@ -407,7 +407,7 @@ Düşman tasarım ve üretim sırası için öneri:
 
 ### Önce zaten oyunda olanlar
 1. Ravager
-2. RedViper
+2. Vaskari Raptor
 3. BadRedViper
 4. Veilmaw
 5. Basalt Juggernaut
