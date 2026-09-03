@@ -179,6 +179,7 @@ shared_internal_tuning = [
     "visibility_shoulder_height_ratio", "visibility_lower_body_ratio",
     "crouched_target_height_scale", "crouched_target_min_height",
     "search_probe_diagonal_weight",
+    "damage_pursuit_min_progress", "damage_pursuit_stall_timeout",
 ]
 for tuning_name in shared_internal_tuning:
     pattern = rf"^var {re.escape(tuning_name)}(?:\b|:)"
@@ -197,6 +198,11 @@ family_internal_tuning = [
 ]
 for tuning_name in family_internal_tuning:
     assert not re.search(rf"@export[^\n]*\bvar {re.escape(tuning_name)}\b", combatant_base + "\n" + lunge_base), tuning_name
+
+# Damage pursuit commit time remains family-authored because Gorehorn serializes
+# a deliberate scene override. Do not accidentally internalize this property.
+for source in (combatant_base, lunge_base):
+    assert re.search(r"@export[^\n]*\bvar damage_pursuit_commit_time\b", source)
 
 serialized_text = "\n".join(
     path.read_text(encoding="utf-8", errors="ignore")

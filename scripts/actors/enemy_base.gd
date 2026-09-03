@@ -67,6 +67,10 @@ var crouched_target_height_scale := 0.50
 var crouched_target_min_height := -0.20
 # arama yoklama çapraz ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var search_probe_diagonal_weight := 0.85
+# Hasar takibinde ilerleme sayılacak en düşük yatay kazanım.
+var damage_pursuit_min_progress := 0.20
+# Hasar takibinde rota ilerlemezse hedefi bırakmadan önceki teknik tıkanma süresi.
+var damage_pursuit_stall_timeout := 3.0
 
 # Combatant ve Lunge sahne köklerinin ortak zorunlu node sözleşmesi.
 # Node adları iki davranış ailesinde de aynıdır; tek kaynaktan çözülür.
