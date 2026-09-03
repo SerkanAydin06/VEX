@@ -290,6 +290,6 @@ for base_name, base_source in [
     ("enemy_lunge_performance_base", lunge_performance),
     ("enemy_hybrid_base", hybrid_base),
 ]:
-    assert not re.search(r'class_name Vex(?:Ravager|VaskariRaptor|VaskariRaptor)\b', base_source), base_name
+    assert not re.search(r'class_name Vex(?:Ravager|VaskariRaptor|VaskariRavager)\b', base_source), base_name
 
 print("enemy script architecture audit passed")
