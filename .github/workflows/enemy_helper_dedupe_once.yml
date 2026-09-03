@@ -1,0 +1,177 @@
+name: Enemy Helper Dedupe Once
+
+on:
+  push:
+    branches:
+      - chatgpt/enemy-helper-dedupe-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Move exact shared helpers to enemy base
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+          base_path = root / 'scripts/actors/enemy_base.gd'
+          combatant_path = root / 'scripts/actors/enemy_combatant_base.gd'
+          lunge_path = root / 'scripts/actors/enemy_lunge_base.gd'
+          audit_path = root / 'tests/enemy_script_architecture_audit.py'
+
+          base = base_path.read_text(encoding='utf-8')
+          combatant = combatant_path.read_text(encoding='utf-8')
+          lunge = lunge_path.read_text(encoding='utf-8')
+
+          node_declarations = [
+              '@onready var animated_sprite: AnimatedSprite3D = $AnimatedSprite3D',
+              '@onready var collision_shape: CollisionShape3D = $CollisionShape3D',
+              '@onready var attack_audio: AudioStreamPlayer3D = $AttackAudio',
+              '@onready var hurt_audio: AudioStreamPlayer3D = $HurtAudio',
+              '@onready var death_audio: AudioStreamPlayer3D = $DeathAudio',
+              '@onready var ground_shadow: Sprite3D = get_node_or_null("GroundShadow") as Sprite3D',
+          ]
+          for declaration in node_declarations:
+              line = declaration + '\n'
+              assert combatant.count(line) == 1, ('combatant node', declaration)
+              assert lunge.count(line) == 1, ('lunge node', declaration)
+              combatant = combatant.replace(line, '', 1)
+              lunge = lunge.replace(line, '', 1)
+          node_block = '# Tüm enemy davranış ailelerinin kullandığı ortak sahne düğümleri.\n' + '\n'.join(node_declarations)
+          node_anchor = 'var _damage_shake_active := false\n'
+          assert base.count(node_anchor) == 1
+          assert node_declarations[0] not in base
+          base = base.replace(node_anchor, node_anchor + '\n\n' + node_block + '\n', 1)
+
+          def pop_function(source: str, name: str):
+              start_match = re.search(rf'(?m)^func {re.escape(name)}\s*\(', source)
+              assert start_match is not None, name
+              next_match = re.search(r'(?m)^(?:static )?func\s+[A-Za-z0-9_]+\s*\(', source[start_match.end():])
+              end = start_match.end() + next_match.start() if next_match else len(source)
+              block = source[start_match.start():end].rstrip()
+              source = source[:start_match.start()] + source[end:]
+              return source, block
+
+          shared_helpers = [
+              '_collision_floor_local_y',
+              '_snap_body_to_floor',
+              '_has_animation',
+              '_reset_search_probe',
+          ]
+          helper_blocks = []
+          for helper in shared_helpers:
+              combatant, block_a = pop_function(combatant, helper)
+              lunge, block_b = pop_function(lunge, helper)
+              assert block_a == block_b, (helper, 'bodies differ')
+              helper_blocks.append(block_a)
+
+          helper_anchor = '\n\nfunc get_behavior_family() -> StringName:\n'
+          assert base.count(helper_anchor) == 1
+          helper_block = '\n\n\n'.join(helper_blocks)
+          base = base.replace(helper_anchor, '\n\n' + helper_block + helper_anchor, 1)
+
+          base_path.write_text(base, encoding='utf-8')
+          combatant_path.write_text(combatant, encoding='utf-8')
+          lunge_path.write_text(lunge, encoding='utf-8')
+
+          audit = audit_path.read_text(encoding='utf-8')
+          anchor = '''assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
+          '''
+          addition = '''
+          shared_node_members = [
+              "animated_sprite", "collision_shape", "attack_audio",
+              "hurt_audio", "death_audio", "ground_shadow",
+          ]
+          for member in shared_node_members:
+              pattern = rf"^@onready var {re.escape(member)}(?:\\b|:)"
+              assert re.search(pattern, enemy_base, re.M), member
+              assert not re.search(pattern, combatant_base, re.M), ("combatant duplicate node", member)
+              assert not re.search(pattern, lunge_base, re.M), ("lunge duplicate node", member)
+
+          shared_base_helpers = [
+              "_collision_floor_local_y",
+              "_snap_body_to_floor",
+              "_has_animation",
+              "_reset_search_probe",
+          ]
+          for helper in shared_base_helpers:
+              pattern = rf"^func {re.escape(helper)}\\s*\\("
+              assert re.search(pattern, enemy_base, re.M), helper
+              assert not re.search(pattern, combatant_base, re.M), ("combatant duplicate helper", helper)
+              assert not re.search(pattern, lunge_base, re.M), ("lunge duplicate helper", helper)
+          '''
+          assert audit.count(anchor) == 1
+          assert 'shared_node_members = [' not in audit
+          audit = audit.replace(anchor, anchor + addition, 1)
+          audit_path.write_text(audit, encoding='utf-8')
+
+          workflow = root / '.github/workflows/enemy_helper_dedupe_once.yml'
+          assert workflow.exists()
+          workflow.unlink()
+          PY
+      - name: Run every Python audit
+        shell: bash
+        run: |
+          status=0
+          while IFS= read -r audit; do
+            echo "::group::$audit"
+            python "$audit" || status=1
+            echo "::endgroup::"
+          done < <(find tests -maxdepth 1 -name '*_audit.py' -print | sort)
+          exit "$status"
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Verify Godot parse and enemy runtime
+        shell: bash
+        run: |
+          set -o pipefail
+          godot --headless --editor --path . --quit 2>&1 | tee "$RUNNER_TEMP/import.log"
+          ! grep -E 'ERROR:|invalid UID' "$RUNNER_TEMP/import.log"
+          godot --headless --path . tests/enemy_combat_runtime_test.tscn 2>&1 | tee "$RUNNER_TEMP/combat.log"
+          ! grep -E 'ERROR:|invalid UID' "$RUNNER_TEMP/combat.log"
+          godot --headless --path . tests/enemy_lunge_runtime_test.tscn 2>&1 | tee "$RUNNER_TEMP/lunge.log"
+          ! grep -E 'ERROR:|invalid UID' "$RUNNER_TEMP/lunge.log"
+      - name: Verify patch scope
+        shell: bash
+        run: |
+          git diff --check
+          changed="$(git diff --name-only | sort)"
+          expected="$(printf '%s\n' \
+            '.github/workflows/enemy_helper_dedupe_once.yml' \
+            'scripts/actors/enemy_base.gd' \
+            'scripts/actors/enemy_combatant_base.gd' \
+            'scripts/actors/enemy_lunge_base.gd' \
+            'tests/enemy_script_architecture_audit.py' | sort)"
+          test "$changed" = "$expected"
+      - name: Commit focused refactor
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Centralize shared enemy helper functions"
+          git push origin HEAD:${{ github.ref_name }}
