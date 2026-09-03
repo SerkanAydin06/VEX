@@ -114,12 +114,10 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 @export_range(0.2, 2.0, 0.05) var attack_lunge_stop_distance := 1.2
 
 @export_category("05 - Yol Bulma")
-## devriye ulaşma mesafe değeridir (metre).
-@export_range(0.1, 1.5, 0.05) var patrol_reach_distance := 0.35
 ## araştırma ulaşma mesafe değeridir (metre).
 @export_range(0.1, 2.0, 0.05) var investigation_reach_distance := 0.55
 ## sapma süre değeridir (saniye).
-@export_range(0.0, 3.0, 0.05) var detour_duration := 0.55
+var detour_duration := 0.55
 ## navigation boşluk değeridir (metre).
 @export_range(0.3, 1.2, 0.05) var navigation_clearance := 0.55
 ## Yol bulma ve engel kontrollerinde kullanılan fizik katmanlarıdır.

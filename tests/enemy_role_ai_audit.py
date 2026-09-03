@@ -64,10 +64,15 @@ for setting in [
 for setting in [
     "local_detour_duration", "local_detour_clearance_multiplier",
     "local_detour_min_step", "local_detour_lateral_multipliers",
-    "local_detour_forward_multipliers",
+    "local_detour_forward_multipliers", "ranged_cover_reposition_refresh",
+    "search_path_attempts",
 ]:
     assert re.search(rf"^var {setting}\b", ravager, re.M), setting
     assert not re.search(rf"@export[^\n]*\bvar {setting}\b", ravager), setting
+
+assert re.search(r"^var detour_duration\b", red, re.M)
+assert not re.search(r"@export[^\n]*\bvar detour_duration\b", red)
+assert "patrol_reach_distance" not in red
 
 for obsolete_call in re.findall(r"EnemyCombatProfiles\.([A-Za-z_][A-Za-z0-9_]*)", ravager + red):
     assert obsolete_call == "Role", obsolete_call
