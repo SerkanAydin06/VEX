@@ -886,20 +886,6 @@ func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Ar
 			return death_frame_y_offsets
 	return PackedFloat32Array()
 
-
-func _get_animation_duration(animation_name: StringName) -> float:
-	if animated_sprite.sprite_frames == null:
-		return 0.0
-	if not animated_sprite.sprite_frames.has_animation(animation_name):
-		return 0.0
-	var frame_count := animated_sprite.sprite_frames.get_frame_count(animation_name)
-	var speed := animated_sprite.sprite_frames.get_animation_speed(animation_name)
-	if frame_count <= 0 or speed <= 0.001:
-		return 0.0
-	return float(frame_count) / speed
-
-
-
 func _restore_defeated_state() -> void:
 	_dead = true
 	_clear_damage_shake(animated_sprite)
@@ -1063,15 +1049,6 @@ func _play_animation(animation_name: StringName) -> void:
 		return
 	animated_sprite.play(target_animation)
 	_apply_frame_ground_offset()
-
-
-func _has_animation(animation_name: StringName) -> bool:
-	return (
-		animated_sprite.sprite_frames != null
-		and animated_sprite.sprite_frames.has_animation(animation_name)
-		and animated_sprite.sprite_frames.get_frame_count(animation_name) > 0
-	)
-
 
 func receive_ally_alert(suspected_position: Vector3) -> void:
 	if _dead or not receive_ally_alerts:

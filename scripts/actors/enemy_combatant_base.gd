@@ -1290,15 +1290,6 @@ func _directional_animation(
 		return back_animation
 	return front_animation
 
-
-func _has_animation(animation_name: StringName) -> bool:
-	return (
-		animated_sprite.sprite_frames != null
-		and animated_sprite.sprite_frames.has_animation(animation_name)
-		and animated_sprite.sprite_frames.get_frame_count(animation_name) > 0
-	)
-
-
 func _should_use_dormant_mode() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
@@ -1723,21 +1714,6 @@ func _restore_defeated_state() -> void:
 	)
 	animated_sprite.pause()
 	_finalize_death_visual()
-
-
-func _get_animation_duration(animation_name: StringName) -> float:
-	if animated_sprite.sprite_frames == null:
-		return 0.0
-	if not animated_sprite.sprite_frames.has_animation(animation_name):
-		return 0.0
-	var frame_count := animated_sprite.sprite_frames.get_frame_count(animation_name)
-	if frame_count <= 0:
-		return 0.0
-	var speed := animated_sprite.sprite_frames.get_animation_speed(animation_name)
-	if speed <= 0.001:
-		return 0.0
-	return float(frame_count) / speed
-
 
 func _place_corpse_on_floor(animated: bool) -> void:
 	var target_y := (

@@ -172,6 +172,27 @@ func _configure_common_runtime_stats(
 	return speed_scale
 
 
+func _has_animation(animation_name: StringName) -> bool:
+	return (
+		animated_sprite.sprite_frames != null
+		and animated_sprite.sprite_frames.has_animation(animation_name)
+		and animated_sprite.sprite_frames.get_frame_count(animation_name) > 0
+	)
+
+
+func _get_animation_duration(animation_name: StringName) -> float:
+	if animated_sprite.sprite_frames == null:
+		return 0.0
+	if not animated_sprite.sprite_frames.has_animation(animation_name):
+		return 0.0
+	var frame_count := animated_sprite.sprite_frames.get_frame_count(animation_name)
+	if frame_count <= 0:
+		return 0.0
+	var speed := animated_sprite.sprite_frames.get_animation_speed(animation_name)
+	if speed <= 0.001:
+		return 0.0
+	return float(frame_count) / speed
+
 func _horizontal_distance(first: Vector3, second: Vector3) -> float:
 	return VexEnemyRuntimeUtils.horizontal_distance(first, second)
 
