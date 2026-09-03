@@ -57,9 +57,17 @@ for setting in [
     "ranged_cover_visibility_threshold", "ranged_cover_reposition_distance",
     "attack_preferred_distance", "attack_minimum_distance",
     "attack_recovery_strafe_scale", "attack_retreat_speed_scale",
-    "chase_path_refresh_interval", "local_detour_duration",
+    "chase_path_refresh_interval",
 ]:
     assert re.search(rf"@export[^\n]*\bvar {setting}\b", ravager), setting
+
+for setting in [
+    "local_detour_duration", "local_detour_clearance_multiplier",
+    "local_detour_min_step", "local_detour_lateral_multipliers",
+    "local_detour_forward_multipliers",
+]:
+    assert re.search(rf"^var {setting}\b", ravager, re.M), setting
+    assert not re.search(rf"@export[^\n]*\bvar {setting}\b", ravager), setting
 
 for obsolete_call in re.findall(r"EnemyCombatProfiles\.([A-Za-z_][A-Za-z0-9_]*)", ravager + red):
     assert obsolete_call == "Role", obsolete_call
