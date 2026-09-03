@@ -1,4 +1,4 @@
-name: Temporary Enemy Duplicate Scan
+name: Temporary Acoustic Contract Scan
 
 on:
   push:
@@ -13,78 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Rank duplicate family methods
+      - name: Inspect acoustic helper contracts
         shell: bash
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          import difflib
-          import re
-
-          paths = {
-              'combatant': Path('scripts/actors/enemy_combatant_base.gd'),
-              'lunge': Path('scripts/actors/enemy_lunge_base.gd'),
-          }
-
-          def functions(path: Path):
-              lines = path.read_text(encoding='utf-8').splitlines()
-              starts = []
-              for i, line in enumerate(lines):
-                  match = re.match(r'^func\s+([A-Za-z0-9_]+)\b', line)
-                  if match:
-                      starts.append((i, match.group(1)))
-              out = {}
-              for index, (start, name) in enumerate(starts):
-                  end = starts[index + 1][0] if index + 1 < len(starts) else len(lines)
-                  while end > start + 1 and not lines[end - 1].strip():
-                      end -= 1
-                  body = lines[start:end]
-                  out[name] = (start + 1, body)
-              return out
-
-          def norm(lines):
-              text = '\n'.join(lines)
-              text = re.sub(r'#.*', '', text)
-              text = re.sub(r'\s+', ' ', text).strip()
-              return text
-
-          left = functions(paths['combatant'])
-          right = functions(paths['lunge'])
-          common = sorted(set(left) & set(right))
-          ranked = []
-          for name in common:
-              l_line, l_body = left[name]
-              r_line, r_body = right[name]
-              logical_lines = max(len(l_body), len(r_body))
-              if logical_lines < 5:
-                  continue
-              l_norm = norm(l_body)
-              r_norm = norm(r_body)
-              ratio = difflib.SequenceMatcher(None, l_norm, r_norm).ratio()
-              exact = l_norm == r_norm
-              ranked.append((exact, ratio, logical_lines, name, l_line, r_line, l_body, r_body))
-
-          ranked.sort(key=lambda row: (row[0], row[1], row[2]), reverse=True)
-          print('===== HIGH-VALUE SAME-NAME DUPLICATE CANDIDATES =====')
-          for exact, ratio, size, name, l_line, r_line, l_body, r_body in ranked:
-              if not exact and ratio < 0.68:
-                  continue
-              print(f'{name}: exact={exact} similarity={ratio:.3f} max_lines={size} combatant_line={l_line} lunge_line={r_line}')
-
-          print('\n===== EXACT DUPLICATES >= 8 LINES =====')
-          for exact, ratio, size, name, l_line, r_line, l_body, r_body in ranked:
-              if exact and size >= 8:
-                  print(f'--- {name} ({size} lines) ---')
-                  print('\n'.join(l_body))
-                  print()
-
-          print('\n===== NEAR DUPLICATES >= 12 LINES, similarity >= 0.78 =====')
-          for exact, ratio, size, name, l_line, r_line, l_body, r_body in ranked:
-              if exact or size < 12 or ratio < 0.78:
-                  continue
-              print(f'--- {name} ({size} lines, similarity={ratio:.3f}) COMBATANT ---')
-              print('\n'.join(l_body))
-              print(f'--- {name} LUNGE ---')
-              print('\n'.join(r_body))
-              print()
-          PY
+          set -euo pipefail
+          echo '===== METHOD DEFINITIONS / SUPER CALLS ====='
+          grep -RIn --include='*.gd' -E 'func (_on_noise_emitted|_alert_nearby_allies)|super\.(_on_noise_emitted|_alert_nearby_allies)' scripts/actors || true
+          echo '===== TEST / AUDIT CONTRACTS ====='
+          grep -RIn --include='*.py' --include='*.gd' -E '_on_noise_emitted|_alert_nearby_allies|should_hear_noise|has_clear_acoustic_path|is_within_horizontal_range' tests || true
+          echo '===== ALLY RADIUS DECLARATIONS / SERIALIZATION ====='
+          grep -RIn --include='*.gd' -E 'var ally_alert_radius\b|var hearing_radius\b|var hearing_loudness_scale\b' scripts/actors/enemy_*base.gd || true
+          grep -RIn --include='*.tscn' --include='*.tres' -E '^ally_alert_radius\s*=|^hearing_radius\s*=|^hearing_loudness_scale\s*=' scenes resources || true
