@@ -127,110 +127,379 @@ func _check_level_01() -> void:
 	var geometry := level.get_node_or_null("Geometry")
 	if _count_named_children(geometry, "Floor_R") != 37:
 		failures.append("VEX-01 zemin modülü 37 değil.")
+	if _count_named_children(geometry, "Ceiling_R") != 37:
+		failures.append("VEX-01 tavan modülü 37 değil.")
+	var room_lights := level.get_node_or_null("RoomLights")
+	if room_lights == null or room_lights.get_child_count() != 37:
+		failures.append("VEX-01 beyaz oda ışığı 37 değil.")
+	var lights := level.get_node_or_null("Lights")
+	if lights == null or lights.get_child_count() != 24:
+		failures.append("VEX-01 statik kapı ışığı sayısı 24 değil.")
+	var doors := level.get_node_or_null("Doors")
+	if doors == null or doors.get_child_count() != 36:
+		failures.append("VEX-01 seçici bağlantı kapısı 36 değil.")
 
-	level.queue_free()
+	var blue_gate := level.get_node_or_null("Doors/Door_25_27") as VexDoor
+	if blue_gate == null or not blue_gate.locked or blue_gate.required_key != &"blue":
+		failures.append("VEX-01 mavi erişim kapısı yanlış.")
+	var final_gate := level.get_node_or_null("Doors/Door_35_37") as VexDoor
+	if final_gate == null or final_gate.required_keys != [&"blue", &"red"]:
+		failures.append("VEX-01 final çift erişim kapısı yanlış.")
+	var finish := level.get_node_or_null("Triggers/FinishSwitch") as VexFinishSwitch
+	if finish == null or finish.required_enemy_id != &"ravager_19":
+		failures.append("VEX-01 final muhafız/bitiş sözleşmesi yanlış.")
+
+	var config: Dictionary = level.call("get_automap_config")
+	var cells: Array = config.get("walkable_cells", []) as Array
+	if cells.size() != 37:
+		failures.append("VEX-01 automap yürünebilir oda sayısı 37 değil.")
+	elif cells[0] != Vector2i(2, 12) or cells[cells.size() - 1] != Vector2i(2, 0):
+		failures.append("VEX-01 automap oda sırası başlangıçtan çıkışa normalize edilmiyor.")
+	level.free()
 
 
 func _check_level_02() -> void:
 	var level := _instantiate("res://scenes/levels/level_02.tscn")
 	if level == null:
 		return
-	level.queue_free()
+	var geometry := level.get_node_or_null("Geometry")
+	if _count_named_children(geometry, "Floor_") != 33:
+		failures.append("VEX-02 zemin modülü 33 değil.")
+	if _count_named_children(geometry, "Ceiling_") != 33:
+		failures.append("VEX-02 tavan modülü 33 değil.")
+	var room_lights := level.get_node_or_null("RoomLights")
+	if room_lights == null or room_lights.get_child_count() != 33:
+		failures.append("VEX-02 beyaz ışık sayısı 33 değil.")
+	var doors := level.get_node_or_null("Doors")
+	if doors == null or doors.get_child_count() != 5:
+		failures.append("VEX-02 kapı sayısı 5 değil.")
+	for node_path in ["Enemies/BasaltJuggernaut_19", "Enemies/Voidweaver_30"]:
+		if level.get_node_or_null(node_path) == null:
+			failures.append("VEX-02 içerik eksik: %s" % node_path)
+	level.free()
 
 
 func _check_level_03() -> void:
 	var level := _instantiate("res://scenes/levels/level_03.tscn")
 	if level == null:
 		return
-	level.queue_free()
+	for node_path in [
+		"Geometry/UpperLevel/UpperDeck",
+		"Geometry/Stairs/Collision/SmoothRampCollision/LowerRamp",
+		"Geometry/Stairs/Collision/SmoothRampCollision/Landing",
+		"Geometry/Stairs/Collision/SmoothRampCollision/UpperRamp",
+		"Objectives/RiftIsolationSwitch",
+		"Enemies/KorvathWarden",
+		"Pickups/BluePowerCard",
+		"LoreTerminals/EceTanEmergencySignal",
+	]:
+		if level.get_node_or_null(node_path) == null:
+			failures.append("VEX-03 bileşeni eksik: %s" % node_path)
+	var enemies := level.get_node_or_null("Enemies")
+	if enemies == null or enemies.get_child_count() != 16:
+		failures.append("VEX-03 düşman yerleşimi 16 düğüm değil.")
+	var pickups := level.get_node_or_null("Pickups")
+	if pickups == null or pickups.get_child_count() != 12:
+		failures.append("VEX-03 pickup yerleşimi 12 düğüm değil.")
+	var doors := level.get_node_or_null("Doors")
+	if doors == null or doors.get_child_count() != 14:
+		failures.append("VEX-03 kapı sayısı 14 değil.")
+	var room_lights := level.get_node_or_null("RoomLights")
+	if room_lights == null or room_lights.get_child_count() != 17:
+		failures.append("VEX-03 beyaz ışık sayısı 17 değil.")
+	level.free()
 
 
 func _check_bastion_7() -> void:
-	var bastion := _instantiate("res://scenes/hub/bastion_7.tscn")
-	if bastion == null:
+	var hub := _instantiate("res://scenes/hub/bastion_7.tscn")
+	if hub == null:
 		return
-	bastion.queue_free()
+	var doors := hub.get_node_or_null("Doors")
+	if doors == null or doors.get_child_count() != 6:
+		failures.append("Bastion-7 kapı sayısı 6 değil.")
+	var lights := hub.get_node_or_null("RoomLights")
+	if lights == null or lights.get_child_count() != 9:
+		failures.append("Bastion-7 beyaz ışık sayısı 9 değil.")
+	var door_lights := hub.get_node_or_null("DoorLights")
+	if door_lights == null or door_lights.get_child_count() != 12:
+		failures.append("Bastion-7 kapı durum ışığı sayısı 12 değil.")
+	var room_displays := hub.get_node_or_null("RoomDisplays")
+	if room_displays == null or room_displays.get_child_count() != 6:
+		failures.append("Bastion-7 oda ekranı sayısı 6 değil.")
+	for node_path in ["Systems/DeploymentTerminal", "Systems/CommandStatusTerminal", "Systems/ArmoryRacks"]:
+		if hub.get_node_or_null(node_path) == null:
+			failures.append("Bastion-7 sistem bileşeni eksik: %s" % node_path)
+	hub.free()
 
 
 func _check_training_overlay() -> void:
-	var overlay := _instantiate("res://scenes/levels/level_01_training_overlay.tscn")
+	var overlay := _instantiate("res://scenes/levels/level_01_training_overlay.tscn") as VexLevel01TrainingFlow
 	if overlay == null:
 		return
-	overlay.queue_free()
+	if overlay.gate_door_paths.size() != 2 or overlay.gate_enemy_ids != [&"ravager_01", &"ravager_07"]:
+		failures.append("VEX-01 Easy-safe combat gate eşlemesi yanlış.")
+	for node_name in [
+		"TutorialMove", "TutorialInteract", "TutorialFire", "TutorialReload",
+		"TutorialStrafe", "TutorialBarrel", "TutorialResource", "TutorialFinal",
+		"TutorialComplete", "TrainingBarrel", "Gate03_07StatusFront",
+		"Gate03_07StatusBack", "Gate13_15StatusFront", "Gate13_15StatusBack",
+	]:
+		if overlay.get_node_or_null(node_name) == null:
+			failures.append("VEX-01 eğitim overlay bileşeni eksik: %s" % node_name)
+	var level_script := FileAccess.get_file_as_string("res://scripts/levels/level_01.gd")
+	if "TRAINING_OVERLAY_SCENE" not in level_script or "add_child(_training_overlay)" not in level_script:
+		failures.append("VEX-01 eğitim overlay sahnesi runtime akışına bağlı değil.")
+	overlay.free()
 
 
 func _check_automap_contract() -> void:
-	var automap_script := load("res://scripts/ui/automap_view.gd") as Script
-	if automap_script == null:
-		failures.append("Automap script yüklenemedi.")
+	var automap := FileAccess.get_file_as_string("res://scripts/ui/automap_view.gd")
+	for contract in [
+		"_walkable_order.find(cell) + 1",
+		"door.has_method(\"is_access_locked\")",
+		"door.call(\"is_access_locked\")",
+	]:
+		if contract not in automap:
+			failures.append("Automap güncel sözleşmesi eksik: %s" % contract)
+	var base_level := FileAccess.get_file_as_string("res://scripts/levels/base_level.gd")
+	for contract in ["ordered_cells.reverse()", "\"walkable_cells\": ordered_cells"]:
+		if contract not in base_level:
+			failures.append("BaseLevel automap sıralama sözleşmesi eksik: %s" % contract)
 
 
 func _check_door_contract() -> void:
-	var door := _instantiate("res://scenes/props/door_side_slide.tscn")
+	var door := _instantiate("res://scenes/props/door_side_slide.tscn") as VexDoor
 	if door == null:
 		return
-	door.queue_free()
+	for property_name in [&"automatic_open", &"required_enemy_ids", &"objective_on_combat_clear"]:
+		if not _has_property(door, property_name):
+			failures.append("Kapı Inspector ayarı eksik: %s" % property_name)
+	var left_panel := door.get_node_or_null("DoorPanel") as Node3D
+	var right_panel := door.get_node_or_null("DoorPanelRight") as Node3D
+	if left_panel == null or not is_equal_approx(left_panel.position.z, -1.11):
+		failures.append("Sol kapı kanadı canonical -1.11 konumunda değil.")
+	if right_panel == null or not is_equal_approx(right_panel.position.z, 1.11):
+		failures.append("Sağ kapı kanadı canonical +1.11 konumunda değil.")
+	for node_path in ["SafetySensor", "PerceptionBlocker", "DoorShadowBlocker", "FrameCollision/JambLeft", "FrameCollision/JambRight", "FrameCollision/Header"]:
+		if door.get_node_or_null(node_path) == null:
+			failures.append("Canonical kapı bileşeni eksik: %s" % node_path)
+	door.free()
 
 
 func _check_heat_hud_contract() -> void:
-	var hud := _instantiate("res://scenes/ui/hud.tscn")
-	if hud == null:
+	var hud_scene := _instantiate("res://scenes/ui/hud.tscn")
+	if hud_scene == null:
 		return
-	hud.queue_free()
+	for node_name in ["HeatPanel", "HeatMeter", "HeatValue", "HeatStatus"]:
+		if hud_scene.find_child(node_name, true, false) == null:
+			failures.append("HUD ısı düğümü eksik: %s" % node_name)
+	if not GameState.has_signal("weapon_heat_changed"):
+		failures.append("GameState weapon_heat_changed sinyali eksik.")
+	var sg15 := load("res://resources/weapons/sg15.tres") as WeaponDefinition
+	if sg15 == null or not sg15.uses_heat or not is_equal_approx(sg15.heat_unlock_ratio, 0.65):
+		failures.append("SG-15 aşırı ısınma kilidi/çözülme eşiği yanlış.")
+	hud_scene.free()
 
 
 func _check_weapon_contracts() -> void:
-	for path in [
-		"res://resources/weapons/p01.tres",
-		"res://resources/weapons/p07.tres",
-		"res://resources/weapons/p14.tres",
-		"res://resources/weapons/p20.tres",
-		"res://resources/weapons/sg04.tres",
-		"res://resources/weapons/sg09.tres",
-		"res://resources/weapons/sg15.tres",
-		"res://resources/weapons/vx47.tres",
-		"res://resources/weapons/mp90.tres",
+	var p20 := load("res://resources/weapons/p20.tres") as WeaponDefinition
+	if p20 == null:
+		failures.append("P-20 WeaponDefinition yüklenemedi.")
+	else:
+		if p20.weapon_id != &"p20" or p20.ammo_type != &"bullets":
+			failures.append("P-20 ortak tabanca mühimmat sözleşmesi yanlış.")
+		if p20.hud_ammo_label_key != "HUD_AMMO_PISTOL":
+			failures.append("P-20 ortak tabanca HUD etiketi yanlış.")
+		if p20.magazine_size != 8 or p20.damage_per_pellet != 42:
+			failures.append("P-20 şarjör/hasar dengesi yanlış.")
+		if p20.reserve_ammo_capacity != 180:
+			failures.append("P-20 ortak bullets rezerv kapasitesi 180 değil.")
+		if not is_equal_approx(p20.penetration_power, 0.5):
+			failures.append("P-20 penetrasyon gücü 0.5 değil.")
+	var sg09 := load("res://resources/weapons/sg09.tres") as WeaponDefinition
+	if sg09 == null:
+		failures.append("SG-09 WeaponDefinition yüklenemedi.")
+	else:
+		if sg09.weapon_id != &"sg09" or sg09.ammo_type != &"shells":
+			failures.append("SG-09 shotgun mühimmat sözleşmesi yanlış.")
+		if sg09.loadout_group != &"shotgun" or sg09.loadout_slot != 2:
+			failures.append("SG-09 shotgun loadout grubu/slotu yanlış.")
+		if sg09.magazine_size != 8 or sg09.damage_per_pellet != 10 or sg09.pellet_count != 8:
+			failures.append("SG-09 şarjör/saçma dengesi yanlış.")
+		if not is_equal_approx(sg09.fire_interval, 0.38) or not is_equal_approx(sg09.reload_duration, 1.6):
+			failures.append("SG-09 atış/reload süresi yanlış.")
+		if not sg09.supports_ads_pose or not sg09.supports_flashlight or sg09.automatic:
+			failures.append("SG-09 ADS/fener/yarı otomatik sözleşmesi yanlış.")
+	var sg15 := load("res://resources/weapons/sg15.tres") as WeaponDefinition
+	if sg15 == null:
+		failures.append("SG-15 WeaponDefinition yüklenemedi.")
+	else:
+		if sg15.weapon_id != &"sg15" or sg15.ammo_type != &"shells":
+			failures.append("SG-15 shotgun mühimmat sözleşmesi yanlış.")
+		if sg15.loadout_group != &"shotgun" or sg15.loadout_slot != 2:
+			failures.append("SG-15 shotgun loadout grubu/slotu yanlış.")
+		if sg15.magazine_size != 12 or sg15.damage_per_pellet != 8 or sg15.pellet_count != 7:
+			failures.append("SG-15 tambur/saçma dengesi yanlış.")
+		if not is_equal_approx(sg15.fire_interval, 0.18) or not is_equal_approx(sg15.reload_duration, 2.0):
+			failures.append("SG-15 atış/reload süresi yanlış.")
+		if not sg15.supports_ads_pose or not sg15.uses_heat or not sg15.automatic:
+			failures.append("SG-15 ADS/ısı/tam otomatik sözleşmesi yanlış.")
+	var controller := FileAccess.get_file_as_string("res://scripts/player/weapon_controller.gd")
+	for contract in [
+		"penetration_power", "target_limit", "_migrate_legacy_ammo_dictionary", "legacy_magnum_count",
+		"_effective_heat_capacity", "_update_weapon_heat", "WEAPON_OVERHEATED",
 	]:
-		if load(path) == null:
-			failures.append("Silah kaynağı yüklenemedi: %s" % path)
+		if contract not in controller:
+			failures.append("WeaponController P-20/save migration sözleşmesi eksik: %s" % contract)
+	var player_script := FileAccess.get_file_as_string("res://scripts/player/player.gd")
+	var pickup_runtime := FileAccess.get_file_as_string("res://scripts/player/player_pickup_runtime.gd")
+	for contract in [
+		"const WORLD_WEAPON_PICKUPS",
+		'&"sg04"', '&"sg09"', '&"sg15"',
+		'"equip_world_weapon",',
+		'"displaced_weapon_id"',
+	]:
+		if contract not in pickup_runtime:
+			failures.append("PickupRuntime SG-04/SG-09 fiziksel swap sözleşmesi eksik: %s" % contract)
+	for contract in [
+		"func _apply_world_weapon_pickup_feedback(",
+		'"_spawn_dropped_weapon_pickup"',
+		"displaced_weapon_id",
+	]:
+		if contract not in player_script:
+			failures.append("Player SG-04/SG-09 feedback/spawn sözleşmesi eksik: %s" % contract)
+	var loadout_flow := player_script + "\n" + pickup_runtime
+	for obsolete in [
+		'unlock_weapon", &"sg04"',
+		'unlock_weapon", &"sg09"',
+		'unlock_weapon", &"sg15"',
+		"func _collect_sidearm_pickup(",
+		'"_spawn_dropped_sidearm_pickup"',
+	]:
+		if obsolete in loadout_flow:
+			failures.append("Shotgun pickup eski kaybolan-silah akışını kullanıyor: %s" % obsolete)
 
 
 func _check_input_map() -> void:
-	for action in [&"move_forward", &"move_backward", &"move_left", &"move_right", &"attack"]:
-		if not InputMap.has_action(action):
-			failures.append("InputMap aksiyonu eksik: %s" % action)
+	for action_name in [
+		"move_forward", "move_backward", "move_left", "move_right", "jump",
+		"sprint", "crouch", "aim", "fire", "interact", "reload", "pause",
+		"automap", "night_vision", "weapon_flashlight", "weapon_1", "weapon_2",
+		"weapon_3", "weapon_4", "weapon_5",
+	]:
+		if not InputMap.has_action(action_name):
+			failures.append("InputMap eksik: %s" % action_name)
 
 
 func _check_localization_contract() -> void:
-	for locale in ["tr", "en"]:
-		if not TranslationServer.get_loaded_locales().has(locale):
-			failures.append("Locale yüklenmedi: %s" % locale)
+	var early_translation_paths: PackedStringArray = ProjectSettings.get_setting(
+		"internationalization/locale/translations",
+		PackedStringArray()
+	)
+	if not early_translation_paths.is_empty():
+		failures.append("Çeviriler temiz importtan önce project.godot üzerinden erken yükleniyor.")
+
+	var original_locale := TranslationServer.get_locale()
+	for locale_code: String in ["tr", "en"]:
+		var expected_name := "TÜRKÇE" if locale_code == "tr" else "TURKISH"
+		TranslationServer.set_locale(locale_code)
+		if tr("LANGUAGE_TURKISH") != expected_name:
+			failures.append("Runtime çeviri kaydı çalışmıyor: %s." % locale_code)
+	TranslationServer.set_locale(original_locale)
+
+	var csv_text := FileAccess.get_file_as_string("res://translations/vex.csv")
+	if not csv_text.begins_with("keys,tr,en"):
+		failures.append("Çeviri CSV başlığı keys,tr,en değil.")
+	for required_key in [
+		"LEVEL01_TUTORIAL_MOVE_HINT", "LEVEL01_TUTORIAL_INTERACT_HINT",
+		"LEVEL01_TUTORIAL_FIRE_HINT", "LEVEL01_TUTORIAL_RELOAD_HINT",
+		"LEVEL01_TUTORIAL_STRAFE_HINT", "LEVEL01_TUTORIAL_BARREL_HINT",
+		"LEVEL01_TUTORIAL_RESOURCE_HINT", "LEVEL01_TUTORIAL_FINAL_HINT",
+		"LEVEL01_TUTORIAL_COMPLETE_HINT", "LEVEL01_DOOR_FIRE_TRAINING",
+		"LEVEL01_DOOR_PROTOCOL_ENTRY", "WEAPON_P20_NAME", "WEAPON_SG15_NAME",
+		"WEAPON_OVERHEATED", "UPGRADE_TEMPEST_DRUM", "UPGRADE_THERMAL_JACKET",
+		"UPGRADE_CYCLONE_BOLT", "HUD_AMMO_PISTOL",
+		"DOOR_COMBAT_LOCKED", "DOOR_COMBAT_CLEARED",
+	]:
+		if required_key not in csv_text:
+			failures.append("Çeviri anahtarı eksik: %s" % required_key)
 
 
 func _check_save_recovery_contract() -> void:
-	if not FileAccess.file_exists(INVALID_SAVE_FIXTURE):
-		failures.append("Bozuk kayıt fixture eksik.")
-	if not FileAccess.file_exists(VALID_BACKUP_FIXTURE):
-		failures.append("Geçerli yedek kayıt fixture eksik.")
+	for fixture_path in [INVALID_SAVE_FIXTURE, VALID_BACKUP_FIXTURE]:
+		if not FileAccess.file_exists(fixture_path):
+			failures.append("Save recovery fixture eksik: %s" % fixture_path)
+			return
+	var recovered := bool(GameState.call(
+		"_load_campaign_save_from_paths",
+		INVALID_SAVE_FIXTURE,
+		VALID_BACKUP_FIXTURE
+	))
+	if not recovered:
+		failures.append("Semantik olarak bozuk ana kayıtta sağlam .bak yüklenemiyor.")
+		return
+	if str(GameState.saved_run_state.get("save_reason", "")) != "test_backup":
+		failures.append("Save recovery ana kayıt yerine doğrulanmış yedeği seçmiyor.")
+	if not bool(GameState.get("_loaded_save_from_backup")):
+		failures.append("Save recovery yedekten yükleme durumunu korumuyor.")
+	var invalid_pair_loaded := bool(GameState.call(
+		"_load_campaign_save_from_paths",
+		INVALID_SAVE_FIXTURE,
+		INVALID_SAVE_FIXTURE
+	))
+	if invalid_pair_loaded:
+		failures.append("Save recovery iki semantik bozuk kaydı geçerli kabul ediyor.")
 
 
 func _check_creature_inspector_contract() -> void:
-	for path: String in CREATURE_SCENES:
-		var enemy := _instantiate(path)
-		if enemy == null:
+	for scene_path: String in CREATURE_SCENES:
+		var creature := _instantiate(scene_path)
+		if creature == null:
 			continue
+		var editor_properties: Dictionary = {}
+		for property_data: Dictionary in creature.get_property_list():
+			var usage := int(property_data.get("usage", 0))
+			if (usage & PROPERTY_USAGE_EDITOR) != 0:
+				editor_properties[StringName(property_data.get("name", ""))] = true
 		for property_name: StringName in COMMON_CREATURE_INSPECTOR_PROPERTIES:
-			if not _has_property(enemy, property_name):
-				failures.append("Yaratık Inspector ayarı eksik: %s -> %s" % [path, property_name])
-		if int(enemy.get("combat_role")) != EnemyCombatProfiles.Role.CLOSE:
+			if not editor_properties.has(property_name):
+				failures.append("Yaratık Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
+		if (
+			not scene_path.ends_with("redviper.tscn")
+			and not scene_path.ends_with("cinderhound.tscn")
+			and not scene_path.ends_with("gorehorn.tscn")
+			and not scene_path.ends_with("vaskari_bulwark.tscn")
+		):
 			for property_name: StringName in RANGED_CREATURE_INSPECTOR_PROPERTIES:
-				if not _has_property(enemy, property_name):
-					failures.append("Menzilli yaratık Inspector ayarı eksik: %s -> %s" % [path, property_name])
-		enemy.queue_free()
+				if not editor_properties.has(property_name):
+					failures.append("Ravager ailesi Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
+		if scene_path.ends_with("crucible_warden.tscn"):
+			if not (creature.get("special_ability_settings") is VexWardenAbilitySettings):
+				failures.append("Crucible Warden tip güvenli özel yetenek ayarına bağlı değil.")
+		elif scene_path.ends_with("furnice_carrier.tscn"):
+			if not (creature.get("special_ability_settings") is VexFurniceCarrierAbilitySettings):
+				failures.append("Furnice Carrier tip güvenli özel yetenek ayarına bağlı değil.")
+		elif scene_path.ends_with("gorehorn.tscn"):
+			var charge_settings := creature.get("special_ability_settings") as VexGorehornChargeSettings
+			if charge_settings == null:
+				failures.append("Gorehorn tip güvenli şarj ayarına bağlı değil.")
+			elif charge_settings.knockback_horizontal_speed <= 0.0:
+				failures.append("Gorehorn boynuz itme kuvveti geçersiz.")
+			elif charge_settings.impact_shake_enabled and charge_settings.impact_shake_duration <= 0.0:
+				failures.append("Gorehorn temas sarsıntısı süresi geçersiz.")
+		elif scene_path.ends_with("briar_skulker.tscn"):
+			var hybrid_settings := creature.get("special_ability_settings") as VexEnemyHybridAbilitySettings
+			if hybrid_settings == null:
+				failures.append("Briar Skulker tip güvenli hibrit ayara bağlı değil.")
+			elif not hybrid_settings.prefer_melee_when_close:
+				failures.append("Briar Skulker yakın mesafede yakın saldırıyı önceliklendirmiyor.")
+			elif hybrid_settings.melee_trigger_range <= 0.0:
+				failures.append("Briar Skulker yakın saldırı menzili geçersiz.")
+		creature.free()
 
 
 func _has_property(object: Object, property_name: StringName) -> bool:
-	for property: Dictionary in object.get_property_list():
-		if property.get("name", &"") == property_name:
+	for property_data in object.get_property_list():
+		if StringName(property_data.get("name", "")) == property_name:
 			return true
 	return false
