@@ -29,9 +29,12 @@ func _update_enemy_lod() -> void:
 	var enemies := get_tree().get_nodes_in_group("enemy")
 	_prune_stale_profiles(enemies)
 
-	var player := GameState.player as Node3D
-	if player == null or not is_instance_valid(player):
+	var player_ref: Variant = GameState.player
+	if player_ref == null or not is_instance_valid(player_ref):
 		return
+	if not (player_ref is Node3D):
+		return
+	var player := player_ref as Node3D
 	if enemies.is_empty():
 		return
 
