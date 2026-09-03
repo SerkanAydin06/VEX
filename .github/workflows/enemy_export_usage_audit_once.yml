@@ -1,0 +1,89 @@
+name: Enemy Export Usage Audit Once
+
+on:
+  push:
+    branches:
+      - chatgpt/enemy-export-usage-audit-20260903
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+
+      - name: Scan scene and resource overrides
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          candidates = [
+              'movement_acceleration', 'gravity_scale', 'floor_stick_velocity',
+              'floor_collision_mask', 'floor_snap_max_correction',
+              'floor_snap_ray_start_height', 'floor_snap_ray_extra_depth',
+              'search_probe_radius', 'search_turn_speed', 'ally_alert_radius',
+              'sight_origin_height', 'sight_target_height', 'sight_collision_mask',
+              'crouch_detection_chance', 'crouch_guaranteed_detection_distance',
+              'damage_reaction_range', 'damage_reaction_duration',
+              'damage_pursuit_min_progress', 'damage_pursuit_stall_timeout',
+              'damage_pursuit_commit_time', 'hearing_loudness_scale',
+              'acoustic_collision_mask', 'acoustic_probe_height',
+              'loud_noise_alert_threshold', 'headshot_height_ratio',
+              'headshot_reference_height', 'visibility_vertical_span_scale',
+              'visibility_vertical_span_min', 'visibility_vertical_span_max',
+              'visibility_lateral_span_scale', 'visibility_lateral_span_min',
+              'visibility_lateral_span_max', 'visibility_shoulder_height_ratio',
+              'visibility_lower_body_ratio', 'crouched_target_height_scale',
+              'crouched_target_min_height', 'search_probe_diagonal_weight',
+              'navigation_clearance', 'navigation_collision_mask',
+              'path_refresh_interval', 'path_target_change_distance',
+              'runtime_grid_step', 'runtime_grid_max_nodes',
+              'runtime_grid_search_margin', 'wall_normal_y_threshold',
+              'local_detour_progress_weight', 'local_detour_distance_penalty',
+              'local_detour_direct_path_bonus', 'local_detour_persistence_bonus',
+              'cover_diagonal_distance_scale', 'cover_forward_distance_scale',
+              'cover_visibility_score_weight', 'cover_distance_score_penalty',
+              'cover_threshold_score_bonus', 'cover_failed_retry_interval',
+              'idle_detection_margin', 'medium_sight_interval',
+              'distant_think_distance', 'distant_sight_interval',
+              'idle_far_sight_interval', 'distant_path_refresh_interval',
+              'dormant_distance', 'back_view_threshold', 'hurt_shake_enabled',
+              'hurt_shake_duration', 'hurt_shake_amount_pixels',
+              'hurt_shake_frequency', 'corpse_floor_clearance',
+          ]
+
+          files = [
+              p for root in (Path('scenes'), Path('resources')) if root.exists()
+              for p in root.rglob('*') if p.suffix in {'.tscn', '.tres'}
+          ]
+          findings = {name: [] for name in candidates}
+          patterns = {
+              name: re.compile(rf'^\s*{re.escape(name)}\s*=\s*(.+)$')
+              for name in candidates
+          }
+          for path in files:
+              try:
+                  lines = path.read_text(encoding='utf-8').splitlines()
+              except UnicodeDecodeError:
+                  continue
+              for index, line in enumerate(lines, 1):
+                  for name, pattern in patterns.items():
+                      match = pattern.match(line)
+                      if match:
+                          findings[name].append((path.as_posix(), index, match.group(1).strip()))
+
+          print('ENEMY EXPORT SCENE/RESOURCE OVERRIDE USAGE')
+          print('scanned_files=', len(files))
+          print()
+          for name in candidates:
+              rows = findings[name]
+              print(f'{name}: {len(rows)}')
+              for path, line, value in rows:
+                  print(f'  {path}:{line} = {value}')
+          PY
