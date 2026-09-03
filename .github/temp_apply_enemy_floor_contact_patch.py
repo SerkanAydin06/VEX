@@ -21,7 +21,7 @@ lunge = lunge.replace(old_block, "", 1)
 old_call = "_snap_body_to_floor(floor_snap_max_correction)"
 new_call = "_snap_body_to_floor(floor_snap_max_correction, floor_stick_velocity)"
 assert combatant.count(old_call) == 1, "combatant: unexpected snap call count"
-assert lunge.count(old_call) == 2, "lunge: unexpected snap call count"
+assert lunge.count(old_call) == 3, "lunge: unexpected snap call count"
 combatant = combatant.replace(old_call, new_call)
 lunge = lunge.replace(old_call, new_call)
 
