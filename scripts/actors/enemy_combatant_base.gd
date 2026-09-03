@@ -94,7 +94,7 @@ enum State {
 ## menzilli siper yeniden konumlanma mesafe değeridir (metre).
 @export_range(0.8, 6.0, 0.1) var ranged_cover_reposition_distance := 2.6
 ## Yaratığın menzilli siper yeniden konumlanma yenileme ayarını belirler.
-@export_range(0.15, 2.0, 0.05) var ranged_cover_reposition_refresh := 0.55
+var ranged_cover_reposition_refresh := 0.55
 ## hasar yaklaşma ofset değeridir (metre).
 @export_range(0.2, 3.0, 0.1) var damage_approach_offset := 1.4
 ## hasar yaklaşma mesafe oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
@@ -190,7 +190,7 @@ enum State {
 ## Yol bulma ve engel kontrollerinde kullanılan fizik katmanlarıdır.
 @export_flags_3d_physics var navigation_collision_mask := 1 | 8
 ## arama rota deneme sayısı değeridir; yükseltmek daha fazla aday veya işlem kullanır.
-@export_range(1, 12, 1) var search_path_attempts := 4
+var search_path_attempts := 4
 ## devriye uzak mesafe çarpanı ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.5, 4.0, 0.05) var patrol_far_distance_multiplier := 2.0
 ## yerel sapma süre değeridir (saniye).
