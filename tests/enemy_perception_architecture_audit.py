@@ -2,6 +2,7 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+PARENT = ROOT / "scripts" / "actors" / "enemy_base.gd"
 BASE = ROOT / "scripts" / "actors" / "enemy_combatant_base.gd"
 LUNGE = ROOT / "scripts" / "actors" / "enemy_lunge_base.gd"
 RUNTIME = ROOT / "scripts" / "actors" / "enemy_perception_runtime.gd"
@@ -26,13 +27,13 @@ def function_body(source: str, name: str) -> str:
     return source[start:] if next_func < 0 else source[start:next_func]
 
 
+parent = read(PARENT)
 base = read(BASE)
 lunge = read(LUNGE)
 runtime = read(RUNTIME)
 
 for contract in [
     "VexEnemyPerceptionRuntime.active_detection_range(",
-    "VexEnemyPerceptionRuntime.is_player_inside_initial_view(",
     "VexEnemyPerceptionRuntime.passes_crouch_detection(",
     "VexEnemyPerceptionRuntime.has_visual_contact(",
     "VexEnemyPerceptionRuntime.ranged_visibility_ratio_from(",
@@ -53,7 +54,6 @@ for contract in [
 
 for contract in [
     "VexEnemyPerceptionRuntime.active_detection_range(",
-    "VexEnemyPerceptionRuntime.is_player_inside_initial_view(",
     "VexEnemyPerceptionRuntime.passes_crouch_detection(",
     "VexEnemyPerceptionRuntime.has_visual_contact(",
     "VexEnemyPerceptionRuntime.crouched_sight_target_height(",
@@ -62,6 +62,9 @@ for contract in [
 ]:
     if contract not in lunge:
         errors.append(f"Lunge perception delegation eksik: {contract}")
+
+if "EnemyPerceptionRuntime.is_player_inside_initial_view(" not in parent:
+    errors.append("Parent initial-view perception delegation eksik")
 
 for contract in [
     "class_name VexEnemyPerceptionRuntime",
@@ -87,13 +90,12 @@ for contract in [
     if contract not in runtime:
         errors.append(f"Perception runtime contract eksik: {contract}")
 
-lunge_initial_view = function_body(lunge, "_is_player_inside_initial_view(")
 lunge_line_of_sight = function_body(lunge, "_check_line_of_sight(")
 lunge_crouched_height = function_body(lunge, "_get_crouched_sight_target_height(")
 lunge_noise_handler = function_body(lunge, "_on_noise_emitted(")
 
 can_see = function_body(base, "_can_see_player(")
-initial_view = function_body(base, "_is_player_inside_initial_view(")
+initial_view = function_body(parent, "_is_player_inside_initial_view(")
 line_of_sight = function_body(base, "_check_line_of_sight(")
 ranged_ratio = function_body(base, "_ranged_visibility_ratio_from(")
 player_collider = function_body(base, "_is_player_collider(")
@@ -105,7 +107,7 @@ perception_update = function_body(base, "_update_perception(")
 if "randf()" in can_see:
     errors.append("Crouch detection RNG hâlâ combatant base içinde")
 if "cos(deg_to_rad" in initial_view:
-    errors.append("Initial view cone hesabı hâlâ combatant base içinde")
+    errors.append("Initial view cone hesabı hâlâ enemy base içinde")
 if "VexEnemyRuntimeUtils.has_visual_contact(" in line_of_sight:
     errors.append("Visual contact çözümü hâlâ combatant base içinde")
 if "visible_samples" in ranged_ratio or "PhysicsRayQueryParameters3D.create(" in ranged_ratio:
@@ -113,8 +115,6 @@ if "visible_samples" in ranged_ratio or "PhysicsRayQueryParameters3D.create(" in
 if "while current != null" in player_collider:
     errors.append("Player collider ancestry çözümü hâlâ combatant base içinde")
 
-if "cos(deg_to_rad" in lunge_initial_view:
-    errors.append("Initial view cone hesabı hâlâ lunge base içinde")
 if "VexEnemyRuntimeUtils.has_visual_contact(" in lunge_line_of_sight:
     errors.append("Visual contact çözümü hâlâ lunge base içinde")
 if "randf()" in lunge_line_of_sight:

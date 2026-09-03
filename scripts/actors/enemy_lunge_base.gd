@@ -613,17 +613,6 @@ func _investigate_last_seen(delta: float) -> void:
 	_chase_position(delta, _search_probe_target)
 
 
-func _is_player_inside_initial_view() -> bool:
-	if _player == null or not is_instance_valid(_player):
-		return false
-	return VexEnemyPerceptionRuntime.is_player_inside_initial_view(
-		global_position,
-		_facing_direction,
-		_player.global_position,
-		initial_view_angle
-	)
-
-
 func _check_line_of_sight() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
@@ -691,7 +680,7 @@ func _get_cached_player_visibility(
 	)
 	_cached_player_visible = (
 		_check_line_of_sight()
-		and (_aggro or _is_player_inside_initial_view())
+		and (_aggro or _is_player_inside_initial_view(initial_view_angle))
 	)
 	return _cached_player_visible
 
@@ -1128,7 +1117,7 @@ func _play_animation(animation_name: StringName) -> void:
 	if not _has_animation(animation_name):
 		return
 	var target_animation := animation_name
-	var observer_is_behind := _is_observer_behind_enemy()
+	var observer_is_behind := _is_observer_behind_enemy(back_view_threshold)
 	if observer_is_behind:
 		if animation_name == &"idle" and _has_animation(&"idle_back"):
 			target_animation = &"idle_back"
@@ -1145,25 +1134,6 @@ func _has_animation(animation_name: StringName) -> bool:
 		animated_sprite.sprite_frames != null
 		and animated_sprite.sprite_frames.has_animation(animation_name)
 		and animated_sprite.sprite_frames.get_frame_count(animation_name) > 0
-	)
-
-
-func _is_observer_behind_enemy() -> bool:
-	var observer_position := Vector3.ZERO
-	var camera := get_viewport().get_camera_3d()
-	if camera != null:
-		observer_position = camera.global_position
-	elif _player != null and is_instance_valid(_player):
-		observer_position = _player.global_position
-	else:
-		return false
-	var direction_to_observer := observer_position - global_position
-	direction_to_observer.y = 0.0
-	if direction_to_observer.length_squared() <= 0.001:
-		return false
-	return (
-		_facing_direction.dot(direction_to_observer.normalized())
-		< back_view_threshold
 	)
 
 
