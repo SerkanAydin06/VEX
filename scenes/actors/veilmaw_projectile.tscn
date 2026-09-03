@@ -1,8 +1,8 @@
 [gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/actors/ravager_projectile.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/veilmaw/veilmaw_projectile_impact_sheet.png" id="2_projectile_sheet"]
-[ext_resource type="Texture2D" path="res://assets/enemies/veilmaw/veilmaw_projectile_impact_sheet.png" id="3_impact_sheet"]
+[ext_resource type="Texture2D" path="res://assets/enemies/veilmaw/veilmaw_effects_spritesheet.png" id="2_projectile_sheet"]
+[ext_resource type="Texture2D" path="res://assets/enemies/veilmaw/veilmaw_effects_spritesheet.png" id="3_impact_sheet"]
 [ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="4_impact_audio"]
 
 [sub_resource type="SphereShape3D" id="SphereShape_veilmaw_projectile"]
