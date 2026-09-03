@@ -23,7 +23,6 @@ const CREATURE_SCENES := [
 const COMMON_CREATURE_INSPECTOR_PROPERTIES := [
 	&"path_target_change_distance", &"runtime_grid_step", &"runtime_grid_max_nodes",
 	&"runtime_grid_search_margin", &"sight_collision_mask", &"aggro_on_damage",
-	&"damage_pursuit_min_progress", &"damage_pursuit_stall_timeout",
 	&"damage_pursuit_commit_time", &"loud_noise_alert_threshold",
 	&"headshot_reference_height",
 ]
