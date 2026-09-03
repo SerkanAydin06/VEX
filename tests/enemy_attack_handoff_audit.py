@@ -6,6 +6,13 @@ ravager = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="
 combat = (ROOT / "scripts/actors/enemy_combat_runtime.gd").read_text(encoding="utf-8")
 red = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 
+
+def function_body(source: str, name: str) -> str:
+    start = source.index(f"func {name}(")
+    next_function = source.find("\nfunc ", start + 1)
+    return source[start:] if next_function < 0 else source[start:next_function]
+
+
 assert "func damage_pursuit_commit_time" not in profile
 for source in (ravager, red):
     assert "var damage_pursuit_commit_time" in source
@@ -24,12 +31,8 @@ assert "combat_role == EnemyCombatProfiles.Role.CLOSE" in red
 assert ravager.index("if _attack_locked:") < ravager.index("if _has_forced_damage_target:")
 assert red.index("if _attack_locked:") < red.index("if _has_forced_damage_target:")
 
-ravager_damage = ravager[
-    ravager.index("func take_damage("):ravager.index("func _on_noise_emitted(")
-]
-red_damage = red[
-    red.index("func take_damage("):red.index("func _on_visual_frame_changed()")
-]
+ravager_damage = function_body(ravager, "take_damage")
+red_damage = function_body(red, "take_damage")
 assert "_combat_interrupt_generation += 1" not in ravager_damage
 assert "_attack_locked = false" not in ravager_damage
 assert "_attack_generation += 1" not in red_damage
