@@ -1,4 +1,4 @@
-name: Temporary Enemy Export Scan
+name: Temporary Enemy Candidate Usage Scan
 
 on:
   push:
@@ -13,53 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Scan zero-override enemy exports
+      - name: Inspect technical candidate usage
         shell: bash
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          sources = [
-              Path('scripts/actors/enemy_combatant_base.gd'),
-              Path('scripts/actors/enemy_lunge_base.gd'),
-          ]
-          serialized = []
-          for path in Path('.').rglob('*'):
-              if '.git' in path.parts or path.suffix not in {'.tscn', '.tres'}:
-                  continue
-              try:
-                  serialized.append((path, path.read_text(encoding='utf-8')))
-              except UnicodeDecodeError:
-                  pass
-
-          def exported_vars(path: Path):
-              lines = path.read_text(encoding='utf-8').splitlines()
-              out = []
-              pending_export = None
-              for i, line in enumerate(lines, 1):
-                  stripped = line.strip()
-                  if stripped.startswith('@export'):
-                      match = re.search(r'\bvar\s+([A-Za-z0-9_]+)', line)
-                      if match:
-                          out.append((match.group(1), i, stripped))
-                          pending_export = None
-                      else:
-                          pending_export = (i, stripped)
-                      continue
-                  if pending_export:
-                      match = re.match(r'\s*var\s+([A-Za-z0-9_]+)', line)
-                      if match:
-                          out.append((match.group(1), i, f'{pending_export[1]} | {stripped}'))
-                      pending_export = None
-              return out
-
-          for source in sources:
-              print(f'===== {source} ZERO OVERRIDES =====')
-              for name, line_no, declaration in exported_vars(source):
-                  pattern = re.compile(rf'(?m)^\s*{re.escape(name)}\s*=')
-                  hits = [str(path) for path, text in serialized if pattern.search(text)]
-                  if not hits:
-                      print(f'{line_no}: {name} :: {declaration}')
-              print()
-          PY
+          set -euo pipefail
+          for name in \
+            ranged_cover_reposition_refresh \
+            search_path_attempts \
+            patrol_reach_distance \
+            investigation_reach_distance \
+            detour_duration; do
+            echo "===== $name ====="
+            grep -RIn --exclude-dir=.git -- "$name" scripts tests scenes resources || true
+          done
