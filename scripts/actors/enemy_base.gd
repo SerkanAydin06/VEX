@@ -62,6 +62,10 @@ var search_probe_diagonal_weight := 0.85
 
 # Combatant ve Lunge ailelerinin birebir ortak runtime state'i burada tek kez tanımlanır.
 # Aileye özgü state-machine alanları alt sınıflarda kalır.
+# Bu private alanların bir bölümü yalnız alt sınıflar tarafından tüketilir. GDScript'in
+# UNUSED_PRIVATE_CLASS_VARIABLE analizi inherited kullanımı saymadığı için uyarıyı yalnız
+# bu bilinçli ortak state bölgesinde bastırıyoruz.
+@warning_ignore_start("unused_private_class_variable")
 var health := 0
 var _spawn_position := Vector3.ZERO
 var _facing_direction := Vector3.FORWARD
@@ -91,6 +95,7 @@ var _runtime_attack_windup := 0.1
 var _dormant_active := false
 var _burn_remains: Node3D = null
 var _visual_base_y := 0.0
+@warning_ignore_restore("unused_private_class_variable")
 
 var _damage_shake_remaining := 0.0
 var _damage_shake_duration := 0.0
