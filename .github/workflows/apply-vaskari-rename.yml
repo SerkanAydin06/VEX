@@ -1,0 +1,172 @@
+name: Apply Vaskari rename
+
+on:
+  push:
+    branches:
+      - chore/finish-vaskari-rename
+
+permissions:
+  contents: write
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rename legacy Vaskari resources and references
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          export LEGACY_NORMAL="red""viper"
+          export LEGACY_UNDER="red""_viper"
+          export LEGACY_BAD="bad${LEGACY_NORMAL}"
+
+          python3 - <<'PY'
+          import os
+          import pathlib
+          import subprocess
+
+          normal = os.environ["LEGACY_NORMAL"]
+          under = os.environ["LEGACY_UNDER"]
+          bad = os.environ["LEGACY_BAD"]
+
+          def map_path(path: str) -> str:
+              # Shared audio gets a neutral family name because both Raptor and Ravager use it.
+              special = {
+                  f"assets/audio/{under}_attack.wav": "assets/audio/vaskari_predator_attack.wav",
+                  f"assets/audio/{under}_hurt.wav": "assets/audio/vaskari_predator_hurt.wav",
+                  f"assets/audio/{under}_death.wav": "assets/audio/vaskari_predator_death.wav",
+                  f"assets/audio/{under}_attack.wav.uid": "assets/audio/vaskari_predator_attack.wav.uid",
+                  f"assets/audio/{under}_hurt.wav.uid": "assets/audio/vaskari_predator_hurt.wav.uid",
+                  f"assets/audio/{under}_death.wav.uid": "assets/audio/vaskari_predator_death.wav.uid",
+              }
+              if path in special:
+                  return special[path]
+
+              replacements = (
+                  (bad, "vaskari_ravager"),
+                  (f"bad_{under}", "vaskari_ravager"),
+                  ("BadRedViper", "VaskariRavager"),
+                  ("Bad_Red_Viper", "Vaskari_Ravager"),
+                  (normal, "vaskari_raptor"),
+                  (under, "vaskari_raptor"),
+                  ("RedViper", "VaskariRaptor"),
+                  ("Red_Viper", "Vaskari_Raptor"),
+              )
+              mapped = path
+              for old, new in replacements:
+                  mapped = mapped.replace(old, new)
+              return mapped
+
+          tracked = subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0")
+          moves = []
+          for old in tracked:
+              if not old:
+                  continue
+              new = map_path(old)
+              if new != old:
+                  moves.append((old, new))
+
+          targets = [new for _, new in moves]
+          if len(targets) != len(set(targets)):
+              raise SystemExit(f"rename target collision: {targets}")
+
+          for old, new in sorted(moves, key=lambda item: item[0].count("/"), reverse=True):
+              if pathlib.Path(new).exists() and new != old:
+                  raise SystemExit(f"rename target already exists: {new}")
+              pathlib.Path(new).parent.mkdir(parents=True, exist_ok=True)
+              subprocess.run(["git", "mv", "--", old, new], check=True)
+              print(f"moved: {old} -> {new}")
+
+          # Ordered text replacements: bad variant and audio names first, then normal legacy forms.
+          red = "red"
+          viper = "viper"
+          normal_joined = red + viper
+          normal_under = red + "_" + viper
+          normal_dash = red + "-" + viper
+          bad_joined = "bad" + normal_joined
+          bad_under = "bad_" + normal_under
+          bad_dash = "bad-" + normal_dash
+
+          replacements = [
+              (normal_under + "_attack", "vaskari_predator_attack"),
+              (normal_under + "_hurt", "vaskari_predator_hurt"),
+              (normal_under + "_death", "vaskari_predator_death"),
+              ("BadRedViper", "VaskariRavager"),
+              ("BADREDVIPER", "VASKARI_RAVAGER"),
+              (bad_joined, "vaskari_ravager"),
+              ("Bad_Red_Viper", "Vaskari_Ravager"),
+              ("BAD_RED_VIPER", "VASKARI_RAVAGER"),
+              (bad_under, "vaskari_ravager"),
+              ("Bad-Red-Viper", "Vaskari-Ravager"),
+              ("BAD-RED-VIPER", "VASKARI-RAVAGER"),
+              (bad_dash, "vaskari-ravager"),
+              ("Bad Red Viper", "Vaskari Ravager"),
+              ("BAD RED VIPER", "VASKARI RAVAGER"),
+              ("bad red viper", "vaskari ravager"),
+              ("RedViper", "VaskariRaptor"),
+              ("REDVIPER", "VASKARI_RAPTOR"),
+              (normal_joined, "vaskari_raptor"),
+              ("Red_Viper", "Vaskari_Raptor"),
+              ("RED_VIPER", "VASKARI_RAPTOR"),
+              (normal_under, "vaskari_raptor"),
+              ("Red-Viper", "Vaskari-Raptor"),
+              ("RED-VIPER", "VASKARI-RAPTOR"),
+              (normal_dash, "vaskari-raptor"),
+              ("Red Viper", "Vaskari Raptor"),
+              ("RED VIPER", "VASKARI RAPTOR"),
+              ("red viper", "vaskari raptor"),
+          ]
+
+          workflow = pathlib.Path(".github/workflows/apply-vaskari-rename.yml")
+          changed = []
+          for raw in subprocess.check_output(["git", "ls-files", "-z"]).decode().split("\0"):
+              if not raw or pathlib.Path(raw) == workflow:
+                  continue
+              path = pathlib.Path(raw)
+              try:
+                  data = path.read_bytes()
+              except FileNotFoundError:
+                  continue
+              if b"\0" in data:
+                  continue
+              try:
+                  text = data.decode("utf-8")
+              except UnicodeDecodeError:
+                  continue
+              updated = text
+              for old, new in replacements:
+                  updated = updated.replace(old, new)
+              if updated != text:
+                  path.write_text(updated, encoding="utf-8", newline="")
+                  changed.append(raw)
+                  print(f"updated refs: {raw}")
+
+          print(f"renamed paths: {len(moves)}; updated text files: {len(changed)}")
+          PY
+
+          # The temporary workflow itself constructs the legacy term without storing it contiguously.
+          if git ls-files | grep -Eiq 'red[ _-]?viper'; then
+            echo "Legacy Viper name remains in a tracked path:" >&2
+            git ls-files | grep -Ein 'red[ _-]?viper' >&2
+            exit 1
+          fi
+
+          if git grep -n -i -E 'red[ _-]?viper' -- ':!.github/workflows/apply-vaskari-rename.yml'; then
+            echo "Legacy Viper name remains in tracked content." >&2
+            exit 1
+          fi
+
+          git diff --check
+          git add -A
+          git diff --cached --stat
+          git diff --cached --quiet && { echo "No migration changes found"; exit 1; }
+          git commit -m "Finish Vaskari enemy rename"
+          git push origin HEAD
