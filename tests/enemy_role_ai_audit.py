@@ -48,7 +48,7 @@ internal_role_settings = [
 for setting in internal_role_settings:
     assert re.search(rf"^var {setting}\b", enemy_base, re.M), setting
     assert not re.search(rf"@export[^\n]*\bvar {setting}\b", enemy_base), setting
-for source_name, source in [("ravager", ravager), ("redviper", red)]:
+for source_name, source in [("ravager", ravager), ("vaskari_raptor", red)]:
     for setting in common_inspector_settings:
         assert re.search(rf"@export[^\n]*\bvar {setting}\b", source), (source_name, setting)
 
@@ -95,8 +95,8 @@ expected_roles = {
     "cinder_spitter": 1,
     "coil_lancer": 2,
     "spore_matriarch": 1,
-    "redviper": 0,
-    "badredviper": 0,
+    "vaskari_raptor": 0,
+    "vaskari_ravager": 0,
     "cinderhound": 0,
     "gorehorn": 0,
     "vaskari_bulwark": 0,
@@ -130,7 +130,7 @@ for enemy, role in expected_roles.items():
     keys = re.findall(r"(?m)^([A-Za-z_][A-Za-z0-9_]*)\s*=", root.group(1))
     duplicates = sorted({key for key in keys if keys.count(key) > 1})
     assert not duplicates, (enemy, duplicates)
-    if enemy not in {"redviper", "badredviper", "cinderhound"}:
+    if enemy not in {"vaskari_raptor", "vaskari_ravager", "cinderhound"}:
         for setting in role_scene_settings[role]:
             assert setting in keys, (enemy, setting)
 

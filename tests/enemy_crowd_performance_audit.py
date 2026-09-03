@@ -81,7 +81,7 @@ for enemy in [
 ]:
     source = read(f"scripts/actors/{enemy}.gd")
     assert 'extends "res://scripts/actors/enemy_combatant_performance_base.gd"' in source, enemy
-for enemy in ["vaskari_raptor", "badredviper", "cinderhound", "vaskari_bulwark"]:
+for enemy in ["vaskari_raptor", "vaskari_ravager", "cinderhound", "vaskari_bulwark"]:
     source = read(f"scripts/actors/{enemy}.gd")
     assert 'extends "res://scripts/actors/enemy_lunge_performance_base.gd"' in source, enemy
 

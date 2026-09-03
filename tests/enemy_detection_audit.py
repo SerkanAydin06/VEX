@@ -13,8 +13,8 @@ EXPECTED = {
     "cinder_spitter": (30.0, 40.0, 46.0),
     "coil_lancer": (34.0, 44.0, 50.0),
     "spore_matriarch": (32.0, 42.0, 48.0),
-    "redviper": (30.0, 38.0, 44.0),
-    "badredviper": (32.0, 42.0, 46.0),
+    "vaskari_raptor": (30.0, 38.0, 44.0),
+    "vaskari_ravager": (32.0, 42.0, 46.0),
     "cinderhound": (30.0, 42.0, 44.0),
     "gorehorn": (32.0, 42.0, 48.0),
     "vaskari_bulwark": (32.0, 42.0, 48.0),
@@ -37,18 +37,18 @@ for enemy, (min_detection, min_pursuit, min_dormant) in EXPECTED.items():
     assert dormant > detection * 1.20, (enemy, "dormant", dormant, detection)
 
 ravager_script = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
-redviper_script = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
+vaskari_raptor_script = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
 perception_script = (ROOT / "scripts/actors/enemy_perception_runtime.gd").read_text(encoding="utf-8")
 assert "var detection_range := 30.0" in ravager_script
 assert "var pursuit_range := 38.0" in ravager_script
 assert "var initial_view_angle := 240.0" in ravager_script
 assert "var dormant_distance := 44.0" in ravager_script
-assert "var detection_range := 30.0" in redviper_script
-assert "var pursuit_range := 38.0" in redviper_script
-assert "var dormant_distance := 44.0" in redviper_script
+assert "var detection_range := 30.0" in vaskari_raptor_script
+assert "var pursuit_range := 38.0" in vaskari_raptor_script
+assert "var dormant_distance := 44.0" in vaskari_raptor_script
 
 door_script = (ROOT / "scripts/props/door.gd").read_text(encoding="utf-8")
-for script_name, script in (("ravager", ravager_script), ("redviper", redviper_script)):
+for script_name, script in (("ravager", ravager_script), ("vaskari_raptor", vaskari_raptor_script)):
     assert "damage_reaction_range := 80.0" in script, script_name
     assert "damage_reaction_duration := 12.0" in script, script_name
     assert "func is_pursuing_player() -> bool:" in script, script_name
@@ -87,7 +87,7 @@ for needle in [
     "VexEnemyRuntimeUtils.investigation_probe(",
     "_lost_sight_remaining = 0.0",
 ]:
-    assert needle in redviper_script, needle
+    assert needle in vaskari_raptor_script, needle
 
 print("Enemy awareness/search contract passed")
 

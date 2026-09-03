@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://d0if1xpxh6no2"]
 
 [ext_resource type="Script" uid="uid://b7pixtku56b8v" path="res://scripts/actors/vaskari_raptor.gd" id="1_script"]
-[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/red_viper_hurt.wav" id="5_1tqjx"]
+[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/vaskari_predator_hurt.wav" id="5_1tqjx"]
 [ext_resource type="Texture2D" uid="uid://bmbm2fkwpryrx" path="res://assets/enemies/vaskari_raptor/vaskari_raptor_character_spritesheet.png" id="5_sheet"]
-[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/red_viper_death.wav" id="6_1tqjx"]
-[ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/red_viper_attack.wav" id="7_1tqjx"]
+[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/vaskari_predator_death.wav" id="6_1tqjx"]
+[ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/vaskari_predator_attack.wav" id="7_1tqjx"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="29_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 

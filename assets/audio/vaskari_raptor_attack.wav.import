@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://c34bk383sd68p"
-path="res://.godot/imported/red_viper_attack.wav-bcd4c18db717b476233a7be2574f08db.sample"
+path="res://.godot/imported/vaskari_predator_attack.wav-bcd4c18db717b476233a7be2574f08db.sample"
 
 [deps]
 
-source_file="res://assets/audio/red_viper_attack.wav"
-dest_files=["res://.godot/imported/red_viper_attack.wav-bcd4c18db717b476233a7be2574f08db.sample"]
+source_file="res://assets/audio/vaskari_predator_attack.wav"
+dest_files=["res://.godot/imported/vaskari_predator_attack.wav-bcd4c18db717b476233a7be2574f08db.sample"]
 
 [params]
 

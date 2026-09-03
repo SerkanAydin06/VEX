@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://dnj5rfyxbcvek"]
 
-[ext_resource type="Script" uid="uid://j3botxbwdehj" path="res://scripts/actors/badredviper.gd" id="1_script"]
-[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/red_viper_hurt.wav" id="5_6bs8p"]
-[ext_resource type="Texture2D" uid="uid://di5wuthxnjfoc" path="res://assets/enemies/badredviper/badredviper_spritesheet.png" id="5_sheet"]
-[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/red_viper_death.wav" id="6_6bs8p"]
-[ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/red_viper_attack.wav" id="7_6bs8p"]
+[ext_resource type="Script" uid="uid://j3botxbwdehj" path="res://scripts/actors/vaskari_ravager.gd" id="1_script"]
+[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/vaskari_predator_hurt.wav" id="5_6bs8p"]
+[ext_resource type="Texture2D" uid="uid://di5wuthxnjfoc" path="res://assets/enemies/vaskari_ravager/vaskari_ravager_spritesheet.png" id="5_sheet"]
+[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/vaskari_predator_death.wav" id="6_6bs8p"]
+[ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/vaskari_predator_attack.wav" id="7_6bs8p"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="29_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape_badredviper"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_vaskari_ravager"]
 radius = 0.82
 height = 3.1
 
@@ -132,7 +132,7 @@ atlas = ExtResource("5_sheet")
 region = Rect2(1705, 1536, 341, 512)
 filter_clip = true
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_badredviper"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_vaskari_ravager"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -237,13 +237,13 @@ animations = [{
 "speed": 7.0
 }]
 
-[node name="BadRedViper" type="CharacterBody3D" unique_id=1730510435]
+[node name="VaskariRavager" type="CharacterBody3D" unique_id=1730510435]
 collision_layer = 4
 collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
-enemy_id = &"badredviper"
+enemy_id = &"vaskari_ravager"
 combat_role = 0
 maximum_health = 190
 difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
@@ -286,7 +286,7 @@ burn_ember_emission_energy = 0.18
 burn_smoke_duration = 9.5
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=863324837]
-shape = SubResource("CapsuleShape_badredviper")
+shape = SubResource("CapsuleShape_vaskari_ravager")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=2043964502]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1333, 0)
@@ -295,7 +295,7 @@ pixel_size = 0.0065753907
 billboard = 2
 shaded = true
 alpha_cut = 1
-sprite_frames = SubResource("SpriteFrames_badredviper")
+sprite_frames = SubResource("SpriteFrames_vaskari_ravager")
 animation = &"idle"
 autoplay = "idle"
 frame_progress = 0.28687912
