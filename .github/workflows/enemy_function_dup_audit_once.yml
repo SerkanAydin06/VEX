@@ -1,0 +1,65 @@
+name: Enemy Function Duplicate Audit Once
+
+on:
+  push:
+    branches:
+      - chatgpt/enemy-function-dup-audit-20260903
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+      - name: Compare functions
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import difflib
+
+          paths = {
+              'combatant': Path('scripts/actors/enemy_combatant_base.gd'),
+              'lunge': Path('scripts/actors/enemy_lunge_base.gd'),
+          }
+
+          def functions(text: str):
+              starts = list(re.finditer(r'(?m)^(?:static )?func\s+([A-Za-z0-9_]+)\s*\(', text))
+              out = {}
+              for i, match in enumerate(starts):
+                  start = match.start()
+                  end = starts[i + 1].start() if i + 1 < len(starts) else len(text)
+                  body = text[start:end].rstrip()
+                  out[match.group(1)] = body
+              return out
+
+          funcs = {name: functions(path.read_text(encoding='utf-8')) for name, path in paths.items()}
+          common_names = sorted(set(funcs['combatant']) & set(funcs['lunge']))
+          print('FUNCTION_COUNTS', {k: len(v) for k, v in funcs.items()})
+          print('COMMON_NAME_COUNT', len(common_names))
+          print('\nEXACT IDENTICAL')
+          for name in common_names:
+              a = funcs['combatant'][name]
+              b = funcs['lunge'][name]
+              if a == b:
+                  print(name, 'lines=', len(a.splitlines()))
+
+          print('\nHIGH SIMILARITY SAME-NAME (>=0.72)')
+          for name in common_names:
+              a = funcs['combatant'][name]
+              b = funcs['lunge'][name]
+              if a == b:
+                  continue
+              ratio = difflib.SequenceMatcher(None, a, b).ratio()
+              if ratio >= 0.72:
+                  print(f'{name}: {ratio:.3f} combatant_lines={len(a.splitlines())} lunge_lines={len(b.splitlines())}')
+
+          print('\nCOMMON NAMES')
+          for name in common_names:
+              print(name)
+          PY
