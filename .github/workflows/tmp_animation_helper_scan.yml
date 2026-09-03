@@ -1,4 +1,4 @@
-name: Temporary Animation Helper Scan
+name: Temporary Animation Offset Scan
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Compare common enemy helpers
+      - name: Inspect shared frame offset contract
         shell: bash
         run: |
           python - <<'PY'
@@ -23,57 +23,50 @@ jobs:
           files = {
               'combatant': Path('scripts/actors/enemy_combatant_base.gd'),
               'lunge': Path('scripts/actors/enemy_lunge_base.gd'),
+              'base': Path('scripts/actors/enemy_base.gd'),
           }
-          candidates = [
-              '_has_animation',
-              '_apply_frame_ground_offset',
-              '_frame_offsets_for_animation',
-              '_collision_floor_local_y',
-              '_snap_body_to_floor',
-              '_finalize_death_visual',
-              '_show_burn_remains',
-              '_get_crouched_sight_target_height',
+          names = [
+              'idle_frame_y_offsets',
+              'idle_back_frame_y_offsets',
+              'walk_frame_y_offsets',
+              'walk_back_frame_y_offsets',
+              'attack_frame_y_offsets',
+              'death_frame_y_offsets',
           ]
-
-          def function_body(text: str, name: str):
-              lines = text.splitlines()
-              start = None
-              for i, line in enumerate(lines):
-                  if re.match(rf'^func {re.escape(name)}\b', line):
-                      start = i
-                      break
-              if start is None:
-                  return None
-              end = len(lines)
-              for j in range(start + 1, len(lines)):
-                  if lines[j].startswith('func '):
-                      end = j
-                      break
-              return '\n'.join(lines[start:end]).rstrip()
-
           texts = {k: p.read_text(encoding='utf-8') for k, p in files.items()}
-          for name in candidates:
+          for name in names:
               print(f'===== {name} =====')
-              bodies = {}
-              for family, text in texts.items():
-                  body = function_body(text, name)
-                  bodies[family] = body
-                  print(f'--- {family} ---')
-                  print(body if body else '<missing>')
-              if bodies['combatant'] and bodies['lunge']:
-                  norm = lambda s: re.sub(r'\s+', ' ', s).strip()
-                  print('NORMALIZED_IDENTICAL=', norm(bodies['combatant']) == norm(bodies['lunge']))
+              for family in ('combatant', 'lunge', 'base'):
+                  text = texts[family]
+                  matches = []
+                  for i, line in enumerate(text.splitlines(), 1):
+                      if re.search(rf'\bvar\s+{re.escape(name)}\b', line):
+                          matches.append((i, line.strip()))
+                  print(f'{family}:', matches or '<missing>')
+              hits = []
+              pattern = re.compile(rf'(?m)^\s*{re.escape(name)}\s*=')
+              for path in Path('.').rglob('*'):
+                  if '.git' in path.parts or path.suffix not in {'.tscn', '.tres'}:
+                      continue
+                  try:
+                      text = path.read_text(encoding='utf-8')
+                  except UnicodeDecodeError:
+                      continue
+                  if pattern.search(text):
+                      hits.append(str(path))
+              print('serialized_hits=', hits)
               print()
 
-          print('===== DEFINITIONS / SUPER CALLS ACROSS ACTOR SCRIPTS =====')
+          print('===== offset method overrides =====')
           for path in sorted(Path('scripts/actors').glob('*.gd')):
               text = path.read_text(encoding='utf-8')
-              hits = []
-              for name in candidates:
-                  if re.search(rf'^func {re.escape(name)}\b', text, re.M):
-                      hits.append(f'def:{name}')
-                  if f'super.{name}(' in text:
-                      hits.append(f'super:{name}')
-              if hits:
-                  print(path, ' '.join(hits))
+              if re.search(r'^func _frame_offsets_for_animation\b', text, re.M):
+                  print(path)
+                  lines = text.splitlines()
+                  for i, line in enumerate(lines):
+                      if line.startswith('func _frame_offsets_for_animation'):
+                          for body_line in lines[i:i+24]:
+                              print(body_line)
+                          print()
+                          break
           PY
