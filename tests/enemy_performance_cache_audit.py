@@ -15,13 +15,15 @@ def main() -> int:
         "for key: Variant in _profiles.keys():",
         "_profiles.erase(key)",
         "_profiles.erase(dead_key)",
+        "var player_ref: Variant = GameState.player",
+        "var player := player_ref as Node3D",
     ]
     for token in required:
         if token not in text:
             errors.append(f"Enemy performance cache cleanup token missing: {token}")
 
     prune_call = text.find("_prune_stale_profiles(enemies)")
-    player_guard = text.find("var player := GameState.player as Node3D")
+    player_guard = text.find("var player_ref: Variant = GameState.player")
     if prune_call < 0 or player_guard < 0 or prune_call > player_guard:
         errors.append("Stale profile pruning must run even when no player is registered.")
 
