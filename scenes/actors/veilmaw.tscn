@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bf7vnpaj7o8rt"]
 
 [ext_resource type="Script" uid="uid://b4apgrelkmkch" path="res://scripts/actors/veilmaw.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/veilmaw/veilmaw_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://c4pp75dy0u01e" path="res://assets/enemies/veilmaw/veilmaw_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="AudioStream" uid="uid://doa6is2yoo5sl" path="res://assets/audio/veilmaw_attack.wav" id="6_evcf2"]
 [ext_resource type="AudioStream" uid="uid://ciow32hh0rynl" path="res://assets/audio/veilmaw_hurt.wav" id="7_evcf2"]
 [ext_resource type="AudioStream" uid="uid://cnp8eamwi4vv5" path="res://assets/audio/veilmaw_death.wav" id="8_evcf2"]
@@ -330,12 +330,12 @@ dormant_distance = 42.0
 death_fall_time = 0.3
 corpse_hold_duration = 2.4
 corpse_floor_clearance = 0.02
-idle_frame_y_offsets = PackedFloat32Array(0.1035, 0.1076, 0.1076, 0.1035)
-idle_back_frame_y_offsets = PackedFloat32Array(0.1076, 0.1076, 0.1035, 0.1076)
-walk_frame_y_offsets = PackedFloat32Array(0.1076, 0.1076, 0.1076, 0.1076)
-walk_back_frame_y_offsets = PackedFloat32Array(0.0871, 0.0871, 0.0871, 0.0871)
-attack_frame_y_offsets = PackedFloat32Array(0.1035, 0.0994, 0.0994, 0.1035)
-death_frame_y_offsets = PackedFloat32Array(0.1035, 0.1035, 0.0871, 0.0256)
+idle_frame_y_offsets = PackedFloat32Array(0.0707, 0.1035, 0.0953, 0.0994)
+idle_back_frame_y_offsets = PackedFloat32Array(0.0953, 0.0953, 0.0953, 0.0953)
+walk_frame_y_offsets = PackedFloat32Array(0.0994, 0.1035, 0.1076, 0.1035)
+walk_back_frame_y_offsets = PackedFloat32Array(0.0789, 0.0871, 0.083, 0.0871)
+attack_frame_y_offsets = PackedFloat32Array(0.0994, 0.0953, 0.0912, 0.0953)
+death_frame_y_offsets = PackedFloat32Array(0.1035, 0.0953, 0.0953, 0.0871)
 burn_remains_scale = 1.0
 burn_smoke_duration = 9.0
 burn_smoke_alpha = 0.14
