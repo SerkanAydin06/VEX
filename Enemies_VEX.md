@@ -42,7 +42,7 @@ Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
 |---|---|---|---|
 | 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | Basalt Juggernaut, Cinder Hound, Furnace Carrier, Crucible Warden |
 | 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager, Briar Skulker, Gorehorn, Spore Matriarch |
-| 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | Vaskari Raptor, VaskariRavager, Coil Lancer, Vaskari Bulwark, Venom Marshall |
+| 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | Vaskari Raptor, Vaskari Ravager, Coil Lancer, Vaskari Bulwark, Venom Marshall |
 | 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw |
 | 5 | **Aether Loom** | Boşluk, yarık dokusu, akıllı enerji organizmaları ve uzamsal örüntüler | Voidweaver |
 
@@ -189,7 +189,7 @@ Bu evrenin yaratıkları “vahşi canavar” değildir; **çatışmayı bilen, 
 - **Savaş kimliği:** Oyuncuyu yan açılardan zorlar, ani ataklarla güvenli alan hissini bozar.
 - **Ayırt edici özellik:** Sürat ve saldırı kararlılığıyla aileye tempo kazandırır.
 
-### 2. VaskariRavager
+### 2. Vaskari Ravager
 
 **Durum:** Mevcut
 
@@ -348,7 +348,7 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 | Gorehorn | Thornwild Sürüsü | Orta-ağır şarj ve ritim bozma birimi |
 | Spore Matriarch | Thornwild Sürüsü | Zehir ve bölge kontrolü destek birimi |
 | Vaskari Raptor | Vaskari Lejyonu | Hızlı elit hücum birimi |
-| VaskariRavager | Vaskari Lejyonu | Ağır hücum varyantı |
+| Vaskari Ravager | Vaskari Lejyonu | Ağır hücum varyantı |
 | Coil Lancer | Vaskari Lejyonu | Orta menzilli çizgisel baskı birimi |
 | Vaskari Bulwark | Vaskari Lejyonu | Ağır yakın menzil ön hat birimi |
 | Venom Marshall | Vaskari Lejyonu | Menzilli destek ve müttefik güçlendirme birimi |
@@ -408,7 +408,7 @@ Düşman tasarım ve üretim sırası için öneri:
 ### Önce zaten oyunda olanlar
 1. Ravager
 2. Vaskari Raptor
-3. VaskariRavager
+3. Vaskari Ravager
 4. Veilmaw
 5. Basalt Juggernaut
 6. Voidweaver

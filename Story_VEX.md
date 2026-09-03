@@ -310,7 +310,7 @@ Ana hikâye tamamlanır; oyun sonu operasyonları, yeni bölgeler, yaratık vary
 ## Vaskari Lejyonu — Kızıl Hat
 
 - Ortam: biyozırhlı savaş yapıları, zehir damarları ve disiplinli kast yerleşimleri.
-- Türler: VaskariRaptor ve VaskariRavager.
+- Türler: Vaskari Raptor ve Vaskari Ravager.
 - Amaç: çalınan biyotoksin ve sinir iletimi örneklerini geri almak; geçitleri askerî bir cephe olarak denetlemek.
 - Oynanış: flank, koordineli hücum, elit baskı ve zehir temelli tehdit.
 
