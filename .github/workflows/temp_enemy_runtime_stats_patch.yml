@@ -34,3 +34,5 @@ jobs:
           fi
           git commit -m "Centralize common enemy runtime stats"
           git push origin HEAD:refactor/enemy-common-runtime-stats
+
+# Trigger marker: workflow already exists on this branch.
