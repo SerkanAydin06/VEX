@@ -991,9 +991,9 @@ enemy_id = &"vex03_upper_korvath_a"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 8.78, 5)
 enemy_id = &"vex03_mezzanine_ravager"
 
-[node name="UpperAuthorizationViper" parent="Enemies" unique_id=351538582 instance=ExtResource("20_vaskari_ravager")]
+[node name="UpperAuthorizationRavager" parent="Enemies" unique_id=351538582 instance=ExtResource("20_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 8.28864, -3)
-enemy_id = &"vex03_mezzanine_viper"
+enemy_id = &"vex03_mezzanine_vaskari_ravager"
 spawn_min_difficulty = 1
 
 [node name="ServiceVoidweaver" parent="Enemies" unique_id=2065339335 instance=ExtResource("21_voidweaver")]
