@@ -353,33 +353,15 @@ enum State {
 @onready var death_audio: AudioStreamPlayer3D = $DeathAudio
 @onready var ground_shadow: Sprite3D = get_node_or_null("GroundShadow") as Sprite3D
 
-var health := 0
 var state := State.IDLE
 
-var _spawn_position := Vector3.ZERO
-var _facing_direction := Vector3.FORWARD
 var _alerted := false
-var _attack_locked := false
 var _attack_windup_active := false
 var _attack_strafe_direction := -1.0
-var _gravity := 20.0
-var _player: Node3D = null
 
-var _sight_check_remaining := 0.0
 var _player_visible := false
 var _seconds_without_sight := 0.0
-var _last_seen_position := Vector3.ZERO
 var _has_last_seen_position := false
-var _search_remaining := 0.0
-var _search_probe_index := 0
-var _search_probe_target := Vector3.ZERO
-var _has_search_probe := false
-var _damage_reaction_remaining := 0.0
-var _forced_damage_target := Vector3.ZERO
-var _has_forced_damage_target := false
-var _forced_damage_best_distance := INF
-var _forced_damage_stall_remaining := 0.0
-var _forced_damage_commit_remaining := 0.0
 var _combat_interrupt_generation := 0
 var _last_visibility_ratio := 0.0
 var _ranged_reposition_target := Vector3.ZERO
@@ -399,17 +381,6 @@ var _path_index := 0
 var _path_refresh_remaining := 0.0
 var _path_target := Vector3.ZERO
 var _has_path_target := false
-var _runtime_maximum_health := 1
-var _runtime_attack_damage := 1
-var _runtime_move_speed := 0.5
-var _runtime_chase_speed := 0.5
-var _runtime_detection_range := 1.0
-var _runtime_pursuit_range := 1.0
-var _runtime_attack_cooldown := 1.0
-var _runtime_attack_windup := 0.1
-var _dormant_active := false
-var _burn_remains: Node3D = null
-var _visual_base_y := 0.0
 
 
 func get_behavior_family() -> StringName:
