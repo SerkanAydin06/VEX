@@ -282,7 +282,7 @@ func _physics_process(delta: float) -> void:
 
 	if _should_use_dormant_mode():
 		_enter_dormant_mode()
-		_apply_dormant_physics(delta)
+		_apply_dormant_physics(delta, floor_stick_velocity)
 		return
 	_exit_dormant_mode()
 
@@ -1038,12 +1038,6 @@ func _exit_dormant_mode() -> void:
 	_sight_check_remaining = 0.0
 
 
-func _apply_dormant_physics(delta: float) -> void:
-	if is_on_floor():
-		velocity.y = floor_stick_velocity
-		return
-	_apply_gravity(delta, floor_stick_velocity)
-	move_and_slide()
 
 
 func _configure_runtime_stats() -> void:

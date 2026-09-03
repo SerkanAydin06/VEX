@@ -185,6 +185,19 @@ func _apply_gravity(delta: float, floor_stick_velocity_value: float) -> void:
 		velocity.y = floor_stick_velocity_value
 
 
+func _apply_dormant_physics(
+	delta: float,
+	floor_stick_velocity_value: float
+) -> void:
+	# Uzak ve alarma geçmemiş düşman zemindeyken CharacterBody çözümü, rota ve
+	# algı çalıştırmaz. Havada doğmuşsa güvenli biçimde zemine oturmaya devam eder.
+	if is_on_floor():
+		velocity.y = floor_stick_velocity_value
+		return
+	_apply_gravity(delta, floor_stick_velocity_value)
+	move_and_slide()
+
+
 func _collision_floor_local_y() -> float:
 	return VexEnemyRuntimeUtils.collision_floor_local_y(collision_shape)
 
