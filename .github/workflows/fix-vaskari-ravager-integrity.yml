@@ -1,39 +1,22 @@
-name: Fix Vaskari Ravager Integrity Contract
+name: Vaskari Ravager Integrity Fix
 
 on:
   push:
-    branches:
-      - cleanup/vaskari-legacy-final
-    paths:
-      - .github/workflows/fix-vaskari-ravager-integrity.yml
+    branches: [cleanup/vaskari-legacy-final]
 
 permissions:
   contents: write
 
 jobs:
-  fix:
+  patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Preserve lunge inspector exemption
-        shell: bash
+      - shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('tests/integrity_test.gd')
-          text = path.read_text(encoding='utf-8')
-          old = '''\t\t\tnot scene_path.ends_with("vaskari_raptor.tscn")
-\t\t\tand not scene_path.ends_with("cinderhound.tscn")'''
-          new = '''\t\t\tnot scene_path.ends_with("vaskari_raptor.tscn")
-\t\t\tand not scene_path.ends_with("vaskari_ravager.tscn")
-\t\t\tand not scene_path.ends_with("cinderhound.tscn")'''
-          count = text.count(old)
-          if count != 1:
-              raise SystemExit(f'expected one integrity exemption block, found {count}')
-          path.write_text(text.replace(old, new, 1), encoding='utf-8')
-          PY
-          rm -f .github/workflows/fix-vaskari-ravager-integrity.yml
+          python3 -c 'from pathlib import Path; p=Path("tests/integrity_test.gd"); s=p.read_text(); old="\t\t\tnot scene_path.ends_with(\"vaskari_raptor.tscn\")\n\t\t\tand not scene_path.ends_with(\"cinderhound.tscn\")"; new="\t\t\tnot scene_path.ends_with(\"vaskari_raptor.tscn\")\n\t\t\tand not scene_path.ends_with(\"vaskari_ravager.tscn\")\n\t\t\tand not scene_path.ends_with(\"cinderhound.tscn\")"; assert s.count(old)==1, s.count(old); p.write_text(s.replace(old,new,1))'
+          rm .github/workflows/fix-vaskari-ravager-integrity.yml
           git add -A
           git diff --cached --check
           git config user.name "github-actions[bot]"
