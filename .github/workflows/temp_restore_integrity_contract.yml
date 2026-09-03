@@ -1,0 +1,44 @@
+name: Restore integrity contract and remove internal tuning checks
+
+on:
+  push:
+    branches:
+      - refactor/enemy-damage-pursuit-internal-tuning
+    paths:
+      - .github/workflows/temp_restore_integrity_contract.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          ref: refactor/enemy-damage-pursuit-internal-tuning
+          fetch-depth: 0
+
+      - name: Restore canonical integrity test and update Inspector contract
+        run: |
+          git fetch origin main
+          git checkout origin/main -- tests/integrity_test.gd
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('tests/integrity_test.gd')
+          text = path.read_text(encoding='utf-8')
+          old = '\t&"damage_pursuit_min_progress", &"damage_pursuit_stall_timeout",\n'
+          assert text.count(old) == 1, 'expected Inspector contract line changed'
+          text = text.replace(old, '', 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit exact integrity test repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/integrity_test.gd
+          git diff --cached --check
+          git commit -m "Update integrity contract for internal pursuit tuning"
+          git push origin HEAD:refactor/enemy-damage-pursuit-internal-tuning
