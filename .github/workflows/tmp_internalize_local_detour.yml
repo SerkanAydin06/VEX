@@ -1,0 +1,53 @@
+name: Temporary Internalize Local Detour
+
+on:
+  push:
+    branches:
+      - chatgpt/internalize-local-detour-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - name: Apply local-detour internalization
+        run: python tools/tmp_internalize_local_detour.py
+      - name: Verify defaults and zero scene serialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in \
+            local_detour_duration \
+            local_detour_clearance_multiplier \
+            local_detour_min_step \
+            local_detour_lateral_multipliers \
+            local_detour_forward_multipliers; do
+            grep -q "^var $name" scripts/actors/enemy_combatant_base.gd
+            if grep -RIn --include='*.tscn' --include='*.tres' -E "^[[:space:]]*$name[[:space:]]*=" scenes resources 2>/dev/null; then
+              echo "::error::$name unexpectedly serialized in a scene/resource"
+              exit 1
+            fi
+          done
+      - name: Run every Python audit
+        shell: bash
+        run: |
+          status=0
+          while IFS= read -r audit; do
+            python "$audit" || status=1
+          done < <(find tests -maxdepth 1 -name '*_audit.py' -print | sort)
+          exit "$status"
+      - name: Commit clean package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f tools/tmp_internalize_local_detour.py .github/workflows/tmp_internalize_local_detour.yml
+          git config user.name "SerkanAydin06"
+          git config user.email "srknydn88@gmail.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Internalize combatant local detour tuning"
+          git push origin HEAD:chatgpt/internalize-local-detour-20260903
