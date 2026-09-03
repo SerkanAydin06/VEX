@@ -211,7 +211,7 @@ lost_sight_timeout = 18.0
 search_duration = 9.0
 search_turn_speed = 48.0
 ally_alert_radius = 10.0
-sight_origin_height = 0.72
+sight_origin_height = 1.25
 sight_target_height = 0.45
 crouch_detection_chance = 0.35
 crouch_guaranteed_detection_distance = 2.5
@@ -230,7 +230,7 @@ attack_preferred_distance = 10.5
 attack_recovery_strafe_scale = 0.58
 attack_retreat_speed_scale = 0.68
 projectile_scene = ExtResource("3_projectile")
-projectile_spawn_height = 0.74
+projectile_spawn_height = 1.15
 projectile_spawn_forward_offset = 0.22
 projectile_target_height = 0.48
 projectile_lead_factor = 0.4
@@ -258,7 +258,7 @@ death_frame_y_offsets = PackedFloat32Array(0, 0, 0, 0)
 shape = SubResource("CapsuleShape_husk_leech")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
-position = Vector3(0, 0.05, 0)
+position = Vector3(0, 0.65, 0)
 cast_shadow = 0
 pixel_size = 0.0033
 billboard = 2
