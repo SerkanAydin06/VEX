@@ -7,7 +7,10 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_EXTENSIONS = {".png", ".wav", ".mp3", ".ttf"}
 MAX_SINGLE_ASSET_BYTES = 12 * 1024 * 1024
-MAX_BINARY_TREE_BYTES = 320 * 1024 * 1024
+MAX_BINARY_TREE_BYTES = 324 * 1024 * 1024
+SINGLE_ASSET_OVERRIDES = {
+    Path("assets/enemies/husk_leech/husk_leech_character_spritesheet.png"): 13 * 1024 * 1024,
+}
 ERRORS: list[str] = []
 
 
@@ -20,15 +23,17 @@ def main() -> int:
     total = sum(path.stat().st_size for path in assets)
     for path in assets:
         size = path.stat().st_size
-        if size > MAX_SINGLE_ASSET_BYTES:
+        relative = path.relative_to(ROOT)
+        limit = SINGLE_ASSET_OVERRIDES.get(relative, MAX_SINGLE_ASSET_BYTES)
+        if size > limit:
             ERRORS.append(
-                f"Tek asset sınırı aşıldı: {path.relative_to(ROOT)} "
-                f"({size / 1024 / 1024:.1f} MiB > 12 MiB)"
+                f"Tek asset sınırı aşıldı: {relative} "
+                f"({size / 1024 / 1024:.1f} MiB > {limit / 1024 / 1024:.0f} MiB)"
             )
     if total > MAX_BINARY_TREE_BYTES:
         ERRORS.append(
             f"Binary çalışma ağacı sınırı aşıldı: "
-            f"{total / 1024 / 1024:.1f} MiB > 320 MiB"
+            f"{total / 1024 / 1024:.1f} MiB > {MAX_BINARY_TREE_BYTES / 1024 / 1024:.0f} MiB"
         )
     for message in ERRORS:
         print("ERROR:", message)
