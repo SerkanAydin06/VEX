@@ -29,14 +29,6 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 @export_range(0.0, 4.0, 0.05) var gravity_scale := 1.0
 ## Eğimlerde gövdeyi zemine bağlı tutan aşağı yönlü hızdır.
 @export_range(-5.0, 0.0, 0.05) var floor_stick_velocity := -0.1
-## zemin çarpışma katmanları kontrolünde dikkate alınacak fizik katmanlarıdır.
-@export_flags_3d_physics var floor_collision_mask := 1
-## Yaratığın zemin oturtma en yüksek düzeltme mesafesi ayarını belirler.
-@export_range(0.1, 5.0, 0.1) var floor_snap_max_correction := 2.0
-## zemin oturtma ışın başlangıç yükseklik değeridir (metre).
-@export_range(0.0, 2.0, 0.05) var floor_snap_ray_start_height := 0.5
-## Yaratığın zemin oturtma ışın ek derinlik ayarını belirler.
-@export_range(0.0, 4.0, 0.1) var floor_snap_ray_extra_depth := 2.0
 ## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
 @export_storage var patrol_offset := Vector3(2.0, 0.0, 0.0)
 ## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
@@ -101,10 +93,6 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 16.0
 ## Ses yüksekliğine uygulanan çarpandır; yükseldikçe işitme menzili artar.
 @export_range(0.1, 2.0, 0.05) var hearing_loudness_scale := 1.0
-## ses engeli çarpışma katmanları kontrolünde dikkate alınacak fizik katmanlarıdır.
-@export_flags_3d_physics var acoustic_collision_mask := 1
-## ses engeli yoklama yükseklik değeridir (metre).
-@export_range(0.0, 3.0, 0.05) var acoustic_probe_height := 0.8
 ## Doğrudan alarm oluşturacak en düşük ses yüksekliğidir.
 @export_range(0.0, 2.0, 0.05) var loud_noise_alert_threshold := 0.9
 ## kafa vuruşu yükseklik oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
@@ -114,29 +102,6 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 ## Açıksa diğer düşmanlardan gelen uyarılar kabul edilir.
 @export var receive_ally_alerts := true
 
-@export_category("03C - Görüş ve Arama Örnekleme")
-## görünürlük dikey örnekleme açıklığı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.1, 1.0, 0.05) var visibility_vertical_span_scale := 0.55
-## Yaratığın görünürlük dikey örnekleme açıklığı en düşük ayarını belirler.
-@export_range(0.0, 1.0, 0.05) var visibility_vertical_span_min := 0.20
-## Yaratığın görünürlük dikey örnekleme açıklığı en yüksek ayarını belirler.
-@export_range(0.0, 2.0, 0.05) var visibility_vertical_span_max := 0.68
-## görünürlük yan örnekleme açıklığı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.1, 1.0, 0.05) var visibility_lateral_span_scale := 0.82
-## Yaratığın görünürlük yan örnekleme açıklığı en düşük ayarını belirler.
-@export_range(0.0, 1.0, 0.05) var visibility_lateral_span_min := 0.15
-## Yaratığın görünürlük yan örnekleme açıklığı en yüksek ayarını belirler.
-@export_range(0.0, 1.0, 0.05) var visibility_lateral_span_max := 0.38
-## görünürlük omuz yükseklik oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.01) var visibility_shoulder_height_ratio := 0.08
-## görünürlük alt gövde oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.05) var visibility_lower_body_ratio := 0.45
-## çömelmiş hedef yükseklik çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.5, 0.05) var crouched_target_height_scale := 0.50
-## çömelmiş hedef en düşük yükseklik değeridir (metre).
-@export_range(-1.0, 1.0, 0.05) var crouched_target_min_height := -0.20
-## arama yoklama çapraz ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 2.0, 0.05) var search_probe_diagonal_weight := 0.85
 
 @export_category("04 - Saldırı")
 ## Normal saldırının başlatılabildiği yatay mesafedir (metre).
@@ -179,8 +144,8 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 @export_range(200, 6000, 100) var runtime_grid_max_nodes := 2600
 ## çalışma anı ızgara arama pay değeridir (metre).
 @export_range(4.0, 30.0, 0.5) var runtime_grid_search_margin := 18.0
-## wall normal y eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.05) var wall_normal_y_threshold := 0.55
+# wall normal y eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var wall_normal_y_threshold := 0.55
 
 @export_category("06 - Performans")
 ## yakın görüş aralığı değeridir (saniye).
