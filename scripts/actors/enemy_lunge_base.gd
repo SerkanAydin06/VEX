@@ -1071,34 +1071,17 @@ func _apply_dormant_physics(delta: float) -> void:
 
 
 func _configure_runtime_stats() -> void:
-	_runtime_maximum_health = maximum_health
-	_runtime_move_speed = move_speed
-	_runtime_chase_speed = chase_speed
-	_runtime_detection_range = detection_range
-	_runtime_pursuit_range = pursuit_range
-	_runtime_attack_damage = attack_damage
-	_runtime_attack_cooldown = attack_cooldown
-	_runtime_attack_windup = attack_windup
-	_runtime_attack_lunge_speed = attack_lunge_speed
-	if not apply_difficulty_scaling:
-		return
-
-	var health_scale := _scene_difficulty_multiplier(difficulty_health_multipliers)
-	var damage_scale := _scene_difficulty_multiplier(difficulty_damage_multipliers)
-	var speed_scale := _scene_difficulty_multiplier(difficulty_speed_multipliers)
-	var detection_scale := _scene_difficulty_multiplier(difficulty_detection_multipliers)
-	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
-	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
-	_runtime_maximum_health = maxi(1, int(round(float(maximum_health) * health_scale)))
-	_runtime_move_speed = maxf(0.0, move_speed * speed_scale)
-	_runtime_chase_speed = maxf(0.0, chase_speed * speed_scale)
+	var speed_scale := _configure_common_runtime_stats(
+		maximum_health,
+		attack_damage,
+		move_speed,
+		chase_speed,
+		detection_range,
+		pursuit_range,
+		attack_cooldown,
+		attack_windup
+	)
 	_runtime_attack_lunge_speed = maxf(0.0, attack_lunge_speed * speed_scale)
-	_runtime_detection_range = maxf(0.0, detection_range * detection_scale)
-	_runtime_pursuit_range = maxf(0.0, pursuit_range * detection_scale)
-	_runtime_attack_damage = maxi(1, int(round(float(attack_damage) * damage_scale)))
-	_runtime_attack_cooldown = maxf(0.01, attack_cooldown * cooldown_scale)
-	_runtime_attack_windup = maxf(0.0, attack_windup * windup_scale)
-
 
 func _play_animation(animation_name: StringName) -> void:
 	if not _has_animation(animation_name):
