@@ -1,0 +1,36 @@
+{
+  "source_zip": "1672_941.zip",
+  "source_folder": "1672_941",
+  "sheet_file": "husk_leech_impact_spritesheet.png",
+  "sheet_size": {
+    "width": 6688,
+    "height": 941
+  },
+  "frame_size": {
+    "width": 1672,
+    "height": 941
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 1
+  },
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right."
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "animation": "impact",
+      "source_prefix": "husk_leech_impact",
+      "frame_count": 4,
+      "frames": [
+        "husk_leech_impact_1.png",
+        "husk_leech_impact_2.png",
+        "husk_leech_impact_3.png",
+        "husk_leech_impact_4.png"
+      ]
+    }
+  ]
+}
