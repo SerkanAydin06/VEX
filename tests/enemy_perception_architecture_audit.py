@@ -38,11 +38,9 @@ for contract in [
     "VexEnemyPerceptionRuntime.has_visual_contact(",
     "VexEnemyPerceptionRuntime.ranged_visibility_ratio_from(",
     "VexEnemyPerceptionRuntime.is_player_collider(",
-    "VexEnemyPerceptionRuntime.should_hear_noise(",
     "VexEnemyPerceptionRuntime.should_broadcast_noise_alert(",
     "VexEnemyPerceptionRuntime.should_accept_ally_alert(",
     "VexEnemyPerceptionRuntime.ally_alert_facing_direction(",
-    "VexEnemyPerceptionRuntime.is_within_horizontal_range(",
     "VexEnemyPerceptionRuntime.should_skip_idle_sight(",
     "VexEnemyPerceptionRuntime.sight_interval(",
     "VexEnemyPerceptionRuntime.is_sight_check_due(",
@@ -55,7 +53,6 @@ for contract in [
     "VexEnemyPerceptionRuntime.active_detection_range(",
     "VexEnemyPerceptionRuntime.passes_crouch_detection(",
     "VexEnemyPerceptionRuntime.has_visual_contact(",
-    "VexEnemyPerceptionRuntime.should_hear_noise(",
     "VexEnemyPerceptionRuntime.should_broadcast_noise_alert(",
 ]:
     if contract not in lunge:
@@ -63,6 +60,16 @@ for contract in [
 
 if "EnemyPerceptionRuntime.is_player_inside_initial_view(" not in parent:
     errors.append("Parent initial-view perception delegation eksik")
+
+for contract in [
+    "EnemyPerceptionRuntime.should_hear_noise(",
+    "EnemyPerceptionRuntime.is_within_horizontal_range(",
+    'get_tree().get_nodes_in_group("enemy")',
+    "VexEnemyRuntimeUtils.has_clear_acoustic_path(",
+    'ally.call("receive_ally_alert", suspected_position)',
+]:
+    if contract not in parent:
+        errors.append(f"Parent acoustic helper contract eksik: {contract}")
 
 for contract in [
     "class_name VexEnemyPerceptionRuntime",
@@ -90,6 +97,7 @@ for contract in [
 
 lunge_line_of_sight = function_body(lunge, "_check_line_of_sight(")
 lunge_noise_handler = function_body(lunge, "_on_noise_emitted(")
+lunge_ally_broadcast = function_body(lunge, "_alert_nearby_allies(")
 
 for source_name, source in [("combatant", base), ("lunge", lunge)]:
     if "_get_crouched_sight_target_height" in source:
@@ -105,6 +113,8 @@ player_collider = function_body(base, "_is_player_collider(")
 noise_handler = function_body(base, "_on_noise_emitted(")
 ally_receiver = function_body(base, "receive_ally_alert(")
 ally_broadcast = function_body(base, "_alert_nearby_allies(")
+parent_hearing = function_body(parent, "_can_hear_noise_event(")
+parent_ally_broadcast = function_body(parent, "_broadcast_ally_alert(")
 perception_update = function_body(base, "_update_perception(")
 
 if "randf()" in can_see:
@@ -131,6 +141,22 @@ if "hearing_radius * maxf(" in noise_handler:
     errors.append("Hearing effective-range hesabı hâlâ combatant base içinde")
 if "loudness >= loud_noise_alert_threshold" in noise_handler:
     errors.append("Noise ally-alert threshold kararı hâlâ combatant base içinde")
+if "_can_hear_noise_event(" not in noise_handler:
+    errors.append("Combatant ortak hearing helper kullanmıyor")
+if "_can_hear_noise_event(" not in lunge_noise_handler:
+    errors.append("Lunge ortak hearing helper kullanmıyor")
+if "VexEnemyRuntimeUtils.has_clear_acoustic_path(" in noise_handler:
+    errors.append("Combatant acoustic raycast yeniden child handler'a taşınmış")
+if "VexEnemyRuntimeUtils.has_clear_acoustic_path(" in lunge_noise_handler:
+    errors.append("Lunge acoustic raycast yeniden child handler'a taşınmış")
+if "_broadcast_ally_alert(suspected_position, ally_alert_radius, true)" not in ally_broadcast:
+    errors.append("Combatant yatay ally-alert wrapper sözleşmesi yanlış")
+if "_broadcast_ally_alert(suspected_position, ally_alert_radius, false)" not in lunge_ally_broadcast:
+    errors.append("Lunge 3B ally-alert wrapper sözleşmesi yanlış")
+if "EnemyPerceptionRuntime.should_hear_noise(" not in parent_hearing:
+    errors.append("Parent hearing helper perception runtime'a delege etmiyor")
+if "use_horizontal_range" not in parent_ally_broadcast:
+    errors.append("Parent ally-alert helper aile menzil geometrisini korumuyor")
 if "state == State.DEAD or _player_visible or not receive_ally_alerts" in ally_receiver:
     errors.append("Ally alert kabul kararı hâlâ combatant base içinde")
 if "alert_direction.normalized()" in ally_receiver:
@@ -144,15 +170,16 @@ if "player_distance > _runtime_detection_range + idle_detection_margin" in perce
 if "_sight_check_remaining -= delta" in perception_update:
     errors.append("Sight timer countdown hesabı hâlâ combatant base içinde")
 
-# Scene/world side effects remain orchestrator-owned.
+# Scene/world side effects remain actor-layer owned; shared side effects live in the parent actor.
+if 'GameState.noise_emitted.is_connected(_on_noise_emitted)' not in base:
+    errors.append("Combatant noise signal ownership kayboldu")
 for contract in [
-    'GameState.noise_emitted.is_connected(_on_noise_emitted)',
     'get_tree().get_nodes_in_group("enemy")',
     "VexEnemyRuntimeUtils.has_clear_acoustic_path(",
     'ally.call("receive_ally_alert", suspected_position)',
 ]:
-    if contract not in base:
-        errors.append(f"Combatant side-effect ownership kayboldu: {contract}")
+    if contract not in parent:
+        errors.append(f"Parent acoustic side-effect ownership kayboldu: {contract}")
 
 for forbidden in [
     "GameState",

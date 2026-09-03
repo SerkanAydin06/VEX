@@ -465,20 +465,14 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 
 
 func _on_noise_emitted(noise_position: Vector3, loudness: float, source: Node) -> void:
-	if state == State.DEAD or source == self:
+	if state == State.DEAD:
 		return
-	if not VexEnemyPerceptionRuntime.should_hear_noise(
-		global_position,
+	if not _can_hear_noise_event(
 		noise_position,
-		hearing_radius,
 		loudness,
+		source,
+		hearing_radius,
 		hearing_loudness_scale
-	):
-		return
-	var hearing_origin := global_position + Vector3.UP * acoustic_probe_height
-	var hearing_target := noise_position + Vector3.UP * acoustic_probe_height
-	if not VexEnemyRuntimeUtils.has_clear_acoustic_path(
-		get_world_3d(), hearing_origin, hearing_target, acoustic_collision_mask
 	):
 		return
 	_exit_dormant_mode()
@@ -529,27 +523,7 @@ func receive_ally_alert(suspected_position: Vector3) -> void:
 	)
 
 func _alert_nearby_allies(suspected_position: Vector3) -> void:
-	for node: Node in get_tree().get_nodes_in_group("enemy"):
-		if node == self or not (node is Node3D):
-			continue
-		if not node.has_method("receive_ally_alert"):
-			continue
-
-		var ally := node as Node3D
-		if not VexEnemyPerceptionRuntime.is_within_horizontal_range(
-			global_position,
-			ally.global_position,
-			ally_alert_radius
-		):
-			continue
-		if not VexEnemyRuntimeUtils.has_clear_acoustic_path(
-			get_world_3d(),
-			global_position + Vector3.UP * acoustic_probe_height,
-			ally.global_position + Vector3.UP * acoustic_probe_height,
-			acoustic_collision_mask
-		):
-			continue
-		ally.call("receive_ally_alert", suspected_position)
+	_broadcast_ally_alert(suspected_position, ally_alert_radius, true)
 
 func _update_perception(delta: float) -> void:
 	if _player == null or not is_instance_valid(_player):
