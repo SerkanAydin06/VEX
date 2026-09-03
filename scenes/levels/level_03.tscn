@@ -17,8 +17,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/wall_lamp_red.tscn" id="16_red_lamp"]
 [ext_resource type="PackedScene" path="res://scenes/world/lore_terminal.tscn" id="17_lore"]
 [ext_resource type="PackedScene" uid="uid://cpdi2qa0vdcq5" path="res://scenes/actors/ravager.tscn" id="18_ravager"]
-[ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/redviper.tscn" id="19_redviper"]
-[ext_resource type="PackedScene" path="res://scenes/actors/badredviper.tscn" id="20_badredviper"]
+[ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/vaskari_raptor.tscn" id="19_vaskari_raptor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/vaskari_ravager.tscn" id="20_vaskari_ravager"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="21_voidweaver"]
 [ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/basalt_juggernaut.tscn" id="22_basalt_juggernaut"]
 [ext_resource type="Texture2D" uid="uid://bymwn67grckfj" path="res://assets/pickups/health.png" id="23_health"]
@@ -954,15 +954,15 @@ visual_texture = ExtResource("24_armor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.98, 15)
 enemy_id = &"vex03_lower_ravager_a"
 
-[node name="LowerRedViperA" parent="Enemies" unique_id=2052871264 instance=ExtResource("19_redviper")]
+[node name="LowerVaskariRaptorA" parent="Enemies" unique_id=2052871264 instance=ExtResource("19_vaskari_raptor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.48, 15)
-enemy_id = &"vex03_lower_redviper_a"
+enemy_id = &"vex03_lower_vaskari_raptor_a"
 
 [node name="VentGuard" parent="Enemies" unique_id=653908192 instance=ExtResource("18_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0.98, 5)
 enemy_id = &"vex03_vent_guard"
 
-[node name="PowerGuard" parent="Enemies" unique_id=352127629 instance=ExtResource("20_badredviper")]
+[node name="PowerGuard" parent="Enemies" unique_id=352127629 instance=ExtResource("20_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.48, -5)
 enemy_id = &"vex03_power_guard"
 
@@ -979,9 +979,9 @@ spawn_min_difficulty = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7189465, 8.78, -4.2377453)
 enemy_id = &"vex03_upper_voidweaver"
 
-[node name="UpperRedViper" parent="Enemies" unique_id=1431709095 instance=ExtResource("19_redviper")]
+[node name="UpperVaskariRaptor" parent="Enemies" unique_id=1431709095 instance=ExtResource("19_vaskari_raptor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 8.28, -7)
-enemy_id = &"vex03_upper_redviper"
+enemy_id = &"vex03_upper_vaskari_raptor"
 
 [node name="UpperKorvathA" parent="Enemies" unique_id=645050818 instance=ExtResource("22_basalt_juggernaut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.849896, 1.9331654, 6.5563035)
@@ -991,9 +991,9 @@ enemy_id = &"vex03_upper_korvath_a"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 8.78, 5)
 enemy_id = &"vex03_mezzanine_ravager"
 
-[node name="UpperAuthorizationViper" parent="Enemies" unique_id=351538582 instance=ExtResource("20_badredviper")]
+[node name="UpperAuthorizationRavager" parent="Enemies" unique_id=351538582 instance=ExtResource("20_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 8.28864, -3)
-enemy_id = &"vex03_mezzanine_viper"
+enemy_id = &"vex03_mezzanine_vaskari_ravager"
 spawn_min_difficulty = 1
 
 [node name="ServiceVoidweaver" parent="Enemies" unique_id=2065339335 instance=ExtResource("21_voidweaver")]
@@ -1005,9 +1005,9 @@ spawn_min_difficulty = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 9.699403, -5)
 enemy_id = &"vex03_core_korvath_a"
 
-[node name="CoreRedViper" parent="Enemies" unique_id=1498020884 instance=ExtResource("19_redviper")]
+[node name="CoreVaskariRaptor" parent="Enemies" unique_id=1498020884 instance=ExtResource("19_vaskari_raptor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.634976, 8.28, -14)
-enemy_id = &"vex03_core_redviper"
+enemy_id = &"vex03_core_vaskari_raptor"
 spawn_min_difficulty = 1
 
 [node name="KorvathWarden" parent="Enemies" unique_id=1257904597 instance=ExtResource("22_basalt_juggernaut")]

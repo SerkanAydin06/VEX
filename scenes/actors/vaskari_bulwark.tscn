@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://cvaskaribulwks1" path="res://scripts/actors/vaskari_bulwark.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://brcm2knf8hn6k" path="res://assets/enemies/vaskari_bulwark/vaskari_bulwark_character_spritesheet.png" id="2_sheet"]
-[ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/red_viper_attack.wav" id="3_attack"]
-[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/red_viper_hurt.wav" id="4_hurt"]
-[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/red_viper_death.wav" id="5_death"]
+[ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/vaskari_raptor_attack.wav" id="3_attack"]
+[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/vaskari_raptor_hurt.wav" id="4_hurt"]
+[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/vaskari_raptor_death.wav" id="5_death"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="6_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="7_burn"]
 

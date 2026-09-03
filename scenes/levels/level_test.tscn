@@ -13,8 +13,8 @@
 [ext_resource type="PackedScene" uid="uid://bk5dcdh1lk7nr" path="res://scenes/props/door_side_slide.tscn" id="11_door"]
 [ext_resource type="PackedScene" uid="uid://16s412t1otyl" path="res://scenes/props/pickup.tscn" id="12_pickup"]
 [ext_resource type="PackedScene" uid="uid://cpdi2qa0vdcq5" path="res://scenes/actors/ravager.tscn" id="13_ravager"]
-[ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/redviper.tscn" id="14_redviper"]
-[ext_resource type="PackedScene" uid="uid://dnj5rfyxbcvek" path="res://scenes/actors/badredviper.tscn" id="15_badredviper"]
+[ext_resource type="PackedScene" uid="uid://d0if1xpxh6no2" path="res://scenes/actors/vaskari_raptor.tscn" id="14_vaskari_raptor"]
+[ext_resource type="PackedScene" uid="uid://dnj5rfyxbcvek" path="res://scenes/actors/vaskari_ravager.tscn" id="15_vaskari_ravager"]
 [ext_resource type="PackedScene" uid="uid://d3hv0gr27g6kr" path="res://scenes/actors/basalt_juggernaut.tscn" id="16_basalt_juggernaut"]
 [ext_resource type="PackedScene" uid="uid://bf7vnpaj7o8rt" path="res://scenes/actors/veilmaw.tscn" id="17_veilmaw"]
 [ext_resource type="PackedScene" uid="uid://dm1m7chx8yipi" path="res://scenes/actors/voidweaver.tscn" id="18_voidweaver"]
@@ -560,16 +560,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 10)
 enemy_id = &"level_test_coil_lancer"
 maximum_health = 180
 
-[node name="RedViper" parent="Enemies" unique_id=406336072 instance=ExtResource("14_redviper")]
+[node name="VaskariRaptor" parent="Enemies" unique_id=406336072 instance=ExtResource("14_vaskari_raptor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.96335053, 10)
-enemy_id = &"level_test_redviper"
+enemy_id = &"level_test_vaskari_raptor"
 maximum_health = 150
 move_speed = 7.0
 detection_range = 25.0
 
-[node name="BadRedViper" parent="Enemies" unique_id=1097403212 instance=ExtResource("15_badredviper")]
+[node name="VaskariRavager" parent="Enemies" unique_id=1097403212 instance=ExtResource("15_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.5569348, 0)
-enemy_id = &"level_test_badredviper"
+enemy_id = &"level_test_vaskari_ravager"
 maximum_health = 500
 move_speed = 10.0
 movement_acceleration = 40.0

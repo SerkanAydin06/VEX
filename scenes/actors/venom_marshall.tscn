@@ -5,8 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://bvenommarshallpr1" path="res://scenes/actors/venom_marshall_projectile.tscn" id="3_projectile"]
 [ext_resource type="PackedScene" uid="uid://bvenombufffield1" path="res://scenes/actors/venom_marshall_buff_projectile.tscn" id="4_buff_projectile"]
 [ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="5_attack"]
-[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/red_viper_hurt.wav" id="6_hurt"]
-[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/red_viper_death.wav" id="7_death"]
+[ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/vaskari_raptor_hurt.wav" id="6_hurt"]
+[ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/vaskari_raptor_death.wav" id="7_death"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="8_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="9_burn"]
 
