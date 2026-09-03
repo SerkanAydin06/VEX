@@ -1,0 +1,87 @@
+name: Temporary Enemy Visual Callback Dedupe
+
+on:
+  push:
+    branches:
+      - chatgpt/enemy-visual-callback-dedupe-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Centralize common visual frame callback
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          base_path = Path("scripts/actors/enemy_base.gd")
+          combatant_path = Path("scripts/actors/enemy_combatant_base.gd")
+          lunge_path = Path("scripts/actors/enemy_lunge_base.gd")
+          audit_path = Path("tests/enemy_script_architecture_audit.py")
+
+          def remove_function(source: str, name: str) -> str:
+              matches = list(re.finditer(r"(?m)^func\s+([A-Za-z0-9_]+)\b", source))
+              target_index = next((i for i, match in enumerate(matches) if match.group(1) == name), None)
+              assert target_index is not None, name
+              start = matches[target_index].start()
+              end = matches[target_index + 1].start() if target_index + 1 < len(matches) else len(source)
+              while start > 0 and source[start - 1] == "\n":
+                  start -= 1
+                  if start == 0 or source[start - 1] != "\n":
+                      break
+              return source[:start] + "\n\n" + source[end:]
+
+          base = base_path.read_text(encoding="utf-8")
+          assert "func _on_visual_frame_changed(" not in base
+          marker = "func _horizontal_distance(first: Vector3, second: Vector3) -> float:\n"
+          assert marker in base
+          callback = (
+              "func _on_visual_frame_changed() -> void:\n"
+              "\t_apply_frame_ground_offset()\n\n\n"
+          )
+          base = base.replace(marker, callback + marker, 1)
+          base_path.write_text(base, encoding="utf-8")
+
+          for path in (combatant_path, lunge_path):
+              source = path.read_text(encoding="utf-8")
+              source = remove_function(source, "_on_visual_frame_changed")
+              path.write_text(source, encoding="utf-8")
+
+          audit = audit_path.read_text(encoding="utf-8")
+          anchor = 'for shared_animation_helper in ["_has_animation", "_get_animation_duration"]:\n'
+          assert anchor in audit
+          addition = (
+              'assert re.search(r"(?m)^func _on_visual_frame_changed\\b", enemy_base)\n'
+              'assert not re.search(r"(?m)^func _on_visual_frame_changed\\b", combatant_base)\n'
+              'assert not re.search(r"(?m)^func _on_visual_frame_changed\\b", lunge_base)\n\n'
+          )
+          audit = audit.replace(anchor, addition + anchor, 1)
+          audit_path.write_text(audit, encoding="utf-8")
+          PY
+      - name: Run every Python audit
+        shell: bash
+        run: |
+          status=0
+          while IFS= read -r audit; do
+            echo "::group::$audit"
+            python "$audit" || status=1
+            echo "::endgroup::"
+          done < <(find tests -maxdepth 1 -name '*_audit.py' -print | sort)
+          exit "$status"
+      - name: Commit clean branch result
+        shell: bash
+        run: |
+          rm .github/workflows/tmp_enemy_visual_callback_dedupe.yml
+          git config user.name "SerkanAydin06"
+          git config user.email "srknydn88@gmail.com"
+          git add scripts/actors/enemy_base.gd scripts/actors/enemy_combatant_base.gd scripts/actors/enemy_lunge_base.gd tests/enemy_script_architecture_audit.py .github/workflows/tmp_enemy_visual_callback_dedupe.yml
+          git commit -m "Centralize common enemy visual callback"
+          git push origin HEAD:chatgpt/enemy-visual-callback-dedupe-20260903
