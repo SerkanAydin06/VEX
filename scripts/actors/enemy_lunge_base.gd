@@ -299,7 +299,7 @@ func _physics_process(delta: float) -> void:
 		return
 	_exit_dormant_mode()
 
-	_apply_gravity(delta)
+	_apply_gravity(delta, floor_stick_velocity)
 	_detour_remaining = maxf(0.0, _detour_remaining - delta)
 
 	# Başlamış saldırı hasar tepkisinden önceliklidir; vurulmak hamleyi veya
@@ -588,12 +588,6 @@ func _face_player() -> void:
 	if _player == null or not is_instance_valid(_player):
 		return
 	_face_position(_player.global_position)
-
-
-func _reset_search_probe() -> void:
-	_search_probe_index = 0
-	_search_probe_target = Vector3.ZERO
-	_has_search_probe = false
 
 
 func _advance_search_probe() -> void:
@@ -1062,13 +1056,6 @@ func _place_corpse_visual_on_floor() -> void:
 	animated_sprite.position.y = corpse_visual_y + corpse_floor_clearance
 
 
-func _apply_gravity(delta: float) -> void:
-	if not is_on_floor():
-		velocity.y -= _gravity * delta
-	else:
-		velocity.y = floor_stick_velocity
-
-
 func _should_use_dormant_mode() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
@@ -1103,7 +1090,7 @@ func _apply_dormant_physics(delta: float) -> void:
 	if is_on_floor():
 		velocity.y = floor_stick_velocity
 		return
-	_apply_gravity(delta)
+	_apply_gravity(delta, floor_stick_velocity)
 	move_and_slide()
 
 

@@ -433,7 +433,7 @@ func _physics_process(delta: float) -> void:
 	_path_refresh_remaining -= delta
 	_update_perception(delta)
 	_update_behavior(delta)
-	_apply_gravity(delta)
+	_apply_gravity(delta, floor_stick_velocity)
 	move_and_slide()
 
 	if get_slide_collision_count() > 0:
@@ -851,12 +851,6 @@ func _begin_search() -> void:
 	_search_remaining = search_duration
 	_reset_search_probe()
 	_advance_search_probe()
-
-
-func _reset_search_probe() -> void:
-	_search_probe_index = 0
-	_search_probe_target = Vector3.ZERO
-	_has_search_probe = false
 
 
 func _advance_search_probe() -> void:
@@ -1361,13 +1355,6 @@ func _is_observer_behind_enemy() -> bool:
 	)
 
 
-func _apply_gravity(delta: float) -> void:
-	if not is_on_floor():
-		velocity.y -= _gravity * delta
-	else:
-		velocity.y = floor_stick_velocity
-
-
 func _should_use_dormant_mode() -> bool:
 	if _player == null or not is_instance_valid(_player):
 		return false
@@ -1406,7 +1393,7 @@ func _apply_dormant_physics(delta: float) -> void:
 	if is_on_floor():
 		velocity.y = floor_stick_velocity
 		return
-	_apply_gravity(delta)
+	_apply_gravity(delta, floor_stick_velocity)
 	move_and_slide()
 
 
