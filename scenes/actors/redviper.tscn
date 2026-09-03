@@ -1,135 +1,151 @@
 [gd_scene format=3 uid="uid://d0if1xpxh6no2"]
 
-[ext_resource type="Script" uid="uid://b7pixtku56b8v" path="res://scripts/actors/redviper.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b7pixtku56b8v" path="res://scripts/actors/vaskari_raptor.gd" id="1_script"]
 [ext_resource type="AudioStream" uid="uid://di0tx7433deim" path="res://assets/audio/red_viper_hurt.wav" id="5_1tqjx"]
-[ext_resource type="Texture2D" uid="uid://br7j8yy64bf7x" path="res://assets/enemies/redviper/redviper_spritesheet.png" id="5_sheet"]
+[ext_resource type="Texture2D" uid="uid://bmbm2fkwpryrx" path="res://assets/enemies/vaskari_raptor/vaskari_raptor_character_spritesheet.png" id="5_sheet"]
 [ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/red_viper_death.wav" id="6_1tqjx"]
 [ext_resource type="AudioStream" uid="uid://c34bk383sd68p" path="res://assets/audio/red_viper_attack.wav" id="7_1tqjx"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="29_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape_redviper"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_vaskari_raptor"]
 radius = 0.42
 height = 1.8
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1tqjx"]
-atlas = ExtResource("5_sheet")
-region = Rect2(0, 0, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7yq6y"]
-atlas = ExtResource("5_sheet")
-region = Rect2(341, 0, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ehe1p"]
-atlas = ExtResource("5_sheet")
-region = Rect2(682, 0, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2x2pl"]
-atlas = ExtResource("5_sheet")
-region = Rect2(1023, 0, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_de0fb"]
-atlas = ExtResource("5_sheet")
-region = Rect2(1364, 0, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lxacd"]
-atlas = ExtResource("5_sheet")
-region = Rect2(1705, 0, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_428la"]
-atlas = ExtResource("5_sheet")
-region = Rect2(0, 512, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0nmdr"]
-atlas = ExtResource("5_sheet")
-region = Rect2(341, 512, 341, 512)
-
 [sub_resource type="AtlasTexture" id="Atlas_idle1"]
 atlas = ExtResource("5_sheet")
-region = Rect2(682, 512, 341, 512)
+region = Rect2(0, 0, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle2"]
 atlas = ExtResource("5_sheet")
-region = Rect2(1023, 512, 341, 512)
+region = Rect2(341, 0, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle3"]
 atlas = ExtResource("5_sheet")
-region = Rect2(1364, 512, 341, 512)
+region = Rect2(682, 0, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle4"]
 atlas = ExtResource("5_sheet")
-region = Rect2(1705, 512, 341, 512)
+region = Rect2(1023, 0, 341, 512)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
+[sub_resource type="AtlasTexture" id="Atlas_walk1"]
+atlas = ExtResource("5_sheet")
+region = Rect2(0, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk2"]
+atlas = ExtResource("5_sheet")
+region = Rect2(341, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk3"]
+atlas = ExtResource("5_sheet")
+region = Rect2(682, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk4"]
+atlas = ExtResource("5_sheet")
+region = Rect2(1023, 512, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_attack1"]
 atlas = ExtResource("5_sheet")
 region = Rect2(0, 1024, 341, 512)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
+[sub_resource type="AtlasTexture" id="Atlas_attack2"]
 atlas = ExtResource("5_sheet")
 region = Rect2(341, 1024, 341, 512)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
+[sub_resource type="AtlasTexture" id="Atlas_attack3"]
 atlas = ExtResource("5_sheet")
 region = Rect2(682, 1024, 341, 512)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
+[sub_resource type="AtlasTexture" id="Atlas_attack4"]
 atlas = ExtResource("5_sheet")
 region = Rect2(1023, 1024, 341, 512)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ve5jg"]
-atlas = ExtResource("5_sheet")
-region = Rect2(1364, 1024, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ax4vh"]
-atlas = ExtResource("5_sheet")
-region = Rect2(1705, 1024, 341, 512)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dtmfn"]
+[sub_resource type="AtlasTexture" id="Atlas_death1"]
 atlas = ExtResource("5_sheet")
 region = Rect2(0, 1536, 341, 512)
+filter_clip = true
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_i6r1v"]
+[sub_resource type="AtlasTexture" id="Atlas_death2"]
 atlas = ExtResource("5_sheet")
 region = Rect2(341, 1536, 341, 512)
+filter_clip = true
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_m2ndl"]
+[sub_resource type="AtlasTexture" id="Atlas_death3"]
 atlas = ExtResource("5_sheet")
 region = Rect2(682, 1536, 341, 512)
+filter_clip = true
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_f0yc1"]
+[sub_resource type="AtlasTexture" id="Atlas_death4"]
 atlas = ExtResource("5_sheet")
 region = Rect2(1023, 1536, 341, 512)
+filter_clip = true
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xyqky"]
+[sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
 atlas = ExtResource("5_sheet")
-region = Rect2(1364, 1536, 341, 512)
+region = Rect2(0, 2048, 341, 512)
+filter_clip = true
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_golj7"]
+[sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
 atlas = ExtResource("5_sheet")
-region = Rect2(1705, 1536, 341, 512)
+region = Rect2(341, 2048, 341, 512)
+filter_clip = true
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_redviper"]
+[sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
+atlas = ExtResource("5_sheet")
+region = Rect2(682, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
+atlas = ExtResource("5_sheet")
+region = Rect2(1023, 2048, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
+atlas = ExtResource("5_sheet")
+region = Rect2(0, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back2"]
+atlas = ExtResource("5_sheet")
+region = Rect2(341, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back3"]
+atlas = ExtResource("5_sheet")
+region = Rect2(682, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_walk_back4"]
+atlas = ExtResource("5_sheet")
+region = Rect2(1023, 2560, 341, 512)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vaskari_raptor"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1tqjx")
+"texture": SubResource("Atlas_attack1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_7yq6y")
+"texture": SubResource("Atlas_attack2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ehe1p")
+"texture": SubResource("Atlas_attack3")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_2x2pl")
+"texture": SubResource("Atlas_attack4")
 }],
 "loop": 0,
 "name": &"attack",
@@ -137,16 +153,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_de0fb")
+"texture": SubResource("Atlas_death1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lxacd")
+"texture": SubResource("Atlas_death2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_428la")
+"texture": SubResource("Atlas_death3")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0nmdr")
+"texture": SubResource("Atlas_death4")
 }],
 "loop": 0,
 "name": &"death",
@@ -188,16 +204,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ve5jg")
+"texture": SubResource("Atlas_walk1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ax4vh")
+"texture": SubResource("Atlas_walk2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dtmfn")
+"texture": SubResource("Atlas_walk3")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_i6r1v")
+"texture": SubResource("Atlas_walk4")
 }],
 "loop": 1,
 "name": &"walk",
@@ -205,29 +221,29 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_m2ndl")
+"texture": SubResource("Atlas_walk_back1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_f0yc1")
+"texture": SubResource("Atlas_walk_back2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_xyqky")
+"texture": SubResource("Atlas_walk_back3")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_golj7")
+"texture": SubResource("Atlas_walk_back4")
 }],
 "loop": 1,
 "name": &"walk_back",
 "speed": 7.0
 }]
 
-[node name="RedViper" type="CharacterBody3D" unique_id=2011380793]
+[node name="VaskariRaptor" type="CharacterBody3D" unique_id=2011380793]
 collision_layer = 4
 collision_mask = 15
 floor_snap_length = 0.3
 safe_margin = 0.06
 script = ExtResource("1_script")
-enemy_id = &"redviper"
+enemy_id = &"vaskari_raptor"
 combat_role = 0
 maximum_health = 140
 difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)
@@ -265,7 +281,7 @@ burn_smoke_duration = 7.5
 burn_smoke_alpha = 0.12
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2122796633]
-shape = SubResource("CapsuleShape_redviper")
+shape = SubResource("CapsuleShape_vaskari_raptor")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=627707926]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25e-05, 0)
@@ -274,7 +290,7 @@ pixel_size = 0.003515713
 billboard = 2
 shaded = true
 alpha_cut = 1
-sprite_frames = SubResource("SpriteFrames_redviper")
+sprite_frames = SubResource("SpriteFrames_vaskari_raptor")
 animation = &"idle"
 autoplay = "idle"
 frame_progress = 0.031359572
