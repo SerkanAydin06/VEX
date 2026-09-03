@@ -1,0 +1,56 @@
+name: Temporary Enemy Identical Helper Scan
+
+on:
+  push:
+    branches:
+      - chatgpt/enemy-identical-helper-scan-20260903
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Find identical Combatant/Lunge functions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = {
+              "combatant": Path("scripts/actors/enemy_combatant_base.gd"),
+              "lunge": Path("scripts/actors/enemy_lunge_base.gd"),
+          }
+
+          def funcs(path):
+              text = path.read_text(encoding="utf-8")
+              matches = list(re.finditer(r"(?m)^func\s+([A-Za-z0-9_]+)\b", text))
+              out = {}
+              for i, m in enumerate(matches):
+                  end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+                  body = text[m.start():end].strip()
+                  normalized = "\n".join(line.rstrip() for line in body.splitlines() if line.strip())
+                  out[m.group(1)] = normalized
+              return out
+
+          parsed = {name: funcs(path) for name, path in files.items()}
+          common = sorted(set(parsed["combatant"]) & set(parsed["lunge"]))
+          all_scripts = "\n".join(p.read_text(encoding="utf-8") for p in Path("scripts").rglob("*.gd"))
+
+          print("===== EXACT IDENTICAL COMMON FUNCTIONS =====")
+          for name in common:
+              if parsed["combatant"][name] != parsed["lunge"][name]:
+                  continue
+              occurrences = len(re.findall(rf"\b{re.escape(name)}\s*\(", all_scripts))
+              print(f"{name} | script call/def occurrences={occurrences}")
+              print(parsed["combatant"][name])
+              print("---")
+
+          print("===== COMMON NAMES WITH DIFFERENT BODIES =====")
+          for name in common:
+              if parsed["combatant"][name] == parsed["lunge"][name]:
+                  continue
+              print(name)
+          PY
