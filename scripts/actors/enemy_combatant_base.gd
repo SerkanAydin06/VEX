@@ -37,14 +37,6 @@ enum State {
 @export_range(0.0, 4.0, 0.05) var gravity_scale := 1.0
 ## Eğimlerde gövdeyi zemine bağlı tutan aşağı yönlü hızdır.
 @export_range(-5.0, 0.0, 0.05) var floor_stick_velocity := -0.1
-## zemin çarpışma katmanları kontrolünde dikkate alınacak fizik katmanlarıdır.
-@export_flags_3d_physics var floor_collision_mask := 1
-## Yaratığın zemin oturtma en yüksek düzeltme mesafesi ayarını belirler.
-@export_range(0.1, 5.0, 0.1) var floor_snap_max_correction := 2.0
-## zemin oturtma ışın başlangıç yükseklik değeridir (metre).
-@export_range(0.0, 2.0, 0.05) var floor_snap_ray_start_height := 0.5
-## Yaratığın zemin oturtma ışın ek derinlik ayarını belirler.
-@export_range(0.0, 4.0, 0.1) var floor_snap_ray_extra_depth := 2.0
 ## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
 @export_storage var patrol_offset := Vector3(0, 0, 3.0)
 ## Eski sahnelerle veri uyumluluğu içindir; sabit bekleme davranışında kullanılmaz.
@@ -122,10 +114,6 @@ enum State {
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 14.0
 ## Ses yüksekliğine uygulanan çarpandır; yükseldikçe işitme menzili artar.
 @export_range(0.1, 2.0, 0.05) var hearing_loudness_scale := 1.0
-## ses engeli çarpışma katmanları kontrolünde dikkate alınacak fizik katmanlarıdır.
-@export_flags_3d_physics var acoustic_collision_mask := 1
-## ses engeli yoklama yükseklik değeridir (metre).
-@export_range(0.0, 3.0, 0.05) var acoustic_probe_height := 0.8
 ## Doğrudan alarm oluşturacak en düşük ses yüksekliğidir.
 @export_range(0.0, 2.0, 0.05) var loud_noise_alert_threshold := 0.9
 ## kafa vuruşu yükseklik oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
@@ -137,28 +125,6 @@ enum State {
 @export var ranged_visibility_sampling_enabled := true
 ## Açıksa menzilli yaratık görüş kapandığında daha açık bir konuma geçer.
 @export var cover_reposition_enabled := true
-## görünürlük dikey örnekleme açıklığı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.1, 1.0, 0.05) var visibility_vertical_span_scale := 0.55
-## Yaratığın görünürlük dikey örnekleme açıklığı en düşük ayarını belirler.
-@export_range(0.0, 1.0, 0.05) var visibility_vertical_span_min := 0.20
-## Yaratığın görünürlük dikey örnekleme açıklığı en yüksek ayarını belirler.
-@export_range(0.0, 2.0, 0.05) var visibility_vertical_span_max := 0.68
-## görünürlük yan örnekleme açıklığı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.1, 1.0, 0.05) var visibility_lateral_span_scale := 0.82
-## Yaratığın görünürlük yan örnekleme açıklığı en düşük ayarını belirler.
-@export_range(0.0, 1.0, 0.05) var visibility_lateral_span_min := 0.15
-## Yaratığın görünürlük yan örnekleme açıklığı en yüksek ayarını belirler.
-@export_range(0.0, 1.0, 0.05) var visibility_lateral_span_max := 0.38
-## görünürlük omuz yükseklik oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.01) var visibility_shoulder_height_ratio := 0.08
-## görünürlük alt gövde oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.05) var visibility_lower_body_ratio := 0.45
-## çömelmiş hedef yükseklik çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.5, 0.05) var crouched_target_height_scale := 0.50
-## çömelmiş hedef en düşük yükseklik değeridir (metre).
-@export_range(-1.0, 1.0, 0.05) var crouched_target_min_height := -0.20
-## arama yoklama çapraz ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 2.0, 0.05) var search_probe_diagonal_weight := 0.85
 
 @export_category("04 - Saldırı")
 ## Normal saldırının zorluk çarpanından önceki temel hasarıdır.
@@ -247,28 +213,28 @@ enum State {
 @export var local_detour_lateral_multipliers := PackedFloat32Array([1.0, 1.8, 2.8, 4.0])
 ## yerel sapma ileri çarpanları ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export var local_detour_forward_multipliers := PackedFloat32Array([0.0, 0.75, 1.5])
-## yerel sapma ilerleme ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 4.0, 0.05) var local_detour_progress_weight := 1.5
-## yerel sapma mesafe ceza ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.01) var local_detour_distance_penalty := 0.08
-## yerel sapma doğrudan rota bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 20.0, 0.1) var local_detour_direct_path_bonus := 8.0
-## yerel sapma süreklilik bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 3.0, 0.05) var local_detour_persistence_bonus := 0.45
+# yerel sapma ilerleme ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var local_detour_progress_weight := 1.5
+# yerel sapma mesafe ceza ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var local_detour_distance_penalty := 0.08
+# yerel sapma doğrudan rota bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var local_detour_direct_path_bonus := 8.0
+# yerel sapma süreklilik bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var local_detour_persistence_bonus := 0.45
 
 @export_category("05B - Cover Yeniden Konumlanma")
-## siper çapraz mesafe çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(1.0, 3.0, 0.05) var cover_diagonal_distance_scale := 1.35
-## siper ileri mesafe çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 2.0, 0.05) var cover_forward_distance_scale := 0.35
-## siper görünürlük puan ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 10.0, 0.1) var cover_visibility_score_weight := 4.0
-## siper mesafe puan ceza ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 1.0, 0.01) var cover_distance_score_penalty := 0.08
-## siper eşik puan bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-@export_range(0.0, 10.0, 0.1) var cover_threshold_score_bonus := 2.0
-## siper başarısız yeniden deneme aralığı değeridir (saniye).
-@export_range(0.05, 2.0, 0.05) var cover_failed_retry_interval := 0.20
+# siper çapraz mesafe çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var cover_diagonal_distance_scale := 1.35
+# siper ileri mesafe çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var cover_forward_distance_scale := 0.35
+# siper görünürlük puan ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var cover_visibility_score_weight := 4.0
+# siper mesafe puan ceza ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var cover_distance_score_penalty := 0.08
+# siper eşik puan bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var cover_threshold_score_bonus := 2.0
+# siper başarısız yeniden deneme aralığı değeridir (saniye).
+var cover_failed_retry_interval := 0.20
 
 @export_category("06 - Performans")
 ## boşta algılama pay değeridir (metre).

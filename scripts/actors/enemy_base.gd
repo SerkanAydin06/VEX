@@ -22,6 +22,43 @@ const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd
 ## zorluk hazırlık çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
 @export var difficulty_windup_multipliers := PackedFloat32Array([1.20, 1.0, 0.90, 0.75])
 
+# Sahne bazında override edilmeyen ortak teknik AI geometrisi/maskeleri.
+# Bunlar gameplay tuning Inspector alanı değildir; iki davranış ailesi tek kaynağı kullanır.
+# zemin çarpışma katmanları kontrolünde dikkate alınacak fizik katmanlarıdır.
+var floor_collision_mask := 1
+# Yaratığın zemin oturtma en yüksek düzeltme mesafesi ayarını belirler.
+var floor_snap_max_correction := 2.0
+# zemin oturtma ışın başlangıç yükseklik değeridir (metre).
+var floor_snap_ray_start_height := 0.5
+# Yaratığın zemin oturtma ışın ek derinlik ayarını belirler.
+var floor_snap_ray_extra_depth := 2.0
+# ses engeli çarpışma katmanları kontrolünde dikkate alınacak fizik katmanlarıdır.
+var acoustic_collision_mask := 1
+# ses engeli yoklama yükseklik değeridir (metre).
+var acoustic_probe_height := 0.8
+# görünürlük dikey örnekleme açıklığı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var visibility_vertical_span_scale := 0.55
+# Yaratığın görünürlük dikey örnekleme açıklığı en düşük ayarını belirler.
+var visibility_vertical_span_min := 0.20
+# Yaratığın görünürlük dikey örnekleme açıklığı en yüksek ayarını belirler.
+var visibility_vertical_span_max := 0.68
+# görünürlük yan örnekleme açıklığı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var visibility_lateral_span_scale := 0.82
+# Yaratığın görünürlük yan örnekleme açıklığı en düşük ayarını belirler.
+var visibility_lateral_span_min := 0.15
+# Yaratığın görünürlük yan örnekleme açıklığı en yüksek ayarını belirler.
+var visibility_lateral_span_max := 0.38
+# görünürlük omuz yükseklik oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var visibility_shoulder_height_ratio := 0.08
+# görünürlük alt gövde oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var visibility_lower_body_ratio := 0.45
+# çömelmiş hedef yükseklik çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var crouched_target_height_scale := 0.50
+# çömelmiş hedef en düşük yükseklik değeridir (metre).
+var crouched_target_min_height := -0.20
+# arama yoklama çapraz ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
+var search_probe_diagonal_weight := 0.85
+
 # Combatant ve Lunge ailelerinin birebir ortak runtime state'i burada tek kez tanımlanır.
 # Aileye özgü state-machine alanları alt sınıflarda kalır.
 var health := 0

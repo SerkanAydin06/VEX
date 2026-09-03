@@ -27,7 +27,6 @@ SCHEMAS = {
         "02 - Hareket ve Sabit Bekleme",
         "03 - Algılama ve Takip",
         "03B - İşitme / Stealth",
-        "03C - Görüş ve Arama Örnekleme",
         "04 - Saldırı",
         "05 - Yol Bulma",
         "06 - Performans",

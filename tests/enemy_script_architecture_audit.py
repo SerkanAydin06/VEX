@@ -162,6 +162,45 @@ for state_name in shared_runtime_state:
     assert not re.search(pattern, combatant_base, re.M), ("combatant duplicate", state_name)
     assert not re.search(pattern, lunge_base, re.M), ("lunge duplicate", state_name)
 
+shared_internal_tuning = [
+    "floor_collision_mask", "floor_snap_max_correction",
+    "floor_snap_ray_start_height", "floor_snap_ray_extra_depth",
+    "acoustic_collision_mask", "acoustic_probe_height",
+    "visibility_vertical_span_scale", "visibility_vertical_span_min",
+    "visibility_vertical_span_max", "visibility_lateral_span_scale",
+    "visibility_lateral_span_min", "visibility_lateral_span_max",
+    "visibility_shoulder_height_ratio", "visibility_lower_body_ratio",
+    "crouched_target_height_scale", "crouched_target_min_height",
+    "search_probe_diagonal_weight",
+]
+for tuning_name in shared_internal_tuning:
+    pattern = rf"^var {re.escape(tuning_name)}(?:\b|:)"
+    assert re.search(pattern, enemy_base, re.M), tuning_name
+    assert not re.search(pattern, combatant_base, re.M), ("combatant duplicate", tuning_name)
+    assert not re.search(pattern, lunge_base, re.M), ("lunge duplicate", tuning_name)
+    assert not re.search(rf"@export[^\n]*\bvar {re.escape(tuning_name)}\b", enemy_base), tuning_name
+
+family_internal_tuning = [
+    "wall_normal_y_threshold", "local_detour_progress_weight",
+    "local_detour_distance_penalty", "local_detour_direct_path_bonus",
+    "local_detour_persistence_bonus", "cover_diagonal_distance_scale",
+    "cover_forward_distance_scale", "cover_visibility_score_weight",
+    "cover_distance_score_penalty", "cover_threshold_score_bonus",
+    "cover_failed_retry_interval",
+]
+for tuning_name in family_internal_tuning:
+    assert not re.search(rf"@export[^\n]*\bvar {re.escape(tuning_name)}\b", combatant_base + "\n" + lunge_base), tuning_name
+
+serialized_text = "\n".join(
+    path.read_text(encoding="utf-8", errors="ignore")
+    for serialized_root in [ROOT / "scenes", ROOT / "resources"]
+    if serialized_root.exists()
+    for path in serialized_root.rglob("*")
+    if path.suffix in {".tscn", ".tres"}
+)
+for tuning_name in shared_internal_tuning + family_internal_tuning:
+    assert not re.search(rf"(?m)^\s*{re.escape(tuning_name)}\s*=", serialized_text), tuning_name
+
 creature_script_paths = {
     enemy: f"res://scripts/actors/{enemy}.gd"
     for enemies in FAMILIES.values()
