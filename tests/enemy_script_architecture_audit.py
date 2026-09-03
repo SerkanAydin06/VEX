@@ -25,7 +25,7 @@ FAMILIES = {
         "crucible_warden",
     ],
     "enemy_lunge_performance_base.gd": [
-        "redviper",
+        "vaskari_raptor",
         "badredviper",
         "cinderhound",
         "vaskari_bulwark",
@@ -40,6 +40,13 @@ FAMILIES = {
     ],
 }
 
+# Vaskari Raptor kanonik script/kimlik adını kullanır. Büyük level sahnelerindeki
+# eski PackedScene yollarını ve instance kimliklerini kırmamak için actor scene
+# dosya yolu bu geçişte uyumluluk alias'ı olarak redviper.tscn kalır.
+SCENE_FILE_OVERRIDES = {
+    "vaskari_raptor": "redviper.tscn",
+}
+
 CHARACTER_CONTRACTS = {
     "ravager": {"combat_role": "2", "attack_range": "20.0", "attack_preferred_distance": "8.0"},
     "basalt_juggernaut": {"combat_role": "1", "maximum_health": "240", "attack_range": "15.0"},
@@ -50,7 +57,7 @@ CHARACTER_CONTRACTS = {
     "cinder_spitter": {"combat_role": "1", "maximum_health": "95", "attack_range": "14.0"},
     "coil_lancer": {"combat_role": "2", "maximum_health": "105", "attack_range": "22.0"},
     "spore_matriarch": {"combat_role": "1", "maximum_health": "165", "attack_range": "18.0"},
-    "redviper": {"combat_role": "0", "maximum_health": "140", "chase_speed": "6.4"},
+    "vaskari_raptor": {"combat_role": "0", "maximum_health": "140", "chase_speed": "6.4"},
     "badredviper": {"combat_role": "0", "maximum_health": "190", "attack_damage": "28"},
     "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.18"},
     "gorehorn": {"combat_role": "0", "maximum_health": "180", "attack_range": "12.0"},
@@ -240,7 +247,8 @@ for family_script, enemies in FAMILIES.items():
             extends_match.group(1),
         )
 
-        scene = read(SCENES / f"{enemy}.tscn")
+        scene_filename = SCENE_FILE_OVERRIDES.get(enemy, f"{enemy}.tscn")
+        scene = read(SCENES / scene_filename)
         own_script = creature_script_paths[enemy]
         assert re.search(
             rf'\[ext_resource type="Script"[^\n]*path="{re.escape(own_script)}"[^\n]*\]',
@@ -270,6 +278,6 @@ for base_name, base_source in [
     ("enemy_lunge_performance_base", lunge_performance),
     ("enemy_hybrid_base", hybrid_base),
 ]:
-    assert not re.search(r'class_name Vex(?:Ravager|RedViper)\b', base_source), base_name
+    assert not re.search(r'class_name Vex(?:Ravager|RedViper|VaskariRaptor)\b', base_source), base_name
 
 print("enemy script architecture audit passed")
