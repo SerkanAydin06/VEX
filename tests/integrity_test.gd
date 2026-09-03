@@ -466,6 +466,7 @@ func _check_creature_inspector_contract() -> void:
 				failures.append("Yaratık Inspector ayarı eksik: %s -> %s" % [scene_path, property_name])
 		if (
 			not scene_path.ends_with("vaskari_raptor.tscn")
+			and not scene_path.ends_with("vaskari_ravager.tscn")
 			and not scene_path.ends_with("cinderhound.tscn")
 			and not scene_path.ends_with("gorehorn.tscn")
 			and not scene_path.ends_with("vaskari_bulwark.tscn")
