@@ -2,6 +2,7 @@
 from collections import Counter
 from pathlib import Path
 import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -23,18 +24,20 @@ required_files = [
 for relative in required_files:
     assert (ROOT / relative).is_file(), relative
 
-legacy_red_viper = "red" + "viper"
-legacy_bad_red_viper = "bad" + legacy_red_viper
-legacy_red_viper_audio = "red" + "_viper"
+retired_color = "red"
+retired_creature = "viper"
+retired_compact = retired_color + retired_creature
+retired_bad_compact = "bad" + retired_compact
+retired_audio_stem = retired_color + "_" + retired_creature
 for removed in (
-    f"scenes/actors/{legacy_red_viper}.tscn",
-    f"scenes/actors/{legacy_bad_red_viper}.tscn",
-    f"scripts/actors/{legacy_bad_red_viper}.gd",
-    f"scripts/actors/{legacy_bad_red_viper}.gd.uid",
-    f"assets/enemies/{legacy_bad_red_viper}/{legacy_bad_red_viper}_spritesheet.png",
-    f"assets/audio/{legacy_red_viper_audio}_attack.wav",
-    f"assets/audio/{legacy_red_viper_audio}_hurt.wav",
-    f"assets/audio/{legacy_red_viper_audio}_death.wav",
+    f"scenes/actors/{retired_compact}.tscn",
+    f"scenes/actors/{retired_bad_compact}.tscn",
+    f"scripts/actors/{retired_bad_compact}.gd",
+    f"scripts/actors/{retired_bad_compact}.gd.uid",
+    f"assets/enemies/{retired_bad_compact}/{retired_bad_compact}_spritesheet.png",
+    f"assets/audio/{retired_audio_stem}_attack.wav",
+    f"assets/audio/{retired_audio_stem}_hurt.wav",
+    f"assets/audio/{retired_audio_stem}_death.wav",
 ):
     assert not (ROOT / removed).exists(), removed
 
@@ -118,4 +121,26 @@ assert "Vaskari Raptor" in enemies_doc
 assert "Vaskari Ravager" in enemies_doc
 assert "- **Görsel dil:** Koyu mor, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler." in enemies_doc
 
-print("vaskari raptor rename audit passed")
+# Reject any tracked path or UTF-8 text that reintroduces the retired identity.
+retired_needles = (
+    retired_color + retired_creature,
+    retired_color + "_" + retired_creature,
+    retired_color + "-" + retired_creature,
+    retired_color + " " + retired_creature,
+)
+tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT).decode().split("\0")
+for relative in tracked:
+    if not relative:
+        continue
+    lowered_path = relative.lower()
+    assert not any(needle in lowered_path for needle in retired_needles), relative
+    data = (ROOT / relative).read_bytes()
+    if b"\0" in data:
+        continue
+    try:
+        text = data.decode("utf-8").lower()
+    except UnicodeDecodeError:
+        continue
+    assert not any(needle in text for needle in retired_needles), relative
+
+print("vaskari raptor/ravager rename audit passed")
