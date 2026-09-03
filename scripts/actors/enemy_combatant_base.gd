@@ -1595,6 +1595,10 @@ func _clear_path() -> void:
 	_path_index = 0
 	_has_path_target = false
 
+func _on_visual_frame_changed() -> void:
+	_apply_frame_ground_offset()
+
+
 func _apply_frame_ground_offset() -> void:
 	if animated_sprite == null:
 		return

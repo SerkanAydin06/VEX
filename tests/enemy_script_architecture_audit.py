@@ -140,9 +140,11 @@ assert enemy_base.count('@export_category("01A - Ortak Kimlik ve Zorluk")') == 1
 assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
 
 
-assert re.search(r"(?m)^func _on_visual_frame_changed\b", enemy_base)
-assert not re.search(r"(?m)^func _on_visual_frame_changed\b", combatant_base)
-assert not re.search(r"(?m)^func _on_visual_frame_changed\b", lunge_base)
+# Frame callback ailede kalır: base sınıfın aileye özgü _apply_frame_ground_offset
+# hook'unu doğrudan çağırması Godot runtime class-resolution'ını bozar.
+assert not re.search(r"(?m)^func _on_visual_frame_changed\b", enemy_base)
+assert re.search(r"(?m)^func _on_visual_frame_changed\b", combatant_base)
+assert re.search(r"(?m)^func _on_visual_frame_changed\b", lunge_base)
 
 for shared_animation_helper in ["_has_animation", "_get_animation_duration"]:
     needle = f"func {shared_animation_helper}("
