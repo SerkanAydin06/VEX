@@ -125,7 +125,7 @@ func _resolve_enemy_door_step(target_position: Vector3) -> Vector3:
 	)
 
 
-func _is_observer_behind_enemy() -> bool:
+func _is_observer_behind_enemy(back_view_threshold_value: float) -> bool:
 	var physics_frame := Engine.get_physics_frames()
 	var cache_frames := 4
 	if _player != null and is_instance_valid(_player):
@@ -134,5 +134,5 @@ func _is_observer_behind_enemy() -> bool:
 	if physics_frame - _perf_observer_frame < cache_frames:
 		return _perf_observer_behind
 	_perf_observer_frame = physics_frame
-	_perf_observer_behind = super._is_observer_behind_enemy()
+	_perf_observer_behind = super._is_observer_behind_enemy(back_view_threshold_value)
 	return _perf_observer_behind
