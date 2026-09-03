@@ -13,36 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Find remaining shared helper dependencies
+      - name: Find crouched target-height dependency chain
         shell: bash
         run: |
           set -euo pipefail
           for symbol in \
-            _get_crouched_sight_target_height \
-            _apply_frame_ground_offset \
-            _frame_offsets_for_animation \
-            _finalize_death_visual \
-            _show_burn_remains; do
+            crouched_sight_target_height \
+            crouched_target_height_scale \
+            crouched_target_min_height \
+            _get_crouched_sight_target_height; do
             echo "===== $symbol ====="
             grep -RIn --exclude-dir=.git -- "$symbol" scripts tests scenes resources || true
           done
-          echo "===== super calls ====="
-          grep -RIn --exclude-dir=.git -- 'super\._get_crouched_sight_target_height\|super\._apply_frame_ground_offset\|super\._frame_offsets_for_animation\|super\._finalize_death_visual\|super\._show_burn_remains' scripts tests || true
-          echo "===== function snippets ====="
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          for filename in ["scripts/actors/enemy_combatant_base.gd", "scripts/actors/enemy_lunge_base.gd"]:
-              text = Path(filename).read_text(encoding="utf-8")
-              print(f"--- {filename} ---")
-              matches = list(re.finditer(r"(?m)^func\s+([A-Za-z0-9_]+)\b", text))
-              by_name = {m.group(1): i for i, m in enumerate(matches)}
-              for name in ["_get_crouched_sight_target_height", "_apply_frame_ground_offset", "_frame_offsets_for_animation", "_finalize_death_visual", "_show_burn_remains"]:
-                  if name not in by_name:
-                      continue
-                  i = by_name[name]
-                  start = matches[i].start()
-                  end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
-                  print(text[start:end].rstrip())
-                  print()
-          PY
