@@ -41,13 +41,14 @@ jobs:
           needle = 'print("vaskari raptor rename audit passed")\n'
           assert needle in audit
           assert "enemies_doc =" not in audit
-          checks = '''enemies_doc = (ROOT / "Enemies_VEX.md").read_text(encoding="utf-8")
-assert re.search(r"(?<![A-Za-z0-9_])RedViper(?![A-Za-z0-9_])", enemies_doc) is None
-assert "Vaskari Raptor" in enemies_doc
-assert "BadRedViper" in enemies_doc
-assert "- **Görsel dil:** Koyu mor, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler." in enemies_doc
-
-'''
+          check_lines = [
+              'enemies_doc = (ROOT / "Enemies_VEX.md").read_text(encoding="utf-8")',
+              'assert re.search(r"(?<![A-Za-z0-9_])RedViper(?![A-Za-z0-9_])", enemies_doc) is None',
+              'assert "Vaskari Raptor" in enemies_doc',
+              'assert "BadRedViper" in enemies_doc',
+              'assert "- **Görsel dil:** Koyu mor, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler." in enemies_doc',
+          ]
+          checks = "\n".join(check_lines) + "\n\n"
           audit = audit.replace(needle, checks + needle, 1)
           audit_path.write_text(audit, encoding="utf-8")
           PY
