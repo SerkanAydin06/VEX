@@ -125,6 +125,43 @@ for shared_difficulty_setting in [
 
 assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
 
+shared_runtime_state = [
+    "health",
+    "_spawn_position",
+    "_facing_direction",
+    "_attack_locked",
+    "_gravity",
+    "_player",
+    "_sight_check_remaining",
+    "_last_seen_position",
+    "_search_remaining",
+    "_search_probe_index",
+    "_search_probe_target",
+    "_has_search_probe",
+    "_damage_reaction_remaining",
+    "_forced_damage_target",
+    "_has_forced_damage_target",
+    "_forced_damage_best_distance",
+    "_forced_damage_stall_remaining",
+    "_forced_damage_commit_remaining",
+    "_runtime_maximum_health",
+    "_runtime_attack_damage",
+    "_runtime_move_speed",
+    "_runtime_chase_speed",
+    "_runtime_detection_range",
+    "_runtime_pursuit_range",
+    "_runtime_attack_cooldown",
+    "_runtime_attack_windup",
+    "_dormant_active",
+    "_burn_remains",
+    "_visual_base_y",
+]
+for state_name in shared_runtime_state:
+    pattern = rf"^var {re.escape(state_name)}(?:\b|:)"
+    assert re.search(pattern, enemy_base, re.M), state_name
+    assert not re.search(pattern, combatant_base, re.M), ("combatant duplicate", state_name)
+    assert not re.search(pattern, lunge_base, re.M), ("lunge duplicate", state_name)
+
 creature_script_paths = {
     enemy: f"res://scripts/actors/{enemy}.gd"
     for enemies in FAMILIES.values()

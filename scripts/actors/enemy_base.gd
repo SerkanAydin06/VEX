@@ -22,6 +22,38 @@ const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd
 ## zorluk hazırlık çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
 @export var difficulty_windup_multipliers := PackedFloat32Array([1.20, 1.0, 0.90, 0.75])
 
+# Combatant ve Lunge ailelerinin birebir ortak runtime state'i burada tek kez tanımlanır.
+# Aileye özgü state-machine alanları alt sınıflarda kalır.
+var health := 0
+var _spawn_position := Vector3.ZERO
+var _facing_direction := Vector3.FORWARD
+var _attack_locked := false
+var _gravity := 20.0
+var _player: Node3D = null
+var _sight_check_remaining := 0.0
+var _last_seen_position := Vector3.ZERO
+var _search_remaining := 0.0
+var _search_probe_index := 0
+var _search_probe_target := Vector3.ZERO
+var _has_search_probe := false
+var _damage_reaction_remaining := 0.0
+var _forced_damage_target := Vector3.ZERO
+var _has_forced_damage_target := false
+var _forced_damage_best_distance := INF
+var _forced_damage_stall_remaining := 0.0
+var _forced_damage_commit_remaining := 0.0
+var _runtime_maximum_health := 1
+var _runtime_attack_damage := 1
+var _runtime_move_speed := 0.5
+var _runtime_chase_speed := 0.5
+var _runtime_detection_range := 1.0
+var _runtime_pursuit_range := 1.0
+var _runtime_attack_cooldown := 1.0
+var _runtime_attack_windup := 0.1
+var _dormant_active := false
+var _burn_remains: Node3D = null
+var _visual_base_y := 0.0
+
 var _damage_shake_remaining := 0.0
 var _damage_shake_duration := 0.0
 var _damage_shake_amount_pixels := 0.0
