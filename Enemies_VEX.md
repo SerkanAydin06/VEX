@@ -43,7 +43,7 @@ Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
 | 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | Basalt Juggernaut, Cinder Hound, Furnace Carrier, Crucible Warden |
 | 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager, Briar Skulker, Gorehorn, Spore Matriarch |
 | 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | Vaskari Raptor, Vaskari Ravager, Coil Lancer, Vaskari Bulwark, Venom Marshall |
-| 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw |
+| 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw, Husk Leech |
 | 5 | **Aether Loom** | Boşluk, yarık dokusu, akıllı enerji organizmaları ve uzamsal örüntüler | Voidweaver |
 
 ---
@@ -263,14 +263,14 @@ Bu evrenin yaratıkları Dünya’da özellikle karanlık koridorlarda, görüş
 - **Savaş kimliği:** Duvar çizgilerine yakın hareket eder, son anda açığa çıkar.
 - **Ayırt edici özellik:** Veilmaw’dan daha hızlı, daha kırılgan.
 
-### 3. Hush Leech
+### 3. Husk Leech
 
-**Durum:** Planlandı
+**Durum:** Mevcut
 
-- **Rol:** Destek / algı bozucu
+- **Rol:** Menzilli destek / algı bozucu
 - **Hikâye rolü:** Avın yön tayinini bozan düşük kütleli perde canlısı.
-- **Savaş kimliği:** Kısa süreli görsel bozulma, nişan dağıtma, perde alanı bırakma.
-- **Ayırt edici özellik:** Doğrudan yüksek hasar değil; çatışma ritmini bozar.
+- **Savaş kimliği:** Orta menzilden perde-zehir mermisi fırlatır; oyuncuya isabet ettiğinde ekranı kısa süreli animasyonlu toksik/perde dokusuyla kaplayarak görüşü belirgin biçimde azaltır.
+- **Ayırt edici özellik:** Doğrudan yüksek hasar yerine oyuncunun görüşünü ve çatışma ritmini bozar; tekrar isabet efekt süresini yeniler.
 
 ### 4. Shade Anchor
 
@@ -353,6 +353,7 @@ Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görüne
 | Vaskari Bulwark | Vaskari Lejyonu | Ağır yakın menzil ön hat birimi |
 | Venom Marshall | Vaskari Lejyonu | Menzilli destek ve müttefik güçlendirme birimi |
 | Veilmaw | Nhal Veil | Pusu avcısı |
+| Husk Leech | Nhal Veil | Menzilli algı bozucu / görüş engelleyici destek |
 | Basalt Juggernaut | Korvath Ocağı | Ağır zırhlı kırıcı |
 | Voidweaver | Aether Loom | Uzaysal menzilli tehdit |
 | Cinder Hound | Korvath Ocağı | Hızlı flank avcısı |
@@ -417,16 +418,16 @@ Düşman tasarım ve üretim sırası için öneri:
 9. Crucible Warden
 10. Briar Skulker
 11. Gorehorn
+12. Husk Leech
 
 ### Sonra aileleri tamamlayacak en gerekli yeni yaratıklar
-12. Coil Lancer
-13. Murk Stalker
-14. Parallax Drone
+13. Coil Lancer
+14. Murk Stalker
+15. Parallax Drone
 
 ### Daha sonra elit / destek / miniboss sınıfları
-15. Spore Matriarch
-16. Venom Marshal
-17. Hush Leech
+16. Spore Matriarch
+17. Venom Marshal
 18. Shade Anchor
 19. Rift Spindle
 20. Loom Herald
