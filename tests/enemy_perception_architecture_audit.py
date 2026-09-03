@@ -37,7 +37,6 @@ for contract in [
     "VexEnemyPerceptionRuntime.passes_crouch_detection(",
     "VexEnemyPerceptionRuntime.has_visual_contact(",
     "VexEnemyPerceptionRuntime.ranged_visibility_ratio_from(",
-    "VexEnemyPerceptionRuntime.crouched_sight_target_height(",
     "VexEnemyPerceptionRuntime.is_player_collider(",
     "VexEnemyPerceptionRuntime.should_hear_noise(",
     "VexEnemyPerceptionRuntime.should_broadcast_noise_alert(",
@@ -56,7 +55,6 @@ for contract in [
     "VexEnemyPerceptionRuntime.active_detection_range(",
     "VexEnemyPerceptionRuntime.passes_crouch_detection(",
     "VexEnemyPerceptionRuntime.has_visual_contact(",
-    "VexEnemyPerceptionRuntime.crouched_sight_target_height(",
     "VexEnemyPerceptionRuntime.should_hear_noise(",
     "VexEnemyPerceptionRuntime.should_broadcast_noise_alert(",
 ]:
@@ -91,8 +89,13 @@ for contract in [
         errors.append(f"Perception runtime contract eksik: {contract}")
 
 lunge_line_of_sight = function_body(lunge, "_check_line_of_sight(")
-lunge_crouched_height = function_body(lunge, "_get_crouched_sight_target_height(")
 lunge_noise_handler = function_body(lunge, "_on_noise_emitted(")
+
+for source_name, source in [("combatant", base), ("lunge", lunge)]:
+    if "_get_crouched_sight_target_height" in source:
+        errors.append(f"Ölü crouched target-height wrapper geri dönmüş: {source_name}")
+    if "VexEnemyPerceptionRuntime.crouched_sight_target_height(" in source:
+        errors.append(f"Kullanılmayan crouched target-height delegation geri dönmüş: {source_name}")
 
 can_see = function_body(base, "_can_see_player(")
 initial_view = function_body(parent, "_is_player_inside_initial_view(")
@@ -119,8 +122,6 @@ if "VexEnemyRuntimeUtils.has_visual_contact(" in lunge_line_of_sight:
     errors.append("Visual contact çözümü hâlâ lunge base içinde")
 if "randf()" in lunge_line_of_sight:
     errors.append("Crouch detection RNG hâlâ lunge base içinde")
-if 'get_node_or_null("CollisionShape3D")' in lunge_crouched_height:
-    errors.append("Crouched target-height çözümü hâlâ lunge base içinde")
 if "hearing_radius * maxf(" in lunge_noise_handler:
     errors.append("Hearing effective-range hesabı hâlâ lunge base içinde")
 if "loudness >= loud_noise_alert_threshold" in lunge_noise_handler:

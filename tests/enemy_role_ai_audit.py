@@ -42,7 +42,7 @@ common_inspector_settings = [
 internal_role_settings = [
     "acoustic_collision_mask", "acoustic_probe_height",
     "visibility_vertical_span_scale", "visibility_lateral_span_scale",
-    "crouched_target_height_scale", "search_probe_diagonal_weight",
+    "search_probe_diagonal_weight",
     "damage_pursuit_min_progress", "damage_pursuit_stall_timeout",
 ]
 for setting in internal_role_settings:

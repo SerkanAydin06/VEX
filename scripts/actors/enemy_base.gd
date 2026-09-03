@@ -61,10 +61,6 @@ var visibility_lateral_span_max := 0.38
 var visibility_shoulder_height_ratio := 0.08
 # görünürlük alt gövde oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var visibility_lower_body_ratio := 0.45
-# çömelmiş hedef yükseklik çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-var crouched_target_height_scale := 0.50
-# çömelmiş hedef en düşük yükseklik değeridir (metre).
-var crouched_target_min_height := -0.20
 # arama yoklama çapraz ağırlık ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var search_probe_diagonal_weight := 0.85
 # Hasar takibinde ilerleme sayılacak en düşük yatay kazanım.

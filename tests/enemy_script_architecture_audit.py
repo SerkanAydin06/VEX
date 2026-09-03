@@ -197,7 +197,6 @@ shared_internal_tuning = [
     "visibility_vertical_span_max", "visibility_lateral_span_scale",
     "visibility_lateral_span_min", "visibility_lateral_span_max",
     "visibility_shoulder_height_ratio", "visibility_lower_body_ratio",
-    "crouched_target_height_scale", "crouched_target_min_height",
     "search_probe_diagonal_weight",
     "damage_pursuit_min_progress", "damage_pursuit_stall_timeout",
 ]

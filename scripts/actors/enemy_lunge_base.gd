@@ -627,15 +627,6 @@ func _check_line_of_sight() -> bool:
 	)
 
 
-func _get_crouched_sight_target_height() -> float:
-	return VexEnemyPerceptionRuntime.crouched_sight_target_height(
-		_player,
-		sight_target_height,
-		crouched_target_height_scale,
-		crouched_target_min_height
-	)
-
-
 func _is_player_collider(collider: Node) -> bool:
 	if collider == null:
 		return false
