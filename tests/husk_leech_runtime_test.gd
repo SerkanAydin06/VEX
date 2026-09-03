@@ -22,8 +22,6 @@ func _spawn_projectile(damage: int, duration: float, peak_alpha: float) -> VexHu
 	add_child(projectile)
 	projectile.launch(Vector3.FORWARD, self, damage)
 
-	# Kısa headless regression çıkışında ses sürücüsü kaynak tutmasın. Canonical
-	# projectile sahnesindeki ses ayarı değişmez; yalnız test fixture'ı izole edilir.
 	var impact_audio := projectile.get_node_or_null("ImpactAudio") as AudioStreamPlayer3D
 	if impact_audio != null:
 		impact_audio.stop()
@@ -37,7 +35,7 @@ func _ready() -> void:
 	target.add_to_group("player")
 	add_child(target)
 
-	var first_projectile := _spawn_projectile(17, 1.0, 0.80)
+	var first_projectile := _spawn_projectile(17, 5.0, 0.80)
 	first_projectile.call("_on_body_entered", target)
 	assert(target.damage_taken == 17)
 	assert(target.last_source == self)
@@ -60,12 +58,19 @@ func _ready() -> void:
 	assert(atlas.region == Rect2(0.0, 0.0, 418.0, 235.0))
 	var overlay_instance_id := overlay.get_instance_id()
 
-	await get_tree().create_timer(0.20).timeout
-	assert(atlas.region.position.x >= 418.0)
+	# Gerçek zaman beklemeden 5 saniyelik sekansı elle ilerlet. İlk dört kare
+	# toplam 3 saniye (0.75 sn/kare), son dört kare toplam 2 saniye (0.5 sn/kare).
+	overlay.set_process(false)
+	overlay.call("_process", 2.99)
+	assert(atlas.region == Rect2(1254.0, 0.0, 418.0, 235.0))
+	overlay.call("_process", 0.01)
+	assert(atlas.region == Rect2(1672.0, 0.0, 418.0, 235.0))
+	overlay.call("_process", 1.99)
+	assert(atlas.region == Rect2(2926.0, 0.0, 418.0, 235.0))
 
-	# İkinci isabet yeni bir CanvasLayer üretmemeli; var olan ekran zehri aynı
-	# node üzerinde ilk frame'e dönüp yeni süre/alpha ile tazelenmeli.
-	var second_projectile := _spawn_projectile(11, 0.70, 0.65)
+	# İkinci isabet yeni CanvasLayer üretmemeli; aynı overlay ilk kareye dönüp
+	# yeniden tam 5 saniyelik sekansla başlamalı.
+	var second_projectile := _spawn_projectile(11, 5.0, 0.65)
 	second_projectile.call("_on_body_entered", target)
 	assert(target.damage_taken == 28)
 	assert(target.last_source == self)
@@ -85,8 +90,8 @@ func _ready() -> void:
 			overlay_count += 1
 	assert(overlay_count == 1)
 
-	# Refresh süresi bittikten sonra runtime UI kendini temizlemeli.
-	await get_tree().create_timer(0.90).timeout
+	refreshed_overlay.set_process(false)
+	refreshed_overlay.call("_process", 5.0)
 	await get_tree().process_frame
 	assert(target.get_node_or_null(OVERLAY_NAME) == null)
 
