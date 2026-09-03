@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://bhuskleechprj1"]
+
+[ext_resource type="Script" path="res://scripts/actors/husk_leech_projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/enemies/husk_leech/husk_leech_projectile_spritesheet.png" id="2_projectile"]
+[ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="3_impact_audio"]
+
+[sub_resource type="SphereShape3D" id="SphereShape_husk_leech_projectile"]
+radius = 0.26
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile_1"]
+atlas = ExtResource("2_projectile")
+filter_clip = true
+region = Rect2(0, 0, 1254, 1254)
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile_2"]
+atlas = ExtResource("2_projectile")
+filter_clip = true
+region = Rect2(1254, 0, 1254, 1254)
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile_3"]
+atlas = ExtResource("2_projectile")
+filter_clip = true
+region = Rect2(2508, 0, 1254, 1254)
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile_4"]
+atlas = ExtResource("2_projectile")
+filter_clip = true
+region = Rect2(3762, 0, 1254, 1254)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_projectile"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_projectile_1")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_2")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_3")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_4")}],
+"loop": true,
+"name": &"default",
+"speed": 11.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_impact"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_projectile_1")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_2")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_3")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_4")}],
+"loop": false,
+"name": &"default",
+"speed": 16.0
+}]
+
+[node name="HuskLeechProjectile" type="Area3D"]
+collision_layer = 0
+collision_mask = 11
+monitorable = false
+script = ExtResource("1_script")
+speed = 13.5
+lifetime = 4.0
+impact_surface_offset = 0.24
+light_pulse_amplitude = 0.34
+light_pulse_speed = 8.5
+impact_light_energy = 4.6
+impact_light_fade_duration = 0.25
+impact_start_scale_multiplier = 0.9
+impact_end_scale_multiplier = 1.1
+impact_scale_duration = 0.2
+impact_fade_delay = 0.12
+impact_fade_duration = 0.13
+venom_overlay_duration = 2.8
+venom_overlay_peak_alpha = 0.95
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape_husk_leech_projectile")
+
+[node name="Visual" type="AnimatedSprite3D" parent="."]
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_projectile")
+autoplay = "default"
+pixel_size = 0.00095
+texture_filter = 3
+alpha_cut = 1
+
+[node name="ImpactVisual" type="AnimatedSprite3D" parent="."]
+visible = false
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("SpriteFrames_impact")
+pixel_size = 0.00105
+texture_filter = 3
+alpha_cut = 1
+
+[node name="Light" type="OmniLight3D" parent="."]
+light_color = Color(0.34, 1, 0.16, 1)
+light_energy = 2.4
+omni_range = 3.6
+shadow_enabled = false
+shadow_bias = 0.02
+shadow_normal_bias = 0.35
+distance_fade_enabled = true
+distance_fade_begin = 18.0
+distance_fade_length = 5.0
+
+[node name="ImpactAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_impact_audio")
+volume_db = -3.0
+pitch_scale = 0.82
+bus = &"SFX"
+max_distance = 18.0
