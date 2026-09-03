@@ -44,6 +44,7 @@ scene = (ROOT / "scenes/actors/vaskari_raptor.tscn").read_text(encoding="utf-8")
 import_text = (ROOT / "assets/enemies/vaskari_raptor/vaskari_raptor_character_spritesheet.png.import").read_text(encoding="utf-8")
 ravager_script = (ROOT / "scripts/actors/vaskari_ravager.gd").read_text(encoding="utf-8")
 ravager_scene = (ROOT / "scenes/actors/vaskari_ravager.tscn").read_text(encoding="utf-8")
+integrity_test = (ROOT / "tests/integrity_test.gd").read_text(encoding="utf-8")
 
 assert "class_name VexVaskariRaptor" in script
 assert uid_text == "uid://b7pixtku56b8v"
@@ -57,6 +58,7 @@ assert 'uid="uid://bmbm2fkwpryrx"' in import_text
 assert "class_name VexVaskariRavager" in ravager_script
 assert '[node name="VaskariRavager" type="CharacterBody3D"' in ravager_scene
 assert 'enemy_id = &"vaskari_ravager"' in ravager_scene
+assert 'not scene_path.ends_with("vaskari_ravager.tscn")' in integrity_test
 
 regions = Counter(
     tuple(map(int, match))
