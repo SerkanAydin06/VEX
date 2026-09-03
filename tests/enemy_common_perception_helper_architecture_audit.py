@@ -4,6 +4,8 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = (ROOT / "scripts/actors/enemy_base.gd").read_text(encoding="utf-8")
 COMBATANT = (ROOT / "scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
 LUNGE = (ROOT / "scripts/actors/enemy_lunge_base.gd").read_text(encoding="utf-8")
+COMBATANT_PERF = (ROOT / "scripts/actors/enemy_combatant_performance_base.gd").read_text(encoding="utf-8")
+LUNGE_PERF = (ROOT / "scripts/actors/enemy_lunge_performance_base.gd").read_text(encoding="utf-8")
 
 errors: list[str] = []
 
@@ -23,6 +25,12 @@ for name, source in (("combatant", COMBATANT), ("lunge", LUNGE)):
         errors.append(f"{name} must pass scene-owned initial_view_angle to the parent helper")
     if "_is_observer_behind_enemy(back_view_threshold)" not in source:
         errors.append(f"{name} must pass scene-owned back_view_threshold to the parent helper")
+
+for name, source in (("combatant performance", COMBATANT_PERF), ("lunge performance", LUNGE_PERF)):
+    if "func _is_observer_behind_enemy(back_view_threshold_value: float) -> bool:" not in source:
+        errors.append(f"{name} must preserve the parameterized observer override signature")
+    if "super._is_observer_behind_enemy(back_view_threshold_value)" not in source:
+        errors.append(f"{name} must forward the scene-owned threshold through its cached super call")
 
 if errors:
     raise SystemExit("\n".join(errors))
