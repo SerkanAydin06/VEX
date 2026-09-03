@@ -130,6 +130,44 @@ func _scene_difficulty_multiplier(values: PackedFloat32Array) -> float:
 	return VexEnemyRuntimeUtils.difficulty_multiplier(values, GameState.active_difficulty)
 
 
+func _configure_common_runtime_stats(
+	maximum_health_value: int,
+	attack_damage_value: int,
+	move_speed_value: float,
+	chase_speed_value: float,
+	detection_range_value: float,
+	pursuit_range_value: float,
+	attack_cooldown_value: float,
+	attack_windup_value: float
+) -> float:
+	_runtime_maximum_health = maximum_health_value
+	_runtime_attack_damage = attack_damage_value
+	_runtime_move_speed = move_speed_value
+	_runtime_chase_speed = chase_speed_value
+	_runtime_detection_range = detection_range_value
+	_runtime_pursuit_range = pursuit_range_value
+	_runtime_attack_cooldown = attack_cooldown_value
+	_runtime_attack_windup = attack_windup_value
+	if not apply_difficulty_scaling:
+		return 1.0
+
+	var health_scale := _scene_difficulty_multiplier(difficulty_health_multipliers)
+	var damage_scale := _scene_difficulty_multiplier(difficulty_damage_multipliers)
+	var speed_scale := _scene_difficulty_multiplier(difficulty_speed_multipliers)
+	var detection_scale := _scene_difficulty_multiplier(difficulty_detection_multipliers)
+	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
+	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
+	_runtime_maximum_health = maxi(1, int(round(float(maximum_health_value) * health_scale)))
+	_runtime_attack_damage = maxi(1, int(round(float(attack_damage_value) * damage_scale)))
+	_runtime_move_speed = maxf(0.0, move_speed_value * speed_scale)
+	_runtime_chase_speed = maxf(0.0, chase_speed_value * speed_scale)
+	_runtime_detection_range = maxf(0.0, detection_range_value * detection_scale)
+	_runtime_pursuit_range = maxf(0.0, pursuit_range_value * detection_scale)
+	_runtime_attack_cooldown = maxf(0.01, attack_cooldown_value * cooldown_scale)
+	_runtime_attack_windup = maxf(0.0, attack_windup_value * windup_scale)
+	return speed_scale
+
+
 func _horizontal_distance(first: Vector3, second: Vector3) -> float:
 	return VexEnemyRuntimeUtils.horizontal_distance(first, second)
 
