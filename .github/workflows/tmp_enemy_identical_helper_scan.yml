@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Scan detour and cover export overrides
+      - name: Scan all detour and cover export overrides
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -21,17 +21,23 @@ jobs:
 
           combatant = Path("scripts/actors/enemy_combatant_base.gd").read_text(encoding="utf-8")
           candidates = []
-          for match in re.finditer(r"(?m)^@export(?:_[^\n]*)?[^\n]*\n(?:#.*\n)*var\s+([A-Za-z0-9_]+)", combatant):
-              name = match.group(1)
-              if "detour" in name or "cover" in name:
-                  candidates.append(name)
+          for line in combatant.splitlines():
+              if "@export" not in line or ("detour" not in line and "cover" not in line):
+                  continue
+              match = re.search(r"\bvar\s+([A-Za-z0-9_]+)", line)
+              if match:
+                  candidates.append(match.group(1))
 
           serialized = []
-          for path in list(Path("scenes").rglob("*.tscn")) + list(Path("resources").rglob("*.tres")):
-              try:
-                  serialized.append((path, path.read_text(encoding="utf-8")))
-              except UnicodeDecodeError:
-                  pass
+          for root in [Path("scenes"), Path("resources")]:
+              if not root.exists():
+                  continue
+              for suffix in ("*.tscn", "*.tres"):
+                  for path in root.rglob(suffix):
+                      try:
+                          serialized.append((path, path.read_text(encoding="utf-8")))
+                      except UnicodeDecodeError:
+                          pass
 
           print("===== DETOUR/COVER EXPORTED CANDIDATES =====")
           for name in sorted(set(candidates)):
@@ -43,9 +49,4 @@ jobs:
               print(f"{name}: overrides={len(hits)}")
               for hit in hits:
                   print(f"  {hit}")
-
-          print("===== SOURCE LINES =====")
-          for i, line in enumerate(combatant.splitlines(), 1):
-              if ("detour" in line or "cover" in line) and ("@export" in line or "var " in line):
-                  print(f"{i}: {line}")
           PY
