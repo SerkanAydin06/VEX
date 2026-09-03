@@ -256,7 +256,7 @@ func _ready() -> void:
 		float(ProjectSettings.get_setting("physics/3d/default_gravity", 20.0))
 		* gravity_scale
 	)
-	_snap_body_to_floor(floor_snap_max_correction)
+	_snap_body_to_floor(floor_snap_max_correction, floor_stick_velocity)
 
 	if GameState.was_enemy_defeated(enemy_id):
 		_restore_defeated_state()
@@ -856,30 +856,6 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 		)
 
 
-func _collision_floor_local_y() -> float:
-	return VexEnemyRuntimeUtils.collision_floor_local_y(collision_shape)
-
-
-func _snap_body_to_floor(max_correction: float) -> void:
-	if not is_inside_tree() or collision_shape == null or collision_shape.shape == null:
-		return
-	var ray_origin := global_position + Vector3.UP * floor_snap_ray_start_height
-	var ray_end := global_position + Vector3.DOWN * (max_correction + floor_snap_ray_extra_depth)
-	var query := PhysicsRayQueryParameters3D.create(
-		ray_origin,
-		ray_end,
-		floor_collision_mask,
-		[get_rid()]
-	)
-	query.collide_with_areas = false
-	var hit := get_world_3d().direct_space_state.intersect_ray(query)
-	if hit.is_empty():
-		return
-	var target_root_y := float(hit["position"].y) - _collision_floor_local_y()
-	if absf(target_root_y - global_position.y) > max_correction:
-		return
-	global_position.y = target_root_y
-	velocity.y = floor_stick_velocity
 
 
 
@@ -938,7 +914,7 @@ func _restore_defeated_state() -> void:
 	_lost_sight_remaining = 0.0
 	_search_remaining = 0.0
 	velocity = Vector3.ZERO
-	_snap_body_to_floor(floor_snap_max_correction)
+	_snap_body_to_floor(floor_snap_max_correction, floor_stick_velocity)
 	collision_shape.set_deferred("disabled", true)
 	set_collision_layer_value(3, false)
 	set_collision_mask_value(1, false)
@@ -988,7 +964,7 @@ func _die() -> void:
 	_lost_sight_remaining = 0.0
 	_search_remaining = 0.0
 	velocity = Vector3.ZERO
-	_snap_body_to_floor(floor_snap_max_correction)
+	_snap_body_to_floor(floor_snap_max_correction, floor_stick_velocity)
 	collision_shape.set_deferred("disabled", true)
 	set_collision_layer_value(3, false)
 	set_collision_mask_value(1, false)
