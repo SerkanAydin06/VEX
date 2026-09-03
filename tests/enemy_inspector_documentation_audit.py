@@ -10,7 +10,6 @@ ACTORS = ROOT / "scripts" / "actors"
 SCHEMAS = {
     "enemy_combatant_base.gd": [
         "01 - Kimlik, Can ve Zorluk",
-        "01B - Zorluk Çarpanları (Sahne)",
         "02 - Hareket ve Sabit Bekleme",
         "03 - Algılama ve Takip",
         "03B - İşitme / Stealth",
@@ -25,7 +24,6 @@ SCHEMAS = {
     ],
     "enemy_lunge_base.gd": [
         "01 - Kimlik, Can ve Zorluk",
-        "01B - Zorluk Çarpanları (Sahne)",
         "02 - Hareket ve Sabit Bekleme",
         "03 - Algılama ve Takip",
         "03B - İşitme / Stealth",
@@ -40,6 +38,7 @@ SCHEMAS = {
 }
 
 DOCUMENTED_EXPORT_FILES = [
+    "enemy_base.gd",
     *SCHEMAS,
     "warden_ability_settings.gd",
     "furnice_carrier_ability_settings.gd",
@@ -55,7 +54,9 @@ def read(name: str) -> str:
 
 
 enemy_base = read("enemy_base.gd")
-assert "@export" not in enemy_base, "enemy_base görünür Inspector sırasını yeniden bozar"
+assert re.findall(r'@export_category\("([^"]+)"\)', enemy_base) == [
+    "01B - Zorluk Çarpanları (Sahne)"
+], "enemy_base yalnız ortak zorluk tuning kategorisini sahiplenmeli"
 
 for filename, expected_categories in SCHEMAS.items():
     source = read(filename)
