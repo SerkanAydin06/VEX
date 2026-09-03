@@ -6,6 +6,7 @@ on:
       - refactor/enemy-common-floor-contact
     paths:
       - .github/workflows/temp_enemy_floor_contact_patch.yml
+      - .github/temp_apply_enemy_floor_contact_patch.py
 
 permissions:
   contents: write
