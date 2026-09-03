@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://chuskleechrt01" path="res://tests/husk_leech_runtime_test.gd" id="1_script"]
+
+[node name="HuskLeechRuntimeTest" type="Node"]
+script = ExtResource("1_script")
