@@ -1,0 +1,71 @@
+name: Temporary Internalize Technical Navigation
+
+on:
+  push:
+    branches:
+      - chatgpt/internalize-technical-navigation-20260903
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Apply technical navigation cleanup
+        run: python tools/tmp_internalize_technical_navigation.py
+      - name: Verify focused architecture audits
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tests/enemy_role_ai_audit.py
+          python tests/enemy_navigation_architecture_audit.py
+          python tests/enemy_lunge_combat_architecture_audit.py
+          python tests/enemy_combat_architecture_audit.py
+          python tests/enemy_door_passage_audit.py
+      - name: Verify technical fields and zero serialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '^var ranged_cover_reposition_refresh := 0.55$' scripts/actors/enemy_combatant_base.gd
+          grep -q '^var search_path_attempts := 4$' scripts/actors/enemy_combatant_base.gd
+          grep -q '^var detour_duration := 0.55$' scripts/actors/enemy_lunge_base.gd
+          ! grep -q 'patrol_reach_distance' scripts/actors/enemy_lunge_base.gd
+          for name in ranged_cover_reposition_refresh search_path_attempts detour_duration patrol_reach_distance; do
+            if grep -RIn --include='*.tscn' --include='*.tres' -E "^[[:space:]]*$name[[:space:]]*=" scenes resources 2>/dev/null; then
+              echo "::error::$name unexpectedly serialized"
+              exit 1
+            fi
+          done
+      - name: Install official Godot 4.7
+        env:
+          GODOT_URL: https://github.com/godotengine/godot-builds/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/godot.zip" "$GODOT_URL"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv "$RUNNER_TEMP/godot/Godot_v4.7-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          chmod +x "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Clean import and integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          import_log="$RUNNER_TEMP/godot-import.log"
+          godot --headless --editor --path . --quit 2>&1 | tee "$import_log"
+          ! grep -E 'ERROR:|invalid UID' "$import_log"
+          integrity_log="$RUNNER_TEMP/godot-integrity.log"
+          godot --headless --path . tests/integrity_test.tscn 2>&1 | tee "$integrity_log"
+          ! grep -E 'ERROR:|invalid UID' "$integrity_log"
+      - name: Commit clean package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm tools/tmp_internalize_technical_navigation.py .github/workflows/tmp_internalize_technical_navigation.yml
+          git config user.name "SerkanAydin06"
+          git config user.email "srknydn88@gmail.com"
+          git add scripts/actors/enemy_combatant_base.gd scripts/actors/enemy_lunge_base.gd tests/enemy_role_ai_audit.py tools/tmp_internalize_technical_navigation.py .github/workflows/tmp_internalize_technical_navigation.yml
+          git diff --cached --check
+          git commit -m "Internalize technical enemy navigation tuning"
+          git push
