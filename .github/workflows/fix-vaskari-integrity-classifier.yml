@@ -1,0 +1,39 @@
+name: Fix Vaskari integrity classifier
+
+on:
+  push:
+    branches:
+      - chore/finish-vaskari-rename
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Disambiguate Vaskari Ravager from ranged family
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("tests/integrity_test.gd")
+          text = path.read_text(encoding="utf-8")
+          old = '''\t\tif (\n\t\t\tnot scene_path.ends_with("vaskari_raptor.tscn")\n\t\t\tand not scene_path.ends_with("cinderhound.tscn")'''
+          new = '''\t\tif (\n\t\t\tnot scene_path.ends_with("vaskari_raptor.tscn")\n\t\t\tand not scene_path.ends_with("vaskari_ravager.tscn")\n\t\t\tand not scene_path.ends_with("cinderhound.tscn")'''
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f"expected exactly one integrity classifier block, found {count}")
+          path.write_text(text.replace(old, new, 1), encoding="utf-8", newline="")
+          PY
+          python3 tests/vaskari_raptor_rename_audit.py
+          git diff --check
+          git add tests/integrity_test.gd
+          git diff --cached --quiet && { echo "No classifier change found"; exit 1; }
+          git commit -m "Disambiguate Vaskari Ravager integrity checks"
+          git push origin HEAD
