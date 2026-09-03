@@ -193,6 +193,10 @@ func _get_animation_duration(animation_name: StringName) -> float:
 		return 0.0
 	return float(frame_count) / speed
 
+func _on_visual_frame_changed() -> void:
+	_apply_frame_ground_offset()
+
+
 func _horizontal_distance(first: Vector3, second: Vector3) -> float:
 	return VexEnemyRuntimeUtils.horizontal_distance(first, second)
 

@@ -851,15 +851,6 @@ func take_damage(amount: int, _hit_position := Vector3.ZERO, _source: Node = nul
 			hurt_shake_amount_pixels
 		)
 
-
-
-
-
-
-func _on_visual_frame_changed() -> void:
-	_apply_frame_ground_offset()
-
-
 func _apply_frame_ground_offset() -> void:
 	if animated_sprite == null:
 		return
