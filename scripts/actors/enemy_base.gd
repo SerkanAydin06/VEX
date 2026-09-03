@@ -53,10 +53,6 @@ var visibility_shoulder_height_ratio := 0.08
 # görünürlük alt gövde oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var visibility_lower_body_ratio := 0.45
 # çömelmiş hedef yükseklik çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-var visibility_shoulder_height_ratio := 0.08
-# görünürlük alt gövde oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
-var visibility_lower_body_ratio := 0.45
-# çömelmiş hedef yükseklik çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var crouched_target_height_scale := 0.50
 # çömelmiş hedef en düşük yükseklik değeridir (metre).
 var crouched_target_min_height := -0.20
