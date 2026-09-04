@@ -107,7 +107,7 @@ for scene_name, expected_color in PALETTE_CONTRACTS.items():
 # İsim standardı: oyuncuya dönük ad Furnace, geriye dönük dosya/ID ise furnice.
 assert "oyuncuya dönük ad **Furnace Carrier**" in enemies_doc
 assert "`furnice_carrier`" in enemies_doc
-assert "**Venom Marshall**" in enemies_doc
-assert "Venom Marshal`" not in enemies_doc
+assert "Doğru ad **Venom Marshall**dır" in enemies_doc
+assert "`Venom Marshal` kullanılmamalıdır" in enemies_doc
 
 print("enemy design document audit passed")
