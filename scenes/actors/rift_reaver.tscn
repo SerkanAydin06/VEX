@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" uid="uid://criftreaver01a" path="res://scripts/actors/rift_reaver.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://cysxas76a1jh3" path="res://assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png" id="2_sheet"]
-[ext_resource type="AudioStream" uid="uid://dpg7kfv4pqud7" path="res://assets/audio/void_weaver_attack.wav" id="3_attack"]
-[ext_resource type="AudioStream" uid="uid://du3qs6vkja5nu" path="res://assets/audio/void_weaver_hurt.wav" id="4_hurt"]
-[ext_resource type="AudioStream" uid="uid://cb1km2et21ycr" path="res://assets/audio/voidweaver_death.wav" id="5_death"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="6_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="7_burn"]
 
@@ -210,6 +207,10 @@ attack_frame_y_offsets = PackedFloat32Array(0.1076, 0.1035, 0.1035, 0.0953)
 death_frame_y_offsets = PackedFloat32Array(0.083, 0.0994, 0.0994, 0.0666)
 burn_remains_scene = ExtResource("7_burn")
 burn_remains_scale = 0.9
+burn_scorch_tint = Color(0.035, 0.15, 0.2, 0.95)
+burn_ember_tint = Color(0.12, 0.72, 0.92, 0.3)
+burn_ember_emission_energy = 0.18
+burn_smoke_enabled = false
 burn_smoke_duration = 7.0
 burn_smoke_alpha = 0.1
 
@@ -238,21 +239,18 @@ render_priority = -2
 texture = ExtResource("6_shadow")
 
 [node name="AttackAudio" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("3_attack")
 volume_db = -2.0
 pitch_scale = 0.92
 max_distance = 18.0
 bus = &"SFX"
 
 [node name="HurtAudio" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("4_hurt")
 volume_db = -2.5
 pitch_scale = 0.92
 max_distance = 18.0
 bus = &"SFX"
 
 [node name="DeathAudio" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource("5_death")
 volume_db = -1.0
 pitch_scale = 0.92
 max_distance = 20.0

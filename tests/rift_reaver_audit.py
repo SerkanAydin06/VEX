@@ -100,6 +100,8 @@ def packed_offsets(scene: str, property_name: str) -> list[float]:
 manifest = json.loads(read("assets/enemies/rift_reaver/rift_reaver_character_spritesheet_manifest.json"))
 scene = read("scenes/actors/rift_reaver.tscn")
 script = read("scripts/actors/rift_reaver.gd")
+audio_runtime = read("scripts/actors/rift_reaver_audio_runtime.gd")
+fx_runtime = read("scripts/effects/rift_reaver_fx.gd")
 metadata = read("assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png.import")
 sheet_path = ROOT / "assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png"
 
@@ -113,6 +115,81 @@ assert all(row["frame_count"] == 4 for row in manifest["rows"])
 assert "class_name VexRiftReaver" in script
 assert 'extends "res://scripts/actors/enemy_lunge_performance_base.gd"' in script
 assert "@export" not in script
+for token in [
+    'preload("res://scripts/actors/rift_reaver_audio_runtime.gd")',
+    'preload("res://scripts/effects/rift_reaver_fx.gd")',
+    "RiftReaverAudio.attack_stream()",
+    "RiftReaverAudio.hurt_stream()",
+    "RiftReaverAudio.death_stream()",
+    "RiftReaverFx.spawn_attack_start",
+    "RiftReaverFx.spawn_wake",
+    "RiftReaverFx.spawn_impact",
+    "RiftReaverFx.spawn_hurt",
+    "RiftReaverFx.spawn_death",
+    "WAKE_INTERVAL := 0.045",
+]:
+    assert token in script, token
+
+# Rift Reaver no longer loads Voidweaver's borrowed combat audio assets.
+for borrowed_audio in [
+    "void_weaver_attack.wav",
+    "void_weaver_hurt.wav",
+    "voidweaver_death.wav",
+]:
+    assert borrowed_audio not in scene, borrowed_audio
+assert 'stream = ExtResource("3_attack")' not in scene
+assert 'stream = ExtResource("4_hurt")' not in scene
+assert 'stream = ExtResource("5_death")' not in scene
+
+# Spatial mix remains scene/Inspector authored even though stream generation is runtime-owned.
+for node_name, volume, max_distance in [
+    ("AttackAudio", "-2.0", "18.0"),
+    ("HurtAudio", "-2.5", "18.0"),
+    ("DeathAudio", "-1.0", "20.0"),
+]:
+    block_match = re.search(
+        rf'^\[node name="{node_name}" type="AudioStreamPlayer3D" parent="\."\]\n(.*?)(?=^\[|\Z)',
+        scene,
+        re.M | re.S,
+    )
+    assert block_match is not None, node_name
+    block = block_match.group(1)
+    assert f"volume_db = {volume}" in block, (node_name, volume)
+    assert "pitch_scale = 0.92" in block, node_name
+    assert f"max_distance = {max_distance}" in block, (node_name, max_distance)
+    assert 'bus = &"SFX"' in block, node_name
+
+# Unique Aether audio is deterministic PCM generated once and cached per sound kind.
+for token in [
+    "MIX_RATE := 22050",
+    "ATTACK_DURATION := 0.34",
+    "HURT_DURATION := 0.28",
+    "DEATH_DURATION := 0.92",
+    "AudioStreamWAV.new()",
+    "AudioStreamWAV.FORMAT_16_BITS",
+    "stream.mix_rate = MIX_RATE",
+    "stream.data = pcm",
+    "static var _attack_stream: AudioStreamWAV",
+    "static var _hurt_stream: AudioStreamWAV",
+    "static var _death_stream: AudioStreamWAV",
+]:
+    assert token in audio_runtime, token
+assert "randf" not in audio_runtime
+assert "randi" not in audio_runtime
+
+# Transient Aether feedback stays runtime-owned and does not add persistent scene nodes.
+for token in [
+    "Sprite3D.new()",
+    "OmniLight3D.new()",
+    "SHADOW_CASTING_SETTING_OFF",
+    "spawn_attack_start",
+    "spawn_wake",
+    "spawn_impact",
+    "spawn_hurt",
+    "spawn_death",
+    "Color(0.24, 0.86, 1.0, 1.0)",
+]:
+    assert token in fx_runtime, token
 
 for token in [
     'path="res://assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png"',
@@ -131,6 +208,10 @@ for token in [
     "offset = Vector2(0, 16)",
     "corpse_visual_y = 0.0466",
     "back_corpse_visual_y = 0.0466",
+    "burn_scorch_tint = Color(0.035, 0.15, 0.2, 0.95)",
+    "burn_ember_tint = Color(0.12, 0.72, 0.92, 0.3)",
+    "burn_ember_emission_energy = 0.18",
+    "burn_smoke_enabled = false",
 ]:
     assert token in scene, token
 
