@@ -112,6 +112,8 @@ Kırık Omurga kayıtları, Yarık Ağı'nın en güçlü emiş düğümlerinden
 
 Geçidin ötesindeki **Korvathlar**, aşırı sıcak ve basınç altında yaşayan madenci kastlardan oluşur. VEX'in yıllarca çektiği enerji onların ocaklarını soğutmuş, yeraltı şehirlerinde çökmelere yol açmıştır. Basalt Juggernaut adı verilen iri canlılar aslında kuşatma yaratıkları değil, yüksek basınç galerilerinde kaya kırmak ve lav akışını yönlendirmek için yetiştirilen biyolojik iş makineleridir. Yarık açılınca yönlerini kaybederek Kül Madeni'ne geçmiş ve VEX ekipmanlarını kaynak sömüren düşman makineleri olarak algılamıştır.
 
+Cinder Hound'lar dar galerilerde hareket ve ısı izini takip ederken Cinder Spitter'lar kızgın maddeyi uzaktan püskürterek geçiş hatlarını kapatır. Furnace Carrier'lar termal yük taşıyan ağır saha organizmalarıdır; uzun menzilli atışlarının yanında tehdit yakına girdiğinde Thermal Burst ile çevresini temizler. Crucible Warden kastı ise enerji kuyularının gerçek koruyucusudur ve Ground Slam ile Heatwave saldırıları, Korvath savunmasının planlı tarafını gösterir.
+
 Aras alt galeride ilerlerken hasarlı personel kayıtlarından olayın yeni yüzünü öğrenir: VEX yalnızca uzak ve boş dünyalardan enerji çekmemiştir; yaşayan toplumların kentlerini ayakta tutan jeotermal damarları da kurutmuştur. Korvathların saldırganlığı planlı bir Dünya fethi değil, kaynağına ulaşmaya çalışan yaralı bir uygarlığın kontrolsüz ve ölümcül tepkisidir. Bu gerçek Aras'ın görevini değiştirmez, fakat karşısındaki canlıların neden burada olduğunu ilk kez anlamasını sağlar.
 
 ### Bölüm akışı
@@ -124,7 +126,7 @@ Kırmızı kart alındığında yarık odası açılır. Aras, çekirdek çevres
 
 ### Oyuncunun öğrendiği
 
-Üst kat farkındalığı, iki kollu metal merdivende dikey çatışma, kartlı kapı rotası okuma, ısı darbeleri, ağır düşman zayıf noktaları, zincir patlamalar, gizli alan okuması ve yakın alan çatışması.
+Dikey çatışma, ağır ve hızlı düşman rollerini ayırma, sıcak projectile hatları, termal alan baskısı, kartlı kapı rotası okuma, zincir patlamalar ve yakın alan çatışması.
 
 ### Bulunan hayatta kalan sinyali
 
@@ -132,13 +134,15 @@ Kırmızı kart alındığında yarık odası açılır. Aras, çekirdek çevres
 
 ## Bölüm 5 — Sessiz Gökyüzü
 
-Bir iletişim gözlemevi, karanlık ve sisle kaplı **Nhal Boyutu** ile iç içe geçmiştir. Veilmaw türleri burada yaşar. Görmek yerine ses, titreşim ve ısıyla avlanırlar. Açılan geçitler onların av alanlarını Dünya’ya bağlamış ve yüzlerce yaratığı yerleşim bölgelerine taşımıştır.
+Bir iletişim gözlemevi, karanlık ve sisle kaplı **Nhal Veil** ile iç içe geçmiştir. Nhal canlıları düşük ışıkta titreşim, ısı ve hareket değişimlerini okuyarak avlanır; ancak bu onları görünmez yapmaz. Veilmaw'lar orta mesafeden uygun görüş hattı arayarak perde enerjisi fırlatırken Husk Leech'ler avın algısını doğrudan hedef alan toksik/perde mermileri kullanır.
 
-Nhal canlıları örgütlü bir ordu değildir; denetimsiz geçitlerden taşan bir ekolojik felakettir. Yuvalar kurar, karanlık alanları genişletir ve buldukları bütün sıcak yaşamı avlarlar.
+Husk Leech saldırısının oyuncuya ulaşması görüşü birkaç saniye boyunca yoğun bir organik doku ile kaplar. Bu yalnız bir zehir görüntüsü değil, Nhal biyolojisinin temel fikrini anlatan gerçek bir savaş davranışıdır: avın gözünü ve yön duygusunu boz, sonra karanlığın avantajını kullan.
+
+Nhal canlıları örgütlü bir ordu değildir; denetimsiz geçitlerden taşan bir ekolojik felakettir. VEX'in düşük ışık ve faz maddesi çekimi onların av yollarıyla Dünya'daki karanlık bölgeler arasında bağlantılar yaratmıştır. Yuvalanma ve beslenme davranışı, insan açısından bir istila kadar yıkıcı görünse de merkezî bir fetih planına dayanmaz.
 
 ### Oyuncunun öğrendiği
 
-Gece görüşü, ışık ve gölge, sessiz hareket, dikkat dağıtma, sınırlı enerji ve alternatif rotalar.
+Gece görüşü, ışık ve gölge, görüş engellenmişken güvenli rota bulma, sessiz hareket, dikkat dağıtma, hedef önceliği ve alternatif rotalar.
 
 ### Kurtarılan NPC
 
@@ -150,13 +154,15 @@ Kerem, kazadan hemen önce VEX merkezinden gönderilen emri çözer: “Kararsı
 
 ## Bölüm 6 — Cam Deniz
 
-Kıyı araştırma tesisi, **Aether Loom** içindeki “Cam Deniz” bölgesine; fizik kurallarının sürekli değiştiği kristal bir okyanusa bağlanmıştır. Buradan gelen **Voidweaverlar**, uzayı kısa mesafelerde bükebilen ve enerji mermilerinin yönünü değiştirebilen zeki avcılardır.
+Kıyı araştırma tesisi, **Aether Loom** içindeki “Cam Deniz” bölgesine; fizik kurallarının ve madde sınırlarının kararsızlaştığı kristal bir okyanusa bağlanmıştır. Buradan gelen Voidweaver ve Rift Reaver formları aynı gerçekliğin iki farklı işlevini temsil eder. Voidweaver'lar uzaktan enerji örüntüsü fırlatıp uygun saldırı açısı ararken Rift Reaver'lar yarık sınırındaki bozuk maddeyi fiziksel olarak parçalamak için hedefe hızla kapanır.
 
-Voidweaverlar VEX teknolojisini inceleyerek geçitleri kendileri açmayı öğrenmeye başlamıştır. Amaçları yalnız kaybettikleri enerjiyi geri almak değildir; Dünya’yı yeni bir boyutsal ulaşım merkezi hâline getirip bütün ağı kontrol etmektir.
+İlk VEX kayıtları Aether canlılarının Yarık Ağı'nı ele geçirmeye çalıştığını varsayar. Nadir'in analizi daha rahatsız edici bir ihtimali ortaya çıkarır: Aether Loom için madde, enerji ve mekân ayrı şeyler değildir. VEX'in enerji çekimi onların gerçeklik dokusunda bozuk bir desen yaratmıştır. Voidweaver'lar Dünya'daki yarıkları fethedilecek kapılar değil, yeniden örülmesi gereken düğümler olarak algılıyor olabilir. Sorun, onların “onarım” mantığının Dünya maddesini ve canlılarını korunması gereken parçalar olarak görmemesidir.
+
+Bu yüzden Aether çatışması bir istilacı ordudan çok iki gerçeklik düzeninin birbirini düzeltmeye çalışırken çarpışmasıdır. Aras için fark pratikte küçüktür; Aether formlarının işlemi tamamlanırsa tesisin bölümleri insan yaşamına uygun olmayan bir uzamsal desene dönüşecektir.
 
 ### Oyuncunun öğrendiği
 
-Yön değiştiren mermiler, hareketli enerji alanları, hedef önceliği, zamanlamalı kapılar ve orta menzil kontrolü.
+Hızlı enerji projectile'ları, orta menzil açı kontrolü, ani yakın lunge baskısı, hedef önceliği, zamanlamalı kapılar ve iki farklı mesafe tehdidini aynı anda yönetme.
 
 ### Kurtarılan NPC
 
@@ -225,7 +231,7 @@ Dünya hükümetleri VEX’in varlığını öğrenir. Bazıları ağı kapatmak
 
 ## Bölüm 9 — Bastion Kuşatması
 
-Haluk Vardar, Bastion-7’deki araştırmaları ve Ters Akış Protokolü’nü ele geçirmek için birliklerini gönderir. Aynı anda Voidweaverlar üssün enerji izini takip ederek alt katlarda bir geçit açar.
+Haluk Vardar, Bastion-7’deki araştırmaları ve Ters Akış Protokolü’nü ele geçirmek için birliklerini gönderir. Aynı anda üssün enerji izi Aether Loom'daki bozuk örüntüyle rezonansa girer ve alt katlarda ikinci bir yarık büyümeye başlar. Voidweaver'lar enerji hattını uzaktan baskılarken Rift Reaver'lar oluşan düğüm çevresine hızla yayılır.
 
 Oyuncu oyun boyunca geliştirdiği üssün içinde savaşır. Kurtardığı NPC’ler savunmaya doğrudan katkı verir:
 
@@ -288,42 +294,42 @@ Ana hikâye tamamlanır; oyun sonu operasyonları, yeni bölgeler, yaratık vary
 
 ## Korvath Ocağı — Sönen Çekirdek
 
-- Ortam: siyah bazalt, kızıl magma, donmaya başlayan lav nehirleri.
-- Türler: Basalt Juggernaut, Cinder Hound, Furnace Carrier ve Crucible Warden.
-- Amaç: çalınan enerji akışını durdurmak ve Dünya'daki yarık altyapısını Korvath lehine devre dışı bırakmak; bazı Warden kastları bunu karşı saldırıya dönüştürür.
-- Oynanış: ağır saldırılar, ısı alanları, patlayıcı çevre ve zırhlı hedefler.
-
-## Nhal Veil — Işıksız Av
-
-- Ortam: yoğun sis, karanlık bitki örtüsü ve zayıf biyolüminesans.
-- Türler: Veilmaw ve sese duyarlı sürü avcıları.
-- Amaç: bilinçli bir siyasetten çok kontrolsüz yayılma, yuvalanma ve beslenme.
-- Oynanış: gizlilik, ses, gece görüşü ve yakın takip baskısı.
+- **Ortam:** siyah bazalt, kızıl magma, donmaya başlayan lav nehirleri.
+- **Türler:** Basalt Juggernaut, Cinder Hound, Cinder Spitter, Furnace Carrier, Crucible Warden.
+- **Amaç:** VEX'in çektiği ısı ve basınç enerjisinin bozduğu ocakları korumak, kaynak kaybını durdurmak ve yarık altyapısının kendi dünyalarına verdiği zararı kesmek.
+- **Oynanış:** ağır projectile baskısı, hızlı yakın takip, termal alan saldırıları ve yüksek dayanıklılık.
 
 ## Thornwild Sürüsü — Kızıl Av
 
-- Ortam: dikenli biyokütle ormanları, kemiksi yapılar ve sert av-avcı döngüsü.
-- Türler: Ravager ve planlanan sürü avcıları.
-- Amaç: VEX'in çektiği biyokütle ile rejeneratif dokunun bozduğu ekolojik dengeyi yeniden kurmak; Dünya'daki geçitleri istemsiz sürü göçü için kullanmak.
-- Oynanış: ani hızlanma, çevreleme, yakın baskı ve sürü koordinasyonu.
+- **Ortam:** dikenli biyokütle ormanları, kemiksi yapılar ve sert av-avcı döngüsü.
+- **Türler:** Ravager, Briar Skulker, Gorehorn, Spore Matriarch.
+- **Amaç:** VEX'in çektiği biyokütle ile rejeneratif dokunun bozduğu ekolojik dengede yeni av ve yaşam alanı bulmak; geçitler istemsiz göç yollarına dönüşür.
+- **Oynanış:** organik ranged baskı, ranged/melee hibrit avcılık, ağır charge ve zehirli alan/DoT kontrolü.
 
-## Vaskari Lejyonu — Kızıl Hat
+## Vaskari Lejyonu — Mor Hat
 
-- Ortam: biyozırhlı savaş yapıları, zehir damarları ve disiplinli kast yerleşimleri.
-- Türler: VaskariRaptor ve Vaskari Ravager.
-- Amaç: çalınan biyotoksin ve sinir iletimi örneklerini geri almak; geçitleri askerî bir cephe olarak denetlemek.
-- Oynanış: flank, koordineli hücum, elit baskı ve zehir temelli tehdit.
+- **Ortam:** koyu mor-viyole biyozırhlı savaş yapıları, zehir damarları ve disiplinli kast yerleşimleri.
+- **Türler:** Vaskari Raptor, Vaskari Ravager, Coil Lancer, Vaskari Bulwark, Venom Marshall.
+- **Amaç:** çalınan biyotoksin ve sinir iletimi örneklerini geri almak; geçitleri askerî bir cephe olarak denetlemek ve kaynak saldırısının tekrarını engellemek.
+- **Oynanış:** hızlı ve ağır melee rolleri, uzun menzil nişancı baskısı, ön hat dayanıklılığı ve Venom Marshall'ın müttefik güçlendirme alanı.
+
+## Nhal Veil — Işıksız Av
+
+- **Ortam:** yoğun sis, mat siyah/lacivert yüzeyler, soğuk mavi perde ışıması ve zayıf biyolüminesans.
+- **Türler:** Veilmaw, Husk Leech.
+- **Amaç:** bilinçli bir siyasetten çok kontrolsüz yayılma, yuvalanma ve beslenme; VEX'in faz/perde maddesi çekimi av yollarını Dünya'ya bağlamıştır.
+- **Oynanış:** orta menzil görüş hattı baskısı, karanlıkta konum alma ve Husk Leech'in doğrudan oyuncu görüşünü kapatan algı bozucu saldırısı.
 
 ## Aether Loom — Cam Deniz
 
-- Ortam: kristalleşmiş okyanuslar, havada asılı su kütleleri ve bükülen ufuk.
-- Türler: Voidweaverlar.
-- Amaç: Yarık Ağı’nı ele geçirerek boyutlar arasında sınırsız hareket kazanmak.
-- Oynanış: uzay bükülmesi, yönlenen mermiler ve değişken enerji alanları.
+- **Ortam:** kristalleşmiş okyanuslar, havada asılı su kütleleri, camgöbeği/buz beyazı enerji ve bükülen ufuk.
+- **Türler:** Voidweaver, Rift Reaver.
+- **Amaç:** VEX'in bozduğu faz ve gerçeklik örüntüsünü kendi fizik mantıklarına göre yeniden düzenlemek. Bu işlem Dünya için ölümcül olsa da insan anlamında bir fetih planı olmak zorunda değildir.
+- **Oynanış:** hızlı orta menzil enerji projectile'ları ile hızlı yakın lunge tehdidinin birleşimi.
 
 ## Bilinmeyen bağlantılar
 
-Yarık Ağı yüzlerce zayıf bağlantı üretmiştir. Bunların tamamı ana oyunda gösterilmez. Böylece yeni yaratıklar ve biyomlar eklenirken temel hikâye bozulmadan genişleyebilir.
+Yarık Ağı yüzlerce zayıf bağlantı üretmiştir. Bunların tamamı ana oyunda gösterilmez. Böylece yeni yaratıklar ve biyomlar eklenirken temel hikâye bozulmadan genişleyebilir. Yeni bir tür ana roster'a girdiğinde bağlı evreni ve gerçek gameplay rolü `Enemies_VEX.md` ile bu özet bölümünde birlikte güncellenmelidir.
 
 ---
 
@@ -341,6 +347,8 @@ Her geliştirme yalnız sayısal güç artışı değildir. Selin mekanik parça
 VEX; askerî bilimkurgu, tesis korkusu, kozmik bilinmezlik ve üs geliştirmeyi birleştirir. İlk bölümlerde oyuncu dar, karanlık tesislerde ne olduğunu anlamaya çalışır. Orta bölümlerde felaketin küresel ve boyutlar arası büyüklüğünü görür. Son bölümlerde ise kurduğu ekiple karşı saldırıya geçer.
 
 Diyaloglar kısa ve doğal olmalıdır. Bilim insanları bilmedikleri şeyler hakkında kesin konuşmamalı; askerler teknik açıklamaları sadeleştirmeli; kayıtlar tek seferde bütün sırrı anlatmamalıdır. Her bölüm bir cevap verirken daha büyük bir soru açmalıdır.
+
+Yaratık anlatımı için ek kural: **oyunda olmayan bir özel mekanik, hikâyede uygulanıyormuş gibi kesin şekilde anlatılmamalıdır.** Biyoloji ve atmosfer daha geniş olabilir; fakat savaş davranışı tarif edildiğinde güncel enemy sahneleriyle uyumlu kalmalıdır.
 
 Oyunun duygusal ve oynanışsal ilerleyişi:
 
