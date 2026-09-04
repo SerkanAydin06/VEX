@@ -6,14 +6,37 @@ VEX, Godot 4.7 ile geliştirilen tek oyunculu bir FPS projesidir.
 
 - Godot 4.7 stable
 - Python 3.12 (depo denetimleri için)
+- Windows/PowerShell yerel doğrulaması için `godot` ve `python` komutlarının PATH üzerinde bulunması önerilir.
 
 ## Yerel doğrulama
+
+Windows'ta proje kökünden önerilen tek komut:
+
+```powershell
+.\validate_local.ps1
+```
+
+Godot PATH üzerinde değilse executable yolu açıkça verilebilir:
+
+```powershell
+.\validate_local.ps1 -Godot "C:\\Godot\\Godot_v4.7.1-stable_win64.exe"
+```
+
+Script sırasıyla bütün `tests/*_audit.py` denetimlerini, Godot headless import/parse kontrolünü, `integrity_test.tscn` sahnesini ve bütün `*_runtime_test.tscn` sahnelerini çalıştırır. İlk hatada durur ve başarısız adımı gösterir.
+
+Windows release export'unu da aynı doğrulamaya eklemek için:
+
+```powershell
+.\validate_local.ps1 -Export
+```
+
+Bash kullanan ortamlarda temel karşılık:
 
 ```bash
 for audit in tests/*_audit.py; do python "$audit"; done
 godot --headless --editor --path . --quit
 godot --headless --path . tests/integrity_test.tscn
-godot --headless --path . tests/warden_door_runtime_test.tscn
+for scene in tests/*_runtime_test.tscn; do godot --headless --path . "$scene"; done
 ```
 
 ## Windows export
