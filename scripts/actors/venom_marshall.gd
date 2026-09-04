@@ -1,27 +1,21 @@
 class_name VexVenomMarshall
 extends "res://scripts/actors/enemy_combatant_performance_base.gd"
 
-@export_category("10 - Venom Marshall Alan Desteği")
-## Venom Marshall'ın bulunduğu zeminde güçlendirme alanı kuran ikinci skill sahnesidir.
-@export var buff_projectile_scene: PackedScene
-## Marshall merkezli buff alanını kurmayı tetikleyecek en uzak müttefik mesafesidir.
-@export_range(2.0, 15.0, 0.5) var buff_cast_range := 7.0
-## İki alan skill'i arasındaki temel bekleme süresidir.
-@export_range(2.0, 30.0, 0.5) var buff_cooldown := 11.5
-## Alan kurulmadan önceki 2nd_attack hazırlık süresidir.
-@export_range(0.05, 3.0, 0.05) var buff_windup := 0.65
-## Alan kurulduktan sonra normal state machine'e dönüş süresidir.
-@export_range(0.0, 4.0, 0.05) var buff_recovery := 0.80
-## Mevcut buff'ın bitmesine bu kadar süre kaldığında alan yenilenebilir.
-@export_range(0.0, 3.0, 0.1) var buff_refresh_window := 1.2
-## 2nd_attack karelerinin zemin hizalama düzeltmeleridir.
-@export var second_attack_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
-
+var _ability: VexVenomMarshallAbilitySettings
 var _buff_cooldown_remaining := 0.0
 
 
 func get_behavior_family() -> StringName:
 	return &"support_ranged"
+
+
+func _ready() -> void:
+	_ability = special_ability_settings as VexVenomMarshallAbilitySettings
+	if _ability == null:
+		_ability = VexVenomMarshallAbilitySettings.new()
+		special_ability_settings = _ability
+		push_warning("Venom Marshall özel yetenek ayarları eksikti; güvenli varsayılanlar kullanılıyor.")
+	super._ready()
 
 
 func _physics_process(delta: float) -> void:
@@ -34,7 +28,7 @@ func _attempt_attack() -> void:
 		return
 	if (
 		_buff_cooldown_remaining <= 0.0
-		and buff_projectile_scene != null
+		and _ability.buff_projectile_scene != null
 		and _has_buff_candidate_in_self_field()
 	):
 		_begin_buff_attack()
@@ -49,7 +43,7 @@ func _has_buff_candidate_in_self_field() -> bool:
 		var ally := node as Node3D
 		if not _is_buff_candidate(ally):
 			continue
-		if _horizontal_distance(global_position, ally.global_position) <= buff_cast_range:
+		if _horizontal_distance(global_position, ally.global_position) <= _ability.buff_cast_range:
 			return true
 	return false
 
@@ -66,7 +60,7 @@ func _is_buff_candidate(ally: Node3D) -> bool:
 	var status := ally.get_node_or_null("VenomMarshallBuffStatus")
 	if status == null:
 		return true
-	return float(status.call("get_remaining_time")) <= buff_refresh_window
+	return float(status.call("get_remaining_time")) <= _ability.buff_refresh_window
 
 
 func _begin_buff_attack() -> void:
@@ -83,16 +77,16 @@ func _begin_buff_attack() -> void:
 		attack_audio.play()
 	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
 	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
-	var runtime_windup := maxf(0.05, buff_windup * windup_scale)
+	var runtime_windup := maxf(0.05, _ability.buff_windup * windup_scale)
 	await get_tree().create_timer(runtime_windup).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_deploy_buff_field()
-	_buff_cooldown_remaining = maxf(runtime_windup, buff_cooldown * cooldown_scale)
+	_buff_cooldown_remaining = maxf(runtime_windup, _ability.buff_cooldown * cooldown_scale)
 	_attack_windup_active = false
 	_play_directional_animation(&"idle", &"idle_back")
-	if buff_recovery > 0.0:
-		await get_tree().create_timer(buff_recovery).timeout
+	if _ability.buff_recovery > 0.0:
+		await get_tree().create_timer(_ability.buff_recovery).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false
@@ -104,7 +98,7 @@ func _deploy_buff_field() -> void:
 	var projectile_parent := get_tree().current_scene
 	if projectile_parent == null:
 		return
-	var projectile := EnemyProjectilePool.acquire(buff_projectile_scene, projectile_parent) as Node3D
+	var projectile := EnemyProjectilePool.acquire(_ability.buff_projectile_scene, projectile_parent) as Node3D
 	if projectile == null:
 		return
 	projectile.global_position = global_position
@@ -113,5 +107,5 @@ func _deploy_buff_field() -> void:
 
 func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Array:
 	if animation_name == &"2nd_attack":
-		return second_attack_frame_y_offsets
+		return _ability.second_attack_frame_y_offsets if _ability != null else PackedFloat32Array()
 	return super._frame_offsets_for_animation(animation_name)
