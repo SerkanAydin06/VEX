@@ -29,6 +29,7 @@ FAMILIES = {
         "vaskari_ravager",
         "cinderhound",
         "vaskari_bulwark",
+        "rift_reaver",
     ],
     # Gorehorn özel charge physics override'ını korur; global manager charge'ı
     # lunge ailesi olarak normalize eder.
@@ -62,6 +63,7 @@ CHARACTER_CONTRACTS = {
     "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.18"},
     "gorehorn": {"combat_role": "0", "maximum_health": "180", "attack_range": "12.0"},
     "vaskari_bulwark": {"combat_role": "0", "maximum_health": "300", "attack_damage": "30"},
+    "rift_reaver": {"combat_role": "0", "maximum_health": "135", "attack_damage": "22"},
     "briar_skulker": {"combat_role": "1", "maximum_health": "110", "attack_range": "14.0"},
 }
 
@@ -138,7 +140,6 @@ for shared_difficulty_setting in [
 
 assert enemy_base.count('@export_category("01A - Ortak Kimlik ve Zorluk")') == 1
 assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
-
 
 # Frame callback ailede kalır: base sınıfın aileye özgü _apply_frame_ground_offset
 # hook'unu doğrudan çağırması Godot runtime class-resolution'ını bozar.
