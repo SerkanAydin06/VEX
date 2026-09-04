@@ -61,7 +61,7 @@ CHARACTER_CONTRACTS = {
     "venom_marshall": {"combat_role": "1", "maximum_health": "155", "attack_range": "20.0"},
     "vaskari_raptor": {"combat_role": "0", "maximum_health": "140", "chase_speed": "6.4"},
     "vaskari_ravager": {"combat_role": "0", "maximum_health": "190", "attack_damage": "28"},
-    "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.18"},
+    "cinderhound": {"combat_role": "0", "chase_speed": "7.2", "attack_windup": "0.32"},
     "gorehorn": {"combat_role": "0", "maximum_health": "180", "attack_range": "12.0"},
     "vaskari_bulwark": {"combat_role": "0", "maximum_health": "300", "attack_damage": "30"},
     "rift_reaver": {"combat_role": "0", "maximum_health": "135", "attack_damage": "22"},
