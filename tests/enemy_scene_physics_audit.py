@@ -25,6 +25,7 @@ CREATURE_CAPSULES = {
     "briar_skulker": (0.38, 1.60),
     "gorehorn": (0.72, 2.40),
     "vaskari_bulwark": (0.72, 2.40),
+    "rift_reaver": (0.46, 1.90),
 }
 
 
