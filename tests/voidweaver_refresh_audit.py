@@ -15,6 +15,9 @@ EFFECTS_MANIFEST = ASSETS / "voidweaver_effects_spritesheet_manifest.json"
 ACTOR_SCENE = ROOT / "scenes" / "actors" / "voidweaver.tscn"
 PROJECTILE_SCENE = ROOT / "scenes" / "actors" / "voidweaver_projectile.tscn"
 
+CHARACTER_UID = "uid://deg8cp3y18u0g"
+EFFECTS_UID = "uid://dpug1hsf0de33"
+
 
 def png_size(path: Path) -> tuple[int, int]:
     data = path.read_bytes()[:24]
@@ -50,7 +53,11 @@ assert all(row["frame_count"] == 4 for row in effects_manifest["rows"])
 actor = ACTOR_SCENE.read_text(encoding="utf-8")
 projectile = PROJECTILE_SCENE.read_text(encoding="utf-8")
 
-assert 'path="res://assets/enemies/voidweaver/voidweaver_character_spritesheet.png"' in actor
+assert (
+    f'[ext_resource type="Texture2D" uid="{CHARACTER_UID}" '
+    'path="res://assets/enemies/voidweaver/voidweaver_character_spritesheet.png" id="2_sheet"]'
+    in actor
+)
 assert "voidweaver_spritesheet.png" not in actor
 character_regions = {
     tuple(map(int, match))
@@ -76,7 +83,11 @@ assert re.search(r'^maximum_health = 120$', actor, re.M)
 assert re.search(r'^attack_range = 13\.5$', actor, re.M)
 assert re.search(r'^attack_preferred_distance = 8\.5$', actor, re.M)
 
-assert 'path="res://assets/enemies/voidweaver/voidweaver_effects_spritesheet.png"' in projectile
+assert (
+    f'[ext_resource type="Texture2D" uid="{EFFECTS_UID}" '
+    'path="res://assets/enemies/voidweaver/voidweaver_effects_spritesheet.png" id="2_effects_sheet"]'
+    in projectile
+)
 assert "voidweaver_projectile_sheet.png" not in projectile
 assert "voidweaver_impact_sheet.png" not in projectile
 effect_regions = re.findall(r"region = Rect2\((\d+), (\d+), 512, 512\)", projectile)
