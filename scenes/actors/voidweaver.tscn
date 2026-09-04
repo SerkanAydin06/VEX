@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dm1m7chx8yipi"]
 
 [ext_resource type="Script" uid="uid://d0idweaver01a" path="res://scripts/actors/voidweaver.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dx51in8rriii4" path="res://assets/enemies/voidweaver/voidweaver_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" path="res://assets/enemies/voidweaver/voidweaver_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="AudioStream" uid="uid://dpg7kfv4pqud7" path="res://assets/audio/void_weaver_attack.wav" id="6_nhar0"]
 [ext_resource type="AudioStream" uid="uid://du3qs6vkja5nu" path="res://assets/audio/void_weaver_hurt.wav" id="7_nhar0"]
 [ext_resource type="AudioStream" uid="uid://cb1km2et21ycr" path="res://assets/audio/voidweaver_death.wav" id="8_nhar0"]
@@ -15,225 +15,153 @@ height = 1.9
 
 [sub_resource type="AtlasTexture" id="Atlas_attack1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 0, 341, 512)
+region = Rect2(0, 1024, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 0, 341, 512)
+region = Rect2(341, 1024, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 0, 341, 512)
+region = Rect2(682, 1024, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 0, 341, 512)
+region = Rect2(1023, 1024, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1364, 0, 341, 512)
+region = Rect2(0, 1536, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1705, 0, 341, 512)
+region = Rect2(341, 1536, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 512, 341, 512)
+region = Rect2(682, 1536, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 512, 341, 512)
+region = Rect2(1023, 1536, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 512, 341, 512)
+region = Rect2(0, 0, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 512, 341, 512)
+region = Rect2(341, 0, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1364, 512, 341, 512)
+region = Rect2(682, 0, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1705, 512, 341, 512)
+region = Rect2(1023, 0, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1024, 341, 512)
+region = Rect2(0, 2048, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 1024, 341, 512)
+region = Rect2(341, 2048, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 1024, 341, 512)
+region = Rect2(682, 2048, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 1024, 341, 512)
+region = Rect2(1023, 2048, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1364, 1024, 341, 512)
+region = Rect2(0, 512, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1705, 1024, 341, 512)
+region = Rect2(341, 512, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1536, 341, 512)
+region = Rect2(682, 512, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 1536, 341, 512)
+region = Rect2(1023, 512, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 1536, 341, 512)
+region = Rect2(0, 2560, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 1536, 341, 512)
+region = Rect2(341, 2560, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1364, 1536, 341, 512)
+region = Rect2(682, 2560, 341, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1705, 1536, 341, 512)
+region = Rect2(1023, 2560, 341, 512)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Atlas_attack1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_attack2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_attack3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_attack4")
-}],
-"loop": 0,
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack4")}],
+"loop": false,
 "name": &"attack",
 "speed": 7.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Atlas_death1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_death2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_death3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_death4")
-}],
-"loop": 0,
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_death1")}, {"duration": 1.0, "texture": SubResource("Atlas_death2")}, {"duration": 1.0, "texture": SubResource("Atlas_death3")}, {"duration": 1.0, "texture": SubResource("Atlas_death4")}],
+"loop": false,
 "name": &"death",
 "speed": 5.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Atlas_idle1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle4")
-}],
-"loop": 1,
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle4")}],
+"loop": true,
 "name": &"idle",
 "speed": 3.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Atlas_idle_back1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle_back2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle_back3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_idle_back4")
-}],
-"loop": 1,
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_back1")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back2")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back3")}, {"duration": 1.0, "texture": SubResource("Atlas_idle_back4")}],
+"loop": true,
 "name": &"idle_back",
 "speed": 3.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Atlas_walk1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk4")
-}],
-"loop": 1,
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk4")}],
+"loop": true,
 "name": &"walk",
 "speed": 5.5
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("Atlas_walk_back1")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk_back2")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk_back3")
-}, {
-"duration": 1.0,
-"texture": SubResource("Atlas_walk_back4")
-}],
-"loop": 1,
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_walk_back1")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back2")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back3")}, {"duration": 1.0, "texture": SubResource("Atlas_walk_back4")}],
+"loop": true,
 "name": &"walk_back",
 "speed": 5.5
 }]
@@ -308,14 +236,13 @@ burn_ember_tint = Color(0.36, 0.06, 0.12, 0.26)
 shape = SubResource("CapsuleShape_enemy")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1470725653]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 cast_shadow = 0
 pixel_size = 0.0041
 billboard = 2
 shaded = true
 alpha_cut = 1
 sprite_frames = SubResource("SpriteFrames_enemy")
-animation = &"walk_back"
+animation = &"idle"
 autoplay = "idle"
 
 [node name="GroundShadow" type="Sprite3D" parent="." unique_id=508337061]
