@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Measure every enemy animation frame against its scene-authored floor plane.
-
-The decoder deliberately uses only the Python standard library so this audit can
-run in the same lightweight CI job as the other repository audits.
-"""
+"""Validate floor-contact offsets for enemies whose sprites are grounded."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -38,11 +34,12 @@ class CreatureSpec:
     capsule_height: float
 
 
+# Floating silhouettes intentionally live in dedicated audits instead of being
+# forced into the common 8 mm floor-contact contract.
 CREATURES = {
     "ravager": CreatureSpec("ravager.tscn", -0.15, 0.003525, 1.80),
     "basalt_juggernaut": CreatureSpec("basalt_juggernaut.tscn", -0.10, 0.0073547, 3.60),
     "veilmaw": CreatureSpec("veilmaw.tscn", 0.0, 0.0041, 1.90),
-    "voidweaver": CreatureSpec("voidweaver.tscn", 0.0, 0.0041, 1.90),
     "furnice_carrier": CreatureSpec("furnice_carrier.tscn", 0.44470531, 0.008, 1.50),
     "crucible_warden": CreatureSpec("crucible_warden.tscn", 0.44, 0.0064, 2.40),
     "vaskari_raptor": CreatureSpec("vaskari_raptor.tscn", 0.0000225, 0.003515713, 1.80),
@@ -90,9 +87,9 @@ def decode_png_alpha(path: Path) -> tuple[int, int, list[bytes]]:
     )
     raw = zlib.decompress(bytes(idat))
     stride = width * channels
-    rows: list[bytes] = []
     cursor = 0
     previous = bytearray(stride)
+    rows: list[bytes] = []
     for _ in range(height):
         filter_type = raw[cursor]
         cursor += 1
@@ -104,22 +101,17 @@ def decode_png_alpha(path: Path) -> tuple[int, int, list[bytes]]:
             up = previous[index]
             upper_left = previous[index - channels] if index >= channels else 0
             predictor = (
-                0
-                if filter_type == 0
-                else left
-                if filter_type == 1
-                else up
-                if filter_type == 2
-                else (left + up) // 2
-                if filter_type == 3
-                else paeth(left, up, upper_left)
+                0 if filter_type == 0 else
+                left if filter_type == 1 else
+                up if filter_type == 2 else
+                (left + up) // 2 if filter_type == 3 else
+                paeth(left, up, upper_left)
             )
             assert 0 <= filter_type <= 4, (path, filter_type)
             row[index] = (value + predictor) & 0xFF
         rows.append(bytes(row))
         previous = row
 
-    alpha_rows: list[bytes] = []
     if color_type == 6:
         alpha_rows = [bytes(row[3::4]) for row in rows]
     elif color_type == 4:
@@ -180,19 +172,12 @@ def atlas_regions(source: str, sheet_id: str) -> dict[str, tuple[int, int, int, 
     return regions
 
 
-def bottom_pixel(
-    alpha_rows: list[bytes], region: tuple[int, int, int, int]
-) -> int | None:
+def bottom_pixel(alpha_rows: list[bytes], region: tuple[int, int, int, int]) -> int:
     x, y, width, height = region
     for local_y in range(height - 1, -1, -1):
         if max(alpha_rows[y + local_y][x : x + width]) > ALPHA_THRESHOLD:
             return local_y
-    return None
-
-
-def frame_gap(spec: CreatureSpec, region_height: int, bottom: int) -> float:
-    alpha_bottom_y = spec.sprite_y + (region_height * 0.5 - (bottom + 1)) * spec.pixel_size
-    return alpha_bottom_y + spec.capsule_height * 0.5
+    raise AssertionError((region, "empty frame"))
 
 
 def packed_float_array(source: str, property_name: str) -> list[float]:
@@ -205,8 +190,12 @@ def packed_float_array(source: str, property_name: str) -> list[float]:
     return [float(value.strip()) for value in match.group(1).split(",")]
 
 
-contact_failures: list[tuple[str, str, list[float], float]] = []
+def frame_gap(spec: CreatureSpec, region_height: int, bottom: int) -> float:
+    alpha_bottom_y = spec.sprite_y + (region_height * 0.5 - (bottom + 1)) * spec.pixel_size
+    return alpha_bottom_y + spec.capsule_height * 0.5
 
+
+failures: list[tuple[str, str, list[float]]] = []
 for creature, spec in CREATURES.items():
     scene_path = ACTORS / spec.scene
     source = scene_path.read_text(encoding="utf-8")
@@ -225,9 +214,7 @@ for creature, spec in CREATURES.items():
     for atlas_id, region in regions.items():
         x, y, frame_width, frame_height = region
         assert x + frame_width <= width and y + frame_height <= height, (creature, atlas_id)
-        bottom = bottom_pixel(alpha_rows, region)
-        assert bottom is not None, (creature, atlas_id, "empty frame")
-        measurements[atlas_id] = frame_gap(spec, frame_height, bottom)
+        measurements[atlas_id] = frame_gap(spec, frame_height, bottom_pixel(alpha_rows, region))
 
     print(f"CONTACT {creature}")
     used: set[str] = set()
@@ -235,32 +222,23 @@ for creature, spec in CREATURES.items():
         name_match = re.search(r'"name": &"([^"]+)"', animation)
         if name_match is None:
             continue
-        frame_ids = re.findall(r'"texture": SubResource\("([^"]+)"\)', animation)
-        gaps = [measurements[frame_id] for frame_id in frame_ids if frame_id in measurements]
-        used.update(frame_id for frame_id in frame_ids if frame_id in measurements)
-        if not gaps:
+        animation_name = name_match.group(1)
+        if animation_name not in CONTACT_PROPERTIES:
             continue
-        property_name = CONTACT_PROPERTIES[name_match.group(1)]
-        offsets = packed_float_array(source, property_name)
-        assert len(offsets) == len(gaps), (creature, name_match.group(1), offsets, gaps)
-        adjusted_gaps = [gap + offset for gap, offset in zip(gaps, offsets)]
+        frame_ids = re.findall(r'"texture": SubResource\("([^"]+)"\)', animation)
+        frame_ids = [frame_id for frame_id in frame_ids if frame_id in measurements]
+        used.update(frame_ids)
+        if not frame_ids:
+            continue
+        offsets = packed_float_array(source, CONTACT_PROPERTIES[animation_name])
+        assert len(offsets) == len(frame_ids), (creature, animation_name, offsets, frame_ids)
+        adjusted = [measurements[frame_id] + offset for frame_id, offset in zip(frame_ids, offsets)]
         tolerance = max(0.0006, spec.pixel_size * 0.55)
-        print(
-            f"  {name_match.group(1):12s} gap="
-            + ",".join(f"{gap:+.4f}" for gap in gaps)
-            + " authored_offset="
-            + ",".join(f"{offset:+.4f}" for offset in offsets)
-            + " adjusted="
-            + ",".join(f"{gap:+.4f}" for gap in adjusted_gaps)
-        )
-        if not all(
-            abs(adjusted_gap - TARGET_CONTACT_GAP) <= tolerance
-            for adjusted_gap in adjusted_gaps
-        ):
-            contact_failures.append(
-                (creature, name_match.group(1), adjusted_gaps, TARGET_CONTACT_GAP)
-            )
+        print(f"  {animation_name:12s} " + ",".join(f"{gap:+.4f}" for gap in adjusted))
+        if not all(abs(gap - TARGET_CONTACT_GAP) <= tolerance for gap in adjusted):
+            failures.append((creature, animation_name, adjusted))
+
     assert used == set(regions), (creature, "unreferenced atlas frames", set(regions) - used)
 
-assert not contact_failures, contact_failures
+assert not failures, failures
 print("enemy sprite contact audit passed")

@@ -13,6 +13,9 @@
 radius = 0.45
 height = 1.9
 
+[sub_resource type="BoxShape3D" id="BoxShape_weapon_hurtbox"]
+size = Vector3(1, 2.05, 1)
+
 [sub_resource type="AtlasTexture" id="Atlas_attack1"]
 atlas = ExtResource("2_sheet")
 region = Rect2(0, 1024, 341, 512)
@@ -203,6 +206,7 @@ search_duration = 9.0
 search_turn_speed = 48.0
 ally_alert_radius = 11.0
 sight_origin_height = 1.2
+headshot_reference_height = 1.7
 attack_damage = 20
 attack_range = 13.5
 attack_cooldown = 1.1
@@ -221,19 +225,28 @@ waypoint_link_distance = 9.5
 navigation_clearance = 0.55
 dormant_distance = 44.0
 back_view_threshold = -0.12
-corpse_visual_y = -0.04
-back_corpse_visual_y = -0.04
-idle_frame_y_offsets = PackedFloat32Array(0.1035, 0.1035, 0.1035, 0.1035)
-idle_back_frame_y_offsets = PackedFloat32Array(0.0748, 0.0748, 0.0748, 0.0748)
-walk_frame_y_offsets = PackedFloat32Array(0.0994, 0.0994, 0.0994, 0.0994)
-walk_back_frame_y_offsets = PackedFloat32Array(0.0789, 0.0789, 0.0789, 0.0789)
-attack_frame_y_offsets = PackedFloat32Array(0.1076, 0.1076, 0.1076, 0.1076)
-death_frame_y_offsets = PackedFloat32Array(0.0789, 0.0789, 0.0789, 0.0789)
+corpse_visual_y = 0.53
+back_corpse_visual_y = 0.53
+idle_frame_y_offsets = PackedFloat32Array(0.1082, 0.0959, 0.1041, 0.1082)
+idle_back_frame_y_offsets = PackedFloat32Array(-0.0763, -0.0845, -0.1009, -0.0886)
+walk_frame_y_offsets = PackedFloat32Array(-0.064, -0.0189, 0.0836, -0.0927)
+walk_back_frame_y_offsets = PackedFloat32Array(-0.0517, -0.0763, -0.0476, -0.0435)
+attack_frame_y_offsets = PackedFloat32Array(-0.1296, -0.146, -0.2608, -0.1624)
+death_frame_y_offsets = PackedFloat32Array(0.1041, 0.1123, 0.1164, 0.1041)
 burn_remains_scene = ExtResource("31_burn")
 burn_ember_tint = Color(0.36, 0.06, 0.12, 0.26)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=601888018]
 shape = SubResource("CapsuleShape_enemy")
+
+[node name="WeaponHurtbox" type="Area3D" parent="."]
+position = Vector3(0, 0.55, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WeaponHurtbox"]
+shape = SubResource("BoxShape_weapon_hurtbox")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1470725653]
 position = Vector3(0, 0.45, 0)

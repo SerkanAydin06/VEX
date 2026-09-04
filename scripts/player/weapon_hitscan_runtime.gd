@@ -95,7 +95,21 @@ static func shoot(
 			var hit_position: Vector3 = result.get("position", Vector3.ZERO)
 			var hit_normal: Vector3 = result.get("normal", -direction)
 
-			# Delme yalnızca canlı/hedef nesneler arasında devam eder. Duvar ve
+			# Bazı düşmanlar hareket/oyuncu çarpışma gövdesini hitscan hasarından
+			# ayırır. Hedef bu isteğe bağlı sözleşmeyi uyguluyorsa yalnız kabul ettiği
+			# collider üzerinden hasar ver; reddedilen fizik gövdesini ışından çıkarıp
+			# aynı mermi yolunda aramaya devam et.
+			if (
+				damage_target != null
+				and damage_target.has_method("accepts_weapon_hit")
+				and not bool(damage_target.call("accepts_weapon_hit", collider, hit_position))
+			):
+				if collider is CollisionObject3D:
+					exclusions.append((collider as CollisionObject3D).get_rid())
+				ray_origin = hit_position + direction * 0.05
+				continue
+
+			# Delme yalnızca canı/hedef nesneler arasında devam eder. Duvar ve
 			# kapılar mermiyi durdurur; böylece arka odalardaki hedefler vurulmaz.
 			if damage_target == null:
 				if world_impacts_spawned < MAX_WORLD_IMPACTS_PER_TRIGGER:
@@ -107,7 +121,7 @@ static func shoot(
 						collider
 					)
 					world_impacts_spawned += 1
-				break
+				break	
 			if not damage_target.is_in_group("enemy") and world_impacts_spawned < MAX_WORLD_IMPACTS_PER_TRIGGER:
 				HIT_IMPACT_V1.spawn_world(
 					current_scene,
