@@ -9,6 +9,17 @@
 [ext_resource type="AudioStream" uid="uid://cpf3lrlha4gw6" path="res://assets/audio/vaskari_raptor_death.wav" id="7_death"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="8_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="9_burn"]
+[ext_resource type="Script" uid="uid://cvenommarset01" path="res://scripts/actors/venom_marshall_ability_settings.gd" id="10_ability_settings"]
+
+[sub_resource type="Resource" id="Resource_venom_marshall_ability"]
+script = ExtResource("10_ability_settings")
+buff_projectile_scene = ExtResource("4_buff_projectile")
+buff_cast_range = 7.0
+buff_cooldown = 11.5
+buff_windup = 0.65
+buff_recovery = 0.8
+buff_refresh_window = 1.2
+second_attack_frame_y_offsets = PackedFloat32Array(0.0, 0.0, 0.0, 0.0)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_venom_marshall"]
 radius = 0.58
@@ -264,13 +275,7 @@ burn_remains_scene = ExtResource("9_burn")
 burn_remains_scale = 1.05
 burn_smoke_duration = 8.0
 burn_smoke_alpha = 0.13
-buff_projectile_scene = ExtResource("4_buff_projectile")
-buff_cast_range = 7.0
-buff_cooldown = 11.5
-buff_windup = 0.65
-buff_recovery = 0.8
-buff_refresh_window = 1.2
-second_attack_frame_y_offsets = PackedFloat32Array(0.0, 0.0, 0.0, 0.0)
+special_ability_settings = SubResource("Resource_venom_marshall_ability")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape_venom_marshall")
