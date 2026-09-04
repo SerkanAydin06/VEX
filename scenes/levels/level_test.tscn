@@ -48,6 +48,7 @@
 [ext_resource type="PackedScene" uid="uid://bsporematriarch1" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
 [ext_resource type="PackedScene" uid="uid://bvenommarshall01" path="res://scenes/actors/venom_marshall.tscn" id="45_venom_marshall"]
 [ext_resource type="PackedScene" uid="uid://bhuskleechact1" path="res://scenes/actors/husk_leech.tscn" id="46_husk_leech"]
+[ext_resource type="PackedScene" uid="uid://briftreaver01v" path="res://scenes/actors/rift_reaver.tscn" id="47_rift_reaver"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -238,6 +239,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -15)
 
 [node name="OpenH_B0_C1" parent="Geometry" unique_id=1911454846 instance=ExtResource("4_open_h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -15)
+
 [node name="OpenH_B0_C2" parent="Geometry" unique_id=1044554457 instance=ExtResource("4_open_h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -15)
 
@@ -631,6 +633,11 @@ maximum_health = 500
 [node name="HuskLeech" parent="Enemies" instance=ExtResource("46_husk_leech")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.9, 0)
 enemy_id = &"level_test_husk_leech"
+
+[node name="RiftReaver" parent="Enemies" instance=ExtResource("47_rift_reaver")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.95, -10)
+enemy_id = &"level_test_rift_reaver"
+maximum_health = 500
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]
 stream = ExtResource("35_music")
