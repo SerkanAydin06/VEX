@@ -105,7 +105,7 @@ texture_filter = 3
 alpha_cut = 1
 
 [node name="Light" type="OmniLight3D" parent="."]
-light_color = Color(1, 0.42, 0.18, 1)
+light_color = Color(0.08, 0.86, 1, 1)
 light_energy = 2.8
 omni_range = 3.8
 shadow_enabled = false
