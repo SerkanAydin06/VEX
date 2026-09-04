@@ -11,6 +11,7 @@ ACTOR = ROOT / "scenes/actors/venom_marshall.tscn"
 NORMAL_PROJECTILE = ROOT / "scenes/actors/venom_marshall_projectile.tscn"
 BUFF_PROJECTILE = ROOT / "scenes/actors/venom_marshall_buff_projectile.tscn"
 ACTOR_SCRIPT = ROOT / "scripts/actors/venom_marshall.gd"
+ABILITY_SCRIPT = ROOT / "scripts/actors/venom_marshall_ability_settings.gd"
 BUFF_PROJECTILE_SCRIPT = ROOT / "scripts/actors/venom_marshall_buff_projectile.gd"
 BUFF_STATUS_SCRIPT = ROOT / "scripts/actors/venom_marshall_buff_status.gd"
 RUNTIME_TEST = ROOT / "tests/venom_marshall_runtime_test.gd"
@@ -21,6 +22,7 @@ for path in [
     NORMAL_PROJECTILE,
     BUFF_PROJECTILE,
     ACTOR_SCRIPT,
+    ABILITY_SCRIPT,
     BUFF_PROJECTILE_SCRIPT,
     BUFF_STATUS_SCRIPT,
     RUNTIME_TEST,
@@ -57,6 +59,7 @@ for import_name in [
 
 actor = ACTOR.read_text(encoding="utf-8")
 actor_script = ACTOR_SCRIPT.read_text(encoding="utf-8")
+ability_script = ABILITY_SCRIPT.read_text(encoding="utf-8")
 normal_projectile = NORMAL_PROJECTILE.read_text(encoding="utf-8")
 buff_projectile = BUFF_PROJECTILE.read_text(encoding="utf-8")
 buff_script = BUFF_PROJECTILE_SCRIPT.read_text(encoding="utf-8")
@@ -70,7 +73,7 @@ for contract in [
     "attack_damage = 16",
     "attack_range = 20.0",
     'projectile_scene = ExtResource("3_projectile")',
-    'buff_projectile_scene = ExtResource("4_buff_projectile")',
+    'special_ability_settings = SubResource("Resource_venom_marshall_ability")',
     "buff_cast_range = 7.0",
     "buff_cooldown = 11.5",
     '"name": &"2nd_attack"',
@@ -87,23 +90,33 @@ for retired_contract in [
 ]:
     assert retired_contract not in actor, retired_contract
 
-regions = re.findall(r"region = Rect2\((\d+), (\d+), (\d+), (\d+)\)", actor)
-assert len(regions) == 28, len(regions)
-expected_regions = [
-    (str(column * 341), str(row * 512), "341", "512")
-    for row in range(7)
-    for column in range(4)
-]
-assert regions == expected_regions, regions
-
 for contract in [
+    "class_name VexVenomMarshallAbilitySettings",
+    "extends VexEnemyAbilitySettings",
+    '@export_category("01 - Alan Desteği")',
+    '@export_category("02 - Görsel Hizalama")',
+    "var buff_cast_range := 7.0",
+    "var buff_cooldown := 11.5",
+    "var buff_windup := 0.65",
+    "var buff_recovery := 0.80",
+    "var buff_refresh_window := 1.2",
+    "var second_attack_frame_y_offsets := PackedFloat32Array",
+]:
+    assert contract in ability_script, contract
+
+assert "@export" not in actor_script
+for contract in [
+    "var _ability: VexVenomMarshallAbilitySettings",
+    "_ability = special_ability_settings as VexVenomMarshallAbilitySettings",
     "func _has_buff_candidate_in_self_field() -> bool:",
-    "_horizontal_distance(global_position, ally.global_position) <= buff_cast_range",
+    "_horizontal_distance(global_position, ally.global_position) <= _ability.buff_cast_range",
     'animated_sprite.play(&"2nd_attack")',
     "func _deploy_buff_field() -> void:",
+    "EnemyProjectilePool.acquire(_ability.buff_projectile_scene, projectile_parent)",
     "projectile.global_position = global_position",
     'projectile.call("deploy_at", global_position, self)',
     'animation_name == &"2nd_attack"',
+    "_ability.second_attack_frame_y_offsets",
 ]:
     assert contract in actor_script, contract
 
@@ -115,8 +128,18 @@ for retired_contract in [
     "buff_cluster_radius",
     "buff_spawn_height",
     "buff_spawn_forward_offset",
+    '@export_category("10 - Venom Marshall Alan Desteği")',
 ]:
     assert retired_contract not in actor_script, retired_contract
+
+regions = re.findall(r"region = Rect2\((\d+), (\d+), (\d+), (\d+)\)", actor)
+assert len(regions) == 28, len(regions)
+expected_regions = [
+    (str(column * 341), str(row * 512), "341", "512")
+    for row in range(7)
+    for column in range(4)
+]
+assert regions == expected_regions, regions
 
 for contract in [
     "field_radius = 7.0",
@@ -163,7 +186,8 @@ for contract in [
     assert contract in status_script, contract
 
 for contract in [
-    "actor.buff_cast_range, 7.0",
+    "actor.special_ability_settings as VexVenomMarshallAbilitySettings",
+    "ability.buff_cast_range, 7.0",
     'actor.call("_has_buff_candidate_in_self_field")',
     "projectile.field_radius, 7.0",
     "projectile.deploy_at(actor.global_position, actor)",
@@ -179,4 +203,4 @@ level_test = LEVEL_TEST.read_text(encoding="utf-8")
 assert 'path="res://scenes/actors/venom_marshall.tscn"' in level_test
 assert 'enemy_id = &"level_test_venom_marshall"' in level_test
 
-print("Venom Marshall self-centered ranged/support audit passed")
+print("Venom Marshall scene-owned self-centered support audit passed")
