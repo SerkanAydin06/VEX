@@ -16,7 +16,7 @@ IMPORT = ROOT / "assets/enemies/cinder_hound/cinder_hound_character_spritesheet.
 ALPHA_THRESHOLD = 16
 ANIM_ROWS = ["idle", "walk", "attack", "death", "idle_back", "walk_back"]
 TARGET_CONTACT_GAP = 0.008
-CAPSULE_HEIGHT = 1.45
+CAPSULE_HEIGHT = 1.30
 CORPSE_FLOOR_CLEARANCE = 0.02
 
 
@@ -115,9 +115,16 @@ assert (width, height) == (2048, 2046)
 pixel_size = scene_float(source, "pixel_size")
 base_y = sprite_y(source)
 corpse_visual_y = scene_float(source, "corpse_visual_y")
-assert math.isclose(pixel_size, 0.0042, abs_tol=0.000001)
-assert math.isclose(base_y, -0.024, abs_tol=0.000001)
-assert math.isclose(corpse_visual_y, -0.0335, abs_tol=0.000001)
+assert math.isclose(pixel_size, 0.00375, abs_tol=0.000001)
+assert math.isclose(base_y, -0.02, abs_tol=0.000001)
+assert math.isclose(corpse_visual_y, -0.0339, abs_tol=0.000001)
+assert math.isclose(scene_float(source, "attack_range"), 1.5, abs_tol=0.000001)
+assert math.isclose(scene_float(source, "attack_windup"), 0.32, abs_tol=0.000001)
+assert math.isclose(scene_float(source, "attack_range_tolerance"), 0.18, abs_tol=0.000001)
+assert math.isclose(scene_float(source, "attack_lunge_speed"), 13.0, abs_tol=0.000001)
+assert math.isclose(scene_float(source, "attack_lunge_acceleration"), 62.0, abs_tol=0.000001)
+assert math.isclose(scene_float(source, "attack_lunge_duration"), 0.32, abs_tol=0.000001)
+assert math.isclose(scene_float(source, "attack_lunge_stop_distance"), 0.74, abs_tol=0.000001)
 print(f"CINDER HOUND SCALE pixel_size={pixel_size:.6f} sprite_y={base_y:+.4f}")
 
 death_final_max_y = None
