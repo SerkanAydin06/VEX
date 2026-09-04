@@ -9,8 +9,8 @@
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_cinderhound"]
-radius = 0.44
-height = 1.45
+radius = 0.39
+height = 1.3
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_1"]
 atlas = ExtResource("5_sheet")
@@ -190,25 +190,25 @@ detection_range = 30.0
 pursuit_range = 42.0
 ally_alert_radius = 8.0
 hearing_radius = 18.0
-attack_range = 1.75
+attack_range = 1.5
 attack_damage = 16
 attack_cooldown = 1.05
-attack_windup = 0.18
-attack_range_tolerance = 0.35
-attack_lunge_speed = 11.5
-attack_lunge_acceleration = 55.0
-attack_lunge_duration = 0.22
-attack_lunge_stop_distance = 0.9
+attack_windup = 0.32
+attack_range_tolerance = 0.18
+attack_lunge_speed = 13.0
+attack_lunge_acceleration = 62.0
+attack_lunge_duration = 0.32
+attack_lunge_stop_distance = 0.74
 dormant_distance = 44.0
-corpse_visual_y = -0.0335
-idle_frame_y_offsets = PackedFloat32Array(-0.0231, -0.0231, -0.0189, -0.0189)
-idle_back_frame_y_offsets = PackedFloat32Array(0.0189, 0.0105, 0.0063, 0.0231)
-walk_frame_y_offsets = PackedFloat32Array(-0.0189, -0.0357, -0.0105, -0.0105)
-walk_back_frame_y_offsets = PackedFloat32Array(0.0105, -0.0063, 0.0063, 0.0063)
-attack_frame_y_offsets = PackedFloat32Array(-0.0063, 0.0063, 0.0063, 0.0147)
-death_frame_y_offsets = PackedFloat32Array(0.0063, -0.0315, 0.0147, 0.0105)
+corpse_visual_y = -0.0339
+idle_frame_y_offsets = PackedFloat32Array(-0.0239, -0.0239, -0.0201, -0.0201)
+idle_back_frame_y_offsets = PackedFloat32Array(0.0136, 0.0061, 0.0024, 0.0174)
+walk_frame_y_offsets = PackedFloat32Array(-0.0201, -0.0351, -0.0126, -0.0126)
+walk_back_frame_y_offsets = PackedFloat32Array(0.0061, -0.0089, 0.0024, 0.0024)
+attack_frame_y_offsets = PackedFloat32Array(-0.0089, 0.0024, 0.0024, 0.0099)
+death_frame_y_offsets = PackedFloat32Array(0.0024, -0.0314, 0.0099, 0.0061)
 burn_remains_scene = ExtResource("31_burn")
-burn_remains_scale = 0.8
+burn_remains_scale = 0.72
 burn_smoke_duration = 6.5
 burn_smoke_alpha = 0.12
 
@@ -216,9 +216,9 @@ burn_smoke_alpha = 0.12
 shape = SubResource("CapsuleShape_cinderhound")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
-position = Vector3(0, -0.024, 0)
+position = Vector3(0, -0.02, 0)
 cast_shadow = 0
-pixel_size = 0.0042
+pixel_size = 0.00375
 billboard = 2
 shaded = true
 alpha_cut = 1
@@ -227,11 +227,11 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="GroundShadow" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.705, 0)
+transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.63, 0)
 cast_shadow = 0
 offset = Vector2(0, 16)
 modulate = Color(1, 1, 1, 0.52)
-pixel_size = 0.0052
+pixel_size = 0.0047
 billboard = 2
 texture_filter = 5
 render_priority = -2
