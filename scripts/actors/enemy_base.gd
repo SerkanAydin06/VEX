@@ -9,15 +9,13 @@ const EnemyNavigationRuntime = preload("res://scripts/actors/enemy_navigation_ru
 const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd")
 const EnemyPerceptionRuntime = preload("res://scripts/actors/enemy_perception_runtime.gd")
 
-@export_category("01A - Ortak Kimlik ve Zorluk")
+@export_category("01 - Kimlik ve Zorluk")
 ## Kayıt ve yenilgi takibinde kullanılan benzersiz yaratık kimliğidir.
 @export var enemy_id: StringName = &"enemy"
 ## Yaratığın doğabileceği en düşük zorluk seviyesidir; 0 tüm seviyelerdir.
 @export_range(0, 3, 1) var spawn_min_difficulty := 0
 ## Açıksa sahnedeki zorluk çarpanları cana, hasara, hıza, algılamaya ve saldırı sürelerine uygulanır.
 @export var apply_difficulty_scaling := true
-
-@export_category("01B - Zorluk Çarpanları (Sahne)")
 ## zorluk can çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
 @export var difficulty_health_multipliers := PackedFloat32Array([0.75, 1.0, 1.20, 1.45])
 ## zorluk hasar çarpanları; dizi sırası Kolay, Normal, Zor ve Kabus seviyeleridir.
