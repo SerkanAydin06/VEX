@@ -99,7 +99,8 @@ var ranged_cover_reposition_refresh := 0.55
 @export_range(0.2, 3.0, 0.1) var damage_approach_offset := 1.4
 ## hasar yaklaşma mesafe oran ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 1.0, 0.05) var damage_approach_distance_ratio := 0.30
-@export_category("03B - İşitme / Stealth")
+
+@export_category("04 - İşitme / Stealth")
 ## Ses olaylarının duyulabileceği temel yarıçaptır (metre).
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 14.0
 ## Ses yüksekliğine uygulanan çarpandır; yükseldikçe işitme menzili artar.
@@ -110,13 +111,14 @@ var ranged_cover_reposition_refresh := 0.55
 @export_range(0.1, 1.0, 0.05) var headshot_height_ratio := 0.62
 ## kafa vuruşu referans yükseklik değeridir (metre).
 @export_range(0.0, 3.0, 0.05) var headshot_reference_height := 0.95
-@export_category("03C - Görüş Örnekleme")
+
+@export_category("05 - Görüş Örnekleme")
 ## Açıksa menzilli saldırı görüşü gövdedeki birden fazla noktadan örneklenir.
 @export var ranged_visibility_sampling_enabled := true
 ## Açıksa menzilli yaratık görüş kapandığında daha açık bir konuma geçer.
 @export var cover_reposition_enabled := true
 
-@export_category("04 - Saldırı")
+@export_category("06 - Saldırı")
 ## Normal saldırının zorluk çarpanından önceki temel hasarıdır.
 @export_range(1, 100, 1) var attack_damage := 12
 ## Normal saldırının başlatılabildiği yatay mesafedir (metre).
@@ -158,7 +160,7 @@ var ranged_cover_reposition_refresh := 0.55
 ## saldırı yaklaşma en düşük hız çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(0.0, 2.0, 0.05) var attack_approach_min_speed_scale := 0.45
 
-@export_category("05 - Yol Bulma")
+@export_category("07 - Yol Bulma")
 ## rota yenileme aralığı değeridir (saniye).
 @export_range(0.1, 1.0, 0.05) var path_refresh_interval := 0.35
 ## takip rota yenileme aralığı değeridir (saniye).
@@ -212,7 +214,7 @@ var local_detour_direct_path_bonus := 8.0
 # yerel sapma süreklilik bonus ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var local_detour_persistence_bonus := 0.45
 
-@export_category("05B - Cover Yeniden Konumlanma")
+@export_category("08 - Cover Yeniden Konumlanma")
 # siper çapraz mesafe çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var cover_diagonal_distance_scale := 1.35
 # siper ileri mesafe çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
@@ -226,7 +228,7 @@ var cover_threshold_score_bonus := 2.0
 # siper başarısız yeniden deneme aralığı değeridir (saniye).
 var cover_failed_retry_interval := 0.20
 
-@export_category("06 - Performans")
+@export_category("09 - Performans")
 ## boşta algılama pay değeridir (metre).
 @export_range(0.0, 30.0, 0.5) var idle_detection_margin := 6.0
 ## yakın görüş aralığı değeridir (saniye).
@@ -244,7 +246,7 @@ var cover_failed_retry_interval := 0.20
 ## Oyuncu bundan uzaktayken pahalı AI işlemlerinin uykuya alınacağı mesafedir (metre).
 @export_range(12.0, 80.0, 1.0) var dormant_distance := 44.0
 
-@export_category("07 - Görsel ve Animasyon")
+@export_category("10 - Görsel ve Animasyon")
 ## arka görüş eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(-1.0, 1.0, 0.05) var back_view_threshold := -0.15
 ## Açıksa hasar alan yaratığın görseline kısa ve hafif bir sarsıntı uygulanır.
@@ -278,7 +280,7 @@ var cover_failed_retry_interval := 0.20
 ## ölüm kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var death_frame_y_offsets := PackedFloat32Array([0.0, -0.008, -0.016, -0.025])
 
-@export_category("08 - Ölüm Sonrası İz")
+@export_category("11 - Ölüm Sonrası İz")
 ## Yanarak ölen yaratığın yerine üretilecek kalıntı sahnesidir.
 @export var burn_remains_scene: PackedScene
 ## yanık kalıntı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
@@ -298,7 +300,7 @@ var cover_failed_retry_interval := 0.20
 ## Yaratığın yanık duman saydamlık ayarını belirler.
 @export_range(0.0, 1.0, 0.01) var burn_smoke_alpha := 0.14
 
-@export_category("09 - Özel Yetenekler")
+@export_category("12 - Özel Yetenekler")
 ## Bu yaratığa özgü saldırı ayarlarını içerir; kaynağı genişleterek alt alanları düzenleyin.
 @export var special_ability_settings: VexEnemyAbilitySettings
 
