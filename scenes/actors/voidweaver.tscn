@@ -202,14 +202,14 @@ lost_sight_timeout = 16.0
 search_duration = 9.0
 search_turn_speed = 48.0
 ally_alert_radius = 11.0
-sight_origin_height = 0.8
+sight_origin_height = 1.2
 attack_damage = 20
 attack_range = 13.5
 attack_cooldown = 1.1
 attack_windup = 0.34
 attack_range_tolerance = 4.0
 projectile_scene = ExtResource("26_projectile")
-projectile_spawn_height = 0.05
+projectile_spawn_height = 0.55
 projectile_spawn_forward_offset = 0.18
 projectile_target_height = 0.55
 projectile_lead_factor = 0.85
@@ -236,6 +236,7 @@ burn_ember_tint = Color(0.36, 0.06, 0.12, 0.26)
 shape = SubResource("CapsuleShape_enemy")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1470725653]
+position = Vector3(0, 0.45, 0)
 cast_shadow = 0
 pixel_size = 0.0041
 billboard = 2
