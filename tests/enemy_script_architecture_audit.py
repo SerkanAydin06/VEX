@@ -41,9 +41,6 @@ FAMILIES = {
     ],
 }
 
-# Vaskari Raptor kanonik script/kimlik adını kullanır. Büyük level sahnelerindeki
-# eski PackedScene yollarını ve instance kimliklerini kırmamak için actor scene
-# dosya yolu bu geçişte uyumluluk alias'ı olarak vaskari_raptor.tscn kalır.
 SCENE_FILE_OVERRIDES = {
     "vaskari_raptor": "vaskari_raptor.tscn",
 }
@@ -138,8 +135,9 @@ for shared_difficulty_setting in [
         lunge_base,
     ), shared_difficulty_setting
 
-assert enemy_base.count('@export_category("01A - Ortak Kimlik ve Zorluk")') == 1
-assert enemy_base.count('@export_category("01B - Zorluk Çarpanları (Sahne)")') == 1
+assert enemy_base.count('@export_category("01 - Kimlik ve Zorluk")') == 1
+assert "01A -" not in enemy_base
+assert "01B -" not in enemy_base
 
 # Frame callback ailede kalır: base sınıfın aileye özgü _apply_frame_ground_offset
 # hook'unu doğrudan çağırması Godot runtime class-resolution'ını bozar.
