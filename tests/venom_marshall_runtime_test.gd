@@ -19,7 +19,9 @@ func _ready() -> void:
 	add_child(actor)
 	actor.global_position = Vector3(3.0, 0.0, 4.0)
 	actor.set_physics_process(false)
-	assert(is_equal_approx(actor.buff_cast_range, 7.0))
+	var ability := actor.special_ability_settings as VexVenomMarshallAbilitySettings
+	assert(ability != null)
+	assert(is_equal_approx(ability.buff_cast_range, 7.0))
 
 	var candidate := DummyEnemy.new()
 	candidate.name = "BuffCandidate"
