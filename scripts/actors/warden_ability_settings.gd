@@ -2,7 +2,7 @@
 class_name VexWardenAbilitySettings
 extends VexEnemyAbilitySettings
 
-@export_category("Ground Slam")
+@export_category("01 - Ground Slam")
 ## Ground Slam etkisini oluşturan sahnedir.
 @export var ground_slam_scene: PackedScene
 ## Oyuncu bu yatay mesafeye girdiğinde Ground Slam seçilebilir (metre).
@@ -36,7 +36,7 @@ extends VexEnemyAbilitySettings
 ## Ground Slam'in düşman işitme sistemine yaydığı gürültü katsayısıdır.
 @export_range(0.0, 3.0, 0.05) var ground_slam_noise_loudness := 1.50
 
-@export_category("Heatwave")
+@export_category("02 - Heatwave")
 ## Heatwave halkasında çoğaltılacak mermi sahnesidir.
 @export var heatwave_projectile_scene: PackedScene
 ## Warden bu yatay mesafeye ulaştığında Heatwave başlatır (metre).
@@ -74,6 +74,6 @@ extends VexEnemyAbilitySettings
 ## Heatwave animasyon karelerinin dikey hizalama düzeltmeleridir; eleman sırası kare sırasıdır.
 @export var heatwave_frame_y_offsets := PackedFloat32Array([0.0, 0.0, 0.0, 0.0])
 
-@export_category("Zırhlı Zayıf Nokta")
+@export_category("03 - Zırhlı Zayıf Nokta")
 ## İsabet bu yerel yüksekliğin üstündeyse Warden kafa vuruşu hasarı alır (metre).
 @export_range(0.5, 3.0, 0.05) var headshot_local_height := 1.15
