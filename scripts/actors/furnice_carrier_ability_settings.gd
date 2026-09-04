@@ -2,7 +2,7 @@
 class_name VexFurniceCarrierAbilitySettings
 extends VexEnemyAbilitySettings
 
-@export_category("Saldırı Seçimi")
+@export_category("01 - Saldırı Seçimi")
 ## Oyuncu bu mesafenin içindeyse hazır olan Thermal Burst tercih edilir (metre).
 @export_range(0.5, 12.0, 0.1) var close_attack_threshold := 6.0
 ## İki normal mermi saldırısı arasındaki temel bekleme süresidir (saniye).
@@ -16,7 +16,7 @@ extends VexEnemyAbilitySettings
 ## Mermi çıkışını bakış yönünde öne taşıyan derinlik payıdır (metre).
 @export_range(0.0, 0.5, 0.01) var projectile_muzzle_depth_offset := 0.08
 
-@export_category("Thermal Burst")
+@export_category("02 - Thermal Burst")
 ## Yakın alan Thermal Burst efektini oluşturan sahnedir.
 @export var thermal_burst_scene: PackedScene
 ## Thermal Burst'ün zorluk çarpanından önceki temel hasarıdır.
