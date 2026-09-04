@@ -2,7 +2,7 @@
 class_name VexGorehornChargeSettings
 extends VexEnemyAbilitySettings
 
-@export_category("Boynuz Şarjı")
+@export_category("01 - Boynuz Şarjı")
 ## Şarj sırasında oyuncuyla temasın kesin vuruş sayılacağı yatay mesafedir (metre).
 @export_range(0.5, 2.5, 0.05) var hit_distance := 1.10
 ## Yakınlık tabanlı boynuz temasının geçerli sayılacağı en yüksek dikey kök farkıdır (metre).
@@ -25,7 +25,7 @@ extends VexEnemyAbilitySettings
 ## Kamera sarsıntısının toplam süresidir (saniye).
 @export_range(0.0, 1.0, 0.01) var impact_shake_duration := 0.34
 
-@export_category("Darbe Perdesi")
+@export_category("02 - Darbe Perdesi")
 ## Başarılı boynuz darbesinde kısa, koyu bir ekran darbe perdesi gösterilip gösterilmeyeceğini belirler.
 @export var impact_shock_enabled := true
 ## Darbe perdesinin rengidir; koyu kırmızı-siyah tonlar göz yormadan ağır çarpışma hissi verir.
