@@ -67,6 +67,10 @@ for animation in ["idle", "walk", "attack", "death", "idle_back", "walk_back"]:
 assert re.search(r'^radius = 0\.45$', actor, re.M)
 assert re.search(r'^height = 1\.9$', actor, re.M)
 assert re.search(r'^pixel_size = 0\.0041$', actor, re.M)
+assert re.search(r'^position = Vector3\(0, 0\.45, 0\)$', actor, re.M)
+assert re.search(r'^sight_origin_height = 1\.2$', actor, re.M)
+assert re.search(r'^projectile_spawn_height = 0\.55$', actor, re.M)
+assert '0, -0.93, 0)' in actor
 assert re.search(r'^combat_role = 1$', actor, re.M)
 assert re.search(r'^maximum_health = 120$', actor, re.M)
 assert re.search(r'^attack_range = 13\.5$', actor, re.M)
