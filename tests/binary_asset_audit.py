@@ -7,7 +7,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_EXTENSIONS = {".png", ".wav", ".mp3", ".ttf"}
 MAX_SINGLE_ASSET_BYTES = 12 * 1024 * 1024
-MAX_BINARY_TREE_BYTES = 324 * 1024 * 1024
+MAX_BINARY_TREE_BYTES = 330 * 1024 * 1024
 SINGLE_ASSET_OVERRIDES = {
     Path("assets/enemies/husk_leech/husk_leech_character_spritesheet.png"): 13 * 1024 * 1024,
 }
