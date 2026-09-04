@@ -78,7 +78,7 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 @export_range(1.0, 30.0, 0.5) var damage_reaction_duration := 12.0
 ## hasar takip kararlılık süre değeridir (saniye).
 @export_range(0.0, 2.0, 0.01) var damage_pursuit_commit_time := 0.12
-@export_category("03B - İşitme / Stealth")
+@export_category("04 - İşitme / Stealth")
 ## Ses olaylarının duyulabileceği temel yarıçaptır (metre).
 @export_range(2.0, 40.0, 0.5) var hearing_radius := 16.0
 ## Ses yüksekliğine uygulanan çarpandır; yükseldikçe işitme menzili artar.
@@ -93,7 +93,7 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 @export var receive_ally_alerts := true
 
 
-@export_category("04 - Saldırı")
+@export_category("05 - Saldırı")
 ## Normal saldırının başlatılabildiği yatay mesafedir (metre).
 @export_range(0.5, 16.0, 0.05) var attack_range := 1.45
 ## Normal saldırının zorluk çarpanından önceki temel hasarıdır.
@@ -113,7 +113,7 @@ const EnemyLungeRuntime = preload("res://scripts/actors/enemy_lunge_runtime.gd")
 ## saldırı atılma durma mesafe değeridir (metre).
 @export_range(0.2, 2.0, 0.05) var attack_lunge_stop_distance := 1.2
 
-@export_category("05 - Yol Bulma")
+@export_category("06 - Yol Bulma")
 ## araştırma ulaşma mesafe değeridir (metre).
 @export_range(0.1, 2.0, 0.05) var investigation_reach_distance := 0.55
 ## sapma süre değeridir (saniye).
@@ -135,7 +135,7 @@ var detour_duration := 0.55
 # wall normal y eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 var wall_normal_y_threshold := 0.55
 
-@export_category("06 - Performans")
+@export_category("07 - Performans")
 ## yakın görüş aralığı değeridir (saniye).
 @export_range(0.02, 1.0, 0.01) var near_sight_interval := 0.08
 ## uzak görüş aralığı değeridir (saniye).
@@ -143,7 +143,7 @@ var wall_normal_y_threshold := 0.55
 ## Oyuncu bundan uzaktayken pahalı AI işlemlerinin uykuya alınacağı mesafedir (metre).
 @export_range(12.0, 80.0, 1.0) var dormant_distance := 44.0
 
-@export_category("07 - Görsel ve Animasyon")
+@export_category("08 - Görsel ve Animasyon")
 ## arka görüş eşik ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
 @export_range(-1.0, 1.0, 0.05) var back_view_threshold := -0.15
 ## Açıksa hasar alan yaratığın görseline kısa ve hafif bir sarsıntı uygulanır.
@@ -175,7 +175,7 @@ var wall_normal_y_threshold := 0.55
 ## ölüm kare y dikey düzeltmeleri; her eleman aynı sıradaki animasyon karesinin zemin hizasını düzeltir.
 @export var death_frame_y_offsets := PackedFloat32Array([0.0, -0.008, -0.016, -0.024])
 
-@export_category("08 - Ölüm Sonrası İz")
+@export_category("09 - Ölüm Sonrası İz")
 ## Yanarak ölen yaratığın yerine üretilecek kalıntı sahnesidir.
 @export var burn_remains_scene: PackedScene
 ## yanık kalıntı çarpan ayarıdır; ilgili AI kararındaki etkinin oranını veya ağırlığını belirler.
@@ -195,7 +195,7 @@ var wall_normal_y_threshold := 0.55
 ## Yaratığın yanık duman saydamlık ayarını belirler.
 @export_range(0.0, 1.0, 0.01) var burn_smoke_alpha := 0.14
 
-@export_category("09 - Özel Yetenekler")
+@export_category("10 - Özel Yetenekler")
 ## Bu yaratığa özgü saldırı ayarlarını içerir; kaynağı genişleterek alt alanları düzenleyin.
 @export var special_ability_settings: VexEnemyAbilitySettings
 
