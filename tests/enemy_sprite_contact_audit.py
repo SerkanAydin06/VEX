@@ -47,7 +47,7 @@ CREATURES = {
     "crucible_warden": CreatureSpec("crucible_warden.tscn", 0.44, 0.0064, 2.40),
     "vaskari_raptor": CreatureSpec("vaskari_raptor.tscn", 0.0000225, 0.003515713, 1.80),
     "vaskari_ravager": CreatureSpec("vaskari_ravager.tscn", 0.1333, 0.0065753907, 3.10),
-    "cinderhound": CreatureSpec("cinderhound.tscn", -0.024, 0.0042, 1.45),
+    "cinderhound": CreatureSpec("cinderhound.tscn", -0.02, 0.00375, 1.30),
     "briar_skulker": CreatureSpec("briar_skulker.tscn", 0.0, 0.003125, 1.60),
     "gorehorn": CreatureSpec("gorehorn.tscn", 0.0, 0.0052, 2.40),
     "vaskari_bulwark": CreatureSpec("vaskari_bulwark.tscn", 0.0884, 0.0052, 2.40),
