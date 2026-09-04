@@ -2,448 +2,441 @@
 
 ## 1. Temel konsept
 
-VEX dünyasındaki her düşman, rastgele “canavar” değil; **belirli bir evrene, ekosisteme ve toplumsal yapıya ait bir varlık** olmalıdır.
+VEX dünyasındaki her düşman rastgele bir “canavar” değil; **belirli bir evrene, ekosisteme ve toplumsal yapıya ait bir varlık** olmalıdır.
 
 Ana ilke:
 
 - Her yaratık ailesi **tek bir ana evrene** aittir.
 - Aynı evrenden gelen yaratıklar ortak bir biyolojiye, görsel dile ve savaş mantığına sahip olur.
-- Ancak aynı evrenin yaratıkları birbirinin kopyası olmaz; her biri **ayrı rol, ayrı tehdit tipi ve ayrı kişilik** taşır.
-- Yaratıkların saldırganlığı “kötü oldukları” için değil; çoğu zaman **kaynak kaybı, yön kaybı, yabancı çevre stresi, savunma içgüdüsü veya görev programı** nedeniyle ortaya çıkar.
-- Oyun ilerledikçe oyuncu yalnız yaratıkların ne yaptığını değil, **neden burada olduklarını** da öğrenir.
-
-Bu yapı hem hikâyeyi güçlendirir hem de düşman tasarımında net bir çerçeve sağlar:
+- Aynı ailedeki yaratıklar birbirinin kopyası olmaz; her biri ayrı rol, tehdit tipi ve karşı oyun üretir.
+- Yaratıkların saldırganlığı çoğu zaman “kötü oldukları” için değil; kaynak kaybı, yabancı çevre stresi, savunma içgüdüsü, görev programı veya bozulan ekolojik düzen nedeniyle ortaya çıkar.
+- Hikâye, uygulanmamış bir gameplay özelliğini varmış gibi anlatmamalıdır. Lore ile güncel sahne/script davranışı çelişirse **oyundaki gerçek davranış kaynak kabul edilir ve metin güncellenir**.
 
 > **Evren = ortak kimlik**  
-> **Yaratık = özgün rol**
+> **Yaratık = özgün rol**  
+> **Gameplay = anlatılan tehdidin gerçek karşılığı**
 
 ---
 
-## 2. Ana tasarım omurgası
+## 2. Güncel kaynak-of-truth kuralı
 
-Her düşman ailesi aşağıdaki 6 sütuna göre tasarlanmalıdır:
+Bu dosya güncel enemy sahneleriyle birlikte düşünülür.
 
-| Başlık | Anlamı |
-|---|---|
-| Evren kimliği | Geldiği boyutun doğası, kültürü ve fizik mantığı |
-| Ortak görsel dil | Siluet, renk, doku, ışık, hareket karakteri |
-| Ortak biyoloji / teknoloji | Canlı, yarı-organik, biyomekanik, enerji temelli vb. |
-| Ana savaş özelliği | Oyuncuya karşı aileyi ayırt eden ana oynanış davranışı |
-| Hikâye nedeni | VEX’in o dünyadan ne çektiği ve neden çatışma çıktığı |
-| Bireysel rol farkı | Aynı evrendeki yaratıkların birbirinden nasıl ayrıldığı |
+- Can, hız, menzil, saldırı tipi ve özel yetenek gibi uygulanmış özelliklerin kaynağı `scenes/actors/*.tscn` ve ilgili enemy scriptleridir.
+- Bu doküman sayısal denge tablosu değildir; **rol, görsel aile ve hikâye kimliğini** tarif eder.
+- Bir yaratığın oyunda olmayan görünmezlik, teleport, yön değiştiren mermi, ally buff vb. özelliği bu belgede “mevcut” gibi yazılmamalıdır.
+- Planlanan yaratıklar mevcut roster’dan açık biçimde ayrılır.
+
+Güncel aktif roster: **18 yaratık**.
 
 ---
 
-## 3. Beş ana evren
+## 3. Beş ana evren ve aktif roster
 
-Şimdilik VEX düşman ekosistemi 5 farklı evrenden oluşur. Mevcut düşmanlar bu yapının içine yerleştirilmiştir.
+| Evren | Genel kimlik | Aktif yaratıklar |
+|---|---|---|
+| **Korvath Ocağı** | Isı, basınç, bazalt, ağır endüstriyel biyoloji | Basalt Juggernaut, Cinder Hound, Cinder Spitter, Furnace Carrier, Crucible Warden |
+| **Thornwild Sürüsü** | Et, kemik, diken, spor ve sert av-avcı ekolojisi | Ravager, Briar Skulker, Gorehorn, Spore Matriarch |
+| **Vaskari Lejyonu** | Disiplinli savaş kastı, mor biyozırh, zehir ve takım baskısı | Vaskari Raptor, Vaskari Ravager, Coil Lancer, Vaskari Bulwark, Venom Marshall |
+| **Nhal Veil** | Karanlık, düşük görünürlük, soğuk perde dokusu ve algı bozma | Veilmaw, Husk Leech |
+| **Aether Loom** | Yarık dokusu, akıllı enerji örüntüleri ve uzamsal anormallik | Voidweaver, Rift Reaver |
 
-| Evren | Kod adı | Genel kimlik | Mevcut yaratık |
+---
+
+## 4. Görsel aile standardı
+
+Aile rengi tek başına bütün sprite'ı boyamak anlamına gelmez. Ama oyuncu yaratığa veya saldırı efektine baktığında **hangi evrene ait olduğunu hızlıca ayırt edebilmelidir**.
+
+| Evren | Ana palet | Görsel anahtar | Kaçınılacak karışıklık |
 |---|---|---|---|
-| 1 | **Korvath Ocağı** | Aşırı sıcak, basınç, jeotermal madencilik ve kızıl endüstri | Basalt Juggernaut, Cinder Hound, Furnace Carrier, Crucible Warden |
-| 2 | **Thornwild Sürüsü** | Kas, kemik, yırtıcılık, sürü baskısı ve biyolojik avcılık | Ravager, Briar Skulker, Gorehorn, Spore Matriarch |
-| 3 | **Vaskari Lejyonu** | Disiplinli savaş kastı, zehir, biyozırh ve saldırı düzeni | Vaskari Raptor, Vaskari Ravager, Coil Lancer, Vaskari Bulwark, Venom Marshall |
-| 4 | **Nhal Veil** | Karanlık, perdeleşme, pusudan av, titreşim ve sessiz yaklaşım | Veilmaw, Husk Leech |
-| 5 | **Aether Loom** | Boşluk, yarık dokusu, akıllı enerji organizmaları ve uzamsal örüntüler | Voidweaver |
+| **Korvath** | Siyah/bazalt, kızıl, turuncu, sıcak sarı | Kor, magma çatlağı, ağır kabuk | Soğuk mavi/camgöbeği ana enerji rengi olmamalı |
+| **Thornwild** | Koyu et/kızıl, kemik, kirli sarı-yeşil biyolüminesans | Kas, diken, spor, organik yüzey | Fazla teknolojik neon veya düzgün askerî zırh olmamalı |
+| **Vaskari** | **Koyu mor, viyole, magenta, siyah** | Biyozırh plakaları, keskin savaş silueti | Aether'in camgöbeği/beyaz enerji diliyle karışmamalı |
+| **Nhal Veil** | Mat siyah, lacivert, **soğuk mavi** | Gölge/perde hissi, ince ve rahatsız edici siluet | Vaskari'nin parlak mor askerî paletiyle aynı görünmemeli |
+| **Aether Loom** | **Camgöbeği, elektrik mavisi, buz beyazı**, siyah yarık çizgileri | Yarı-maddesel enerji, kırık geometri, faz izi | Ana palet olarak Vaskari moru kullanılmamalı |
+
+### Özel efekt istisnası
+
+**Husk Leech'in toksik yeşil görüş efekti**, Nhal ailesinin ana rengi değil; oyuncuya bulaşan özel durum etkisinin rengidir. Bu nedenle yeşil yalnız zehir/perde etkisinde belirgin olabilir.
 
 ---
 
-## 4. Evren 1 — Korvath Ocağı
-
-## 4.1 Evren özeti
-
-Korvathlar, aşırı sıcak ve basınç altında yaşam kurmuş endüstriyel bir yeraltı uygarlığıdır. Enerji, magma kanalları ve derin kaya damarları üzerinden taşınır. VEX, bu evrenden jeotermal enerji ve ısı akışı çekerek Korvath şehirlerinin dengesini bozmuştur.
-
-Korvath varlıkları saldırırken “istila” yapmaz; daha çok **enerji sömürüsünü durdurmaya çalışan, yönünü kaybetmiş ya da işlev bozulmasına uğramış ağır saha organizmaları** gibi davranırlar.
-
-## 4.2 Ortak özellikler
-
-- **Görsel dil:** Siyah bazalt, kızıl çatlaklar, turuncu lav ışığı, ağır sanayi silueti.
-- **Beden yapısı:** Yoğun kütleli, yüksek ısı taşıyan, kalın kabuklu.
-- **Ana oynanış özelliği:** Alan baskısı, sıcaklık tehdidi, ağır yakın çatışma.
-- **Doğal avantaj:** Zırh, yüksek dayanıklılık, ateş/ısı direnci.
-- **Genel zayıflık:** Soğutma şoku, parlak çekirdek bölgeleri, yavaş yön değiştirme.
-
-## 4.3 Dört yaratık
-
-### 1. Basalt Juggernaut
-
-**Durum:** Mevcut
-
-- **Rol:** Ağır ön hat kırıcı
-- **Hikâye rolü:** Korvath madenlerinde kaya kırma ve lav akışı yönlendirme için kullanılan biyolojik iş makinesi.
-- **Savaş kimliği:** Yavaş ama tehditkâr ilerler; yakın mesafede ezici hasar verir, orta mesafede kızgın çekirdek fırlatabilir.
-- **Ayırt edici özellik:** Göğüs/omuz hattındaki erimiş çekirdek zayıf noktadır.
-
-### 2. Cinder Hound
-
-**Durum:** Mevcut
-
-- **Rol:** Hızlı flank yaratığı
-- **Hikâye rolü:** Ocak tünellerinde arıza ve sızıntı tespiti yapan avcı canlı.
-- **Savaş kimliği:** Çember çizerek yaklaşır, kısa sıçramalar yapar, oyuncuyu pozisyon değiştirmeye zorlar.
-- **Ayırt edici özellik:** Basalt Juggernaut'ın aksine küçük ama agresiftir; sürat ile baskı kurar.
-
-### 3. Furnace Carrier
-
-**Durum:** Mevcut
-
-> Geriye dönük sahne ve kayıt uyumluluğu için dahili kimlik/dosya yolu `furnice_carrier` olarak korunur.
-
-- **Rol:** Destek / alan bozucu
-- **Hikâye rolü:** Isı çekirdeği ve işçi sürüleri taşıyan yarı-organik saha taşıyıcısı.
-- **Savaş kimliği:** Öldüğünde yere sıcak alan bırakır; zaman zaman küçük lav kapsülleri bırakır.
-- **Ayırt edici özellik:** Doğrudan hasardan çok arena kontrolü yapar.
-
-### 4. Crucible Warden
-
-**Durum:** Mevcut
-
-- **Rol:** Elit koruyucu / miniboss sınıfı
-- **Hikâye rolü:** Korvath enerji kuyularının nöbetçi kastı.
-- **Savaş kimliği:** Ağır zırhlıdır, kısa menzilli ısı dalgası yayar, saldırıdan sonra açıklık verir.
-- **Ayırt edici özellik:** Diğer Korvathlara göre daha “askerî” ve amaçlı davranır.
-
----
-
-## 5. Evren 2 — Thornwild Sürüsü
+# 5. Korvath Ocağı
 
 ## 5.1 Evren özeti
 
-Thornwild, bitki ve hayvan dokusunun birbirine karıştığı, av-avcı dengesinin çok sert olduğu biyolojik bir evrendir. VEX bu dünyadan biyokütle enerjisi, rejeneratif doku örnekleri ve enzimatik güç kaynakları çekmiştir. Bunun sonucu Thornwild’ın üst seviye avcıları yönlerini kaybedip geçitlerden Dünya’ya taşınmıştır.
+Korvathlar aşırı sıcak ve basınç altında yaşam kurmuş endüstriyel bir yeraltı uygarlığıdır. VEX, bu evrenden jeotermal enerji ve ısı akışı çekerken ocakların sıcaklık dengesini bozmuş, bazı damarları soğutmuş ve yeraltı altyapısında çökmelere yol açmıştır.
 
-Bu evrenin yaratıkları daha “kültürlü medeniyet” değil, **vahşi fakat son derece etkili ekolojik savaş organizmaları** gibidir.
+Korvath yaratıkları Dünya'yı ele geçirmek için tasarlanmış bir ordu değildir. Bir bölümü iş canlısı, bir bölümü bakım/taşıma organizması, bir bölümü ise enerji kuyularını koruyan güvenlik kastıdır. Dünya'daki VEX donanımını kaynak kaybının nedeni olarak algılamaları çatışmayı büyütür.
 
-## 5.2 Ortak özellikler
+## 5.2 Oynanış kimliği
 
-- **Görsel dil:** Koyu et tonları, kemik çıkıntılar, diken, kas lifleri, organik yeşil/sarı biyolüminesans.
-- **Beden yapısı:** Kaslı, esnek, düşük zırhlı ama atılgan.
-- **Ana oynanış özelliği:** Baskın, ani hızlanma, sürü koordinasyonu.
-- **Doğal avantaj:** Hızlı kapanma, baskı, yakın mesafe öldürücülük.
-- **Genel zayıflık:** Susturucu ateş yerine ani burst hasar, kafatası/boğaz gibi açık organ bölgeleri.
+Korvath yalnız “yavaş yakın dövüş” ailesi değildir. Güncel roster daha doğru biçimde şunu temsil eder:
 
-## 5.3 Dört yaratık
+**yüksek dayanıklılık + ısı tabanlı projectile baskısı + yakın alan termal tehdit + ağır saha kontrolü.**
 
-### 1. Ravager
+### 1. Basalt Juggernaut
 
-**Durum:** Mevcut
+- **Rol:** Ağır orta menzil kırıcı / tank shooter.
+- **Güncel savaş kimliği:** Yüksek canla ilerler ve yaklaşık 15 m menzilden ağır sıcak projectile atar. Yaklaşması başlı başına alan daraltır, fakat ana gameplay kimliği saf melee değildir.
+- **Hikâye rolü:** Kaya kırma ve lav akışını yönlendirme için yetiştirilmiş yüksek basınç iş organizması.
+- **Görsel rol:** Ailenin en iri bazalt kütlesi; kızıl-turuncu çekirdek hissi Korvath kimliğini taşımalıdır.
+- **Ayırt edici özellik:** Dayanıklılık ve ağır ranged baskıyı aynı gövdede birleştirir.
 
-- **Rol:** Temel saldırı sınıfı / yakın baskı
-- **Hikâye rolü:** Thornwild’ın baskın sürülerine ait orta seviye avcı.
-- **Savaş kimliği:** Oyuncuya doğrudan baskı kurar, zigzag yaklaşabilir, boşluk bulunca atılır.
-- **Ayırt edici özellik:** “Standart düşman” gibi görünse de aile içinde saldırganlığın temel omurgasıdır.
+### 2. Cinder Hound
 
-### 2. Briar Skulker
+- **Rol:** Hızlı yakın menzil takipçisi.
+- **Güncel savaş kimliği:** Çok yüksek chase hızı, kısa windup ve kısa lunge ile oyuncuya hızla kapanır.
+- **Hikâye rolü:** Dar ocak tünellerinde kaçak ısı, çatlak ve hareket tespiti yapan avcı/bakım canlısı.
+- **Ayırt edici özellik:** Korvath'ın ağır yaratıklarının tersine hafif ve saldırgandır; oyuncuyu ranged birimlerin güvenli alanından çıkarır.
 
-**Durum:** Mevcut
+### 3. Cinder Spitter
 
-- **Rol:** Pusu / hibrit yakın-menzilli avcı
-- **Hikâye rolü:** Sürüye görünmeden yaklaşan keşif ve zayıf hedef temizleme organizması.
-- **Savaş kimliği:** Uzakta diken küresi fırlatır; oyuncu yakın saldırı alanına girdiğinde menzilli saldırıyı bırakıp pençe vuruşuna öncelik verir.
-- **Ayırt edici özellik:** Ravager’dan daha kırılgan ve çeviktir. Ön/arka hareket görselleri kullanır; yakın saldırı menzilini her karar anında yeniden değerlendirir.
+- **Rol:** Mobil orta menzil ısı atıcısı.
+- **Güncel savaş kimliği:** Yaklaşık 14 m menzilden projectile kullanır; cover/reposition davranışıyla açı değiştirir ve orta mesafeyi tutmaya çalışır.
+- **Hikâye rolü:** Ocaklarda basınç ve sıcak gaz birikimini boşaltan, tehlike anında kızgın madde püskürten çevik bakım organizması.
+- **Görsel rol:** Korvath turuncu/kızıl projectile dili güçlü olmalıdır; Basalt kadar iri görünmemelidir.
+- **Ayırt edici özellik:** Ailenin daha hızlı ve daha kırılgan ranged baskı katmanıdır.
 
-### 3. Gorehorn
+### 4. Furnace Carrier
 
-**Durum:** Mevcut
+**Dahili uyumluluk adı:** Sahne/script kimliği `furnice_carrier` olarak korunur; oyuncuya dönük ad **Furnace Carrier**dır.
 
-- **Rol:** Orta-ağır şarj birimi
-- **Hikâye rolü:** Thornwild’da kalın kabuklu avları devirmek için kullanılan koçbaşı türü avcı.
-- **Savaş kimliği:** Kısa hazırlık sonrası yönünü kilitleyip çok hızlı düz hat şarjı yapar; boynuz teması hasar, oyuncu itmesi ve erişilebilirlik ayarına bağlı kamera sarsıntısı uygular.
-- **Ayırt edici özellik:** Şarj sırasında dönemediği için okunabilir ama yüksek ivmeli bir koridor tehdididir; duvara çarptığında daha uzun açık verir.
+- **Rol:** Ağır ranged destek / yakın alan termal bozucu.
+- **Güncel savaş kimliği:** Uzun menzilli normal projectile kullanır; oyuncu yaklaştığında ayrı **Thermal Burst** saldırısına geçer. Normal atışın zemin etkisi de alan baskısına katkı verir.
+- **Hikâye rolü:** Korvath sahalarında ısı çekirdeği ve termal yük taşıyan yarı-organik taşıyıcı.
+- **Ayırt edici özellik:** Oyuncuyu hem uzak kalmak hem yaklaşmak konusunda cezalandırabilen iki modlu ağır birimdir.
 
-### 4. Spore Matriarch
+### 5. Crucible Warden
 
-**Durum:** Mevcut
-
-- **Rol:** Destek / bölge kontrolü
-- **Hikâye rolü:** Ekosistemde sürü feromonlarını ve rejeneratif sporları dağıtan çoğaltıcı kast.
-- **Savaş kimliği:** Yakındaki Thornwild birimlerini güçlendirir, yere spor havuzları bırakır.
-- **Ayırt edici özellik:** Vurulmadığında karşılaşmayı ciddi şekilde zorlaştırır.
+- **Rol:** Elit koruyucu / miniboss sınıfı.
+- **Güncel savaş kimliği:** **Ground Slam** ile çevresel alan baskısı kurar; çok yakına geldiğinde **Heatwave** halkası üretir. Yüksek canı nedeniyle karşılaşmanın merkez hedefidir.
+- **Hikâye rolü:** Korvath enerji kuyularını ve kritik akış düğümlerini koruyan güvenlik kastı.
+- **Ayırt edici özellik:** Korvath'ın iş canlılarından farklı olarak bilinçli savunma davranışı ve özel saldırı ritmi taşır.
 
 ---
 
-## 6. Evren 3 — Vaskari Lejyonu
+# 6. Thornwild Sürüsü
 
 ## 6.1 Evren özeti
 
-Vaskari Lejyonu, savaş kastlarıyla yaşayan, biyozırh ve zehir temelli disiplinli bir uygarlıktır. VEX’in bu evrenden çektiği enerji yalnız güç değil; aynı zamanda biyotoksin, rejeneratif serum ve sinir iletim örnekleridir. Bu da Vaskari savunma ağlarını ve askerî üretim zincirini bozmuştur.
+Thornwild, bitki ve hayvan dokusunun iç içe geçtiği sert bir av-avcı ekosistemidir. VEX bu dünyadan biyokütle enerjisi, enzimatik kaynaklar ve rejeneratif doku örnekleri çekmiştir. Bu müdahale habitat zincirini bozmuş, av bölgelerini daraltmış ve bazı türleri yarık hatlarına doğru sürmüştür.
 
-Bu evrenin yaratıkları “vahşi canavar” değildir; **çatışmayı bilen, pozisyon alan, hücum düzeni kuran askerî canlılar** gibi çalışır.
+Thornwild canlıları askerî birlik değildir. Aynı türler birbirinin kokusunu, hareketini ve tehdit davranışını okuyabilir; fakat amaçları fetih değil **hayatta kalma ve yeni av alanına tutunmadır**.
 
-## 6.2 Ortak özellikler
+## 6.2 Oynanış kimliği
 
-- **Görsel dil:** Koyu mor, siyah, kemiksi biyozırh, yılanımsı hatlar, keskin yüzeyler.
-- **Beden yapısı:** Kaslı ama kontrollü; organik zırh plakaları taşır.
-- **Ana oynanış özelliği:** Takım baskısı, flank, zehir/kanama, hücum düzeni.
-- **Doğal avantaj:** Orta dayanıklılık, iyi takip, agresif hücum kararları.
-- **Genel zayıflık:** Kafa, boyun altı, iç karın segmentleri; çevresel patlayıcılar.
+Thornwild'ın ortak hissi yalnız yakın rush değildir. Güncel aile:
 
-## 6.3 Beş yaratık
+**organik ranged baskı + hibrit avcılık + sert charge + zehirli alan kontrolü** üretir.
 
-### 1. Vaskari Raptor
+### 1. Ravager
 
-**Durum:** Mevcut
+- **Rol:** Uzun menzilli organik baskı avcısı.
+- **Güncel savaş kimliği:** Yaklaşık 20 m menzilden hızlı projectile atar, lead kullanır ve açık görüş hattını korumaya çalışır.
+- **Hikâye rolü:** Avını doğrudan üzerine atlamak yerine uzaktan zayıflatabilen orta seviye sürü avcısı.
+- **Ayırt edici özellik:** Thornwild'ın temel ranged omurgasıdır; dokümanda artık melee standart düşman olarak değerlendirilmez.
 
-- **Rol:** Hızlı saldırı / orta seviye elit
-- **Hikâye rolü:** Vaskari öncü taarruz kastı.
-- **Savaş kimliği:** Oyuncuyu yan açılardan zorlar, ani ataklarla güvenli alan hissini bozar.
-- **Ayırt edici özellik:** Sürat ve saldırı kararlılığıyla aileye tempo kazandırır.
+### 2. Briar Skulker
 
-### 2. Vaskari Ravager
+- **Rol:** Hibrit pusu / yakın-menzilli avcı.
+- **Güncel savaş kimliği:** Uzakta organik projectile kullanır; oyuncu yakın saldırı eşiğine girince melee saldırıya öncelik verir.
+- **Hikâye rolü:** Çalılık ve biyokütle katmanlarında saklanarak zayıf hedef temizleyen keşif avcısı.
+- **Ayırt edici özellik:** Mesafeye göre saldırı biçimini gerçek zamanlı değiştirir.
 
-**Durum:** Mevcut
+### 3. Gorehorn
 
-- **Rol:** Ağırlaştırılmış hücum varyantı
-- **Hikâye rolü:** Lejyonun daha saldırgan, daha acımasız kırma birimi.
-- **Savaş kimliği:** Vaskari Raptor’dan daha dirençli ve daha sert vurur; koridor baskısında öne çıkar.
-- **Ayırt edici özellik:** Aynı aile içinde “brute” varyantı görevi görür.
+- **Rol:** Ağır charge avcısı.
+- **Güncel savaş kimliği:** Kısa hazırlık sonrası yönünü kilitler ve düz hat üzerinde çok hızlı şarj olur. Temas oyuncuyu iter ve güçlü darbe hissi üretir; duvara çarpınca daha uzun açık verir.
+- **Hikâye rolü:** Kalın kabuklu avları veya biyolojik engelleri devirmek için evrimleşmiş koçbaşı türü.
+- **Ayırt edici özellik:** Okunabilir ama çok yüksek ivmeli koridor tehdididir.
 
-### 3. Coil Lancer
+### 4. Spore Matriarch
 
-**Durum:** Mevcut
-
-- **Rol:** Orta menzilli baskı / sıçrama hücumu
-- **Hikâye rolü:** Düşman hattını kırmak için biyolojik mızrak bezleri geliştirilmiş savaşçı.
-- **Savaş kimliği:** Oyuncuya çizgisel zehirli diken atar veya ani mızrak sıçrayışı yapar.
-- **Ayırt edici özellik:** Aileye ilk gerçek menzilli tehdit hissini getirir.
-
-### 4. Vaskari Bulwark
-
-**Durum:** Mevcut
-
-- **Rol:** Ağır yakın menzil baskı / ön hat tutucu
-- **Hikâye rolü:** Vaskari hücum kollarında ilerleme hattını koruyan kalın biyozırhlı kırma kastı.
-- **Savaş kimliği:** Yavaş yaklaşır, yüksek dayanıklılıkla alan kapatır ve kısa lunge ile ağır yakın darbe uygular.
-- **Ayırt edici özellik:** Vaskari Raptor ailesinin hız baskısını tersine çevirir; süratten çok dayanıklılık ve tek darbe tehdidiyle alan kazanır.
-
-### 5. Venom Marshall
-
-**Durum:** Mevcut
-
-- **Rol:** Komutan / menzilli destek eliti
-- **Hikâye rolü:** Küçük Vaskari saldırı kollarını sahada yöneten subay kastı.
-- **Savaş kimliği:** Normal menzilli saldırısına ek olarak yakındaki uygun müttefik kümelerine güçlendirme alanı gönderir ve savaş hattını destekler.
-- **Ayırt edici özellik:** Tek başına salt hasar tehdidi olmak yerine takımın dayanıklılığını ve baskısını yükselten öncelikli destek hedefidir.
+- **Rol:** Zehirli bölge kontrolü / DoT ranged support.
+- **Güncel savaş kimliği:** Projectile isabet veya süre sonunda zeminde geniş bir **zehir alanına** dönüşür. Alan oyuncuya tick hasarı ve süreli poison DoT uygular.
+- **Hikâye rolü:** Thornwild ekosisteminde spor dağıtan, habitat oluşturan çoğaltıcı kast.
+- **Ayırt edici özellik:** **Müttefik buff'lamaz.** Güncel rolü oyuncunun güvenli zeminini azaltmak ve hareket rotasını zehir alanlarıyla bölmektir.
 
 ---
 
-## 7. Evren 4 — Nhal Veil
+# 7. Vaskari Lejyonu
 
 ## 7.1 Evren özeti
 
-Nhal Veil, sis, gölge, titreşim ve düşük görünürlükle tanımlanan bir av evrenidir. Buradaki canlılar fiziksel güç kadar **görünmezlik hissi, perdeleşme ve sessiz konum alma** üzerine evrimleşmiştir. VEX’in bu evrenden çektiği güç; düşük ışık enerjisi, faz kayması ve perde benzeri madde akışlarıdır.
+Vaskari Lejyonu biyozırh, zehir ve askerî kast düzeni üzerine kurulmuş disiplinli bir uygarlıktır. VEX'in çektiği biyotoksin, sinir iletimi ve rejeneratif biyoloji örnekleri Vaskari üretim ve savunma zincirini bozmuştur.
 
-Bu evrenin yaratıkları Dünya’da özellikle karanlık koridorlarda, görüşün bozulduğu alanlarda ve oyuncunun güven duygusunu zayıflatmak için etkilidir.
+Vaskari diğer ailelerden farklı olarak Dünya'daki yarıkları yalnız kazara geçiş noktası değil, **kontrol edilmesi gereken askerî cepheler** olarak görmeye başlamıştır. Bu onları en organize düşman ailesi yapar.
 
-## 7.2 Ortak özellikler
+## 7.2 Görsel kimlik
 
-- **Görsel dil:** Mat siyah, koyu mor, soğuk mavi kenar ışıması, ince uzun siluet.
-- **Beden yapısı:** Hafif, esnek, bazen perde gibi dağılan organik yapı.
-- **Ana oynanış özelliği:** Pusu, perdeleme, sessiz yaklaşım, görüş oyunu.
-- **Doğal avantaj:** Düşük görünürlükte ölümcüllük, ani baskın.
-- **Genel zayıflık:** Güçlü ışık, yakın mesafede açığa çıkan ana gövde merkezi, disiplinli takip ateşi.
+Vaskari'nin tanınabilir aile rengi **mor/viyole**dir. Siyah-kemiksi biyozırh üzerine mor/magenta enerji veya toksin vurgusu kullanılmalıdır. Aether Loom'un camgöbeği/beyaz diliyle karıştırılmamalıdır.
 
-## 7.3 Dört yaratık
+## 7.3 Beş aktif yaratık
 
-### 1. Veilmaw
+### 1. Vaskari Raptor
 
-**Durum:** Mevcut
+- **Rol:** Hızlı yakın menzil taarruz birimi.
+- **Güncel savaş kimliği:** Yüksek chase hızı ve lunge ile oyuncuya hızla kapanır.
+- **Hikâye rolü:** Öncü hücum ve takip kastı.
+- **Ayırt edici özellik:** Lejyonun tempo kuran hızlı melee birimidir.
 
-- **Rol:** Pusu avcısı / orta tehdit
-- **Hikâye rolü:** Nhal Veil’in avcı kastı; titreşim ve korku tepkisini takip eder.
-- **Savaş kimliği:** Perde arkasından yaklaşır, oyuncu fark ettiğinde çoktan etkili mesafeye girmiş olur.
-- **Ayırt edici özellik:** Sahne gerilimini doğrudan artıran düşmandır.
+### 2. Vaskari Ravager
 
-### 2. Murk Stalker
+- **Rol:** Ağır yakın menzil hücum varyantı.
+- **Güncel savaş kimliği:** Raptor'dan daha dayanıklı ve daha sert vurur; lunge ailesini kullanır ama hız yerine güç ve canla baskı yapar.
+- **Hikâye rolü:** Savunma hattını fiziksel olarak kırmak için yetiştirilmiş ağır saldırı kastı.
+- **Ayırt edici özellik:** Raptor ile aynı silueti/oyun rolünü tekrar etmemeli; daha ağır ve tehditkâr hissedilmelidir.
 
-**Durum:** Planlandı
+### 3. Coil Lancer
 
-- **Rol:** Hızlı yakın pusu
-- **Hikâye rolü:** Dar alanlarda ve düşük ışıkta sürü dışı tekil avcı.
-- **Savaş kimliği:** Duvar çizgilerine yakın hareket eder, son anda açığa çıkar.
-- **Ayırt edici özellik:** Veilmaw’dan daha hızlı, daha kırılgan.
+- **Rol:** Uzun menzil nişancı / çizgisel baskı.
+- **Güncel savaş kimliği:** Yaklaşık 22 m menzilden çok hızlı, yüksek hasarlı projectile kullanır. Yakın dövüş sıçraması yoktur.
+- **Hikâye rolü:** Lejyonun uzaktan hedef kıran mızrak/atış kastı.
+- **Görsel rol:** Projectile ışığı Vaskari ailesine uygun **viyole-mor** ekseninde kalmalıdır.
+- **Ayırt edici özellik:** Vaskari'nin gerçek uzun menzil tehdididir.
 
-### 3. Husk Leech
+### 4. Vaskari Bulwark
 
-**Durum:** Mevcut
+- **Rol:** Ağır yakın menzil ön hat tutucu.
+- **Güncel savaş kimliği:** Çok yüksek dayanıklılıkla yaklaşır ve ağır melee/lunge darbesi uygular.
+- **Hikâye rolü:** Hücum kolunun ilerleme hattını koruyan kalın biyozırhlı kalkan kastı.
+- **Ayırt edici özellik:** Raptor'un hızını tersine çevirir; alanı dayanıklılık ve gövde tehdidiyle kapatır.
 
-- **Rol:** Menzilli destek / algı bozucu
-- **Hikâye rolü:** Avın yön tayinini bozan düşük kütleli perde canlısı.
-- **Savaş kimliği:** Orta menzilden perde-zehir mermisi fırlatır; oyuncuya isabet ettiğinde ekranı kısa süreli animasyonlu toksik/perde dokusuyla kaplayarak görüşü belirgin biçimde azaltır.
-- **Ayırt edici özellik:** Doğrudan yüksek hasar yerine oyuncunun görüşünü ve çatışma ritmini bozar; tekrar isabet efekt süresini yeniler.
+### 5. Venom Marshall
 
-### 4. Shade Anchor
-
-**Durum:** Planlandı
-
-- **Rol:** Alan sabitleyici elit
-- **Hikâye rolü:** Nhal geçitlerini kararlı tutan, perde alanını yoğunlaştıran çekirdek canlı.
-- **Savaş kimliği:** Yakın çevresini karartır, diğer Nhal yaratıklarına yaklaşma avantajı sağlar.
-- **Ayırt edici özellik:** Öncelikli hedef hâline gelir; öldürülünce alan rahatlar.
+- **Rol:** Komutan / ranged support eliti.
+- **Güncel savaş kimliği:** Normal menzilli projectile saldırısına ek olarak **kendi bulunduğu noktada destek alanı kurar**. Bu alan içindeki uygun müttefikleri iyileştirir ve hasarlarını geçici olarak yükseltir.
+- **Hikâye rolü:** Küçük Vaskari saldırı kollarını sahada ayakta tutan komuta ve biyokimyasal destek kastı.
+- **Ayırt edici özellik:** Diğer Vaskari'lerle beraberken öncelikli hedef hâline gelir; desteği bir hedefe fırlatmaz, kendi savaş hattını güçlendirir.
 
 ---
 
-## 8. Evren 5 — Aether Loom
+# 8. Nhal Veil
 
 ## 8.1 Evren özeti
 
-Aether Loom, maddeden çok **örüntü, alan, enerji ve uzamsal düzen** üzerinden işleyen bir gerçekliktir. Buradaki yaşam formları klasik biyolojiye benzemez; bazıları enerji örüntüsü, bazıları yarı-kristal örgü, bazıları da “varlık” ile “mekanizma” arasında duran akıllı yapılardır. VEX bu evrenden yalnız enerji değil; boyutsal faz dengesi ve gerçeklik dokusu çekmektedir.
+Nhal Veil, düşük görünürlük, sis, titreşim ve perde benzeri madde akışlarıyla şekillenmiş bir av ekosistemidir. VEX'in düşük ışık/faz maddesi çekimi, bu dünyanın duyusal ve fiziksel sınırlarını bozmuş; av yolları ile yarık ağı arasında istemsiz bağlantılar kurmuştur.
 
-Bu yüzden Aether Loom yaratıkları en “yabancı” ve en az insanî görünen aile olur.
+Nhal'ın gerilimi “gerçek invisibility” zorunluluğundan gelmez. Güncel gameplay için aile kimliği daha doğru biçimde:
 
-## 8.2 Ortak özellikler
+**karanlıkta konum alma + düşük görünürlük hissi + menzilli taciz + oyuncu görüşünü bozma**dır.
 
-- **Görsel dil:** Menekşe, indigo, beyaz parlama, yarık çizgileri, örümcekimsi veya geometri bozucu şekiller.
-- **Beden yapısı:** Yarı-maddesel, enerji omurgalı, bazen havada asılı.
-- **Ana oynanış özelliği:** Uzaysal baskı, menzilli enerji, yer değiştirme ve örüntü kurma.
-- **Doğal avantaj:** Beklenmedik açı saldırıları, alışılmadık hareket.
-- **Genel zayıflık:** Kararlı çekirdek noktaları, yoğun ateşle faz dengesini bozma, enerji odaklarının kırılması.
+## 8.2 Görsel kimlik
 
-## 8.3 Dört yaratık
+Ana palet **mat siyah, lacivert ve soğuk mavi** olmalıdır. Vaskari moruyla karışmaması gerekir. Husk Leech'in toksik yeşili yalnız özel zehir/görüş etkisi olarak kullanılabilir.
+
+### 1. Veilmaw
+
+- **Durum:** Mevcut.
+- **Rol:** Orta menzil harrier / görüş hattı avcısı.
+- **Güncel savaş kimliği:** Yaklaşık 12 m menzilden projectile atar; cover/reposition ile daha iyi görüş açısı arar ve orta mesafeyi korur.
+- **Hikâye rolü:** Nhal av bölgelerinde açık hedefi uzaktan taciz eden çevik avcı formu.
+- **Görsel rol:** Projectile ışığı mor yerine Nhal'a ait **soğuk mavi** ekseninde kalmalıdır.
+- **Ayırt edici özellik:** Güncel oyunda görünmezlik veya faza girip çıkma yeteneği yoktur; gerilim hareketi, karanlık çevre ve menzilli baskıdan gelir.
+
+### 2. Husk Leech
+
+- **Durum:** Mevcut.
+- **Rol:** Menzilli algı bozucu / görüş engelleyici destek.
+- **Güncel savaş kimliği:** Orta menzilden zehir/perde projectile atar. Oyuncuya isabet ettiğinde ekranı yaklaşık 5 saniye boyunca animasyonlu toksik doku ile kaplar; tekrar isabet mevcut efektin süresini yeniler.
+- **Hikâye rolü:** Nhal avcılarının avın yön tayinini ve görsel algısını bozmak için kullandığı düşük kütleli parazit/perde canlısı.
+- **Ayırt edici özellik:** Hasardan çok oyuncunun bilgi akışını bozar.
+
+### Planlanan Nhal yaratıkları
+
+#### Murk Stalker
+- **Rol:** Hızlı yakın pusu.
+- Veilmaw'ın ranged rolünü tekrar etmemeli; Nhal'a eksik olan gerçek yakın mesafe ambush katmanını eklemelidir.
+
+#### Shade Anchor
+- **Rol:** Alan sabitleyici elit.
+- Çevresel kararma/perde alanı gibi yeni bir gameplay mekaniği gerçekten uygulanırsa roster'a eklenmelidir; uygulanmadan “mevcut” sayılmamalıdır.
+
+---
+
+# 9. Aether Loom
+
+## 9.1 Evren özeti
+
+Aether Loom klasik biyolojiden çok **örüntü, alan, enerji ve uzamsal düzen** üzerinden işleyen bir gerçekliktir. VEX bu evrenden yalnız enerji değil, faz dengesi ve yarık dokusu çekmiştir. Bunun sonucu bazı bölgelerde gerçeklik örüntüsü parçalanmış ve Aether organizmaları Dünya'daki yarıkları doğal bir yara, düğüm veya onarılması gereken bozuk desen gibi algılamaya başlamıştır.
+
+Bu yaklaşım Aether'ı “hepsi Dünya'yı fethetmek isteyen kötü uzaylılar” olmaktan çıkarır. İnsan için ölümcül davranışları, kendi gerçeklik düzenlerini yeniden kurmaya çalışırken Dünya maddesini yanlış bir parçaya dönüştürmelerinden kaynaklanabilir.
+
+## 9.2 Görsel kimlik
+
+Aether Loom, Vaskari'den kesin ayrılmalıdır:
+
+- Ana enerji: **camgöbeği / elektrik mavisi / buz beyazı**.
+- İkincil öğe: siyah yarık çizgileri, saydam veya yarı-maddesel bölgeler.
+- Mor/viyole yalnız çok küçük geçiş tonu olabilir; aileyi tanımlayan ana renk değildir.
+
+## 9.3 Aktif yaratıklar
 
 ### 1. Voidweaver
 
-**Durum:** Mevcut
+- **Rol:** Orta menzil enerji tehdidi.
+- **Güncel savaş kimliği:** Yaklaşık 13.5 m menzilden hızlı enerji projectile kullanır ve cover/reposition davranışıyla açısını düzeltir.
+- **Hikâye rolü:** Aether Loom'da yarık ve enerji akışlarını düzenleyen dokuyucu saha organizması.
+- **Görsel rol:** Projectile ışığı sıcak turuncu değil, **camgöbeği/soğuk enerji** kimliğini taşımalıdır.
+- **Ayırt edici özellik:** Güncel oyunda mermiyi uçuş sırasında yön değiştiren veya teleport olan özel bir sistem yoktur; tehdit yüksek hızlı enerji atışı ve yabancı görsel dilden gelir.
 
-- **Rol:** Menzilli uzaysal tehdit
-- **Hikâye rolü:** Aether Loom’da yarık akışını dokuyan akıllı saha organizması.
-- **Savaş kimliği:** Oyuncuya enerji/örümsi atışlar gönderir, güvenli mesafe hissini bozar.
-- **Ayırt edici özellik:** Fiziksel değil, uzamsal tehdit olarak hissedilir.
+### 2. Rift Reaver
 
-### 2. Rift Spindle
+- **Rol:** Hızlı yakın menzil yarık avcısı.
+- **Güncel savaş kimliği:** Yüksek chase hızıyla mesafeyi kapatır, yaklaşık 2 m melee menzil ve hızlı lunge ile saldırır.
+- **Hikâye rolü:** Yarık sınırlarında yoğunlaşan, bozuk örüntünün içindeki yabancı maddeleri fiziksel olarak parçalayan saldırı formu.
+- **Ayırt edici özellik:** Aether ailesine Voidweaver'ın tersine gerçek yakın mesafe baskısı ekler; bu nedenle iki aktif Aether yaratığı oynanışta birbirini tamamlar.
 
-**Durum:** Planlandı
+## 9.4 Planlanan Aether yaratıkları
 
-- **Rol:** Sabit topçu / taret benzeri destek
-- **Hikâye rolü:** Alan istikrarı için belirli noktalara köklenen örüntü düğümü.
-- **Savaş kimliği:** Sabit durur ama çizgisel enerji darbeleri ve alan işaretleri üretir.
-- **Ayırt edici özellik:** Öncelikli yıkım hedefidir; savaş alanını bölümlere ayırır.
+### Rift Spindle
+- Sabit topçu / alan düğümü. Voidweaver'ın mobil ranged rolünü tekrar etmemeli; sabit alan bölme davranışı getirmelidir.
 
-### 3. Parallax Drone
+### Parallax Drone
+- Hafif mobil rahatsız edici. Küçük hedef, farklı hareket profili veya yeni nişan baskısı uygulanmadan eklenmemelidir.
 
-**Durum:** Planlandı
-
-- **Rol:** Hafif rahatsız edici / hareketli menzilli birim
-- **Hikâye rolü:** Ana dokuyuculara bilgi ve enerji akışı taşıyan küçük örüntü yaratığı.
-- **Savaş kimliği:** Sürekli yer değiştirir, oyuncunun nişan alışkanlığını bozar.
-- **Ayırt edici özellik:** Tek başına zayıf, grup içinde sinir bozucu.
-
-### 4. Loom Herald
-
-**Durum:** Planlandı
-
-- **Rol:** Elit koordinatör / miniboss
-- **Hikâye rolü:** Aether Loom’da geçit örüntülerini koruyan üst düzey bilinç düğümü.
-- **Savaş kimliği:** Voidweaver ve drone türlerini koordine eder, kısa faz kaymalarıyla konum değiştirir.
-- **Ayırt edici özellik:** Bu evrenin en “zeki” saha temsilcisidir.
+### Loom Herald
+- Elit koordinatör / miniboss. Faz kayması veya unit coordination gibi gerçek, uygulanmış bir özel sistemle gelmelidir.
 
 ---
 
-## 9. Mevcut düşmanların evren haritası
+# 10. Güncel enemy haritası
 
-| Mevcut oyun düşmanı | Bağlı evren | Aile rolü |
+| Aktif düşman | Evren | Gerçek oyun rolü |
 |---|---|---|
-| Ravager | Thornwild Sürüsü | Temel yakın baskı avcısı |
-| Briar Skulker | Thornwild Sürüsü | Hibrit pusu avcısı |
-| Gorehorn | Thornwild Sürüsü | Orta-ağır şarj ve ritim bozma birimi |
-| Spore Matriarch | Thornwild Sürüsü | Zehir ve bölge kontrolü destek birimi |
-| Vaskari Raptor | Vaskari Lejyonu | Hızlı elit hücum birimi |
-| Vaskari Ravager | Vaskari Lejyonu | Ağır hücum varyantı |
-| Coil Lancer | Vaskari Lejyonu | Orta menzilli çizgisel baskı birimi |
-| Vaskari Bulwark | Vaskari Lejyonu | Ağır yakın menzil ön hat birimi |
-| Venom Marshall | Vaskari Lejyonu | Menzilli destek ve müttefik güçlendirme birimi |
-| Veilmaw | Nhal Veil | Pusu avcısı |
-| Husk Leech | Nhal Veil | Menzilli algı bozucu / görüş engelleyici destek |
-| Basalt Juggernaut | Korvath Ocağı | Ağır zırhlı kırıcı |
-| Voidweaver | Aether Loom | Uzaysal menzilli tehdit |
-| Cinder Hound | Korvath Ocağı | Hızlı flank avcısı |
-| Furnace Carrier | Korvath Ocağı | Destek ve alan bozucu |
-| Crucible Warden | Korvath Ocağı | Elit koruyucu / miniboss |
+| Basalt Juggernaut | Korvath | Ağır orta menzil projectile tankı |
+| Cinder Hound | Korvath | Çok hızlı yakın lunge takipçisi |
+| Cinder Spitter | Korvath | Mobil orta menzil ısı atıcısı |
+| Furnace Carrier | Korvath | Uzun menzil projectile + yakın Thermal Burst |
+| Crucible Warden | Korvath | Ground Slam / Heatwave elit koruyucu |
+| Ravager | Thornwild | Uzun menzil organik projectile baskısı |
+| Briar Skulker | Thornwild | Ranged + yakın melee hibrit avcı |
+| Gorehorn | Thornwild | Düz hat ağır charge birimi |
+| Spore Matriarch | Thornwild | Zehir alanı ve DoT kontrolü |
+| Vaskari Raptor | Vaskari | Hızlı yakın lunge taarruzu |
+| Vaskari Ravager | Vaskari | Daha ağır ve sert yakın lunge varyantı |
+| Coil Lancer | Vaskari | Uzun menzil yüksek hızlı nişancı |
+| Vaskari Bulwark | Vaskari | Çok dayanıklı yakın ön hat birimi |
+| Venom Marshall | Vaskari | Ranged saldırı + heal/damage buff destek alanı |
+| Veilmaw | Nhal Veil | Orta menzil cover/reposition harrier |
+| Husk Leech | Nhal Veil | Görüş kapatan zehir projectile desteği |
+| Voidweaver | Aether Loom | Hızlı enerji projectile orta menzil tehdidi |
+| Rift Reaver | Aether Loom | Hızlı yakın lunge yarık avcısı |
 
 ---
 
-## 10. Oynanış standardı
+# 11. Evrenlerin oyuncuya verdiği his
 
-Her evren oyuncuya farklı tür baskı uygular. Böylece düşman çeşitliliği yalnız model farkı değil, **oynanış hissi farkı** üretir.
-
-| Evren | Oyuncuya hissettirdiği ana baskı |
+| Evren | Ana baskı hissi |
 |---|---|
-| Korvath Ocağı | “Ağır, sıcak, alanı kaplayan tehdit” |
-| Thornwild Sürüsü | “Hızlı, vahşi, üstüne çöken baskı” |
-| Vaskari Lejyonu | “Disiplinli ve koordineli saldırı” |
-| Nhal Veil | “Görmediğin şeyden gelen korku” |
-| Aether Loom | “Gerçeklik bozan, alışılmadık tehdit” |
+| **Korvath** | “Ağır gövdeler, sıcak projectile'lar ve termal alan beni sıkıştırıyor.” |
+| **Thornwild** | “Organik avcılar farklı mesafelerden beni hareket etmeye zorluyor.” |
+| **Vaskari** | “Birbirini tamamlayan askerî roller aynı anda savaş hattı kuruyor.” |
+| **Nhal Veil** | “Görüşüm ve güvenli bilgi alanım bozuluyor; karanlıkta yanlış pozisyon ölümcül.” |
+| **Aether Loom** | “Aynı gerçekliğe ait değilmiş gibi davranan enerji ve yakın yarık formları arasında mesafe okuyamıyorum.” |
 
-Bu tablo tasarım sırasında korunmalıdır. Bir evrenin yaratıkları başka bir evrenin işini yapmamalı; örneğin:
+### Tasarım korumaları
 
-- Korvath düşmanı “çok görünmez ve sinsi” olmamalı.
-- Nhal düşmanı “çok tank ve kaba kırıcı” olmamalı.
-- Vaskari yaratıkları koordinasyon ve disiplin duygusunu kaybetmemeli.
-- Thornwild yaratıkları fazla teknolojik görünmemeli.
-- Aether Loom düşmanları klasik “zombi koşusu” hissine düşmemeli.
-
----
-
-## 11. Hikâye uyumu için ana kural
-
-VEX’in felaketi yalnız portallar açmamış; **başka evrenlerin yaşam, enerji ve düzen kaynaklarını sömürmüştür.** Bu yüzden her aile için şu soru zorunludur:
-
-> “VEX bu evrenden ne çaldı ve bunun sonucu bu yaratık neden Dünya’da?”
-
-### Kısa cevap şablonu
-
-- **Korvath:** Isı ve jeotermal güç çalındı.
-- **Thornwild:** Biyokütle, enzim ve rejeneratif doku çalındı.
-- **Vaskari:** Biyotoksin, sinir iletimi ve savaş biyolojisi örnekleri çalındı.
-- **Nhal Veil:** Düşük ışık enerjisi ve perde maddesi çalındı.
-- **Aether Loom:** Faz dengesi, yarık enerjisi ve gerçeklik dokusu çalındı.
-
-Bu çerçeve, düşmanları yalnız “cool canavar” olmaktan çıkarıp hikâyenin merkezine bağlar.
+- Korvath yaratıkları gizlilik ailesine dönüşmemeli.
+- Thornwild yaratıkları askerî zırhlı birlik gibi görünmemeli.
+- Vaskari birimleri tek tek güçlü olmaktan çok **rol kombinasyonuyla** tehdit üretmeli.
+- Nhal yaratıklarına lore gereği görünmezlik yazılacaksa önce gerçek gameplay sistemi uygulanmalı.
+- Aether düşmanları Vaskari morunu ana aile rengi olarak kullanmamalı.
+- Aynı ailede yeni yaratık, mevcut birimin yalnız can/hasar artırılmış kopyası olmamalı.
 
 ---
 
-## 12. Şimdilik önerilen üretim sırası
+# 12. Hikâye uyumu
 
-Düşman tasarım ve üretim sırası için öneri:
+VEX felaketi yalnız portal açmadı; **başka evrenlerin yaşam ve düzen kaynaklarını sömürdü**.
 
-### Önce zaten oyunda olanlar
-1. Ravager
-2. Vaskari Raptor
-3. Vaskari Ravager
-4. Veilmaw
-5. Basalt Juggernaut
-6. Voidweaver
-7. Cinder Hound
-8. Furnace Carrier
-9. Crucible Warden
-10. Briar Skulker
-11. Gorehorn
-12. Husk Leech
+Her aile için temel soru:
 
-### Sonra aileleri tamamlayacak en gerekli yeni yaratıklar
-13. Coil Lancer
-14. Murk Stalker
-15. Parallax Drone
+> **“VEX bu evrenden ne çekti ve bunun sonucu bu yaratık neden Dünya'da?”**
 
-### Daha sonra elit / destek / miniboss sınıfları
-16. Spore Matriarch
-17. Venom Marshal
-18. Shade Anchor
-19. Rift Spindle
-20. Loom Herald
+- **Korvath:** Isı, basınç dengesi ve jeotermal güç çekildi. Ocaklar soğudu, altyapı çöktü; iş ve koruma canlıları enerji kaynağına doğru sürüklendi.
+- **Thornwild:** Biyokütle, enzim ve rejeneratif doku çekildi. Av zinciri bozuldu; yaratıklar yarıkların çevresinde yeni habitat ve av alanı aramaya başladı.
+- **Vaskari:** Biyotoksin, sinir iletimi ve savaş biyolojisi örnekleri çekildi. Lejyon bunu düşmanca kaynak saldırısı kabul edip yarıkları askerî cepheye çevirdi.
+- **Nhal Veil:** Düşük ışık/faz maddesi ve perde dokusu çekildi. Av yolları ile Dünya'nın karanlık alanları birbirine bağlandı; Nhal türleri istemsiz ekolojik yayılma gösterdi.
+- **Aether Loom:** Faz dengesi ve gerçeklik örüntüsü çekildi. Aether formları Dünya yarıklarını bozuk bir desen olarak algılayıp kendi düzenlerini kurmaya çalışırken fiziksel çevreyi tehlikeli biçimde dönüştürdü.
+
+### Ton kuralı
+
+VEX hikâyesinin güçlü tarafı, yaratıkların tamamının “kötü istilacılar” olmamasıdır. Aynı felaket farklı evrenlerde farklı tepki üretir:
+
+- Korvath kaynak kaybına karşılık verir.
+- Thornwild göç eder ve avlanır.
+- Vaskari organize karşı saldırı yürütür.
+- Nhal ekolojik olarak taşar.
+- Aether bozuk gerçeklik desenini yeniden düzenlemeye çalışır.
+
+Bu farklı motivasyonlar korunmalıdır.
 
 ---
 
-## 13. Kısa sonuç
+# 13. Güncel üretim durumu
 
-Bu dokümanın amacı VEX düşmanlarını tek tek isimlendirmekten çok, onları **ortak ama tutarlı bir evren sistemine oturtmaktır.**
+## Aktif / oyunda
 
-Bundan sonra her yeni yaratık şu sırayla tasarlanmalıdır:
+1. Basalt Juggernaut
+2. Cinder Hound
+3. Cinder Spitter
+4. Furnace Carrier
+5. Crucible Warden
+6. Ravager
+7. Briar Skulker
+8. Gorehorn
+9. Spore Matriarch
+10. Vaskari Raptor
+11. Vaskari Ravager
+12. Coil Lancer
+13. Vaskari Bulwark
+14. Venom Marshall
+15. Veilmaw
+16. Husk Leech
+17. Voidweaver
+18. Rift Reaver
+
+## Planlanan ve aileye yeni gameplay katması gerekenler
+
+1. Murk Stalker — Nhal gerçek yakın pusu katmanı
+2. Shade Anchor — Nhal alan/perde sabitleme eliti
+3. Rift Spindle — Aether sabit alan topçusu
+4. Parallax Drone — Aether küçük mobil rahatsız edici
+5. Loom Herald — Aether koordinatör/miniboss
+
+Eski üretim listesinde mevcut olduğu hâlde “sonra yapılacak” görünen Coil Lancer, Spore Matriarch ve Venom Marshall artık planned listesinde değildir.
+
+---
+
+# 14. İsim ve kimlik standardı
+
+- Oyuncuya dönük ad **Furnace Carrier**; mevcut dosya/kimlik uyumluluğu için `furnice_carrier` korunur.
+- Doğru ad **Venom Marshall**dır; `Venom Marshal` kullanılmamalıdır.
+- **Vaskari Raptor** ile **Vaskari Ravager** iki ayrı aktif türdür; isimler birbirinin yerine kullanılmamalıdır.
+- **Ravager** tek başına kullanıldığında Thornwild yaratığını ifade eder; Vaskari türü her zaman **Vaskari Ravager** olarak yazılır.
+- **Rift Reaver** Aether Loom ailesindedir.
+- **Cinder Spitter** Korvath Ocağı ailesindedir.
+
+---
+
+# 15. Sonuç
+
+Bu belge bundan sonra yalnız yaratık isimleri listesi değildir. Her enemy için dört şeyin aynı anda tutarlı kalmasını zorunlu kılar:
+
+1. **Görsel aile kimliği**
+2. **Gerçek uygulanmış gameplay rolü**
+3. **Aile içindeki benzersiz karşı oyun**
+4. **VEX felaketiyle doğrudan bağlantılı hikâye nedeni**
+
+Yeni bir yaratık eklenirken şu kontrol yapılmalıdır:
 
 1. Hangi evrenden geliyor?
-2. O evrenin ortak kuralı ne?
-3. Aile içindeki görevi ne?
-4. Oyuncuya hangi yeni baskıyı hissettiriyor?
-5. Hikâyede neden burada?
+2. Ailenin ana paletine ve siluet diline uyuyor mu?
+3. Mevcut bir yaratığın rolünü tekrar ediyor mu?
+4. Oyuncuya gerçekten yeni bir baskı getiriyor mu?
+5. Dokümanda anlatılan özel özellik oyunda gerçekten uygulanmış mı?
+6. VEX'in o evrenden çektiği kaynakla yaratığın Dünya'da bulunma nedeni mantıklı mı?
 
-Bu kurala uyulursa VEX’teki yaratıklar hem görsel olarak hem oynanış olarak hem de hikâye açısından birbirini tamamlayan, güçlü bir düşman ekosistemi oluşturur.
+Bu altı soruya net cevap verilemiyorsa yaratık henüz VEX roster'ına hazır değildir.
