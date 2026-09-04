@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dm1m7chx8yipi"]
 
 [ext_resource type="Script" uid="uid://d0idweaver01a" path="res://scripts/actors/voidweaver.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/voidweaver/voidweaver_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://deg8cp3y18u0g" path="res://assets/enemies/voidweaver/voidweaver_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="AudioStream" uid="uid://dpg7kfv4pqud7" path="res://assets/audio/void_weaver_attack.wav" id="6_nhar0"]
 [ext_resource type="AudioStream" uid="uid://du3qs6vkja5nu" path="res://assets/audio/void_weaver_hurt.wav" id="7_nhar0"]
 [ext_resource type="AudioStream" uid="uid://cb1km2et21ycr" path="res://assets/audio/voidweaver_death.wav" id="8_nhar0"]
