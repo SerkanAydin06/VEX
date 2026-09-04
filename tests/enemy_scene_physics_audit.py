@@ -21,7 +21,7 @@ CREATURE_CAPSULES = {
     "spore_matriarch": (0.55, 1.90),
     "vaskari_raptor": (0.42, 1.80),
     "vaskari_ravager": (0.82, 3.10),
-    "cinderhound": (0.44, 1.45),
+    "cinderhound": (0.39, 1.30),
     "briar_skulker": (0.38, 1.60),
     "gorehorn": (0.72, 2.40),
     "vaskari_bulwark": (0.72, 2.40),
