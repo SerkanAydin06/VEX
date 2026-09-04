@@ -3,8 +3,10 @@ extends "res://scripts/actors/ravager_projectile.gd"
 
 const VenomOverlay = preload("res://scripts/effects/husk_leech_venom_overlay.gd")
 
-@export_category("04 - Husk Leech Zehir Görüşü")
-@export_range(0.5, 6.0, 0.1) var venom_overlay_duration := 2.8
+@export_category("01 - Husk Leech Zehir Görüşü")
+## Oyuncuya isabetten sonra ekran zehri efektinin toplam aktif kalma süresidir (saniye).
+@export_range(0.5, 6.0, 0.1) var venom_overlay_duration := 5.0
+## Ekran zehri görselinin en yüksek saydamlık değeridir; 1 en yoğun görünürlüktür.
 @export_range(0.2, 1.0, 0.05) var venom_overlay_peak_alpha := 0.95
 
 
