@@ -12,37 +12,82 @@ SCHEMAS = {
         "01 - Kimlik, Can ve Zorluk",
         "02 - Hareket ve Sabit Bekleme",
         "03 - Algılama ve Takip",
-        "03B - İşitme / Stealth",
-        "03C - Görüş Örnekleme",
-        "04 - Saldırı",
-        "05 - Yol Bulma",
-        "05B - Cover Yeniden Konumlanma",
-        "06 - Performans",
-        "07 - Görsel ve Animasyon",
-        "08 - Ölüm Sonrası İz",
-        "09 - Özel Yetenekler",
+        "04 - İşitme / Stealth",
+        "05 - Görüş Örnekleme",
+        "06 - Saldırı",
+        "07 - Yol Bulma",
+        "08 - Cover Yeniden Konumlanma",
+        "09 - Performans",
+        "10 - Görsel ve Animasyon",
+        "11 - Ölüm Sonrası İz",
+        "12 - Özel Yetenekler",
     ],
     "enemy_lunge_base.gd": [
         "01 - Kimlik, Can ve Zorluk",
         "02 - Hareket ve Sabit Bekleme",
         "03 - Algılama ve Takip",
-        "03B - İşitme / Stealth",
-        "04 - Saldırı",
-        "05 - Yol Bulma",
-        "06 - Performans",
-        "07 - Görsel ve Animasyon",
-        "08 - Ölüm Sonrası İz",
-        "09 - Özel Yetenekler",
+        "04 - İşitme / Stealth",
+        "05 - Saldırı",
+        "06 - Yol Bulma",
+        "07 - Performans",
+        "08 - Görsel ve Animasyon",
+        "09 - Ölüm Sonrası İz",
+        "10 - Özel Yetenekler",
+    ],
+}
+
+SPECIAL_RESOURCE_SCHEMAS = {
+    "warden_ability_settings.gd": [
+        "01 - Ground Slam",
+        "02 - Heatwave",
+        "03 - Zırhlı Zayıf Nokta",
+    ],
+    "furnice_carrier_ability_settings.gd": [
+        "01 - Saldırı Seçimi",
+        "02 - Thermal Burst",
+    ],
+    "enemy_hybrid_ability_settings.gd": [
+        "01 - Yakın Saldırı Seçimi",
+        "02 - Yakın Saldırı Görsel Hizası",
+    ],
+    "gorehorn_charge_settings.gd": [
+        "01 - Boynuz Şarjı",
+        "02 - Darbe Perdesi",
+    ],
+    "venom_marshall_ability_settings.gd": [
+        "01 - Alan Desteği",
+        "02 - Görsel Hizalama",
+    ],
+    "husk_leech_projectile.gd": [
+        "01 - Husk Leech Zehir Görüşü",
     ],
 }
 
 DOCUMENTED_EXPORT_FILES = [
     "enemy_base.gd",
     *SCHEMAS,
-    "warden_ability_settings.gd",
-    "furnice_carrier_ability_settings.gd",
-    "enemy_hybrid_ability_settings.gd",
-    "gorehorn_charge_settings.gd",
+    *SPECIAL_RESOURCE_SCHEMAS,
+]
+
+PRIMARY_CREATURE_SCRIPTS = [
+    "ravager.gd",
+    "basalt_juggernaut.gd",
+    "veilmaw.gd",
+    "voidweaver.gd",
+    "cinder_spitter.gd",
+    "coil_lancer.gd",
+    "spore_matriarch.gd",
+    "furnice_carrier.gd",
+    "crucible_warden.gd",
+    "vaskari_raptor.gd",
+    "vaskari_ravager.gd",
+    "cinderhound.gd",
+    "vaskari_bulwark.gd",
+    "gorehorn.gd",
+    "briar_skulker.gd",
+    "venom_marshall.gd",
+    "husk_leech.gd",
+    "rift_reaver.gd",
 ]
 
 
@@ -52,16 +97,32 @@ def read(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-enemy_base = read("enemy_base.gd")
-assert re.findall(r'@export_category\("([^"]+)"\)', enemy_base) == [
-    "01A - Ortak Kimlik ve Zorluk",
-    "01B - Zorluk Çarpanları (Sahne)",
-], "enemy_base yalnız ortak kimlik/zorluk sözleşmesini sahiplenmeli"
+def categories(source: str) -> list[str]:
+    return re.findall(r'@export_category\("([^"]+)"\)', source)
 
-for filename, expected_categories in SCHEMAS.items():
-    source = read(filename)
-    categories = re.findall(r'@export_category\("([^"]+)"\)', source)
-    assert categories == expected_categories, (filename, categories)
+
+def assert_sequential(category_names: list[str], filename: str) -> None:
+    numbers: list[int] = []
+    for category in category_names:
+        match = re.match(r"^(\d{2}) - ", category)
+        assert match is not None, (filename, "numarasız Inspector kategorisi", category)
+        numbers.append(int(match.group(1)))
+    assert numbers == list(range(1, len(numbers) + 1)), (
+        filename,
+        "Inspector kategorileri 01, 02, 03... sırasını izlemiyor",
+        numbers,
+    )
+
+
+enemy_base = read("enemy_base.gd")
+assert categories(enemy_base) == [
+    "01 - Kimlik ve Zorluk",
+], "enemy_base ortak kimlik/zorluk sözleşmesini tek 01 kategorisinde sahiplenmeli"
+
+for filename, expected_categories in {**SCHEMAS, **SPECIAL_RESOURCE_SCHEMAS}.items():
+    observed = categories(read(filename))
+    assert observed == expected_categories, (filename, observed)
+    assert_sequential(observed, filename)
 
 for filename in DOCUMENTED_EXPORT_FILES:
     lines = read(filename).splitlines()
@@ -77,27 +138,45 @@ for filename in DOCUMENTED_EXPORT_FILES:
         description = lines[index - 1].removeprefix("## ").strip()
         assert len(description) >= 20, (filename, index + 1, "açıklama çok kısa")
 
+# Yaratığa özgü tuning doğrudan derived creature scriptine export edilmez.
+# Böylece inherited Inspector sırası bozulmaz; özel tuning scene-owned Resource'a gider.
+for filename in PRIMARY_CREATURE_SCRIPTS:
+    source = read(filename)
+    assert "@export" not in source, (filename, "creature scriptinde doğrudan export bulundu")
+
+hybrid_script = read("enemy_hybrid_base.gd")
+assert "@export" not in hybrid_script
+assert not hybrid_script.startswith("@tool\n")
+assert not read("briar_skulker.gd").startswith("@tool\n")
+assert not read("gorehorn.gd").startswith("@tool\n")
+
 warden_script = read("crucible_warden.gd")
 furnice_script = read("furnice_carrier.gd")
-assert "@export" not in warden_script
-assert "@export" not in furnice_script
-hybrid_script = read("enemy_hybrid_base.gd")
-briar_script = read("briar_skulker.gd")
-gorehorn_script = read("gorehorn.gd")
-assert "@export" not in hybrid_script
-assert "@export" not in briar_script
-assert "@export" not in gorehorn_script
-assert not hybrid_script.startswith("@tool\n")
-assert not briar_script.startswith("@tool\n")
-assert not gorehorn_script.startswith("@tool\n")
+venom_script = read("venom_marshall.gd")
 assert "var _ability: VexWardenAbilitySettings" in warden_script
 assert "var _ability: VexFurniceCarrierAbilitySettings" in furnice_script
+assert "var _ability: VexVenomMarshallAbilitySettings" in venom_script
 
-warden_scene = (ROOT / "scenes/actors/crucible_warden.tscn").read_text(encoding="utf-8")
-furnice_scene = (ROOT / "scenes/actors/furnice_carrier.tscn").read_text(encoding="utf-8")
-assert 'special_ability_settings = SubResource("Resource_warden_ability")' in warden_scene
-assert 'special_ability_settings = SubResource("Resource_furnice_ability")' in furnice_scene
-briar_scene = (ROOT / "scenes/actors/briar_skulker.tscn").read_text(encoding="utf-8")
-assert 'special_ability_settings = SubResource("Resource_hybrid_settings")' in briar_scene
+scene_contracts = {
+    "crucible_warden.tscn": 'special_ability_settings = SubResource("Resource_warden_ability")',
+    "furnice_carrier.tscn": 'special_ability_settings = SubResource("Resource_furnice_ability")',
+    "briar_skulker.tscn": 'special_ability_settings = SubResource("Resource_hybrid_settings")',
+    "gorehorn.tscn": 'special_ability_settings = SubResource("Resource_gorehorn_charge")',
+    "venom_marshall.tscn": 'special_ability_settings = SubResource("Resource_venom_marshall_ability")',
+}
+for scene_name, contract in scene_contracts.items():
+    scene = (ROOT / "scenes/actors" / scene_name).read_text(encoding="utf-8")
+    assert contract in scene, (scene_name, contract)
+
+venom_scene = (ROOT / "scenes/actors/venom_marshall.tscn").read_text(encoding="utf-8")
+assert 'path="res://scripts/actors/venom_marshall_ability_settings.gd"' in venom_scene
+for contract in [
+    "buff_cast_range = 7.0",
+    "buff_cooldown = 11.5",
+    "buff_windup = 0.65",
+    "buff_recovery = 0.8",
+    "buff_refresh_window = 1.2",
+]:
+    assert contract in venom_scene, contract
 
 print("enemy Inspector documentation audit passed")
