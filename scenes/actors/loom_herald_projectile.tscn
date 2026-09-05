@@ -1,0 +1,122 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/ravager_projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/enemies/loom_herald/loom_herald_effects_spritesheet.png" id="2_effects"]
+[ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="3_impact_audio"]
+
+[sub_resource type="SphereShape3D" id="Sphere_loom_projectile"]
+radius = 0.18
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile_1"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile_2"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile_3"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1024, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_projectile_4"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1536, 0, 512, 512)
+
+[sub_resource type="SpriteFrames" id="Frames_projectile"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_projectile_1")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_2")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_3")}, {"duration": 1.0, "texture": SubResource("Atlas_projectile_4")}],
+"loop": true,
+"name": &"default",
+"speed": 11.0
+}]
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_1"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_2"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_3"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1024, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="Atlas_impact_4"]
+atlas = ExtResource("2_effects")
+filter_clip = true
+region = Rect2(1536, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="Frames_impact"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_impact_1")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_2")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_3")}, {"duration": 1.0, "texture": SubResource("Atlas_impact_4")}],
+"loop": false,
+"name": &"default",
+"speed": 16.0
+}]
+
+[node name="LoomHeraldProjectile" type="Area3D"]
+collision_layer = 0
+collision_mask = 11
+monitorable = false
+script = ExtResource("1_script")
+speed = 13.5
+lifetime = 4.5
+impact_surface_offset = 0.24
+player_impact_surface_offset = 0.04
+light_pulse_amplitude = 0.32
+light_pulse_speed = 8.0
+impact_light_energy = 4.6
+impact_light_fade_duration = 0.26
+impact_start_scale_multiplier = 0.9
+impact_end_scale_multiplier = 1.18
+impact_scale_duration = 0.22
+impact_fade_delay = 0.12
+impact_fade_duration = 0.14
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Sphere_loom_projectile")
+
+[node name="Visual" type="AnimatedSprite3D" parent="."]
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("Frames_projectile")
+autoplay = "default"
+pixel_size = 0.00125
+texture_filter = 3
+alpha_cut = 1
+
+[node name="ImpactVisual" type="AnimatedSprite3D" parent="."]
+visible = false
+billboard = 1
+double_sided = true
+sprite_frames = SubResource("Frames_impact")
+pixel_size = 0.00145
+texture_filter = 3
+alpha_cut = 1
+
+[node name="Light" type="OmniLight3D" parent="."]
+light_color = Color(0.24, 0.52, 1, 1)
+light_energy = 2.6
+omni_range = 4.2
+shadow_enabled = false
+shadow_bias = 0.02
+shadow_normal_bias = 0.35
+distance_fade_enabled = true
+distance_fade_begin = 18.0
+distance_fade_length = 5.0
+
+[node name="ImpactAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_impact_audio")
+volume_db = -2.0
+pitch_scale = 1.08
+bus = &"SFX"
+max_distance = 18.0
