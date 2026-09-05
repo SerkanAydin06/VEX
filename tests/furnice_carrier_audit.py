@@ -130,7 +130,9 @@ def main() -> int:
         ('speed := 14.0', "projectile 14 m/s"),
         ('var _direct_damage := 18', "projectile 18 direct hasar defaultu"),
         ('_spawn_decal_below(impact_position)', "impact sonrası decal"),
-        ('decal.call("configure", _decal_tick_damage, _source)', "decal hasar aktarımı"),
+        ('decal.call("configure", _decal_tick_damage, damage_source)', "decal hasar aktarımı"),
+        ('func _valid_source() -> Node:', "projectile source yaşam süresi koruması"),
+        ('_source = source if is_instance_valid(source) else null', "launch source doğrulaması"),
         ('impact_light_fade_duration := 0.35', "impact ışık fade Inspector ayarı"),
     ]:
         require(projectile_script, needle, label)
@@ -140,6 +142,8 @@ def main() -> int:
         ('lifetime := 6.0', "6 sn decal lifetime"),
         ('damage_tick_interval := 0.5', "decal tick interval"),
         ('overlaps_body(player)', "decal içindeyken hasar"),
+        ('func _valid_source() -> Node:', "decal source yaşam süresi koruması"),
+        ('player.call("take_damage", damage_per_tick, player.global_position, _valid_source())', "decal güvenli source aktarımı"),
     ]:
         require(decal_script, needle, label)
 
