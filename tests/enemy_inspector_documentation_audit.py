@@ -37,6 +37,18 @@ SCHEMAS = {
 }
 
 SPECIAL_RESOURCE_SCHEMAS = {
+    "ravager_ability_settings.gd": [
+        "01 - Avcı Atışı",
+    ],
+    "cinder_spitter_ability_settings.gd": [
+        "01 - Kısa Seri",
+    ],
+    "veilmaw_ability_settings.gd": [
+        "01 - Ateş Et / Konum Değiştir",
+    ],
+    "voidweaver_ability_settings.gd": [
+        "01 - Enerji Örgüsü",
+    ],
     "warden_ability_settings.gd": [
         "01 - Ground Slam",
         "02 - Heatwave",
@@ -57,6 +69,9 @@ SPECIAL_RESOURCE_SCHEMAS = {
     "venom_marshall_ability_settings.gd": [
         "01 - Alan Desteği",
         "02 - Görsel Hizalama",
+    ],
+    "rift_reaver_phase_settings.gd": [
+        "01 - Rift Phase",
     ],
     "husk_leech_projectile.gd": [
         "01 - Husk Leech Zehir Görüşü",
@@ -150,26 +165,45 @@ assert not hybrid_script.startswith("@tool\n")
 assert not read("briar_skulker.gd").startswith("@tool\n")
 assert not read("gorehorn.gd").startswith("@tool\n")
 
-warden_script = read("crucible_warden.gd")
-furnice_script = read("furnice_carrier.gd")
-venom_script = read("venom_marshall.gd")
-assert "var _ability: VexWardenAbilitySettings" in warden_script
-assert "var _ability: VexFurniceCarrierAbilitySettings" in furnice_script
-assert "var _ability: VexVenomMarshallAbilitySettings" in venom_script
+for filename, type_name in {
+    "ravager.gd": "VexRavagerAbilitySettings",
+    "cinder_spitter.gd": "VexCinderSpitterAbilitySettings",
+    "veilmaw.gd": "VexVeilmawAbilitySettings",
+    "voidweaver.gd": "VexVoidweaverAbilitySettings",
+    "crucible_warden.gd": "VexWardenAbilitySettings",
+    "furnice_carrier.gd": "VexFurniceCarrierAbilitySettings",
+    "venom_marshall.gd": "VexVenomMarshallAbilitySettings",
+}.items():
+    assert f"var _ability: {type_name}" in read(filename), (filename, type_name)
 
 scene_contracts = {
+    "ravager.tscn": 'special_ability_settings = SubResource("Resource_ravager_ability")',
+    "cinder_spitter.tscn": 'special_ability_settings = SubResource("Resource_cinder_spitter_ability")',
+    "veilmaw.tscn": 'special_ability_settings = SubResource("Resource_veilmaw_ability")',
+    "voidweaver.tscn": 'special_ability_settings = SubResource("Resource_voidweaver_ability")',
     "crucible_warden.tscn": 'special_ability_settings = SubResource("Resource_warden_ability")',
     "furnice_carrier.tscn": 'special_ability_settings = SubResource("Resource_furnice_ability")',
     "briar_skulker.tscn": 'special_ability_settings = SubResource("Resource_hybrid_settings")',
     "gorehorn.tscn": 'special_ability_settings = SubResource("Resource_gorehorn_charge")',
     "venom_marshall.tscn": 'special_ability_settings = SubResource("Resource_venom_marshall_ability")',
+    "rift_reaver.tscn": 'special_ability_settings = SubResource("Resource_rift_phase")',
 }
 for scene_name, contract in scene_contracts.items():
     scene = (ROOT / "scenes/actors" / scene_name).read_text(encoding="utf-8")
     assert contract in scene, (scene_name, contract)
 
+for scene_name, settings_path in {
+    "ravager.tscn": "ravager_ability_settings.gd",
+    "cinder_spitter.tscn": "cinder_spitter_ability_settings.gd",
+    "veilmaw.tscn": "veilmaw_ability_settings.gd",
+    "voidweaver.tscn": "voidweaver_ability_settings.gd",
+    "venom_marshall.tscn": "venom_marshall_ability_settings.gd",
+    "rift_reaver.tscn": "rift_reaver_phase_settings.gd",
+}.items():
+    scene = (ROOT / "scenes/actors" / scene_name).read_text(encoding="utf-8")
+    assert f'path="res://scripts/actors/{settings_path}"' in scene, (scene_name, settings_path)
+
 venom_scene = (ROOT / "scenes/actors/venom_marshall.tscn").read_text(encoding="utf-8")
-assert 'path="res://scripts/actors/venom_marshall_ability_settings.gd"' in venom_scene
 for contract in [
     "buff_cast_range = 7.0",
     "buff_cooldown = 11.5",
