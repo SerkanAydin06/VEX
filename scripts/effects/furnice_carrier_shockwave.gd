@@ -26,7 +26,7 @@ var _damage_applied := false
 
 func configure(new_damage: int, source: Node) -> void:
 	burst_damage = maxi(1, new_damage)
-	_source = source
+	_source = source if is_instance_valid(source) else null
 
 
 func _ready() -> void:
@@ -80,15 +80,23 @@ func _apply_damage_once() -> void:
 	if not _has_clear_path_to_player(player):
 		return
 	if player.has_method("take_damage"):
-		player.call("take_damage", burst_damage, player.global_position, _source)
+		player.call("take_damage", burst_damage, player.global_position, _valid_source())
 
 
 func _has_clear_path_to_player(player: Node3D) -> bool:
 	var origin := global_position + Vector3.UP * occlusion_origin_height
 	var target := player.global_position + Vector3.UP * occlusion_target_height
 	var exclusions: Array[RID] = [get_rid()]
-	if _source is CollisionObject3D:
-		exclusions.append((_source as CollisionObject3D).get_rid())
+	var damage_source := _valid_source()
+	if damage_source is CollisionObject3D:
+		exclusions.append((damage_source as CollisionObject3D).get_rid())
 	var query := PhysicsRayQueryParameters3D.create(origin, target, occlusion_mask, exclusions)
 	query.collide_with_areas = false
 	return get_world_3d().direct_space_state.intersect_ray(query).is_empty()
+
+
+func _valid_source() -> Node:
+	if is_instance_valid(_source):
+		return _source
+	_source = null
+	return null
