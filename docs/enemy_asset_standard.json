@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "status": "canonical",
+  "character": {
+    "master_examples": {
+      "portrait": {
+        "width": 1024,
+        "height": 1536
+      },
+      "landscape": {
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    "runtime_frame_sizes": {
+      "portrait": {
+        "width": 512,
+        "height": 768
+      },
+      "landscape": {
+        "width": 768,
+        "height": 512
+      }
+    },
+    "default_sheet_grid": {
+      "columns": 4,
+      "rows": 6
+    },
+    "default_animation_rows": [
+      "idle",
+      "walk",
+      "attack",
+      "death",
+      "idle_back",
+      "walk_back"
+    ],
+    "default_sheet_sizes": {
+      "portrait_4x6": {
+        "width": 2048,
+        "height": 4608
+      },
+      "landscape_4x6": {
+        "width": 3072,
+        "height": 3072
+      }
+    },
+    "extra_animation_rule": "Keep canonical frame size; increase sheet row count only."
+  },
+  "effects": {
+    "master_example": {
+      "width": 1254,
+      "height": 1254
+    },
+    "runtime_frame_size": {
+      "width": 512,
+      "height": 512
+    },
+    "types": [
+      "projectile",
+      "projectile_trail",
+      "impact",
+      "decal",
+      "explosion",
+      "burst",
+      "charge",
+      "cast",
+      "enemy_vfx"
+    ],
+    "example_sheet_sizes": {
+      "4x1": {
+        "width": 2048,
+        "height": 512
+      },
+      "2x2": {
+        "width": 1024,
+        "height": 1024
+      },
+      "4x2": {
+        "width": 2048,
+        "height": 1024
+      },
+      "4x4": {
+        "width": 2048,
+        "height": 2048
+      }
+    }
+  },
+  "image_rules": {
+    "format": "PNG",
+    "background": "transparent",
+    "preserve_aspect_ratio": true,
+    "per_frame_alpha_crop": false,
+    "clip_visible_content": false
+  },
+  "paths": {
+    "runtime_enemy_assets": "assets/enemies/<enemy_id>/",
+    "optional_master_archive": "art_source/enemies/<enemy_id>/"
+  },
+  "godot": {
+    "runtime_scenes_must_not_reference_art_source": true,
+    "enemy_filter": "Linear Mipmap",
+    "enemy_billboard": "Fixed-Y",
+    "recalibrate_on_sheet_resize": [
+      "AtlasTexture regions",
+      "AnimatedSprite3D.pixel_size",
+      "frame Y offsets"
+    ]
+  },
+  "migration": {
+    "mode": "incremental",
+    "bulk_blind_resize_existing_assets": false
+  }
+}
