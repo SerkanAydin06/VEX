@@ -42,7 +42,7 @@ func _ready() -> void:
 
 func launch(direction: Vector3, source: Node, direct_damage: int, decal_tick_damage: int) -> void:
 	_direction = direction.normalized()
-	_source = source
+	_source = source if is_instance_valid(source) else null
 	_direct_damage = maxi(1, direct_damage)
 	_decal_tick_damage = maxi(1, decal_tick_damage)
 	_active = _direction.length_squared() > 0.001
@@ -59,8 +59,9 @@ func _physics_process(delta: float) -> void:
 	var from := global_position
 	var to := from + _direction * speed * delta
 	var exclusions: Array[RID] = [get_rid()]
-	if _source is CollisionObject3D:
-		exclusions.append((_source as CollisionObject3D).get_rid())
+	var damage_source := _valid_source()
+	if damage_source is CollisionObject3D:
+		exclusions.append((damage_source as CollisionObject3D).get_rid())
 	var query := PhysicsRayQueryParameters3D.create(from, to, collision_mask, exclusions)
 	query.collide_with_areas = false
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
@@ -74,7 +75,10 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_body_entered(body: Node) -> void:
-	if not _active or _impacted or body == _source:
+	if not _active or _impacted:
+		return
+	var damage_source := _valid_source()
+	if body == damage_source:
 		return
 	_resolve_direct_hit(body, global_position)
 	_begin_impact(global_position)
@@ -89,7 +93,7 @@ func _resolve_direct_hit(target: Node, hit_position: Vector3) -> void:
 		if parent.has_method("take_damage"):
 			damage_target = parent
 	if damage_target == GameState.player and damage_target.has_method("take_damage"):
-		damage_target.call("take_damage", _direct_damage, hit_position, _source)
+		damage_target.call("take_damage", _direct_damage, hit_position, _valid_source())
 
 
 func _begin_impact(impact_position: Vector3) -> void:
@@ -117,8 +121,9 @@ func _spawn_decal_below(impact_position: Vector3) -> void:
 	var ray_start := impact_position + Vector3.UP * ground_probe_height
 	var ray_end := impact_position + Vector3.DOWN * ground_probe_depth
 	var exclusions: Array[RID] = [get_rid()]
-	if _source is CollisionObject3D:
-		exclusions.append((_source as CollisionObject3D).get_rid())
+	var damage_source := _valid_source()
+	if damage_source is CollisionObject3D:
+		exclusions.append((damage_source as CollisionObject3D).get_rid())
 	var query := PhysicsRayQueryParameters3D.create(ray_start, ray_end, ground_collision_mask, exclusions)
 	query.collide_with_areas = false
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
@@ -128,8 +133,15 @@ func _spawn_decal_below(impact_position: Vector3) -> void:
 	if decal == null:
 		return
 	if decal.has_method("configure"):
-		decal.call("configure", _decal_tick_damage, _source)
+		decal.call("configure", _decal_tick_damage, damage_source)
 	get_tree().current_scene.add_child(decal)
 	var floor_position: Vector3 = hit.get("position", impact_position)
 	var floor_normal: Vector3 = hit.get("normal", Vector3.UP)
 	decal.global_position = floor_position + floor_normal * decal_surface_offset
+
+
+func _valid_source() -> Node:
+	if is_instance_valid(_source):
+		return _source
+	_source = null
+	return null
