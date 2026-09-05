@@ -1,6 +1,8 @@
 class_name VexCrucibleWardenHeatwaveProjectile
 extends Area3D
 
+const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.gd")
+
 @export_category("01 - Uçuş")
 @export_range(1.0, 30.0, 0.5) var speed := 8.5
 @export_range(0.2, 5.0, 0.05) var lifetime := 1.45
@@ -21,6 +23,10 @@ var _burst_id := 0
 var _remaining_lifetime := 0.0
 var _active := false
 var _impacted := false
+var _lifecycle_generation := 0
+var _base_visual_scale := Vector3.ONE
+var _base_visual_modulate := Color.WHITE
+var _base_light_energy := 0.0
 
 
 func _ready() -> void:
@@ -28,9 +34,52 @@ func _ready() -> void:
 	var sphere := collision_shape.shape as SphereShape3D
 	if sphere != null:
 		sphere.radius = collision_radius
-	visual.play(&"default")
+	_base_visual_scale = visual.scale
+	_base_visual_modulate = visual.modulate
+	_base_light_energy = heat_light.light_energy if heat_light != null else 0.0
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
+	activate_from_pool()
+
+
+func activate_from_pool() -> void:
+	_lifecycle_generation += 1
+	_direction = Vector3.FORWARD
+	_source = null
+	_damage = 18
+	_burst_id = 0
 	_remaining_lifetime = lifetime
-	body_entered.connect(_on_body_entered)
+	_active = true
+	_impacted = false
+	visible = true
+	set_physics_process(true)
+	set_deferred("monitoring", true)
+	collision_shape.set_deferred("disabled", false)
+	visual.visible = true
+	visual.scale = _base_visual_scale
+	visual.modulate = _base_visual_modulate
+	visual.frame = 0
+	visual.play(&"default")
+	if heat_light != null:
+		heat_light.visible = true
+		heat_light.light_energy = _base_light_energy
+
+
+func deactivate_for_pool() -> void:
+	_lifecycle_generation += 1
+	_active = false
+	_impacted = false
+	_source = null
+	_direction = Vector3.FORWARD
+	set_physics_process(false)
+	set_deferred("monitoring", false)
+	collision_shape.set_deferred("disabled", true)
+	visual.stop()
+	visual.visible = false
+	if heat_light != null:
+		heat_light.visible = false
+		heat_light.light_energy = 0.0
+	visible = false
 
 
 func launch(
@@ -46,7 +95,9 @@ func launch(
 	_source = source if is_instance_valid(source) else null
 	_damage = maxi(1, damage)
 	_burst_id = burst_id
+	_remaining_lifetime = lifetime
 	_active = _direction.length_squared() > 0.001
+	_impacted = false
 
 
 func _physics_process(delta: float) -> void:
@@ -123,20 +174,29 @@ func _valid_source() -> Node:
 func _begin_impact() -> void:
 	if _impacted:
 		return
+	var generation := _lifecycle_generation
 	_impacted = true
 	_active = false
+	set_deferred("monitoring", false)
 	collision_shape.set_deferred("disabled", true)
 	var tween := create_tween()
 	tween.set_parallel(true)
 	tween.tween_property(
 		visual,
 		"scale",
-		visual.scale * impact_scale_multiplier,
+		_base_visual_scale * impact_scale_multiplier,
 		impact_fade_time
 	)
 	tween.tween_property(visual, "modulate:a", 0.0, impact_fade_time)
 	if heat_light != null:
 		tween.tween_property(heat_light, "light_energy", 0.0, impact_fade_time)
 	await tween.finished
-	if is_inside_tree():
+	if is_inside_tree() and generation == _lifecycle_generation:
+		_recycle_or_free()
+
+
+func _recycle_or_free() -> void:
+	if has_meta("vex_projectile_pool_key"):
+		EnemyProjectilePool.recycle(self)
+	else:
 		queue_free()
