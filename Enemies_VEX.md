@@ -78,25 +78,25 @@ Korvath yalnız “yavaş yakın dövüş” ailesi değildir. Güncel roster da
 ### 1. Basalt Juggernaut
 
 - **Rol:** Ağır orta menzil kırıcı / tank shooter.
-- **Güncel savaş kimliği:** Yüksek canla ilerler ve yaklaşık 15 m menzilden ağır sıcak projectile atar. Yaklaşması başlı başına alan daraltır, fakat ana gameplay kimliği saf melee değildir.
+- **Güncel savaş kimliği:** Çok yüksek canla ağır adımlarla ilerler ve yaklaşık 15 m menzilden yüksek hasarlı, büyük sıcak projectile atar. Atışı hızlı spam yerine belirgin hazırlık ve daha yavaş projectile uçuşuyla okunabilir ağır darbe olarak tasarlanmıştır.
 - **Hikâye rolü:** Kaya kırma ve lav akışını yönlendirme için yetiştirilmiş yüksek basınç iş organizması.
 - **Görsel rol:** Ailenin en iri bazalt kütlesi; kızıl-turuncu çekirdek hissi Korvath kimliğini taşımalıdır.
-- **Ayırt edici özellik:** Dayanıklılık ve ağır ranged baskıyı aynı gövdede birleştirir.
+- **Ayırt edici özellik:** Dayanıklılık ve ağır ranged baskıyı aynı gövdede birleştirir; gücü hızlı ateş hızından değil tek atışın ağırlığından gelir.
 
 ### 2. Cinder Hound
 
 - **Rol:** Hızlı yakın menzil takipçisi.
-- **Güncel savaş kimliği:** Çok yüksek chase hızı, kısa windup ve kısa lunge ile oyuncuya hızla kapanır.
+- **Güncel savaş kimliği:** Çok yüksek chase hızı ve oyuncunun fiziksel temasına kadar yaklaşan kısa lunge ile saldırır. Küçük gövdesi ve yakın temas saldırısı Korvath'ın ağır ranged birimlerine karşı tempo katmanı oluşturur.
 - **Hikâye rolü:** Dar ocak tünellerinde kaçak ısı, çatlak ve hareket tespiti yapan avcı/bakım canlısı.
 - **Ayırt edici özellik:** Korvath'ın ağır yaratıklarının tersine hafif ve saldırgandır; oyuncuyu ranged birimlerin güvenli alanından çıkarır.
 
 ### 3. Cinder Spitter
 
 - **Rol:** Mobil orta menzil ısı atıcısı.
-- **Güncel savaş kimliği:** Yaklaşık 14 m menzilden projectile kullanır; cover/reposition davranışıyla açı değiştirir ve orta mesafeyi tutmaya çalışır.
+- **Güncel savaş kimliği:** Yaklaşık 14 m menzilden **iki atışlık kısa sıcak projectile serisi** kullanır; cover/reposition davranışıyla açı değiştirir ve orta mesafeyi tutmaya çalışır.
 - **Hikâye rolü:** Ocaklarda basınç ve sıcak gaz birikimini boşaltan, tehlike anında kızgın madde püskürten çevik bakım organizması.
 - **Görsel rol:** Korvath turuncu/kızıl projectile dili güçlü olmalıdır; Basalt kadar iri görünmemelidir.
-- **Ayırt edici özellik:** Ailenin daha hızlı ve daha kırılgan ranged baskı katmanıdır.
+- **Ayırt edici özellik:** Basalt'ın tek ağır atışının tersine kısa seriyle ritmik baskı kuran, daha hızlı ve daha kırılgan ranged katmandır.
 
 ### 4. Furnace Carrier
 
@@ -133,9 +133,9 @@ Thornwild'ın ortak hissi yalnız yakın rush değildir. Güncel aile:
 ### 1. Ravager
 
 - **Rol:** Uzun menzilli organik baskı avcısı.
-- **Güncel savaş kimliği:** Yaklaşık 20 m menzilden hızlı projectile atar, lead kullanır ve açık görüş hattını korumaya çalışır.
+- **Güncel savaş kimliği:** Yaklaşık 20 m menzilden **tek ve hızlı precision projectile** atar, güçlü lead kullanır ve açık görüş hattını korumaya çalışır.
 - **Hikâye rolü:** Avını doğrudan üzerine atlamak yerine uzaktan zayıflatabilen orta seviye sürü avcısı.
-- **Ayırt edici özellik:** Thornwild'ın temel ranged omurgasıdır; dokümanda artık melee standart düşman olarak değerlendirilmez.
+- **Ayırt edici özellik:** Thornwild'ın temel uzun menzil avcı atışıdır; Cinder Spitter gibi seri atış veya Coil Lancer gibi askerî nişancı ritmi kullanmaz.
 
 ### 2. Briar Skulker
 
@@ -177,16 +177,16 @@ Vaskari'nin tanınabilir aile rengi **mor/viyole**dir. Siyah-kemiksi biyozırh �
 ### 1. Vaskari Raptor
 
 - **Rol:** Hızlı yakın menzil taarruz birimi.
-- **Güncel savaş kimliği:** Yüksek chase hızı ve lunge ile oyuncuya hızla kapanır.
+- **Güncel savaş kimliği:** Vaskari Ravager'dan daha yüksek sürekli takip temposu ve daha kısa saldırı döngüsüyle oyuncuya hızla kapanır.
 - **Hikâye rolü:** Öncü hücum ve takip kastı.
-- **Ayırt edici özellik:** Lejyonun tempo kuran hızlı melee birimidir.
+- **Ayırt edici özellik:** Lejyonun tempo kuran hızlı melee birimidir; Ravager'ın ağır saldırı rolünü tekrar etmez.
 
 ### 2. Vaskari Ravager
 
 - **Rol:** Ağır yakın menzil hücum varyantı.
-- **Güncel savaş kimliği:** Raptor'dan daha dayanıklı ve daha sert vurur; lunge ailesini kullanır ama hız yerine güç ve canla baskı yapar.
+- **Güncel savaş kimliği:** Raptor'dan daha dayanıklı ve daha sert vurur. Normal takipte daha yavaştır; asıl hız patlamasını daha güçlü lunge sırasında üretir ve saldırılar arasında daha uzun açık bırakır.
 - **Hikâye rolü:** Savunma hattını fiziksel olarak kırmak için yetiştirilmiş ağır saldırı kastı.
-- **Ayırt edici özellik:** Raptor ile aynı silueti/oyun rolünü tekrar etmemeli; daha ağır ve tehditkâr hissedilmelidir.
+- **Ayırt edici özellik:** Raptor süreklilik ve takip temposunu, Ravager ise tek hamlede yüksek fiziksel baskıyı temsil eder.
 
 ### 3. Coil Lancer
 
@@ -230,10 +230,10 @@ Ana palet **mat siyah, lacivert ve soğuk mavi** olmalıdır. Vaskari moruyla ka
 
 - **Durum:** Mevcut.
 - **Rol:** Orta menzil harrier / görüş hattı avcısı.
-- **Güncel savaş kimliği:** Yaklaşık 12 m menzilden projectile atar; cover/reposition ile daha iyi görüş açısı arar ve orta mesafeyi korur.
+- **Güncel savaş kimliği:** Yaklaşık 12 m menzilden projectile atar; **her atıştan sonra kısa bir reposition penceresiyle** yeni görüş açısı arar ve orta mesafeyi korur.
 - **Hikâye rolü:** Nhal av bölgelerinde açık hedefi uzaktan taciz eden çevik avcı formu.
 - **Görsel rol:** Projectile ışığı mor yerine Nhal'a ait **soğuk mavi** ekseninde kalmalıdır.
-- **Ayırt edici özellik:** Güncel oyunda görünmezlik veya faza girip çıkma yeteneği yoktur; gerilim hareketi, karanlık çevre ve menzilli baskıdan gelir.
+- **Ayırt edici özellik:** Güncel oyunda görünmezlik veya faza girip çıkma yeteneği yoktur; gerilim hareketi, karanlık çevre ve sürekli açı değiştirmesinden gelir.
 
 ### 2. Husk Leech
 
@@ -275,18 +275,19 @@ Aether Loom, Vaskari'den kesin ayrılmalıdır:
 
 ### 1. Voidweaver
 
-- **Rol:** Orta menzil enerji tehdidi.
-- **Güncel savaş kimliği:** Yaklaşık 13.5 m menzilden hızlı enerji projectile kullanır ve cover/reposition davranışıyla açısını düzeltir.
-- **Hikâye rolü:** Aether Loom'da yarık ve enerji akışlarını düzenleyen dokuyucu saha organizması.
-- **Görsel rol:** Projectile ışığı sıcak turuncu değil, **camgöbeği/soğuk enerji** kimliğini taşımalıdır.
-- **Ayırt edici özellik:** Güncel oyunda mermiyi uçuş sırasında yön değiştiren veya teleport olan özel bir sistem yoktur; tehdit yüksek hızlı enerji atışı ve yabancı görsel dilden gelir.
+- **Rol:** Havada süzülen orta menzil enerji dokuyucusu.
+- **Güncel savaş kimliği:** Görsel olarak zeminin üzerinde süzülür ve yaklaşık 13.5 m menzilden **üç kollu enerji örgüsü** atar. Merkez projectile ana hasarı taşır; daha düşük hasarlı yan kollar geniş açıyla alan kapatır. Cover/reposition davranışıyla atış açısını düzeltir.
+- **Hikâye rolü:** Aether Loom'da yarık ve enerji akışlarını düzenleyen dokuyucu saha organizması; Dünya'da da kırılmış faz çizgilerini çoklu enerji yollarıyla yeniden bağlamaya çalışır.
+- **Görsel rol:** Projectile ışığı sıcak turuncu değil, **camgöbeği/soğuk enerji** kimliğini taşımalıdır. Ground shadow yerde kalırken gövde havada okunmalıdır.
+- **Ayırt edici özellik:** Uçuş sırasında teleport eden mermi kullanmaz; imzası havada süzülen siluet ve geniş üçlü enerji fanıdır.
 
 ### 2. Rift Reaver
 
 - **Rol:** Hızlı yakın menzil yarık avcısı.
-- **Güncel savaş kimliği:** Yüksek chase hızıyla mesafeyi kapatır, yaklaşık 2 m melee menzil ve hızlı lunge ile saldırır.
-- **Hikâye rolü:** Yarık sınırlarında yoğunlaşan, bozuk örüntünün içindeki yabancı maddeleri fiziksel olarak parçalayan saldırı formu.
-- **Ayırt edici özellik:** Aether ailesine Voidweaver'ın tersine gerçek yakın mesafe baskısı ekler; bu nedenle iki aktif Aether yaratığı oynanışta birbirini tamamlar.
+- **Güncel savaş kimliği:** Oyuncuya yaklaşır; saldırı başlarken uygun ve güvenli bir nokta varsa oyuncunun çevresine kısa **phase step** yapıp lunge uygular. Saldırı döngüsü bittiğinde güvenli hedef bulunursa recovery phase ile tekrar açı açar.
+- **Phase güvenlik kuralı:** Phase noclip değildir; zemin, yükseklik farkı, süpürülmüş gövde yolu ve varış görüş hattı doğrulanır. Duvar/engel üzerinden geçemez ve güvenli nokta yoksa normal lunge'a devam eder.
+- **Hikâye rolü:** Yarık sınırlarında yoğunlaşan, bozuk örüntünün içindeki yabancı maddeleri fiziksel olarak parçalayan saldırı formu. Kısa phase hareketi gerçekliği sınırsız teleport etmek değil, yalnız sağlam kalan komşu yarık çizgileri arasında kendini yeniden bağlamaktır.
+- **Ayırt edici özellik:** Aether ailesine Voidweaver'ın tersine gerçek yakın mesafe ve uzamsal açı değiştirme baskısı ekler.
 
 ## 9.4 Planlanan Aether yaratıkları
 
@@ -298,6 +299,7 @@ Aether Loom, Vaskari'den kesin ayrılmalıdır:
 
 ### Loom Herald
 - Elit koordinatör / miniboss. Faz kayması veya unit coordination gibi gerçek, uygulanmış bir özel sistemle gelmelidir.
+- **Tasarımı tamamlanmadan ve nihai sprite/animasyon seti hazır olmadan aktif roster'a alınmamalıdır.**
 
 ---
 
@@ -305,24 +307,24 @@ Aether Loom, Vaskari'den kesin ayrılmalıdır:
 
 | Aktif düşman | Evren | Gerçek oyun rolü |
 |---|---|---|
-| Basalt Juggernaut | Korvath | Ağır orta menzil projectile tankı |
+| Basalt Juggernaut | Korvath | Yavaş, ağır projectile kullanan yüksek dayanıklılıklı tank |
 | Cinder Hound | Korvath | Çok hızlı yakın lunge takipçisi |
-| Cinder Spitter | Korvath | Mobil orta menzil ısı atıcısı |
+| Cinder Spitter | Korvath | İki atışlık kısa seri kullanan mobil ısı atıcısı |
 | Furnace Carrier | Korvath | Uzun menzil projectile + yakın Thermal Burst |
 | Crucible Warden | Korvath | Ground Slam / Heatwave elit koruyucu |
-| Ravager | Thornwild | Uzun menzil organik projectile baskısı |
+| Ravager | Thornwild | Uzun menzil tek hızlı precision projectile avcısı |
 | Briar Skulker | Thornwild | Ranged + yakın melee hibrit avcı |
 | Gorehorn | Thornwild | Düz hat ağır charge birimi |
 | Spore Matriarch | Thornwild | Zehir alanı ve DoT kontrolü |
-| Vaskari Raptor | Vaskari | Hızlı yakın lunge taarruzu |
-| Vaskari Ravager | Vaskari | Daha ağır ve sert yakın lunge varyantı |
+| Vaskari Raptor | Vaskari | Hızlı takip + kısa döngülü yakın lunge taarruzu |
+| Vaskari Ravager | Vaskari | Daha yavaş takip + sert ve ağır yakın lunge |
 | Coil Lancer | Vaskari | Uzun menzil yüksek hızlı nişancı |
 | Vaskari Bulwark | Vaskari | Çok dayanıklı yakın ön hat birimi |
 | Venom Marshall | Vaskari | Ranged saldırı + heal/damage buff destek alanı |
-| Veilmaw | Nhal Veil | Orta menzil cover/reposition harrier |
+| Veilmaw | Nhal Veil | Atış sonrası açı değiştiren orta menzil harrier |
 | Husk Leech | Nhal Veil | Görüş kapatan zehir projectile desteği |
-| Voidweaver | Aether Loom | Hızlı enerji projectile orta menzil tehdidi |
-| Rift Reaver | Aether Loom | Hızlı yakın lunge yarık avcısı |
+| Voidweaver | Aether Loom | Havada süzülen üçlü enerji örgüsü tehdidi |
+| Rift Reaver | Aether Loom | Güvenli phase step + yakın lunge yarık avcısı |
 
 ---
 
@@ -334,7 +336,7 @@ Aether Loom, Vaskari'den kesin ayrılmalıdır:
 | **Thornwild** | “Organik avcılar farklı mesafelerden beni hareket etmeye zorluyor.” |
 | **Vaskari** | “Birbirini tamamlayan askerî roller aynı anda savaş hattı kuruyor.” |
 | **Nhal Veil** | “Görüşüm ve güvenli bilgi alanım bozuluyor; karanlıkta yanlış pozisyon ölümcül.” |
-| **Aether Loom** | “Aynı gerçekliğe ait değilmiş gibi davranan enerji ve yakın yarık formları arasında mesafe okuyamıyorum.” |
+| **Aether Loom** | “Enerji örgüleri ve kısa faz kaymaları yüzünden düşmanın açısını sürekli yeniden okumam gerekiyor.” |
 
 ### Tasarım korumaları
 
@@ -343,6 +345,7 @@ Aether Loom, Vaskari'den kesin ayrılmalıdır:
 - Vaskari birimleri tek tek güçlü olmaktan çok **rol kombinasyonuyla** tehdit üretmeli.
 - Nhal yaratıklarına lore gereği görünmezlik yazılacaksa önce gerçek gameplay sistemi uygulanmalı.
 - Aether düşmanları Vaskari morunu ana aile rengi olarak kullanmamalı.
+- Aether phase davranışı kullanıyorsa fizik/zemin güvenliğini bypass eden sınırsız noclip'e dönüşmemeli.
 - Aynı ailede yeni yaratık, mevcut birimin yalnız can/hasar artırılmış kopyası olmamalı.
 
 ---
@@ -404,7 +407,7 @@ Bu farklı motivasyonlar korunmalıdır.
 2. Shade Anchor — Nhal alan/perde sabitleme eliti
 3. Rift Spindle — Aether sabit alan topçusu
 4. Parallax Drone — Aether küçük mobil rahatsız edici
-5. Loom Herald — Aether koordinatör/miniboss
+5. Loom Herald — Aether koordinatör/miniboss; tasarım tamamlanana kadar yalnız planned
 
 Eski üretim listesinde mevcut olduğu hâlde “sonra yapılacak” görünen Coil Lancer, Spore Matriarch ve Venom Marshall artık planned listesinde değildir.
 
