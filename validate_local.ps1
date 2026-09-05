@@ -37,6 +37,9 @@ try {
     $PythonVersion = & $Python --version 2>&1
     Assert-LastExitCode "Python version check"
     Write-Host "Python: $PythonVersion"
+    if ($PythonVersion -notmatch '^Python 3\.12(?:\.|$)') {
+        throw "VEX requires Python 3.12.x; detected: $PythonVersion"
+    }
 
     $GodotVersion = & $Godot --version 2>&1
     Assert-LastExitCode "Godot version check"
