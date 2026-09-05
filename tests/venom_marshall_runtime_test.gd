@@ -69,11 +69,14 @@ func _ready() -> void:
 	var status := candidate.get_node_or_null("VenomMarshallBuffStatus") as VexVenomMarshallBuffStatus
 	assert(status != null)
 	assert(status.get_damage_bonus() == 5)
+	assert(is_equal_approx(status.get_damage_multiplier(), 1.25))
 
 	# Yenilenen nabız canı artırır fakat hasar bonusunu katlayarak biriktirmez.
 	projectile.call("_apply_support_pulse", candidate)
 	assert(candidate.health == 58)
 	assert(candidate._runtime_attack_damage == 25)
+	assert(status.get_damage_bonus() == 5)
+	assert(is_equal_approx(status.get_damage_multiplier(), 1.25))
 
 	await get_tree().create_timer(0.24).timeout
 	assert(candidate._runtime_attack_damage == 20)
