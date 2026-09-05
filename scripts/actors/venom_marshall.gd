@@ -85,8 +85,9 @@ func _begin_buff_attack() -> void:
 	_buff_cooldown_remaining = maxf(runtime_windup, _ability.buff_cooldown * cooldown_scale)
 	_attack_windup_active = false
 	_play_directional_animation(&"idle", &"idle_back")
-	if _ability.buff_recovery > 0.0:
-		await get_tree().create_timer(_ability.buff_recovery).timeout
+	var runtime_recovery := maxf(0.0, _ability.buff_recovery * cooldown_scale)
+	if runtime_recovery > 0.0:
+		await get_tree().create_timer(runtime_recovery).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false
