@@ -97,8 +97,8 @@ func deactivate_for_pool() -> void:
 
 func launch(new_direction: Vector3, new_source: Node, new_damage: int) -> void:
 	direction = new_direction.normalized()
-	source = new_source
-	damage = new_damage
+	source = new_source if is_instance_valid(new_source) else null
+	damage = maxi(1, new_damage)
 
 
 func _process(delta: float) -> void:
@@ -115,8 +115,9 @@ func _physics_process(delta: float) -> void:
 	var start_position := global_position
 	var end_position := start_position + direction * speed * delta
 	var exclusions: Array[RID] = [get_rid()]
-	if source is CollisionObject3D:
-		exclusions.append((source as CollisionObject3D).get_rid())
+	var damage_source := _valid_source()
+	if damage_source is CollisionObject3D:
+		exclusions.append((damage_source as CollisionObject3D).get_rid())
 
 	var query := PhysicsRayQueryParameters3D.create(
 		start_position,
@@ -142,17 +143,20 @@ func _physics_process(delta: float) -> void:
 		+ hit_normal.normalized() * _impact_offset_for_target(damage_target)
 	)
 	if damage_target != null:
-		damage_target.call("take_damage", damage, global_position, source)
+		damage_target.call("take_damage", damage, global_position, damage_source)
 	_impact()
 
 
 func _on_body_entered(body: Node3D) -> void:
-	if not _active or body == source:
+	if not _active:
+		return
+	var damage_source := _valid_source()
+	if body == damage_source:
 		return
 	var damage_target := _resolve_damage_target(body)
 	global_position -= direction * _impact_offset_for_target(damage_target)
 	if damage_target != null:
-		damage_target.call("take_damage", damage, global_position, source)
+		damage_target.call("take_damage", damage, global_position, damage_source)
 	_impact()
 
 
@@ -169,6 +173,13 @@ func _resolve_damage_target(collider: Object) -> Node:
 		var parent := (collider as Node).get_parent()
 		if parent != null and parent.has_method("take_damage"):
 			return parent
+	return null
+
+
+func _valid_source() -> Node:
+	if is_instance_valid(source):
+		return source
+	source = null
 	return null
 
 
