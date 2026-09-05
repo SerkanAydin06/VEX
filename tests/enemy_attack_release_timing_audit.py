@@ -135,9 +135,11 @@ lunge_performance = read("scripts/actors/enemy_lunge_performance_base.gd")
 assert "func _attack_playback_scale_for_runtime_windup() -> float:" in lunge_performance
 assert 'frames.get_frame_duration(&"attack", 2) * 0.5' in lunge_performance
 assert "authored_release_time / maxf(_runtime_attack_windup, 0.001)" in lunge_performance
-assert "func _play_runtime_synced_attack() -> void:" in lunge_performance
-assert "_play_runtime_synced_attack()" in lunge_performance
-assert "await get_tree().create_timer(_runtime_attack_windup).timeout" in lunge_performance
+assert "func _play_animation(animation_name: StringName) -> void:" in lunge_performance
+assert 'animated_sprite.play(&"attack", _attack_playback_scale_for_runtime_windup())' in lunge_performance
+
+lunge_base = read("scripts/actors/enemy_lunge_base.gd")
+assert "await get_tree().create_timer(_runtime_attack_windup).timeout" in lunge_base
 
 PERFORMANCE_LUNGE_SCRIPTS = (
     "scripts/actors/cinderhound.gd",
