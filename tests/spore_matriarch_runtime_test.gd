@@ -65,9 +65,23 @@ func _ready() -> void:
 	assert(status != null)
 	assert(status.get_remaining_time() > 0.0)
 	assert(status.get_tick_damage() == 4)
+	assert(_count_named_children(target, "SporePoisonStatus") == 1)
 
-	await get_tree().create_timer(0.26).timeout
-	assert(target.damage_taken >= 11)
+	# Aynı hedef yeniden zehirlendiğinde ikinci bir DoT node'u oluşmamalı. Daha
+	# zayıf poison mevcut tick hasarını düşüremez; yalnız süreyi uzatabilir.
+	status.refresh_poison(0.70, 2, 0.20, null)
+	assert(_count_named_children(target, "SporePoisonStatus") == 1)
+	assert(status.get_tick_damage() == 4)
+	assert(status.get_remaining_time() > 0.60)
+
+	# Daha güçlü bir yeniden uygulama aynı status üzerinde yükseltilir. Böylece
+	# üst üste field'lar paralel coroutine yerine tek, en güçlü DoT sözleşmesini korur.
+	status.refresh_poison(0.70, 7, 0.05, null)
+	assert(_count_named_children(target, "SporePoisonStatus") == 1)
+	assert(status.get_tick_damage() == 7)
+
+	await get_tree().create_timer(0.16).timeout
+	assert(target.damage_taken >= 10)
 	assert(target.last_source == null)
 
 	# Test fixture'larını synchronous temizle; çıkışta sahne/material/status
@@ -79,3 +93,11 @@ func _ready() -> void:
 
 	print("Spore Matriarch poison runtime test passed")
 	get_tree().quit(0)
+
+
+func _count_named_children(parent: Node, child_name: String) -> int:
+	var count := 0
+	for child: Node in parent.get_children():
+		if child.name == child_name:
+			count += 1
+	return count
