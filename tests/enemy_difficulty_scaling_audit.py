@@ -101,10 +101,12 @@ for token in [
     "HARD,",
     "NIGHTMARE,",
     '@export_enum("Easy", "Normal", "Hard", "Nightmare")',
+    "func get_difficulty_profile(",
 ]:
     assert token in settings, token
 
-# Campaign difficulty must survive New Game, save, and Continue.
+# Campaign difficulty must survive New Game, save, and Continue, and the public
+# GameState profile accessor must resolve the selected campaign difficulty.
 game_state = read("scripts/autoload/game_state.gd")
 for token in [
     "active_difficulty = SettingsManager.difficulty",
@@ -112,6 +114,7 @@ for token in [
     'int(saved_run_state.get("difficulty", SettingsManager.difficulty))',
     "SettingsManager.Difficulty.EASY",
     "SettingsManager.Difficulty.NIGHTMARE",
+    "SettingsManager.get_difficulty_profile(active_difficulty)",
 ]:
     assert token in game_state, token
 
@@ -129,11 +132,25 @@ assert "if not apply_difficulty_scaling:" in helper
 assert "return 1.0" in helper
 assert "VexEnemyRuntimeUtils.difficulty_multiplier" in helper
 
+# SettingsManager exposes the canonical baseline profile to UI/game-state APIs,
+# while actor scenes may deliberately override it. Base enemy defaults must stay
+# identical to that global baseline so a new enemy does not silently start on a
+# different curve.
 for property_name, direction in MULTIPLIERS.items():
+    settings_values = packed_array(settings, property_name)
     defaults = packed_array(enemy_base, property_name)
+    assert_profile(settings_values, direction, f"settings:{property_name}")
     assert_profile(defaults, direction, f"enemy_base:{property_name}")
+    assert defaults == settings_values, (
+        property_name,
+        "enemy base/global profile drift",
+        defaults,
+        settings_values,
+    )
 
 # All active enemy scenes keep their difficulty profile in Inspector/scene data.
+# Per-creature overrides are allowed, but each authored curve must stay ordered
+# and within broad safety bands.
 for scene_name in ACTIVE_ENEMY_SCENES:
     scene = read(f"scenes/actors/{scene_name}")
     assert "apply_difficulty_scaling = false" not in scene, scene_name
@@ -177,12 +194,19 @@ for token in [
 assert "attack_lunge_speed * speed_scale" in lunge
 assert "_runtime_attack_lunge_speed =" in lunge
 
-# Resource pickups get scarcer on higher difficulty, but Normal remains authored 1:1.
+# Resource pickups get scarcer on higher difficulty. Their authored baseline is
+# mirrored by SettingsManager's public difficulty profile and must not drift.
 pickup = read("scripts/props/pickup.gd")
 resource_values = packed_array(pickup, "difficulty_amount_multipliers")
+settings_resource_values = packed_array(settings, "difficulty_resource_multipliers")
 assert abs(resource_values[1] - 1.0) <= 1e-6, resource_values
 assert resource_values == sorted(resource_values, reverse=True), resource_values
 assert all(0.40 <= value <= 1.60 for value in resource_values), resource_values
+assert resource_values == settings_resource_values, (
+    "pickup/global resource profile drift",
+    resource_values,
+    settings_resource_values,
+)
 assert "if not scale_amount_with_difficulty:" in pickup
 
 # Level-authored spawn tiers may only use 0..3 and must produce a monotonic roster.
