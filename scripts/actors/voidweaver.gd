@@ -28,7 +28,7 @@ func _fire_projectile() -> void:
 	if projectile_scene == null or _player == null or not is_instance_valid(_player):
 		return
 	var projectile_count := maxi(1, _ability.weave_projectile_count)
-	var center_index := int(projectile_count / 2)
+	var center_index := int(float(projectile_count) / 2.0)
 	for shot_index: int in range(projectile_count):
 		var yaw_degrees := 0.0
 		if projectile_count > 1:
