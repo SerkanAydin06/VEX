@@ -47,7 +47,7 @@ static func acquire(projectile_scene: PackedScene, parent: Node) -> Node3D:
 
 
 static func recycle(projectile: Node3D) -> void:
-	if projectile == null or not is_instance_valid(projectile):
+	if projectile == null or not is_instance_valid(projectile) or projectile.is_queued_for_deletion():
 		return
 	if not projectile.has_meta("vex_projectile_pool_key"):
 		projectile.queue_free()
