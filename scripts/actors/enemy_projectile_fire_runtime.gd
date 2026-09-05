@@ -1,6 +1,9 @@
 extends RefCounted
 
 const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd")
+const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.gd")
+
+const BASE_SPEED_META := &"vex_projectile_base_speed"
 
 
 static func fire(
@@ -31,16 +34,15 @@ static func fire(
 	var projectile_parent := source.get_tree().current_scene
 	if projectile_parent == null:
 		return null
-	var projectile_instance := projectile_scene.instantiate()
-	if not (projectile_instance is Node3D):
-		if projectile_instance != null:
-			projectile_instance.queue_free()
+	var projectile := EnemyProjectilePool.acquire(
+		projectile_scene,
+		projectile_parent
+	) as Node3D
+	if projectile == null:
 		return null
-	var projectile := projectile_instance as Node3D
 	if not projectile.has_method("launch"):
-		projectile.queue_free()
+		EnemyProjectilePool.recycle(projectile)
 		return null
-	projectile_parent.add_child(projectile)
 
 	var spawn_forward := facing_direction
 	if spawn_forward.length_squared() <= 0.001:
@@ -59,8 +61,13 @@ static func fire(
 		+ spawn_forward * spawn_forward_offset
 	)
 
-	var projectile_speed := maxf(float(projectile.get("speed")), 0.1)
-	projectile_speed *= maxf(speed_scale, 0.1)
+	# Pooled projectiles retain runtime properties between uses. Preserve the
+	# scene-authored speed once, then derive every scaled shot from that baseline
+	# so precision/variant speed multipliers never compound across pool reuse.
+	if not projectile.has_meta(BASE_SPEED_META):
+		projectile.set_meta(BASE_SPEED_META, maxf(float(projectile.get("speed")), 0.1))
+	var base_projectile_speed := maxf(float(projectile.get_meta(BASE_SPEED_META)), 0.1)
+	var projectile_speed := base_projectile_speed * maxf(speed_scale, 0.1)
 	projectile.set("speed", projectile_speed)
 
 	var target_position := target.global_position + Vector3.UP * target_height
