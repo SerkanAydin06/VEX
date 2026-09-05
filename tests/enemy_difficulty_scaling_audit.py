@@ -145,20 +145,37 @@ for scene_name in ACTIVE_ENEMY_SCENES:
 warden = read("scripts/actors/crucible_warden.gd")
 furnace = read("scripts/actors/furnice_carrier.gd")
 venom = read("scripts/actors/venom_marshall.gd")
+hybrid = read("scripts/actors/enemy_hybrid_base.gd")
+gorehorn = read("scripts/actors/gorehorn.gd")
+lunge = read("scripts/actors/enemy_lunge_base.gd")
 for script_name, source in [
     ("crucible_warden.gd", warden),
     ("furnice_carrier.gd", furnace),
     ("venom_marshall.gd", venom),
+    ("enemy_hybrid_base.gd", hybrid),
 ]:
     assert "_scene_difficulty_multiplier(difficulty_windup_multipliers)" in source, script_name
     assert "_scene_difficulty_multiplier(difficulty_cooldown_multipliers)" in source, script_name
-for script_name, source in [
-    ("crucible_warden.gd", warden),
-    ("furnice_carrier.gd", furnace),
+for script_name, source, function_name in [
+    ("crucible_warden.gd", warden, "_scaled_special_damage"),
+    ("furnice_carrier.gd", furnace, "_scaled_special_damage"),
+    ("enemy_hybrid_base.gd", hybrid, "_scaled_hybrid_damage"),
 ]:
-    assert "func _scaled_special_damage(" in source, script_name
+    assert f"func {function_name}(" in source, script_name
     assert "if not apply_difficulty_scaling:" in source, script_name
     assert "_scene_difficulty_multiplier(difficulty_damage_multipliers)" in source, script_name
+
+# Gorehorn's custom charge must remain on the lunge family's already-scaled
+# runtime damage/windup/cooldown/speed values rather than bypassing difficulty.
+for token in [
+    "create_timer(_runtime_attack_windup)",
+    'take_damage", _runtime_attack_damage',
+    "_runtime_attack_cooldown",
+    "_runtime_attack_lunge_speed",
+]:
+    assert token in gorehorn, token
+assert "attack_lunge_speed * speed_scale" in lunge
+assert "_runtime_attack_lunge_speed =" in lunge
 
 # Resource pickups get scarcer on higher difficulty, but Normal remains authored 1:1.
 pickup = read("scripts/props/pickup.gd")
