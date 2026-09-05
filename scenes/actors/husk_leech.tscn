@@ -154,7 +154,7 @@ filter_clip = true
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_husk_leech"]
 animations = [{
-"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_4")}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_2")}, {"duration": 1.55, "texture": SubResource("Atlas_attack_3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_4")}],
 "loop": false,
 "name": &"attack",
 "speed": 7.0
