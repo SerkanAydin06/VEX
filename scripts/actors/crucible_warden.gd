@@ -1,6 +1,8 @@
 class_name VexCrucibleWarden
 extends "res://scripts/actors/enemy_combatant_base.gd"
 
+const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.gd")
+
 var _ability: VexWardenAbilitySettings
 
 @onready var heatwave_origin: Marker3D = get_node_or_null("HeatwaveOrigin") as Marker3D
@@ -231,7 +233,8 @@ func _emit_ground_slam() -> void:
 
 
 func _emit_heatwave() -> void:
-	if _ability.heatwave_projectile_scene == null or get_tree().current_scene == null:
+	var projectile_parent := get_tree().current_scene
+	if _ability.heatwave_projectile_scene == null or projectile_parent == null:
 		return
 
 	_heatwave_burst_generation += 1
@@ -250,24 +253,28 @@ func _emit_heatwave() -> void:
 	var angular_offset := randf_range(0.0, angular_step) if _ability.heatwave_randomize_rotation else 0.0
 
 	for index in range(projectile_count):
-		var projectile := _ability.heatwave_projectile_scene.instantiate() as Node3D
+		var projectile := EnemyProjectilePool.acquire(
+			_ability.heatwave_projectile_scene,
+			projectile_parent
+		) as Node3D
 		if projectile == null:
+			continue
+		if not projectile.has_method("launch"):
+			projectile.queue_free()
 			continue
 		projectile.set("speed", _ability.heatwave_projectile_speed)
 		projectile.set("lifetime", _ability.heatwave_projectile_lifetime)
-		get_tree().current_scene.add_child(projectile)
 
 		var angle := angular_offset + angular_step * float(index)
 		var direction := Vector3(cos(angle), 0.0, sin(angle)).normalized()
 		projectile.global_position = origin + direction * _ability.heatwave_spawn_radius
-		if projectile.has_method("launch"):
-			projectile.call(
-				"launch",
-				direction,
-				self,
-				runtime_damage,
-				burst_id
-			)
+		projectile.call(
+			"launch",
+			direction,
+			self,
+			runtime_damage,
+			burst_id
+		)
 
 
 func apply_heatwave_projectile_hit(
