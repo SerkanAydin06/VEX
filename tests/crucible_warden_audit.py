@@ -161,7 +161,9 @@ def main() -> int:
         ("lifetime := 1.45", "Heatwave projectile yaşam süresi"),
         ("PhysicsRayQueryParameters3D.create", "yüksek hız ray collision"),
         ('add_to_group("projectile")', "projectile temizleme grubu"),
-        ('_source.has_method("apply_heatwave_projectile_hit")', "Warden burst dedupe callback"),
+        ('damage_source.has_method("apply_heatwave_projectile_hit")', "Warden burst dedupe callback"),
+        ("func _valid_source() -> Node:", "Heatwave source yaşam süresi koruması"),
+        ("_source = source if is_instance_valid(source) else null", "Heatwave launch source doğrulaması"),
         ("_burst_id", "Heatwave burst kimliği"),
     ]:
         require(projectile_script, needle, label)
