@@ -54,11 +54,27 @@ for scene_name in DIRECT_PROJECTILE_SCENES:
     assert mask & PLAYER_LAYER_BIT, (scene_name, "cannot collide with player", mask)
     assert not mask & ENEMY_LAYER_BIT, (scene_name, "enemy friendly-fire mask enabled", mask)
 
-# Shared anti-tunneling projectile excludes its source from both ray and overlap
-# paths, preventing the shot from immediately impacting the shooter.
+# Shared anti-tunneling projectile excludes a live source from both ray and body
+# paths. If the shooter dies while the projectile is in flight, the stale Node
+# reference is cleared and null is forwarded to the eventual damage call.
 ravager_projectile = read("scripts/actors/ravager_projectile.gd")
-assert "exclusions.append((source as CollisionObject3D).get_rid())" in ravager_projectile
-assert "body == source" in ravager_projectile
+for contract in [
+    "source = new_source if is_instance_valid(new_source) else null",
+    "var damage_source := _valid_source()",
+    "exclusions.append((damage_source as CollisionObject3D).get_rid())",
+    "if body == damage_source:",
+    'damage_target.call("take_damage", damage, global_position, damage_source)',
+    "func _valid_source() -> Node:",
+    "if is_instance_valid(source):",
+    "source = null",
+]:
+    assert contract in ravager_projectile, contract
+for retired_contract in [
+    "exclusions.append((source as CollisionObject3D).get_rid())",
+    "if not _active or body == source:",
+    'damage_target.call("take_damage", damage, global_position, source)',
+]:
+    assert retired_contract not in ravager_projectile, retired_contract
 
 # Custom projectile implementations keep the same source-exclusion contract.
 for script_name in [
@@ -76,5 +92,6 @@ assert "flight_collision_mask := 1 | 2" in spore
 assert "field_collision_mask := 2" in spore
 assert "collision_mask = field_collision_mask" in spore
 assert "exclusions.append((damage_source as CollisionObject3D).get_rid())" in spore
+assert "func _valid_source() -> Node:" in spore
 
 print("enemy projectile collision audit passed")
