@@ -132,6 +132,18 @@ for contract in [
 ]:
     assert contract in actor_script, contract
 
+# Buff attack timing follows the same difficulty profile as Warden specials.
+# The difficulty helper already returns 1.0 when scaling is disabled, so authored
+# recovery remains unchanged under apply_difficulty_scaling=false.
+for contract in [
+    "var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)",
+    "var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)",
+    "_ability.buff_cooldown * cooldown_scale",
+    "var runtime_recovery := maxf(0.0, _ability.buff_recovery * cooldown_scale)",
+    "create_timer(runtime_recovery)",
+]:
+    assert contract in actor_script, contract
+
 for retired_contract in [
     "func _select_buff_target() -> Node3D:",
     "func _buff_cluster_score(",
@@ -238,6 +250,7 @@ for contract in [
     "projectile.deploy_at(actor.global_position, actor)",
     "projectile.global_position.x, actor.global_position.x",
     "projectile.global_position.z, actor.global_position.z",
+    "status.get_damage_multiplier(), 1.25",
 ]:
     assert contract in runtime_test, contract
 
