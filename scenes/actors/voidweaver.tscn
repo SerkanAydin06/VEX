@@ -8,6 +8,13 @@
 [ext_resource type="PackedScene" path="res://scenes/actors/voidweaver_projectile.tscn" id="26_projectile"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="30_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="31_burn"]
+[ext_resource type="Script" uid="uid://cvoidweaverset1" path="res://scripts/actors/voidweaver_ability_settings.gd" id="32_ability"]
+
+[sub_resource type="Resource" id="Resource_voidweaver_ability"]
+script = ExtResource("32_ability")
+weave_projectile_count = 3
+weave_half_angle_degrees = 5.0
+weave_side_damage_scale = 0.45
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
 radius = 0.45
@@ -235,6 +242,7 @@ attack_frame_y_offsets = PackedFloat32Array(-0.1296, -0.146, -0.2608, -0.1624)
 death_frame_y_offsets = PackedFloat32Array(0.1041, 0.1123, 0.1164, 0.1041)
 burn_remains_scene = ExtResource("31_burn")
 burn_ember_tint = Color(0.36, 0.06, 0.12, 0.26)
+special_ability_settings = SubResource("Resource_voidweaver_ability")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=601888018]
 shape = SubResource("CapsuleShape_enemy")
