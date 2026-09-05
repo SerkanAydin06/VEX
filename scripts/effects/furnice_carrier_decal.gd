@@ -29,7 +29,7 @@ func _ready() -> void:
 
 func configure(new_damage_per_tick: int, source: Node) -> void:
 	damage_per_tick = maxi(1, new_damage_per_tick)
-	_source = source
+	_source = source if is_instance_valid(source) else null
 
 
 func _physics_process(delta: float) -> void:
@@ -69,4 +69,11 @@ func _damage_overlapping_player() -> void:
 	if not overlaps_body(player):
 		return
 	if player.has_method("take_damage"):
-		player.call("take_damage", damage_per_tick, player.global_position, _source)
+		player.call("take_damage", damage_per_tick, player.global_position, _valid_source())
+
+
+func _valid_source() -> Node:
+	if is_instance_valid(_source):
+		return _source
+	_source = null
+	return null
