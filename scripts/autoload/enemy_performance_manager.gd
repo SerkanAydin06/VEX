@@ -203,8 +203,10 @@ func _apply_physics_sleep(enemy: Node3D, _profile: Dictionary, distance: float) 
 	var should_sleep := not pursuing and distance > effective_dormant
 	var slept_by_manager := bool(enemy.get_meta("vex_perf_physics_slept", false))
 	if should_sleep and not slept_by_manager:
-		enemy.set_physics_process(false)
-		enemy.set_meta("vex_perf_physics_slept", true)
+		# Başka bir gameplay sistemi physics processing'i zaten kapattıysa ownership alma.
+		if enemy.is_physics_processing():
+			enemy.set_physics_process(false)
+			enemy.set_meta("vex_perf_physics_slept", true)
 	elif not should_sleep and slept_by_manager:
 		enemy.set_physics_process(true)
 		enemy.set_meta("vex_perf_physics_slept", false)
