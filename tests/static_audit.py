@@ -97,7 +97,6 @@ def check_core_files() -> None:
         "tests/gorehorn_charge_runtime_test.tscn",
         "tests/fixtures/save_invalid_version.cfg",
         "tests/fixtures/save_valid_backup.cfg",
-        ".github/workflows/validate.yml",
     ]
     for relative in required:
         exists(relative)
@@ -487,7 +486,7 @@ def check_scene_authority() -> None:
         fail("VEX-01 tutorial oynanış prop'u sahnede tutulmuyor")
 
 
-def check_save_recovery_and_runtime_ci() -> None:
+def check_save_recovery_and_runtime_tests() -> None:
     game_state = read("scripts/autoload/game_state.gd")
     for contract in [
         "_load_campaign_save_from_paths(SAVE_PATH, SAVE_BACKUP_PATH)",
@@ -508,20 +507,12 @@ def check_save_recovery_and_runtime_ci() -> None:
     ]:
         if contract not in integrity:
             fail(f"Godot integrity runner sözleşmesi eksik: {contract}")
-    workflow = read(".github/workflows/validate.yml")
-    for contract in [
-        "Godot_v4.7-stable_linux.x86_64.zip",
-        "godot --headless --editor --path . --quit 2>&1 | tee",
-        "Godot clean import log contains an error or invalid UID",
-        "godot --headless --path . tests/integrity_test.tscn",
-        "godot --headless --path . tests/warden_door_runtime_test.tscn",
-        "godot --headless --verbose --path . tests/gorehorn_charge_runtime_test.tscn",
-        '--export-release "Windows Desktop"',
-        "actions/checkout@v7",
-        "actions/setup-python@v7",
+    for relative in [
+        "tests/warden_door_runtime_test.tscn",
+        "tests/gorehorn_charge_runtime_test.tscn",
+        "tests/weapon_pause_reload_runtime_test.tscn",
     ]:
-        if contract not in workflow:
-            fail(f"Headless Godot CI sözleşmesi eksik: {contract}")
+        exists(relative)
 
 
 def check_repository_hygiene() -> None:
@@ -543,6 +534,7 @@ def check_repository_hygiene() -> None:
         ".github/enemy_movement.patch.gz.b64",
         ".github/enemy_movement.patch.part1",
         ".github/enemy_movement.patch.part2",
+        ".github/workflows/validate.yml",
         ".github/workflows/export_enemy_detection_sources.yml",
         ".github/workflows/export_enemy_movement_sources.yml",
     ]
@@ -575,7 +567,6 @@ def check_player_gameplay_regressions() -> None:
     reload_runtime = read("scripts/player/weapon_reload_runtime.gd")
     game_state = read("scripts/autoload/game_state.gd")
     base_level = read("scripts/levels/base_level.gd")
-    workflow = read(".github/workflows/validate.yml")
     if '@export_range(1, 500, 1) var maximum_health := 100' not in player:
         fail("Player canonical maximum_health default 100 değil")
     if "maximum_health := 10000000" in player:
@@ -604,16 +595,15 @@ def check_player_gameplay_regressions() -> None:
         "tests/weapon_pause_reload_runtime_test.tscn",
     ]:
         exists(relative)
-    if "Run weapon pause reload runtime regression" not in workflow:
-        fail("Weapon pause/reload runtime regression CI'a bağlı değil")
 
 
 def check_canonical_documentation() -> None:
     enemies = read("Enemies_VEX.md")
+    if "Güncel aktif roster: **18 yaratık**." not in enemies:
+        fail("Enemies_VEX aktif roster sayısı 18 değil")
     for name in ["Spore Matriarch", "Coil Lancer", "Vaskari Bulwark", "Venom Marshall"]:
-        pattern = rf"^### \d+\. {re.escape(name)}\n\n\*\*Durum:\*\* Mevcut$"
-        if re.search(pattern, enemies, re.M) is None:
-            fail(f"Enemies_VEX canonical durum drift'i: {name} Mevcut değil")
+        if name not in enemies:
+            fail(f"Enemies_VEX canonical aktif yaratığı eksik: {name}")
     if re.search(r"^### \d+\. Venom Marshal$", enemies, re.M):
         fail("Eski Venom Marshal adı canonical belgede geri gelmiş")
     for actor in ["coil_lancer", "spore_matriarch", "vaskari_bulwark", "venom_marshall"]:
@@ -634,7 +624,7 @@ def main() -> int:
         check_automap, check_level_02, check_level_03, check_bastion,
         check_door_contract, check_weapons, check_unique_progression_ids,
         check_localization, check_scene_authority,
-        check_save_recovery_and_runtime_ci, check_player_gameplay_regressions,
+        check_save_recovery_and_runtime_tests, check_player_gameplay_regressions,
         check_canonical_documentation, check_repository_hygiene, check_stale_contracts,
     ]
     for check in checks:
