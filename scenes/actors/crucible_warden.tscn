@@ -173,7 +173,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Atlas_attack_2")
 }, {
-"duration": 1.0,
+"duration": 2.55,
 "texture": SubResource("Atlas_attack_3")
 }, {
 "duration": 1.0,
@@ -207,7 +207,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("Atlas_heatwave_2")
 }, {
-"duration": 1.0,
+"duration": 2.25,
 "texture": SubResource("Atlas_heatwave_3")
 }, {
 "duration": 1.0,
