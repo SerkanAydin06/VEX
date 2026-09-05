@@ -2,6 +2,7 @@ class_name VexVoidweaver
 extends "res://scripts/actors/enemy_combatant_performance_base.gd"
 
 const ProjectileFireRuntime = preload("res://scripts/actors/enemy_projectile_fire_runtime.gd")
+const WEAVE_EMITTER_HALF_SPAN := 0.42
 
 var _ability: VexVoidweaverAbilitySettings
 
@@ -31,11 +32,17 @@ func _fire_projectile() -> void:
 	var center_index := int(float(projectile_count) / 2.0)
 	for shot_index: int in range(projectile_count):
 		var yaw_degrees := 0.0
+		var emitter_side_offset := projectile_spawn_side_offset
 		if projectile_count > 1:
 			var ratio := float(shot_index) / float(projectile_count - 1)
 			yaw_degrees = lerpf(
 				-_ability.weave_half_angle_degrees,
 				_ability.weave_half_angle_degrees,
+				ratio
+			)
+			emitter_side_offset += lerpf(
+				-WEAVE_EMITTER_HALF_SPAN,
+				WEAVE_EMITTER_HALF_SPAN,
 				ratio
 			)
 		var damage_scale := 1.0 if shot_index == center_index else _ability.weave_side_damage_scale
@@ -49,7 +56,7 @@ func _fire_projectile() -> void:
 			projectile_scene,
 			_facing_direction,
 			projectile_spawn_height,
-			projectile_spawn_side_offset,
+			emitter_side_offset,
 			projectile_spawn_forward_offset,
 			projectile_target_height,
 			projectile_lead_factor,
