@@ -5,7 +5,7 @@ const EnemyPerformanceRuntime = preload("res://scripts/actors/enemy_performance_
 const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.gd")
 
 var _perf_los_frame := -1000000
-var _perf_los_result = false
+var _perf_los_result := false
 var _perf_los_visibility_ratio := 0.0
 var _perf_observer_frame := -1000000
 var _perf_observer_behind := false
