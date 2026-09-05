@@ -12,6 +12,7 @@ const CROWD_START := 16.0
 const CROWD_FULL := 48.0
 const MAX_DORMANT_REDUCTION := 8.0
 const DORMANT_DETECTION_MARGIN := 6.0
+const VISUAL_PROCESS_MODE_META := &"vex_perf_visual_process_mode"
 
 var _update_remaining := 0.0
 var _profiles: Dictionary = {}
@@ -100,13 +101,11 @@ func _ensure_profile(enemy: Node3D, family: StringName) -> Dictionary:
 	var key := enemy.get_instance_id()
 	if _profiles.has(key):
 		return _profiles[key] as Dictionary
-	var sprite := enemy.get_node_or_null("AnimatedSprite3D") as AnimatedSprite3D
 	var profile := {
 		"family": family,
 		"near_sight_interval": float(enemy.get("near_sight_interval")),
 		"path_refresh_interval": float(enemy.get("path_refresh_interval")),
 		"dormant_distance": float(enemy.get("dormant_distance")),
-		"visual_speed_scale": sprite.speed_scale if sprite != null else 1.0,
 	}
 	if family == &"lunge":
 		profile["far_sight_interval"] = float(enemy.get("far_sight_interval"))
@@ -213,7 +212,7 @@ func _apply_physics_sleep(enemy: Node3D, _profile: Dictionary, distance: float) 
 
 func _apply_visual_lod(
 	enemy: Node3D,
-	profile: Dictionary,
+	_profile: Dictionary,
 	distance: float,
 	camera: Camera3D,
 	viewport_rect: Rect2
@@ -228,11 +227,19 @@ func _apply_visual_lod(
 	var paused_by_manager := bool(enemy.get_meta("vex_perf_visual_paused", false))
 	if not screen_relevant:
 		if not paused_by_manager:
+			enemy.set_meta(VISUAL_PROCESS_MODE_META, int(sprite.process_mode))
 			enemy.set_meta("vex_perf_visual_paused", true)
-		sprite.speed_scale = 0.0
+		sprite.process_mode = Node.PROCESS_MODE_DISABLED
 	elif paused_by_manager:
-		sprite.speed_scale = float(profile["visual_speed_scale"])
-		enemy.set_meta("vex_perf_visual_paused", false)
+		_restore_visual_processing(enemy, sprite)
+
+
+func _restore_visual_processing(enemy: Node3D, sprite: AnimatedSprite3D) -> void:
+	var previous_mode := int(enemy.get_meta(VISUAL_PROCESS_MODE_META, Node.PROCESS_MODE_INHERIT))
+	sprite.process_mode = previous_mode
+	if enemy.has_meta(VISUAL_PROCESS_MODE_META):
+		enemy.remove_meta(VISUAL_PROCESS_MODE_META)
+	enemy.set_meta("vex_perf_visual_paused", false)
 
 
 func _is_enemy_near_screen(enemy: Node3D, camera: Camera3D, viewport_rect: Rect2) -> bool:
@@ -251,8 +258,7 @@ func _restore_enemy(enemy: Node3D, profile: Dictionary) -> void:
 		enemy.set_meta("vex_perf_physics_slept", false)
 	var sprite := enemy.get_node_or_null("AnimatedSprite3D") as AnimatedSprite3D
 	if sprite != null and bool(enemy.get_meta("vex_perf_visual_paused", false)):
-		sprite.speed_scale = float(profile["visual_speed_scale"])
-		enemy.set_meta("vex_perf_visual_paused", false)
+		_restore_visual_processing(enemy, sprite)
 
 	enemy.set("near_sight_interval", float(profile["near_sight_interval"]))
 	enemy.set("path_refresh_interval", float(profile["path_refresh_interval"]))
