@@ -180,7 +180,7 @@ func load_settings() -> void:
 		return
 	var settings_version := int(config.get_value("meta", "version", 1))
 	language = _validated_locale(str(config.get_value("localization", "language", default_language)))
-	resolution = config.get_value("display", "resolution", default_resolution) as Vector2i
+	resolution = _validated_resolution(config.get_value("display", "resolution", default_resolution))
 	fullscreen = bool(config.get_value("display", "fullscreen", default_fullscreen))
 	vsync = bool(config.get_value("display", "vsync", default_vsync))
 	graphics_quality = clampi(
@@ -306,8 +306,18 @@ func _validated_locale(value: String) -> String:
 	return supported_locales[0] if not supported_locales.is_empty() else "tr"
 
 
+func _validated_resolution(value: Variant) -> Vector2i:
+	if typeof(value) == TYPE_VECTOR2I:
+		for candidate: Vector2i in supported_resolutions:
+			if value == candidate:
+				return candidate
+	if supported_resolutions.has(default_resolution):
+		return default_resolution
+	return supported_resolutions[0] if not supported_resolutions.is_empty() else Vector2i(1920, 1080)
+
+
 func set_resolution(value: Vector2i) -> void:
-	resolution = value if supported_resolutions.has(value) else default_resolution
+	resolution = _validated_resolution(value)
 	if not fullscreen:
 		DisplayServer.window_set_size(resolution)
 		_center_window()
