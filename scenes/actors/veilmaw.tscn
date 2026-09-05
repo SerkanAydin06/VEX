@@ -364,26 +364,26 @@ autoplay = "idle"
 transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, 1, 0, -1, -3.6199901e-06, 0, -0.93, 0)
 cast_shadow = 0
 billboard = 2
-modulate = Color(1, 1, 1, 0.52)
+modulate = Color(1, 1, 1, 0.50)
 offset = Vector2(0, 16)
-pixel_size = 0.0052
+pixel_size = 0.0056
 texture_filter = 5
 render_priority = -2
 texture = ExtResource("30_shadow")
 
-[node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=1741040827]
+[node name="AttackAudio" type="AudioStreamPlayer3D" parent="." unique_id=658329044]
 stream = ExtResource("6_evcf2")
 volume_db = -1.0
 max_distance = 20.0
 bus = &"SFX"
 
-[node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=316753826]
+[node name="HurtAudio" type="AudioStreamPlayer3D" parent="." unique_id=1844502729]
 stream = ExtResource("7_evcf2")
 volume_db = -2.0
 max_distance = 18.0
 bus = &"SFX"
 
-[node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=1707401510]
+[node name="DeathAudio" type="AudioStreamPlayer3D" parent="." unique_id=895190058]
 stream = ExtResource("8_evcf2")
 volume_db = 1.5
 max_distance = 20.0
