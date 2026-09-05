@@ -41,7 +41,7 @@ static func fire(
 	if projectile == null:
 		return null
 	if not projectile.has_method("launch"):
-		EnemyProjectilePool.recycle(projectile)
+		projectile.queue_free()
 		return null
 
 	var spawn_forward := facing_direction
