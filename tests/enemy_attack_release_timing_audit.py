@@ -80,6 +80,7 @@ GENERIC_CASES = [
     ("scenes/actors/briar_skulker.tscn", "attack", 2),
     ("scenes/actors/cinder_spitter.tscn", "attack", 2),
     ("scenes/actors/coil_lancer.tscn", "attack", 2),
+    ("scenes/actors/loom_herald.tscn", "attack", 2),
     ("scenes/actors/ravager.tscn", "attack", 2),
     ("scenes/actors/husk_leech.tscn", "attack", 2),
     ("scenes/actors/veilmaw.tscn", "attack", 2),
