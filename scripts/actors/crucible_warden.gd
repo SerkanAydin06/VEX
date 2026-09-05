@@ -52,8 +52,8 @@ func _attempt_attack() -> void:
 				):
 					_begin_ground_slam_attack()
 					return
-			_close_for_heatwave(_ability.heatwave_approach_speed_multiplier)
-			return
+				_close_for_heatwave(_ability.heatwave_approach_speed_multiplier)
+				return
 		_reset_heatwave_approach_progress()
 		_begin_heatwave_attack()
 		return
@@ -290,10 +290,15 @@ func apply_heatwave_projectile_hit(
 
 
 func _scaled_special_damage(base_damage: int) -> int:
-	if not apply_difficulty_scaling:
-		return maxi(1, base_damage)
-	var damage_scale := _scene_difficulty_multiplier(difficulty_damage_multipliers)
-	return maxi(1, int(round(float(base_damage) * damage_scale)))
+	var scaled_damage := maxi(1, base_damage)
+	if apply_difficulty_scaling:
+		var damage_scale := _scene_difficulty_multiplier(difficulty_damage_multipliers)
+		scaled_damage = maxi(1, int(round(float(base_damage) * damage_scale)))
+	var venom_status := get_node_or_null("VenomMarshallBuffStatus")
+	if venom_status != null and venom_status.has_method("get_damage_multiplier"):
+		var buff_multiplier := maxf(1.0, float(venom_status.call("get_damage_multiplier")))
+		scaled_damage = maxi(1, int(ceil(float(scaled_damage) * buff_multiplier)))
+	return scaled_damage
 
 
 func _ground_effect_position() -> Vector3:
