@@ -37,6 +37,7 @@ voidweaver_scene = read(SCENES / "voidweaver.tscn")
 
 # Özel projectile imzaları ortak launch/lead hesabını tek helper'da paylaşır.
 for token in [
+    'const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd")',
     "EnemyCombatRuntime.calculate_intercept_time",
     'projectile.set("speed", projectile_speed)',
     'projectile.call("launch", shot_direction, source, maxi(1, damage))',
