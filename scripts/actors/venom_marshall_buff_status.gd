@@ -3,11 +3,13 @@ extends Node
 
 # Aynı hedefteki Venom Marshall güçlendirmeleri üst üste katlanmaz. Süre
 # yenilenir ve bonus, hedefin zorlukla ölçeklenmiş gerçek hasarı üzerinden
-# tekrar hesaplanır.
+# tekrar hesaplanır. Özel saldırılar da aynı aktif çarpanı bu status üzerinden
+# okuyarak normal saldırıyla aynı destek bonusunu kullanır.
 
 var _target: Node = null
 var _remaining_time := 0.0
 var _damage_bonus := 0
+var _damage_multiplier := 1.0
 var _glow: OmniLight3D = null
 var _pulse_time := 0.0
 
@@ -32,7 +34,11 @@ func refresh_buff(duration: float, damage_multiplier: float) -> void:
 		return
 	var current_damage := maxi(1, int(_target.get("_runtime_attack_damage")))
 	var base_damage := maxi(1, current_damage - _damage_bonus)
-	var buffed_damage := maxi(base_damage, int(ceil(float(base_damage) * maxf(damage_multiplier, 1.0))))
+	_damage_multiplier = maxf(damage_multiplier, 1.0)
+	var buffed_damage := maxi(
+		base_damage,
+		int(ceil(float(base_damage) * _damage_multiplier))
+	)
 	_damage_bonus = buffed_damage - base_damage
 	_target.set("_runtime_attack_damage", buffed_damage)
 	_remaining_time = maxf(_remaining_time, duration)
@@ -64,13 +70,19 @@ func get_damage_bonus() -> int:
 	return _damage_bonus
 
 
+func get_damage_multiplier() -> float:
+	return _damage_multiplier
+
+
 func _restore_damage() -> void:
 	if _damage_bonus <= 0 or _target == null or not is_instance_valid(_target):
 		_damage_bonus = 0
+		_damage_multiplier = 1.0
 		return
 	var current_damage := maxi(1, int(_target.get("_runtime_attack_damage")))
 	_target.set("_runtime_attack_damage", maxi(1, current_damage - _damage_bonus))
 	_damage_bonus = 0
+	_damage_multiplier = 1.0
 
 
 func _exit_tree() -> void:
