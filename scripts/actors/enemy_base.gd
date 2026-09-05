@@ -125,6 +125,8 @@ func get_behavior_family() -> StringName:
 
 
 func _scene_difficulty_multiplier(values: PackedFloat32Array) -> float:
+	if not apply_difficulty_scaling:
+		return 1.0
 	return VexEnemyRuntimeUtils.difficulty_multiplier(values, GameState.active_difficulty)
 
 
