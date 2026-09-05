@@ -134,10 +134,15 @@ func _is_player_in_melee_envelope(extra_tolerance: float = 0.0) -> bool:
 
 
 func _scaled_hybrid_damage(base_damage: int) -> int:
-	if not apply_difficulty_scaling:
-		return maxi(1, base_damage)
-	var damage_scale := _scene_difficulty_multiplier(difficulty_damage_multipliers)
-	return maxi(1, int(round(float(base_damage) * damage_scale)))
+	var scaled_damage := maxi(1, base_damage)
+	if apply_difficulty_scaling:
+		var damage_scale := _scene_difficulty_multiplier(difficulty_damage_multipliers)
+		scaled_damage = maxi(1, int(round(float(base_damage) * damage_scale)))
+	var venom_status := get_node_or_null("VenomMarshallBuffStatus")
+	if venom_status != null and venom_status.has_method("get_damage_multiplier"):
+		var buff_multiplier := maxf(1.0, float(venom_status.call("get_damage_multiplier")))
+		scaled_damage = maxi(1, int(ceil(float(scaled_damage) * buff_multiplier)))
+	return scaled_damage
 
 
 func _frame_offsets_for_animation(animation_name: StringName) -> PackedFloat32Array:
