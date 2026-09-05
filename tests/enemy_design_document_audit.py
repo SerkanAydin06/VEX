@@ -85,7 +85,16 @@ assert "görünmezlik veya faza girip çıkma yeteneği yoktur" in enemies_doc
 assert "Yakın dövüş sıçraması yoktur" in enemies_doc
 assert "kendi bulunduğu noktada destek alanı kurar" in enemies_doc
 assert "yaklaşık 5 saniye" in enemies_doc
-assert "bozuk bir gerçeklik deseni" in enemies_doc
+
+# Güncel imza davranışları belgede gerçek gameplay ile aynı kalmalı.
+for current_contract in [
+    "her atıştan sonra kısa bir reposition penceresiyle",
+    "üç kollu enerji örgüsü",
+    "Phase noclip değildir",
+    "güvenli nokta yoksa normal lunge'a devam eder",
+    "Tasarımı tamamlanmadan ve nihai sprite/animasyon seti hazır olmadan aktif roster'a alınmamalıdır",
+]:
+    assert current_contract in enemies_doc, current_contract
 
 # Aile renkleri: sprite PNG paleti görsel review gerektirir; burada sahnede açıkça
 # tanımlı projectile/alan ışıklarının yanlış evren rengine kaymaması korunur.
