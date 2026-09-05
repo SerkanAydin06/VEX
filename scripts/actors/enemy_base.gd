@@ -130,6 +130,18 @@ func _scene_difficulty_multiplier(values: PackedFloat32Array) -> float:
 	return VexEnemyRuntimeUtils.difficulty_multiplier(values, GameState.active_difficulty)
 
 
+func _apply_active_damage_support(damage_value: int) -> int:
+	var supported_damage := maxi(1, damage_value)
+	var venom_status: Node = get_node_or_null("VenomMarshallBuffStatus")
+	if venom_status == null or not venom_status.has_method("get_damage_multiplier"):
+		return supported_damage
+	var buff_multiplier := maxf(
+		1.0,
+		float(venom_status.call("get_damage_multiplier"))
+	)
+	return maxi(1, int(ceil(float(supported_damage) * buff_multiplier)))
+
+
 func _configure_common_runtime_stats(
 	maximum_health_value: int,
 	attack_damage_value: int,
@@ -390,4 +402,82 @@ func _clear_damage_shake(visual: SpriteBase3D) -> void:
 	_damage_shake_duration = 0.0
 	_damage_shake_amount_pixels = 0.0
 	_damage_shake_phase = 0.0
+	_damage_shake_origin_offset = Vector2.ZERO
 	_damage_shake_active = false
+
+
+func _on_visual_frame_changed() -> void:
+	_apply_frame_ground_offset()
+
+
+func _apply_frame_ground_offset() -> void:
+	if animated_sprite == null:
+		return
+	var offsets := _frame_offsets_for_animation(animated_sprite.animation)
+	var frame_index := animated_sprite.frame
+	var frame_offset := 0.0
+	if frame_index >= 0 and frame_index < offsets.size():
+		frame_offset = offsets[frame_index]
+	animated_sprite.position.y = _visual_base_y + frame_offset
+
+
+func _frame_offsets_for_animation(_animation_name: StringName) -> PackedFloat32Array:
+	return PackedFloat32Array()
+
+
+func _update_burn_remains_orientation() -> void:
+	if _burn_remains == null or not is_instance_valid(_burn_remains):
+		return
+	var camera := get_viewport().get_camera_3d()
+	if camera == null or not is_instance_valid(camera):
+		return
+	var camera_direction := camera.global_position - _burn_remains.global_position
+	camera_direction.y = 0.0
+	if camera_direction.length_squared() <= 0.001:
+		return
+	_burn_remains.rotation.y = atan2(-camera_direction.x, -camera_direction.z)
+
+
+func _spawn_burn_remains(
+	burn_scene: PackedScene,
+	burn_pixel_size: float,
+	burn_y: float,
+	burn_ground_offset: float,
+	burn_ground_clearance: float,
+	burn_use_sprite_bottom: bool,
+	burn_alpha := 0.76,
+	burn_scale := 1.0,
+	burn_tint := Color(0.16, 0.09, 0.07, 1.0),
+	burn_emission := Color(0.34, 0.13, 0.05, 1.0),
+	burn_emission_energy := 0.14,
+	burn_smoke_enabled := false,
+	burn_smoke_duration := 8.5,
+	burn_smoke_alpha := 0.14
+) -> void:
+	if burn_scene == null or get_tree().current_scene == null:
+		return
+	var remains := burn_scene.instantiate() as Node3D
+	if remains == null:
+		return
+	get_tree().current_scene.add_child(remains)
+	remains.global_position = global_position
+	remains.rotation.y = rotation.y
+	if remains.has_method("configure_visual"):
+		remains.call(
+			"configure_visual",
+			burn_pixel_size,
+			burn_y,
+			burn_ground_offset,
+			burn_ground_clearance,
+			burn_use_sprite_bottom,
+			burn_alpha,
+			burn_scale,
+			burn_tint,
+			burn_emission,
+			burn_emission_energy,
+			burn_smoke_enabled,
+			burn_smoke_duration,
+			burn_smoke_alpha
+		)
+	_burn_remains = remains
+	_update_burn_remains_orientation()
