@@ -18,6 +18,16 @@ static func spawn_impact(source: Node3D, sprite: AnimatedSprite3D) -> void:
 	_spawn_light(source, AETHER_WHITE, 4.4, 2.4, 0.22)
 
 
+static func spawn_phase_departure(source: Node3D, sprite: AnimatedSprite3D) -> void:
+	_spawn_ghost(source, sprite, Color(0.18, 0.74, 1.0, 0.54), 0.16, 1.24)
+	_spawn_light(source, AETHER_CYAN, 3.2, 1.9, 0.14)
+
+
+static func spawn_phase_arrival(source: Node3D, sprite: AnimatedSprite3D) -> void:
+	_spawn_ghost(source, sprite, Color(0.82, 0.98, 1.0, 0.70), 0.18, 1.18)
+	_spawn_light(source, AETHER_WHITE, 4.0, 2.2, 0.18)
+
+
 static func spawn_hurt(source: Node3D, sprite: AnimatedSprite3D) -> void:
 	_spawn_ghost(source, sprite, Color(0.46, 0.88, 1.0, 0.42), 0.12, 1.05)
 	_spawn_light(source, AETHER_CYAN, 1.8, 1.25, 0.10)

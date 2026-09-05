@@ -4,6 +4,20 @@
 [ext_resource type="Texture2D" uid="uid://cysxas76a1jh3" path="res://assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="Texture2D" uid="uid://tfc4g6n7mwjo" path="res://assets/world/contact_shadow.png" id="6_shadow"]
 [ext_resource type="PackedScene" path="res://scenes/props/burn_remains.tscn" id="7_burn"]
+[ext_resource type="Script" uid="uid://criftphaseset1" path="res://scripts/actors/rift_reaver_phase_settings.gd" id="8_phase_settings"]
+
+[sub_resource type="Resource" id="Resource_rift_phase"]
+script = ExtResource("8_phase_settings")
+enabled = true
+pre_attack_arc_degrees = 32.0
+pre_attack_radius = 1.65
+recovery_arc_degrees = 20.0
+recovery_radius = 2.65
+minimum_player_distance = 1.1
+maximum_step_distance = 1.85
+floor_probe_height = 0.5
+floor_probe_depth = 1.8
+maximum_floor_height_change = 0.45
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_rift_reaver"]
 radius = 0.46
@@ -213,6 +227,7 @@ burn_ember_emission_energy = 0.18
 burn_smoke_enabled = false
 burn_smoke_duration = 7.0
 burn_smoke_alpha = 0.1
+special_ability_settings = SubResource("Resource_rift_phase")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape_rift_reaver")

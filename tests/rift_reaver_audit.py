@@ -102,6 +102,8 @@ scene = read("scenes/actors/rift_reaver.tscn")
 script = read("scripts/actors/rift_reaver.gd")
 audio_runtime = read("scripts/actors/rift_reaver_audio_runtime.gd")
 fx_runtime = read("scripts/effects/rift_reaver_fx.gd")
+phase_settings = read("scripts/actors/rift_reaver_phase_settings.gd")
+phase_runtime = read("scripts/actors/rift_reaver_phase_runtime.gd")
 metadata = read("assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png.import")
 sheet_path = ROOT / "assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png"
 
@@ -118,15 +120,23 @@ assert "@export" not in script
 for token in [
     'preload("res://scripts/actors/rift_reaver_audio_runtime.gd")',
     'preload("res://scripts/effects/rift_reaver_fx.gd")',
+    'preload("res://scripts/actors/rift_reaver_phase_runtime.gd")',
     "RiftReaverAudio.attack_stream()",
     "RiftReaverAudio.hurt_stream()",
     "RiftReaverAudio.death_stream()",
     "RiftReaverFx.spawn_attack_start",
     "RiftReaverFx.spawn_wake",
     "RiftReaverFx.spawn_impact",
+    "RiftReaverFx.spawn_phase_departure",
+    "RiftReaverFx.spawn_phase_arrival",
     "RiftReaverFx.spawn_hurt",
     "RiftReaverFx.spawn_death",
     "WAKE_INTERVAL := 0.045",
+    "special_ability_settings as VexRiftReaverPhaseSettings",
+    "_try_phase_step(false)",
+    "_try_phase_step(true)",
+    "_rift_attack_active and not _attack_locked",
+    "_phase_side *= -1.0",
 ]:
     assert token in script, token
 
@@ -177,6 +187,45 @@ for token in [
 assert "randf" not in audio_runtime
 assert "randi" not in audio_runtime
 
+# Phase gameplay tuning is Inspector-authored through the existing special ability Resource slot.
+assert "class_name VexRiftReaverPhaseSettings" in phase_settings
+assert "extends VexEnemyAbilitySettings" in phase_settings
+for token in [
+    "var enabled := true",
+    "var pre_attack_arc_degrees := 32.0",
+    "var pre_attack_radius := 1.65",
+    "var recovery_arc_degrees := 20.0",
+    "var recovery_radius := 2.65",
+    "var minimum_player_distance := 1.10",
+    "var maximum_step_distance := 1.85",
+    "var floor_probe_height := 0.50",
+    "var floor_probe_depth := 1.80",
+    "var maximum_floor_height_change := 0.45",
+]:
+    assert token in phase_settings, token
+
+# The phase is a constrained reposition, not noclip/teleport invulnerability.
+for token in [
+    "MIN_FLOOR_NORMAL_Y := 0.65",
+    "MIN_STEP_DISTANCE := 0.08",
+    "PhysicsRayQueryParameters3D.create",
+    "source.test_move(source.global_transform, motion)",
+    "settings.maximum_step_distance",
+    "settings.minimum_player_distance",
+    "settings.maximum_floor_height_change",
+    "_has_player_line_of_sight",
+    'return {"position": candidate}',
+]:
+    assert token in phase_runtime, token
+for forbidden in [
+    "collision_shape.disabled",
+    "set_collision_layer_value",
+    "set_collision_mask_value",
+    "invulnerable",
+    "invincible",
+]:
+    assert forbidden not in phase_runtime.lower(), forbidden
+
 # Transient Aether feedback stays runtime-owned and does not add persistent scene nodes.
 for token in [
     "Sprite3D.new()",
@@ -185,6 +234,8 @@ for token in [
     "spawn_attack_start",
     "spawn_wake",
     "spawn_impact",
+    "spawn_phase_departure",
+    "spawn_phase_arrival",
     "spawn_hurt",
     "spawn_death",
     "Color(0.24, 0.86, 1.0, 1.0)",
@@ -193,6 +244,7 @@ for token in [
 
 for token in [
     'path="res://assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png"',
+    'path="res://scripts/actors/rift_reaver_phase_settings.gd"',
     'enemy_id = &"rift_reaver"',
     "combat_role = 0",
     "maximum_health = 135",
@@ -203,6 +255,16 @@ for token in [
     "attack_cooldown = 1.05",
     "attack_windup = 0.22",
     "attack_lunge_speed = 10.6",
+    "special_ability_settings = SubResource(\"Resource_rift_phase\")",
+    "pre_attack_arc_degrees = 32.0",
+    "pre_attack_radius = 1.65",
+    "recovery_arc_degrees = 20.0",
+    "recovery_radius = 2.65",
+    "minimum_player_distance = 1.1",
+    "maximum_step_distance = 1.85",
+    "floor_probe_height = 0.5",
+    "floor_probe_depth = 1.8",
+    "maximum_floor_height_change = 0.45",
     "billboard = 2",
     "render_priority = -2",
     "offset = Vector2(0, 16)",

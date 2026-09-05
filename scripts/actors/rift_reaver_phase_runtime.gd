@@ -43,7 +43,7 @@ static func find_destination(
 		else settings.pre_attack_radius
 	)
 	var primary_side := 1.0 if preferred_side >= 0.0 else -1.0
-	for side_variant: Variant in [primary_side, -primary_side]:
+	for side_variant in [primary_side, -primary_side]:
 		var side := float(side_variant)
 		var rotated := radial.rotated(
 			Vector3.UP,
