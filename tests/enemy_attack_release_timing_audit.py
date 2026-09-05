@@ -154,4 +154,16 @@ for script_path in PERFORMANCE_LUNGE_SCRIPTS:
         f"{script_path}: standard melee release synchronization no longer applies"
     )
 
+# Hybrid close attacks have one damage resolve. Briar's authored close-contact
+# pose is frame 2, so keep its midpoint on the difficulty-scaled melee windup.
+hybrid_base = read("scripts/actors/enemy_hybrid_base.gd")
+assert "func _melee_attack_playback_scale(animation_name: StringName, runtime_windup: float) -> float:" in hybrid_base
+assert "frames.get_frame_duration(animation_name, 1) * 0.5" in hybrid_base
+assert "authored_release_time / maxf(runtime_windup, 0.001)" in hybrid_base
+assert "_melee_attack_playback_scale(attack_animation, runtime_windup)" in hybrid_base
+assert "await get_tree().create_timer(runtime_windup).timeout" in hybrid_base
+
+briar_script = read("scripts/actors/briar_skulker.gd")
+assert 'extends "res://scripts/actors/enemy_hybrid_base.gd"' in briar_script
+
 print("enemy attack release timing audit passed")
