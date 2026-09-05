@@ -128,4 +128,30 @@ assert_release_window(
     assignment(venom_scene, "buff_windup"),
 )
 
+# Standard performance-lunge enemies synchronize their actual hit windup to
+# the midpoint of authored attack frame 3 at runtime. This keeps the visual
+# contact frame stable while difficulty still changes the real windup length.
+lunge_performance = read("scripts/actors/enemy_lunge_performance_base.gd")
+assert "func _attack_playback_scale_for_runtime_windup() -> float:" in lunge_performance
+assert 'frames.get_frame_duration(&"attack", 2) * 0.5' in lunge_performance
+assert "authored_release_time / maxf(_runtime_attack_windup, 0.001)" in lunge_performance
+assert "func _play_animation(animation_name: StringName) -> void:" in lunge_performance
+assert 'animated_sprite.play(&"attack", _attack_playback_scale_for_runtime_windup())' in lunge_performance
+
+lunge_base = read("scripts/actors/enemy_lunge_base.gd")
+assert "await get_tree().create_timer(_runtime_attack_windup).timeout" in lunge_base
+
+PERFORMANCE_LUNGE_SCRIPTS = (
+    "scripts/actors/cinderhound.gd",
+    "scripts/actors/rift_reaver.gd",
+    "scripts/actors/vaskari_bulwark.gd",
+    "scripts/actors/vaskari_raptor.gd",
+    "scripts/actors/vaskari_ravager.gd",
+)
+for script_path in PERFORMANCE_LUNGE_SCRIPTS:
+    script = read(script_path)
+    assert 'extends "res://scripts/actors/enemy_lunge_performance_base.gd"' in script, (
+        f"{script_path}: standard melee release synchronization no longer applies"
+    )
+
 print("enemy attack release timing audit passed")

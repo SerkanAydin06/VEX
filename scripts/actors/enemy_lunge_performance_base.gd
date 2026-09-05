@@ -138,6 +138,34 @@ func _is_observer_behind_enemy(back_view_threshold_value: float) -> bool:
 	return _perf_observer_behind
 
 
+func _attack_playback_scale_for_runtime_windup() -> float:
+	if animated_sprite == null or not _has_animation(&"attack"):
+		return 1.0
+	var frames := animated_sprite.sprite_frames
+	if frames == null or frames.get_frame_count(&"attack") < 3:
+		return 1.0
+	var animation_fps := maxf(frames.get_animation_speed(&"attack"), 0.001)
+	var release_units := (
+		frames.get_frame_duration(&"attack", 0)
+		+ frames.get_frame_duration(&"attack", 1)
+		+ frames.get_frame_duration(&"attack", 2) * 0.5
+	)
+	var authored_release_time := release_units / animation_fps
+	return maxf(authored_release_time / maxf(_runtime_attack_windup, 0.001), 0.01)
+
+
+func _play_animation(animation_name: StringName) -> void:
+	if animation_name != &"attack":
+		super._play_animation(animation_name)
+		return
+	if not _has_animation(&"attack"):
+		return
+	if animated_sprite.animation == &"attack" and animated_sprite.is_playing():
+		return
+	animated_sprite.play(&"attack", _attack_playback_scale_for_runtime_windup())
+	_apply_frame_ground_offset()
+
+
 func _place_corpse_visual_on_floor() -> void:
 	if (
 		animated_sprite != null
