@@ -136,3 +136,15 @@ func _is_observer_behind_enemy(back_view_threshold_value: float) -> bool:
 	_perf_observer_frame = physics_frame
 	_perf_observer_behind = super._is_observer_behind_enemy(back_view_threshold_value)
 	return _perf_observer_behind
+
+
+func _place_corpse_visual_on_floor() -> void:
+	if (
+		animated_sprite != null
+		and animated_sprite.animation == &"death"
+		and not death_frame_y_offsets.is_empty()
+	):
+		var frame_index := mini(animated_sprite.frame, death_frame_y_offsets.size() - 1)
+		animated_sprite.position.y = _visual_base_y + death_frame_y_offsets[frame_index]
+		return
+	super._place_corpse_visual_on_floor()

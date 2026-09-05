@@ -172,3 +172,16 @@ func _fire_projectile() -> void:
 		target_position += target_velocity * travel_time * projectile_lead_factor
 	var shot_direction := (target_position - projectile.global_position).normalized()
 	projectile.call("launch", shot_direction, self, _runtime_attack_damage)
+
+
+func _place_corpse_on_floor(animated: bool) -> void:
+	if (
+		animated
+		and animated_sprite != null
+		and animated_sprite.animation == &"death"
+		and not death_frame_y_offsets.is_empty()
+	):
+		# Death-frame offsets are already authored to keep every frame grounded.
+		# Do not run a second Y tween that drags the sprite between frame changes.
+		return
+	super._place_corpse_on_floor(animated)
