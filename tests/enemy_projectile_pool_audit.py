@@ -18,6 +18,8 @@ fire_runtime = read("scripts/actors/enemy_projectile_fire_runtime.gd")
 shared_projectile = read("scripts/actors/ravager_projectile.gd")
 spore = read("scripts/actors/spore_matriarch_projectile.gd")
 venom_field = read("scripts/actors/venom_marshall_buff_projectile.gd")
+warden = read("scripts/actors/crucible_warden.gd")
+warden_heatwave = read("scripts/actors/crucible_warden_heatwave_projectile.gd")
 ravager = read("scripts/actors/ravager.gd")
 cinder = read("scripts/actors/cinder_spitter.gd")
 voidweaver = read("scripts/actors/voidweaver.gd")
@@ -97,6 +99,38 @@ for token in [
     "set_physics_process(false)",
 ]:
     assert token in shared_projectile, token
+
+# Warden Heatwave is a 12-projectile burst and must reuse the same pool rather
+# than causing a 12-node allocation spike every cast. Its impact tween is async,
+# so it needs the same generation protection as the shared projectile family.
+for token in [
+    'const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.gd")',
+    "var projectile := EnemyProjectilePool.acquire(",
+    'projectile.set("speed", _ability.heatwave_projectile_speed)',
+    'projectile.set("lifetime", _ability.heatwave_projectile_lifetime)',
+    'projectile.call(',
+]:
+    assert token in warden, token
+assert "_ability.heatwave_projectile_scene.instantiate()" not in warden, (
+    "Warden Heatwave must not allocate each radial projectile"
+)
+
+for token in [
+    'const EnemyProjectilePool = preload("res://scripts/actors/enemy_projectile_pool.gd")',
+    "var _lifecycle_generation := 0",
+    "func activate_from_pool() -> void:",
+    "func deactivate_for_pool() -> void:",
+    "_remaining_lifetime = lifetime",
+    "_source = null",
+    "set_physics_process(false)",
+    'set_deferred("monitoring", false)',
+    'collision_shape.set_deferred("disabled", true)',
+    "var generation := _lifecycle_generation",
+    "generation == _lifecycle_generation",
+    "func _recycle_or_free() -> void:",
+    "EnemyProjectilePool.recycle(self)",
+]:
+    assert token in warden_heatwave, token
 
 # Stateful field projectiles have no long async impact coroutine; recycle must
 # still fully disable processing, monitoring, collision and source references.
