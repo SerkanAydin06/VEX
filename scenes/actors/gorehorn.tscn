@@ -224,7 +224,7 @@ dormant_distance = 48.0
 hurt_shake_duration = 0.09
 hurt_shake_amount_pixels = 1.75
 hurt_shake_frequency = 28.0
-corpse_visual_y = 0.1236
+corpse_visual_y = 0.1036
 idle_frame_y_offsets = PackedFloat32Array(0.1236, 0.1236, 0.1288, 0.1236)
 idle_back_frame_y_offsets = PackedFloat32Array(0.134, 0.1236, 0.1288, 0.1392)
 walk_frame_y_offsets = PackedFloat32Array(0.1184, 0.1184, 0.1236, 0.1288)
@@ -287,4 +287,3 @@ volume_db = -2.0
 pitch_scale = 0.68
 max_distance = 28.0
 bus = &"SFX"
-

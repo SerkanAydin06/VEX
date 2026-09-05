@@ -142,7 +142,7 @@ filter_clip = true
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cinder_spitter"]
 animations = [{
-"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_2")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_4")}],
+"frames": [{"duration": 1.0, "texture": SubResource("Atlas_attack_1")}, {"duration": 0.95, "texture": SubResource("Atlas_attack_2")}, {"duration": 1.25, "texture": SubResource("Atlas_attack_3")}, {"duration": 1.0, "texture": SubResource("Atlas_attack_4")}],
 "loop": false,
 "name": &"attack",
 "speed": 7.5
@@ -218,7 +218,7 @@ attack_preferred_distance = 8.0
 attack_recovery_strafe_scale = 0.65
 attack_retreat_speed_scale = 0.65
 projectile_scene = ExtResource("3_projectile")
-projectile_spawn_height = 0.72
+projectile_spawn_height = -0.05
 projectile_spawn_forward_offset = 0.20
 projectile_target_height = 0.5
 projectile_lead_factor = 0.45

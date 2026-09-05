@@ -141,13 +141,13 @@ filter_clip = true
 [sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
 animations = [{
 "frames": [{
-"duration": 1.0,
+"duration": 0.95,
 "texture": SubResource("Atlas_attack1")
 }, {
-"duration": 1.0,
+"duration": 0.9,
 "texture": SubResource("Atlas_attack2")
 }, {
-"duration": 1.0,
+"duration": 1.2,
 "texture": SubResource("Atlas_attack3")
 }, {
 "duration": 1.0,
@@ -289,7 +289,7 @@ attack_cooldown = 1.25
 attack_windup = 0.36
 attack_range_tolerance = 3.0
 projectile_scene = ExtResource("26_projectile")
-projectile_spawn_height = 0.78
+projectile_spawn_height = 0.58
 projectile_spawn_forward_offset = 0.18
 projectile_target_height = 0.5
 projectile_lead_factor = 0.55
