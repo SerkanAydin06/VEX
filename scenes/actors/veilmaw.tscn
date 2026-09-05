@@ -141,13 +141,13 @@ filter_clip = true
 [sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
 animations = [{
 "frames": [{
-"duration": 1.0,
+"duration": 0.95,
 "texture": SubResource("Atlas_attack1")
 }, {
-"duration": 1.0,
+"duration": 0.9,
 "texture": SubResource("Atlas_attack2")
 }, {
-"duration": 1.0,
+"duration": 1.2,
 "texture": SubResource("Atlas_attack3")
 }, {
 "duration": 1.0,
