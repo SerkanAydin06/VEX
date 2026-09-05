@@ -12,9 +12,17 @@ PROJECTILE_SCENE = ROOT / "scenes/actors/spore_matriarch_projectile.tscn"
 ACTOR_SCRIPT = ROOT / "scripts/actors/spore_matriarch.gd"
 PROJECTILE_SCRIPT = ROOT / "scripts/actors/spore_matriarch_projectile.gd"
 POISON_SCRIPT = ROOT / "scripts/actors/spore_poison_status.gd"
+RUNTIME_TEST = ROOT / "tests/spore_matriarch_runtime_test.gd"
 LEVEL_TEST = ROOT / "scenes/levels/level_test.tscn"
 
-for path in [ACTOR, PROJECTILE_SCENE, ACTOR_SCRIPT, PROJECTILE_SCRIPT, POISON_SCRIPT]:
+for path in [
+    ACTOR,
+    PROJECTILE_SCENE,
+    ACTOR_SCRIPT,
+    PROJECTILE_SCRIPT,
+    POISON_SCRIPT,
+    RUNTIME_TEST,
+]:
     assert path.exists(), path
 
 character_manifest = json.loads(
@@ -48,6 +56,7 @@ actor_script = ACTOR_SCRIPT.read_text(encoding="utf-8")
 projectile_scene = PROJECTILE_SCENE.read_text(encoding="utf-8")
 projectile_script = PROJECTILE_SCRIPT.read_text(encoding="utf-8")
 poison_script = POISON_SCRIPT.read_text(encoding="utf-8")
+runtime_test = RUNTIME_TEST.read_text(encoding="utf-8")
 
 assert 'extends "res://scripts/actors/enemy_combatant_performance_base.gd"' in actor_script
 for contract in [
@@ -115,9 +124,17 @@ for contract in [
 # The old unsafe source forwarding must not return.
 assert 'target.call("take_damage", damage, global_position, source)' not in projectile_script
 
+# Re-applying poison refreshes one shared status instead of creating parallel DoT
+# loops. A weaker refresh cannot reduce existing damage or slow its tick rate;
+# a stronger/faster refresh upgrades the same status.
 for contract in [
     "class_name VexSporePoisonStatus",
     "func refresh_poison(",
+    "var was_active := _remaining > 0.0",
+    "_remaining = maxf(_remaining, safe_duration)",
+    "_tick_damage = maxi(_tick_damage, safe_damage)",
+    "_tick_interval = minf(_tick_interval, safe_interval)",
+    "_tick_remaining = minf(_tick_remaining, _tick_interval)",
     "_source = source if is_instance_valid(source) else null",
     "if is_instance_valid(_source):",
     '_target.call("take_damage", _tick_damage, hit_position, damage_source)',
@@ -125,6 +142,15 @@ for contract in [
     "queue_free()",
 ]:
     assert contract in poison_script, contract
+
+for contract in [
+    '_count_named_children(target, "SporePoisonStatus") == 1',
+    "status.refresh_poison(0.70, 2, 0.20, null)",
+    "status.get_tick_damage() == 4",
+    "status.refresh_poison(0.70, 7, 0.05, null)",
+    "status.get_tick_damage() == 7",
+]:
+    assert contract in runtime_test, contract
 
 level_test = LEVEL_TEST.read_text(encoding="utf-8")
 assert 'path="res://scenes/actors/spore_matriarch.tscn"' in level_test
