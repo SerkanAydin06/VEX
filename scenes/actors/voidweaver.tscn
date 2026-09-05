@@ -13,7 +13,7 @@
 [sub_resource type="Resource" id="Resource_voidweaver_ability"]
 script = ExtResource("32_ability")
 weave_projectile_count = 3
-weave_half_angle_degrees = 5.0
+weave_half_angle_degrees = 7.0
 weave_side_damage_scale = 0.45
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
