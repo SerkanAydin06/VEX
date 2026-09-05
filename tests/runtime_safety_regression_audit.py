@@ -18,12 +18,16 @@ assert (
     "or projectile.is_queued_for_deletion():"
 ) in pool
 
-# Görsel LOD animation speed ownership'ine dokunmaz; yalnız processing'i askıya alır.
+# Performance manager başka sistemlerin animation speed / physics ownership'ini ezmez.
 assert "visual_speed_scale" not in performance
 assert "sprite.speed_scale = 0.0" not in performance
 assert "VISUAL_PROCESS_MODE_META" in performance
 assert "sprite.process_mode = Node.PROCESS_MODE_DISABLED" in performance
 assert "func _restore_visual_processing(" in performance
+assert "if enemy.is_physics_processing():" in performance
+assert performance.index("if enemy.is_physics_processing():") < performance.index(
+    'enemy.set_meta("vex_perf_physics_slept", true)'
+)
 
 # Yerel doğrulama README'de belirtilen Python major/minor sürümünü gerçekten zorunlu tutar.
 assert "VEX requires Python 3.12.x" in validator
