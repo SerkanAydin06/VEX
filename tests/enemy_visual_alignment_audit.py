@@ -2,13 +2,19 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = (
+SCENE_ALIGNED_CORPSES = (
     "cinderhound.tscn",
     "gorehorn.tscn",
     "rift_reaver.tscn",
     "vaskari_raptor.tscn",
+    "crucible_warden.tscn",
+    "furnice_carrier.tscn",
 )
 NUMBER = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?"
+
+
+def _read(relative_path: str) -> str:
+    return (ROOT / relative_path).read_text(encoding="utf-8")
 
 
 def _scalar(text: str, name: str, default: float | None = None) -> float:
@@ -56,8 +62,8 @@ def _visual_base_y(text: str) -> float:
     return 0.0
 
 
-for scene_name in SCENES:
-    text = (ROOT / "scenes/actors" / scene_name).read_text(encoding="utf-8")
+for scene_name in SCENE_ALIGNED_CORPSES:
+    text = _read(f"scenes/actors/{scene_name}")
     corpse_y = _scalar(text, "corpse_visual_y")
     clearance = _scalar(text, "corpse_floor_clearance", 0.02)
     expected_final_y = _visual_base_y(text) + _final_death_offset(text)
@@ -66,5 +72,17 @@ for scene_name in SCENES:
         f"{scene_name}: corpse jump detected "
         f"(expected y={expected_final_y:.6f}, actual y={actual_final_y:.6f})"
     )
+
+combatant_performance = _read("scripts/actors/enemy_combatant_performance_base.gd")
+assert "func _place_corpse_on_floor(animated: bool) -> void:" in combatant_performance
+assert 'animated_sprite.animation == &"death"' in combatant_performance
+assert "not death_frame_y_offsets.is_empty()" in combatant_performance
+assert "super._place_corpse_on_floor(animated)" in combatant_performance
+
+lunge_performance = _read("scripts/actors/enemy_lunge_performance_base.gd")
+assert "func _place_corpse_visual_on_floor() -> void:" in lunge_performance
+assert 'animated_sprite.animation == &"death"' in lunge_performance
+assert "_visual_base_y + death_frame_y_offsets[frame_index]" in lunge_performance
+assert "super._place_corpse_visual_on_floor()" in lunge_performance
 
 print("enemy visual alignment audit passed")
