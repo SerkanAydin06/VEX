@@ -4,7 +4,7 @@ extends CharacterBody3D
 const DROPPED_WEAPON_PICKUP_SCENE := preload("res://scenes/props/pickup.tscn")
 
 @export_category("Hareket")
-@export_range(1.0, 12.0, 0.1) var walk_speed := 4.0
+@export_range(1.0, 12.0, 0.1) var walk_speed := 10.0
 @export_range(1.0, 16.0, 0.1) var sprint_speed := 8.0
 @export_range(1.0, 40.0, 0.5) var acceleration := 18.0
 @export_range(1.0, 40.0, 0.5) var deceleration := 22.0

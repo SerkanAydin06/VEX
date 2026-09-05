@@ -41,14 +41,14 @@
 [ext_resource type="PackedScene" uid="uid://csh77lhvvhlfs" path="res://scenes/actors/furnice_carrier.tscn" id="37_furnice"]
 [ext_resource type="PackedScene" uid="uid://c5s0tolim1ws2" path="res://scenes/actors/crucible_warden.tscn" id="38_crucible"]
 [ext_resource type="PackedScene" uid="uid://b1briarskulkr" path="res://scenes/actors/briar_skulker.tscn" id="39_briar"]
-[ext_resource type="PackedScene" uid="uid://bgorehorn01vex" path="res://scenes/actors/gorehorn.tscn" id="40_gorehorn"]
+[ext_resource type="PackedScene" uid="uid://b1ook4k5d04tb" path="res://scenes/actors/gorehorn.tscn" id="40_gorehorn"]
 [ext_resource type="PackedScene" uid="uid://bcindspitter1" path="res://scenes/actors/cinder_spitter.tscn" id="41_cinder_spitter"]
 [ext_resource type="PackedScene" uid="uid://bcoillancer01" path="res://scenes/actors/coil_lancer.tscn" id="42_coil_lancer"]
-[ext_resource type="PackedScene" uid="uid://bvaskaribulwk1" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
-[ext_resource type="PackedScene" uid="uid://bsporematriarch1" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
-[ext_resource type="PackedScene" uid="uid://bvenommarshall01" path="res://scenes/actors/venom_marshall.tscn" id="45_venom_marshall"]
-[ext_resource type="PackedScene" uid="uid://bhuskleechact1" path="res://scenes/actors/husk_leech.tscn" id="46_husk_leech"]
-[ext_resource type="PackedScene" uid="uid://briftreaver01v" path="res://scenes/actors/rift_reaver.tscn" id="47_rift_reaver"]
+[ext_resource type="PackedScene" uid="uid://53d0ymrxrnyc" path="res://scenes/actors/vaskari_bulwark.tscn" id="43_vaskari_bulwark"]
+[ext_resource type="PackedScene" uid="uid://dlhh0brl5gqdc" path="res://scenes/actors/spore_matriarch.tscn" id="44_spore_matriarch"]
+[ext_resource type="PackedScene" uid="uid://oxeh1jsrbxvs" path="res://scenes/actors/venom_marshall.tscn" id="45_venom_marshall"]
+[ext_resource type="PackedScene" uid="uid://c7puos6ss8lae" path="res://scenes/actors/husk_leech.tscn" id="46_husk_leech"]
+[ext_resource type="PackedScene" uid="uid://84i3ncl15m6x" path="res://scenes/actors/rift_reaver.tscn" id="47_rift_reaver"]
 
 [sub_resource type="Environment" id="Environment_test"]
 background_mode = 1
@@ -539,45 +539,45 @@ visual_texture = ExtResource("34_armor")
 
 [node name="Ravager" parent="Enemies" unique_id=1314898711 instance=ExtResource("13_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.9074496, 20)
-enemy_id = &"level_test_ravager"
 maximum_health = 100
 move_speed = 5.0
+enemy_id = &"level_test_ravager"
 
 [node name="CinderHound" parent="Enemies" unique_id=139156611 instance=ExtResource("19_cinderhound")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.7327161, 20)
-enemy_id = &"level_test_cinderhound"
 maximum_health = 120
 move_speed = 10.0
 chase_speed = 10.0
 detection_range = 15.0
 pursuit_range = 26.0
 dormant_distance = 30.0
+enemy_id = &"level_test_cinderhound"
 
 [node name="CinderSpitter" parent="Enemies" unique_id=1803186983 instance=ExtResource("41_cinder_spitter")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.883, 10)
-enemy_id = &"level_test_cinder_spitter"
 maximum_health = 180
+enemy_id = &"level_test_cinder_spitter"
 
 [node name="CoilLancer" parent="Enemies" unique_id=99385466 instance=ExtResource("42_coil_lancer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 10)
-enemy_id = &"level_test_coil_lancer"
 maximum_health = 180
+enemy_id = &"level_test_coil_lancer"
 
 [node name="VaskariRaptor" parent="Enemies" unique_id=406336072 instance=ExtResource("14_vaskari_raptor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.96335053, 10)
-enemy_id = &"level_test_vaskari_raptor"
 maximum_health = 150
 move_speed = 7.0
 detection_range = 25.0
+enemy_id = &"level_test_vaskari_raptor"
 
 [node name="VaskariRavager" parent="Enemies" unique_id=1097403212 instance=ExtResource("15_vaskari_ravager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.5569348, 0)
-enemy_id = &"level_test_vaskari_ravager"
 maximum_health = 500
 move_speed = 10.0
 movement_acceleration = 40.0
 detection_range = 30.0
 dormant_distance = 32.0
+enemy_id = &"level_test_vaskari_ravager"
 
 [node name="Veilmaw" parent="Enemies" unique_id=1564511686 instance=ExtResource("17_veilmaw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0523984, 0)
@@ -589,55 +589,55 @@ enemy_id = &"level_test_voidweaver"
 
 [node name="BasaltJuggernaut" parent="Enemies" unique_id=1262786008 instance=ExtResource("16_basalt_juggernaut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.9010693, -20)
-enemy_id = &"level_test_basalt_juggernaut"
 maximum_health = 250
 move_speed = 5.0
 detection_range = 28.0
 attack_damage = 35
+enemy_id = &"level_test_basalt_juggernaut"
 
 [node name="FurniceCarrier" parent="Enemies" unique_id=1822641573 instance=ExtResource("37_furnice")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.8653867, -20)
-enemy_id = &"level_test_furnice_carrier"
 maximum_health = 500
+enemy_id = &"level_test_furnice_carrier"
 
 [node name="CrucibleWarden" parent="Enemies" unique_id=879260090 instance=ExtResource("38_crucible")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.25, -20)
-enemy_id = &"level_test_crucible_warden"
 maximum_health = 500
+enemy_id = &"level_test_crucible_warden"
 
 [node name="BriarSkulker" parent="Enemies" unique_id=1297055620 instance=ExtResource("39_briar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7649529, -20)
-enemy_id = &"level_test_briar_skulker"
 maximum_health = 500
+enemy_id = &"level_test_briar_skulker"
 
 [node name="Gorehorn" parent="Enemies" unique_id=1621256487 instance=ExtResource("40_gorehorn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 1.22, -10)
-enemy_id = &"level_test_gorehorn"
 maximum_health = 500
+enemy_id = &"level_test_gorehorn"
 
 [node name="VaskariBulwark" parent="Enemies" unique_id=356253491 instance=ExtResource("43_vaskari_bulwark")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.22, -10)
-enemy_id = &"level_test_vaskari_bulwark"
 maximum_health = 500
+enemy_id = &"level_test_vaskari_bulwark"
 
 [node name="SporeMatriarch" parent="Enemies" unique_id=606212745 instance=ExtResource("44_spore_matriarch")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -10)
-enemy_id = &"level_test_spore_matriarch"
 maximum_health = 500
+enemy_id = &"level_test_spore_matriarch"
 
 [node name="VenomMarshall" parent="Enemies" unique_id=342178243 instance=ExtResource("45_venom_marshall")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.792728, 1.0006597, -0.0829978)
-enemy_id = &"level_test_venom_marshall"
 maximum_health = 500
+enemy_id = &"level_test_venom_marshall"
 
-[node name="HuskLeech" parent="Enemies" instance=ExtResource("46_husk_leech")]
+[node name="HuskLeech" parent="Enemies" unique_id=2113154869 instance=ExtResource("46_husk_leech")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.9, 0)
 enemy_id = &"level_test_husk_leech"
 
-[node name="RiftReaver" parent="Enemies" instance=ExtResource("47_rift_reaver")]
+[node name="RiftReaver" parent="Enemies" unique_id=1491605873 instance=ExtResource("47_rift_reaver")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.95, -10)
-enemy_id = &"level_test_rift_reaver"
 maximum_health = 500
+enemy_id = &"level_test_rift_reaver"
 
 [node name="LevelMusic" type="AudioStreamPlayer" parent="." unique_id=1354157790]
 stream = ExtResource("35_music")
