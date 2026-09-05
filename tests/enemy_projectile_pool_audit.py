@@ -23,18 +23,27 @@ warden_heatwave = read("scripts/actors/crucible_warden_heatwave_projectile.gd")
 ravager = read("scripts/actors/ravager.gd")
 cinder = read("scripts/actors/cinder_spitter.gd")
 voidweaver = read("scripts/actors/voidweaver.gd")
+pool_runtime_test = read("tests/enemy_projectile_pool_runtime_test.gd")
+assert (ROOT / "tests/enemy_projectile_pool_runtime_test.tscn").exists()
+assert (ROOT / "tests/enemy_projectile_pool_runtime_test.gd.uid").exists()
 
 # Pool ownership: pooled instances remain parented to the current scene, are
 # reactivated on acquire, deactivated on recycle and capped per projectile scene.
+# recycle() itself is idempotent so one Node can never appear twice in a bucket.
 for token in [
     "const MAX_POOLED_PER_SCENE := 24",
+    'const IN_POOL_META := &"vex_projectile_in_pool"',
     "static var _buckets: Dictionary = {}",
     "static func acquire(projectile_scene: PackedScene, parent: Node) -> Node3D:",
+    "node.set_meta(IN_POOL_META, false)",
     'node.call("activate_from_pool")',
     'projectile.set_meta("vex_projectile_pool_key", key)',
+    "projectile.set_meta(IN_POOL_META, false)",
     "parent.add_child(projectile)",
     "static func recycle(projectile: Node3D) -> void:",
+    "if bool(projectile.get_meta(IN_POOL_META, false)):",
     "if bucket.size() >= MAX_POOLED_PER_SCENE:",
+    "projectile.set_meta(IN_POOL_META, true)",
     'projectile.call("deactivate_for_pool")',
     "bucket.append(projectile)",
 ]:
@@ -151,5 +160,17 @@ for source_name, source in [
         "visible = false",
     ]:
         assert token in source, (source_name, token)
+
+# Runtime fixture proves the double-recycle failure mode directly: one recycled
+# instance is reused once, while the second acquire must return a different Node.
+for token in [
+    "EnemyProjectilePool.recycle(first)",
+    'first.get_meta("vex_projectile_in_pool", false)',
+    "var reused := EnemyProjectilePool.acquire(PROJECTILE_SCENE, self)",
+    "assert(reused == first)",
+    "var second := EnemyProjectilePool.acquire(PROJECTILE_SCENE, self)",
+    "assert(second != reused)",
+]:
+    assert token in pool_runtime_test, token
 
 print("enemy projectile pool audit passed")
