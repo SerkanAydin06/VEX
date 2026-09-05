@@ -76,14 +76,51 @@ for retired_contract in [
 ]:
     assert retired_contract not in ravager_projectile, retired_contract
 
-# Custom projectile implementations keep the same source-exclusion contract.
-for script_name in [
-    "briar_skulker_projectile.gd",
-    "furnice_carrier_projectile.gd",
+# Custom direct projectiles follow the same lifetime rule instead of forwarding
+# raw shooter references after the shooter has already left the tree.
+briar = read("scripts/actors/briar_skulker_projectile.gd")
+for contract in [
+    "source = new_source if is_instance_valid(new_source) else null",
+    "var damage_source := _valid_source()",
+    "func _valid_source() -> Node:",
+    'damage_target.call("take_damage", damage, global_position, _valid_source())',
 ]:
-    source = read(f"scripts/actors/{script_name}")
-    assert "get_rid()" in source, script_name
-    assert "source" in source or "_source" in source, script_name
+    assert contract in briar, contract
+assert 'damage_target.call("take_damage", damage, global_position, source)' not in briar
+
+furnace = read("scripts/actors/furnice_carrier_projectile.gd")
+for contract in [
+    "_source = source if is_instance_valid(source) else null",
+    "var damage_source := _valid_source()",
+    "func _valid_source() -> Node:",
+    'damage_target.call("take_damage", _direct_damage, hit_position, _valid_source())',
+    'decal.call("configure", _decal_tick_damage, damage_source)',
+]:
+    assert contract in furnace, contract
+for retired_contract in [
+    'damage_target.call("take_damage", _direct_damage, hit_position, _source)',
+    'decal.call("configure", _decal_tick_damage, _source)',
+]:
+    assert retired_contract not in furnace, retired_contract
+
+furnace_decal = read("scripts/effects/furnice_carrier_decal.gd")
+for contract in [
+    "_source = source if is_instance_valid(source) else null",
+    "func _valid_source() -> Node:",
+    'player.call("take_damage", damage_per_tick, player.global_position, _valid_source())',
+]:
+    assert contract in furnace_decal, contract
+assert 'player.call("take_damage", damage_per_tick, player.global_position, _source)' not in furnace_decal
+
+warden_heatwave = read("scripts/actors/crucible_warden_heatwave_projectile.gd")
+for contract in [
+    "_source = source if is_instance_valid(source) else null",
+    "var damage_source := _valid_source()",
+    "func _valid_source() -> Node:",
+    'damage_target.call("take_damage", _damage, global_position, damage_source)',
+]:
+    assert contract in warden_heatwave, contract
+assert 'damage_target.call("take_damage", _damage, global_position, _source)' not in warden_heatwave
 
 # Spore projectile controls its masks in code because it changes from flight to
 # field phase. Flight sees world+player; the deployed field monitors player only.
