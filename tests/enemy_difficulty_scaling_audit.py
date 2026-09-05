@@ -53,8 +53,10 @@ def read(relative: str) -> str:
 
 
 def packed_array(source: str, property_name: str) -> list[float]:
+    # .tscn stores `property = PackedFloat32Array(...)`, while GDScript
+    # defaults use `@export var property := PackedFloat32Array(...)`.
     match = re.search(
-        rf"^{re.escape(property_name)}\s*=\s*PackedFloat32Array\(([^)]*)\)$",
+        rf"^(?:@export\s+var\s+)?{re.escape(property_name)}\s*(?::=|=)\s*PackedFloat32Array\(([^)]*)\)$",
         source,
         re.M,
     )
