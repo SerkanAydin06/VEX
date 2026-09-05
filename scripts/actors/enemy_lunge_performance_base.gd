@@ -154,80 +154,16 @@ func _attack_playback_scale_for_runtime_windup() -> float:
 	return maxf(authored_release_time / maxf(_runtime_attack_windup, 0.001), 0.01)
 
 
-func _play_runtime_synced_attack() -> void:
+func _play_animation(animation_name: StringName) -> void:
+	if animation_name != &"attack":
+		super._play_animation(animation_name)
+		return
 	if not _has_animation(&"attack"):
+		return
+	if animated_sprite.animation == &"attack" and animated_sprite.is_playing():
 		return
 	animated_sprite.play(&"attack", _attack_playback_scale_for_runtime_windup())
 	_apply_frame_ground_offset()
-
-
-func _attempt_attack() -> void:
-	if _attack_locked or _dead:
-		return
-	if _player == null or not is_instance_valid(_player):
-		return
-	var player_distance := _horizontal_distance(global_position, _player.global_position)
-	if not EnemyCombatRuntime.should_start_attack(player_distance, attack_range):
-		return
-	if not _check_line_of_sight():
-		return
-
-	_attack_generation += 1
-	var attack_generation := _attack_generation
-	_attack_locked = true
-	_attack_lunge_remaining = EnemyLungeRuntime.initial_attack_lunge_duration(
-		attack_lunge_duration,
-		_runtime_attack_windup
-	)
-	_play_runtime_synced_attack()
-	if attack_audio.stream != null:
-		attack_audio.play()
-
-	# Runtime windup is synchronized to the midpoint of authored attack frame 3.
-	await get_tree().create_timer(_runtime_attack_windup).timeout
-	if not is_inside_tree() or _dead or attack_generation != _attack_generation:
-		return
-	_attack_lunge_remaining = 0.0
-	velocity.x = 0.0
-	velocity.z = 0.0
-
-	if _player != null and is_instance_valid(_player):
-		player_distance = _horizontal_distance(global_position, _player.global_position)
-		if EnemyCombatRuntime.is_within_attack_range(
-			player_distance,
-			attack_range,
-			attack_range_tolerance
-		):
-			var has_line_of_sight := _check_line_of_sight()
-			if (
-				EnemyCombatRuntime.should_resolve_attack_after_windup(
-					player_distance,
-					attack_range,
-					attack_range_tolerance,
-					has_line_of_sight
-				)
-				and _player.has_method("take_damage")
-			):
-				_player.call("take_damage", _runtime_attack_damage, global_position, self)
-
-	_play_animation(&"idle")
-
-	var remaining := EnemyCombatRuntime.remaining_attack_cooldown(
-		_runtime_attack_cooldown,
-		_runtime_attack_windup
-	)
-	await get_tree().create_timer(remaining).timeout
-	if not is_inside_tree() or _dead or attack_generation != _attack_generation:
-		return
-	_attack_locked = false
-
-	if _player != null and is_instance_valid(_player):
-		player_distance = _horizontal_distance(global_position, _player.global_position)
-		if EnemyCombatRuntime.should_start_attack(player_distance, attack_range):
-			_face_player()
-			_play_animation(&"idle")
-			return
-	_play_animation(&"walk")
 
 
 func _place_corpse_visual_on_floor() -> void:
