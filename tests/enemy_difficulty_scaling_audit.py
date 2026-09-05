@@ -150,13 +150,41 @@ for property_name, direction in MULTIPLIERS.items():
 
 # All active enemy scenes keep their difficulty profile in Inspector/scene data.
 # Per-creature overrides are allowed, but each authored curve must stay ordered
-# and within broad safety bands.
+# and within broad safety bands. Enemy group membership must remain runtime-only:
+# difficulty-filtered scene instances must never be counted by BaseLevel/HUD.
 for scene_name in ACTIVE_ENEMY_SCENES:
     scene = read(f"scenes/actors/{scene_name}")
     assert "apply_difficulty_scaling = false" not in scene, scene_name
+    assert re.search(
+        r'^\[node name="[^"]+" type="CharacterBody3D"[^\n]*\]$',
+        scene,
+        re.M,
+    ), scene_name
+    assert not re.search(
+        r'^\[node name="[^"]+" type="CharacterBody3D"[^\n]*groups=\[[^\]]*"enemy"',
+        scene,
+        re.M,
+    ), (scene_name, "enemy group must be assigned after difficulty gate")
     for property_name, direction in MULTIPLIERS.items():
         values = packed_array(scene, property_name)
         assert_profile(values, direction, f"{scene_name}:{property_name}")
+
+# Both behavior families must difficulty-filter before joining the enemy group.
+# BaseLevel can then count only the active roster when its parent _ready runs.
+combatant = read("scripts/actors/enemy_combatant_base.gd")
+lunge = read("scripts/actors/enemy_lunge_base.gd")
+for script_name, source in [
+    ("enemy_combatant_base.gd", combatant),
+    ("enemy_lunge_base.gd", lunge),
+]:
+    gate_index = source.index("if GameState.active_difficulty < spawn_min_difficulty:")
+    group_index = source.index('add_to_group("enemy")')
+    assert gate_index < group_index, (script_name, "enemy group added before difficulty gate")
+    between = source[gate_index:group_index]
+    assert "queue_free()" in between and "return" in between, script_name
+
+base_level = read("scripts/levels/base_level.gd")
+assert 'GameState.begin_level(get_tree().get_nodes_in_group("enemy").size()' in base_level
 
 # Custom attacks use the same difficulty helper instead of raw difficulty math.
 warden = read("scripts/actors/crucible_warden.gd")
@@ -164,7 +192,6 @@ furnace = read("scripts/actors/furnice_carrier.gd")
 venom = read("scripts/actors/venom_marshall.gd")
 hybrid = read("scripts/actors/enemy_hybrid_base.gd")
 gorehorn = read("scripts/actors/gorehorn.gd")
-lunge = read("scripts/actors/enemy_lunge_base.gd")
 for script_name, source in [
     ("crucible_warden.gd", warden),
     ("furnice_carrier.gd", furnace),
@@ -210,16 +237,47 @@ assert resource_values == settings_resource_values, (
 assert "if not scale_amount_with_difficulty:" in pickup
 
 # Level-authored spawn tiers may only use 0..3 and must produce a monotonic roster.
+# Every placed enemy needs a unique explicit ID for defeat tracking. Any enemy
+# required by a finish switch must exist and be available even on Easy, otherwise
+# the campaign can become impossible to complete on lower difficulties.
 for level_name in ["level_01.tscn", "level_02.tscn", "level_03.tscn"]:
     source = read(f"scenes/levels/{level_name}")
     blocks = enemy_blocks(source)
     assert blocks, level_name
     minimums: list[int] = []
+    enemy_minimum_by_id: dict[str, int] = {}
     for block in blocks:
+        id_match = re.search(r'^enemy_id\s*=\s*&"([^"]+)"\s*$', block, re.M)
+        assert id_match is not None, (level_name, "enemy without explicit enemy_id")
+        enemy_id = id_match.group(1)
+        assert enemy_id not in enemy_minimum_by_id, (level_name, "duplicate enemy_id", enemy_id)
+
         match = re.search(r"^spawn_min_difficulty\s*=\s*(\d+)\s*$", block, re.M)
         value = int(match.group(1)) if match else 0
         assert 0 <= value <= 3, (level_name, value)
         minimums.append(value)
+        enemy_minimum_by_id[enemy_id] = value
+
+    required_enemy_ids = re.findall(
+        r'^required_enemy_id\s*=\s*&"([^"]+)"\s*$',
+        source,
+        re.M,
+    )
+    for required_enemy_id in required_enemy_ids:
+        if not required_enemy_id:
+            continue
+        assert required_enemy_id in enemy_minimum_by_id, (
+            level_name,
+            "finish switch references missing enemy",
+            required_enemy_id,
+        )
+        assert enemy_minimum_by_id[required_enemy_id] == 0, (
+            level_name,
+            "finish-required enemy is difficulty gated",
+            required_enemy_id,
+            enemy_minimum_by_id[required_enemy_id],
+        )
+
     counts = [sum(1 for value in minimums if value <= difficulty) for difficulty in range(4)]
     assert counts == sorted(counts), (level_name, counts)
     assert counts[0] > 0, (level_name, "no Easy enemies")
