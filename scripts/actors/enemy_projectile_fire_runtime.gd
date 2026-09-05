@@ -1,5 +1,7 @@
 extends RefCounted
 
+const EnemyCombatRuntime = preload("res://scripts/actors/enemy_combat_runtime.gd")
+
 
 static func fire(
 	source: Node3D,
