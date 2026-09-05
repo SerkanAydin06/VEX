@@ -118,8 +118,8 @@ for token in [
 ]:
     assert token in game_state, token
 
-# apply_difficulty_scaling=false must disable *all* multipliers, including
-# special-ability scripts that call this shared helper directly.
+# apply_difficulty_scaling=false must disable *all* difficulty multipliers,
+# including special-ability scripts that call this shared helper directly.
 enemy_base = read("scripts/actors/enemy_base.gd")
 helper_match = re.search(
     r"func _scene_difficulty_multiplier\(values: PackedFloat32Array\) -> float:\n(.*?)(?=\n\nfunc )",
@@ -131,6 +131,20 @@ helper = helper_match.group(1)
 assert "if not apply_difficulty_scaling:" in helper
 assert "return 1.0" in helper
 assert "VexEnemyRuntimeUtils.difficulty_multiplier" in helper
+
+# Ally damage support is independent from the difficulty toggle. Special attack
+# helpers scale by difficulty first (when enabled), then use this shared support
+# helper so Venom Marshall affects every attack channel consistently.
+support_match = re.search(
+    r"func _apply_active_damage_support\(damage_value: int\) -> int:\n(.*?)(?=\n\nfunc )",
+    enemy_base,
+    re.S,
+)
+assert support_match is not None
+support_helper = support_match.group(1)
+assert 'get_node_or_null("VenomMarshallBuffStatus")' in support_helper
+assert 'has_method("get_damage_multiplier")' in support_helper
+assert 'call("get_damage_multiplier")' in support_helper
 
 # SettingsManager exposes the canonical baseline profile to UI/game-state APIs,
 # while actor scenes may deliberately override it. Base enemy defaults must stay
@@ -206,8 +220,9 @@ for script_name, source, function_name in [
     ("enemy_hybrid_base.gd", hybrid, "_scaled_hybrid_damage"),
 ]:
     assert f"func {function_name}(" in source, script_name
-    assert "if not apply_difficulty_scaling:" in source, script_name
+    assert "if apply_difficulty_scaling:" in source, script_name
     assert "_scene_difficulty_multiplier(difficulty_damage_multipliers)" in source, script_name
+    assert "return _apply_active_damage_support(scaled_damage)" in source, script_name
 
 # Gorehorn's custom charge must remain on the lunge family's already-scaled
 # runtime damage/windup/cooldown/speed values rather than bypassing difficulty.
