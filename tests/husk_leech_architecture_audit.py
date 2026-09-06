@@ -67,9 +67,9 @@ assert [(row["animation"], row["row_index"], row["frame_count"]) for row in effe
 assert full_vfx_manifest["sheet_size"] == {"width": 5120, "height": 720}
 assert full_vfx_manifest["frame_size"] == {"width": 1280, "height": 720}
 assert full_vfx_manifest["grid"] == {"columns": 4, "rows": 1}
-assert [(row["animation"], row["row_index"], row["frame_count"]) for row in full_vfx_manifest["rows"]] == [
-    ("full_vfx", 0, 4),
-]
+assert full_vfx_manifest["animation"] == "full_vfx"
+assert full_vfx_manifest["frame_count"] == 4
+assert len(full_vfx_manifest["frames"]) == 4
 
 actor_source = actor_script.read_text(encoding="utf-8")
 assert "class_name VexHuskLeech" in actor_source
