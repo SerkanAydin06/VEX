@@ -10,8 +10,11 @@ import zlib
 ROOT = Path(__file__).resolve().parents[1]
 ALPHA_THRESHOLD = 16
 TARGET_GAP = 0.008
-PIXEL_SIZE = 0.0041
+PIXEL_SIZE = 0.0027333333
 CAPSULE_HEIGHT = 1.9
+FRAME_WIDTH = 512
+FRAME_HEIGHT = 768
+FRAME_HALF_HEIGHT = FRAME_HEIGHT * 0.5
 
 
 def read(relative: str) -> str:
@@ -107,8 +110,8 @@ phase_runtime = read("scripts/actors/rift_reaver_phase_runtime.gd")
 metadata = read("assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png.import")
 sheet_path = ROOT / "assets/enemies/rift_reaver/rift_reaver_character_spritesheet.png"
 
-assert manifest["sheet_size"] == {"width": 1364, "height": 3072}
-assert manifest["frame_size"] == {"width": 341, "height": 512}
+assert manifest["sheet_size"] == {"width": 2048, "height": 4608}
+assert manifest["frame_size"] == {"width": 512, "height": 768}
 assert manifest["grid"] == {"columns": 4, "rows": 6}
 animations = [row["animation"] for row in manifest["rows"]]
 assert animations == ["idle", "walk", "attack", "death", "idle_back", "walk_back"]
@@ -277,10 +280,10 @@ for token in [
 ]:
     assert token in scene, token
 
-regions = re.findall(r'region = Rect2\((\d+), (\d+), 341, 512\)', scene)
+regions = re.findall(r'region = Rect2\((\d+), (\d+), 512, 768\)', scene)
 assert len(regions) == 24, len(regions)
 assert set(regions) == {
-    (str(column * 341), str(row * 512))
+    (str(column * FRAME_WIDTH), str(row * FRAME_HEIGHT))
     for row in range(6)
     for column in range(4)
 }
@@ -288,12 +291,14 @@ assert set(re.findall(r'"name": &"([^"]+)"', scene)) == set(animations)
 
 assert "radius = 0.46" in scene
 assert "height = 1.9" in scene
+assert "pixel_size = 0.0027333333" in scene
+assert 'uid="uid://cysxas76a1jh3"' in metadata
 assert "compress/mode=2" in metadata
 assert "mipmaps/generate=true" in metadata
 assert "detect_3d/compress_to=0" in metadata
 
 width, height, alpha_rows = decode_alpha(sheet_path)
-assert (width, height) == (1364, 3072)
+assert (width, height) == (2048, 4608)
 property_names = {
     "idle": "idle_frame_y_offsets",
     "walk": "walk_frame_y_offsets",
@@ -307,17 +312,33 @@ for row_index, animation in enumerate(animations):
     assert len(offsets) == 4
     adjusted: list[float] = []
     for column, offset in enumerate(offsets):
-        bottom = bottom_pixel(alpha_rows, column * 341, row_index * 512, 341, 512)
-        raw_gap = (256 - (bottom + 1)) * PIXEL_SIZE + CAPSULE_HEIGHT * 0.5
+        bottom = bottom_pixel(
+            alpha_rows,
+            column * FRAME_WIDTH,
+            row_index * FRAME_HEIGHT,
+            FRAME_WIDTH,
+            FRAME_HEIGHT,
+        )
+        raw_gap = (FRAME_HALF_HEIGHT - (bottom + 1)) * PIXEL_SIZE + CAPSULE_HEIGHT * 0.5
         adjusted.append(raw_gap + offset)
     tolerance = max(0.0006, PIXEL_SIZE * 0.55)
     print(f"RIFT CONTACT {animation:10s} " + ",".join(f"{gap:+.4f}" for gap in adjusted))
     assert all(abs(gap - TARGET_GAP) <= tolerance for gap in adjusted), (animation, adjusted)
 
 # Final death frame must retain the same 8 mm clearance after corpse tween.
-final_death_bottom = bottom_pixel(alpha_rows, 3 * 341, 3 * 512, 341, 512)
+final_death_bottom = bottom_pixel(
+    alpha_rows,
+    3 * FRAME_WIDTH,
+    3 * FRAME_HEIGHT,
+    FRAME_WIDTH,
+    FRAME_HEIGHT,
+)
 corpse_base = 0.0466 + 0.02  # inherited corpse_floor_clearance default
-final_corpse_gap = corpse_base + (256 - (final_death_bottom + 1)) * PIXEL_SIZE + CAPSULE_HEIGHT * 0.5
+final_corpse_gap = (
+    corpse_base
+    + (FRAME_HALF_HEIGHT - (final_death_bottom + 1)) * PIXEL_SIZE
+    + CAPSULE_HEIGHT * 0.5
+)
 assert abs(final_corpse_gap - TARGET_GAP) <= max(0.0006, PIXEL_SIZE * 0.55), final_corpse_gap
 
 print("rift reaver audit passed")
