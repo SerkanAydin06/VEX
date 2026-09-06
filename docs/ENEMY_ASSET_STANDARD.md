@@ -47,9 +47,9 @@ Bir yaratıkta `attack_close`, özel yetenek veya başka ek animasyon satırı v
 
 Master effect kaynakları 1254 x 1254 olabilir. Oyunda kullanılacak canonical runtime kare:
 
-**512 x 512 px**
+**256 x 256 px**
 
-Bu ölçü tüm kare effect türleri için ortaktır:
+Bu ölçü normal enemy effect türleri için ortaktır:
 
 - projectile
 - projectile trail frame
@@ -62,18 +62,19 @@ Bu ölçü tüm kare effect türleri için ortaktır:
 Kurallar:
 
 - PNG ve şeffaf arka plan kullanılır.
-- Runtime frame her zaman **512 x 512** canvas'tır.
+- Normal runtime effect frame **256 x 256** canvas'tır.
 - Effect görseli alfa sınırına göre canvas'tan kırpılıp farklı ölçüye dönüştürülmez.
 - Animasyonun frame sayısı serbesttir; sheet grid'i frame sayısına göre belirlenir.
+- Yalnız çok büyük boss veya ekranın önemli bölümünü kaplayan özel VFX gerçekten ihtiyaç duyuyorsa **512 x 512** istisnası kullanılabilir. Normal projectile / impact / decal için 512 kullanılmaz.
 
-Örnek sheet ölçüleri:
+Örnek 256 px sheet ölçüleri:
 
 | Grid | Sheet ölçüsü |
 | --- | ---: |
-| 4 x 1 | 2048 x 512 |
-| 2 x 2 | 1024 x 1024 |
-| 4 x 2 | 2048 x 1024 |
-| 4 x 4 | 2048 x 2048 |
+| 4 x 1 | 1024 x 256 |
+| 2 x 2 | 512 x 512 |
+| 4 x 2 | 1024 x 512 |
+| 4 x 4 | 1024 x 1024 |
 
 ## 4. Dosya ve import standardı
 
@@ -89,10 +90,11 @@ Yeni görsel hazırlanırken mümkünse doğrudan canonical runtime frame boyutu
 
 - Dikey karakter: **512 x 768**
 - Yatay karakter: **768 x 512**
-- Projectile / impact / decal / effect: **512 x 512**
+- Normal projectile / impact / decal / enemy effect: **256 x 256**
+- Büyük boss / ekran-kaplayan özel VFX istisnası: **512 x 512**
 
-Böylece ayrı bir runtime küçültme pipeline'ına ihtiyaç duyulmaz. Yüksek çözünürlüklü master üretmek istenirse master ayrıca saklanabilir; oyuna giren kopya yine bu canonical runtime ölçülerine dönüştürülür.
+Böylece ayrı bir runtime küçültme pipeline'ına ihtiyaç duyulmaz. Yüksek çözünürlüklü master üretmek istenirse master ayrıca saklanabilir; oyuna giren kopya yine canonical runtime ölçüsüne dönüştürülür.
 
 ## 6. Geçiş kuralı
 
-Bu belge yeni canonical hedeftir. Eski enemy asset'leri topluca körlemesine resize edilmez. Her yaratık kendi sheet'i güncellendiğinde yeni frame standardına geçirilir ve scene atlas / pixel size / ground-contact kalibrasyonu birlikte güncellenir.
+Bu belge yeni canonical hedeftir. Eski enemy asset'leri topluca körlemesine resize edilmez. Her yaratık kendi sheet'i güncellendiğinde yeni frame standardına geçirilir ve scene atlas / pixel size / ground-contact veya hover kalibrasyonu birlikte güncellenir.

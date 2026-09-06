@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "status": "canonical",
   "character": {
     "master_examples": {
@@ -52,8 +52,13 @@
       "height": 1254
     },
     "runtime_frame_size": {
+      "width": 256,
+      "height": 256
+    },
+    "large_screen_effect_exception": {
       "width": 512,
-      "height": 512
+      "height": 512,
+      "rule": "Use only for unusually large boss or screen-filling VFX whose visible size justifies the extra texture cost."
     },
     "types": [
       "projectile",
@@ -68,20 +73,20 @@
     ],
     "example_sheet_sizes": {
       "4x1": {
-        "width": 2048,
-        "height": 512
+        "width": 1024,
+        "height": 256
       },
       "2x2": {
-        "width": 1024,
-        "height": 1024
+        "width": 512,
+        "height": 512
       },
       "4x2": {
-        "width": 2048,
-        "height": 1024
+        "width": 1024,
+        "height": 512
       },
       "4x4": {
-        "width": 2048,
-        "height": 2048
+        "width": 1024,
+        "height": 1024
       }
     }
   },
