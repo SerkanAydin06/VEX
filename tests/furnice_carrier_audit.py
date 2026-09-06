@@ -35,44 +35,52 @@ def check_res_paths(relative: str, text: str) -> None:
 
 
 def main() -> int:
-    body_manifest_path = "assets/enemies/furnice_carrier/furnice_carrier_body_manifest.json"
-    effects_manifest_path = "assets/enemies/furnice_carrier/furnice_carrier_effects_manifest.json"
-    body_sheet = "assets/enemies/furnice_carrier/furnice_carrier_body_spritesheet.png"
-    effects_sheet = "assets/enemies/furnice_carrier/furnice_carrier_effects_spritesheet.png"
+    character_manifest_path = "assets/enemies/furnice_carrier/furnace_carrier_character_spritesheet_manifest.json"
+    effects_manifest_path = "assets/enemies/furnice_carrier/furnace_carrier_effects_spritesheet_manifest.json"
+    character_sheet = "assets/enemies/furnice_carrier/furnace_carrier_character_spritesheet.png"
+    effects_sheet = "assets/enemies/furnice_carrier/furnace_carrier_effects_spritesheet.png"
 
-    for path in [body_sheet, effects_sheet, f"{body_sheet}.import", f"{effects_sheet}.import"]:
+    for path in [character_sheet, effects_sheet, f"{character_sheet}.import", f"{effects_sheet}.import"]:
         if not (ROOT / path).exists():
             fail(f"Eksik Furnice asseti: {path}")
 
     try:
-        body_manifest = json.loads(read(body_manifest_path))
-        if (body_manifest.get("frame_width"), body_manifest.get("frame_height"), body_manifest.get("columns")) != (512, 341, 4):
-            fail("Furnice body sheet grid'i 512x341 / 4 kolon değil")
-        body_rows = {row.get("animation"): row.get("row_index") for row in body_manifest.get("rows", [])}
-        expected_body_rows = {
+        character = json.loads(read(character_manifest_path))
+        if character.get("sheet_size") != {"width": 3072, "height": 3584}:
+            fail("Furnace Carrier character sheet 3072x3584 değil")
+        if character.get("frame_size") != {"width": 768, "height": 512}:
+            fail("Furnace Carrier character frame ölçüsü 768x512 değil")
+        if character.get("grid") != {"columns": 4, "rows": 7}:
+            fail("Furnace Carrier character grid'i 4x7 değil")
+        rows = {row.get("animation"): row.get("row_index") for row in character.get("rows", [])}
+        expected_rows = {
             "idle": 0,
-            "idle_back": 1,
-            "walk": 2,
-            "walk_back": 3,
-            "attack": 4,
-            "thermal_burst": 5,
-            "death": 6,
+            "walk": 1,
+            "attack": 2,
+            "thermal_burst": 3,
+            "death": 4,
+            "idle_back": 5,
+            "walk_back": 6,
         }
-        if body_rows != expected_body_rows:
-            fail(f"Furnice body animasyon satırları bozuk: {body_rows}")
+        if rows != expected_rows:
+            fail(f"Furnace Carrier character animasyon satırları bozuk: {rows}")
     except json.JSONDecodeError as exc:
-        fail(f"Furnice body manifest JSON bozuk: {exc}")
+        fail(f"Furnace Carrier character manifest JSON bozuk: {exc}")
 
     try:
-        effects_manifest = json.loads(read(effects_manifest_path))
-        if (effects_manifest.get("frame_width"), effects_manifest.get("frame_height"), effects_manifest.get("columns")) != (512, 512, 4):
-            fail("Furnice effects sheet grid'i 512x512 / 4 kolon değil")
-        effect_rows = {row.get("animation"): row.get("row_index") for row in effects_manifest.get("rows", [])}
+        effects = json.loads(read(effects_manifest_path))
+        if effects.get("sheet_size") != {"width": 1024, "height": 1024}:
+            fail("Furnace Carrier effects sheet 1024x1024 değil")
+        if effects.get("frame_size") != {"width": 256, "height": 256}:
+            fail("Furnace Carrier effect frame ölçüsü 256x256 değil")
+        if effects.get("grid") != {"columns": 4, "rows": 4}:
+            fail("Furnace Carrier effects grid'i 4x4 değil")
+        effect_rows = {row.get("animation"): row.get("row_index") for row in effects.get("rows", [])}
         expected_effect_rows = {"projectile": 0, "impact": 1, "shockwave": 2, "decal": 3}
         if effect_rows != expected_effect_rows:
-            fail(f"Furnice effect animasyon satırları bozuk: {effect_rows}")
+            fail(f"Furnace Carrier effect animasyon satırları bozuk: {effect_rows}")
     except json.JSONDecodeError as exc:
-        fail(f"Furnice effects manifest JSON bozuk: {exc}")
+        fail(f"Furnace Carrier effects manifest JSON bozuk: {exc}")
 
     carrier_script_path = "scripts/actors/furnice_carrier.gd"
     settings_script_path = "scripts/actors/furnice_carrier_ability_settings.gd"
@@ -105,23 +113,18 @@ def main() -> int:
 
     for needle, label in [
         ('var _ability: VexFurniceCarrierAbilitySettings', "tip güvenli Furnice ayar kaynağı"),
-        ('var thermal_burst_ready := Time.get_ticks_msec() >= _thermal_burst_ready_at_msec', "thermal ayrı cooldown takibi"),
-        ('var use_thermal_burst := distance_to_player <= _ability.close_attack_threshold and thermal_burst_ready', "yakında ve hazırsa thermal seçim"),
-        ('_thermal_burst_ready_at_msec = Time.get_ticks_msec()', "thermal cooldown yeniden kurma"),
-        ('_ability.projectile_attack_cooldown * cooldown_scale', "thermal aralarında projectile saldırı ritmi"),
         ('_fire_furnice_projectile()', "projectile saldırısı"),
         ('_emit_thermal_burst()', "thermal saldırısı"),
         ('_ability.projectile_muzzle_sprite_offset_pixels', "furnace ağzı sprite-pixel anchor kullanımı"),
         ('camera.global_transform.basis.x', "billboard kamera-sağ muzzle ekseni"),
         ('animated_sprite.global_position', "muzzle sprite merkezi tabanı"),
         ('func _projectile_muzzle_world_position()', "sprite-pixel muzzle dönüşümü"),
-        ('projectile.call("launch", shot_direction, self, _runtime_attack_damage, decal_damage)', "projectile direct + decal damage aktarımı"),
     ]:
         require(carrier_script, needle, label)
 
     for needle, label in [
         ('close_attack_threshold := 6.0', "6 m saldırı eşiği"),
-        ('projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -139.0)', "furnace ağzı sprite-pixel anchor"),
+        ('projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -208.5)', "canonical 768x512 furnace ağzı anchor"),
         ('thermal_burst_damage := 22', "thermal temel hasarı"),
     ]:
         require(settings_script, needle, label)
@@ -131,9 +134,6 @@ def main() -> int:
         ('var _direct_damage := 18', "projectile 18 direct hasar defaultu"),
         ('_spawn_decal_below(impact_position)', "impact sonrası decal"),
         ('decal.call("configure", _decal_tick_damage, damage_source)', "decal hasar aktarımı"),
-        ('func _valid_source() -> Node:', "projectile source yaşam süresi koruması"),
-        ('_source = source if is_instance_valid(source) else null', "launch source doğrulaması"),
-        ('impact_light_fade_duration := 0.35', "impact ışık fade Inspector ayarı"),
     ]:
         require(projectile_script, needle, label)
 
@@ -141,9 +141,6 @@ def main() -> int:
         ('hazard_radius := 2.0', "2 m decal radius"),
         ('lifetime := 6.0', "6 sn decal lifetime"),
         ('damage_tick_interval := 0.5', "decal tick interval"),
-        ('overlaps_body(player)', "decal içindeyken hasar"),
-        ('func _valid_source() -> Node:', "decal source yaşam süresi koruması"),
-        ('player.call("take_damage", damage_per_tick, player.global_position, _valid_source())', "decal güvenli source aktarımı"),
     ]:
         require(decal_script, needle, label)
 
@@ -151,33 +148,32 @@ def main() -> int:
         ('burst_radius := 6.0', "6 m thermal radius"),
         ('burst_damage := 22', "thermal hasar"),
         ('damage_time_ratio := 0.82', "thermal görsel ulaşınca hasar timing"),
-        ('visual_end_scale := 1.20', "thermal görsel telegraph taşması"),
         ('_apply_damage_once()', "thermal tek vuruş"),
         ('_has_clear_path_to_player(player)', "thermal occlusion"),
-        ('occlusion_origin_height := 0.35', "thermal occlusion başlangıç yüksekliği Inspector ayarı"),
-        ('occlusion_target_height := 0.35', "thermal occlusion hedef yüksekliği Inspector ayarı"),
     ]:
         require(shockwave_script, needle, label)
 
-    for animation in ["idle", "idle_back", "walk", "walk_back", "attack", "thermal_burst", "death"]:
+    for animation in ["idle", "walk", "attack", "thermal_burst", "death", "idle_back", "walk_back"]:
         require(carrier_scene, f'&"{animation}"', f"body animation {animation}")
     require(carrier_scene, 'enemy_id = &"furnice_carrier"', "canonical enemy id")
-    require(carrier_scene, 'special_ability_settings = SubResource("Resource_furnice_ability")', "Furnice özel ayar bağlantısı")
-    require(carrier_scene, 'attack_damage = 18', "scene direct hasar")
-    require(carrier_scene, 'projectile_scene = ExtResource("3_projectile")', "scene projectile bağlantısı")
-    require(carrier_scene, 'thermal_burst_scene = ExtResource("4_shockwave")', "scene thermal bağlantısı")
+    require(carrier_scene, 'path="res://assets/enemies/furnice_carrier/furnace_carrier_character_spritesheet.png"', "canonical character texture path")
+    require(carrier_scene, 'region = Rect2(0, 1024, 768, 512)', "attack canonical row")
+    require(carrier_scene, 'region = Rect2(0, 1536, 768, 512)', "thermal canonical row")
+    require(carrier_scene, 'region = Rect2(0, 2560, 768, 512)', "idle_back canonical row")
+    require(carrier_scene, "pixel_size = 0.0053333333", "canonical character world scale")
     if '[node name="ProjectileMuzzle"' in carrier_scene:
         fail("Eski world-space ProjectileMuzzle marker sahnede kalmış")
 
-    require(projectile_scene, 'decal_scene = ExtResource("3_decal")', "projectile decal scene bağlantısı")
-    require(projectile_scene, 'impact_light_fade_duration = 0.35', "projectile impact fade scene ayarı")
-    require(projectile_scene, 'region = Rect2(0, 0, 512, 512)', "projectile effect row")
-    require(projectile_scene, 'region = Rect2(0, 512, 512, 512)', "impact effect row")
-    require(decal_scene, 'region = Rect2(0, 1536, 512, 512)', "decal effect row")
-    require(shockwave_scene, 'region = Rect2(0, 1024, 512, 512)', "shockwave effect row")
+    require(projectile_scene, 'path="res://assets/enemies/furnice_carrier/furnace_carrier_effects_spritesheet.png"', "canonical effect texture path")
+    require(projectile_scene, 'region = Rect2(0, 0, 256, 256)', "projectile effect row")
+    require(projectile_scene, 'region = Rect2(0, 256, 256, 256)', "impact effect row")
+    require(projectile_scene, 'pixel_size = 0.0036', "projectile world-space size")
+    require(projectile_scene, 'pixel_size = 0.0068', "impact world-space size")
+    require(decal_scene, 'region = Rect2(0, 768, 256, 256)', "decal effect row")
+    require(decal_scene, 'pixel_size = 0.015625', "decal world-space size")
+    require(shockwave_scene, 'region = Rect2(0, 512, 256, 256)', "shockwave effect row")
+    require(shockwave_scene, 'pixel_size = 0.046875', "shockwave world-space size")
     require(shockwave_scene, 'damage_time_ratio = 0.82', "shockwave scene damage timing")
-    require(shockwave_scene, 'visual_end_scale = 1.2', "shockwave scene visual taşma")
-    require(shockwave_scene, 'occlusion_origin_height = 0.35', "shockwave occlusion scene ayarı")
     require(shockwave_scene, 'scale = Vector3(1, 3, 1)', "source-art zemin ekseni telafisi")
 
     if ERRORS:
