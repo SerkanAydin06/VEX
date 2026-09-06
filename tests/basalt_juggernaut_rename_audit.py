@@ -10,12 +10,12 @@ required_files = [
     "scripts/actors/basalt_juggernaut.gd.uid",
     "scenes/actors/basalt_juggernaut.tscn",
     "scenes/actors/basalt_juggernaut_projectile.tscn",
-    "assets/enemies/basalt_juggernaut/basalt_juggernaut_spritesheet.png",
-    "assets/enemies/basalt_juggernaut/basalt_juggernaut_spritesheet.png.import",
-    "assets/enemies/basalt_juggernaut/basalt_juggernaut_projectile_sheet.png",
-    "assets/enemies/basalt_juggernaut/basalt_juggernaut_projectile_sheet.png.import",
-    "assets/enemies/basalt_juggernaut/basalt_juggernaut_impact_sheet.png",
-    "assets/enemies/basalt_juggernaut/basalt_juggernaut_impact_sheet.png.import",
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_character_spritesheet.png",
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_character_spritesheet.png.import",
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_character_spritesheet_manifest.json",
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_effects_spritesheet.png",
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_effects_spritesheet.png.import",
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_effects_spritesheet_manifest.json",
     "assets/audio/basalt_juggernaut_attack.wav",
     "assets/audio/basalt_juggernaut_attack.wav.import",
     "assets/audio/basalt_juggernaut_hurt.wav",
@@ -26,6 +26,14 @@ required_files = [
 for relative in required_files:
     assert (ROOT / relative).is_file(), relative
 
+obsolete_files = [
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_spritesheet.png",
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_projectile_sheet.png",
+    "assets/enemies/basalt_juggernaut/basalt_juggernaut_impact_sheet.png",
+]
+for relative in obsolete_files:
+    assert not (ROOT / relative).exists(), relative
+
 text_suffixes = {".gd", ".godot", ".import", ".md", ".py", ".tres", ".tscn", ".txt", ".uid", ".csv"}
 for path in ROOT.rglob("*"):
     if not path.is_file() or path == Path(__file__) or path.suffix not in text_suffixes:
@@ -34,12 +42,15 @@ for path in ROOT.rglob("*"):
     assert OLD_PATTERN.search(source) is None, path.relative_to(ROOT)
 
 scene = (ROOT / "scenes/actors/basalt_juggernaut.tscn").read_text(encoding="utf-8")
+projectile = (ROOT / "scenes/actors/basalt_juggernaut_projectile.tscn").read_text(encoding="utf-8")
 script = (ROOT / "scripts/actors/basalt_juggernaut.gd").read_text(encoding="utf-8")
 level_02 = (ROOT / "scenes/levels/level_02.tscn").read_text(encoding="utf-8")
 assert "class_name VexBasaltJuggernaut" in script
 assert '[node name="BasaltJuggernaut" type="CharacterBody3D"' in scene
 assert 'enemy_id = &"basalt_juggernaut"' in scene
 assert 'path="res://scenes/actors/basalt_juggernaut_projectile.tscn"' in scene
+assert 'path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_character_spritesheet.png"' in scene
+assert 'path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_effects_spritesheet.png"' in projectile
 assert '[node name="BasaltJuggernaut_19"' in level_02
 assert 'enemy_id = &"v2_basalt_juggernaut_19"' in level_02
 
