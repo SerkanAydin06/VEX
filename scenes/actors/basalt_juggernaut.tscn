@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d3hv0gr27g6kr"]
 
 [ext_resource type="Script" uid="uid://ceaxa6s7v5v5y" path="res://scripts/actors/basalt_juggernaut.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_character_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://cjkcxynu3uhrh" path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="AudioStream" uid="uid://d3d23chsf3l" path="res://assets/audio/basalt_juggernaut_attack.wav" id="6_hhf7w"]
 [ext_resource type="AudioStream" uid="uid://cxjxoucjvy13u" path="res://assets/audio/basalt_juggernaut_hurt.wav" id="7_hhf7w"]
 [ext_resource type="AudioStream" uid="uid://l03ab26phvuw" path="res://assets/audio/basalt_juggernaut_death.wav" id="8_hhf7w"]
@@ -15,122 +15,122 @@ height = 3.6
 
 [sub_resource type="AtlasTexture" id="Atlas_attack1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 3072, 1024, 1536)
+region = Rect2(0, 1536, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 3072, 1024, 1536)
+region = Rect2(512, 1536, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(2048, 3072, 1024, 1536)
+region = Rect2(1024, 1536, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(3072, 3072, 1024, 1536)
+region = Rect2(1536, 1536, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 4608, 1024, 1536)
+region = Rect2(0, 2304, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 4608, 1024, 1536)
+region = Rect2(512, 2304, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(2048, 4608, 1024, 1536)
+region = Rect2(1024, 2304, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(3072, 4608, 1024, 1536)
+region = Rect2(1536, 2304, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 0, 1024, 1536)
+region = Rect2(0, 0, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 0, 1024, 1536)
+region = Rect2(512, 0, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(2048, 0, 1024, 1536)
+region = Rect2(1024, 0, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(3072, 0, 1024, 1536)
+region = Rect2(1536, 0, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 6144, 1024, 1536)
+region = Rect2(0, 3072, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 6144, 1024, 1536)
+region = Rect2(512, 3072, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(2048, 6144, 1024, 1536)
+region = Rect2(1024, 3072, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(3072, 6144, 1024, 1536)
+region = Rect2(1536, 3072, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1536, 1024, 1536)
+region = Rect2(0, 768, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 1536, 1024, 1536)
+region = Rect2(512, 768, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(2048, 1536, 1024, 1536)
+region = Rect2(1024, 768, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(3072, 1536, 1024, 1536)
+region = Rect2(1536, 768, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 7680, 1024, 1536)
+region = Rect2(0, 3840, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 7680, 1024, 1536)
+region = Rect2(512, 3840, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(2048, 7680, 1024, 1536)
+region = Rect2(1024, 3840, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(3072, 7680, 1024, 1536)
+region = Rect2(1536, 3840, 512, 768)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_basalt_juggernaut"]
@@ -305,12 +305,12 @@ corpse_visual_y = 0.19680105
 back_corpse_visual_y = 0.19680105
 death_fall_time = 0.35
 corpse_hold_duration = 2.8
-idle_frame_y_offsets = PackedFloat32Array(0.078, 0.078, 0.078, 0.0731)
-idle_back_frame_y_offsets = PackedFloat32Array(0.0756, 0.078, 0.0756, 0.0756)
-walk_frame_y_offsets = PackedFloat32Array(0.1074, 0.0731, 0.1172, 0.0903)
-walk_back_frame_y_offsets = PackedFloat32Array(0.1172, 0.0805, 0.1172, 0.0805)
-attack_frame_y_offsets = PackedFloat32Array(0.0756, 0.0805, 0.0756, 0.078)
-death_frame_y_offsets = PackedFloat32Array(0.0535, 0.0216, 0.0952, 0.0633)
+idle_frame_y_offsets = PackedFloat32Array(0.0731, 0.0731, 0.0731, 0.0682)
+idle_back_frame_y_offsets = PackedFloat32Array(0.0731, 0.0731, 0.0731, 0.0731)
+walk_frame_y_offsets = PackedFloat32Array(0.1025, 0.0682, 0.1124, 0.0878)
+walk_back_frame_y_offsets = PackedFloat32Array(0.1124, 0.078, 0.1124, 0.078)
+attack_frame_y_offsets = PackedFloat32Array(0.0731, 0.078, 0.0731, 0.0731)
+death_frame_y_offsets = PackedFloat32Array(0.0486, 0.0192, 0.0927, 0.0584)
 burn_remains_scene = ExtResource("31_burn")
 burn_remains_scale = 1.35
 burn_remains_scale_multiplier = 1.18
@@ -326,7 +326,7 @@ shape = SubResource("CapsuleShape_basalt_juggernaut")
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1419864760]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 cast_shadow = 0
-pixel_size = 0.0024515667
+pixel_size = 0.0049031334
 billboard = 2
 shaded = true
 alpha_cut = 1
