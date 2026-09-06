@@ -25,122 +25,122 @@ size = Vector3(1, 2.05, 1)
 
 [sub_resource type="AtlasTexture" id="Atlas_attack1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1024, 341, 512)
+region = Rect2(0, 1536, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 1024, 341, 512)
+region = Rect2(512, 1536, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 1024, 341, 512)
+region = Rect2(1024, 1536, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 1024, 341, 512)
+region = Rect2(1536, 1536, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1536, 341, 512)
+region = Rect2(0, 2304, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 1536, 341, 512)
+region = Rect2(512, 2304, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 1536, 341, 512)
+region = Rect2(1024, 2304, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 1536, 341, 512)
+region = Rect2(1536, 2304, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 0, 341, 512)
+region = Rect2(0, 0, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 0, 341, 512)
+region = Rect2(512, 0, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 0, 341, 512)
+region = Rect2(1024, 0, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 0, 341, 512)
+region = Rect2(1536, 0, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 2048, 341, 512)
+region = Rect2(0, 3072, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 2048, 341, 512)
+region = Rect2(512, 3072, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 2048, 341, 512)
+region = Rect2(1024, 3072, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 2048, 341, 512)
+region = Rect2(1536, 3072, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 512, 341, 512)
+region = Rect2(0, 768, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 512, 341, 512)
+region = Rect2(512, 768, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 512, 341, 512)
+region = Rect2(1024, 768, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 512, 341, 512)
+region = Rect2(1536, 768, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 2560, 341, 512)
+region = Rect2(0, 3840, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(341, 2560, 341, 512)
+region = Rect2(512, 3840, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(682, 2560, 341, 512)
+region = Rect2(1024, 3840, 512, 768)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1023, 2560, 341, 512)
+region = Rect2(1536, 3840, 512, 768)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
@@ -259,7 +259,7 @@ shape = SubResource("BoxShape_weapon_hurtbox")
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1470725653]
 position = Vector3(0, 0.45, 0)
 cast_shadow = 0
-pixel_size = 0.0041
+pixel_size = 0.0027333333
 billboard = 2
 shaded = true
 alpha_cut = 1

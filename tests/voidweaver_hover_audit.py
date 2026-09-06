@@ -16,7 +16,7 @@ GROUND_CONTACT_AUDIT = ROOT / "tests" / "enemy_sprite_contact_audit.py"
 ALPHA_THRESHOLD = 16
 TARGET_HOVER_GAP = 0.475
 SPRITE_BASE_Y = 0.45
-PIXEL_SIZE = 0.0041
+PIXEL_SIZE = 0.0027333333
 CAPSULE_HEIGHT = 1.9
 TOLERANCE = max(0.0006, PIXEL_SIZE * 0.55)
 
@@ -228,9 +228,10 @@ def main() -> None:
     assert sheet is not None
     sheet_path = ROOT / sheet.group(1).removeprefix("res://")
     width, height, alpha_rows = decode_png_alpha(sheet_path)
-    assert (width, height) == (1364, 3072)
+    assert (width, height) == (2048, 4608)
     regions = atlas_regions(actor, sheet.group(2))
     assert len(regions) == 24
+    assert {region[2:] for region in regions.values()} == {(512, 768)}
 
     measurements: dict[str, float] = {}
     for atlas_id, region in regions.items():
