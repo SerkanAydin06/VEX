@@ -58,9 +58,9 @@ func _chase_position(delta: float, target_position: Vector3, use_chase_speed: bo
 				navigation_clearance,
 				floor_snap_ray_start_height,
 				floor_snap_ray_extra_depth,
-				runtime_grid_step,
-				runtime_grid_max_nodes,
-				runtime_grid_search_margin
+				EnemyPerformanceRuntime.effective_runtime_grid_step(runtime_grid_step),
+				EnemyPerformanceRuntime.effective_runtime_grid_max_nodes(runtime_grid_max_nodes),
+				EnemyPerformanceRuntime.effective_runtime_grid_search_margin(runtime_grid_search_margin)
 			)
 			_navigation_path_index = 1 if _navigation_path.size() > 1 else 0
 			_navigation_target = resolved_target
