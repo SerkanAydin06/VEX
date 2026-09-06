@@ -1,14 +1,14 @@
 {
-  "source_zip": "512_512(5).zip",
-  "source_folder": "512_512",
+  "source_zip": "efektler(10).zip",
+  "source_folder": "efektler",
   "sheet_file": "spore_matriarch_effects_spritesheet.png",
   "sheet_size": {
-    "width": 2048,
-    "height": 512
+    "width": 1024,
+    "height": 256
   },
   "frame_size": {
-    "width": 512,
-    "height": 512
+    "width": 256,
+    "height": 256
   },
   "grid": {
     "columns": 4,
@@ -17,7 +17,7 @@
   "notes": [
     "Spritesheet was generated without scaling.",
     "Transparent RGBA background preserved.",
-    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
+    "Frames are arranged left-to-right."
   ],
   "rows": [
     {

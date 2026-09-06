@@ -1,14 +1,14 @@
 {
-  "source_zip": "gorehorn.zip",
-  "source_folder": "371_512",
+  "source_zip": "karakter(20260906-105530).zip",
+  "source_folder": "karakter",
   "sheet_file": "gorehorn_character_spritesheet.png",
   "sheet_size": {
-    "width": 1364,
-    "height": 3072
+    "width": 2048,
+    "height": 4608
   },
   "frame_size": {
-    "width": 341,
-    "height": 512
+    "width": 512,
+    "height": 768
   },
   "grid": {
     "columns": 4,

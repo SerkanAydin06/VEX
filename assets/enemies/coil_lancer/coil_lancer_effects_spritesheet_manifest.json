@@ -1,14 +1,14 @@
 {
-  "source_zip": "512_512(1).zip",
-  "source_folder": "512_512",
+  "source_zip": "efektler(20260906-110649).zip",
+  "source_folder": "efektler",
   "sheet_file": "coil_lancer_effects_spritesheet.png",
   "sheet_size": {
-    "width": 2048,
-    "height": 1024
+    "width": 1024,
+    "height": 512
   },
   "frame_size": {
-    "width": 512,
-    "height": 512
+    "width": 256,
+    "height": 256
   },
   "grid": {
     "columns": 4,

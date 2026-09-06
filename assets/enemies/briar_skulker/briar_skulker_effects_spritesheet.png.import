@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cd067ng1bxgx7"
-path="res://.godot/imported/ravager_spritesheet.png-4676c8375723a1c99b87080e9a22d408.ctex"
+uid="uid://dt1wxkn5dhqlp"
+path="res://.godot/imported/briar_skulker_effects_spritesheet.png-13834903d55b88df76f313825df86d1b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/ravager/ravager_spritesheet.png"
-dest_files=["res://.godot/imported/ravager_spritesheet.png-4676c8375723a1c99b87080e9a22d408.ctex"]
+source_file="res://assets/enemies/briar_skulker/briar_skulker_effects_spritesheet.png"
+dest_files=["res://.godot/imported/briar_skulker_effects_spritesheet.png-13834903d55b88df76f313825df86d1b.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -37,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://k0e1eq0x583e"
-path.s3tc="res://.godot/imported/venom_marshall_effects_spritesheet.png-13613f75ee458ed5ed810f439ce6af46.s3tc.ctex"
+uid="uid://cmvs4ppjgk2og"
+path="res://.godot/imported/venom_marshall_effects_spritesheet.png-13613f75ee458ed5ed810f439ce6af46.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/enemies/venom_marshall/venom_marshall_effects_spritesheet.png"
-dest_files=["res://.godot/imported/venom_marshall_effects_spritesheet.png-13613f75ee458ed5ed810f439ce6af46.s3tc.ctex"]
+dest_files=["res://.godot/imported/venom_marshall_effects_spritesheet.png-13613f75ee458ed5ed810f439ce6af46.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -24,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

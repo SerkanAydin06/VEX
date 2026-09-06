@@ -1,14 +1,14 @@
 {
-  "source_zip": "512_512(3).zip",
-  "source_folder": "512_512",
+  "source_zip": "karakter(20260906-111033).zip",
+  "source_folder": "karakter",
   "sheet_file": "vaskari_bulwark_character_spritesheet.png",
   "sheet_size": {
-    "width": 2048,
-    "height": 3072
+    "width": 3072,
+    "height": 4608
   },
   "frame_size": {
-    "width": 512,
-    "height": 512
+    "width": 768,
+    "height": 768
   },
   "grid": {
     "columns": 4,

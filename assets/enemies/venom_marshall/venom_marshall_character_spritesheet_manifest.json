@@ -1,25 +1,19 @@
 {
-  "source_zip": "371_512(7).zip",
-  "source_folder": "371_512",
+  "source_zip": "karakter(20260906-111708).zip",
+  "source_folder": "karakter",
   "sheet_file": "venom_marshall_character_spritesheet.png",
   "sheet_size": {
-    "width": 1364,
-    "height": 3584
+    "width": 2048,
+    "height": 5376
   },
   "frame_size": {
-    "width": 341,
-    "height": 512
+    "width": 512,
+    "height": 768
   },
   "grid": {
     "columns": 4,
     "rows": 7
   },
-  "notes": [
-    "Spritesheet was generated without scaling.",
-    "Transparent RGBA background preserved.",
-    "Frames are arranged left-to-right; animations are arranged top-to-bottom.",
-    "The source file venom_marshall_walk_back_4png_result.png had a filename typo but was included as frame 4 of walk_back."
-  ],
   "rows": [
     {
       "row_index": 0,
@@ -105,5 +99,11 @@
         "venom_marshall_walk_back_4png_result.png"
       ]
     }
+  ],
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom.",
+    "Malformed source filename venom_marshall_walk_back_4png_result.png was interpreted as walk_back frame 4."
   ]
 }

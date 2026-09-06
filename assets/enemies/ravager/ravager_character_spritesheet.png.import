@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bvrt6s217bhab"
-path="res://.godot/imported/ravager_projectile_sheet.png-4a0d96871b91b666423459249021877c.ctex"
+uid="uid://dpfarkgkpul4n"
+path="res://.godot/imported/ravager_character_spritesheet.png-ba0e89af1f2121b0a06019af14eed8ee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemies/ravager/ravager_projectile_sheet.png"
-dest_files=["res://.godot/imported/ravager_projectile_sheet.png-4a0d96871b91b666423459249021877c.ctex"]
+source_file="res://assets/enemies/ravager/ravager_character_spritesheet.png"
+dest_files=["res://.godot/imported/ravager_character_spritesheet.png-ba0e89af1f2121b0a06019af14eed8ee.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

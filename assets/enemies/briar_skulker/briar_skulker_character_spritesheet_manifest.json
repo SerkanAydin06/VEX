@@ -1,19 +1,24 @@
 {
-  "source_zip": "371_512(3).zip",
-  "source_folder": "371_512",
+  "source_zip": "karakter(20260906-105122).zip",
+  "source_folder": "karakter",
   "sheet_file": "briar_skulker_character_spritesheet.png",
   "sheet_size": {
-    "width": 1364,
-    "height": 3584
+    "width": 2048,
+    "height": 5376
   },
   "frame_size": {
-    "width": 341,
-    "height": 512
+    "width": 512,
+    "height": 768
   },
   "grid": {
     "columns": 4,
     "rows": 7
   },
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
+  ],
   "rows": [
     {
       "row_index": 0,

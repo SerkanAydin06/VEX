@@ -1,0 +1,48 @@
+{
+  "source_zip": "efektler(8).zip",
+  "source_folder": "efektler",
+  "sheet_file": "briar_skulker_effects_spritesheet.png",
+  "sheet_size": {
+    "width": 1024,
+    "height": 512
+  },
+  "frame_size": {
+    "width": 256,
+    "height": 256
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 2
+  },
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "animation": "projectile",
+      "source_prefix": "briar_skulker_projectile",
+      "frame_count": 4,
+      "frames": [
+        "briar_skulker_projectile_1_result.png",
+        "briar_skulker_projectile_2_result.png",
+        "briar_skulker_projectile_3_result.png",
+        "briar_skulker_projectile_4_result.png"
+      ]
+    },
+    {
+      "row_index": 1,
+      "animation": "impact",
+      "source_prefix": "briar_skulker_impact",
+      "frame_count": 4,
+      "frames": [
+        "briar_skulker_impact_1_result.png",
+        "briar_skulker_impact_2_result.png",
+        "briar_skulker_impact_3_result.png",
+        "briar_skulker_impact_4_result.png"
+      ]
+    }
+  ]
+}
