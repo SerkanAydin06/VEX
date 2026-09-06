@@ -1,47 +1,47 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/actors/furnice_carrier_projectile.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnice_carrier_effects_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnace_carrier_effects_spritesheet.png" id="2_sheet"]
 [ext_resource type="PackedScene" path="res://scenes/effects/furnice_carrier_decal.tscn" id="3_decal"]
 
 [sub_resource type="AtlasTexture" id="Atlas_projectile1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 0, 512, 512)
+region = Rect2(0, 0, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_projectile2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 0, 512, 512)
+region = Rect2(256, 0, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_projectile3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 0, 512, 512)
+region = Rect2(512, 0, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_projectile4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 0, 512, 512)
+region = Rect2(768, 0, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_impact1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 512, 512, 512)
+region = Rect2(0, 256, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_impact2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 512, 512, 512)
+region = Rect2(256, 256, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_impact3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 512, 512, 512)
+region = Rect2(512, 256, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_impact4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 512, 512, 512)
+region = Rect2(768, 256, 256, 256)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="Frames_projectile"]
@@ -70,7 +70,7 @@ shape = SubResource("Sphere_projectile")
 
 [node name="ProjectileVisual" type="AnimatedSprite3D" parent="."]
 cast_shadow = 0
-pixel_size = 0.0018
+pixel_size = 0.0036
 billboard = 2
 shaded = false
 sprite_frames = SubResource("Frames_projectile")
@@ -80,7 +80,7 @@ autoplay = "default"
 [node name="ImpactVisual" type="AnimatedSprite3D" parent="."]
 visible = false
 cast_shadow = 0
-pixel_size = 0.0034
+pixel_size = 0.0068
 billboard = 2
 shaded = false
 sprite_frames = SubResource("Frames_impact")

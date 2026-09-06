@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/effects/crucible_warden_ground_slam.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://caon4k5re8ebi" path="res://assets/enemies/crucible_warden/crucible_warden_effects_spritesheet.png" id="2_sheet"]
 
 [sub_resource type="StandardMaterial3D" id="Material_slam"]
 transparency = 1
@@ -17,13 +18,48 @@ bottom_radius = 1.0
 height = 0.025
 radial_segments = 64
 
+[sub_resource type="AtlasTexture" id="Atlas_decal_1"]
+atlas = ExtResource("2_sheet")
+region = Rect2(0, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_decal_2"]
+atlas = ExtResource("2_sheet")
+region = Rect2(256, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_decal_3"]
+atlas = ExtResource("2_sheet")
+region = Rect2(512, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_decal_4"]
+atlas = ExtResource("2_sheet")
+region = Rect2(768, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="Frames_decal"]
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Atlas_decal_1")}, {"duration": 1.0, "texture": SubResource("Atlas_decal_2")}, {"duration": 1.0, "texture": SubResource("Atlas_decal_3")}, {"duration": 1.0, "texture": SubResource("Atlas_decal_4")}], "loop": false, "name": &"default", "speed": 9.0}]
+
 [node name="CrucibleWardenGroundSlam" type="Node3D"]
 script = ExtResource("1_script")
 impact_light_range_multiplier = 1.15
 impact_light_minimum_range = 1.0
+visual_reference_radius = 4.6
 occlusion_origin_height = 0.25
 occlusion_target_height = 0.35
 shake_minimum_proximity_scale = 0.3
+
+[node name="DecalVisual" type="AnimatedSprite3D" parent="."]
+rotation = Vector3(-1.5708, 0, 0)
+position = Vector3(0, 0.03, 0)
+cast_shadow = 0
+pixel_size = 0.0359375
+shaded = false
+render_priority = 2
+sprite_frames = SubResource("Frames_decal")
+animation = &"default"
+autoplay = "default"
 
 [node name="Ring" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0.025, 0)

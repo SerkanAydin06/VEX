@@ -14,6 +14,7 @@ extends Node3D
 @export_category("03 - Visual")
 @export_range(0.05, 1.5, 0.05) var visual_duration := 0.48
 @export_range(0.01, 1.0, 0.01) var visual_start_scale := 0.12
+@export_range(0.5, 12.0, 0.1) var visual_reference_radius := 4.6
 @export_range(0.5, 2.0, 0.05) var impact_light_range_multiplier := 1.15
 @export_range(0.1, 4.0, 0.1) var impact_light_minimum_range := 1.0
 
@@ -22,6 +23,7 @@ extends Node3D
 @export_range(0.0, 2.0, 0.05) var occlusion_target_height := 0.35
 @export_range(0.0, 1.0, 0.05) var shake_minimum_proximity_scale := 0.30
 
+@onready var decal_visual: AnimatedSprite3D = $DecalVisual
 @onready var ring: MeshInstance3D = $Ring
 @onready var impact_light: OmniLight3D = $ImpactLight
 
@@ -45,6 +47,8 @@ func configure(
 
 
 func _ready() -> void:
+	var decal_target_scale := damage_radius / maxf(visual_reference_radius, 0.001)
+	decal_visual.scale = Vector3.ONE * visual_start_scale * decal_target_scale
 	ring.scale = Vector3(visual_start_scale, 1.0, visual_start_scale)
 	impact_light.omni_range = maxf(
 		damage_radius * impact_light_range_multiplier,
@@ -58,6 +62,12 @@ func _ready() -> void:
 		ring,
 		"scale",
 		Vector3(damage_radius, 1.0, damage_radius),
+		visual_duration
+	)
+	tween.parallel().tween_property(
+		decal_visual,
+		"scale",
+		Vector3.ONE * decal_target_scale,
 		visual_duration
 	)
 	tween.parallel().tween_property(

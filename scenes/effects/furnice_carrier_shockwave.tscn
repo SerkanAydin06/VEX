@@ -1,26 +1,26 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/effects/furnice_carrier_shockwave.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnice_carrier_effects_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnace_carrier_effects_spritesheet.png" id="2_sheet"]
 
 [sub_resource type="AtlasTexture" id="Atlas_shockwave1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1024, 512, 512)
+region = Rect2(0, 512, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_shockwave2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 1024, 512, 512)
+region = Rect2(256, 512, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_shockwave3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 1024, 512, 512)
+region = Rect2(512, 512, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_shockwave4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 1024, 512, 512)
+region = Rect2(768, 512, 256, 256)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="Frames_shockwave"]
@@ -57,7 +57,7 @@ rotation = Vector3(-1.5708, 0, 0)
 position = Vector3(0, 0.035, 0)
 scale = Vector3(1, 3, 1)
 cast_shadow = 0
-pixel_size = 0.0234375
+pixel_size = 0.046875
 shaded = false
 render_priority = 3
 sprite_frames = SubResource("Frames_shockwave")
