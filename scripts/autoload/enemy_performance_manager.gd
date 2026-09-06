@@ -238,7 +238,7 @@ func _apply_visual_lod(
 
 func _restore_visual_processing(enemy: Node3D, sprite: AnimatedSprite3D) -> void:
 	var previous_mode := int(enemy.get_meta(VISUAL_PROCESS_MODE_META, Node.PROCESS_MODE_INHERIT))
-	sprite.process_mode = previous_mode
+	sprite.process_mode = previous_mode as Node.ProcessMode
 	if enemy.has_meta(VISUAL_PROCESS_MODE_META):
 		enemy.remove_meta(VISUAL_PROCESS_MODE_META)
 	enemy.set_meta("vex_perf_visual_paused", false)
