@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "status": "canonical",
   "character": {
     "master_examples": {
@@ -44,7 +44,8 @@
         "height": 3072
       }
     },
-    "extra_animation_rule": "Keep canonical frame size; increase sheet row count only."
+    "extra_animation_rule": "Keep canonical frame size; increase sheet row count only.",
+    "noncanonical_source_ratio_rule": "Do not stretch an existing creature whose authored source ratio does not match the canonical portrait/landscape ratios; keep its fixed per-enemy frame ratio until dedicated art is re-exported."
   },
   "effects": {
     "master_example": {
@@ -55,10 +56,10 @@
       "width": 256,
       "height": 256
     },
-    "large_screen_effect_exception": {
+    "large_world_effect_exception": {
       "width": 512,
       "height": 512,
-      "rule": "Use only for unusually large boss or screen-filling VFX whose visible size justifies the extra texture cost."
+      "rule": "Use only for unusually large boss or world-space VFX whose visible 3D size justifies the extra texture cost. This exception does not apply to HUD/Canvas full-screen overlays."
     },
     "types": [
       "projectile",
@@ -89,6 +90,32 @@
         "height": 1024
       }
     }
+  },
+  "screen_space_vfx": {
+    "runtime_frame_size": {
+      "width": 1280,
+      "height": 720
+    },
+    "aspect_ratio": "16:9",
+    "types": [
+      "full_screen_overlay",
+      "vision_debuff",
+      "screen_hit_effect"
+    ],
+    "example_sheet_sizes": {
+      "4x1": {
+        "width": 5120,
+        "height": 720
+      },
+      "4x2": {
+        "width": 5120,
+        "height": 1440
+      }
+    },
+    "stretch_mode": "KEEP_ASPECT_COVERED",
+    "transparent_background_preferred": true,
+    "opaque_full_frame_allowed_when_intentional": true,
+    "default_generate_mipmaps": false
   },
   "image_rules": {
     "format": "PNG",

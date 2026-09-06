@@ -1,10 +1,10 @@
 class_name VexHuskLeechVenomOverlay
 extends CanvasLayer
 
-const DECAL_SHEET = preload("res://assets/enemies/husk_leech/husk_leech_decal_spritesheet.png")
-const FRAME_SIZE := Vector2i(418, 235)
-const FRAME_COUNT := 8
-const FIRST_PHASE_FRAME_COUNT := 4
+const FULL_VFX_SHEET = preload("res://assets/enemies/husk_leech/husk_leech_full_vfx_spritesheet.png")
+const FRAME_SIZE := Vector2i(1280, 720)
+const FRAME_COUNT := 4
+const FIRST_PHASE_FRAME_COUNT := 2
 const FIRST_PHASE_DURATION := 3.0
 const SECOND_PHASE_DURATION := 2.0
 const TOTAL_FRAME_DURATION := FIRST_PHASE_DURATION + SECOND_PHASE_DURATION
@@ -45,7 +45,7 @@ func _ready() -> void:
 	add_child(_shade_rect)
 
 	_atlas = AtlasTexture.new()
-	_atlas.atlas = DECAL_SHEET
+	_atlas.atlas = FULL_VFX_SHEET
 
 	_texture_rect = TextureRect.new()
 	_texture_rect.name = "PoisonDecal"
