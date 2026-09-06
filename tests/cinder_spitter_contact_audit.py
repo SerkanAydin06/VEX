@@ -12,8 +12,10 @@ SHEET = ROOT / "assets/enemies/cinder_spitter/cinder_spitter_character_spriteshe
 ALPHA_THRESHOLD = 16
 TARGET_GAP = 0.008
 SPRITE_Y = 0.0
-PIXEL_SIZE = 0.0037
+PIXEL_SIZE = 0.0024666667
 CAPSULE_HEIGHT = 1.75
+FRAME_WIDTH = 512
+FRAME_HEIGHT = 768
 ANIM_ROWS = {
     "idle": 0,
     "walk": 1,
@@ -72,7 +74,14 @@ def decode_alpha(path: Path) -> tuple[int, int, list[bytes]]:
             left = row[index - channels] if index >= channels else 0
             up = previous[index]
             upper_left = previous[index - channels] if index >= channels else 0
-            predictor = 0 if filter_type == 0 else left if filter_type == 1 else up if filter_type == 2 else (left + up) // 2 if filter_type == 3 else paeth(left, up, upper_left)
+            predictor = (
+                0 if filter_type == 0 else
+                left if filter_type == 1 else
+                up if filter_type == 2 else
+                (left + up) // 2 if filter_type == 3 else
+                paeth(left, up, upper_left)
+            )
+            assert 0 <= filter_type <= 4
             row[index] = (value + predictor) & 0xFF
         rows.append(bytes(row))
         previous = row
@@ -90,21 +99,22 @@ def offsets(source: str, property_name: str) -> list[float]:
 
 
 source = SCENE.read_text(encoding="utf-8")
+assert re.search(r"^pixel_size = 0\.0024666667$", source, re.M)
 width, height, alpha = decode_alpha(SHEET)
-assert (width, height) == (1364, 3072)
+assert (width, height) == (2048, 4608)
 failures = []
 for animation, row_index in ANIM_ROWS.items():
     raw_gaps = []
     for column in range(4):
-        x = column * 341
-        y = row_index * 512
+        x = column * FRAME_WIDTH
+        y = row_index * FRAME_HEIGHT
         bottom = None
-        for local_y in range(511, -1, -1):
-            if max(alpha[y + local_y][x:x + 341]) > ALPHA_THRESHOLD:
+        for local_y in range(FRAME_HEIGHT - 1, -1, -1):
+            if max(alpha[y + local_y][x:x + FRAME_WIDTH]) > ALPHA_THRESHOLD:
                 bottom = local_y
                 break
         assert bottom is not None, (animation, column)
-        alpha_bottom_y = SPRITE_Y + (256.0 - (bottom + 1)) * PIXEL_SIZE
+        alpha_bottom_y = SPRITE_Y + (FRAME_HEIGHT * 0.5 - (bottom + 1)) * PIXEL_SIZE
         raw_gaps.append(alpha_bottom_y + CAPSULE_HEIGHT * 0.5)
     authored = offsets(source, PROPERTIES[animation])
     adjusted = [gap + offset for gap, offset in zip(raw_gaps, authored)]
