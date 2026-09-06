@@ -55,18 +55,18 @@ func _ready() -> void:
 
 	var atlas := decal.texture as AtlasTexture
 	assert(atlas != null)
-	assert(atlas.region == Rect2(0.0, 0.0, 418.0, 235.0))
+	assert(atlas.region == Rect2(0.0, 0.0, 1280.0, 720.0))
 	var overlay_instance_id := overlay.get_instance_id()
 
-	# Gerçek zaman beklemeden 5 saniyelik sekansı elle ilerlet. İlk dört kare
-	# toplam 3 saniye (0.75 sn/kare), son dört kare toplam 2 saniye (0.5 sn/kare).
+	# Gerçek zaman beklemeden 5 saniyelik sekansı elle ilerlet. İlk iki kare
+	# toplam 3 saniye (1.5 sn/kare), son iki kare toplam 2 saniye (1.0 sn/kare).
 	overlay.set_process(false)
 	overlay.call("_process", 2.99)
-	assert(atlas.region == Rect2(1254.0, 0.0, 418.0, 235.0))
+	assert(atlas.region == Rect2(1280.0, 0.0, 1280.0, 720.0))
 	overlay.call("_process", 0.02)
-	assert(atlas.region == Rect2(1672.0, 0.0, 418.0, 235.0))
+	assert(atlas.region == Rect2(2560.0, 0.0, 1280.0, 720.0))
 	overlay.call("_process", 1.98)
-	assert(atlas.region == Rect2(2926.0, 0.0, 418.0, 235.0))
+	assert(atlas.region == Rect2(3840.0, 0.0, 1280.0, 720.0))
 
 	# İkinci isabet yeni CanvasLayer üretmemeli; aynı overlay ilk kareye dönüp
 	# yeniden tam 5 saniyelik sekansla başlamalı.
@@ -81,7 +81,7 @@ func _ready() -> void:
 	var refreshed_decal := refreshed_overlay.get_node("PoisonDecal") as TextureRect
 	var refreshed_atlas := refreshed_decal.texture as AtlasTexture
 	assert(refreshed_atlas != null)
-	assert(refreshed_atlas.region == Rect2(0.0, 0.0, 418.0, 235.0))
+	assert(refreshed_atlas.region == Rect2(0.0, 0.0, 1280.0, 720.0))
 	assert(is_equal_approx(refreshed_decal.modulate.a, 0.65))
 
 	var overlay_count := 0
