@@ -72,12 +72,31 @@ func _populate_options() -> void:
 	difficulty_option.clear()
 	for label_key: StringName in SettingsManager.difficulty_label_keys:
 		difficulty_option.add_item(tr(str(label_key)))
-	graphics_quality_option.clear()
-	for label_key: StringName in SettingsManager.graphics_quality_label_keys:
-		graphics_quality_option.add_item(tr(str(label_key)))
+	_populate_performance_profile_options()
 	language_option.clear()
 	for locale: String in SettingsManager.supported_locales:
 		language_option.add_item(SettingsManager.get_language_display_name(locale))
+
+
+func _populate_performance_profile_options() -> void:
+	var is_turkish := TranslationServer.get_locale().begins_with("tr")
+	var profile_label := get_node(
+		"Margin/VBox/SettingsScroll/SettingsGrid/GraphicsQualityLabel"
+	) as Label
+	profile_label.text = "PERFORMANS PROFİLİ" if is_turkish else "PERFORMANCE PROFILE"
+	var tooltip := (
+		"Düşük; gölge/LOD ayarlarının yanında düşman yol bulma CPU bütçesini de azaltır. Orta ve Yüksek normal AI/navigation davranışını korur."
+		if is_turkish
+		else "Low reduces enemy pathfinding CPU budgets in addition to shadow/LOD settings. Medium and High keep normal AI/navigation behavior."
+	)
+	profile_label.tooltip_text = tooltip
+	graphics_quality_option.tooltip_text = tooltip
+	graphics_quality_option.clear()
+	var labels := PackedStringArray(["DÜŞÜK", "ORTA", "YÜKSEK"])
+	if not is_turkish:
+		labels = PackedStringArray(["LOW", "MEDIUM", "HIGH"])
+	for label: String in labels:
+		graphics_quality_option.add_item(label)
 
 
 func show_panel() -> void:
