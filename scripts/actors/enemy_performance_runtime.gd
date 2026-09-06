@@ -2,8 +2,8 @@ class_name VexEnemyPerformanceRuntime
 extends RefCounted
 
 # Kalabalık savaşlarda pahalı sorguların aynı fizik karesine yığılmasını önler.
-# Yakın düşmanlar daha yüksek öncelik alır; görsel kalite veya hareket fiziği
-# bu bütçeler tarafından düşürülmez.
+# Yakın düşmanlar daha yüksek öncelik alır. Düşük performans profili seçildiğinde
+# yalnız navigation CPU bütçesi daha agresif kısılır; Orta/Yüksek mevcut davranışı korur.
 const NEAR_PRIORITY_DISTANCE := 14.0
 const MID_DISTANCE := 28.0
 const PATH_RETRY_DELAY := 0.05
@@ -17,6 +17,12 @@ const NEAR_PATH_CLAIMS_PER_FRAME := 2
 const FAR_COVER_CLAIMS_PER_FRAME := 1
 const NEAR_COVER_CLAIMS_PER_FRAME := 2
 
+# Yalnız SettingsManager.graphics_quality == PERFORMANCE (0) iken etkinleşir.
+const LOW_PATH_CLAIMS_PER_FRAME := 1
+const LOW_RUNTIME_GRID_MAX_NODES := 650
+const LOW_RUNTIME_GRID_MIN_STEP := 1.35
+const LOW_RUNTIME_GRID_MAX_SEARCH_MARGIN := 8.0
+
 static var _budget_frame := -1
 static var _sight_claims := 0
 static var _path_claims := 0
@@ -25,6 +31,28 @@ static var _cover_claims := 0
 static var _door_scene_id := -1
 static var _door_refresh_frame := -1000000
 static var _door_nodes: Array[Node] = []
+
+
+static func is_low_performance_profile() -> bool:
+	return int(SettingsManager.graphics_quality) == 0
+
+
+static func effective_runtime_grid_step(authored_value: float) -> float:
+	if not is_low_performance_profile():
+		return authored_value
+	return maxf(authored_value, LOW_RUNTIME_GRID_MIN_STEP)
+
+
+static func effective_runtime_grid_max_nodes(authored_value: int) -> int:
+	if not is_low_performance_profile():
+		return authored_value
+	return mini(authored_value, LOW_RUNTIME_GRID_MAX_NODES)
+
+
+static func effective_runtime_grid_search_margin(authored_value: float) -> float:
+	if not is_low_performance_profile():
+		return authored_value
+	return minf(authored_value, LOW_RUNTIME_GRID_MAX_SEARCH_MARGIN)
 
 
 static func _roll_budget_frame() -> void:
@@ -52,11 +80,13 @@ static func try_claim_sight(near_priority: bool) -> bool:
 
 static func try_claim_path(near_priority: bool) -> bool:
 	_roll_budget_frame()
-	var limit := (
-		NEAR_PATH_CLAIMS_PER_FRAME
-		if near_priority
-		else FAR_PATH_CLAIMS_PER_FRAME
-	)
+	var limit := LOW_PATH_CLAIMS_PER_FRAME
+	if not is_low_performance_profile():
+		limit = (
+			NEAR_PATH_CLAIMS_PER_FRAME
+			if near_priority
+			else FAR_PATH_CLAIMS_PER_FRAME
+		)
 	if _path_claims >= limit:
 		return false
 	_path_claims += 1
