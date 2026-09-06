@@ -5,6 +5,7 @@ const TRANSLATION_RESOURCE_PATHS := [
 	"res://translations/vex.tr.translation",
 	"res://translations/vex.en.translation",
 ]
+const GRAPHICS_NATIVE_RENDER_SCALE := 1.0
 
 signal settings_applied
 signal difficulty_changed(difficulty: int)
@@ -45,23 +46,31 @@ enum GraphicsQuality {
 	&"QUALITY_BALANCED",
 	&"QUALITY_HIGH",
 ]
-@export_range(0.5, 1.0, 0.01) var performance_render_scale := 0.75
-@export_range(0.5, 1.0, 0.01) var balanced_render_scale := 0.85
-@export_range(0.5, 1.0, 0.01) var high_render_scale := 1.0
 
-@export_category("03 - Brightness Mapping")
+@export_category("03 - Graphics Quality Profiles")
+@export_range(256, 4096, 256) var performance_shadow_atlas_size := 1024
+@export_range(256, 4096, 256) var balanced_shadow_atlas_size := 2048
+@export_range(256, 4096, 256) var high_shadow_atlas_size := 2048
+@export var performance_shadow_atlas_16_bits := true
+@export var balanced_shadow_atlas_16_bits := true
+@export var high_shadow_atlas_16_bits := false
+@export_range(0.1, 8.0, 0.05) var performance_mesh_lod_threshold := 2.0
+@export_range(0.1, 8.0, 0.05) var balanced_mesh_lod_threshold := 1.35
+@export_range(0.1, 8.0, 0.05) var high_mesh_lod_threshold := 1.0
+
+@export_category("04 - Brightness Mapping")
 @export_range(0.1, 1.0, 0.01) var brightness_min := 0.35
 @export_range(1.0, 3.0, 0.01) var brightness_max := 2.0
 @export_range(0.1, 3.0, 0.01) var default_brightness := 1.15
 @export_range(0.1, 1.0, 0.01) var brightness_multiplier_min := 0.42
 @export_range(1.0, 3.0, 0.01) var brightness_multiplier_max := 2.15
 
-@export_category("04 - Audio Defaults")
+@export_category("05 - Audio Defaults")
 @export_range(0.0, 1.0, 0.01) var default_master_volume := 0.85
 @export_range(0.0, 1.0, 0.01) var default_music_volume := 0.65
 @export_range(0.0, 1.0, 0.01) var default_sfx_volume := 0.85
 
-@export_category("05 - Controls and Gameplay")
+@export_category("06 - Controls and Gameplay")
 @export_range(0.01, 1.0, 0.01) var mouse_sensitivity_min := 0.03
 @export_range(0.01, 1.0, 0.01) var mouse_sensitivity_max := 0.30
 @export_range(0.01, 1.0, 0.01) var default_mouse_sensitivity := 0.11
@@ -87,7 +96,7 @@ enum GraphicsQuality {
 	&"weapon_1", &"weapon_2", &"weapon_3", &"weapon_4", &"weapon_5",
 ]
 
-@export_category("06 - Difficulty Profiles")
+@export_category("07 - Difficulty Profiles")
 @export var difficulty_health_multipliers := PackedFloat32Array([0.75, 1.0, 1.20, 1.45])
 @export var difficulty_damage_multipliers := PackedFloat32Array([0.65, 1.0, 1.25, 1.55])
 @export var difficulty_speed_multipliers := PackedFloat32Array([0.90, 1.0, 1.08, 1.15])
@@ -340,25 +349,51 @@ func set_graphics_quality(value: int) -> void:
 	graphics_quality = clampi(value, GraphicsQuality.PERFORMANCE, GraphicsQuality.HIGH)
 	apply_graphics_quality()
 	save_settings()
+	settings_applied.emit()
 
 
 func apply_graphics_quality() -> void:
 	if not is_inside_tree():
 		return
 	var root_viewport := get_tree().root
+	var profile := get_graphics_quality_profile()
+	# Compatibility/ANGLE'da 1.0 altındaki 3D scale ayrı render buffer + upscale
+	# yolunu açabiliyor. VEX'in hafif sahnelerinde bu yol kazanç yerine ciddi
+	# overhead ürettiği için bütün presetler native 3D çözünürlükte kalır.
 	root_viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
-	root_viewport.scaling_3d_scale = get_graphics_quality_scale()
+	root_viewport.scaling_3d_scale = GRAPHICS_NATIVE_RENDER_SCALE
+	root_viewport.positional_shadow_atlas_size = int(profile["shadow_atlas_size"])
+	root_viewport.positional_shadow_atlas_16_bits = bool(profile["shadow_atlas_16_bits"])
+	root_viewport.mesh_lod_threshold = float(profile["mesh_lod_threshold"])
 
 
-func get_graphics_quality_scale(value: int = -1) -> float:
+func get_graphics_quality_scale(_value: int = -1) -> float:
+	# Kept as a public compatibility helper for callers/tests that query the old
+	# preset scale. All Compatibility presets intentionally render at native scale.
+	return GRAPHICS_NATIVE_RENDER_SCALE
+
+
+func get_graphics_quality_profile(value: int = -1) -> Dictionary:
 	var resolved := graphics_quality if value < 0 else value
 	match clampi(resolved, GraphicsQuality.PERFORMANCE, GraphicsQuality.HIGH):
 		GraphicsQuality.PERFORMANCE:
-			return performance_render_scale
+			return {
+				"shadow_atlas_size": performance_shadow_atlas_size,
+				"shadow_atlas_16_bits": performance_shadow_atlas_16_bits,
+				"mesh_lod_threshold": performance_mesh_lod_threshold,
+			}
 		GraphicsQuality.BALANCED:
-			return balanced_render_scale
+			return {
+				"shadow_atlas_size": balanced_shadow_atlas_size,
+				"shadow_atlas_16_bits": balanced_shadow_atlas_16_bits,
+				"mesh_lod_threshold": balanced_mesh_lod_threshold,
+			}
 		_:
-			return high_render_scale
+			return {
+				"shadow_atlas_size": high_shadow_atlas_size,
+				"shadow_atlas_16_bits": high_shadow_atlas_16_bits,
+				"mesh_lod_threshold": high_mesh_lod_threshold,
+			}
 
 
 func get_graphics_quality_display_name(value: int = -1) -> String:
