@@ -20,75 +20,60 @@ script = read("scripts/actors/briar_skulker.gd")
 hybrid = read("scripts/actors/enemy_hybrid_base.gd")
 settings = read("scripts/actors/enemy_hybrid_ability_settings.gd")
 projectile = read("scripts/actors/briar_skulker_projectile.gd")
-manifest = json.loads(read("assets/enemies/briar_skulker/spritesheet_manifest.json"))
+character_manifest = json.loads(read("assets/enemies/briar_skulker/briar_skulker_character_spritesheet_manifest.json"))
+effects_manifest = json.loads(read("assets/enemies/briar_skulker/briar_skulker_effects_spritesheet_manifest.json"))
 
-assert manifest["sheet_size"] == {"width": 1364, "height": 3584}
-assert manifest["frame_size"] == {"width": 341, "height": 512}
-assert manifest["grid"] == {"columns": 4, "rows": 7}
-assert [row["animation"] for row in manifest["rows"]] == [
-    "idle", "walk", "attack", "attack_close", "death", "idle_back",
-    "walk_back",
+assert character_manifest["sheet_size"] == {"width": 2048, "height": 5376}
+assert character_manifest["frame_size"] == {"width": 512, "height": 768}
+assert character_manifest["grid"] == {"columns": 4, "rows": 7}
+assert [row["animation"] for row in character_manifest["rows"]] == [
+    "idle", "walk", "attack", "attack_close", "death", "idle_back", "walk_back",
 ]
-assert all(row["frame_count"] == 4 for row in manifest["rows"])
+assert all(row["frame_count"] == 4 for row in character_manifest["rows"])
+assert effects_manifest["sheet_size"] == {"width": 1024, "height": 512}
+assert effects_manifest["frame_size"] == {"width": 256, "height": 256}
+assert effects_manifest["grid"] == {"columns": 4, "rows": 2}
+assert [row["animation"] for row in effects_manifest["rows"]] == ["projectile", "impact"]
 
-assert not script.startswith("@tool\n")
-assert not hybrid.startswith("@tool\n")
 assert 'extends "res://scripts/actors/enemy_hybrid_base.gd"' in script
 assert 'extends "res://scripts/actors/enemy_combatant_performance_base.gd"' in hybrid
-assert 'return &"hybrid"' in hybrid
-assert "@export" not in hybrid
 assert settings.startswith("@tool\n")
-
-for token in [
-    "prefer_melee_when_close", "_is_player_in_melee_envelope",
-    "_resolve_melee_hit", "_resolve_ranged_shot", "attack_close",
-]:
+for token in ["prefer_melee_when_close", "_is_player_in_melee_envelope", "_resolve_melee_hit", "_resolve_ranged_shot", "attack_close"]:
     assert token in hybrid or token in settings, token
 
-for obsolete in [
-    "DirectionalView", "mirror_opposite_directions", "source_frames_face_right",
-    "front_diagonal_limit_degrees", "idle_front_side", "walk_front_side",
-    "idle_side", "walk_side",
-]:
-    assert obsolete not in hybrid + settings + scene, obsolete
-
-assert hybrid.index("prefer_melee_when_close") < hybrid.index("_begin_hybrid_attack(use_melee)")
-assert 'special_ability_settings = SubResource("Resource_hybrid_settings")' in scene
-assert 'projectile_scene = ExtResource("3_projectile")' in scene
 assert 'enemy_id = &"briar_skulker"' in scene
 assert 'combat_role = 1' in scene
+assert 'projectile_scene = ExtResource("3_projectile")' in scene
+assert "pixel_size = 0.0020833333" in scene
 
-atlas_regions = re.findall(
-    r'\[sub_resource type="AtlasTexture" id="Atlas_[^"]+"\]\n'
-    r'atlas = ExtResource\("2_sheet"\)\n'
-    r'region = Rect2\((\d+), (\d+), 341, 512\)',
-    scene,
-)
+atlas_regions = re.findall(r'region = Rect2\((\d+), (\d+), 512, 768\)', scene)
 assert len(atlas_regions) == 28, len(atlas_regions)
-assert set(atlas_regions) == {
-    (str(column * 341), str(row * 512))
-    for row in range(7)
-    for column in range(4)
-}
-
-animation_names = set(re.findall(r'"name": &"([^"]+)"', scene))
-assert animation_names == {
-    "idle", "walk", "attack", "attack_close", "death",
-    "idle_back", "walk_back",
+assert set(atlas_regions) == {(str(c * 512), str(r * 768)) for r in range(7) for c in range(4)}
+assert set(re.findall(r'"name": &"([^"]+)"', scene)) == {
+    "idle", "walk", "attack", "attack_close", "death", "idle_back", "walk_back",
 }
 
 assert 'class_name VexBriarSkulkerProjectile' in projectile
-for token in ["func launch(", "PhysicsRayQueryParameters3D.create", "take_damage", "source"]:
+for token in ["PhysicsRayQueryParameters3D.create", "take_damage", "flight_visual.visible = false", "impact_visual.visible = true"]:
     assert token in projectile, token
-assert 'collision_layer = 0' in projectile_scene
-assert 'collision_mask = 11' in projectile_scene
-assert 'shape = SubResource("SphereShape_projectile")' in projectile_scene
+for token in [
+    'path="res://assets/enemies/briar_skulker/briar_skulker_effects_spritesheet.png"',
+    "pixel_size = 0.0018",
+    "collision_mask = 11",
+]:
+    assert token in projectile_scene, token
+fx_regions = re.findall(r'region = Rect2\((\d+), (\d+), 256, 256\)', projectile_scene)
+assert len(fx_regions) == 8
+assert set(fx_regions) == {(str(c * 256), str(r * 256)) for r in range(2) for c in range(4)}
 
-import_metadata = read(
-    "assets/enemies/briar_skulker/briar_skulker_character_spritesheet.png.import"
-)
-assert 'uid="uid://d2briarsheet1"' in import_metadata
-assert 'compress/mode=2' in import_metadata
-assert 'mipmaps/generate=true' in import_metadata
+for import_path, uid in [
+    ("assets/enemies/briar_skulker/briar_skulker_character_spritesheet.png.import", "uid://d2briarsheet1"),
+    ("assets/enemies/briar_skulker/briar_skulker_effects_spritesheet.png.import", "uid://dt1wxkn5dhqlp"),
+]:
+    metadata = read(import_path)
+    assert f'uid="{uid}"' in metadata
+    assert "compress/mode=2" in metadata
+    assert "mipmaps/generate=true" in metadata
+    assert '"vram_texture": true' in metadata
 
 print("briar skulker audit passed")

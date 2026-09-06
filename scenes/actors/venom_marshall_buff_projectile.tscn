@@ -7,22 +7,22 @@
 [sub_resource type="AtlasTexture" id="Atlas_flight_1"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(0, 0, 512, 512)
+region = Rect2(0, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_flight_2"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(512, 0, 512, 512)
+region = Rect2(256, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_flight_3"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(1024, 0, 512, 512)
+region = Rect2(512, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_flight_4"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(1536, 0, 512, 512)
+region = Rect2(768, 256, 256, 256)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_flight"]
 animations = [{
@@ -35,22 +35,22 @@ animations = [{
 [sub_resource type="AtlasTexture" id="Atlas_field_1"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(0, 512, 512, 512)
+region = Rect2(0, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_field_2"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(512, 512, 512, 512)
+region = Rect2(256, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_field_3"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(1024, 512, 512, 512)
+region = Rect2(512, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_field_4"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(1536, 512, 512, 512)
+region = Rect2(768, 256, 256, 256)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_field"]
 animations = [{
@@ -63,22 +63,22 @@ animations = [{
 [sub_resource type="AtlasTexture" id="Atlas_impact_1"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(0, 1024, 512, 512)
+region = Rect2(0, 512, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_impact_2"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(512, 1024, 512, 512)
+region = Rect2(256, 512, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_impact_3"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(1024, 1024, 512, 512)
+region = Rect2(512, 512, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_impact_4"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(1536, 1024, 512, 512)
+region = Rect2(768, 512, 256, 256)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_impact"]
 animations = [{
@@ -134,7 +134,7 @@ billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_flight")
 autoplay = "default"
-pixel_size = 0.0013
+pixel_size = 0.0026
 texture_filter = 3
 alpha_cut = 1
 
@@ -144,7 +144,7 @@ position = Vector3(0, 0.045, 0)
 rotation = Vector3(-1.5708, 0, 0)
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_field")
-pixel_size = 0.02734375
+pixel_size = 0.0546875
 texture_filter = 3
 alpha_cut = 1
 modulate = Color(1, 1, 1, 0.72)
@@ -156,7 +156,7 @@ position = Vector3(0, 0.75, 0)
 billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_impact")
-pixel_size = 0.0034
+pixel_size = 0.0068
 texture_filter = 3
 alpha_cut = 1
 

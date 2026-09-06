@@ -10,6 +10,17 @@ MAX_SINGLE_ASSET_BYTES = 12 * 1024 * 1024
 MAX_BINARY_TREE_BYTES = 330 * 1024 * 1024
 SINGLE_ASSET_OVERRIDES = {
     Path("assets/enemies/husk_leech/husk_leech_character_spritesheet.png"): 13 * 1024 * 1024,
+    # Refreshed character sheets intentionally retain the authored transparent
+    # canvas at runtime resolution. Keep the global limit strict and allow only
+    # these reviewed canonical sheets extra headroom.
+    Path("assets/enemies/briar_skulker/briar_skulker_character_spritesheet.png"): 20 * 1024 * 1024,
+    Path("assets/enemies/gorehorn/gorehorn_character_spritesheet.png"): 20 * 1024 * 1024,
+    Path("assets/enemies/ravager/ravager_character_spritesheet.png"): 20 * 1024 * 1024,
+    Path("assets/enemies/spore_matriarch/spore_matriarch_character_spritesheet.png"): 20 * 1024 * 1024,
+    Path("assets/enemies/coil_lancer/coil_lancer_character_spritesheet.png"): 20 * 1024 * 1024,
+    Path("assets/enemies/vaskari_bulwark/vaskari_bulwark_character_spritesheet.png"): 20 * 1024 * 1024,
+    Path("assets/enemies/vaskari_raptor/vaskari_raptor_character_spritesheet.png"): 20 * 1024 * 1024,
+    Path("assets/enemies/venom_marshall/venom_marshall_character_spritesheet.png"): 20 * 1024 * 1024,
 }
 ERRORS: list[str] = []
 

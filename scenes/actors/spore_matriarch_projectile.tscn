@@ -7,22 +7,22 @@
 [sub_resource type="AtlasTexture" id="Atlas_projectile_1"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(0, 0, 512, 512)
+region = Rect2(0, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_projectile_2"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(512, 0, 512, 512)
+region = Rect2(256, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_projectile_3"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(1024, 0, 512, 512)
+region = Rect2(512, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="Atlas_projectile_4"]
 atlas = ExtResource("2_effects")
 filter_clip = true
-region = Rect2(1536, 0, 512, 512)
+region = Rect2(768, 0, 256, 256)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_spore_projectile"]
 animations = [{
@@ -79,7 +79,7 @@ billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_spore_projectile")
 autoplay = "default"
-pixel_size = 0.00135
+pixel_size = 0.0027
 texture_filter = 3
 alpha_cut = 1
 
@@ -89,7 +89,7 @@ position = Vector3(0, 0.62, 0)
 billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_spore_projectile")
-pixel_size = 0.0042
+pixel_size = 0.0084
 texture_filter = 3
 alpha_cut = 1
 modulate = Color(1, 1, 1, 0.62)
@@ -100,7 +100,7 @@ position = Vector3(-2.15, 0.48, -0.7)
 billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_spore_projectile")
-pixel_size = 0.0036
+pixel_size = 0.0072
 texture_filter = 3
 alpha_cut = 1
 modulate = Color(1, 1, 1, 0.56)
@@ -111,7 +111,7 @@ position = Vector3(2.15, 0.48, 0.7)
 billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_spore_projectile")
-pixel_size = 0.0036
+pixel_size = 0.0072
 texture_filter = 3
 alpha_cut = 1
 modulate = Color(1, 1, 1, 0.56)
