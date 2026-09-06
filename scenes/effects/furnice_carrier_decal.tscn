@@ -1,26 +1,26 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/effects/furnice_carrier_decal.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnice_carrier_effects_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://dgwce4s207moc" path="res://assets/enemies/furnice_carrier/furnace_carrier_effects_spritesheet.png" id="2_sheet"]
 
 [sub_resource type="AtlasTexture" id="Atlas_decal1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1536, 512, 512)
+region = Rect2(0, 768, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_decal2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 1536, 512, 512)
+region = Rect2(256, 768, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_decal3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 1536, 512, 512)
+region = Rect2(512, 768, 256, 256)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_decal4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 1536, 512, 512)
+region = Rect2(768, 768, 256, 256)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="Frames_decal"]
@@ -52,7 +52,7 @@ shape = SubResource("Cylinder_decal")
 rotation = Vector3(-1.5708, 0, 0)
 position = Vector3(0, 0.025, 0)
 cast_shadow = 0
-pixel_size = 0.0078125
+pixel_size = 0.015625
 shaded = false
 render_priority = 2
 sprite_frames = SubResource("Frames_decal")
