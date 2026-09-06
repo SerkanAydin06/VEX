@@ -23,6 +23,8 @@ extends Area3D
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var visual_root: Node3D = $VisualRoot
+@onready var flight_visual: AnimatedSprite3D = $VisualRoot/FlightVisual
+@onready var impact_visual: AnimatedSprite3D = $VisualRoot/ImpactVisual
 @onready var projectile_light: OmniLight3D = $Light
 
 var damage := 10
@@ -38,6 +40,8 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	_remaining_lifetime = lifetime
 	_base_light_energy = projectile_light.light_energy
+	flight_visual.visible = true
+	impact_visual.visible = false
 
 
 func launch(new_direction: Vector3, new_source: Node, new_damage: int) -> void:
@@ -137,14 +141,14 @@ func _begin_impact() -> void:
 	set_physics_process(false)
 	set_deferred("monitoring", false)
 	collision_shape.set_deferred("disabled", true)
+	flight_visual.visible = false
+	impact_visual.visible = true
+	impact_visual.play(&"default")
 	var target_scale := visual_root.scale * impact_scale_multiplier
 	var tween := create_tween().set_parallel(true)
 	tween.tween_property(visual_root, "scale", target_scale, impact_duration)
 	tween.tween_property(projectile_light, "light_energy", 0.0, impact_duration)
-	for child: Node in visual_root.get_children():
-		if child is GeometryInstance3D:
-			var geometry := child as GeometryInstance3D
-			tween.tween_property(geometry, "transparency", 1.0, impact_duration)
+	tween.tween_property(impact_visual, "transparency", 1.0, impact_duration)
 	await tween.finished
 	if is_inside_tree():
 		queue_free()
