@@ -1,32 +1,31 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/actors/ravager_projectile.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://b3kjj7fhvogrk" path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_projectile_sheet.png" id="2_projectile_sheet"]
-[ext_resource type="Texture2D" uid="uid://cpbnbl2drs41h" path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_impact_sheet.png" id="3_impact_sheet"]
+[ext_resource type="Texture2D" uid="uid://b3kjj7fhvogrk" path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_effects_spritesheet.png" id="2_effects_sheet"]
 [ext_resource type="AudioStream" path="res://assets/audio/ravager_projectile_hit_pro.wav" id="4_impact_audio"]
 
 [sub_resource type="SphereShape3D" id="SphereShape_basalt_juggernaut_projectile"]
 radius = 0.24
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_projectile_1"]
-atlas = ExtResource("2_projectile_sheet")
+atlas = ExtResource("2_effects_sheet")
 filter_clip = true
-region = Rect2(0, 0, 512, 512)
+region = Rect2(0, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_projectile_2"]
-atlas = ExtResource("2_projectile_sheet")
+atlas = ExtResource("2_effects_sheet")
 filter_clip = true
-region = Rect2(512, 0, 512, 512)
+region = Rect2(256, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_projectile_3"]
-atlas = ExtResource("2_projectile_sheet")
+atlas = ExtResource("2_effects_sheet")
 filter_clip = true
-region = Rect2(0, 512, 512, 512)
+region = Rect2(512, 0, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_projectile_4"]
-atlas = ExtResource("2_projectile_sheet")
+atlas = ExtResource("2_effects_sheet")
 filter_clip = true
-region = Rect2(512, 512, 512, 512)
+region = Rect2(768, 0, 256, 256)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_projectile"]
 animations = [{
@@ -49,24 +48,24 @@ animations = [{
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_impact_1"]
-atlas = ExtResource("3_impact_sheet")
+atlas = ExtResource("2_effects_sheet")
 filter_clip = true
-region = Rect2(0, 0, 512, 512)
+region = Rect2(0, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_impact_2"]
-atlas = ExtResource("3_impact_sheet")
+atlas = ExtResource("2_effects_sheet")
 filter_clip = true
-region = Rect2(512, 0, 512, 512)
+region = Rect2(256, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_impact_3"]
-atlas = ExtResource("3_impact_sheet")
+atlas = ExtResource("2_effects_sheet")
 filter_clip = true
-region = Rect2(0, 512, 512, 512)
+region = Rect2(512, 256, 256, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_impact_4"]
-atlas = ExtResource("3_impact_sheet")
+atlas = ExtResource("2_effects_sheet")
 filter_clip = true
-region = Rect2(512, 512, 512, 512)
+region = Rect2(768, 256, 256, 256)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_impact"]
 animations = [{
@@ -115,7 +114,7 @@ billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_projectile")
 autoplay = "default"
-pixel_size = 0.00205
+pixel_size = 0.0041
 texture_filter = 3
 alpha_cut = 1
 
@@ -124,7 +123,7 @@ visible = false
 billboard = 1
 double_sided = true
 sprite_frames = SubResource("SpriteFrames_impact")
-pixel_size = 0.00225
+pixel_size = 0.0045
 texture_filter = 3
 alpha_cut = 1
 
