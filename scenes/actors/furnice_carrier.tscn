@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://csh77lhvvhlfs"]
 
 [ext_resource type="Script" uid="uid://bl137sn50q7ig" path="res://scripts/actors/furnice_carrier.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://c6pvy1xlbe5dg" path="res://assets/enemies/furnice_carrier/furnice_carrier_body_spritesheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://c6pvy1xlbe5dg" path="res://assets/enemies/furnice_carrier/furnace_carrier_character_spritesheet.png" id="2_sheet"]
 [ext_resource type="PackedScene" path="res://scenes/actors/furnice_carrier_projectile.tscn" id="3_projectile"]
 [ext_resource type="PackedScene" path="res://scenes/effects/furnice_carrier_shockwave.tscn" id="4_shockwave"]
 [ext_resource type="AudioStream" uid="uid://bwkpab28myb74" path="res://assets/audio/enemy_fire_pro.wav" id="5_attack_audio"]
@@ -22,142 +22,142 @@ height = 1.5
 
 [sub_resource type="AtlasTexture" id="Atlas_attack1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1364, 512, 341)
+region = Rect2(0, 1024, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 1364, 512, 341)
+region = Rect2(768, 1024, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 1364, 512, 341)
+region = Rect2(1536, 1024, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_attack4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 1364, 512, 341)
+region = Rect2(2304, 1024, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 2046, 512, 341)
+region = Rect2(0, 2048, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 2046, 512, 341)
+region = Rect2(768, 2048, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 2046, 512, 341)
+region = Rect2(1536, 2048, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_death4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 2046, 512, 341)
+region = Rect2(2304, 2048, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 0, 512, 341)
+region = Rect2(0, 0, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 0, 512, 341)
+region = Rect2(768, 0, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 0, 512, 341)
+region = Rect2(1536, 0, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 0, 512, 341)
+region = Rect2(2304, 0, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 341, 512, 341)
+region = Rect2(0, 2560, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 341, 512, 341)
+region = Rect2(768, 2560, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 341, 512, 341)
+region = Rect2(1536, 2560, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_idle_back4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 341, 512, 341)
+region = Rect2(2304, 2560, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_thermal_burst1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1705, 512, 341)
+region = Rect2(0, 1536, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_thermal_burst2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 1705, 512, 341)
+region = Rect2(768, 1536, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_thermal_burst3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 1705, 512, 341)
+region = Rect2(1536, 1536, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_thermal_burst4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 1705, 512, 341)
+region = Rect2(2304, 1536, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 682, 512, 341)
+region = Rect2(0, 512, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 682, 512, 341)
+region = Rect2(768, 512, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 682, 512, 341)
+region = Rect2(1536, 512, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 682, 512, 341)
+region = Rect2(2304, 512, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back1"]
 atlas = ExtResource("2_sheet")
-region = Rect2(0, 1023, 512, 341)
+region = Rect2(0, 3072, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back2"]
 atlas = ExtResource("2_sheet")
-region = Rect2(512, 1023, 512, 341)
+region = Rect2(768, 3072, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back3"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1024, 1023, 512, 341)
+region = Rect2(1536, 3072, 768, 512)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_walk_back4"]
 atlas = ExtResource("2_sheet")
-region = Rect2(1536, 1023, 512, 341)
+region = Rect2(2304, 3072, 768, 512)
 filter_clip = true
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
@@ -336,7 +336,7 @@ shape = SubResource("CylinderShape3D_2gs8v")
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1096514729]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4447053, 0)
 cast_shadow = 0
-pixel_size = 0.008
+pixel_size = 0.0053333333
 billboard = 2
 shaded = true
 alpha_cut = 1
