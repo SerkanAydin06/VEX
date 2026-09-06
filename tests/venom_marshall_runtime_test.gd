@@ -52,7 +52,9 @@ func _ready() -> void:
 	assert(field_mesh != null)
 	assert(is_equal_approx(field_mesh.top_radius, 7.0))
 	var ground_visual := projectile.get_node("GroundFieldVisual") as AnimatedSprite3D
-	assert(is_equal_approx(ground_visual.pixel_size, 14.0 / 512.0))
+	# Refreshed Venom VFX use 256 px frames; a 7 m radius field must therefore
+	# render at the full 14 m authored diameter instead of the old 512 px scale.
+	assert(is_equal_approx(ground_visual.pixel_size, 14.0 / 256.0))
 	var field_light := projectile.get_node("FieldLight") as OmniLight3D
 	assert(is_equal_approx(field_light.omni_range, 8.0))
 

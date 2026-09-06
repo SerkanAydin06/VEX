@@ -72,7 +72,16 @@ func _apply_field_radius() -> void:
 		unique_mesh.top_radius = field_radius
 		unique_mesh.bottom_radius = field_radius
 		field_disc.mesh = unique_mesh
-	ground_field_visual.pixel_size = field_radius * 2.0 / 512.0
+	var field_frame_width := 256.0
+	if (
+		ground_field_visual.sprite_frames != null
+		and ground_field_visual.sprite_frames.has_animation(&"default")
+		and ground_field_visual.sprite_frames.get_frame_count(&"default") > 0
+	):
+		var frame_texture := ground_field_visual.sprite_frames.get_frame_texture(&"default", 0)
+		if frame_texture != null:
+			field_frame_width = maxf(1.0, float(frame_texture.get_width()))
+	ground_field_visual.pixel_size = field_radius * 2.0 / field_frame_width
 	field_light.omni_range = maxf(field_radius + 1.0, 1.0)
 
 
