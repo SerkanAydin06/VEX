@@ -12,7 +12,7 @@ extends VexEnemyAbilitySettings
 ## Merminin yerde bıraktığı etkinin her vuruştaki temel hasarıdır.
 @export_range(1, 100, 1) var projectile_decal_tick_damage := 4
 ## Mermi çıkışının saldırı karesindeki piksel konumudur; X sağa, Y aşağı yöndedir.
-@export var projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -139.0)
+@export var projectile_muzzle_sprite_offset_pixels := Vector2(0.0, -208.5)
 ## Mermi çıkışını bakış yönünde öne taşıyan derinlik payıdır (metre).
 @export_range(0.0, 0.5, 0.01) var projectile_muzzle_depth_offset := 0.08
 
