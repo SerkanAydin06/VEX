@@ -1,14 +1,14 @@
 {
-  "source_zip": "512_512(10).zip",
-  "source_folder": "512_512",
+  "source_zip": "efektler(6).zip",
+  "source_folder": "efektler",
   "sheet_file": "veilmaw_effects_spritesheet.png",
   "sheet_size": {
-    "width": 2048,
-    "height": 1024
+    "width": 1024,
+    "height": 512
   },
   "frame_size": {
-    "width": 512,
-    "height": 512
+    "width": 256,
+    "height": 256
   },
   "grid": {
     "columns": 4,
@@ -17,20 +17,19 @@
   "notes": [
     "Spritesheet was generated without scaling.",
     "Transparent RGBA background preserved.",
-    "Frames are arranged left-to-right; animations are arranged top-to-bottom.",
-    "Projectile source files are named without the veilmaw prefix."
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
   ],
   "rows": [
     {
       "row_index": 0,
       "animation": "projectile",
-      "source_prefix": "projectile",
+      "source_prefix": "veilmaw_projectile",
       "frame_count": 4,
       "frames": [
-        "projectile_01_result.png",
-        "projectile_02_result.png",
-        "projectile_03_result.png",
-        "projectile_04_result.png"
+        "veilmaw_projectile_1_result.png",
+        "veilmaw_projectile_2_result.png",
+        "veilmaw_projectile_3_result.png",
+        "veilmaw_projectile_4_result.png"
       ]
     },
     {

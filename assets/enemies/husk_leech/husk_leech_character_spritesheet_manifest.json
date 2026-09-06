@@ -1,6 +1,6 @@
 {
-  "source_zip": "512_512(6).zip",
-  "source_folder": "512_512",
+  "source_zip": "karakter(9).zip",
+  "source_folder": "karakter",
   "source_prefix_note": "Source files use the prefix \"hush_leech\".",
   "sheet_file": "husk_leech_character_spritesheet.png",
   "sheet_size": {
@@ -19,8 +19,7 @@
     "Spritesheet was generated without scaling.",
     "Transparent RGBA background preserved.",
     "Frames are arranged left-to-right; animations are arranged top-to-bottom.",
-    "Rows with fewer than 8 frames leave remaining cells transparent.",
-    "The uploaded source files use the creature prefix \"hush_leech\"."
+    "Rows with fewer than 8 frames leave remaining cells transparent."
   ],
   "rows": [
     {

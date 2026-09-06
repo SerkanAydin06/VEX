@@ -1,0 +1,36 @@
+{
+  "source_zip": "full_VFX.zip",
+  "source_folder": "full_VFX",
+  "sheet_file": "husk_leech_full_vfx_spritesheet.png",
+  "sheet_size": {
+    "width": 5120,
+    "height": 720
+  },
+  "frame_size": {
+    "width": 1280,
+    "height": 720
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 1
+  },
+  "animation": "full_vfx",
+  "frame_count": 4,
+  "frames": [
+    "ChatGPT Image 6 Eyl 2026 13_41_20 (1)_result.png",
+    "ChatGPT Image 6 Eyl 2026 13_41_20 (2)_result.png",
+    "ChatGPT Image 6 Eyl 2026 13_41_20 (3)_result.png",
+    "ChatGPT Image 6 Eyl 2026 13_41_21 (4)_result.png"
+  ],
+  "source_modes": [
+    "RGBA",
+    "RGB",
+    "RGB",
+    "RGB"
+  ],
+  "notes": [
+    "Spritesheet generated without scaling or cropping.",
+    "Frames arranged left-to-right in source sequence.",
+    "These are full-frame VFX images; opaque source backgrounds are preserved where present."
+  ]
+}
