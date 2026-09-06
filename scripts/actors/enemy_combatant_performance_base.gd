@@ -60,7 +60,18 @@ func _build_runtime_shortest_path(destination: Vector3) -> PackedVector3Array:
 			return _perf_last_runtime_path.duplicate()
 		return PackedVector3Array()
 
-	var path := super._build_runtime_shortest_path(destination)
+	var path := EnemyNavigationRuntime.build_shortest_path(
+		self,
+		destination,
+		navigation_collision_mask,
+		floor_collision_mask,
+		navigation_clearance,
+		floor_snap_ray_start_height,
+		floor_snap_ray_extra_depth,
+		EnemyPerformanceRuntime.effective_runtime_grid_step(runtime_grid_step),
+		EnemyPerformanceRuntime.effective_runtime_grid_max_nodes(runtime_grid_max_nodes),
+		EnemyPerformanceRuntime.effective_runtime_grid_search_margin(runtime_grid_search_margin)
+	)
 	if not path.is_empty():
 		_perf_last_runtime_path = path.duplicate()
 		_perf_last_runtime_target = destination
