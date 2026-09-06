@@ -12,6 +12,7 @@ ACTORS = ROOT / "scenes" / "actors"
 ALPHA_THRESHOLD = 16
 TARGET_CONTACT_GAP = 0.008
 CONTACT_PROPERTIES = {
+    "2nd_attack": "second_attack_frame_y_offsets",
     "attack": "attack_frame_y_offsets",
     "attack_close": "attack_close_frame_y_offsets",
     "death": "death_frame_y_offsets",
@@ -39,6 +40,7 @@ CREATURES = {
     "gorehorn": "gorehorn.tscn",
     "vaskari_bulwark": "vaskari_bulwark.tscn",
     "spore_matriarch": "spore_matriarch.tscn",
+    "venom_marshall": "venom_marshall.tscn",
 }
 
 
