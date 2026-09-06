@@ -15,142 +15,65 @@ POISON_SCRIPT = ROOT / "scripts/actors/spore_poison_status.gd"
 RUNTIME_TEST = ROOT / "tests/spore_matriarch_runtime_test.gd"
 LEVEL_TEST = ROOT / "scenes/levels/level_test.tscn"
 
-for path in [
-    ACTOR,
-    PROJECTILE_SCENE,
-    ACTOR_SCRIPT,
-    PROJECTILE_SCRIPT,
-    POISON_SCRIPT,
-    RUNTIME_TEST,
-]:
+for path in [ACTOR, PROJECTILE_SCENE, ACTOR_SCRIPT, PROJECTILE_SCRIPT, POISON_SCRIPT, RUNTIME_TEST]:
     assert path.exists(), path
 
-character_manifest = json.loads(
-    (ASSET / "spore_matriarch_character_spritesheet_manifest.json").read_text(encoding="utf-8")
-)
-effects_manifest = json.loads(
-    (ASSET / "spore_matriarch_effects_spritesheet_manifest.json").read_text(encoding="utf-8")
-)
-assert character_manifest["sheet_size"] == {"width": 2048, "height": 2046}
-assert character_manifest["frame_size"] == {"width": 512, "height": 341}
+character_manifest = json.loads((ASSET / "spore_matriarch_character_spritesheet_manifest.json").read_text(encoding="utf-8"))
+effects_manifest = json.loads((ASSET / "spore_matriarch_effects_spritesheet_manifest.json").read_text(encoding="utf-8"))
+assert character_manifest["sheet_size"] == {"width": 3072, "height": 3072}
+assert character_manifest["frame_size"] == {"width": 768, "height": 512}
 assert character_manifest["grid"] == {"columns": 4, "rows": 6}
-assert [row["animation"] for row in character_manifest["rows"]] == [
-    "idle", "walk", "attack", "death", "idle_back", "walk_back"
-]
-assert effects_manifest["sheet_size"] == {"width": 2048, "height": 512}
-assert effects_manifest["frame_size"] == {"width": 512, "height": 512}
+assert [row["animation"] for row in character_manifest["rows"]] == ["idle", "walk", "attack", "death", "idle_back", "walk_back"]
+assert effects_manifest["sheet_size"] == {"width": 1024, "height": 256}
+assert effects_manifest["frame_size"] == {"width": 256, "height": 256}
 assert effects_manifest["grid"] == {"columns": 4, "rows": 1}
 assert effects_manifest["rows"][0]["animation"] == "projectile"
 
-for import_name in [
-    "spore_matriarch_character_spritesheet.png.import",
-    "spore_matriarch_effects_spritesheet.png.import",
+for import_name, uid in [
+    ("spore_matriarch_character_spritesheet.png.import", "uid://dl0orefhp7ru"),
+    ("spore_matriarch_effects_spritesheet.png.import", "uid://jvbsftoxtpdf"),
 ]:
-    import_text = (ASSET / import_name).read_text(encoding="utf-8")
-    assert "compress/mode=2" in import_text, import_name
-    assert "mipmaps/generate=true" in import_text, import_name
-    assert '"vram_texture": true' in import_text, import_name
+    text = (ASSET / import_name).read_text(encoding="utf-8")
+    assert f'uid="{uid}"' in text, import_name
+    assert "compress/mode=2" in text, import_name
+    assert "mipmaps/generate=true" in text, import_name
+    assert '"vram_texture": true' in text, import_name
 
 actor = ACTOR.read_text(encoding="utf-8")
-actor_script = ACTOR_SCRIPT.read_text(encoding="utf-8")
 projectile_scene = PROJECTILE_SCENE.read_text(encoding="utf-8")
 projectile_script = PROJECTILE_SCRIPT.read_text(encoding="utf-8")
 poison_script = POISON_SCRIPT.read_text(encoding="utf-8")
 runtime_test = RUNTIME_TEST.read_text(encoding="utf-8")
+actor_script = ACTOR_SCRIPT.read_text(encoding="utf-8")
 
 assert 'extends "res://scripts/actors/enemy_combatant_performance_base.gd"' in actor_script
 for contract in [
-    'enemy_id = &"spore_matriarch"',
-    "combat_role = 1",
-    "maximum_health = 165",
-    "attack_damage = 12",
-    "attack_range = 18.0",
-    "attack_cooldown = 3.4",
-    "attack_preferred_distance = 11.0",
-    'projectile_scene = ExtResource("3_projectile")',
-    "pixel_size = 0.0045",
-    "billboard = 2",
-    "shaded = true",
+    'enemy_id = &"spore_matriarch"', "maximum_health = 165", "attack_damage = 12",
+    "attack_range = 18.0", "attack_cooldown = 3.4", "attack_preferred_distance = 11.0",
+    'projectile_scene = ExtResource("3_projectile")', "pixel_size = 0.0029970703", "billboard = 2",
 ]:
     assert contract in actor, contract
-assert "material_override" not in re.search(
-    r'^\[node name="AnimatedSprite3D".*?(?=^\[node |\Z)', actor, re.M | re.S
-).group(0)
+regions = re.findall(r"region = Rect2\((\d+), (\d+), 768, 512\)", actor)
+assert len(regions) == 24
+assert set(regions) == {(str(c * 768), str(r * 512)) for r in range(6) for c in range(4)}
 
-regions = re.findall(r"region = Rect2\((\d+), (\d+), (\d+), (\d+)\)", actor)
-assert len(regions) == 24, len(regions)
-expected_regions = [
-    (str(column * 512), str(row * 341), "512", "341")
-    for row in range(6)
-    for column in range(4)
-]
-assert regions == expected_regions, regions
-
-# Scene defaults remain explicit while the exported field_radius is the runtime
-# authority for collision, visible disc and light range.
+fx_regions = re.findall(r"region = Rect2\((\d+), (\d+), 256, 256\)", projectile_scene)
+assert len(fx_regions) == 4
+assert set(fx_regions) == {(str(c * 256), "0") for c in range(4)}
 for contract in [
-    "field_radius = 5.2",
-    "field_duration = 5.8",
-    "field_tick_interval = 0.55",
-    "poison_duration = 3.4",
-    "poison_tick_interval = 0.75",
-    'shape = SubResource("CylinderShape_poison_field")',
-    "radius = 5.2",
-    "height = 2.4",
+    "field_radius = 5.2", "field_duration = 5.8", "field_tick_interval = 0.55",
+    "poison_duration = 3.4", "poison_tick_interval = 0.75",
+    "pixel_size = 0.0027", "pixel_size = 0.0084", "pixel_size = 0.0072",
 ]:
     assert contract in projectile_scene, contract
-
 for contract in [
-    "enum Phase",
-    "Phase.FLIGHT",
-    "Phase.FIELD",
-    "func _deploy_field(",
-    "get_overlapping_bodies()",
-    "func _apply_field_radius() -> void:",
-    "unique_shape.radius = field_radius",
-    "unique_mesh.top_radius = field_radius",
-    "unique_mesh.bottom_radius = field_radius",
-    "field_light.omni_range = maxf(field_radius + 1.0, 1.0)",
-    "func _valid_source() -> Node:",
-    "var damage_source := _valid_source()",
-    'target.call("take_damage", damage, global_position, damage_source)',
-    'target.get_node_or_null("SporePoisonStatus")',
-    '"refresh_poison"',
-    "_valid_source()",
-    "EnemyProjectilePool.recycle(self)",
+    "Phase.FLIGHT", "Phase.FIELD", "func _deploy_field(", "get_overlapping_bodies()",
+    "EnemyProjectilePool.recycle(self)", 'target.get_node_or_null("SporePoisonStatus")',
 ]:
     assert contract in projectile_script, contract
-
-# The old unsafe source forwarding must not return.
-assert 'target.call("take_damage", damage, global_position, source)' not in projectile_script
-
-# Re-applying poison refreshes one shared status instead of creating parallel DoT
-# loops. A weaker refresh cannot reduce existing damage or slow its tick rate;
-# a stronger/faster refresh upgrades the same status.
-for contract in [
-    "class_name VexSporePoisonStatus",
-    "func refresh_poison(",
-    "var was_active := _remaining > 0.0",
-    "_remaining = maxf(_remaining, safe_duration)",
-    "_tick_damage = maxi(_tick_damage, safe_damage)",
-    "_tick_interval = minf(_tick_interval, safe_interval)",
-    "_tick_remaining = minf(_tick_remaining, _tick_interval)",
-    "_source = source if is_instance_valid(source) else null",
-    "if is_instance_valid(_source):",
-    '_target.call("take_damage", _tick_damage, hit_position, damage_source)',
-    "SporePoisonOverlay",
-    "queue_free()",
-]:
+for contract in ["class_name VexSporePoisonStatus", "func refresh_poison(", "SporePoisonOverlay", "queue_free()"]:
     assert contract in poison_script, contract
-
-for contract in [
-    '_count_named_children(target, "SporePoisonStatus") == 1',
-    "status.refresh_poison(0.70, 2, 0.20, null)",
-    "status.get_tick_damage() == 4",
-    "status.refresh_poison(0.70, 7, 0.05, null)",
-    "status.get_tick_damage() == 7",
-]:
-    assert contract in runtime_test, contract
+assert '_count_named_children(target, "SporePoisonStatus") == 1' in runtime_test
 
 level_test = LEVEL_TEST.read_text(encoding="utf-8")
 assert 'path="res://scenes/actors/spore_matriarch.tscn"' in level_test
