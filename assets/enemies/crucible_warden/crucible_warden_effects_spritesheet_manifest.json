@@ -1,0 +1,48 @@
+{
+  "source_zip": "efektler(5).zip",
+  "source_folder": "efektler",
+  "sheet_file": "crucible_warden_effects_spritesheet.png",
+  "sheet_size": {
+    "width": 1024,
+    "height": 512
+  },
+  "frame_size": {
+    "width": 256,
+    "height": 256
+  },
+  "grid": {
+    "columns": 4,
+    "rows": 2
+  },
+  "notes": [
+    "Spritesheet was generated without scaling.",
+    "Transparent RGBA background preserved.",
+    "Frames are arranged left-to-right; animations are arranged top-to-bottom."
+  ],
+  "rows": [
+    {
+      "row_index": 0,
+      "animation": "heatwave_projectile",
+      "source_prefix": "crucible_warden_heatwave_projectile",
+      "frame_count": 4,
+      "frames": [
+        "crucible_warden_heatwave_projectile_1_result.png",
+        "crucible_warden_heatwave_projectile_2_result.png",
+        "crucible_warden_heatwave_projectile_3_result.png",
+        "crucible_warden_heatwave_projectile_4_result.png"
+      ]
+    },
+    {
+      "row_index": 1,
+      "animation": "decal",
+      "source_prefix": "crucible_warden_decal",
+      "frame_count": 4,
+      "frames": [
+        "crucible_warden_decal_1_result.png",
+        "crucible_warden_decal_2_result.png",
+        "crucible_warden_decal_3_result.png",
+        "crucible_warden_decal_4_result.png"
+      ]
+    }
+  ]
+}
