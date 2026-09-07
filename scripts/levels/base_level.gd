@@ -1,3 +1,4 @@
+@tool
 class_name VexBaseLevel
 extends Node3D
 
