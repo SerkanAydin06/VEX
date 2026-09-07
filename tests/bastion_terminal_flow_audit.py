@@ -30,21 +30,25 @@ def test_operations_terminal_uses_single_deploy_action_with_confirmation() -> No
     assert request_pos < confirm_pos <= first_persist_pos
 
 
-def test_terminal_layout_is_viewport_relative_and_has_confirmation_layer() -> None:
+def test_terminal_layout_is_viewport_relative_compact_and_has_confirmation_layer() -> None:
     scene = SCENE.read_text(encoding="utf-8")
 
     assert '[node name="ScreenShell" type="PanelContainer" parent="TerminalRoot"]' in scene
-    assert "anchor_left = 0.045" in scene
-    assert "anchor_top = 0.06" in scene
-    assert "anchor_right = 0.955" in scene
-    assert "anchor_bottom = 0.94" in scene
+    assert "anchor_left = 0.05" in scene
+    assert "anchor_top = 0.065" in scene
+    assert "anchor_right = 0.95" in scene
+    assert "anchor_bottom = 0.935" in scene
     assert '[node name="Body" type="HBoxContainer"' in scene
     assert '[node name="ConfirmationOverlay" type="Control" parent="TerminalRoot"]' in scene
     assert 'unique_name_in_owner = true\nvisible = false' in scene
+    assert "custom_minimum_size = Vector2(0, 78)" in scene
+    assert "custom_minimum_size = Vector2(620, 290)" in scene
 
-    # The old fixed 1920x1080 console framing should not return.
+    # The old fixed 1920x1080 console framing and oversized controls should not return.
     assert "offset_left = 226.0" not in scene
     assert "offset_right = 1694.0" not in scene
+    assert "custom_minimum_size = Vector2(0, 96)" not in scene
+    assert "custom_minimum_size = Vector2(700, 340)" not in scene
     assert "automap_console_frame.png" not in scene
 
 
