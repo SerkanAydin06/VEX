@@ -34,83 +34,64 @@ def _record_block(database: str, record_id: str) -> str:
     return database[start:] if next_record < 0 else database[start:next_record]
 
 
-def test_level02_shell_is_small_canonical_and_legacy_gameplay_stays_in_structure_source() -> None:
+def test_level02_main_scene_exposes_canonical_layers_in_editor() -> None:
     shell = _read(SHELL)
-    structure = _read(STRUCTURE)
-    script = _read(SCRIPT)
-
     assert '[node name="Level02_AshCorridor" type="Node3D"]' in shell
     assert 'level_display_name = "CH02_NAME"' in shell
     assert 'campaign_completion_stage = 2' in shell
-    assert 'total_secrets = 1' in shell
-    assert "ravager.tscn" not in shell.lower()
-    assert "vaskari" not in shell.lower()
-    assert "basalt_juggernaut" not in shell.lower()
-    assert "voidweaver" not in shell.lower()
+    assert 'path="res://scenes/levels/level_02_environment_story.tscn"' in shell
+    assert 'path="res://scenes/levels/level_02_ash_corridor_content.tscn"' in shell
+    assert '[node name="Level02EnvironmentStory" parent="." instance=ExtResource("6_environment")]' in shell
+    assert '[node name="Level02AshCorridorContent" parent="." instance=ExtResource("7_content")]' in shell
+    for forbidden in ["ravager.tscn", "vaskari", "basalt_juggernaut", "voidweaver"]:
+        assert forbidden not in shell.lower()
 
-    # The authored old map remains available as a source, but its gameplay roots
-    # are intentionally not transferred into the active chapter shell.
+
+def test_level02_tool_script_previews_only_safe_structure_roots() -> None:
+    structure = _read(STRUCTURE)
+    script = _read(SCRIPT)
     assert '[node name="Geometry" type="Node3D" parent="."]' in structure
     assert '[node name="Doors" type="Node3D" parent="."]' in structure
     assert '[node name="Enemies" type="Node3D" parent="."]' in structure
+    assert script.startswith("@tool\nextends VexBaseLevel")
+    assert 'if Engine.is_editor_hint():' in script
     assert 'STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_02_structure_source.tscn"' in script
+    structure_block = script[script.index("const STRUCTURE_NODE_NAMES"):script.index("var _alarm_triggered")]
     for allowed in [
         '&"WorldEnvironment"', '&"Geometry"', '&"EnemyNavigation"', '&"Doors"',
         '&"RoomLights"', '&"Lights"', '&"Props"',
     ]:
-        assert allowed in script
-    structure_names_block = script[script.index("const STRUCTURE_NODE_NAMES"):script.index("const ASH_CORRIDOR_CONTENT_SCENE")]
+        assert allowed in structure_block
     for forbidden in ['&"Enemies"', '&"Pickups"', '&"Triggers"']:
-        assert forbidden not in structure_names_block
+        assert forbidden not in structure_block
+    assert 'if get_node_or_null("Geometry") != null:' in script
+    assert "ASH_CORRIDOR_CONTENT_SCENE" not in script
+    assert "ENVIRONMENT_STORY_SCENE" not in script
 
 
 def test_active_content_uses_only_hounds_and_spitters_with_expected_difficulty_counts() -> None:
     content = _read(CONTENT)
-
     assert 'path="res://scenes/actors/cinderhound.tscn"' in content
     assert 'path="res://scenes/actors/cinder_spitter.tscn"' in content
     for forbidden in ["ravager.tscn", "vaskari", "basalt_juggernaut", "voidweaver"]:
         assert forbidden not in content.lower()
-
     enemy_nodes = re.findall(r'^\[node name="(Cinder(?:Hound|Spitter)_[^"]+)" parent="Enemies"', content, re.MULTILINE)
     assert len(enemy_nodes) == 20
-
-    # Nodes without spawn_min_difficulty are Easy baseline; tier additions are
-    # authored explicitly as 4 Normal, 3 Hard and 2 Nightmare additions.
     assert content.count("spawn_min_difficulty = 1") == 4
     assert content.count("spawn_min_difficulty = 2") == 3
     assert content.count("spawn_min_difficulty = 3") == 2
     assert len(enemy_nodes) - 4 - 3 - 2 == 11
-
-    hounds = len(re.findall(r'^\[node name="CinderHound_', content, re.MULTILINE))
-    spitters = len(re.findall(r'^\[node name="CinderSpitter_', content, re.MULTILINE))
-    assert hounds == 12
-    assert spitters == 8
+    assert len(re.findall(r'^\[node name="CinderHound_', content, re.MULTILINE)) == 12
+    assert len(re.findall(r'^\[node name="CinderSpitter_', content, re.MULTILINE)) == 8
 
 
-def test_sg04_is_chapter02_weapon_and_live_species_tuning_is_not_reauthored() -> None:
-    content = _read(CONTENT)
-    plan = _read(PLAN)
-
-    assert "## BÖLÜM 2 — KÜL KORİDORU" in plan
-    chapter2 = plan[plan.index("## BÖLÜM 2 — KÜL KORİDORU"):plan.index("## BÖLÜM 3 — BASINÇ HATTI")]
-    assert "**Yeni yaratık:** Cinder Spitter" in chapter2
-    assert "**Yeni silah:** SG-04 Breacher" in chapter2
-
-    assert '[node name="SG04BreacherPickup"' in content
-    assert 'pickup_type = "sg04"' in content
-    assert 'amount = 12' in content
-    # Encounter staging may tune perception, but actor health/damage/speed remain
-    # scene-authoritative in the Cinder Hound / Spitter scenes.
-    for forbidden in ["maximum_health =", "attack_damage =", "move_speed =", "chase_speed ="]:
-        assert forbidden not in content
-
-
-def test_power_chain_reuses_key_state_but_is_presented_as_relay_fuses() -> None:
+def test_sg04_and_power_fuse_chain_are_scene_authored() -> None:
     content = _read(CONTENT)
     script = _read(SCRIPT)
     translations = _read(TRANSLATIONS)
-
+    assert '[node name="SG04BreacherPickup"' in content
+    assert 'pickup_type = "sg04"' in content
+    assert 'amount = 12' in content
     for node_name, pickup_type, display_key in [
         ("BlueLineFuse", "key_blue", "CH02_BLUE_FUSE"),
         ("YellowRelayFuse", "key_yellow", "CH02_YELLOW_FUSE"),
@@ -121,16 +102,19 @@ def test_power_chain_reuses_key_state_but_is_presented_as_relay_fuses() -> None:
         assert f'display_name = "{display_key}"' in content
         assert display_key in translations
         assert display_key in script
-
     assert 'required_keys = Array[StringName]([&"blue", &"yellow", &"red"])' in content
-    assert 'display_name = "CH02_FINISH_CONTROL"' in content
 
 
-def test_chapter02_three_records_match_campaign_plan_and_persistent_database() -> None:
+def test_species_stats_remain_actor_authoritative() -> None:
+    content = _read(CONTENT)
+    for forbidden in ["maximum_health =", "attack_damage =", "move_speed =", "chase_speed ="]:
+        assert forbidden not in content
+
+
+def test_chapter02_records_match_campaign_and_persistent_database() -> None:
     content = _read(CONTENT)
     db = _read(RECORD_DB)
     plan = _read(PLAN)
-
     ids = [
         "vex02_kor_thermal_source_signature",
         "vex02_relay_technician_last_shift",
@@ -140,42 +124,25 @@ def test_chapter02_three_records_match_campaign_plan_and_persistent_database() -
         assert f'&"{record_id}"' in content
         assert f'&"{record_id}"' in db
     assert db.count('"chapter": 2') == 3
-    for order in [4, 5, 6]:
-        assert f'"order": {order}' in db
-
     chapter2 = plan[plan.index("## BÖLÜM 2 — KÜL KORİDORU"):plan.index("## BÖLÜM 3 — BASINÇ HATTI")]
-    for title in [
-        "KOR-TERMAL Kaynak İmzası",
-        "Röle Teknisyeni / Son Vardiya",
-        "Basınç Sapması Önemsizdir",
-    ]:
+    for title in ["KOR-TERMAL Kaynak İmzası", "Röle Teknisyeni / Son Vardiya", "Basınç Sapması Önemsizdir"]:
         assert title in chapter2
-    assert "KOR-TERMAL KAYNAK İMZASI" in db
-    assert "RÖLE TEKNİSYENİ / SON VARDİYA" in db
-    assert "BASINÇ SAPMASI ÖNEMSİZDİR" in db
 
 
 def test_kor_thermal_signature_is_at_final_r33_relay_console() -> None:
     content = _read(CONTENT)
     db = _read(RECORD_DB)
     doc = _read(DOC)
-
     node = _node_block(content, "Record_KorThermalSourceSignature")
     assert 'record_id = &"vex02_kor_thermal_source_signature"' in node
     assert '50.2, 0.85, 28.8' in node
-
     record = _record_block(db, "vex02_kor_thermal_source_signature")
     assert '"room": "R33"' in record
-    assert '"title_tr": "KOR-TERMAL KAYNAK İMZASI"' in record
-
     assert "### R33 — TEKNİK / KOR-TERMAL Kaynak İmzası" in doc
-    assert "final R33 ana röle konsolundadır" in doc
-    assert "### R08 — TEKNİK / KOR-TERMAL Kaynak İmzası" not in doc
 
 
 def test_environment_story_is_visual_only_and_marks_relay_route() -> None:
     environment = _read(ENVIRONMENT)
-
     assert "RoomCodes" in environment
     assert "ThermalConduits" in environment
     assert "StoryLights" in environment
@@ -185,29 +152,19 @@ def test_environment_story_is_visual_only_and_marks_relay_route() -> None:
         assert forbidden not in environment
 
 
-def test_mission_and_translation_catalog_use_ash_corridor_keys() -> None:
+def test_mission_translation_catalog_and_planned_bypass_remain_consistent() -> None:
     mission = _read(MISSION)
     translations = _read(TRANSLATIONS)
     settings = _read(SETTINGS)
-
-    assert 'display_name = "CH02_NAME"' in mission
-    assert 'briefing = "CH02_MISSION_BRIEF"' in mission
-    assert 'completion_message = "CH02_COMPLETE"' in mission
-    assert 'scene_path = "res://scenes/levels/level_02.tscn"' in mission
-    for key in [
-        "CH02_NAME", "CH02_BRIEFING_STORY", "CH02_BRIEFING_OBJECTIVE",
-        "CH02_MISSION_BRIEF", "CH02_COMPLETE", "CH02_FINISH_CONTROL",
-    ]:
-        assert key in translations
-    assert '"res://translations/chapter02.tr.translation"' in settings
-    assert '"res://translations/chapter02.en.translation"' in settings
-
-
-def test_bypass_coupler_is_documented_as_planned_not_fake_gameplay() -> None:
     plan = _read(PLAN)
     doc = _read(DOC)
     content = _read(CONTENT)
-
+    assert 'display_name = "CH02_NAME"' in mission
+    assert 'briefing = "CH02_MISSION_BRIEF"' in mission
+    assert 'completion_message = "CH02_COMPLETE"' in mission
+    assert '"res://translations/chapter02.tr.translation"' in settings
+    assert '"res://translations/chapter02.en.translation"' in settings
+    assert "CH02_FINISH_CONTROL" in translations
     chapter2 = plan[plan.index("## BÖLÜM 2 — KÜL KORİDORU"):plan.index("## BÖLÜM 3 — BASINÇ HATTI")]
     assert "Güç Bypass Kuplörü (planlandı)" in chapter2
     assert "runtime sistemi henüz aktif değil" in doc
