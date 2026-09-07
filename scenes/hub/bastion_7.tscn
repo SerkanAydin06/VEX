@@ -107,8 +107,11 @@ piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
 
-[node name="Ceiling_FiringRange" parent="Geometry" instance=ExtResource("9_white")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 6.82, -10)
+[node name="Ceiling_FiringRange" parent="Geometry" unique_id=724834527 instance=ExtResource("2_piece")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.2, -10)
+piece_size = Vector3(12, 0.4, 10)
+surface_material = ExtResource("5_ceiling")
+occlusion_enabled = false
 
 [node name="Floor_Armory" parent="Geometry" unique_id=2011248365 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.996028, -0.19999988, -9.9977665)
@@ -917,9 +920,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 12.3)
 required_campaign_stage = 3
 display_name_key = "SURVIVOR_SELIN_NAME"
 role_key = "SURVIVOR_SELIN_ROLE"
-dialogue_key = "SURVIVOR_SELIN_DIALOGUE_STAGE2"
-advanced_dialogue_stage = 3
-advanced_dialogue_key = "SURVIVOR_SELIN_DIALOGUE_STAGE3"
+dialogue_key = "HUB_SELIN_POST_CH03"
+advanced_dialogue_stage = 100
+advanced_dialogue_key = ""
 
 [node name="Player" parent="." unique_id=1205297111 instance=ExtResource("6_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 27.35)
