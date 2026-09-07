@@ -84,6 +84,8 @@ def test_main_terminal_records_bridge_lists_only_discovered_field_records() -> N
     assert "SAHA KAYDI BULUNMADI" in bridge
     assert "RecordDB.get_record(record_id)" in bridge
     assert "ArchiveDB.LOGS" not in bridge
+    assert "BaseManagementDashboard" not in bridge
+    assert "kendi sekme görünürlüğünün sahibidir" in bridge
 
 
 def test_record_manager_attaches_bridge_without_project_autoload() -> None:
