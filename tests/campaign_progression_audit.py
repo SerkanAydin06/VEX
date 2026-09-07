@@ -143,3 +143,15 @@ def test_level_complete_retries_failed_boundary_save_before_leaving_summary() ->
     assert "if last_campaign_save_failed:" in block
     assert '"level_complete_retry"' in block
     assert "return false" in block
+
+
+def test_bastion_safe_zone_autosaves_base_and_loadout_changes() -> None:
+    bastion = _read(BASTION_SCRIPT)
+    assert "var _safe_save_queued := false" in bastion
+    assert "BaseManager.base_state_changed.connect(_on_base_state_changed)" in bastion
+    assert "GameState.weapon_changed.connect(_on_hub_weapon_changed)" in bastion
+    assert "GameState.ammo_changed.connect(_on_hub_ammo_changed)" in bastion
+    assert "GameState.player_stats_changed.connect(_on_hub_player_stats_changed)" in bastion
+    assert 'call_deferred("_flush_hub_safe_save")' in bastion
+    assert 'GameState.save_current_safe_progress("bastion_state_changed")' in bastion
+    assert 'call_deferred("_save_hub_safe_point", "bastion_arrival")' in bastion
