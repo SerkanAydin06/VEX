@@ -163,8 +163,12 @@ def test_pause_main_menu_forces_current_bastion_state_to_disk_without_creating_m
     pause = _read(PAUSE_MENU)
     game_state = _read(GAME_STATE)
     assert "main_menu_button.pressed.connect(_return_to_main_menu)" in pause
-    assert 'GameState.save_current_safe_progress("main_menu_exit")' in pause
+    assert "current_scene.scene_file_path == GameState.BASTION_7_PATH" in pause
+    assert 'not GameState.save_current_safe_progress("main_menu_exit")' in pause
+    assert "GameState.notify(GameState.get_save_failure_message())" in pause
+    assert "main_menu_button.grab_focus()" in pause
     assert "GameState.return_to_main_menu()" in pause
+    assert pause.index('not GameState.save_current_safe_progress("main_menu_exit")') < pause.index("GameState.return_to_main_menu()")
     save_start = game_state.index("func save_current_safe_progress")
     save_end = game_state.index("func _sanitize_campaign_player_state", save_start)
     save_block = game_state[save_start:save_end]
