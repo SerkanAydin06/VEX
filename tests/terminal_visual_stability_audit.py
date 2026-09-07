@@ -13,15 +13,16 @@ def test_archive_section_switch_casts_int_back_to_enum() -> None:
     assert "_current_section = section as Section" in script
 
 
-def test_archive_columns_stay_fixed_when_dynamic_labels_change() -> None:
+def test_archive_columns_stay_fixed_and_leave_room_for_labels() -> None:
     scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
     script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
 
-    assert "custom_minimum_size = Vector2(238, 0)" in scene
-    assert "custom_minimum_size = Vector2(390, 0)" in scene
+    assert "custom_minimum_size = Vector2(300, 0)" in scene
+    assert "custom_minimum_size = Vector2(480, 0)" in scene
     assert scene.count("size_flags_horizontal = 0") >= 2
     assert '[node name="IndexPanel" type="PanelContainer"' in scene
-    assert "custom_minimum_size = Vector2(362, 0)" in scene
+    assert "custom_minimum_size = Vector2(452, 0)" in scene
+    assert scene.count("theme_override_font_sizes/font_size = 14") >= 7
     assert "button.clip_text = true" in script
     assert "button.size_flags_horizontal = Control.SIZE_EXPAND_FILL" in script
 
