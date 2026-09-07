@@ -1,0 +1,165 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/room_name_display.tscn" id="1_display"]
+
+[sub_resource type="StandardMaterial3D" id="Material_scorch"]
+albedo_color = Color(0.026, 0.012, 0.008, 1)
+roughness = 0.94
+
+[sub_resource type="StandardMaterial3D" id="Material_thermal"]
+albedo_color = Color(0.22, 0.055, 0.012, 1)
+metallic = 0.18
+roughness = 0.34
+emission_enabled = true
+emission = Color(1, 0.18, 0.025, 1)
+emission_energy_multiplier = 2.8
+
+[sub_resource type="StandardMaterial3D" id="Material_warning"]
+albedo_color = Color(0.32, 0.04, 0.008, 1)
+roughness = 0.38
+emission_enabled = true
+emission = Color(1, 0.33, 0.035, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="BoxMesh" id="Mesh_scorch"]
+size = Vector3(3.2, 0.045, 2.2)
+
+[sub_resource type="BoxMesh" id="Mesh_conduit"]
+size = Vector3(0.16, 0.16, 5.5)
+
+[sub_resource type="BoxMesh" id="Mesh_warning"]
+size = Vector3(2.8, 0.055, 0.28)
+
+[node name="Level02EnvironmentStory" type="Node3D"]
+
+[node name="RoomCodes" type="Node3D" parent="."]
+
+[node name="WestServiceDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(-24, 4.85, -34.65)
+room_name = "R08 // ASH-W"
+header_text = "VEX // 02"
+
+[node name="BreacherCacheDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(-52.65, 4.85, 10)
+rotation = Vector3(0, 1.5708, 0)
+room_name = "R13 // ARM"
+header_text = "VEX // 02"
+
+[node name="TransferHallDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(24, 4.85, -14.65)
+room_name = "R19 // XFER"
+header_text = "VEX // 02"
+
+[node name="PressureArchiveDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(52.65, 4.85, 20)
+rotation = Vector3(0, -1.5708, 0)
+room_name = "R27 // P-ARC"
+header_text = "VEX // 02"
+
+[node name="FinalAirlockDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(48, 4.85, 34.65)
+room_name = "R33 // ISO"
+header_text = "VEX // 02"
+
+[node name="ThermalScars" type="Node3D" parent="."]
+
+[node name="WestScorch" type="MeshInstance3D" parent="ThermalScars"]
+position = Vector3(-24, 0.07, -20)
+rotation = Vector3(0, 0.22, 0)
+mesh = SubResource("Mesh_scorch")
+material_override = SubResource("Material_scorch")
+cast_shadow = 0
+
+[node name="TransferScorch" type="MeshInstance3D" parent="ThermalScars"]
+position = Vector3(24, 0.07, -10)
+rotation = Vector3(0, -0.35, 0)
+mesh = SubResource("Mesh_scorch")
+material_override = SubResource("Material_scorch")
+cast_shadow = 0
+
+[node name="SouthScorch" type="MeshInstance3D" parent="ThermalScars"]
+position = Vector3(36, 0.07, 20)
+rotation = Vector3(0, 0.15, 0)
+mesh = SubResource("Mesh_scorch")
+material_override = SubResource("Material_scorch")
+cast_shadow = 0
+
+[node name="ThermalConduits" type="Node3D" parent="."]
+
+[node name="WestConduitA" type="MeshInstance3D" parent="ThermalConduits"]
+position = Vector3(-29.55, 2.7, -20)
+rotation = Vector3(0, 0, 1.5708)
+mesh = SubResource("Mesh_conduit")
+material_override = SubResource("Material_thermal")
+cast_shadow = 0
+
+[node name="EastConduitA" type="MeshInstance3D" parent="ThermalConduits"]
+position = Vector3(29.55, 2.8, -10)
+rotation = Vector3(0, 0, 1.5708)
+mesh = SubResource("Mesh_conduit")
+material_override = SubResource("Material_thermal")
+cast_shadow = 0
+
+[node name="SouthConduitA" type="MeshInstance3D" parent="ThermalConduits"]
+position = Vector3(42.0, 2.7, 20)
+rotation = Vector3(1.5708, 0, 0)
+mesh = SubResource("Mesh_conduit")
+material_override = SubResource("Material_thermal")
+cast_shadow = 0
+
+[node name="WarningBars" type="Node3D" parent="."]
+
+[node name="BlueWingWarning" type="MeshInstance3D" parent="WarningBars"]
+position = Vector3(-24, 4.65, -34.55)
+mesh = SubResource("Mesh_warning")
+material_override = SubResource("Material_warning")
+cast_shadow = 0
+
+[node name="TransferWarning" type="MeshInstance3D" parent="WarningBars"]
+position = Vector3(24, 4.65, -14.55)
+mesh = SubResource("Mesh_warning")
+material_override = SubResource("Material_warning")
+cast_shadow = 0
+
+[node name="FinalWarning" type="MeshInstance3D" parent="WarningBars"]
+position = Vector3(48, 4.65, 34.55)
+mesh = SubResource("Mesh_warning")
+material_override = SubResource("Material_warning")
+cast_shadow = 0
+
+[node name="StoryLights" type="Node3D" parent="."]
+
+[node name="BreacherLockerLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(-46.5, 3.6, 8.75)
+light_color = Color(0.48, 0.78, 1, 1)
+light_energy = 1.3
+omni_range = 5.0
+shadow_enabled = false
+
+[node name="FirstSpitterHeatLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(-24, 3.7, -20)
+light_color = Color(1, 0.20, 0.035, 1)
+light_energy = 2.0
+omni_range = 6.5
+shadow_enabled = true
+
+[node name="TransferHeatLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(24, 3.8, -10)
+light_color = Color(1, 0.27, 0.04, 1)
+light_energy = 2.15
+omni_range = 7.0
+shadow_enabled = true
+
+[node name="PressureArchiveLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(48, 3.8, 20)
+light_color = Color(0.98, 0.14, 0.025, 1)
+light_energy = 1.9
+omni_range = 6.0
+shadow_enabled = true
+
+[node name="FinalIsolationLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(48, 4.0, 30)
+light_color = Color(1, 0.07, 0.02, 1)
+light_energy = 2.4
+omni_range = 7.5
+shadow_enabled = true
