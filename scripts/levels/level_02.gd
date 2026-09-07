@@ -58,28 +58,28 @@ func _configure_authored_doors(doors_root: Node) -> void:
 		doors_root.get_node_or_null("D01_Door"),
 		"CH02_DOOR_BLUE_SHORTCUT",
 		&"blue",
-		"KEY_BLUE",
+		"CH02_BLUE_FUSE",
 		"CH02_OBJECTIVE_BLUE"
 	)
 	_configure_door(
 		doors_root.get_node_or_null("D02_Door"),
 		"CH02_DOOR_THERMAL_BULKHEAD",
 		&"yellow",
-		"KEY_YELLOW",
+		"CH02_YELLOW_FUSE",
 		"CH02_OBJECTIVE_YELLOW"
 	)
 	_configure_door(
 		doors_root.get_node_or_null("D03_Door"),
 		"CH02_DOOR_EAST_TRANSFER",
 		&"blue",
-		"KEY_BLUE",
+		"CH02_BLUE_FUSE",
 		"CH02_OBJECTIVE_BLUE"
 	)
 	_configure_door(
 		doors_root.get_node_or_null("D04_Door"),
 		"CH02_DOOR_ISOLATION_LOCK",
 		&"red",
-		"KEY_RED",
+		"CH02_RED_FUSE",
 		"CH02_OBJECTIVE_RED"
 	)
 	var final_airlock := doors_root.get_node_or_null("D05_Door") as VexDoor
