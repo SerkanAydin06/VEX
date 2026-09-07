@@ -51,7 +51,10 @@ func _install_authored_structure() -> void:
 		if structure_node == null:
 			push_error("VEX-02 yapısal node bulunamadı: %s" % node_name)
 			continue
-		if node_name == &"Doors":
+		# Door scripts are runtime actors and intentionally remain non-tool. Editor
+		# preview only needs their authored geometry; canonical lock semantics are
+		# applied before the doors enter the runtime SceneTree.
+		if node_name == &"Doors" and not Engine.is_editor_hint():
 			_configure_authored_doors(structure_node)
 		source_root.remove_child(structure_node)
 		structure_node.owner = null
