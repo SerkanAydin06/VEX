@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c8q4b7m2k5n3p"
+
+[deps]
+
+files=["res://translations/chapter03.tr.translation", "res://translations/chapter03.en.translation"]
+
+source_file="res://translations/chapter03.csv"
+dest_files=["res://translations/chapter03.tr.translation", "res://translations/chapter03.en.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
