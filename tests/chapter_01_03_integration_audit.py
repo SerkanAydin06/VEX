@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -9,6 +10,11 @@ MISSIONS = [
     (ROOT / "resources" / "missions" / "vex01.tres", "vex01", 1, "BÖLÜM-01", "res://scenes/levels/level_01.tscn", "CH01"),
     (ROOT / "resources" / "missions" / "vex02.tres", "vex02", 2, "BÖLÜM-02", "res://scenes/levels/level_02.tscn", "CH02"),
     (ROOT / "resources" / "missions" / "vex03.tres", "vex03", 3, "BÖLÜM-03", "res://scenes/levels/level_03.tscn", "CH03"),
+]
+CONTENT_SCENES = [
+    ROOT / "scenes" / "levels" / "level_01_first_fracture_content.tscn",
+    ROOT / "scenes" / "levels" / "level_02_ash_corridor_content.tscn",
+    ROOT / "scenes" / "levels" / "level_03_pressure_line_content.tscn",
 ]
 
 
@@ -46,11 +52,16 @@ def test_first_three_mission_resources_use_explicit_canonical_metadata() -> None
         assert f'facility_type = "{prefix}_NAME"' in mission
 
 
-def test_first_three_level_scenes_keep_matching_completion_stages_and_names() -> None:
+def test_first_three_level_scenes_keep_matching_completion_stages_names_and_secret_total() -> None:
+    secret_total = 0
     for _, _, stage, _, scene_path, prefix in MISSIONS:
         scene = _read(ROOT / scene_path.removeprefix("res://"))
         assert f"campaign_completion_stage = {stage}" in scene
         assert f'level_display_name = "{prefix}_NAME"' in scene
+        match = re.search(r"^total_secrets = (\d+)$", scene, flags=re.MULTILINE)
+        assert match is not None
+        secret_total += int(match.group(1))
+    assert secret_total == 3
 
 
 def test_main_menu_uses_current_playable_summary_and_canonical_chapter_one_text() -> None:
@@ -80,3 +91,15 @@ def test_bastion_return_messages_follow_current_chapter_names() -> None:
     assert "CH01_HUB_RETURN" in chapter01
     assert "CH02_HUB_RETURN" in chapter02
     assert "CH03_HUB_RETURN" in chapter03
+
+
+def test_active_chapter_content_does_not_reintroduce_retired_player_facing_level_names() -> None:
+    combined = "\n".join(_read(path).upper() for path in CONTENT_SCENES)
+    for retired in [
+        "VEX-01 // KARANTİNA TESİSİ",
+        "VEX-02 // KIRIK OMURGA",
+        "VEX-03 // KÜL MADENİ",
+        "BROKEN SPINE",
+        "ASH MINE",
+    ]:
+        assert retired not in combined
