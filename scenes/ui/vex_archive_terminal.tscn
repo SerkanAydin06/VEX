@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="3_logo"]
 [ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="4_mono"]
+[ext_resource type="PackedScene" path="res://scenes/ui/base_management_dashboard.tscn" id="5_base_dashboard"]
 
 [node name="VexArchiveTerminal" type="CanvasLayer"]
 process_mode = 3
@@ -397,6 +398,9 @@ custom_minimum_size = Vector2(210, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "ERİŞİMİ AÇ"
+
+[node name="BaseManagementDashboard" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel" instance=ExtResource("5_base_dashboard")]
+layout_mode = 2
 
 [node name="FooterLine" type="HSeparator" parent="ArchiveRoot/ScreenShell/Margin/VBox"]
 layout_mode = 2
