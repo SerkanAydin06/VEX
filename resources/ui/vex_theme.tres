@@ -3,9 +3,9 @@
 [ext_resource type="FontFile" uid="uid://dt6b8nj54csq0" path="res://assets/fonts/vex_ui_bold.ttf" id="1_ui_font"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_button_disabled"]
-content_margin_left = 20.0
+content_margin_left = 16.0
 content_margin_top = 10.0
-content_margin_right = 20.0
+content_margin_right = 16.0
 content_margin_bottom = 10.0
 bg_color = Color(0.025, 0.035, 0.043, 0.85)
 border_width_left = 2
@@ -31,9 +31,9 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_button_hover"]
-content_margin_left = 20.0
+content_margin_left = 16.0
 content_margin_top = 10.0
-content_margin_right = 20.0
+content_margin_right = 16.0
 content_margin_bottom = 10.0
 bg_color = Color(0.055, 0.17, 0.22, 0.98)
 border_width_left = 6
@@ -47,9 +47,9 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_button"]
-content_margin_left = 20.0
+content_margin_left = 16.0
 content_margin_top = 10.0
-content_margin_right = 20.0
+content_margin_right = 16.0
 content_margin_bottom = 10.0
 bg_color = Color(0.018, 0.047, 0.064, 0.94)
 border_width_left = 3
@@ -63,9 +63,9 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_button_pressed"]
-content_margin_left = 20.0
+content_margin_left = 16.0
 content_margin_top = 10.0
-content_margin_right = 20.0
+content_margin_right = 16.0
 content_margin_bottom = 10.0
 bg_color = Color(0.29, 0.055, 0.035, 0.98)
 border_width_left = 6
