@@ -54,3 +54,6 @@ bus = &"Music"
 stream = ExtResource("5_ambient")
 volume_db = -7.0
 bus = &"SFX"
+
+[editable path="Level03EnvironmentStory"]
+[editable path="Level03PressureLineContent"]
