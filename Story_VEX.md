@@ -2,733 +2,1029 @@
 
 ## Belge durumu ve kaynak-of-truth
 
-Bu belge VEX'in **ana hikâye, perde yapısı ve bölüm planı** için kanonik taslak kaynaktır.
+Bu belge VEX'in **ana hikâye, perde yapısı ve 30 bölümlük ana kampanya planı** için kanonik taslak kaynaktır.
 
-- Güncel ana kampanya: **17 bölüm**.
-- Bölüm 1, Bölüm 3 ve Bölüm 4 sırasıyla mevcut **VEX-01, VEX-02 ve VEX-03** operasyon kimliklerini korur.
-- Bölüm 2, Bastion-7'nin hikâye içindeki ilk hub bölümüdür.
-- Bölüm 5-17 şu an **kampanya / level tasarım planıdır**. Gerçek sahne ve scriptler üretildikçe oynanış ayrıntılarında uygulanan sistem kaynak kabul edilir.
-- Yaratıkların aktif roster ve gerçek savaş davranışı için `Enemies_VEX.md` ile `scenes/actors/*.tscn` + ilgili scriptler kaynak-of-truth'tur.
-- Ana hikâye yeni bir düşman türünü yalnız anlatı ihtiyacı için aktif roster'a eklemez. Güncel ana kampanya **18 aktif yaratık / 5 ana evren** üzerine kuruludur.
+- Güncel ana kampanya: **30 bölüm**.
+- 30 bölümün tamamı saha operasyonudur. **Bastion-7 numaralı bir bölüm değildir**; bölümler arasında geri dönülen, hikâye ve sistemlerle büyüyen ana merkezdir.
+- Oyuncuya dönük bölüm adlandırmasında **VEX-01 / VEX-02 / VEX-03 dizilimi kullanılmaz**. Mevcut üretilmiş sahnelerde eski dahili operasyon kimlikleri teknik uyumluluk için bir süre kalabilir; yeni kampanya isimleri oyuncuya dönük kanondur.
+- İlk 25 bölüm, beş ana gerçekliği beşer bölümlük ayrı yaylar hâlinde işler. Erken oyunda farklı evrenlerin yaratıkları karıştırılmaz.
+- Bölüm 26-30 yakınsama ve final perdesidir. Bu noktada aileler aynı operasyon içinde görülebilir; ancak tek bir ortak “xeno ordusu” gibi anlatılmaz.
+- Yaratıkların aktif roster ve gerçek savaş davranışı için `Enemies_VEX.md` ile `scenes/actors/*.tscn` ve ilgili scriptler kaynak-of-truth'tur.
+- Güncel ana kampanya **18 aktif yaratık / 5 ana evren** üzerine kuruludur. Planlanan yaratıklar ana hikâyeyi tamamlamak için zorunlu değildir.
 
-Kampanya yapısı bilinçli olarak eski 11 bölümlük taslaktan genişletilmiştir. Amaç yalnız süreyi uzatmak değil; her evrene kendi kimliğini, motivasyonunu ve oynanış ritmini gösterecek yeterli alan vermektir.
+Bu 30 bölümlük yapı yalnız oyunu uzatmak için tasarlanmamıştır. Ana amaç, oyuncunun her yeni gerçekliği önce anlaması, o gerçekliğin yaratıklarını kademeli öğrenmesi, sonra daha karmaşık encounter'lara geçmesi ve finalde öğrendiği bütün karşı oyunları kullanmasıdır.
 
 ---
 
 # Hikâyenin özü
 
-Yakın gelecekte enerji krizi devletleri görünürde iş birliğine, perde arkasında ise acımasız bir teknoloji yarışına sürükler. Bu yarışın en gizli projelerinden biri, doğrudan devlete bağlı çalışan **VEX — Vektörel Enerji ve Xenoaraştırma Dairesi**dir. VEX resmî kayıtlarda bulunmaz. Yeraltındaki araştırma tesisleri, terk edilmiş madenlerin altına kurulan laboratuvarları ve askerî üsleri yalnız birkaç üst düzey yetkili bilir.
+Yakın gelecekte Dünya uzun süren bir enerji krizinin içindedir. Şehirlerin elektrik şebekeleri, su arıtma sistemleri, ağır sanayi ve savunma altyapısı sürekli kapasite sınırında çalışmaktadır. Devletler görünürde ortak çözüm ararken perde arkasında enerji üstünlüğü için yarışır.
 
-VEX'in görevi insanlığın enerji sorununu sonsuza kadar çözmektir. Yıllarca süren deneylerden sonra bilim insanları **Sıfır Kaynak Reaktörü**nü çalıştırır. Sistem yakıt tüketmeden enerji vermekte, bilinen hiçbir fizik kuralıyla açıklanamayan miktarda güç üretmektedir. Önce tek bir laboratuvarı, ardından bütün bir tesisi besler. VEX yönetimi bunu insanlık tarihinin en büyük buluşu ilan etmeye hazırlanır: yoktan enerji.
+Bu yarışın en gizli projelerinden biri **VEX — Vektörel Enerji ve Xenoaraştırma Dairesi**dir.
 
-Fakat enerji yoktan var olmamaktadır.
+VEX'in amacı yakıt tüketmeden sürekli enerji sağlayacak bir sistem geliştirmektir. Yıllar süren deneylerin sonunda **Sıfır Kaynak Reaktörü** çalıştırılır. İlk sonuçlar olağanüstüdür. Reaktör görünürde hiçbir kaynaktan beslenmeden devasa miktarda güç üretmektedir.
 
-Reaktör, ölçülemeyecek kadar küçük boyutsal yarıklar açarak başka gerçekliklerden güç çekmektedir. Isı, ışık, elektromanyetik alanlar, biyolojik enerji, faz dengesi ve egzotik maddeler bu yarıklardan Dünya'ya taşınmaktadır. İnsanlar farkında olmadan bilmedikleri dünyaların doğal kaynaklarını tüketmektedir.
+Fakat enerji yoktan gelmemektedir.
 
-Her başarılı deney başka bir gerçekliğin dengesini biraz daha bozar.
+Sıfır Kaynak, mikroskobik boyutsal yarıklar üzerinden başka gerçekliklerden enerji ve madde özellikleri çekmektedir. VEX başlangıçta bunu anlamaz. Daha sonra akışın içinde jeotermal ısı, biyolojik enerji, sinirsel iletim örüntüleri, düşük ışık/faz maddesi ve fiziksel uzay dokusuna ait anomaliler tespit edilir.
 
-VEX yönetimi akıştaki anomalileri ve canlı dünyalara ait izleri felaketten önce fark eder. Fakat Dünya'nın enerji altyapısı Sıfır Kaynak'a bağlanmaya başladığı için deneyleri durdurmanın ekonomik, askerî ve siyasi bedeli giderek büyür. Yönetim tehlikeyi inkâr etmek yerine onu **kabul edilebilir risk** olarak sınıflandırır.
+VEX böylece beş ana kaynak sınıfını keşfeder:
 
-Son testte sınır kırılır.
+1. **Korvath Ocağı** — ısı, basınç ve jeotermal güç.
+2. **Thornwild Sürüsü** — biyokütle, enzim ve rejeneratif doku.
+3. **Vaskari Lejyonu** — biyotoksin, sinir iletimi ve savaş biyolojisi.
+4. **Nhal Veil** — düşük ışık/faz maddesi ve perde dokusu.
+5. **Aether Loom** — faz dengesi ve gerçeklik örüntüsü.
 
-Mikroskobik yarıklar birleşir. VEX tesislerinde eş zamanlı patlamalar meydana gelir. Beton katlar parçalanır, enerji hatları erir ve başka gerçekliklere açılan kalıcı geçitler oluşur. Bu defa yalnız enerji geçmez. Farklı dünyalara ait canlılar, maddeler ve doğa yasaları Dünya'ya sızar.
+Başlangıçta VEX yönetimi bu kaynakların cansız veya kendini yenileyen boyutsal alanlardan geldiğini varsayar. Sonraki araştırmalar bunun yanlış olduğunu gösterir. Bazı akışlarda yapılaşmış bölgeler, biyolojik döngüler, davranış örüntüleri ve yaşayan toplumlara ait izler bulunur.
 
-Bu planlanmış tek bir istila değildir.
+Bu noktada proje durdurulmaz.
 
-- Korvath kaynak kaybının merkezine doğru ilerler.
-- Thornwild bozulan habitatından taşar ve yeni av alanlarına tutunur.
-- Vaskari yapılanı düşmanca kaynak saldırısı kabul edip yarıkları askerî cepheye çevirir.
-- Nhal Veil av yolları ile Dünya'nın karanlık bölgeleri birbirine karıştığı için ekolojik olarak yayılır.
-- Aether Loom, bozuk gerçeklik örüntüsünü kendi fizik mantığına göre yeniden düzenlemeye çalışır.
+Dünya'nın enerji altyapısı Sıfır Kaynak'a bağlanmaya başlamıştır. Sistemi kapatmak ekonomik çöküş, siyasi kriz ve stratejik güç kaybı anlamına gelecektir. VEX yönetimi tehlikeyi ortadan kaldırmak yerine sınıflandırır:
 
-İnsanlık, başka dünyaların birbirinden farklı tepkilerini tek kelimeyle **istila** diye adlandırır. Aras'ın hikâyesi bu basit açıklamanın parçalanmasıdır.
+> **“Harici gerçeklik etkisi: kabul edilebilir operasyonel maliyet.”**
+
+Daha fazla güç için yeni düğümler açılır. Mikroskobik yarıklar birbirini bulur ve senkronize olur. Bir noktadan sonra sistem tek reaktör olmaktan çıkar; kendi faz referansını kullanan dev bir **Yarık Ağı**na dönüşür.
+
+Son kapasite artışında sınır kırılır.
+
+VEX tesislerinde eş zamanlı patlamalar yaşanır. Kalıcı geçitler açılır. Dünya'ya yalnız enerji değil, başka gerçekliklerin canlıları, biyolojik yapıları ve fiziksel koşulları da geçmeye başlar.
+
+Fakat bu tek bir istila değildir.
+
+- Korvath, kaybettiği ısı ve basıncın kaynağına yönelir.
+- Thornwild'ın av zinciri parçalanır ve türler yeni habitatlara taşar.
+- Vaskari, kaynak çekimini doğrudan düşman saldırısı sayarak organize karşı cephe kurar.
+- Nhal Veil'in av yolları Dünya'nın karanlık bölgeleriyle üst üste biner.
+- Aether Loom, kırılmış gerçeklik desenini kendi kurallarına göre onarmaya çalışır.
+
+İnsanlık bunların hepsine önce aynı adı verir: **istila**.
+
+Aras Koral'ın hikâyesi, bu kelimenin ne kadar yetersiz olduğunu öğrenmesiyle büyür.
 
 ---
 
 # Ana tema
 
-VEX, “bilim kötüdür” hikâyesi değildir. Ana mesele:
+VEX “bilim kötüdür” hikâyesi değildir. Bilgiye ulaşmak felaketin sebebi değildir; **anlaşılmayan bilginin sonuçları bilindikten sonra bile güç uğruna kullanılmaya devam edilmesi** felaketin merkezidir.
 
-> **Anlaşılmayan bilginin, sonuçları ölçülmeden güç ve zorunluluk adına kullanılmasıdır.**
+VEX yönetiminin savunması tamamen anlamsız değildir. Sıfır Kaynak gerçekten şehirleri ayakta tutmuş, enerji kıtlığını azaltmış ve milyonlarca insanın yaşamını kolaylaştırmıştır.
 
-VEX yönetiminin gerekçesi tamamen anlamsız değildir. Dünya gerçek bir enerji krizi yaşamaktadır. Sıfır Kaynak milyonlarca insanın hayatını, şehirlerin altyapısını ve devletlerin istikrarını koruyabilecek ölçekte güç üretmiştir.
+Sorun, sistemin bedeli ortaya çıktığında başlar.
 
-Trajedi şuradadır: yönetim enerjinin bedelini öğrendiğinde sistemi bırakmak yerine bedeli başka gerçekliklerin ödemesine karar verir.
+VEX şu kararı verir:
 
-Hikâye boyunca oyuncunun sorusu değişir:
+> Dünya'nın refahı için bedeli başka gerçeklikler ödeyebilir.
+
+Aras'ın yolculuğu bu kararın sonuçlarını beş farklı dünyada görmesidir.
+
+Hikâye boyunca oyuncunun soruları aşamalı değişir:
 
 1. **Ne oldu?**
-2. **Bu yaratıklar nereden geliyor?**
-3. **Neden saldırıyorlar?**
-4. **VEX bunu önceden biliyor muydu?**
-5. **Dünya'yı kurtarmak için başka dünyaları yok etmeye devam etmek kabul edilebilir mi?**
-6. **Yarık Ağı kapatılırsa Dünya kendi enerji krizine geri döndüğünde bunun sorumluluğunu kim taşıyacak?**
+2. **Bu canlılar nereden geliyor?**
+3. **Neden Dünya'dalar?**
+4. **VEX neyi çekiyordu?**
+5. **Yönetim yaşayan dünyalara zarar verdiğini biliyor muydu?**
+6. **Bu felaket gerçekten kazayla mı büyüdü?**
+7. **Yarık Ağı artık kendi kendini mi sürdürüyor?**
+8. **Dünya'nın enerji ihtiyacı başka dünyaları sömürmeyi haklı çıkarır mı?**
+9. **Ağ kapatılırsa Dünya'nın ödeyeceği bedel kabul edilebilir mi?**
+10. **Sistemi yok etmek yerine onu kontrol etmenin güvenli bir yolu gerçekten var mı?**
 
 ---
 
 # Oyuncu karakteri — Başçavuş Aras Koral
 
-Oyuncu **Başçavuş Aras Koral**'ı yönetir. Aras, VEX tesislerinde çalışan askerî güvenlik personelidir. Bilimsel projenin gerçek amacı kendisinden gizlenmiştir; ona yalnız stratejik temiz enerji araştırmalarını koruduğu söylenmiştir.
+Oyuncu **Başçavuş Aras Koral**'ı yönetir. Aras, VEX'in saha güvenliğinde görev yapan askerî personeldir. Projenin gerçek amacı kendisinden gizlenmiştir; ona stratejik temiz enerji araştırmalarını koruduğu söylenmiştir.
 
-Aras özel güçleri olan seçilmiş biri değildir. Eğitimli, dayanıklı ve kriz anında karar verebilen bir askerdir. Felaket başladığında birliği dağılır, komuta zinciri çöker ve VEX-01 içeriden kilitlenir.
+Aras seçilmiş kişi değildir. Özel güçleri yoktur. Onu merkeze taşıyan şey eğitimli olması, felaketin ilk saatlerinde hayatta kalması ve gerçeği öğrendikçe sorumluluktan kaçmamasıdır.
 
-### Aras'ın karakter yayı
+## Aras'ın 30 bölümlük karakter yayı
 
-**Aşama 1 — Hayatta kalma:** Başlangıçta tek hedefi tesisten çıkmaktır.
+### Bölüm 1-5 — Hayatta kalma ve ilk şüphe
 
-**Aşama 2 — Görev:** Bastion-7'ye ulaştığında hayatta kalanları kurtarmayı ve VEX düğümlerini kapatmayı askerî bir görev olarak görür.
+Aras yaratıkları saldırgan istilacılar olarak görür. Korvath yayının sonunda ilk kez onların Dünya'ya gelişinin VEX'in kaynak çekimiyle doğrudan bağlantılı olduğunu öğrenir.
 
-**Aşama 3 — Şüphe:** Kül Madeni ve sonraki gerçekliklerde yaratıkların önemli bölümünün Dünya'yı fethetmek için gelmediğini öğrenir.
+### Bölüm 6-10 — Suçun ölçeğini görme
 
-**Aşama 4 — Sorumluluk:** VEX'in uyarıları bilerek bastırdığını ve Yarık Ağı'nı felaket yaklaşırken büyüttüğünü kanıtlar. Kendisinin de koruduğu sistemin sonuçlarından kaçamayacağını kabul eder.
+Thornwild, VEX'in yalnız enerji değil yaşayan ekosistemleri de “kaynak” olarak sınıflandırdığını gösterir. Aras'ın sorusu artık “onları nasıl durdururuz?” değil, “biz onlara ne yaptık?” hâline gelir.
 
-**Aşama 5 — Seçim:** Finalde ağı kapatmanın Dünya'yı yeniden enerji kıtlığına sürükleyeceğini bilmesine rağmen başka gerçeklikleri sürekli sömüren sistemi devam ettirmeyi reddeder.
+### Bölüm 11-15 — Karşı savaş
 
-Onu kahraman yapan şey kader değil, gerçeği öğrendikten sonra sorumluluktan kaçmamasıdır.
+Vaskari, Aras'ın ilk kez planlı ve organize bir karşılıkla yüzleşmesini sağlar. VEX'in başka bir uygarlığın gözünde saldırgan taraf olduğunu kabul etmek zorunda kalır.
 
----
+### Bölüm 16-20 — Kontrolün kaybı
 
-# Ana hedef — Yarık Ağı'nı susturmak
+Nhal Veil yayı, felaketin askerî veya teknolojik bir savaş olmaktan çıkıp gerçekliklerin ekolojik olarak birbirine karışmasına dönüştüğünü gösterir. Aras artık tek tek portal kapatmanın yeterli olmadığını anlar.
 
-Bütün VEX reaktörleri **Yarık Ağı** adı verilen gizli bir enerji omurgasına bağlıdır. Bir portal yerel olarak kapatılsa bile ağ çalıştığı sürece başka bir noktada yeniden açılabilir.
+### Bölüm 21-25 — Gerçeğin yapısı
 
-Aras'ın ana hedef zinciri:
+Aether Loom, Yarık Ağı'nın yalnız bağlantı kurmadığını; farklı gerçeklikleri yapay bir ara yapıda birbirine zorladığını ortaya çıkarır. Nexus gerçeği burada anlaşılır.
 
-1. Bastion-7'yi operasyon üssüne dönüştürmek.
-2. Hayatta kalan uzmanları ve saha verilerini toplamak.
-3. Beş ana gerçekliğin VEX'le bağlantısını çözmek.
-4. Dünya üzerindeki emiş / dengeleme düğümlerini devre dışı bırakmak.
-5. Yarıkların neden kendi kendine büyüdüğünü anlamak.
-6. VEX yönetiminin felaketteki bilinçli kararlarını kanıtlamak.
-7. Nexus'un yerini bulmak.
-8. Yarık Ağı'nın merkezini kalıcı olarak susturmak.
+### Bölüm 26-30 — Sorumluluk ve seçim
 
-Tek tek yaratıkları yok etmek ana çözüm değildir. Asıl hedef, onları Dünya'ya sürükleyen sistemin kendisini kapatmaktır.
+Aras ağı susturmanın Dünya'yı yeniden ağır enerji krizine sokacağını öğrenir. Buna rağmen başka dünyaların sürekli çöküşü üzerine kurulu bir sistemin “kurtuluş” olamayacağına karar verir.
 
 ---
 
-# Kampanya yapısı — 17 bölüm
+# Bastion-7 — Bölümler arasındaki ana merkez
 
-## BİRİNCİ PERDE — FELAKET
+Bastion-7 numaralı bir bölüm değildir. Aras **Bölüm 1'in sonunda** ana Yarık Ağı'ndan fiziksel olarak ayrılmış bu eski güvenli tesise ulaşır ve Yüzbaşı **Leyla Sönmez** ile birlikte burayı operasyon merkezine dönüştürür.
 
-### Bölüm 1 — VEX-01: İlk Kırılma
+Her görevden sonra oyuncu Bastion'a dönebilir. Hikâyedeki ilerleme burada fiziksel olarak görünür:
 
-Aras, güvenlik sığınağında yaralı hâlde uyanır. Acil durum ışıkları yanmakta, ana güç kesik kesik çalışmakta ve tesisin bazı koridorları içeriden parçalanmış görünmektedir. Telsizde yalnız bozuk bir otomatik mesaj duyulur:
+- yeni odalar açılır,
+- aydınlatma ve enerji geri gelir,
+- kurtarılan uzmanlar üste görünür,
+- xeno arşivi yeni yaratıkları ve evrenleri kaydeder,
+- yeni operasyonlar açılır,
+- önce boş olan alanlar yaşayan bir karargâha dönüşür.
 
-> “Sıfır Kaynak deneyi başarısız. Boyutsal bütünlük kaybedildi. Yetkisiz yaşam biçimleri tespit edildi.”
+Planlanan ana uzman kadrosu:
 
-Sığınağın tahliye kapısı doğrudan açılmaz. Hasar gören güvenlik sistemi Aras'ı kilitli bölmelerden geçirir. Oyuncu hareket, etkileşim, P-01, mühimmat yönetimi, kartlı kapılar ve temel çatışma ritmini öğrenir.
+| Kişi | Ana hikâye rolü | Kampanyadaki ana kazanım noktası |
+|---|---|---:|
+| Yüzbaşı Leyla Sönmez | Operasyon koordinasyonu | Bölüm 1 sonrası |
+| Dr. Selin Erdem | Enerji / reaktör mühendisliği | Bölüm 3 |
+| Dr. Ece Tan | Saha tıbbı / biyolojik analiz | Bölüm 9 |
+| Cem “Kurt” Yalın | Eski VEX güvenliği / saha doktrini | Bölüm 13 |
+| Derya Keskin | Lojistik / tesis operasyonu | Bölüm 14 |
+| Uzman Kerem Aksu | Haberleşme / istihbarat | Bölüm 17 |
+| Dr. Nadir Volkan | Boyutsal fizik | Bölüm 22 |
 
-Aras başlangıçta yaratıkların laboratuvar deneyi olduğunu düşünür. Güvenlik görüntülerinde reaktör odasında açılan siyah-kızıl yarık ve yarıktan geçen ilk canlı görülür. Bilimsel bir kayıtta yarım kalmış tek cümle vardır:
+Bu kişiler hikâyeye ve Bastion'ın fiziksel gelişimine bağlanır. Gerçek gameplay sistemi uygulanmadan kesin buff, ekonomi bonusu veya savaş avantajı varmış gibi anlatılmaz.
+
+---
+
+# Zorluk ve yaratık tanıtım kuralı
+
+İlk 25 bölümde temel kural şudur:
+
+> **Önce evreni öğret, sonra o evrenin yeni rolünü ekle, en son aile kombinasyonunu sınav hâline getir.**
+
+Bu nedenle ilk bölümlerde karışık evren spawn'ları kullanılmaz.
+
+## Evren blokları
+
+| Bölümler | Ana gerçeklik | Tasarım amacı |
+|---|---|---|
+| 1-5 | Korvath Ocağı | Temel savaş, takip, ranged baskı, ağır düşman, elit alan kontrolü |
+| 6-10 | Thornwild Sürüsü | Organik ranged, hibrit avcı, charge, zehirli alan ve hareket yönetimi |
+| 11-15 | Vaskari Lejyonu | Organize yakın hat, sniper baskısı, tank ön hat ve destek önceliği |
+| 16-20 | Nhal Veil | Karanlık, açı okuma, görüş kaybı ve bilgi baskısı |
+| 21-25 | Aether Loom | Enerji fanı, açı kontrolü, güvenli phase step ve uzamsal baskı |
+| 26-30 | Yakınsama / Nexus | Öğrenilen bütün ailelerin kontrollü birleşimi ve final sınavı |
+
+---
+
+# PERDE I — KORVATH: SÖNEN ÇEKİRDEK
+
+## Bölüm 1 — İlk Kırılma
+
+### Ana ortam
+
+Yeraltındaki bir VEX enerji araştırma kompleksi. Felaket birkaç dakika önce yaşanmıştır. Acil aydınlatma çalışır, bazı koridorlarda buhar ve sıcaklık artışı vardır, güvenlik kapıları otomatik karantinaya geçmiştir.
+
+### Düşman tanıtımı
+
+**Cinder Hound** kampanyanın ilk aktif yaratığıdır. İlk bölüm bilinçli olarak tek ana düşman rolü üzerine kurulur. Oyuncu hareket, nişan, mühimmat ve hızlı yakın takipçiye karşı mesafe korumayı öğrenir.
+
+### Hikâye
+
+Aras bir güvenlik odasında bilincini kazanır. Komuta kanalı ölüdür. Tesis içindeki yaratıkların önce kaçmış deney organizmaları olduğunu düşünür. Güvenlik görüntülerinde ise kırmızı-siyah bir yarığın açıldığı ve Cinder Hound'ların doğrudan o geçitten geldiği görülür.
+
+Bir laboratuvar kaydında yarım kalmış cümle vardır:
 
 > **“Enerji üretmiyoruz. Bir yerden çekiyoruz.”**
 
-#### Bölüm sonu
+Aras tesisten çıkar ve gecenin karanlığında başka VEX noktalarından yükselen enerji sütunlarını görür. Olay tek tesise ait değildir.
 
-Aras tahliye hattına ulaştığında gecenin içinde gökyüzüne yükselen birden fazla enerji sütunu görür. VEX-01 tek kaza değildir. **Bütün ağ çökmüştür.**
+### Bölüm sonu
 
----
-
-### Bölüm 2 — Bastion-7: Karanlıktaki Üs
-
-Aras, ana Yarık Ağı'ndan fiziksel olarak ayrılmış eski bir güvenli üs olan **Bastion-7**'ye ulaşır. Üs doğrudan boyutsal darbe almamıştır; ancak güç ve tesis sistemlerinin önemli bölümü kapalıdır.
-
-Burada **Yüzbaşı Leyla Sönmez** ile bağlantı kurar. Leyla farklı VEX noktalarından gelen acil sinyalleri toplamıştır. Bastion-7, kaçış noktası olmaktan çıkarılıp karşı operasyon merkezine dönüştürülür.
-
-Bu bölümün amacı büyük bir savaş değil, oyuncuya oyunun ikinci omurgasını tanıtmaktır:
-
-- operasyon terminali,
-- silah deposu,
-- ana VEX terminali / xeno arşivi,
-- üs yönetimi,
-- kapalı tesis bölgeleri,
-- ilerledikçe geri dönülen fiziksel hub mantığı.
-
-Bastion'ın karanlık başlaması hikâye ile sistem ilerlemesini aynı yerde gösterir. Oyuncu yalnız karakterini değil, operasyon kapasitesini de yeniden kurar.
+Aras acil durum protokolünde geçen bağımsız güvenli tesis **Bastion-7**'ye yönelir. Burada Leyla Sönmez ile temas kurulur ve oyun boyunca kullanılacak ana üs kurulur.
 
 ---
 
-### Bölüm 3 — VEX-02: Kırık Omurga
+## Bölüm 2 — Kül Koridoru
 
-VEX-02, güvenlik ağı ve enerji ölçümlerinin ana merkezlerinden biridir. Aras'ın görevi tesise girmek, ana kayıtları ele geçirmek ve reaktör mühendisi **Dr. Selin Erdem**'e ulaşmaktır.
+### Ana ortam
 
-Selin ilk ölçümlerde enerjinin kuantum boşluğundan geldiğine inanmıştır. Daha sonra akımın içinde yıldız radyasyonu, biyolojik ısı ve bilinmeyen maddelere ait izler tespit etmiş; ancak VEX yönetimi sonuçları askerî sır ilan etmiştir.
+Bastion'a en yakın enerji aktarım tünelleri ve eski jeotermal servis hattı.
 
-#### Büyük keşif
+### Yeni düşman
 
-Arşivlerde tarih damgaları vardır. Yönetim enerji akışının **başka gerçekliklerden geldiğini felaketten aylar önce öğrenmiştir**. Buna rağmen kapasite azaltılmamış, tam tersine yeni düğümler devreye alınmıştır.
+**Cinder Spitter** ilk kez eklenir. Artık oyuncu Cinder Hound'un yakın baskısıyla Spitter'ın orta menzil projectile baskısını aynı aile içinde okumayı öğrenir.
 
-Bu noktada hikâye “bilinmeyen deney ters gitti” aşamasından çıkar ve “bilinen risk neden devam ettirildi?” sorusuna geçer.
+### Hikâye
 
----
+Bastion'ın dış iletişimini açmak için eski aktarım rölesinin tekrar çalıştırılması gerekir. Aras ilerledikçe tünellerde normal Dünya jeolojisine ait olmayan bazalt yapıların oluştuğunu görür.
 
-## İKİNCİ PERDE — SÖMÜRÜLEN DÜNYALAR
+Röle kayıtlarında Sıfır Kaynak'ın farklı frekanslarda enerji çektiği ve “KOR-TERMAL” adlı bir kaynak imzasının yıllardır izlendiği ortaya çıkar. Bu noktada VEX'in karşı taraftaki dünyayı ne kadar bildiği hâlâ belirsizdir.
 
-### Bölüm 4 — VEX-03: Kül Madeni
+### Bölüm sonu keşfi
 
-Kırık Omurga kayıtları, Yarık Ağı'nın en güçlü emiş düğümlerinden birini işaret eder: kapatılmış bir maden şehrinin altındaki **VEX-03 Kül Madeni**.
-
-Tesis bir zamanlar jeotermal araştırma merkezi gibi gösterilmiş, gerçekte ise **Korvath Ocağı**'nın ısı ve basınç dengesinden güç çekmiştir.
-
-Korvath ilk kez burada yalnız “düşman ailesi” değil, zarar gören bir gerçekliğin parçası olarak anlatılır.
-
-#### Ana yaratık baskısı
-
-- Cinder Hound
-- Cinder Spitter
-- Furnace Carrier
-- Basalt Juggernaut
-- Crucible Warden'ın ilk elit/koruyucu baskısı
-
-#### Hikâye gerçeği
-
-VEX'in yıllarca çektiği enerji bazı Korvath damarlarını soğutmuş, yeraltı altyapısını çökertmiş ve iş/koruma organizmalarını enerji kaybının kaynağına doğru sürüklemiştir.
-
-Basalt Juggernaut doğal bir “Dünya kuşatma canavarı” değildir; yüksek basınç galerilerinde kaya kırmak ve akış düzenlemek için kullanılan ağır bir organizmadır. Crucible Warden ise kritik enerji kuyularını koruyan güvenlik kastıdır.
-
-Aras ilk kez şu gerçekle yüzleşir:
-
-> **Dünya'daki bazı saldırılar istilanın başlangıcı değil, VEX'in daha önce yaptığı saldırının geri tepmesidir.**
-
-Bölüm sonunda **Dr. Ece Tan** ve yaralı bir saha grubundan kuzey tahliye sinyali alınır.
+Leyla, aynı termal imzaya bağlı daha büyük bir tesis tespit eder. Orada hayatta kalan mühendis sinyali vardır: **Dr. Selin Erdem**.
 
 ---
 
-### Bölüm 5 — Basınç Mezarları
+## Bölüm 3 — Basınç Hattı
 
-**Evren odağı: Korvath Ocağı**
+### Ana ortam
 
-Ece'nin tahliye sinyali, Kül Madeni'nin kapatılmış kuzey galerilerinden gelmektedir. Ancak bu bölge artık Dünya madeni ile Korvath'ın çökmüş bir basınç şaftının üst üste bindiği kararsız bir alandır.
+Yüksek basınç boruları, reaktör servis galerileri ve çökmüş test odaları.
 
-Bu bölüm Korvath hikâyesini tamamlar. İlk bölümde oyuncu VEX'in ne çektiğini öğrenmiştir; burada bunun karşı tarafta bıraktığı **fiziksel mezarlığı** görür.
+### Yeni düşman
 
-#### Oynanış odağı
+**Basalt Juggernaut** tanıtılır. Hound hızlı yakın tehdit, Spitter mobil ranged baskı, Juggernaut ise yüksek dayanıklılık ve ağır projectile ile üçüncü katmanı oluşturur.
 
-- Basalt Juggernaut ağır hat kırıcı olarak daha belirgin kullanılır.
-- Crucible Warden bölümün savunma omurgasıdır.
-- Cinder Hound ve Cinder Spitter ağır birimlerin açtığı boşlukları zorlar.
-- Furnace Carrier oyuncunun “uzakta kal / yakına gir” kararını sürekli bozar.
+### Hikâye
 
-#### Hikâye amacı
+Aras Selin'e ulaşmaya çalışırken tesis arşivinde ilk gerçek kanıtı bulur: VEX, enerji akışının jeolojik olarak aktif ve düzenli bir sisteme bağlı olduğunu kazadan aylar önce biliyordur.
 
-Aras, çalışmayı durdurmaya çalışan bazı VEX saha mühendislerinin emirle susturulduğunu gösteren kayıtları bulur. Sorun yalnız merkezdeki birkaç kişinin hatası değildir; **riskin kurum içinde bilinip hiyerarşi tarafından bastırılmasıdır.**
+Selin kurtarıldığında daha ağır gerçeği açıklar. Akış doğal bir yıldız veya boşluk alanından değil, **düzenlenmiş ısı damarlarından** gelmektedir. Başka bir gerçeklikte bu enerjiyi kullanan yapıların olabileceğinden şüphelenmiştir; raporu gizlenmiştir.
 
-Ece ve yaralıların kurtarılması, insan tarafındaki kaybı da görünür tutar. Başka gerçekliklere yapılan zarar, Dünya'daki sıradan personeli de tüketmiştir.
+### Bölüm sonu
 
----
-
-### Bölüm 6 — Diken Hattı
-
-**Evren odağı: Thornwild Sürüsü**
-
-VEX'in biyolojik enerji ve rejeneratif doku araştırmaları için kullandığı orman sınırı tesisi, felaketten sonra Thornwild biyokütlesiyle iç içe büyümeye başlamıştır.
-
-Korvath'tan farklı olarak burada organize savunma değil, bozulan bir **av-avcı ekosistemi** vardır.
-
-#### Ana yaratık tanıtımı
-
-- Ravager
-- Briar Skulker
-- Gorehorn
-
-Ravager uzun görüş hattını cezalandırır, Briar Skulker mesafeye göre rol değiştirir, Gorehorn koridor ve açık alan geometrisini tehdit hâline getirir.
-
-#### Hikâye gerçeği
-
-VEX bu gerçeklikten yalnız enerji çekmemiş; enzimatik kaynakları ve rejeneratif dokuyu da örneklemiştir. Yarık çevresinde bozulan av zinciri, bazı türleri yeni habitat ve besin kaynağı aramak için Dünya tarafına sürüklemiştir.
-
-Thornwild'ın tepkisi Korvath gibi “kaynağı koru” değil:
-
-> **“Bozulan habitatta hayatta kalabileceğin yeni alanı bul.”**
+Selin Bastion'a katılır. İlk kez Yarık Ağı'nın tek reaktörden oluşmadığını ve farklı kaynak düğümlerinin ortak bir senkronizasyon sistemi kullandığını gösterir.
 
 ---
 
-### Bölüm 7 — Spor Tahtı
+## Bölüm 4 — Erimiş Damar
 
-**Evren odağı: Thornwild Sürüsü**
+### Ana ortam
 
-Diken Hattı'nın merkezindeki biyokütle, eski bir VEX tarım/lojistik araştırma sahasını tamamen yutmuştur. Bölgenin büyümesi rastgele değildir; spor yoğunluğu çevredeki canlı dağılımını yönlendirmektedir.
+Terk edilmiş bir maden şehrinin altındaki büyük ısı aktarım istasyonu.
 
-#### Ana tehdit
+### Yeni düşman
 
-**Spore Matriarch**, Thornwild'ın “boss olmak için yaratılmış dev canavarından” çok ekosistemin alan kuran merkez türü olarak sunulur.
+**Furnace Carrier** tanıtılır. Oyuncu artık uzak menzil baskısı ile yakına girildiğinde oluşan termal tehdit arasında karar vermek zorundadır.
 
-Ravager, Briar Skulker ve Gorehorn bu bölümde Matriarch'ın oluşturduğu zehirli alan baskısıyla birlikte kullanılır.
+### Hikâye
 
-#### Hikâye amacı
+Aras tesisin alt katlarında Dünya'ya ait olmayan işaretler, düzenli tünel yüzeyleri ve yapısal izler bulur. Bunlar vahşi bir mağara sistemine değil, karşı tarafta işlenmiş bir altyapıya işaret eder.
 
-Aras burada VEX'in biyolojik kaynak çekiminin doğrudan tek türü değil, **besin zincirinin tamamını** değiştirdiğini öğrenir. Bir gerçekliğin kaynağını almak, yalnız kaynağın miktarını azaltmamış; hangi türün nerede yaşayabildiğini de değiştirmiştir.
+VEX kayıtları sonunda gerçeği doğrular: yıllar süren enerji çekimi Korvath tarafındaki ısı ve basınç dengesini düşürmüş, bazı galerilerin çökmesine neden olmuştur.
 
-Planlanan hikâye tarafında lojistik uzmanı **Derya Keskin** burada kurtarılabilir. Derya'nın rolü ileride Bastion kaynak/operasyon planlamasını geliştirmektir; bu sistem uygulanana kadar bu bağlantı yalnız anlatı planıdır.
+Aras ilk kez şu ihtimalle yüzleşir:
 
----
-
-## ÜÇÜNCÜ PERDE — KARŞI CEPHE
-
-### Bölüm 8 — Lejyon Sınırı
-
-**Evren odağı: Vaskari Lejyonu**
-
-Aras ilk defa geçidi kullanan yaratıkların tesadüfen dağılmadığı bir savaş alanına girer. Vaskari, yarık hattını bir kaza değil **askerî sınır** olarak ele almaktadır.
-
-#### İlk Vaskari savaş hattı
-
-- Vaskari Raptor
-- Vaskari Ravager
-- Coil Lancer
-
-Bu bölümün amacı aile kimliğini tek tek güçlü düşmanlardan değil, rollerin birlikte oluşturduğu baskıdan kurmaktır.
-
-#### Büyük keşif
-
-Vaskari kayıtları insan diliyle okunamaz; fakat ele geçirilen VEX telemetrisi ve saha örüntüleri, Lejyon'un enerji çekimini doğal felaket olarak değil **düşman bir gücün kaynak saldırısı** olarak sınıflandırdığını gösterir.
-
-Vaskari Dünya'yı ele geçirmek için sebepsizce saldırmamaktadır. Onların gözünde savaş zaten VEX tarafından başlatılmıştır.
-
-Planlanan karakter çizgisinde **Cem “Kurt” Yalın** bu operasyon sırasında kurtarılabilir ve Bastion eğitim alanı fikrine bağlanabilir. Gerçek eğitim sistemi uygulanana kadar bu yalnız kampanya planıdır.
+> Korvathlar Dünya'yı işgal etmiyor olabilir; **kaybettikleri enerjinin yönüne doğru geliyor olabilirler.**
 
 ---
 
-### Bölüm 9 — Zehirli Emir
+## Bölüm 5 — Sönen Çekirdek
 
-**Evren odağı: Vaskari Lejyonu**
+### Ana ortam
 
-Lejyon Sınırı'ndaki birliklerin bir keşif kolu olduğu anlaşılır. Aras, Vaskari'nin ele geçirdiği eski bir VEX toksin araştırma tesisine ilerler. Burada düşman artık yalnız hat kurmamakta, VEX altyapısını inceleyip kendi cephe mantığına göre kullanmaktadır.
+Korvath bağlantısının Dünya'daki en büyük termal ankrajı. Bazalt ve VEX endüstriyel yapıları iç içe geçmiştir.
 
-#### Yeni Vaskari katmanı
+### Yeni düşman / yay zirvesi
 
-- Vaskari Bulwark
-- Venom Marshall
-- önceki Vaskari rollerinin birleşimi
+**Crucible Warden** tanıtılır. Beş Korvath yaratığının tamamı artık kullanılabilir. Encounter'lar önce ayrı roller, sonra kontrollü aile kombinasyonları şeklinde yükselir.
 
-Bulwark ön hattı sabitlerken Venom Marshall destek alanıyla savaş hattının öncelik sırasını değiştirir.
+### Hikâye
 
-#### Hikâye gerçeği
+Aras ankrajı kapatmak için merkeze ilerlerken VEX'in “harici kaynak stabilizasyonu” adlı belgelerine ulaşır. Yönetim, Korvath tarafında yapılaşmış alanların zarar gördüğünü öğrenmiş fakat enerji akışını azaltmak yerine çekiş yönünü değiştirmiştir.
 
-VEX, Vaskari gerçekliğinden biyotoksin, sinir iletimi ve savaş biyolojisi örnekleri çekmiştir. Bazı deneyler “savunma araştırması” etiketiyle yürütülmüş; fakat karşı gerçekliğin canlı bir toplum olduğu anlaşıldıktan sonra da devam etmiştir.
+Bu bölüm Korvathların toplum yapısını tamamen açıklamaz; ama onların yalnız vahşi yaratık sürüsü olmadığını kesinleştirir.
 
-Aras ilk kez karşısında yanlışlıkla Dünya'ya düşmüş canlılardan ziyade **insanları tanımlanmış düşman olarak gören organize bir irade** bulunduğunu kesin biçimde anlar.
+### Büyük kırılma
 
-Bu, bütün evrenlerin birleştiği anlamına gelmez. Vaskari yalnız kendi savaşını yürütmektedir.
+Aras ilk büyük ankrajı devre dışı bırakır. Ancak sistem kapanmaz. Selin beş farklı kaynak imzasının aynı ağ üzerinde çalıştığını tespit eder.
 
----
-
-### Bölüm 10 — Sessiz Gökyüzü
-
-**Evren odağı: Nhal Veil**
-
-Bir iletişim gözlemevi, karanlık ve sisle kaplı Nhal Veil ile iç içe geçmiştir. Bölümün korkusu gerçek görünmezlikten değil, oyuncunun güvenilir bilgi alanının azalmasından gelir.
-
-#### Ana tehdit
-
-- Veilmaw
-
-Veilmaw atış sonrasında yeni görüş hattı arayan hareketiyle oyuncunun karanlıkta açı kontrolünü bozar.
-
-#### Hikâye gerçeği
-
-VEX, Nhal'dan düşük ışık/faz maddesi ve “perde” dokusu çekmiştir. Bu çekim Nhal av yollarıyla Dünya'nın karanlık, kapalı bölgeleri arasında geçici bağlantılar üretmiştir.
-
-Nhal örgütlü bir ordu değildir. İnsan açısından istilaya benzeyen şey, iki ekolojinin kontrolsüz biçimde üst üste binmesidir.
-
-#### Kurtarılan uzman planı
-
-**Kerem Aksu — Haberleşme ve İstihbarat** burada bulunur. Kerem kazadan hemen önce merkezden gönderilen bir emri çözer:
-
-> **“Kararsızlık kabul edilebilir sınırda. Üretimi durdurmayın.”**
-
-Felaket bir anda ortaya çıkmamıştır. Yaklaşırken görülmüş ve devam kararı verilmiştir.
+Korvath yalnızca **birinci kaynaktır**.
 
 ---
 
-### Bölüm 11 — Açlığın Yankısı
+# PERDE II — THORNWILD: YARALI EKOSİSTEM
 
-**Evren odağı: Nhal Veil**
+## Bölüm 6 — Yeşil Karantina
 
-Sessiz Gökyüzü'nün kayıtları, VEX'in perde maddesini yalnız iletişim/optik araştırmasında kullanmadığını; algı bastırma ve düşük ışık adaptasyonu için daha derin testler yaptığını gösterir.
+### Ana ortam
 
-Aras yeraltındaki eski bir faz gözlem kompleksine iner. Burada ışık kesintileri ve dar görüş hatları, Nhal'ın ikinci aktif türünü merkez tehdide dönüştürür.
+Bir VEX biyolojik araştırma sahasının çevresi. Beton koridorlar kök, kas benzeri doku ve hızlı büyüyen organik yüzeylerle kaplanmaktadır.
 
-#### Ana tehdit
+### Yeni düşman
 
-- Husk Leech
-- Veilmaw
+**Ravager** tanıtılır. Thornwild yayı Korvath'tan farklı olarak uzun menzilli organik precision baskıyla başlar.
 
-Husk Leech'in görüşü kapatan saldırısı bölümün ana bilgi baskısıdır. Hikâye bunu yeni bir “görünmezlik gücü” gibi büyütmez; güncel gameplay'deki gerçek algı bozma davranışına dayanır.
+### Hikâye
 
-#### Büyük keşif
+VEX'in ikinci kaynak sınıfının enerji değil, doğrudan **biyolojik üretkenlik** olduğu ortaya çıkar. Rejeneratif dokular, enzimler ve yüksek hızlı hücresel yenilenme yıllardır laboratuvarlarda incelenmektedir.
 
-VEX'in düşük ışık/faz çekimi Nhal tarafında yalnız habitatı değil, **avın algılanma biçimini belirleyen çevresel düzeni** de değiştirmiştir. Aras artık felaketin yalnız enerji veya madde kaybı olmadığını görür; bazı gerçekliklerde VEX'in aldığı şey doğrudan o dünyanın fiziksel davranışının parçasıdır.
-
----
-
-## DÖRDÜNCÜ PERDE — GERÇEKLİĞİN DOKUSU
-
-### Bölüm 12 — Cam Deniz
-
-**Evren odağı: Aether Loom**
-
-Kıyı araştırma tesisi, Aether Loom içindeki “Cam Deniz” bölgesine bağlanmıştır: kristalleşmiş okyanuslar, havada asılı madde ve bükülen perspektif çizgileri.
-
-#### Ana tehdit
-
-- Voidweaver
-
-Voidweaver, Aether'ın uzaktan örüntü kuran savaş dilini tanıtır. Buradaki anlatım yaratığı “büyücü” gibi değil, bozulmuş enerji/faz çizgilerini kendi gerçeklik mantığına göre yeniden bağlayan bir saha organizması olarak ele alır.
-
-#### Kurtarılan uzman planı
-
-**Dr. Nadir Volkan — Boyutsal Fizikçi** bu operasyonda bulunur.
-
-Nadir'in analizi önemli bir kırılma yaratır:
-
-> Aether Loom için madde, enerji ve mekân birbirinden tamamen ayrı şeyler olmayabilir.
-
-VEX'in enerji çekimi bu dünyada yalnız kaynak eksiltmemiş; gerçeklik örüntüsünde **bozuk bir desen** üretmiştir.
+Aras'ın ilk görevi karantina merkezindeki örnek arşivini güvenceye almak ve yayılmanın yönünü belirlemektir.
 
 ---
 
-### Bölüm 13 — Kırık Geometri
+## Bölüm 7 — Diken İzleri
 
-**Evren odağı: Aether Loom**
+### Ana ortam
 
-Cam Deniz verileri, Yarık Ağı'nın “başka dünyalara açılan borular” kadar basit olmadığını gösterir. Ağ farklı gerçeklikleri yapay bir dengeye zorlayan büyük bir faz geometrisi üretmektedir.
+Terk edilmiş tarım araştırma alanları, seralar ve yarık biyokütlesiyle kaplanmış servis tünelleri.
 
-Aras, birbirine yanlış bağlanmış koridorlardan ve katmanlardan oluşan bir dengeleme tesisine girer.
+### Yeni düşman
 
-#### Ana tehdit
+**Briar Skulker** eklenir. Uzakta projectile, yakında melee davranışıyla oyuncuya mesafe değiştiren ilk Thornwild hibritini öğretir.
 
-- Rift Reaver
-- Voidweaver
+### Hikâye
 
-Rift Reaver'ın güvenli phase step + lunge davranışı Aether'ın yakın mesafe uzamsal baskısını temsil eder. Hikâye bu davranışı sınırsız teleport veya duvardan geçme olarak anlatmaz.
+Aras canlıların rastgele yayılmadığını görür. Bazı türler belirli biyokütle ceplerini takip etmekte, bazı bölgeleri ise tamamen terk etmektedir. VEX araştırma kayıtları Thornwild'ın karmaşık bir av-avcı zincirine sahip olduğunu gösterir.
 
-#### Büyük keşif — Nexus
-
-Nadir, bütün VEX düğümlerinin doğal bir ortak evrene bağlanmadığını kanıtlar.
-
-**Nexus**, yıllarca yapılan çekimin ve yapay senkronizasyonun sonucunda oluşmuş, farklı gerçeklik parçalarını birbirine zorla bağlayan bir ara yapıdır.
-
-Nexus ağın sonucu olduğu kadar artık ağın devam etmesini sağlayan merkezdir.
-
-Bir düğümü kapatmak yetmez. **Merkezin susturulması gerekir.**
+Kaynak çekimi yalnız tek türü değil, tüm besin zincirini bozmuştur.
 
 ---
 
-### Bölüm 14 — Çöküş Bölgesi
+## Bölüm 8 — Boynuz Geçidi
 
-**Odağı: Beş gerçekliğin kontrollü yakınsaması**
+### Ana ortam
 
-Bir metropolün dış bölgesinde Yarık Ağı kendi kendine kararlı kalmaya çalışırken birden fazla gerçeklik Dünya geometrisinin üzerine binmeye başlar.
+Yarık bitki örtüsünün bir otoyol bakım kompleksi ve drenaj vadisiyle birleştiği geniş saha.
 
-Bu bölüm, daha önce ayrı ayrı öğrenilen ailelerin ilk büyük birleşim sınavıdır; fakat önemli bir lore kuralı korunur:
+### Yeni düşman
 
-> **Farklı evrenlerin yaratıkları tek bir ittifak ordusu değildir.**
+**Gorehorn** tanıtılır. Düz hat charge baskısı, Ravager ve Briar'ın kurduğu pozisyon oyununu bozar. Oyuncu artık yalnız cover aramak yerine güvenli kaçış hattını da düşünmek zorundadır.
 
-Korvath enerji altyapısına yönelir, Thornwild biyokütle bölgelerinde yuvalanır, Vaskari geçitleri askerî koridor kabul eder, Nhal karanlık alt geçitlerde yayılır, Aether ise kırılmış faz çizgilerinin çevresinde gerçekliği yeniden düzenlemeye çalışır.
+### Hikâye
 
-Bölüm tasarımı mümkün olduğunca bu aileleri kendi sektörlerinde ve kesişim noktalarında kullanmalıdır. Karışık encounter'lar lore gereği “ortak saldırı” değil, aynı çöken alanda çıkarları çakışan farklı tehditler olmalıdır.
+Bastion ekibi Thornwild canlılarının yarık çevresinde kalıcı yuva alanları kurduğunu fark eder. Bu davranış planlı fetih değil, çöken habitat zincirinin başka tarafa taşmasıdır.
 
-#### Hikâye kırılması
-
-Felaket artık VEX'in gizleyebileceği ölçekte değildir. Yerel portal kazaları küresel bir **gerçeklik çöküşü** riskine dönüşür.
-
-Bastion ekibi Ters Akış Protokolü'nün ilk uygulanabilir taslağını çıkarır: amaç enerji çekimini tersine çevirmek değil, düğümlerin birbirini besleme yeteneğini keserek ağı sessizleştirmektir.
+VEX ise felaketten önce bu göç belirtilerini “örnek yoğunluğunda artış” olarak kaydetmiş ve projeyi durdurmamıştır.
 
 ---
 
-## BEŞİNCİ PERDE — YARIK SAVAŞI
+## Bölüm 9 — Spor Bahçesi
 
-### Bölüm 15 — Bastion Kuşatması
+### Ana ortam
 
-Bastion-7 ana Yarık Ağı'ndan fiziksel olarak izoledir. Bu özellik değiştirilmez; Vardar üssü uzaktan “hackleyip” ağı ele geçiremez.
+Eski bir tıbbi biyoteknoloji merkezi ve çevresindeki sporla kaplanmış yerleşke.
 
-Kuşatmanın nedeni Bastion ekibinin Ters Akış Protokolü'nü test etmek için kısa süreli güçlü bir faz imzası üretmesidir. Bu imza dış ağdan bağlantı kurmaz, fakat çevredeki kararsız yarıkları Bastion'ın konumuna doğru rezonansa sokar.
+### Yeni düşman
 
-Aynı anda Haluk Vardar açık iletişim kanalından Bastion ekibine teslim olma çağrısı yapar. Onun amacı protokolün yok edilmesi ve Sıfır Kaynak sisteminin tekrar kontrol altına alınmasıdır; ancak güncel aktif enemy roster'da insan asker/dron fraksiyonu bulunmadığı için **Vardar'ın birlikleri bu aşamada oynanabilir düşman roster'ı olarak kanon değildir**.
+**Spore Matriarch** tanıtılır. Zehir alanı ve DoT baskısı, Thornwild ailesinin hareket alanı kontrolünü tamamlar.
 
-Kuşatmanın gerçek savaş baskısı mevcut xeno ailelerinin açılan farklı yarık sektörlerinden gelmesiyle kurulur.
+### Hikâye
 
-#### Bölümün işlevi
+Aras tesiste mahsur kalan **Dr. Ece Tan** ve yaralı personelin sinyalini bulur. Ece'nin biyolojik analizleri, VEX'in Thornwild'dan çektiği rejeneratif maddelerin Dünya'daki tıbbi programlarda kullanılmaya başlandığını gösterir.
 
-- Oyuncunun oyun boyunca tanıdığı Bastion alanlarını savunması.
-- Açtığı kapalı bölümlerin ve üs ışık/güç durumunun mekânsal olarak anlam kazanması.
-- Önceki bütün düşman okuma becerilerinin aynı savunma bağlamında kullanılması.
-- Bastion'ın yalnız menü değil, korunması gereken gerçek bir yer olduğunu göstermesi.
+Bu keşif hikâyeyi ahlaki olarak zorlaştırır: VEX'in çaldığı kaynaklar gerçekten hayat kurtarmıştır.
 
-NPC ve gelecekteki üs geliştirmelerinin savunmaya mekanik katkısı ancak ilgili sistemler gerçekten uygulandığında kanona alınacaktır.
+Ancak aynı kaynak çekimi karşı taraftaki ekosistemin çöküşünü hızlandırmıştır.
+
+### Bölüm sonu
+
+Ece Bastion'a katılır. Xeno örnekleri artık yalnız “düşman dokusu” değil, başka ekosistemlerin parçaları olarak sınıflandırılmaya başlanır.
 
 ---
 
-### Bölüm 16 — VEX Sıfır
+## Bölüm 10 — Köklerin Hafızası
 
-Aras ve Bastion ekibi, ilk Sıfır Kaynak Reaktörü'nün ve yönetim arşivinin bulunduğu ana VEX merkezine ulaşır.
+### Ana ortam
 
-Tesis felakete rağmen tamamen ölü değildir. Otomatik güvenlik katmanları, reaktör anomalileri ve farklı düğümlerden taşan mevcut xeno tehditleri birbirine karışmıştır.
+Dünya tarafında yarık üzerinden büyümüş en büyük Thornwild biyokütle kolonisi.
 
-Bu bölümün ana düşmanı yeni bir insan fraksiyonu değil, **VEX'in kararlarının fiziksel sonucu olan tesisin kendisidir**.
+### Yay sınavı
 
-#### Haluk Vardar
+Ravager, Briar Skulker, Gorehorn ve Spore Matriarch birlikte kullanılır. Encounter'lar oyuncuyu precision ateş, hibrit yaklaşma, charge hattı ve zehir alanı arasında hareket etmeye zorlar.
 
-VEX Genel Direktörü **Haluk Vardar** hikâyenin insan karşıtıdır. Vardar “dünyayı yok etmek isteyen deli bilim insanı” değildir. Onun savı daha tehlikelidir çünkü mantıklı bir korkuya dayanır:
+### Hikâye
 
-- Dünya Sıfır Kaynak'a bağımlı hâle gelmiştir.
-- Ağ kapatılırsa enerji kıtlığı geri dönecektir.
-- Hastaneler, şehirler ve devletler uzun süreli çöküş yaşayabilir.
-- Ona göre başka gerçekliklerin kaybı, Dünya'daki milyarlarca insanın yaşamından daha düşük bir bedeldir.
+Koloninin merkezinde VEX'in eski biyolojik emiş modülü bulunur. Aras modülü kapatırken kayıtların yalnız veri toplamadığını, karşı taraftaki biyolojik döngünün verimliliğini ölçüp en yüksek üretim anlarında çekiş yaptığını keşfeder.
 
-Aras'ın cevabı, bedelin yok sayılmasına karşıdır: Dünya'nın kurtuluşu sürekli başka dünyaların çöküşüne bağlıysa sistem kurtuluş değildir.
+Yani VEX Thornwild'ın yaşayan bir ekosistem olduğunu yalnız bilmemiş; **onu daha verimli sömürmek için davranışını modellemiştir.**
 
-#### Tam kanıt
+### Büyük kırılma
 
-Aras ana yönetim arşivini açtığında üç aşamalı suç zinciri kanıtlanır:
+Aras için felaket artık yalnız bir kaza değildir. Sistem kazadan önce etik sınırı çoktan aşmıştır.
+
+Aynı anda Bastion, üçüncü kaynak imzasında düzenli ve tekrarlayan askerî benzeri sinyal paketleri algılar.
+
+---
+
+# PERDE III — VASKARI: KARŞI CEPHE
+
+## Bölüm 11 — Mor Cephe
+
+### Ana ortam
+
+Bir VEX sınır dinleme tesisi ve çevresinde yeni oluşan mor biyozırhlı geçiş hattı.
+
+### Yeni düşman
+
+**Vaskari Raptor** tanıtılır. Hızlı takip ve kısa lunge döngüsüyle Vaskari'nin agresif ön hat kimliği kurulur.
+
+### Hikâye
+
+Korvath ve Thornwild'dan farklı olarak bu bölgede davranışlar rastgele değildir. Vaskari birimleri belirli enerji ekipmanlarını hedef almakta, geçitleri korumakta ve tekrar eden hatlar üzerinden hareket etmektedir.
+
+Aras ilk kez karşı tarafın yalnız tepki vermediğini; **operasyon yürüttüğünü** anlar.
+
+---
+
+## Bölüm 12 — Kırıcı Hat
+
+### Ana ortam
+
+VEX lojistik tünelleri ve ele geçirilmiş ağır servis hangarları.
+
+### Yeni düşman
+
+**Vaskari Ravager** eklenir. Raptor'ın hızına karşı daha ağır, daha yavaş ve daha sert yakın lunge tehdidi oluşturur.
+
+### Hikâye
+
+Selin ve Leyla, ele geçirilen sinyal dizilerinin VEX enerji düğümleriyle eşleştiğini fark eder. Vaskari birlikleri rastgele insan yerleşimlerini değil, öncelikle **Yarık Ağı altyapısını** işaretlemektedir.
+
+Bu onları dost yapmaz; yollarındaki insan unsurlarını tehdit olarak görmektedirler. Ancak amaçları Dünya'yı kolonileştirmekten çok saldırının kaynağını susturmaktır.
+
+---
+
+## Bölüm 13 — Mızrak Menzili
+
+### Ana ortam
+
+Açık saha radar kompleksi, uzun görüş koridorları ve hasarlı savunma platformları.
+
+### Yeni düşman
+
+**Coil Lancer** tanıtılır. Uzun menzilli yüksek hızlı atış, oyuncuyu Vaskari yakın birimleriyle uğraşırken açık alanda kalmamaya zorlar.
+
+### Hikâye
+
+Aras tesiste eski VEX güvenlik personeli **Cem “Kurt” Yalın**'a ulaşır. Cem, felaketten önce bazı VEX saha birimlerinin “harici kaynak alanlarında canlı muhalefet” ihtimaline karşı eğitildiğini anlatır.
+
+Bu, yönetimin olası karşı tepkiyi düşündüğünü kanıtlar.
+
+Cem emirlere itiraz ettiği için operasyon dışına alınmış ve olay başladığında tesiste mahsur kalmıştır. Kurtarıldıktan sonra Bastion'a katılır.
+
+---
+
+## Bölüm 14 — Kalkan Duvarı
+
+### Ana ortam
+
+Ağır yük terminali ve taşınabilir Sıfır Kaynak çekirdeklerinin depolandığı lojistik merkez.
+
+### Yeni düşman
+
+**Vaskari Bulwark** tanıtılır. Çok dayanıklı yakın ön hat birimi, Coil Lancer'ın geriden kurduğu baskıya alan kazandırır.
+
+### Hikâye
+
+Aras burada **Derya Keskin**'i ve VEX lojistik kayıtlarını bulur. Felaket sonrasında bile bazı üst yönetim emirleri taşınabilir çekirdeklerin güvenli bölgelere gönderilmesini istemiştir.
+
+Amaç ağı kapatmak değildir.
+
+Amaç, sistemi **yeniden kurabilmek için çekirdekleri korumaktır**.
+
+Derya Bastion'a katılır ve VEX'in hangi tesislerinin hâlâ malzeme ve enerji taşıdığını haritalandırır.
+
+---
+
+## Bölüm 15 — Zehirli Emir
+
+### Ana ortam
+
+Vaskari'nin Dünya tarafında kurduğu en büyük geçiş cephesi ile bir VEX komuta düğümünün üst üste bindiği bölge.
+
+### Yeni düşman / yay zirvesi
+
+**Venom Marshall** tanıtılır. Ranged saldırı ve destek alanı, Vaskari'yi ilk kez tam bir rol kombinasyonu ailesine dönüştürür. Oyuncu yalnız en yakın hedefi değil, savaş hattını ayakta tutan destek birimini önceliklendirmeyi öğrenir.
+
+### Hikâye
+
+Bastion ekibi Vaskari sinyal düzenini tam dil olarak çeviremez; fakat tekrar eden askeri işaretleri ve hedef önceliklerini çözer. VEX'in biyotoksin, sinir iletimi ve savaş biyolojisi örneklerini uzun süre çektiği anlaşılır.
+
+Vaskari bunu doğal kaynak kaybı değil **düşmanca biyolojik saldırı** olarak sınıflandırmıştır.
+
+### Büyük kırılma
+
+Aras VEX Genel Direktörü **Haluk Vardar** imzalı eski bir emre ulaşır:
+
+> “Harici uygarlık tepkisi projenin stratejik değerini değiştirmez. Kaynak sürekliliği korunacaktır.”
+
+Vardar artık hikâyenin insan tarafındaki ana karşıt görüşünü temsil eder: Dünya'nın hayatta kalmasının başka gerçekliklerin haklarından daha önemli olduğuna inanmaktadır.
+
+---
+
+# PERDE IV — NHAL VEIL: KAYIP ALGI
+
+## Bölüm 16 — Sessiz Gökyüzü
+
+### Ana ortam
+
+Dağlık bölgede bulunan bir VEX gözlemevi. Tesisin büyük kısmı karanlıktır; çevredeki sis ve düşük ışık Dünya koşullarına ait değildir.
+
+### Yeni düşman
+
+**Veilmaw** tanıtılır. Orta menzil projectile ve atış sonrası reposition davranışıyla oyuncu sabit bir tehdidi değil sürekli değişen görüş hattını takip etmeyi öğrenir.
+
+### Hikâye
+
+Nhal bağlantısında ilk kez büyük enerji üretimi yerine düşük ışık, faz maddesi ve algısal perde ölçümleri görülür. VEX bu gerçekliği enerji santralinden çok özel araştırma kaynağı olarak kullanmıştır.
+
+---
+
+## Bölüm 17 — Perde Altında
+
+### Ana ortam
+
+Yeraltı haberleşme istasyonu, güç kesintileri ve birbirinden kopmuş karanlık servis odaları.
+
+### Düşman gelişimi
+
+Henüz yalnız Veilmaw ailesi kullanılır; zorluk yeni düşman eklemek yerine görüş hattı, karanlık alanlar ve açı değiştirme üzerinden büyür.
+
+### Hikâye
+
+Aras **Uzman Kerem Aksu**'nun sinyalini takip eder. Kerem, felaketten önce merkezi yönetimden gönderilen kritik bir emri saklamıştır:
+
+> “Kararsızlık kabul edilebilir sınırda. Üretimi durdurmayın.”
+
+Kerem Bastion'a katılır ve kayıp sinyalleriyle Yarık Ağı yoğunluk haritasını çıkarmaya başlar.
+
+---
+
+## Bölüm 18 — Kör Nokta
+
+### Ana ortam
+
+Nhal etkisinin bir metro bakım ağına yayıldığı kapalı ve yön duygusunu zorlayan alan.
+
+### Yeni düşman
+
+**Husk Leech** tanıtılır. Görüşü kapatan saldırı ilk kez doğrudan oyuncunun bilgi akışını hedef alır.
+
+Veilmaw açı değiştirirken Husk Leech'in görüş engeli devreye girdiğinde oyuncu yalnız hasar değil, bilgi kaybıyla mücadele eder.
+
+### Hikâye
+
+Ece ve Kerem'in verileri Nhal türlerinin koordineli bir ordu kurmadığını gösterir. Geçitler Nhal'ın doğal av yolları ile Dünya'nın tünel, gece ve düşük ışık alanlarını birbirine bağlamaktadır.
+
+İki dünyanın ekolojik sınırı fiziksel olarak karışmaktadır.
+
+---
+
+## Bölüm 19 — Av Yolları
+
+### Ana ortam
+
+Karanlık servis şehri, birbirine bağlanan metro, depo ve yarık koridorları.
+
+### Aile sınavı
+
+Veilmaw ve Husk Leech birlikte daha yoğun kullanılır. Oyuncu hangi yönden atış geldiğini takip ederken görüş kaybı yaşadığında güvenli rota hafızasına güvenmek zorunda kalır.
+
+### Hikâye
+
+VEX'in Nhal tarafındaki düşük ışık/faz maddesi çekimi, karşı gerçeklikte yalnız fiziksel kayıp yaratmamıştır. Nhal canlılarının çevreyi algılama ve av rotalarını belirleme koşulları da değişmiştir.
+
+Bu kez sömürülen şey bir “yakıt” değil, **bir dünyanın çevresel düzenidir**.
+
+---
+
+## Bölüm 20 — Sesi Olmayan Dünya
+
+### Ana ortam
+
+Nhal bağlantısının ana Dünya ankrajı. Tesis bölümleri ile karanlık perde katmanları iç içedir.
+
+### Yay zirvesi
+
+Nhal'ın iki aktif yaratığı tam kombinasyon hâlinde kullanılır. Zorluk sayısal çeşitlilikten değil, sınırlı görüş ve bilgi kaybının daha karmaşık encounter alanlarıyla birleşmesinden gelir.
+
+### Büyük keşif
+
+Kerem ve Selin aynı anda farklı düğümlerin birbirini yeniden açtığını tespit eder. Aras bir ankrajı kapattığında enerji başka bir hatta kaymaktadır.
+
+Yarık Ağı artık pasif kablolardan oluşan bir sistem değildir.
+
+**Kendi bağlantılarını dengeleyen bir ağ hâline gelmiştir.**
+
+Ağı tek tek düğüm kapatarak bitirmek mümkün değildir.
+
+---
+
+# PERDE V — AETHER LOOM: KIRIK ÖRÜNTÜ
+
+## Bölüm 21 — Cam Deniz
+
+### Ana ortam
+
+Kıyı araştırma merkezi ve arkasında açılan kristal/faz bozulması. Su, yansıma ve geometri normal davranmaz.
+
+### Yeni düşman
+
+**Voidweaver** tanıtılır. Havada süzülen gövde ve üç kollu enerji örgüsü, oyuncuya geniş açı baskısını okumayı öğretir.
+
+### Hikâye
+
+Aether Loom'dan çekilen şey yalnız enerji değildir. VEX kayıtlarında “faz kararlılığı”, “uzamsal referans” ve “gerçeklik örgüsü” gibi terimler bulunur.
+
+Aras ilk kez Yarık Ağı'nın portalları açmakla kalmayıp uzayın davranışını da değiştirdiğini görür.
+
+---
+
+## Bölüm 22 — Örüntü Hatası
+
+### Ana ortam
+
+Geometrisi bozulmuş araştırma kulesi ve birbirine yanlış açılarla bağlanan servis bölümleri.
+
+### Düşman gelişimi
+
+Henüz yalnız Voidweaver kullanılır; encounter zorluğu geniş enerji fanı, görüş hattı ve yeniden pozisyon alma üzerinden artar.
+
+### Hikâye
+
+Aras, tesiste mahsur kalan **Dr. Nadir Volkan**'a ulaşır. Nadir, Aether formlarının davranışını klasik canlı hareketi olarak yorumlamanın yanlış olabileceğini söyler.
+
+Onlara göre Dünya'daki yarıklar “kapı” değil, bozulmuş bir desenin düğümleridir.
+
+Voidweaver'lar bu düğümleri kendi fizik mantığına göre tekrar bağlamaya çalışıyor olabilir.
+
+Sorun şudur: bu onarım işlemi Dünya maddesini korunması gereken canlı bir çevre olarak görmez.
+
+---
+
+## Bölüm 23 — Faz Yarığı
+
+### Ana ortam
+
+Kırılmış köprüler, kısa mesafeli faz çizgileri ve parçalanmış araştırma platformları.
+
+### Yeni düşman
+
+**Rift Reaver** tanıtılır. Güvenli phase step ve yakın lunge ile oyuncunun “uzaktaki hedef orada kalır” varsayımını bozar.
+
+### Hikâye
+
+Nadir, phase hareketinin sınırsız ışınlanma olmadığını; sağlam kalan komşu yarık çizgileri arasında yeniden bağlanma olduğunu açıklar. Bu bilgi Aether'ın görünürde kaotik davranışının kendi içinde kuralları olduğunu gösterir.
+
+Aynı bölümde ilk kez VEX'in farklı evrenlerden çektiği faz referanslarını tek bir merkezde senkronize ettiği öğrenilir.
+
+Merkezin eski proje adı: **NEXUS**.
+
+---
+
+## Bölüm 24 — Kırık Geometri
+
+### Ana ortam
+
+Bir VEX faz dengeleme tesisi. Koridorlar normaldir fakat bazı odalar Aether uzayıyla üst üste biner ve yön algısı sürekli sınanır.
+
+### Aile sınavı
+
+Voidweaver'ın ranged açı baskısı ile Rift Reaver'ın yakın phase tehdidi birlikte kullanılır.
+
+### Hikâye
+
+Nadir ve Selin, daha önce kapatılan Korvath, Thornwild, Vaskari ve Nhal düğümlerinin tamamen yok olmadığını fark eder. Enerji çekimi azalmıştır fakat ağ onların koordinatlarını Nexus üzerinden hâlâ tutmaktadır.
+
+Bu nedenle dünya parçaları birbirine yeniden bağlanabilmektedir.
+
+Nexus bir sonuç değil, **Yarık Ağı'nın kendisini ayakta tutan ortak referans merkezidir.**
+
+---
+
+## Bölüm 25 — Dokuma Merkezi
+
+### Ana ortam
+
+Dünya'daki en büyük Aether ankrajı ve Nexus'a en yakın çalışan faz laboratuvarı.
+
+### Yay zirvesi
+
+Voidweaver ve Rift Reaver'ın en yoğun kombinasyonları kullanılır. Yeni aktif düşman eklenmez; oyuncunun iki rolü yüksek baskı altında doğru okuması beklenir.
+
+### Büyük keşif
+
+Nadir, Yarık Ağı'nı kalıcı olarak susturmak için **Ters Akış Protokolü**nün temelini çıkarır. Ama protokol enerjiyi geri patlatmak veya bütün portalları aynı anda kapatmak değildir.
+
+Yapılması gereken:
+
+1. Dünya üzerindeki ana senkronizasyon istasyonlarını susturmak.
+2. VEX merkezindeki Sıfır Kaynak ana referansını kesmek.
+3. Nexus'a geçip beş gerçekliğin zorla paylaştığı ortak faz bağını çözmek.
+
+### Perde sonu
+
+Tam bu sırada Yarık Ağı büyük bir dengeleme tepkisi verir. Daha önce ayrı kalan bağlantılar Dünya üzerinde aynı bölgelere taşmaya başlar.
+
+İlk kez farklı gerçekliklerin etkileri aynı operasyon alanlarında görülmeye başlayacaktır.
+
+---
+
+# PERDE VI — YAKINSAMA VE YARIK SAVAŞI
+
+## Bölüm 26 — Kesişim Hattı
+
+### Ana ortam
+
+Bir metropolün sanayi dış kuşağı. Yarık Ağı'nın dengeleme tepkisi nedeniyle farklı gerçeklik bağlantıları aynı geniş bölgede ortaya çıkmıştır.
+
+### Karışım kuralı
+
+Bu, kampanyadaki ilk gerçek karma evren bölümüdür. Ancak düşmanlar tek bir birleşik ordu gibi spawn edilmez. Bölgenin farklı sektörlerinde farklı aileler kendi nedenleriyle bulunur.
+
+Örneğin:
+
+- Korvath enerji altyapısına yönelir.
+- Thornwild terk edilmiş yeşil alanlarda yuvalanır.
+- Vaskari VEX sinyal vericilerini hedefler.
+- Nhal karanlık alt geçitlere yayılır.
+- Aether aktif yarık düğümlerini yeniden örmeye çalışır.
+
+Bazı sınır alanlarında bu ailelerin rotaları çakışabilir; bu ortak ittifak anlamına gelmez.
+
+### Hikâye
+
+Aras sivillerin tahliye hattını açarken felaketin artık gizli tesislerle sınırlı olmadığını görür. Dünya kamuoyu VEX'in varlığını öğrenmeye başlar.
+
+Bastion ekibi Ters Akış için gereken ilk ana senkronizasyon verisini toplar.
+
+---
+
+## Bölüm 27 — Bastion Kuşatması
+
+### Ana ortam
+
+Oyuncunun oyun boyunca geliştirdiği Bastion-7.
+
+### Hikâye nedeni
+
+Bastion'ın Ters Akış hesaplamaları güçlü bir faz izi üretir. Aynı anda VEX yönetimi Bastion'ın ana ağı susturabilecek bilgiye sahip olduğunu fark eder.
+
+Kuşatma tek bir ordunun planlı ortak saldırısı değildir. Üs çevresindeki yarık aktivitesi farklı aileleri farklı sektörlere çekerken Vardar Bastion'ın veri bağlantısını uzaktan kesmeye ve sistemi ele geçirmeye çalışır.
+
+### Oynanış amacı
+
+Oyuncu 26 bölüm boyunca tanıdığı mekânda savaşır. Farklı sektörler farklı aile kimliği taşır; örneğin karanlık servis katı Nhal, enerji katı Korvath/Aether, dış savunma hattı Vaskari baskısı taşıyabilir.
+
+Kurtarılan uzmanların hikâyesi burada karşılığını verir; Bastion artık boş sığınak değil kurulmuş bir ekip merkezidir.
+
+### Bölüm sonu
+
+Bastion ayakta kalır fakat Vardar'ın konumu belirlenir: Sıfır Kaynak projesinin ilk ana merkezi hâlâ çalışmaktadır.
+
+---
+
+## Bölüm 28 — Sıfır Kaynak
+
+### Ana ortam
+
+VEX'in ana araştırma merkezi. Felaketin başladığı sistemin yönetim çekirdeği burada bulunmaktadır.
+
+### Düşman kullanımı
+
+Tesisin farklı kanatları farklı gerçekliklerle kirlenmiştir. Karışık encounter kullanılabilir; ancak mümkün olduğunda aile kimliği oda/kanat bazında korunur. Böylece final zorluğu okunabilir kalır.
+
+### Hikâye
+
+Aras ana yönetim arşivini açar ve felaketin bütün suç zincirini kanıtlar:
 
 1. Enerjinin başka gerçekliklerden geldiği öğrenildi.
-2. Bu gerçekliklerde canlı yaşam ve sistemik zarar tespit edildi.
-3. Yönetim buna rağmen üretimi büyütmeyi seçti.
+2. Bu gerçekliklerde canlı yaşam bulunduğu tespit edildi.
+3. Kaynak çekiminin fiziksel ve ekolojik zarar verdiği ölçüldü.
+4. Olası organize karşı tepki için güvenlik senaryoları hazırlandı.
+5. Buna rağmen üretim büyütüldü.
+6. Felaket sonrasında bile sistemi yeniden çalıştırmak için çekirdekler korundu.
 
-Vardar Nexus'a geçerek ağı merkezden yeniden sabitlemeye çalışır. Aras, Nexus koordinatları ve Ters Akış Protokolü için gereken son anahtarla peşinden gider.
+Vardar'ın amacı yalnız gücü ele geçirmek değildir. Ona göre Sıfır Kaynak kapatılırsa Dünya yeniden enerji kıtlığına dönecek, devletler çökecek ve milyarlarca insanın hayatı dolaylı olarak riske girecektir.
 
-**Not:** Vardar'ın savaş zırhı, insan askerleri veya özel boss mekaniği gerçek gameplay olarak uygulanmadan hikâyede aktif boss roster'ı sayılmaz.
+Aras'a sunduğu argüman basittir:
+
+> “Bir komutan kendi dünyasını kurtarmak için kimi feda edeceğine karar verir.”
+
+Aras bunun bir kurtuluş değil, bedelin görünmez bir yere aktarılması olduğunu söyler.
+
+### Bölüm sonu
+
+Vardar Nexus'a geçer ve ana referansı oradan sabitlemeye çalışır. Bastion ekibi geçidin koordinatını açar.
 
 ---
 
-### Bölüm 17 — Nexus: Sessiz Merkez
+## Bölüm 29 — Nexus Eşiği
 
-**Alt başlık: Bin Dünyanın Mezarı**
+### Ana ortam
 
-Nexus doğal bir evren değildir. Yıllarca süren enerji çekimi, başarısız dengeleme girişimleri ve birbirine zorla bağlanan yarık çizgileri tarafından oluşturulmuş yapay bir ara yapıdır.
+Nexus'un dış halkası. Doğal bir dünya değildir; VEX'in yıllarca zorla birbirine bağladığı gerçeklik parçalarından oluşan yapay ara bölgedir.
 
-Bir bölge Korvath'ın ısı/basınç izlerini taşırken bir sonraki koridor Thornwild biyokütlesine, Nhal karanlığına veya Aether geometrisine dönüşebilir. Vaskari ise ağı kaynak saldırısının merkezi olarak gördüğü için bazı geçiş sektörlerine askerî hat kurmuştur.
+### Yapı
 
-Final bölümünün amacı oyuna yeni ve açıklanmamış bir yaratık yığını eklemek değil, **oyuncunun 18 aktif düşmanla öğrendiği bütün karşı oyunları anlamlı son encounter'lara dönüştürmektir.**
+Bu bölüm beş büyük sektörden oluşur ve önceki 25 bölümün hatırlatma sınavıdır:
 
-#### Beş düğüm sektörü
+1. **Korvath Ankrajı** — ısı, ağır projectile ve Crucible Warden baskısı.
+2. **Thornwild Ankrajı** — hareket alanı, charge ve Spore Matriarch zehir kontrolü.
+3. **Vaskari Ankrajı** — rol kombinasyonu, Bulwark önü ve Venom Marshall önceliği.
+4. **Nhal Ankrajı** — görüş ve bilgi baskısı.
+5. **Aether Ankrajı** — Voidweaver açı kontrolü ve Rift Reaver phase tehdidi.
 
-1. **Korvath Ankrajı** — ağır ısı/basınç hattı; Crucible Warden ve Basalt Juggernaut merkezli.
-2. **Thornwild Ankrajı** — hareket alanını biyokütle/zehir baskısıyla daraltan Spore Matriarch merkezli.
-3. **Vaskari Ankrajı** — rol kombinasyonu ve Venom Marshall öncelik problemi.
-4. **Nhal Ankrajı** — görüş ve bilgi baskısı; Veilmaw + Husk Leech.
-5. **Aether Ankrajı** — Voidweaver açı kontrolü + Rift Reaver yakın faz baskısı.
+Bu sektörler ailelerin Vardar için savaştığı anlamına gelmez. Nexus onların gerçekliklerinden koparılmış parçaları ortak merkezde tutmaktadır.
 
-Bu sektörler “bütün evrenler Vardar için çalışıyor” anlamına gelmez. Nexus her gerçekliğin yarasını aynı yapay merkezde birbirine bağlamıştır.
+### Hikâye
 
-#### Son karşılaşma
+Aras beş ankrajı birer birer senkronizasyondan çıkarır. Her bağlantı çözüldüğünde ilgili gerçekliğe aktif enerji çekimi azalır.
 
-Vardar çekirdeği kapatmayı reddeder ve son kez Aras'a seçimin bedelini hatırlatır. Vardar'ın rolü öncelikle anlatısaldır; uygulanmamış bir insan boss sistemi zorunlu değildir.
+Son kapı açıldığında yalnız ana çekirdek kalır.
 
-Aras ve Bastion ekibi **Ters Akış Protokolü**nü etkinleştirir.
+---
 
-Protokol enerjiyi “çalındığı yere patlayarak geri göndermez.” Bunun yerine:
+## Bölüm 30 — Sessiz Merkez
 
-- düğümler arasındaki senkronizasyonu keser,
-- aktif emişi durdurur,
-- kalıcı geçitleri besleyen ortak faz referansını çökertir,
-- Dünya'daki Sıfır Kaynak reaktörlerini kullanılmaz hâle getirir.
+### Ana ortam
 
-Aras bunu yaptığında Dünya anında düzelmez. Enerji altyapısının önemli bölümü kaybedilir. Bazı yarıklar kapanır, bazıları ise artık beslenmediği için yavaşça sönmeye başlar. Dünya'da kalmış yaratıklar bir anda yok olmaz.
+Nexus'un çekirdeği. Beş gerçekliğin faz referansları burada tek bir yapay geometri içinde tutulmaktadır.
 
-Ama ilk kez yeni bir dünya daha sömürülmemektedir.
+### Final çatışmasının yapısı
 
-#### Vardar'ın sonu
+Finalin amacı oyuna yeni, açıklanmamış bir yaratık veya uygulanmamış bir boss sistemi eklemek değildir. Oyuncunun öğrendiği sistemler, çekirdeği kapatma operasyonunun parçaları hâline gelir.
 
-Vardar çekirdeğin acil sabitlemesini manuel olarak sürdürmeye çalışır. Nexus katmanları ayrılırken Aras ile fiziksel bağlantısı kesilir. Onun kesin ölümü gösterilmek zorunda değildir; ana hikâyenin çözümü Vardar'ı öldürmek değil **sistemi ondan geri almaktır**.
+Aras ve Bastion ekibi Ters Akış Protokolünü başlatır. Protokol üç aşamada çalışır:
+
+1. **Senkronizasyonu kes:** Beş ana gerçeklik ortak referanstan ayrılır.
+2. **Emişi durdur:** Dünya tarafındaki Sıfır Kaynak düğümleri güç çekemez hâle gelir.
+3. **Nexus'u sessizleştir:** Yeni kalıcı geçitleri besleyen yapay merkez çöker.
+
+Vardar son ana kadar sistemi kapatmaya karşı çıkar. Onun hikâyedeki rolü Aras'ın kararını zorlaştırmaktır; uygulanmış ayrı bir insan boss sistemi olmadığı sürece finalin başarısı Vardar'ın can barını sıfırlamak değildir.
+
+Vardar ağı yeniden sabitlemeye çalışırken ana platformlar ayrılır. Aras Ters Akış'ı tamamlar.
+
+### Sonuç
+
+Dünya'daki büyük enerji sütunları sönmeye başlar.
+
+Yeni büyük geçit oluşumu durur.
+
+Yıllardır Dünya'da kalmış yaratıklar bir anda yok olmaz. Bazı biyomlar kalıcı olarak değişmiştir. Küçük, beslenmeyen yarıklar ve izole koloniler hâlâ vardır.
+
+Daha ağır bedel ise insana aittir: Dünya Sıfır Kaynak'ın sağladığı dev enerji kapasitesini kaybeder.
+
+Aras bunu bilerek sistemi kapatmıştır.
+
+Çünkü başka dünyaların sürekli çöküşü üzerine kurulu enerji bolluğunun sürdürülebilir bir kurtuluş olmadığına karar vermiştir.
 
 ---
 
 # Final — Son Kapı
 
-Ana Yarık Ağı sessizdir.
+VEX'in ana yönetim kayıtları Bastion-7 üzerinden dış dünyaya aktarılır.
 
-Dünya'daki yeni büyük geçit oluşumu durur, fakat yıllardır açık kalmış bölgelerde yaratık yuvaları, bozulmuş biyomlar ve küçük kararsız yarıklar yaşamaya devam eder.
+Dünya artık üç gerçekle aynı anda yaşamak zorundadır:
 
-VEX'in yönetim kayıtları Bastion-7 üzerinden dış dünyaya aktarılır. Kurumun enerji krizini çözmüş olması yaptığı seçimi silmez; aynı şekilde kurumun suçları, Dünya'nın hâlâ enerjiye ihtiyaç duyduğu gerçeğini de yok etmez.
+1. VEX başka gerçeklikleri bilinçli şekilde sömürmüştür.
+2. Sıfır Kaynak gerçekten insanlığın enerji krizini hafifletmiştir.
+3. Sistemi kapatmak doğru olsa bile bunun Dünya için ağır ekonomik ve insani sonuçları olacaktır.
 
-Bastion-7 artık gizli bir kaçış üssü değildir. Kalan yarıkları izleyen, kayıp bölgeleri geri alan ve başka gerçekliklerle yeni temaslarda aynı hatanın tekrarlanmamasını sağlamaya çalışan bir operasyon merkezi hâline gelir.
+Bastion-7 gizli sığınak olmaktan çıkar. Kalan yarıkları izleyen, xeno bölgelerini araştıran, kayıp alanları geri alan ve başka gerçekliklerle yeni temaslarda aynı hatanın tekrarlanmasını engellemeye çalışan operasyon merkezi hâline gelir.
 
-Leyla son haritayı açar. Büyük enerji sütunları sönmüştür; yüzlerce küçük saha sinyali hâlâ yanmaktadır.
+Leyla dünya haritasını açar. Beş büyük enerji sütunu artık yoktur. Fakat yüzlerce küçük sinyal hâlâ yanmaktadır.
 
-> “Ana ağı susturduk. Şimdi geride bıraktığımızı temizlememiz gerekiyor.”
+> **“Ana ağı susturduk. Şimdi geride bıraktığımızı temizlememiz gerekiyor.”**
 
-Aras silahını bırakmaz. Fakat artık neye ateş ettiğini ve neden savaştığını bilmektedir.
+Aras silahını bırakmaz.
 
-Ana hikâye tamamlanır; oyun sonu operasyonları, yeni bölgeler ve ileride gerçekten tasarlanıp roster'a eklenen yaratıklar için doğal bir devam alanı kalır.
+Ama artık karşısındaki her yaratığa “istilacı” demenin doğru olmadığını bilir.
 
----
-
-# Bastion-7'nin hikâye içindeki ilerlemesi
-
-Bastion-7 yalnız görev seçilen bir menü alanı değildir. Hikâye ilerledikçe oyuncunun felaket üzerindeki kontrolünün fiziksel göstergesidir.
-
-## Güncel uygulanmış üs ilerleme omurgası
-
-Bu tablo mevcut `BaseManager` kampanya mantığıyla uyumlu tutulmalıdır.
-
-| Kampanya eşiği | Açılabilir üs kapasitesi |
-|---|---|
-| Başlangıç | Aydınlatma Seviye 1 — %25 |
-| VEX-01 tamamlandı | Aydınlatma Seviye 2 — %50; Atış Poligonu ve Araştırma Laboratuvarı erişimi açılabilir |
-| VEX-02 tamamlandı | Aydınlatma Seviye 3 — %75; Silah Atölyesi ve Mühendislik Bölmesi erişimi açılabilir |
-| VEX-03 tamamlandı | Aydınlatma Seviye 4 — %100 |
-
-Enerji Dağıtım Ağı, Güvenlik Ağı ve Araştırma Altyapısı için ileride kullanılacak geliştirme omurgası hazırdır; fakat ekonomi/maliyet ve gerçek gameplay etkileri uygulanmadan hikâye bunların sağladığı bonusları kesin gerçek gibi anlatmamalıdır.
-
-## Planlanan uzman kadrosu
-
-| Kişi | Hikâye rolü | Planlanan Bastion katkısı |
-|---|---|---|
-| Leyla Sönmez | Haberleşme / operasyon koordinasyonu | Ana görev ve brifing omurgası |
-| Dr. Selin Erdem | Reaktör / enerji mühendisi | Üs enerji sistemleri ve teknik geliştirme anlatısı |
-| Dr. Ece Tan | Saha doktoru | Revir ve biyolojik analiz anlatısı |
-| Kerem Aksu | Haberleşme / istihbarat | Sinyal ve saha istihbaratı |
-| Dr. Nadir Volkan | Boyutsal fizik | Yarık analizi ve Ters Akış Protokolü |
-| Cem “Kurt” Yalın | Eski VEX güvenlik personeli | Eğitim ve saha doktrini |
-| Derya Keskin | Lojistik | Kaynak ve tesis operasyon planlaması |
-
-Bu NPC katkıları planlanan hikâye katmanıdır. Bir NPC'nin sağladığı mekanik sistem gerçekten uygulanmadan “oyuncuya şu buff'ı verir” gibi kesin gameplay iddiası yazılmamalıdır.
+Ana hikâye burada tamamlanır. Oyun sonu operasyonları, kalan yarık bölgeleri ve ileride gerçekten tasarlanıp aktif roster'a eklenen yeni yaratıklar için doğal alan bırakılır.
 
 ---
 
-# Beş gerçeklik ve kampanya dağılımı
+# 30 bölümlük hızlı kampanya özeti
 
-## Korvath Ocağı — Sönen Çekirdek
-
-- **Ana bölümler:** 4-5
-- **Kaynak:** Isı, basınç ve jeotermal enerji.
-- **Aktif türler:** Basalt Juggernaut, Cinder Hound, Cinder Spitter, Furnace Carrier, Crucible Warden.
-- **Hikâye işlevi:** Aras'a “istila” anlatısının ilk kez yanlış olduğunu gösterir.
-- **Tepki biçimi:** Kaynak kaybına ve altyapı çöküşüne karşı savunma / kaynağa yönelme.
-
-## Thornwild Sürüsü — Yaralı Ekosistem
-
-- **Ana bölümler:** 6-7
-- **Kaynak:** Biyokütle, enzim, rejeneratif doku.
-- **Aktif türler:** Ravager, Briar Skulker, Gorehorn, Spore Matriarch.
-- **Hikâye işlevi:** VEX müdahalesinin yalnız toplumları değil bütün av zincirlerini değiştirebildiğini gösterir.
-- **Tepki biçimi:** Göç, yuvalanma ve avlanma.
-
-## Vaskari Lejyonu — Karşı Cephe
-
-- **Ana bölümler:** 8-9
-- **Kaynak:** Biyotoksin, sinir iletimi ve savaş biyolojisi.
-- **Aktif türler:** Vaskari Raptor, Vaskari Ravager, Coil Lancer, Vaskari Bulwark, Venom Marshall.
-- **Hikâye işlevi:** İlk organize karşı savaş perspektifini getirir.
-- **Tepki biçimi:** Yarıkları düşman saldırı hattı kabul eden planlı askerî karşılık.
-
-## Nhal Veil — Kayıp Algı
-
-- **Ana bölümler:** 10-11
-- **Kaynak:** Düşük ışık/faz maddesi ve perde dokusu.
-- **Aktif türler:** Veilmaw, Husk Leech.
-- **Hikâye işlevi:** Felaketin kaynak miktarından öte bir gerçekliğin algısal/çevresel düzenini bozabildiğini gösterir.
-- **Tepki biçimi:** Ekolojik taşma ve av yollarının Dünya ile birleşmesi.
-
-## Aether Loom — Kırık Örüntü
-
-- **Ana bölümler:** 12-13
-- **Kaynak:** Faz dengesi ve gerçeklik yapısı.
-- **Aktif türler:** Voidweaver, Rift Reaver.
-- **Hikâye işlevi:** Yarık Ağı'nın gerçeklikleri yalnız bağlamadığını, yapay bir geometrinin içine zorladığını açıklar ve Nexus'u kurar.
-- **Tepki biçimi:** Bozuk deseni kendi fizik mantığıyla yeniden düzenleme.
-
-## Yakınsama bölümleri
-
-**Bölüm 14-17**, daha önce ayrı ayrı tanıtılmış aileleri tekrar kullanabilir. Bu aşamadan önce bir ailenin en önemli mekanik ve hikâye kimliği kendi gerçeklik bölümünde açıklanmış olmalıdır.
-
-Karışık encounter kuralı:
-
-> Farklı aileler aynı yerde bulunabilir; fakat sırf encounter tasarımı için tek bir birleşik “xeno ordusu” gibi anlatılmamalıdır.
+| # | Bölüm | Ana gerçeklik / işlev | Yeni ana tehdit veya hikâye adımı |
+|---:|---|---|---|
+| 1 | İlk Kırılma | Korvath | Cinder Hound; felaket ve Bastion'a kaçış |
+| 2 | Kül Koridoru | Korvath | Cinder Spitter; ilk kaynak imzası |
+| 3 | Basınç Hattı | Korvath | Basalt Juggernaut; Selin kurtarılır |
+| 4 | Erimiş Damar | Korvath | Furnace Carrier; Korvath zararının kanıtı |
+| 5 | Sönen Çekirdek | Korvath | Crucible Warden; ilk ankraj kapanır |
+| 6 | Yeşil Karantina | Thornwild | Ravager; biyolojik kaynak gerçeği |
+| 7 | Diken İzleri | Thornwild | Briar Skulker; av zinciri |
+| 8 | Boynuz Geçidi | Thornwild | Gorehorn; habitat göçü |
+| 9 | Spor Bahçesi | Thornwild | Spore Matriarch; Ece kurtarılır |
+| 10 | Köklerin Hafızası | Thornwild | Tam aile; kasıtlı ekosistem sömürüsü |
+| 11 | Mor Cephe | Vaskari | Vaskari Raptor; organize karşılık |
+| 12 | Kırıcı Hat | Vaskari | Vaskari Ravager; VEX düğümleri hedefte |
+| 13 | Mızrak Menzili | Vaskari | Coil Lancer; Cem kurtarılır |
+| 14 | Kalkan Duvarı | Vaskari | Vaskari Bulwark; Derya kurtarılır |
+| 15 | Zehirli Emir | Vaskari | Venom Marshall; Vardar'ın emri |
+| 16 | Sessiz Gökyüzü | Nhal Veil | Veilmaw; düşük ışık/faz kaynağı |
+| 17 | Perde Altında | Nhal Veil | Veilmaw gelişimi; Kerem kurtarılır |
+| 18 | Kör Nokta | Nhal Veil | Husk Leech; görüş bozma |
+| 19 | Av Yolları | Nhal Veil | Tam aile; ekolojik taşma |
+| 20 | Sesi Olmayan Dünya | Nhal Veil | Ağın kendi kendini dengelediği keşfedilir |
+| 21 | Cam Deniz | Aether Loom | Voidweaver; gerçeklik örüntüsü |
+| 22 | Örüntü Hatası | Aether Loom | Nadir kurtarılır |
+| 23 | Faz Yarığı | Aether Loom | Rift Reaver; Nexus adı ortaya çıkar |
+| 24 | Kırık Geometri | Aether Loom | Tam aile; Nexus'un işlevi anlaşılır |
+| 25 | Dokuma Merkezi | Aether Loom | Ters Akış Protokolü hazırlanır |
+| 26 | Kesişim Hattı | Yakınsama | İlk kontrollü karma evren operasyonu |
+| 27 | Bastion Kuşatması | Yakınsama | Üssün savunması, Vardar'ın konumu |
+| 28 | Sıfır Kaynak | VEX merkezi | Tam suç zinciri ve Vardar'ın gerekçesi |
+| 29 | Nexus Eşiği | Nexus | Beş evrenin ayrı ankraj sınavları |
+| 30 | Sessiz Merkez | Nexus | Ters Akış, Yarık Ağı'nın susturulması |
 
 ---
 
-# 18 aktif yaratığın hikâye kullanım matrisi
+# 18 aktif yaratığın kademeli tanıtım matrisi
 
-Bu tablo **ilk mekanik spawn** zorunluluğu değil, yaratığın ilk güçlü hikâye/tema odağını gösterir. Mevcut üretilmiş Bölüm 1-4 sahnelerinde gerçek spawn kompozisyonu sahne kaynak-of-truth'udur.
+Bu tablo ilk güçlü kampanya tanıtımını gösterir. Üretilmiş eski sahnelerde teknik spawn kompozisyonu farklıysa gerçek sahne o an için gameplay kaynak-of-truth'udur; yeni level üretiminde bu kampanya planı hedef alınır.
 
-| Yaratık | Evren | Ana hikâye odağı | Sonraki kullanım |
-|---|---|---|---|
-| Cinder Hound | Korvath | Bölüm 4 | 5, 14-17 |
-| Cinder Spitter | Korvath | Bölüm 4 | 5, 14-17 |
-| Furnace Carrier | Korvath | Bölüm 4 | 5, 14-17 |
-| Basalt Juggernaut | Korvath | Bölüm 4-5 | 14, 17 |
-| Crucible Warden | Korvath | Bölüm 4-5 | 14, 17 |
-| Ravager | Thornwild | Bölüm 6 | 7, 14-17 |
-| Briar Skulker | Thornwild | Bölüm 6 | 7, 14-17 |
-| Gorehorn | Thornwild | Bölüm 6 | 7, 14-17 |
-| Spore Matriarch | Thornwild | Bölüm 7 | 14, 17 |
-| Vaskari Raptor | Vaskari | Bölüm 8 | 9, 14-17 |
-| Vaskari Ravager | Vaskari | Bölüm 8 | 9, 14-17 |
-| Coil Lancer | Vaskari | Bölüm 8 | 9, 14-17 |
-| Vaskari Bulwark | Vaskari | Bölüm 9 | 14-17 |
-| Venom Marshall | Vaskari | Bölüm 9 | 14, 17 |
-| Veilmaw | Nhal Veil | Bölüm 10 | 11, 14-17 |
-| Husk Leech | Nhal Veil | Bölüm 11 | 14-17 |
-| Voidweaver | Aether Loom | Bölüm 12 | 13-17 |
-| Rift Reaver | Aether Loom | Bölüm 13 | 14-17 |
+| Yaratık | Evren | İlk ana tanıtım | Tam aile sınavı |
+|---|---|---:|---:|
+| Cinder Hound | Korvath | 1 | 5 |
+| Cinder Spitter | Korvath | 2 | 5 |
+| Basalt Juggernaut | Korvath | 3 | 5 |
+| Furnace Carrier | Korvath | 4 | 5 |
+| Crucible Warden | Korvath | 5 | 5 |
+| Ravager | Thornwild | 6 | 10 |
+| Briar Skulker | Thornwild | 7 | 10 |
+| Gorehorn | Thornwild | 8 | 10 |
+| Spore Matriarch | Thornwild | 9 | 10 |
+| Vaskari Raptor | Vaskari | 11 | 15 |
+| Vaskari Ravager | Vaskari | 12 | 15 |
+| Coil Lancer | Vaskari | 13 | 15 |
+| Vaskari Bulwark | Vaskari | 14 | 15 |
+| Venom Marshall | Vaskari | 15 | 15 |
+| Veilmaw | Nhal Veil | 16 | 19-20 |
+| Husk Leech | Nhal Veil | 18 | 19-20 |
+| Voidweaver | Aether Loom | 21 | 24-25 |
+| Rift Reaver | Aether Loom | 23 | 24-25 |
 
-Planlanan **Murk Stalker, Shade Anchor, Rift Spindle, Parallax Drone ve Loom Herald** bu 17 bölümlük ana planın zorunlu parçası değildir ve aktif roster'a alınmış sayılmaz.
-
----
-
-# Haluk Vardar'ın kullanım standardı
-
-Vardar hikâyenin insan yüzündeki karşıtıdır; fakat mevcut düşman üretim durumuyla çelişmemesi için şu kurallar korunur:
-
-1. Vardar'ın ideolojisi “kötülük için güç” değil, Dünya'nın enerji çöküşünü önlemek adına başka gerçekliklerin bedelini kabul etmesidir.
-2. Aras ile Vardar arasındaki çatışma önce **etik ve stratejik**, sonra fiziksel operasyon hedefleri üzerinden ilerler.
-3. İnsan askerleri, paralı birlikler, dron ordusu veya Vardar savaş zırhı gerçekten tasarlanıp uygulanmadan aktif gameplay düşmanı gibi kanonlaştırılmaz.
-4. Vardar ileride gerçek bir boss olarak üretilecekse bu ayrı bir combat design işi olarak ele alınmalı; mevcut 18 xeno roster'ın yerine metinle sahte bir boss eklenmemelidir.
-5. Finalin başarısı Vardar'ın can barını sıfırlamak değil, Yarık Ağı'nı susturmak üzerine kuruludur.
+Planlanan **Murk Stalker, Shade Anchor, Rift Spindle, Parallax Drone ve Loom Herald** bu 30 bölümlük ana kampanyanın zorunlu parçası değildir. Gerçek gameplay rolleri ve üretim setleri tamamlanırsa ilgili evren bloklarına sonradan eklenebilirler; mevcut 18 yaratığın rolünü bozmak için kullanılmamalıdır.
 
 ---
 
-# Anlatı bilgi akışı
+# Zorluk eğrisi
 
-Her perde bir cevap verirken daha büyük bir soru açar.
+## Bölüm 1-5 — Temel savaş okuryazarlığı
 
-| Bölümler | Oyuncunun ulaştığı gerçek |
-|---|---|
-| 1-3 | Enerji başka gerçekliklerden geliyor ve VEX bunu önceden biliyordu. |
-| 4-5 | Enerji çekimi başka bir toplumun yaşam altyapısını fiziksel olarak çökertti. |
-| 6-7 | Müdahale bütün ekosistemleri ve av zincirlerini değiştirebiliyor. |
-| 8-9 | En az bir gerçeklik insan faaliyetini bilinçli düşman saldırısı olarak görüyor. |
-| 10-11 | VEX yalnız enerji/madde değil, bazı dünyaların çevresel/faz düzenini de bozdu. |
-| 12-13 | Yarık Ağı gerçeklikleri Nexus adlı yapay merkezde birbirine zorla bağlıyor. |
-| 14 | Ağ artık kendi kendine büyüyen küresel bir çöküş riski. |
-| 15 | Bastion'ın çözümü bile yeni yarık baskısı yaratabilecek kadar hassas. |
-| 16 | Yönetim canlı dünyalara verilen zararı bilerek üretimi büyüttü. |
-| 17 | Dünya ancak başka dünyalardan çalmayı bırakmayı kabul ederse ağ kalıcı olarak susturulabilir. |
+Oyuncu hızlı takip, ranged baskı, ağır projectile, iki modlu ağır düşman ve elit alan kontrolünü tek aile içinde öğrenir.
+
+## Bölüm 6-10 — Hareket yönetimi
+
+Precision projectile, hibrit mesafe, charge ve zehir alanı oyuncuyu sürekli pozisyon değiştirmeye zorlar.
+
+## Bölüm 11-15 — Hedef önceliği
+
+Vaskari birimleri tek tek değil rol kombinasyonuyla güçlenir. Oyuncu sniper, tank, rush ve destek ilişkisini okumayı öğrenir.
+
+## Bölüm 16-20 — Bilgi baskısı
+
+Nhal bölümleri düşman sayısını körlemesine artırmak yerine görüş, açı ve bilgi kaybını zorlaştırır.
+
+## Bölüm 21-25 — Uzamsal baskı
+
+Aether bölümleri geniş enerji hatları ve güvenli phase hareketleriyle oyuncunun tehdit açısını sürekli yeniden hesaplamasını ister.
+
+## Bölüm 26-30 — Ustalık
+
+Yeni temel kural öğretmek yerine daha önce öğrenilen kurallar farklı sektörlerde ve kontrollü kombinasyonlarda sınanır. Final zorluğu yalnız düşman canını ve hasarını büyütmeye dayanmaz.
 
 ---
 
-# Silahlar ve gelişim mantığı
+# Evrenlerin hikâyedeki işlevi
 
-Silahların gerçek isim, stat ve upgrade davranışı için `Weapons_VEX.md` ile güncel weapon resource'ları kaynak-of-truth'tur.
+## Korvath Ocağı — “Kaynağın bir sahibi var.”
 
-Hikâye tarafında silah gelişimi Bastion'ın yeniden kurulmasına bağlanabilir; fakat uygulanmış olmayan özel mühimmat, crafting veya NPC buff sistemi kesin olarak varmış gibi yazılmamalıdır.
+Aras'a ilk kez başka tarafın zarar gördüğünü gösterir.
+
+## Thornwild Sürüsü — “Bir ekosistem de sömürülebilir.”
+
+VEX'in canlı dünyaları ölçüp verimli kaynak alanlarına dönüştürdüğünü ortaya çıkarır.
+
+## Vaskari Lejyonu — “Karşı taraf da bizi saldırgan olarak görüyor.”
+
+İlk organize karşı savaş perspektifini getirir ve VEX yönetiminin olası dirençten haberdar olduğunu kanıtlar.
+
+## Nhal Veil — “Felaket artık kontrol edilen bir savaş değil.”
+
+İki gerçekliğin çevresel sınırlarının birbirine karışmasını ve ağın kendi kendini dengelemeye başlamasını gösterir.
+
+## Aether Loom — “Sorun portallar değil, onları birbirine bağlayan yapı.”
+
+Nexus'un varlığını ve Yarık Ağı'nın gerçek çözümünün merkez senkronizasyonu kesmek olduğunu açıklar.
+
+## Nexus — “Dünya ne pahasına kurtarılacak?”
+
+Bütün teknik ve ahlaki soruları tek final kararında toplar.
 
 ---
 
-# Anlatım ve ton standardı
+# Anlatım standardı
 
-VEX; askerî bilimkurgu, tesis korkusu, kozmik bilinmezlik ve üs geliştirmeyi birleştirir.
+VEX; askerî bilimkurgu, tesis korkusu, kozmik bilinmezlik ve üs geliştirme hissini birlikte taşır.
 
-İlk bölümlerde oyuncu dar ve hasarlı tesislerde ne olduğunu anlamaya çalışır. Orta kampanyada her gerçekliğin kendi mantığını öğrenir. Son bölümlerde ise mesele “daha büyük canavar” değil, felaketin sistemik kaynağını kapatabilecek kadar bilgi ve operasyon kapasitesi toplamaktır.
+- İlk bölümlerde bilgi azdır; oyuncu gördüğü şeyleri yanlış yorumlayabilir.
+- Her beş bölümlük evren yayı bir ana soruya cevap verir ve daha büyük bir soru açar.
+- Yaratıkların tamamı “kötü istilacılar” olarak yazılmaz.
+- Vaskari organize bir düşman güçtür; bu, diğer evrenlerin de ordu olduğu anlamına gelmez.
+- Farklı aileler ancak Bölüm 26'dan itibaren ana kampanya encounter'larında bilinçli şekilde karıştırılır.
+- Karma encounter, evrenlerin ittifak kurduğu anlamına gelmez.
+- Hikâye, oyunda olmayan invisibility, sınırsız teleport, ally buff veya başka özel sistemi uygulanmış gerçek gibi anlatmaz.
+- Yeni yaratık yalnız bölüm sayısını doldurmak için aktif roster'a eklenmez.
+- Haluk Vardar karikatür kötü olmamalıdır. Yanlış olan gerekçesizce yıkım istemesi değil; Dünya'nın ihtiyacını başka gerçekliklerin yaşam hakkından sistematik olarak üstün tutmasıdır.
+- Aras'ın zaferi yalnız düşman öldürmek değil, felaketi üreten mekanizmayı anlamak ve onu susturmaktır.
 
-### Diyalog standardı
+Oyunun genel duygusal ilerleyişi:
 
-- Diyaloglar kısa ve doğal olmalıdır.
-- Bilim insanları bilmedikleri şeyler hakkında kesin konuşmamalıdır.
-- Askerler teknik açıklamaları sadeleştirmelidir.
-- Kayıtlar tek seferde bütün sırrı anlatmamalıdır.
-- Vardar'ın argümanı tamamen karikatürize edilmemelidir; oyuncu onun çözümünü reddederken problemin gerçek olduğunu hissetmelidir.
-
-### Yaratık anlatım standardı
-
-**Oyunda olmayan bir özel mekanik, hikâyede uygulanıyormuş gibi kesin şekilde anlatılmamalıdır.**
-
-Biyoloji ve atmosfer daha geniş olabilir; fakat savaş davranışı tarif edildiğinde güncel enemy sahneleriyle uyumlu kalmalıdır.
-
-### Kampanyanın duygusal ilerleyişi
-
-**Hayatta kal → Üssü bul → Gerçeği öğren → Zararı gör → Diğer dünyaları anla → Karşı cepheyi tanı → Gerçeklik ağını çöz → Üssü savun → VEX'in kararlarını kanıtla → Yarık Ağı'nı sustur → Dünya'nın sonucuyla yaşamayı kabul et.**
+**Hayatta kal → İlk dünyayı tanı → Sömürünün boyutunu gör → Karşı savaşla yüzleş → Gerçekliklerin karıştığını anla → Nexus'u keşfet → Bastion'ı savun → VEX gerçeğini açığa çıkar → Yarık Ağı'nı sustur.**
