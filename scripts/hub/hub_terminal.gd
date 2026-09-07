@@ -5,10 +5,11 @@ enum TerminalMode {
 	MISSION_CONTROL,
 	DEPLOYMENT,
 	INFORMATION,
+	WEAPON_ARCHIVE,
 }
 
 @export_category("Terminal")
-@export_enum("Mission Control", "Deployment", "Information") var terminal_mode: int = TerminalMode.INFORMATION
+@export_enum("Mission Control", "Deployment", "Information", "Weapon Archive") var terminal_mode: int = TerminalMode.INFORMATION
 @export var display_name := "BASTION TERMİNALİ"
 @export var offline := false
 @export var offline_message := "POWER OFFLINE"
@@ -22,6 +23,7 @@ enum TerminalMode {
 @onready var screen_surface: Sprite3D = $Visuals/ScreenAssembly/ScreenSurface
 @onready var terminal_menu: VexTerminalMenu = $TerminalMenu
 @onready var archive_terminal: VexArchiveTerminal = $ArchiveTerminal
+@onready var weapon_archive_terminal: VexWeaponArchiveTerminal = $WeaponArchiveTerminal
 
 var _screen_base_position := Vector3.ZERO
 var _screen_base_pixel_size := 0.0008
@@ -83,6 +85,9 @@ func interact(_player: Node) -> void:
 	if terminal_mode == TerminalMode.INFORMATION:
 		archive_terminal.open_terminal()
 		return
+	if terminal_mode == TerminalMode.WEAPON_ARCHIVE:
+		weapon_archive_terminal.open_terminal()
+		return
 	terminal_menu.open_terminal(
 		_get_mission_definitions(),
 		true,
@@ -93,6 +98,8 @@ func interact(_player: Node) -> void:
 func _get_display_name() -> String:
 	if terminal_mode == TerminalMode.INFORMATION:
 		return "VEX ANA TERMİNALİ" if TranslationServer.get_locale().begins_with("tr") else "VEX MAIN TERMINAL"
+	if terminal_mode == TerminalMode.WEAPON_ARCHIVE:
+		return "SİLAH ARŞİV TERMİNALİ" if TranslationServer.get_locale().begins_with("tr") else "WEAPON ARCHIVE TERMINAL"
 	return tr(display_name)
 
 
