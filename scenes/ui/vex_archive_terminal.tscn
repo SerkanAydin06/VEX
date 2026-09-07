@@ -209,6 +209,16 @@ toggle_mode = true
 text = "PROTOKOLLER"
 alignment = 0
 
+[node name="BaseManagementTab" type="Button" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+text = "ÜS YÖNETİMİ"
+alignment = 0
+autowrap_mode = 2
+
 [node name="NavSpacer" type="Control" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -362,6 +372,31 @@ bbcode_enabled = true
 text = "Archive data awaiting field verification."
 fit_content = false
 scroll_active = true
+
+[node name="BaseActionRow" type="HBoxContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BaseActionHint" type="Label" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/BaseActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.48, 0.63, 0.68, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 10
+text = "BASTION-7 FACILITY CONTROL"
+autowrap_mode = 2
+vertical_alignment = 1
+
+[node name="BaseActionButton" type="Button" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/BaseActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "ERİŞİMİ AÇ"
 
 [node name="FooterLine" type="HSeparator" parent="ArchiveRoot/ScreenShell/Margin/VBox"]
 layout_mode = 2
