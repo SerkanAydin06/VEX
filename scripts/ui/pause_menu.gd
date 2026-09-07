@@ -14,7 +14,7 @@ func _ready() -> void:
 	resume_button.pressed.connect(close_menu)
 	restart_level_button.pressed.connect(GameState.restart_level)
 	settings_button.pressed.connect(_open_settings)
-	main_menu_button.pressed.connect(GameState.return_to_main_menu)
+	main_menu_button.pressed.connect(_return_to_main_menu)
 	settings_panel.close_requested.connect(_on_settings_closed)
 
 
@@ -53,3 +53,11 @@ func _open_settings() -> void:
 func _on_settings_closed() -> void:
 	menu_panel.visible = true
 	settings_button.grab_focus()
+
+
+func _return_to_main_menu() -> void:
+	# This only writes while the current scene is Bastion-7. During a mission the
+	# safe-progress API deliberately returns false, so Pause -> Main Menu can never
+	# become a mid-level checkpoint.
+	GameState.save_current_safe_progress("main_menu_exit")
+	GameState.return_to_main_menu()
