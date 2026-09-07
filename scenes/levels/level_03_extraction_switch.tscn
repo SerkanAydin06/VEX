@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=23 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/props/finish_switch.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/levels/level_03_extraction_switch.gd" id="2_script"]
