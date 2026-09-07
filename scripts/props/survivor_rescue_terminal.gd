@@ -8,10 +8,10 @@ signal survivor_rescued
 @export var interact_key := "CH03_RESCUE_INTERACT"
 @export var rescued_message_key := "CH03_RESCUE_COMPLETE"
 @export var objective_after_rescue := "CH03_OBJECTIVE_EVAC"
-@export var rescued_modulate := Color(0.55, 0.85, 0.68, 1.0)
+@export var rescued_light_color := Color(0.35, 1.0, 0.58, 1.0)
 
 @onready var status_light: OmniLight3D = %StatusLight
-@onready var status_panel: MeshInstance3D = %StatusPanel
+@onready var status_label: Label3D = %StatusLabel
 
 var rescued := false
 
@@ -31,9 +31,9 @@ func interact(_player: Node) -> void:
 		return
 	rescued = true
 	if status_light != null:
-		status_light.light_color = rescued_modulate
-	if status_panel != null:
-		status_panel.modulate = rescued_modulate
+		status_light.light_color = rescued_light_color
+	if status_label != null:
+		status_label.text = tr("CH03_RESCUE_STABLE")
 	GameState.notify(rescued_message_key)
 	GameState.set_objective(objective_after_rescue)
 	survivor_rescued.emit()
