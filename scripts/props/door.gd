@@ -225,9 +225,7 @@ func _get_required_key_label() -> String:
 	return " + ".join(labels)
 
 
-func set_campaign_unlocked(unlocked: bool) -> void:
-	if campaign_unlock_stage < 0:
-		return
+func set_facility_access_unlocked(unlocked: bool) -> void:
 	permanently_locked = not unlocked
 	_runtime_locked = false if unlocked else locked
 	_emit_lock_state()
@@ -236,6 +234,12 @@ func set_campaign_unlocked(unlocked: bool) -> void:
 			if body == GameState.player:
 				force_open()
 				break
+
+
+func set_campaign_unlocked(unlocked: bool) -> void:
+	if campaign_unlock_stage < 0:
+		return
+	set_facility_access_unlocked(unlocked)
 
 
 func force_open() -> void:
