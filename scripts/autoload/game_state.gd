@@ -28,7 +28,7 @@ const LEVEL_COMPLETE_PATH := "res://scenes/ui/level_complete.tscn"
 const SAVE_PATH := "user://vex_save.cfg"
 const SAVE_TEMP_PATH := "user://vex_save.tmp"
 const SAVE_BACKUP_PATH := "user://vex_save.bak"
-const SAVE_VERSION := 5
+const SAVE_VERSION := 6
 const CAMPAIGN_SAVE_ENABLED := true
 const CHECKPOINTS_ENABLED := false
 
@@ -70,6 +70,7 @@ func start_new_game() -> void:
 	hub_selected_mission_path = ""
 	hub_selected_mission_label = ""
 	campaign_stage = 0
+	BaseManager.reset_campaign_state()
 	current_level_path = LEVEL_01_PATH
 	_reset_level_counters()
 	active_difficulty = SettingsManager.difficulty
@@ -342,6 +343,7 @@ func save_campaign_progress(
 		"campaign_stage": campaign_stage,
 		"hub_selected_mission_path": hub_selected_mission_path,
 		"hub_selected_mission_label": hub_selected_mission_label,
+		"base_state": BaseManager.capture_state(),
 	}
 	var config := ConfigFile.new()
 	for key: String in state.keys():
@@ -634,6 +636,9 @@ func _read_valid_campaign_save(path: String) -> Dictionary:
 	var player_state: Variant = state.get("resume_player_state", {})
 	if typeof(player_state) != TYPE_DICTIONARY:
 		return {}
+	var base_state: Variant = state.get("base_state", {})
+	if typeof(base_state) != TYPE_DICTIONARY:
+		return {}
 	return state
 
 
@@ -650,6 +655,7 @@ func _apply_loaded_campaign_state() -> void:
 	campaign_stage = maxi(0, int(saved_run_state.get("campaign_stage", campaign_stage)))
 	hub_selected_mission_path = str(saved_run_state.get("hub_selected_mission_path", ""))
 	hub_selected_mission_label = str(saved_run_state.get("hub_selected_mission_label", ""))
+	BaseManager.restore_state(saved_run_state.get("base_state", {}) as Dictionary)
 	current_level_path = level_path
 
 
@@ -670,7 +676,16 @@ func _migrate_save_state(state: Dictionary, version: int) -> Dictionary:
 		migrated["resume_mode"] = "campaign_boundary"
 		migrated["save_reason"] = "migrated_v%d" % version
 		migrated["saved_unix_time"] = Time.get_unix_time_from_system()
-		migrated["save_version"] = SAVE_VERSION
+	if version < 6:
+		var migrated_unlocked_areas: Array[String] = []
+		if int(migrated.get("campaign_stage", 0)) >= 2:
+			migrated_unlocked_areas = ["weapon_workshop", "engineering_bay"]
+		migrated["base_state"] = {
+			"unlocked_areas": migrated_unlocked_areas,
+			"lighting_mode": 0,
+			"upgrade_levels": {},
+		}
+	migrated["save_version"] = SAVE_VERSION
 	return migrated
 
 
