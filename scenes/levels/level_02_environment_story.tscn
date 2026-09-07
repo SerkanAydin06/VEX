@@ -50,15 +50,15 @@ position = Vector3(24, 4.85, -14.65)
 room_name = "R19 // XFER"
 header_text = "VEX // 02"
 
-[node name="PressureArchiveDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+[node name="BypassCabinetDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
 position = Vector3(52.65, 4.85, 20)
 rotation = Vector3(0, -1.5708, 0)
-room_name = "R27 // P-ARC"
+room_name = "R27 // BYPASS"
 header_text = "VEX // 02"
 
-[node name="FinalAirlockDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+[node name="RelayControlDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
 position = Vector3(48, 4.85, 34.65)
-room_name = "R33 // ISO"
+room_name = "R33 // RELAY"
 header_text = "VEX // 02"
 
 [node name="ThermalScars" type="Node3D" parent="."]
@@ -121,7 +121,7 @@ mesh = SubResource("Mesh_warning")
 material_override = SubResource("Material_warning")
 cast_shadow = 0
 
-[node name="FinalWarning" type="MeshInstance3D" parent="WarningBars"]
+[node name="RelayWarning" type="MeshInstance3D" parent="WarningBars"]
 position = Vector3(48, 4.65, 34.55)
 mesh = SubResource("Mesh_warning")
 material_override = SubResource("Material_warning")
@@ -150,14 +150,14 @@ light_energy = 2.15
 omni_range = 7.0
 shadow_enabled = true
 
-[node name="PressureArchiveLight" type="OmniLight3D" parent="StoryLights"]
+[node name="BypassCabinetLight" type="OmniLight3D" parent="StoryLights"]
 position = Vector3(48, 3.8, 20)
 light_color = Color(0.98, 0.14, 0.025, 1)
 light_energy = 1.9
 omni_range = 6.0
 shadow_enabled = true
 
-[node name="FinalIsolationLight" type="OmniLight3D" parent="StoryLights"]
+[node name="RelayControlLight" type="OmniLight3D" parent="StoryLights"]
 position = Vector3(48, 4.0, 30)
 light_color = Color(1, 0.07, 0.02, 1)
 light_energy = 2.4
