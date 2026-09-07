@@ -43,11 +43,11 @@ func _install_editor_structure_preview() -> void:
 func _install_authored_structure() -> void:
 	var structure_resource := load(STRUCTURE_SOURCE_PATH) as PackedScene
 	if structure_resource == null:
-		push_error("VEX-01 yapısal kaynak sahnesi yüklenemedi.")
+		push_error("Bölüm 01 yapısal kaynak sahnesi yüklenemedi.")
 		return
 	var source_root := structure_resource.instantiate() as Node3D
 	if source_root == null:
-		push_error("VEX-01 yapısal kaynak sahnesi instantiate edilemedi.")
+		push_error("Bölüm 01 yapısal kaynak sahnesi instantiate edilemedi.")
 		return
 
 	for node_name: StringName in STRUCTURE_NODE_NAMES:
@@ -55,8 +55,13 @@ func _install_authored_structure() -> void:
 			continue
 		var structure_node := source_root.get_node_or_null(NodePath(str(node_name)))
 		if structure_node == null:
-			push_error("VEX-01 yapısal node bulunamadı: %s" % node_name)
+			push_error("Bölüm 01 yapısal node bulunamadı: %s" % node_name)
 			continue
+		# Legacy structure source already has the two intended access doors, but its
+		# labels/objectives predate the 30-chapter canon. Apply current semantics only
+		# at runtime; editor preview keeps non-tool door scripts visual-only.
+		if node_name == &"Doors" and not Engine.is_editor_hint():
+			_configure_authored_doors(structure_node)
 		source_root.remove_child(structure_node)
 		structure_node.owner = null
 		add_child(structure_node)
@@ -64,14 +69,70 @@ func _install_authored_structure() -> void:
 	source_root.free()
 
 
+func _configure_authored_doors(doors_root: Node) -> void:
+	for child: Node in doors_root.get_children():
+		var door := child as VexDoor
+		if door == null:
+			continue
+		_reset_authored_door(door)
+
+	_configure_key_door(
+		doors_root.get_node_or_null("Door_25_27"),
+		"CH01_DOOR_BLUE_ACCESS",
+		[&"blue"],
+		"CH01_BLUE_ACCESS",
+		"CH01_OBJECTIVE_DEEPER"
+	)
+	_configure_key_door(
+		doors_root.get_node_or_null("Door_35_37"),
+		"CH01_DOOR_FINAL_AIRLOCK",
+		[&"blue", &"red"],
+		"CH01_DUAL_ACCESS",
+		"CH01_OBJECTIVE_FINAL"
+	)
+
+
+func _reset_authored_door(door: VexDoor) -> void:
+	door.locked = false
+	door.required_key = &""
+	door.required_keys = []
+	door.required_key_label = ""
+	door.objective_on_unlock = ""
+	door.required_enemy_ids = []
+	door.objective_on_combat_clear = ""
+	door.permanently_locked = false
+
+
+func _configure_key_door(
+	door_node: Node,
+	display_key: String,
+	required_keys: Array[StringName],
+	required_label_key: String,
+	objective_key: String
+) -> void:
+	var door := door_node as VexDoor
+	if door == null:
+		push_warning("Bölüm 01 kanonik erişim kapısı bulunamadı: %s" % display_key)
+		return
+	door.display_name = display_key
+	door.locked = true
+	door.required_key = &""
+	door.required_keys = required_keys
+	door.required_key_label = required_label_key
+	door.objective_on_unlock = objective_key
+	door.required_enemy_ids = []
+	door.objective_on_combat_clear = ""
+	door.permanently_locked = false
+
+
 func _on_level_ready() -> void:
 	_configure_first_fracture_start()
 	if TRAINING_OVERLAY_SCENE == null:
-		push_error("VEX-01 eğitim overlay sahnesi yüklenemedi.")
+		push_error("Bölüm 01 eğitim overlay sahnesi yüklenemedi.")
 		return
 	_training_overlay = TRAINING_OVERLAY_SCENE.instantiate() as Node3D
 	if _training_overlay == null:
-		push_error("VEX-01 eğitim overlay sahnesi instantiate edilemedi.")
+		push_error("Bölüm 01 eğitim overlay sahnesi instantiate edilemedi.")
 		return
 	add_child(_training_overlay)
 
@@ -85,11 +146,11 @@ func _configure_first_fracture_start() -> void:
 		return
 	var level_player := get_node_or_null("Player") as Node
 	if level_player == null:
-		push_warning("VEX-01 silahsız başlangıç için Player bulunamadı.")
+		push_warning("Bölüm 01 silahsız başlangıç için Player bulunamadı.")
 		return
 	var weapon_controller := level_player.get_node_or_null("WeaponController") as VexWeaponController
 	if weapon_controller == null:
-		push_warning("VEX-01 silahsız başlangıç için WeaponController bulunamadı.")
+		push_warning("Bölüm 01 silahsız başlangıç için WeaponController bulunamadı.")
 		return
 	weapon_controller.unlocked_weapons.clear()
 	weapon_controller.acquired_weapons.clear()
@@ -107,8 +168,8 @@ func _on_key_inventory_changed(keys: Array[StringName]) -> void:
 	var has_blue := keys.has(&"blue")
 	var has_red := keys.has(&"red")
 	if has_blue and has_red:
-		GameState.set_objective("LEVEL01_OBJECTIVE_BOTH_KEYS")
+		GameState.set_objective("CH01_OBJECTIVE_BOTH_KEYS")
 	elif has_red:
-		GameState.set_objective("LEVEL01_OBJECTIVE_RED_ONLY")
+		GameState.set_objective("CH01_OBJECTIVE_RED_ONLY")
 	elif has_blue:
-		GameState.set_objective("LEVEL01_OBJECTIVE_BLUE_ONLY")
+		GameState.set_objective("CH01_OBJECTIVE_BLUE_ONLY")
