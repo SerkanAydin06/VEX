@@ -18,6 +18,7 @@ enum Section {
 	THREAT_ANALYSIS,
 	RIFT_NETWORK,
 	PROTOCOLS,
+	BASE_MANAGEMENT,
 }
 
 @onready var terminal_root: Control = %ArchiveRoot
@@ -27,6 +28,7 @@ enum Section {
 @onready var threat_tab: Button = %ThreatTab
 @onready var rift_tab: Button = %RiftTab
 @onready var protocols_tab: Button = %ProtocolsTab
+@onready var base_management_tab: Button = %BaseManagementTab
 @onready var entry_list: VBoxContainer = %EntryList
 @onready var section_title: Label = %SectionTitle
 @onready var archive_summary: Label = %ArchiveSummary
@@ -35,6 +37,9 @@ enum Section {
 @onready var detail_meta: Label = %DetailMeta
 @onready var detail_body: RichTextLabel = %DetailBody
 @onready var classification_label: Label = %ClassificationLabel
+@onready var base_action_row: HBoxContainer = %BaseActionRow
+@onready var base_action_hint: Label = %BaseActionHint
+@onready var base_action_button: Button = %BaseActionButton
 @onready var close_button: Button = %CloseButton
 
 var _current_section := Section.CREATURES
@@ -55,11 +60,16 @@ func _ready() -> void:
 	threat_tab.pressed.connect(_select_section.bind(Section.THREAT_ANALYSIS))
 	rift_tab.pressed.connect(_select_section.bind(Section.RIFT_NETWORK))
 	protocols_tab.pressed.connect(_select_section.bind(Section.PROTOCOLS))
+	base_management_tab.pressed.connect(_select_section.bind(Section.BASE_MANAGEMENT))
+	base_action_button.pressed.connect(_activate_base_management_entry)
 	close_button.pressed.connect(close_terminal)
 	if not SettingsManager.language_changed.is_connected(_on_language_changed):
 		SettingsManager.language_changed.connect(_on_language_changed)
 	if not ArchiveManager.archive_changed.is_connected(_on_archive_changed):
 		ArchiveManager.archive_changed.connect(_on_archive_changed)
+	if not BaseManager.base_state_changed.is_connected(_on_base_state_changed):
+		BaseManager.base_state_changed.connect(_on_base_state_changed)
+	base_action_row.visible = false
 	terminal_root.visible = false
 
 
@@ -136,6 +146,7 @@ func _refresh_tabs() -> void:
 	threat_tab.text = _t("TEHDİT ANALİZİ", "THREAT ANALYSIS")
 	rift_tab.text = _t("YARIK AĞI", "RIFT NETWORK")
 	protocols_tab.text = _t("PROTOKOLLER", "PROTOCOLS")
+	base_management_tab.text = _t("ÜS YÖNETİMİ", "BASE MANAGEMENT")
 	var tabs: Array[Button] = [
 		creatures_tab,
 		universes_tab,
@@ -143,6 +154,7 @@ func _refresh_tabs() -> void:
 		threat_tab,
 		rift_tab,
 		protocols_tab,
+		base_management_tab,
 	]
 	for index in tabs.size():
 		tabs[index].button_pressed = index == _current_section
@@ -201,6 +213,8 @@ func _get_entries_for_section() -> Array[Dictionary]:
 		Section.PROTOCOLS:
 			for entry: Dictionary in ArchiveDB.PROTOCOLS:
 				result.append(entry)
+		Section.BASE_MANAGEMENT:
+			result = _build_base_management_entries()
 	return result
 
 
@@ -216,8 +230,12 @@ func _get_section_title() -> String:
 			return _t("TAKTİK TEHDİT MATRİSİ", "TACTICAL THREAT MATRIX")
 		Section.RIFT_NETWORK:
 			return _t("YARIK AĞI TELEMETRİSİ", "RIFT NETWORK TELEMETRY")
-		_:
+		Section.PROTOCOLS:
 			return _t("VEX SAHA PROTOKOLLERİ", "VEX FIELD PROTOCOLS")
+		Section.BASE_MANAGEMENT:
+			return _t("BASTION-7 // ÜS YÖNETİMİ", "BASTION-7 // BASE MANAGEMENT")
+		_:
+			return _t("SİSTEM VERİSİ", "SYSTEM DATA")
 
 
 func _get_entry_button_text(entry: Dictionary, index: int) -> String:
@@ -243,6 +261,8 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 				"ŞİFRELİ KAYIT // %02d" % (index + 1),
 				"ENCRYPTED RECORD // %02d" % (index + 1)
 			)
+		Section.BASE_MANAGEMENT:
+			return _get_base_management_button_text(entry)
 		_:
 			return str(entry.get("title", "DATA"))
 
@@ -271,6 +291,8 @@ func _refresh_detail() -> void:
 			_show_rift_entry(entry)
 		Section.PROTOCOLS:
 			_show_protocol(entry)
+		Section.BASE_MANAGEMENT:
+			_show_base_management_entry(entry)
 
 
 func _show_enemy(entry: Dictionary) -> void:
@@ -454,6 +476,305 @@ func _show_protocol(entry: Dictionary) -> void:
 	)
 
 
+func _build_base_management_entries() -> Array[Dictionary]:
+	var result: Array[Dictionary] = [
+		{
+			"base_kind": &"overview",
+			"title": _t("ÜS DURUMU", "BASE STATUS"),
+		},
+	]
+	for definition: Dictionary in BaseManager.get_area_definitions():
+		var entry := definition.duplicate(true)
+		entry["base_kind"] = &"area"
+		entry["title"] = _base_localized(entry, "name")
+		result.append(entry)
+	for definition: Dictionary in BaseManager.get_lighting_definitions():
+		var entry := definition.duplicate(true)
+		entry["base_kind"] = &"lighting"
+		entry["title"] = _base_localized(entry, "name")
+		result.append(entry)
+	for definition: Dictionary in BaseManager.get_upgrade_definitions():
+		var entry := definition.duplicate(true)
+		entry["base_kind"] = &"upgrade"
+		entry["title"] = _base_localized(entry, "name")
+		result.append(entry)
+	return result
+
+
+func _get_base_management_button_text(entry: Dictionary) -> String:
+	var title := str(entry.get("title", "BASTION-7"))
+	var kind := StringName(str(entry.get("base_kind", "")))
+	match kind:
+		&"overview":
+			return "%s\n// %s" % [title, _t("YEREL SİSTEMLER", "LOCAL SYSTEMS")]
+		&"area":
+			var area_id := _entry_string_name(entry, "id")
+			var status := _t("YETKİ KİLİTLİ", "CLEARANCE LOCKED")
+			if BaseManager.is_area_unlocked(area_id):
+				status = _t("ERİŞİM AÇIK", "ACCESS ONLINE")
+			elif BaseManager.can_unlock_area(area_id, GameState.campaign_stage):
+				status = _t("AKTİVASYON HAZIR", "ACTIVATION READY")
+			return "%s\n// %s" % [title, status]
+		&"lighting":
+			var mode := int(entry.get("mode", 0))
+			var status := (
+				_t("AKTİF PROFİL", "ACTIVE PROFILE")
+				if mode == BaseManager.get_lighting_mode()
+				else _t("UYGULANABİLİR", "AVAILABLE")
+			)
+			return "%s\n// %s" % [title, status]
+		&"upgrade":
+			var upgrade_id := _entry_string_name(entry, "id")
+			return "%s\n// %s %d / %d" % [
+				title,
+				_t("SEVİYE", "LEVEL"),
+				BaseManager.get_upgrade_level(upgrade_id),
+				int(entry.get("max_level", 0)),
+			]
+		_:
+			return title
+
+
+func _show_base_management_entry(entry: Dictionary) -> void:
+	var kind := StringName(str(entry.get("base_kind", "")))
+	match kind:
+		&"overview":
+			_show_base_overview()
+		&"area":
+			_show_base_area(entry)
+		&"lighting":
+			_show_base_lighting(entry)
+		&"upgrade":
+			_show_base_upgrade(entry)
+		_:
+			_set_detail(
+				_t("ÜS SİSTEMİ", "BASE SYSTEM"),
+				"BASTION-7",
+				_t("Geçerli bir üs yönetim kaydı bulunamadı.", "No valid base-management record was found."),
+				VEX_LOGO,
+				false
+			)
+
+
+func _show_base_overview() -> void:
+	var unlocked_count := 0
+	var areas := BaseManager.get_area_definitions()
+	for definition: Dictionary in areas:
+		if BaseManager.is_area_unlocked(_entry_string_name(definition, "id")):
+			unlocked_count += 1
+	var lighting := BaseManager.get_lighting_definition(BaseManager.get_lighting_mode())
+	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("BÖLGE ERİŞİMİ", "AREA ACCESS"),
+		_t(
+			"Yeniden etkinleştirilen kapalı bölüm: %d / %d" % [unlocked_count, areas.size()],
+			"Recommissioned restricted areas: %d / %d" % [unlocked_count, areas.size()]
+		),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("AYDINLATMA PROFİLİ", "LIGHTING PROFILE"),
+		_base_localized(lighting, "name"),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s" % [
+		_t("GELİŞTİRME OMURGASI", "UPGRADE BACKBONE"),
+		_t(
+			"Enerji dağıtımı, güvenlik ağı ve araştırma altyapısı için kalıcı geliştirme yuvaları hazır. Ekonomi ve oynanış etkileri sonraki sistemlere bağlanabilir.",
+			"Persistent upgrade slots are registered for power distribution, security and research infrastructure. Economy and gameplay effects can be attached later."
+		),
+	]
+	_set_detail(
+		_t("BASTION-7 // ÜS DURUMU", "BASTION-7 // BASE STATUS"),
+		_t("YEREL TESİS KONTROLÜ // ÇEVRİMDIŞI AĞ", "LOCAL FACILITY CONTROL // AIR-GAPPED"),
+		body,
+		VEX_LOGO,
+		false
+	)
+	_set_base_classification(_t("BASTION-7 // YEREL YETKİ AKTİF", "BASTION-7 // LOCAL AUTHORITY ACTIVE"))
+
+
+func _show_base_area(entry: Dictionary) -> void:
+	var area_id := _entry_string_name(entry, "id")
+	var required_stage := int(entry.get("required_stage", 0))
+	var unlocked := BaseManager.is_area_unlocked(area_id)
+	var can_unlock := BaseManager.can_unlock_area(area_id, GameState.campaign_stage)
+	var status := _t("YETKİ KİLİTLİ", "CLEARANCE LOCKED")
+	if unlocked:
+		status = _t("ERİŞİM AÇIK", "ACCESS ONLINE")
+	elif can_unlock:
+		status = _t("AKTİVASYON HAZIR", "ACTIVATION READY")
+	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("BÖLGE DURUMU", "AREA STATUS"),
+		status,
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("TESİS KAYDI", "FACILITY RECORD"),
+		_base_localized(entry, "description"),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s" % [
+		_t("YETKİ KOŞULU", "CLEARANCE REQUIREMENT"),
+		_get_base_stage_requirement_text(required_stage),
+	]
+	_set_detail(
+		str(entry.get("title", "FACILITY")),
+		_t("BASTION-7 // BÖLGE ERİŞİM AĞI", "BASTION-7 // AREA ACCESS GRID"),
+		body,
+		VEX_LOGO,
+		false
+	)
+	_set_base_classification(status)
+	if unlocked:
+		_configure_base_action(
+			_t("ERİŞİM AÇIK", "ACCESS ONLINE"),
+			false,
+			_t("Kapı ağı bu yetkiyi canlı olarak uyguluyor.", "The door network is actively enforcing this authorization.")
+		)
+	elif can_unlock:
+		_configure_base_action(
+			_t("ERİŞİMİ AÇ", "RESTORE ACCESS"),
+			true,
+			_t("Aktivasyon kampanya kaydına yazılır ve ilgili kapı anında yetkilendirilir.", "Activation is written to the campaign save and the linked door is authorized immediately.")
+		)
+	else:
+		_configure_base_action(
+			_t("YETKİ KİLİTLİ", "CLEARANCE LOCKED"),
+			false,
+			_get_base_stage_requirement_text(required_stage)
+		)
+
+
+func _show_base_lighting(entry: Dictionary) -> void:
+	var mode := int(entry.get("mode", 0))
+	var active := mode == BaseManager.get_lighting_mode()
+	var energy_percent := roundi(float(entry.get("energy_multiplier", 1.0)) * 100.0)
+	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("AYDINLATMA PROFİLİ", "LIGHTING PROFILE"),
+		_base_localized(entry, "description"),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("ANA IŞIK GÜCÜ", "PRIMARY LIGHT POWER"),
+		"%d%%" % energy_percent,
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s" % [
+		_t("SAHNE OTORİTESİ", "SCENE AUTHORITY"),
+		_t(
+			"Bu profil armatürlerin sahnede tanımlanan enerji/renk ayarlarını değiştirmez; çalışma anında yalnız çarpan ve ton uygular.",
+			"This profile does not replace scene-authored fixture energy/color settings; it only applies a runtime multiplier and tint."
+		),
+	]
+	_set_detail(
+		str(entry.get("title", "LIGHTING")),
+		_t("BASTION-7 // AYDINLATMA KONTROLÜ", "BASTION-7 // LIGHTING CONTROL"),
+		body,
+		VEX_LOGO,
+		false
+	)
+	_set_base_classification(
+		_t("AKTİF AYDINLATMA PROFİLİ", "ACTIVE LIGHTING PROFILE")
+		if active
+		else _t("PROFİL UYGULAMAYA HAZIR", "PROFILE READY TO APPLY")
+	)
+	_configure_base_action(
+		_t("AKTİF", "ACTIVE") if active else _t("PROFİLİ UYGULA", "APPLY PROFILE"),
+		not active,
+		_t("Değişiklik Bastion-7 oda ışıklarına anında uygulanır.", "The change is applied to Bastion-7 room lighting immediately.")
+	)
+
+
+func _show_base_upgrade(entry: Dictionary) -> void:
+	var upgrade_id := _entry_string_name(entry, "id")
+	var level := BaseManager.get_upgrade_level(upgrade_id)
+	var max_level := int(entry.get("max_level", 0))
+	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("GELİŞTİRME HATTI", "UPGRADE TRACK"),
+		_base_localized(entry, "description"),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%d / %d\n\n" % [
+		_t("MEVCUT SEVİYE", "CURRENT LEVEL"),
+		level,
+		max_level,
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s" % [
+		_t("ENTEGRASYON DURUMU", "INTEGRATION STATUS"),
+		_t(
+			"Kalıcı state, seviye sınırı ve save desteği hazır. Maliyet, kaynak ekonomisi ve gerçek oynanış etkileri sonraki geliştirme sistemine bağlanacak.",
+			"Persistent state, level limits and save support are ready. Costs, resource economy and gameplay effects will be connected by a future upgrade system."
+		),
+	]
+	_set_detail(
+		str(entry.get("title", "UPGRADE")),
+		_t("BASTION-7 // GELİŞTİRME ALTYAPISI", "BASTION-7 // UPGRADE INFRASTRUCTURE"),
+		body,
+		VEX_LOGO,
+		false
+	)
+	_set_base_classification(_t("ALTYAPI HAZIR // ETKİ BAĞLANTISI BEKLİYOR", "INFRASTRUCTURE READY // EFFECT HOOK PENDING"))
+	_configure_base_action(
+		_t("GELİŞTİRME YAKINDA", "UPGRADES COMING LATER"),
+		false,
+		_t("Bu düğme ekonomi ve maliyet sistemi eklendiğinde aktifleşecek.", "This action will activate when the economy and upgrade-cost system is added.")
+	)
+
+
+func _configure_base_action(button_text: String, enabled: bool, hint: String) -> void:
+	base_action_row.visible = true
+	base_action_button.text = button_text
+	base_action_button.disabled = not enabled
+	base_action_hint.text = hint
+
+
+func _set_base_classification(text: String) -> void:
+	classification_label.text = text
+	classification_label.add_theme_color_override("font_color", Color(0.30, 1.0, 0.62, 1.0))
+
+
+func _activate_base_management_entry() -> void:
+	if _current_section != Section.BASE_MANAGEMENT:
+		return
+	if _selected_index < 0 or _selected_index >= _current_entries.size():
+		return
+	var entry := _current_entries[_selected_index]
+	var kind := StringName(str(entry.get("base_kind", "")))
+	var changed := false
+	var success_message := ""
+	match kind:
+		&"area":
+			var area_id := _entry_string_name(entry, "id")
+			changed = BaseManager.unlock_area(area_id, GameState.campaign_stage)
+			if changed:
+				success_message = _t(
+					"BASTION-7 // BÖLGE ERİŞİMİ YENİDEN ETKİN",
+					"BASTION-7 // AREA ACCESS RESTORED"
+				)
+		&"lighting":
+			changed = BaseManager.set_lighting_mode(int(entry.get("mode", 0)))
+			if changed:
+				success_message = _t(
+					"BASTION-7 // AYDINLATMA PROFİLİ GÜNCELLENDİ",
+					"BASTION-7 // LIGHTING PROFILE UPDATED"
+				)
+		_:
+			return
+	if not changed:
+		return
+	if not GameState.save_current_safe_progress("base_management"):
+		GameState.notify(GameState.get_save_failure_message())
+		return
+	GameState.notify(success_message)
+
+
+func _get_base_stage_requirement_text(required_stage: int) -> String:
+	if required_stage <= 0:
+		return _t("YEREL YETKİ // HAZIR", "LOCAL AUTHORITY // READY")
+	return _t(
+		"VEX-%02d OPERASYONU TAMAMLANMALI" % required_stage,
+		"VEX-%02d OPERATION MUST BE COMPLETED" % required_stage
+	)
+
+
+func _base_localized(entry: Dictionary, key: String) -> String:
+	var suffix := "_tr" if ArchiveDB.is_turkish() else "_en"
+	return str(entry.get(key + suffix, entry.get(key, "")))
+
+
 func _set_detail(
 	title: String,
 	meta: String,
@@ -461,6 +782,9 @@ func _set_detail(
 	texture: Texture2D,
 	classified: bool
 ) -> void:
+	base_action_row.visible = false
+	base_action_hint.text = ""
+	base_action_button.disabled = true
 	detail_title.text = title
 	detail_meta.text = meta
 	detail_body.text = body
@@ -689,6 +1013,11 @@ func _entry_string_name(entry: Dictionary, key: String) -> StringName:
 
 func _on_archive_changed(_enemy_id: StringName) -> void:
 	_refresh_all()
+
+
+func _on_base_state_changed() -> void:
+	if terminal_root.visible and _current_section == Section.BASE_MANAGEMENT:
+		_refresh_all()
 
 
 func _on_language_changed(_locale: String) -> void:
