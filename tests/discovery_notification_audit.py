@@ -57,11 +57,12 @@ def test_first_xeno_archive_discovery_requests_xeno_card() -> None:
     assert '&"xeno"' in archive
 
 
-def test_record_terminal_announces_only_first_open_per_instance() -> None:
+def test_record_terminal_announces_only_new_campaign_discovery() -> None:
     record = _read(RECORD)
-    assert "var _discovery_announced := false" in record
-    assert "if not _discovery_announced:" in record
-    assert "_discovery_announced = true" in record
+    assert "BaseManager.discover_field_record(record_id)" in record
+    assert "var newly_discovered := false" in record
+    assert "if newly_discovered:" in record
+    assert "_discovery_announced" not in record
     assert '"KAYIT ÇÖZÜLDÜ"' in record
     assert '"RECORD DECODED"' in record
     assert '&"record"' in record
