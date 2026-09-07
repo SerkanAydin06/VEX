@@ -13,7 +13,8 @@ const ACTION_LABELS := {
 	&"move_left": "KEYBIND_MOVE_LEFT", &"move_right": "KEYBIND_MOVE_RIGHT",
 	&"jump": "KEYBIND_JUMP", &"sprint": "KEYBIND_SPRINT", &"crouch": "KEYBIND_CROUCH",
 	&"interact": "KEYBIND_INTERACT", &"reload": "KEYBIND_RELOAD", &"automap": "KEYBIND_AUTOMAP",
-	&"night_vision": "KEYBIND_NIGHT_VISION", &"weapon_1": "KEYBIND_WEAPON_1", &"weapon_2": "KEYBIND_WEAPON_2",
+	&"night_vision": "KEYBIND_NIGHT_VISION", &"weapon_flashlight": "KEYBIND_WEAPON_FLASHLIGHT",
+	&"weapon_1": "KEYBIND_WEAPON_1", &"weapon_2": "KEYBIND_WEAPON_2",
 	&"weapon_3": "KEYBIND_WEAPON_3", &"weapon_4": "KEYBIND_WEAPON_4", &"weapon_5": "KEYBIND_WEAPON_5",
 }
 
@@ -31,12 +32,16 @@ func _build_rows() -> void:
 	_buttons.clear()
 	for action: StringName in SettingsManager.rebindable_actions:
 		var row := HBoxContainer.new()
+		row.custom_minimum_size = Vector2(0.0, 40.0)
+		row.add_theme_constant_override("separation", 10)
 		var label := Label.new()
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		label.text = tr(str(ACTION_LABELS.get(action, str(action))))
 		row.add_child(label)
 		var button := Button.new()
-		button.custom_minimum_size = Vector2(180.0, 42.0)
+		button.custom_minimum_size = Vector2(160.0, 38.0)
 		button.pressed.connect(_begin_rebind.bind(action))
 		row.add_child(button)
 		rows.add_child(row)
