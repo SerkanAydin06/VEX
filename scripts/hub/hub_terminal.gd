@@ -1,4 +1,3 @@
-@tool
 class_name VexHubTerminal
 extends Node3D
 
