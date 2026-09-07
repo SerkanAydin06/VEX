@@ -1,0 +1,17 @@
+keys,tr,en
+CH01_NAME,BÖLÜM 01 // İLK KIRILMA,CHAPTER 01 // FIRST FRACTURE
+CH01_OBJECTIVE_START,ACİL DURUM HATTINI TAKİP ET // GÜVENLİK DOLABINA ULAŞ,FOLLOW THE EMERGENCY LINE // REACH THE SECURITY LOCKER
+CH01_BRIEFING_STORY,"Sıfır Kaynak kazasından sonra parçalanmış bir VEX tesisinde gözlerini açıyorsun. Haberleşme kesik; koridorlarda kaynağı bilinmeyen canlı temaslar var. Güvenlik hattını takip et, fiziksel erişim kartlarını topla ve dışarıdaki Bastion-7 acil durum sinyaline ulaş.","You awaken inside a shattered VEX facility after the Zero Source disaster. Communications are down and biological contacts of unknown origin are moving through the corridors. Follow the security line, recover the physical access cards and reach the Bastion-7 emergency signal outside."
+CH01_BRIEFING_OBJECTIVE,GÖREV: TESİSTEN ÇIKIŞ YOLUNU BUL // BASTION-7 HATTINA ULAŞ,MISSION: FIND A WAY OUT OF THE FACILITY // REACH THE BASTION-7 LINE
+CH01_MAP_TITLE,TESİS HARİTASI // İLK KIRILMA,FACILITY MAP // FIRST FRACTURE
+CH01_OBJECTIVE_RED_ONLY,KIRMIZI ERİŞİM KARTI ALINDI // MAVİ KARTI BUL,RED ACCESS CARD ACQUIRED // FIND THE BLUE CARD
+CH01_OBJECTIVE_BLUE_ONLY,MAVİ ERİŞİM KARTI ALINDI // KIRMIZI KARTI BUL,BLUE ACCESS CARD ACQUIRED // FIND THE RED CARD
+CH01_OBJECTIVE_BOTH_KEYS,ÇİFTE ERİŞİM KURULDU // FİNAL HAVA KİLİDİNE İLERLE,DUAL ACCESS RESTORED // PROCEED TO THE FINAL AIRLOCK
+CH01_OBJECTIVE_DEEPER,MAVİ ERİŞİM DOĞRULANDI // TESİSİN DERİNLİKLERİNE İLERLE,BLUE ACCESS VERIFIED // PROCEED DEEPER INTO THE FACILITY
+CH01_OBJECTIVE_FINAL,FİNAL HAVA KİLİDİ AÇILDI // BASTION-7 SİNYALİNE İLERLE,FINAL AIRLOCK OPEN // PROCEED TO THE BASTION-7 SIGNAL
+CH01_DOOR_BLUE_ACCESS,MAVİ GÜVENLİK GEÇİDİ,BLUE SECURITY PASSAGE
+CH01_DOOR_FINAL_AIRLOCK,FİNAL TAHLİYE HAVA KİLİDİ,FINAL EVACUATION AIRLOCK
+CH01_BLUE_ACCESS,MAVİ ERİŞİM KARTI,BLUE ACCESS CARD
+CH01_DUAL_ACCESS,MAVİ + KIRMIZI ERİŞİM KARTI,BLUE + RED ACCESS CARDS
+CH01_MISSION_BRIEF,"İlk Kırılma tesisinden sağ çık. P-01'i güvenlik dolabından al, mavi ve kırmızı erişim kartlarını bul ve Bastion-7 acil durum hattına ulaş.","Survive the First Fracture facility. Recover the P-01 from the security locker, find the blue and red access cards and reach the Bastion-7 emergency line."
+CH01_COMPLETE,BÖLÜM 01 TAMAMLANDI // İLK KIRILMA KAYITLARI BASTION-7'YE AKTARILDI,CHAPTER 01 COMPLETE // FIRST FRACTURE RECORDS TRANSFERRED TO BASTION-7
