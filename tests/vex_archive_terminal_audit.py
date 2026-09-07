@@ -87,6 +87,21 @@ def test_main_terminal_has_six_gameplay_relevant_sections_and_real_sprite_previe
     assert "GameState.campaign_stage" in script
     assert "_build_extraction_matrix" in script
 
+    # Vaskari Ravager still uses the pre-manifest legacy atlas. The archive must
+    # crop its authored idle frame instead of falling back to a logo/full sheet.
+    assert '&"vaskari_ravager": Rect2(682.0, 512.0, 341.0, 512.0)' in script
+    assert '"res://assets/enemies/%s/%s_spritesheet.png"' in script
+    assert "LEGACY_PREVIEW_REGIONS.has(enemy_id)" in script
+
+
+def test_completed_operation_records_do_not_spoil_future_missions() -> None:
+    script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
+
+    assert '&"vex01":\n\t\t\trequired_stage = maxi(required_stage, 1)' in script
+    assert '&"vex02":\n\t\t\trequired_stage = maxi(required_stage, 2)' in script
+    assert '&"vex03":\n\t\t\trequired_stage = maxi(required_stage, 3)' in script
+    assert "return GameState.campaign_stage >= required_stage" in script
+
 
 def test_information_terminal_routes_to_archive_without_changing_deployment_terminal() -> None:
     hub_script = HUB_SCRIPT.read_text(encoding="utf-8")
