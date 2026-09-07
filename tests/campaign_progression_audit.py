@@ -3,11 +3,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME_STATE = ROOT / "scripts" / "autoload" / "game_state.gd"
+BASE_LEVEL = ROOT / "scripts" / "levels" / "base_level.gd"
 BASTION_SCENE = ROOT / "scenes" / "hub" / "bastion_7.tscn"
 BASTION_SCRIPT = ROOT / "scripts" / "hub" / "bastion_7.gd"
 HUB_TERMINAL = ROOT / "scripts" / "hub" / "hub_terminal.gd"
 TERMINAL_MENU = ROOT / "scripts" / "ui" / "terminal_menu.gd"
 LEVEL_COMPLETE = ROOT / "scripts" / "ui" / "level_complete.gd"
+PAUSE_MENU = ROOT / "scripts" / "ui" / "pause_menu.gd"
 LEVEL01_CONTENT = ROOT / "scenes" / "levels" / "level_01_first_fracture_content.tscn"
 LEVEL02_CONTENT = ROOT / "scenes" / "levels" / "level_02_ash_corridor_content.tscn"
 LEVEL03_CONTENT = ROOT / "scenes" / "levels" / "level_03_pressure_line_content.tscn"
@@ -155,3 +157,30 @@ def test_bastion_safe_zone_autosaves_base_and_loadout_changes() -> None:
     assert 'call_deferred("_flush_hub_safe_save")' in bastion
     assert 'GameState.save_current_safe_progress("bastion_state_changed")' in bastion
     assert 'call_deferred("_save_hub_safe_point", "bastion_arrival")' in bastion
+
+
+def test_pause_main_menu_forces_current_bastion_state_to_disk_without_creating_mission_checkpoint() -> None:
+    pause = _read(PAUSE_MENU)
+    game_state = _read(GAME_STATE)
+    assert "main_menu_button.pressed.connect(_return_to_main_menu)" in pause
+    assert 'GameState.save_current_safe_progress("main_menu_exit")' in pause
+    assert "GameState.return_to_main_menu()" in pause
+    save_start = game_state.index("func save_current_safe_progress")
+    save_end = game_state.index("func _sanitize_campaign_player_state", save_start)
+    save_block = game_state[save_start:save_end]
+    assert "if scene_path != BASTION_7_PATH:" in save_block
+    assert "return false" in save_block
+
+
+def test_direct_scene_run_syncs_restart_target_to_the_actual_level() -> None:
+    base = _read(BASE_LEVEL)
+    ready_start = base.index("func _ready()")
+    ready_end = base.index("func _sync_current_level_path", ready_start)
+    ready_block = base[ready_start:ready_end]
+    assert "_sync_current_level_path()" in ready_block
+    sync_start = base.index("func _sync_current_level_path")
+    sync_end = base.index("func _on_level_ready", sync_start)
+    sync_block = base[sync_start:sync_end]
+    assert "var current_scene := get_tree().current_scene" in sync_block
+    assert "if current_scene != self or scene_file_path.is_empty():" in sync_block
+    assert "GameState.current_level_path = scene_file_path" in sync_block
