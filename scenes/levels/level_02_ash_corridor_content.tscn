@@ -253,7 +253,7 @@ visual_texture = ExtResource("9_armor")
 [node name="Records" type="Node3D" parent="."]
 
 [node name="Record_KorThermalSourceSignature" parent="Records" instance=ExtResource("12_record")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -26.2, 0.85, -28.2)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 50.2, 0.85, 28.8)
 record_id = &"vex02_kor_thermal_source_signature"
 
 [node name="Record_RelayTechnicianLastShift" parent="Records" instance=ExtResource("12_record")]
