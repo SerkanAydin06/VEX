@@ -51,16 +51,40 @@ def test_weapon_archive_exposes_detailed_live_stats_and_upgrades() -> None:
     assert "theoretical_dps" in script
 
 
-def test_weapon_archive_categories_and_layout_are_compact() -> None:
+def test_weapon_archive_categories_and_layout_fit_compact_viewports() -> None:
     scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
     script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
 
     for node_name in ["SidearmTab", "ShotgunTab", "RifleTab", "SmgTab", "LaserTab"]:
         assert f'[node name="{node_name}"' in scene
-    assert "custom_minimum_size = Vector2(190, 0)" in scene
-    assert "custom_minimum_size = Vector2(300, 0)" in scene
+
+    # The shell uses nearly the full viewport and all three columns leave
+    # substantially more room for the detail pane at 1280x720.
+    assert "anchor_left = 0.02" in scene
+    assert "anchor_top = 0.025" in scene
+    assert "anchor_right = 0.98" in scene
+    assert "anchor_bottom = 0.975" in scene
+    assert "custom_minimum_size = Vector2(160, 0)" in scene
+    assert "custom_minimum_size = Vector2(245, 0)" in scene
+    assert "custom_minimum_size = Vector2(180, 170)" in scene
+    assert "custom_minimum_size = Vector2(0, 170)" in scene
+
+    # Long labels wrap instead of forcing their parent wider.
+    assert 'text = "SİLAH ARŞİV TERMİNALİ"\nautowrap_mode = 2' in scene
+    assert 'text = "ARMORY RECORD STATUS"\nhorizontal_alignment = 2\nautowrap_mode = 2' in scene
+    assert "theme_override_font_sizes/normal_font_size = 12" in scene
     assert "autowrap_mode = TextServer.AUTOWRAP_WORD_SMART" in script
-    assert "button.custom_minimum_size = Vector2(0.0, 64.0)" in script
+
+
+def test_weapon_archive_vertical_budget_is_compact() -> None:
+    scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
+
+    assert "custom_minimum_size = Vector2(0, 54)" in scene
+    assert scene.count("custom_minimum_size = Vector2(0, 44)") == 5
+    assert "custom_minimum_size = Vector2(0, 40)" in scene
+    assert "custom_minimum_size = Vector2(160, 40)" in scene
+    assert "theme_override_constants/margin_top = 10" in scene
+    assert "theme_override_constants/margin_bottom = 10" in scene
 
 
 def test_shared_terminal_routes_weapon_archive_without_changing_old_modes() -> None:
