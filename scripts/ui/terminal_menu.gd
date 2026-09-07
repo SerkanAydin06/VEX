@@ -1,3 +1,4 @@
+@tool
 class_name VexTerminalMenu
 extends CanvasLayer
 
@@ -40,6 +41,10 @@ var _was_paused := false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if Engine.is_editor_hint():
+		terminal_root.visible = get_tree().edited_scene_root == self
+		confirmation_overlay.visible = false
+		return
 	var buttons := _get_mission_buttons()
 	for index in buttons.size():
 		buttons[index].pressed.connect(_select_mission.bind(index))
@@ -90,7 +95,7 @@ func is_open() -> bool:
 
 
 func _input(event: InputEvent) -> void:
-	if not terminal_root.visible:
+	if Engine.is_editor_hint() or not terminal_root.visible:
 		return
 	if event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
