@@ -1,7 +1,7 @@
 class_name VexLevel03ExtractionSwitch
 extends VexFinishSwitch
 
-@export_node_path("VexSurvivorRescueTerminal") var rescue_terminal_path: NodePath
+@export var rescue_terminal_path: NodePath
 @export var rescue_required_message_key := "CH03_FINISH_REQUIRES_RESCUE"
 @export var rescue_required_objective_key := "CH03_OBJECTIVE_RESCUE"
 
@@ -21,7 +21,7 @@ func interact(player: Node) -> void:
 
 
 func _is_survivor_rescued() -> bool:
-	if rescue_terminal_path.is_empty():
+	if String(rescue_terminal_path).is_empty():
 		return false
 	var rescue_terminal := get_node_or_null(rescue_terminal_path) as VexSurvivorRescueTerminal
 	return rescue_terminal != null and rescue_terminal.rescued
