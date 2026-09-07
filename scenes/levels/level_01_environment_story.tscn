@@ -1,0 +1,233 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/levels/level_01_environment_story.gd" id="1_story"]
+[ext_resource type="PackedScene" path="res://scenes/world/room_name_display.tscn" id="2_display"]
+
+[sub_resource type="StandardMaterial3D" id="Material_debris"]
+albedo_color = Color(0.055, 0.064, 0.072, 1)
+metallic = 0.72
+roughness = 0.56
+
+[sub_resource type="StandardMaterial3D" id="Material_scorch"]
+albedo_color = Color(0.018, 0.012, 0.014, 1)
+roughness = 0.96
+
+[sub_resource type="StandardMaterial3D" id="Material_breach_core"]
+albedo_color = Color(0.12, 0.48, 0.58, 1)
+metallic = 0.08
+roughness = 0.14
+emission_enabled = true
+emission = Color(0.30, 0.86, 1, 1)
+emission_energy_multiplier = 5.2
+
+[sub_resource type="StandardMaterial3D" id="Material_breach_edge"]
+albedo_color = Color(0.008, 0.018, 0.026, 1)
+metallic = 0.28
+roughness = 0.38
+emission_enabled = true
+emission = Color(0.045, 0.22, 0.30, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="StandardMaterial3D" id="Material_warning"]
+albedo_color = Color(0.32, 0.012, 0.008, 1)
+roughness = 0.42
+emission_enabled = true
+emission = Color(1, 0.035, 0.012, 1)
+emission_energy_multiplier = 2.4
+
+[sub_resource type="BoxMesh" id="Mesh_floor_panel"]
+size = Vector3(2.8, 0.10, 1.15)
+
+[sub_resource type="BoxMesh" id="Mesh_wall_scorch"]
+size = Vector3(0.05, 3.8, 3.0)
+
+[sub_resource type="BoxMesh" id="Mesh_breach_back"]
+size = Vector3(2.55, 5.3, 0.055)
+
+[sub_resource type="BoxMesh" id="Mesh_breach_core"]
+size = Vector3(0.15, 4.6, 0.065)
+
+[sub_resource type="BoxMesh" id="Mesh_breach_shard"]
+size = Vector3(0.10, 1.65, 0.05)
+
+[node name="Level01EnvironmentStory" type="Node3D"]
+script = ExtResource("1_story")
+disabled_structure_light_paths = Array[NodePath]([NodePath("../RoomLights/CeilingWhite_Room_17"), NodePath("../RoomLights/CeilingWhite_Room_29"), NodePath("../RoomLights/CeilingWhite_Room_35"), NodePath("../RoomLights/CeilingWhite_Room_37")])
+breach_visual_path = NodePath("FinalVista/FinalBreachCore")
+breach_light_path = NodePath("FinalVista/BreachLight")
+breach_pulse_speed = 1.65
+breach_scale_pulse = 0.035
+breach_light_pulse = 0.18
+
+[node name="RoomCodes" type="Node3D" parent="."]
+
+[node name="R03SecurityDisplay" parent="RoomCodes" instance=ExtResource("2_display")]
+position = Vector3(0, 4.85, 54.72)
+rotation = Vector3(0, 3.14159, 0)
+room_name = "R03 // SEC"
+header_text = "VEX // 01"
+
+[node name="R17QuarantineDisplay" parent="RoomCodes" instance=ExtResource("2_display")]
+position = Vector3(-29.72, 4.85, 0)
+rotation = Vector3(0, 1.5708, 0)
+room_name = "R17 // Q-CAM"
+header_text = "VEX // 01"
+
+[node name="R23MedicalDisplay" parent="RoomCodes" instance=ExtResource("2_display")]
+position = Vector3(0, 4.85, -14.72)
+room_name = "R23 // MED"
+header_text = "VEX // 01"
+
+[node name="R29MaintenanceDisplay" parent="RoomCodes" instance=ExtResource("2_display")]
+position = Vector3(-29.72, 4.85, -40)
+rotation = Vector3(0, 1.5708, 0)
+room_name = "R29 // MNT"
+header_text = "VEX // 01"
+
+[node name="R35EvacDisplay" parent="RoomCodes" instance=ExtResource("2_display")]
+position = Vector3(0, 4.85, -54.72)
+room_name = "R35 // EVAC"
+header_text = "VEX // 01"
+
+[node name="R37NetworkDisplay" parent="RoomCodes" instance=ExtResource("2_display")]
+position = Vector3(0, 4.85, -64.72)
+room_name = "R37 // NET"
+header_text = "VEX // 01"
+
+[node name="DamageStory" type="Node3D" parent="."]
+
+[node name="R07FallenPanel" type="MeshInstance3D" parent="DamageStory"]
+position = Vector3(3.65, 0.16, 38.3)
+rotation = Vector3(0.06, -0.28, 0.16)
+mesh = SubResource("Mesh_floor_panel")
+material_override = SubResource("Material_debris")
+cast_shadow = 1
+
+[node name="R13FallenPanel" type="MeshInstance3D" parent="DamageStory"]
+position = Vector3(-3.4, 0.14, 18.0)
+rotation = Vector3(-0.04, 0.42, -0.12)
+mesh = SubResource("Mesh_floor_panel")
+material_override = SubResource("Material_debris")
+cast_shadow = 1
+
+[node name="R17Scorch" type="MeshInstance3D" parent="DamageStory"]
+position = Vector3(-29.78, 2.2, -1.1)
+mesh = SubResource("Mesh_wall_scorch")
+material_override = SubResource("Material_scorch")
+cast_shadow = 0
+
+[node name="R29Scorch" type="MeshInstance3D" parent="DamageStory"]
+position = Vector3(-29.78, 2.25, -40.6)
+mesh = SubResource("Mesh_wall_scorch")
+material_override = SubResource("Material_scorch")
+cast_shadow = 0
+
+[node name="R29MaintenancePanel" type="MeshInstance3D" parent="DamageStory"]
+position = Vector3(-21.5, 0.14, -38.1)
+rotation = Vector3(0.03, 0.72, -0.18)
+mesh = SubResource("Mesh_floor_panel")
+material_override = SubResource("Material_debris")
+cast_shadow = 1
+
+[node name="StoryLights" type="Node3D" parent="."]
+
+[node name="R03SecurityLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(0, 4.6, 51.5)
+light_color = Color(0.54, 0.82, 1, 1)
+light_energy = 1.45
+omni_range = 5.6
+shadow_enabled = false
+
+[node name="R17EmergencyLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(-24, 4.0, 0)
+light_color = Color(1, 0.08, 0.035, 1)
+light_energy = 2.55
+omni_range = 7.0
+shadow_enabled = true
+
+[node name="R23SafeLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(0, 4.2, -10)
+light_color = Color(0.54, 0.92, 0.78, 1)
+light_energy = 1.35
+omni_range = 5.8
+shadow_enabled = false
+
+[node name="R29ColdLeakLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(-24, 3.6, -40)
+light_color = Color(0.30, 0.72, 0.92, 1)
+light_energy = 1.85
+omni_range = 6.2
+shadow_enabled = true
+
+[node name="R35EmergencyLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(0, 4.2, -50.5)
+light_color = Color(1, 0.07, 0.025, 1)
+light_energy = 2.25
+omni_range = 6.5
+shadow_enabled = true
+
+[node name="FinalVista" type="Node3D" parent="."]
+
+[node name="FinalBreachBack" type="MeshInstance3D" parent="FinalVista"]
+position = Vector3(0, 3.0, -64.73)
+mesh = SubResource("Mesh_breach_back")
+material_override = SubResource("Material_scorch")
+cast_shadow = 0
+
+[node name="FinalBreachEdgeLeft" type="MeshInstance3D" parent="FinalVista"]
+position = Vector3(-0.52, 3.0, -64.66)
+rotation = Vector3(0, 0, -0.18)
+mesh = SubResource("Mesh_breach_shard")
+material_override = SubResource("Material_breach_edge")
+cast_shadow = 0
+
+[node name="FinalBreachEdgeRight" type="MeshInstance3D" parent="FinalVista"]
+position = Vector3(0.48, 2.95, -64.66)
+rotation = Vector3(0, 0, 0.22)
+mesh = SubResource("Mesh_breach_shard")
+material_override = SubResource("Material_breach_edge")
+cast_shadow = 0
+
+[node name="FinalBreachCore" type="MeshInstance3D" parent="FinalVista"]
+position = Vector3(0, 3.0, -64.60)
+rotation = Vector3(0, 0, 0.035)
+mesh = SubResource("Mesh_breach_core")
+material_override = SubResource("Material_breach_core")
+cast_shadow = 0
+
+[node name="FinalBreachShardUpper" type="MeshInstance3D" parent="FinalVista"]
+position = Vector3(0.28, 4.48, -64.61)
+rotation = Vector3(0, 0, 0.42)
+scale = Vector3(0.72, 0.62, 1)
+mesh = SubResource("Mesh_breach_shard")
+material_override = SubResource("Material_breach_core")
+cast_shadow = 0
+
+[node name="FinalBreachShardLower" type="MeshInstance3D" parent="FinalVista"]
+position = Vector3(-0.24, 1.55, -64.61)
+rotation = Vector3(0, 0, -0.48)
+scale = Vector3(0.68, 0.56, 1)
+mesh = SubResource("Mesh_breach_shard")
+material_override = SubResource("Material_breach_core")
+cast_shadow = 0
+
+[node name="BreachLight" type="OmniLight3D" parent="FinalVista"]
+position = Vector3(0, 3.0, -63.6)
+light_color = Color(0.34, 0.88, 1, 1)
+light_energy = 3.4
+omni_range = 8.5
+shadow_enabled = true
+
+[node name="FinalWarningLeft" type="MeshInstance3D" parent="FinalVista"]
+position = Vector3(-3.55, 4.6, -64.55)
+scale = Vector3(0.8, 0.22, 0.5)
+mesh = SubResource("Mesh_breach_shard")
+material_override = SubResource("Material_warning")
+cast_shadow = 0
+
+[node name="FinalWarningRight" type="MeshInstance3D" parent="FinalVista"]
+position = Vector3(3.55, 4.6, -64.55)
+scale = Vector3(0.8, 0.22, 0.5)
+mesh = SubResource("Mesh_breach_shard")
+material_override = SubResource("Material_warning")
+cast_shadow = 0
