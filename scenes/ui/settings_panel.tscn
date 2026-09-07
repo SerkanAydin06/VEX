@@ -6,23 +6,23 @@
 
 [node name="SettingsPanel" type="PanelContainer"]
 visible = false
-custom_minimum_size = Vector2(820, 780)
+custom_minimum_size = Vector2(760, 720)
 clip_contents = true
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
 [node name="Margin" type="MarginContainer" parent="."]
-theme_override_constants/margin_left = 42
-theme_override_constants/margin_top = 28
-theme_override_constants/margin_right = 42
-theme_override_constants/margin_bottom = 28
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 22
 
 [node name="VBox" type="VBoxContainer" parent="Margin"]
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
 [node name="Title" type="Label" parent="Margin/VBox"]
 theme_override_colors/font_color = Color(0.3, 0.87, 1, 1)
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 32
 text = "SETTINGS_TITLE"
 
 [node name="Divider" type="HSeparator" parent="Margin/VBox"]
@@ -30,157 +30,157 @@ text = "SETTINGS_TITLE"
 [node name="SettingsScroll" type="ScrollContainer" parent="Margin/VBox"]
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
-theme_override_constants/scrollbar_h_separation = 18
+theme_override_constants/scrollbar_h_separation = 12
 
 [node name="SettingsGrid" type="GridContainer" parent="Margin/VBox/SettingsScroll"]
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/h_separation = 28
-theme_override_constants/v_separation = 13
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 8
 columns = 2
 
 [node name="LanguageLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_LANGUAGE"
+autowrap_mode = 2
 
 [node name="LanguageOption" type="OptionButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 56)
+custom_minimum_size = Vector2(320, 46)
 size_flags_horizontal = 3
 
 [node name="DifficultyLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_DIFFICULTY"
+autowrap_mode = 2
 
 [node name="DifficultyOption" type="OptionButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 56)
+custom_minimum_size = Vector2(320, 46)
 size_flags_horizontal = 3
 
 [node name="ResolutionLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_RESOLUTION"
+autowrap_mode = 2
 
 [node name="ResolutionOption" type="OptionButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 56)
+custom_minimum_size = Vector2(320, 46)
 size_flags_horizontal = 3
 
 [node name="GraphicsQualityLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_GRAPHICS_QUALITY"
+autowrap_mode = 2
 
 [node name="GraphicsQualityOption" type="OptionButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 56)
+custom_minimum_size = Vector2(320, 46)
 size_flags_horizontal = 3
 
 [node name="FullscreenLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_FULLSCREEN"
+autowrap_mode = 2
 
 [node name="FullscreenCheck" type="CheckButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
 text = "UI_ENABLED"
 
 [node name="VsyncLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_VSYNC"
+autowrap_mode = 2
 
 [node name="VsyncCheck" type="CheckButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
 text = "UI_ENABLED"
 
 [node name="FpsLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "FPS"
+autowrap_mode = 2
 
 [node name="FpsCheck" type="CheckButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
 text = "UI_ENABLED"
 
 [node name="MasterLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_MASTER_VOLUME"
+autowrap_mode = 2
 
 [node name="MasterRow" type="HBoxContainer" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="MasterSlider" type="HSlider" parent="Margin/VBox/SettingsScroll/SettingsGrid/MasterRow"]
 scrollable = false
 unique_name_in_owner = true
-custom_minimum_size = Vector2(270, 38)
+custom_minimum_size = Vector2(240, 32)
 size_flags_horizontal = 3
 value = 85.0
 
 [node name="MasterValue" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid/MasterRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(60, 0)
 text = "85%"
 horizontal_alignment = 2
 
 [node name="MusicLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_MUSIC_VOLUME"
+autowrap_mode = 2
 
 [node name="MusicRow" type="HBoxContainer" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="MusicSlider" type="HSlider" parent="Margin/VBox/SettingsScroll/SettingsGrid/MusicRow"]
 scrollable = false
 unique_name_in_owner = true
-custom_minimum_size = Vector2(270, 38)
+custom_minimum_size = Vector2(240, 32)
 size_flags_horizontal = 3
 value = 65.0
 
 [node name="MusicValue" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid/MusicRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(60, 0)
 text = "65%"
 horizontal_alignment = 2
 
 [node name="SfxLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_SFX_VOLUME"
+autowrap_mode = 2
 
 [node name="SfxRow" type="HBoxContainer" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="SfxSlider" type="HSlider" parent="Margin/VBox/SettingsScroll/SettingsGrid/SfxRow"]
 scrollable = false
 unique_name_in_owner = true
-custom_minimum_size = Vector2(270, 38)
+custom_minimum_size = Vector2(240, 32)
 size_flags_horizontal = 3
 value = 85.0
 
 [node name="SfxValue" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid/SfxRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(60, 0)
 text = "85%"
 horizontal_alignment = 2
 
 [node name="BrightnessLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_BRIGHTNESS"
+autowrap_mode = 2
 
 [node name="BrightnessRow" type="HBoxContainer" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="BrightnessSlider" type="HSlider" parent="Margin/VBox/SettingsScroll/SettingsGrid/BrightnessRow"]
 scrollable = false
 unique_name_in_owner = true
-custom_minimum_size = Vector2(270, 38)
+custom_minimum_size = Vector2(240, 32)
 size_flags_horizontal = 3
 min_value = 35.0
 max_value = 200.0
@@ -189,22 +189,22 @@ value = 115.0
 
 [node name="BrightnessValue" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid/BrightnessRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(60, 0)
 text = "115%"
 horizontal_alignment = 2
 
 [node name="SensitivityLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_MOUSE_SENSITIVITY"
+autowrap_mode = 2
 
 [node name="SensitivityRow" type="HBoxContainer" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="SensitivitySlider" type="HSlider" parent="Margin/VBox/SettingsScroll/SettingsGrid/SensitivityRow"]
 scrollable = false
 unique_name_in_owner = true
-custom_minimum_size = Vector2(270, 38)
+custom_minimum_size = Vector2(240, 32)
 size_flags_horizontal = 3
 min_value = 30.0
 max_value = 300.0
@@ -213,22 +213,22 @@ value = 110.0
 
 [node name="SensitivityValue" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid/SensitivityRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(60, 0)
 text = "0.11"
 horizontal_alignment = 2
 
 [node name="ControllerSensitivityLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_CONTROLLER_SENSITIVITY"
+autowrap_mode = 2
 
 [node name="ControllerSensitivityRow" type="HBoxContainer" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="ControllerSensitivitySlider" type="HSlider" parent="Margin/VBox/SettingsScroll/SettingsGrid/ControllerSensitivityRow"]
 scrollable = false
 unique_name_in_owner = true
-custom_minimum_size = Vector2(270, 38)
+custom_minimum_size = Vector2(240, 32)
 size_flags_horizontal = 3
 min_value = 50.0
 max_value = 600.0
@@ -237,14 +237,14 @@ value = 260.0
 
 [node name="ControllerSensitivityValue" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid/ControllerSensitivityRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(60, 0)
 text = "2.6"
 horizontal_alignment = 2
 
 [node name="ShakeLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_SCREEN_SHAKE"
+autowrap_mode = 2
 
 [node name="ShakeCheck" type="CheckButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
@@ -252,17 +252,17 @@ text = "UI_ENABLED"
 button_pressed = true
 
 [node name="FovLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_FOV"
+autowrap_mode = 2
 
 [node name="FovRow" type="HBoxContainer" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="FovSlider" type="HSlider" parent="Margin/VBox/SettingsScroll/SettingsGrid/FovRow"]
 scrollable = false
 unique_name_in_owner = true
-custom_minimum_size = Vector2(270, 38)
+custom_minimum_size = Vector2(240, 32)
 size_flags_horizontal = 3
 min_value = 60.0
 max_value = 110.0
@@ -271,14 +271,14 @@ value = 78.0
 
 [node name="FovValue" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid/FovRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
+custom_minimum_size = Vector2(60, 0)
 text = "78°"
 horizontal_alignment = 2
 
 [node name="HeadBobLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_HEAD_BOB"
+autowrap_mode = 2
 
 [node name="HeadBobCheck" type="CheckButton" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
@@ -286,23 +286,25 @@ text = "UI_ENABLED"
 button_pressed = true
 
 [node name="KeybindLabel" type="Label" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
-custom_minimum_size = Vector2(250, 0)
-text_overrun_behavior = 3
+custom_minimum_size = Vector2(235, 0)
 text = "SETTINGS_KEYBINDS"
+autowrap_mode = 2
 
 [node name="KeyBindingsButton" type="Button" parent="Margin/VBox/SettingsScroll/SettingsGrid"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
 text = "SETTINGS_KEYBINDS_OPEN"
 
 [node name="Hint" type="Label" parent="Margin/VBox"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 40)
 theme_override_colors/font_color = Color(0.47, 0.61, 0.67, 1)
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 14
 text = "SETTINGS_FOOTNOTE"
 autowrap_mode = 2
 
 [node name="CloseButton" type="Button" parent="Margin/VBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
 text = "UI_BACK"
 
 [node name="KeybindPanel" parent="." instance=ExtResource("3_keybind")]
