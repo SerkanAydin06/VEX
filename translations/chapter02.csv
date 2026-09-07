@@ -1,0 +1,18 @@
+keys,tr,en
+CH02_NAME,BÖLÜM 02 // KÜL KORİDORU,CHAPTER 02 // ASH CORRIDOR
+CH02_OBJECTIVE_START,BATI SERVİS HATTINI ARA // MAVİ SERVİS YETKİSİNİ BUL,SEARCH THE WEST SERVICE LINE // FIND BLUE SERVICE CLEARANCE
+CH02_BRIEFING_STORY,"Bastion-7, İlk Kırılma'dan alınan veride ikinci bir aktif hat buldu: Kül Koridoru. Bu tesis enerji üretmiyor; uzak bir gerçeklikten çekilen ısı ve basıncı Zero Source omurgasına taşıyor. Koridorlarda Cinder Hound'lara ek olarak menzilli yeni bir Korvath formu görüldü. Servis yetkilerini topla, transfer kayıtlarını güvenceye al ve güney izolasyon hattını kapat.","Bastion-7 found a second active line in the data recovered from First Fracture: the Ash Corridor. This facility does not generate energy; it transfers heat and pressure drawn from a remote reality into the Zero Source backbone. A new ranged Korvath form has appeared alongside the Cinder Hounds. Recover the service clearances, secure the transfer records and shut down the southern isolation line."
+CH02_BRIEFING_OBJECTIVE,GÖREV: TRANSFER HATTINI İZLE // ÜÇ YETKİYİ TOPLA // KÜL KORİDORUNU İZOLE ET,MISSION: TRACE THE TRANSFER LINE // RECOVER THREE CLEARANCES // ISOLATE THE ASH CORRIDOR
+CH02_MAP_TITLE,TERMAL TRANSFER PLANI // KÜL KORİDORU,THERMAL TRANSFER PLAN // ASH CORRIDOR
+CH02_OBJECTIVE_BLUE,MAVİ SERVİS YETKİSİ ALINDI // DOĞU TRANSFER HATTINI AÇ,BLUE SERVICE CLEARANCE ACQUIRED // OPEN THE EAST TRANSFER LINE
+CH02_OBJECTIVE_YELLOW,SARI TRANSFER YETKİSİ ALINDI // TERMAL BÖLMEYİ AÇ,YELLOW TRANSFER CLEARANCE ACQUIRED // OPEN THE THERMAL BULKHEAD
+CH02_OBJECTIVE_RED,KIRMIZI İZOLASYON YETKİSİ ALINDI // GÜNEY HAVA KİLİDİNE İLERLE,RED ISOLATION CLEARANCE ACQUIRED // PROCEED TO THE SOUTH AIRLOCK
+CH02_MISSION_BRIEF,"Kül Koridoru'ndaki termal transfer hattına gir. Mavi, sarı ve kırmızı yetkileri kurtar; Cinder Spitter temasını doğrula ve güney izolasyon kontrolünü etkinleştir.","Enter the thermal transfer line in the Ash Corridor. Recover blue, yellow and red clearance, verify the Cinder Spitter contact and activate the southern isolation control."
+CH02_COMPLETE,BÖLÜM 02 TAMAMLANDI // KÜL KORİDORU TRANSFER HATTI İZOLE EDİLDİ,CHAPTER 02 COMPLETE // ASH CORRIDOR TRANSFER LINE ISOLATED
+CH02_GUNSHOT_ALARM,KÜL KORİDORU // SİLAH SESİ TERMAL HATTA YAYILDI,ASH CORRIDOR // GUNFIRE ECHOED THROUGH THE THERMAL LINE
+CH02_DOOR_BLUE_SHORTCUT,MAVİ SERVİS KISAYOLU,BLUE SERVICE SHORTCUT
+CH02_DOOR_THERMAL_BULKHEAD,TERMAL TRANSFER BÖLME KAPISI,THERMAL TRANSFER BULKHEAD
+CH02_DOOR_EAST_TRANSFER,DOĞU TRANSFER GÜVENLİK KAPISI,EAST TRANSFER SECURITY DOOR
+CH02_DOOR_ISOLATION_LOCK,KIRMIZI İZOLASYON KİLİDİ,RED ISOLATION LOCK
+CH02_DOOR_FINAL_AIRLOCK,GÜNEY İZOLASYON HAVA KİLİDİ,SOUTH ISOLATION AIRLOCK
+CH02_FINISH_CONTROL,TERMAL İZOLASYON KONTROLÜ,THERMAL ISOLATION CONTROL
