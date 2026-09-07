@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://c4gn8k6ogvf0n" path="res://scenes/ui/hud.tscn" id="3_hud"]
 [ext_resource type="AudioStream" uid="uid://bc6m2yvln3f84" path="res://assets/audio/game_music_pro.mp3" id="4_level_music"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="5_ambience"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_01_environment_story.tscn" id="6_environment"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_01_first_fracture_content.tscn" id="7_content"]
 
 [node name="Level01_QuarantineFacility" type="Node3D" unique_id=1518302970]
 script = ExtResource("1_script")
@@ -25,6 +27,10 @@ automap_start_cell = Vector2i(2, 12)
 automap_exit_cell = Vector2i(2, 0)
 automap_merge_adjacent_cells = false
 automap_show_room_numbers = true
+
+[node name="Level01EnvironmentStory" parent="." instance=ExtResource("6_environment")]
+
+[node name="Level01FirstFractureContent" parent="." instance=ExtResource("7_content")]
 
 [node name="Player" parent="." unique_id=545627888 instance=ExtResource("2_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 60)
