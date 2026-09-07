@@ -19,14 +19,16 @@ Ravager, Vaskari Raptor, Vaskari Ravager, Voidweaver ve Loom Herald bu bölümü
 
 ## 2. Sahne mimarisi
 
-Eski iki katlı maden/servis sahnesinin fiziksel emeği korunur:
+Eski iki katlı maden/servis sahnesinin fiziksel emeği korunurken ana bölüm artık Godot editöründe doğrudan okunabilir:
 
-- `level_03.tscn` → küçük görev kabuğu: Player, HUD, müzik, briefing/automap metadata ve P-07 edinimi sonrası tek seferlik fener öğretim trigger'ı.
-- `level_03_structure_source.tscn` → eski authored iki katlı yapı.
-- `level_03_pressure_line_content.tscn` → kanonik düşmanlar, P-07, erişim yetkileri, ikmal, kayıtlar, Selin kurtarma ve tahliye.
-- `level_03_environment_story.tscn` → collision'sız basınç boruları, sıcaklık izleri, oda kodları ve hikâye ışıkları.
+- `level_03.tscn` → ana bölüm sahnesi; Player, HUD, müzik, briefing/automap metadata, P-07 fener öğretim trigger'ı ve aşağıdaki iki kanonik katmanı doğrudan içerir.
+- `level_03_pressure_line_content.tscn` → ana sahnede doğrudan instance ve **Editable Children**; kanonik düşmanlar, P-07, erişim yetkileri, ikmal, kayıtlar, Selin kurtarma ünitesi ve detaylı VEX tahliye konsolu viewport'ta görünür.
+- `level_03_environment_story.tscn` → ana sahnede doğrudan instance ve **Editable Children**; collision'sız basınç boruları, sıcaklık izleri, oda kodları ve hikâye ışıkları doğrudan görünür.
+- `level_03_structure_source.tscn` → eski authored iki katlı fiziksel kaynak. İçindeki legacy gameplay nedeniyle tamamı ana level'a instance edilmez.
 
-Runtime'a structure source içinden yalnız `WorldEnvironment`, `Geometry`, `Doors`, `Props`, `RoomLights` ve `Lights` taşınır. Eski `Enemies`, `Pickups`, `Objectives`, `Secrets` ve `LoreTerminals` canlı SceneTree'ye girmez.
+`level_03.gd` `@tool` preview ile structure source içinden yalnız `WorldEnvironment`, `Geometry`, `Doors`, `Props`, `RoomLights` ve `Lights` root'larını filtreler. Eski `Enemies`, `Pickups`, `Objectives`, `Secrets` ve `LoreTerminals` aktif göreve veya editor preview'a girmez.
+
+Runtime structure `_enter_tree()` aşamasında gameplay çocuklarından önce kurulur. `VexDoor` runtime scripti non-tool kalır; editörde yalnız authored kapı geometrisi gösterilir, legacy kilitler nötrlenip mavi/sarı/kırmızı kanonik erişim semantiği yalnız oyun çalışırken kapılar SceneTree'ye girmeden önce uygulanır. Fiziksel geometri değişiklikleri structure source'ta, gameplay/environment yerleşimleri ana level içindeki editable alt sahnelerde yapılır.
 
 ## 3. 19–22 dakikalık ritim
 
@@ -60,7 +62,8 @@ Runtime'a structure source içinden yalnız `WorldEnvironment`, `Geometry`, `Doo
 - Üst reaktör servisinde Dr. Selin Erdem'in acil medikal stabilizasyon ünitesi bulunur.
 - Selin fiziksel character model yerine şimdilik **kanonik kurtarma/stabilizasyon etkileşimi** ile temsil edilir; sahte karakter modeli üretilmez.
 - `[E]` ile stabilize edilince hedef tahliye kontrolüne döner.
-- Tahliye şalteri `VexLevel03ExtractionSwitch` kullanır ve Selin stabilize edilmeden bölümün tamamlanmasına izin vermez.
+- Detaylı `VexLevel03ExtractionSwitch` VEX tahliye konsolu kullanılır ve Selin stabilize edilmeden bölümün tamamlanmasına izin vermez.
+- Konsolun interaction collider'ı yeni yaklaşık 2 metrelik görsel gövdeye hizalanmıştır; oyuncu ekrana/üst gövdeye nişan aldığında etkileşim ray'i inherited `PanelBody` collider'ını yakalar.
 - Tamamlanınca campaign stage `3` olur; Selin bundan sonra Bastion-7'de görünür.
 
 ## 4. Encounter bütçesi
@@ -94,9 +97,9 @@ Mevcut key sistemi yeni hikâyede erişim kartı/anahtar yerine yetki modülleri
 
 1. `blue` → **Mavi Bakım Yetkisi** → üst kat merdiveni.
 2. `yellow` → **Sarı Arşiv Yetkisi** → 7-C sınıflandırılmış arşivi.
-3. `red` → **Kırmızı Reaktör Yetkisi** → Selin/rektör servis hattı.
+3. `red` → **Kırmızı Reaktör Yetkisi** → Selin/reaktör servis hattı.
 
-Loader önce tüm legacy kapıları nötrler; eski combat lock veya eski objective string'leri aktif göreve sızmaz. Sonra yalnız bu üç kanonik kapı yeniden kilitlenir.
+Loader runtime'da önce tüm legacy kapıları nötrler; eski combat lock veya eski objective string'leri aktif göreve sızmaz. Sonra yalnız bu üç kanonik kapı yeniden kilitlenir. Editor preview kapı scriptlerini çalıştırmaz; yalnız authored fiziksel kapıları gösterir.
 
 ## 7. Kayıtlar
 
@@ -134,8 +137,8 @@ Selin'in kurtarılması Aras'ın yalnız dosya bulmaktan canlı bir tanığa ula
 
 ## 10. Kabul kriterleri
 
-- [x] Aktif `level_03.tscn` legacy gameplay içermeyen küçük görev kabuğudur.
-- [x] Eski iki katlı authored yapı `level_03_structure_source.tscn` içinde korunur.
+- [x] Ana `level_03.tscn` canonical content/environment katmanlarını editörde doğrudan gösteriyor ve Editable Children ile açabiliyor.
+- [x] Eski iki katlı authored yapı `level_03_structure_source.tscn` içinde korunur ve yalnız güvenli fiziksel root'lar filtrelenir.
 - [x] Karma evren düşmanları runtime'a alınmaz.
 - [x] Aktif aile yalnız Cinder Hound + Cinder Spitter + Basalt Juggernaut.
 - [x] Easy/Normal/Hard/Nightmare toplamları 11/15/19/22.
@@ -146,6 +149,7 @@ Selin'in kurtarılması Aras'ın yalnız dosya bulmaktan canlı bir tanığa ula
 - [x] 3 kanonik kayıt persistent database'e bağlıdır.
 - [x] Selin kurtarma etkileşimi uygulanmıştır.
 - [x] Selin kurtarılmadan tahliye tamamlanamaz.
+- [x] Yeni detaylı VEX tahliye konsolunun interaction collider'ı görsel gövdeye hizalanmıştır.
 - [x] Selin Bastion'da yalnız campaign stage 3 sonrası görünür.
 - [x] Tekil species kimliği korunurken fiziksel düşman ölümleri ayrı ayrı sayılır.
 - [ ] Godot runtime parse/playthrough testi yapılacak.
