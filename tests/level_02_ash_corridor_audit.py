@@ -20,6 +20,20 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
+def _node_block(scene: str, node_name: str) -> str:
+    marker = f'[node name="{node_name}"'
+    start = scene.index(marker)
+    next_node = scene.find("\n[node ", start + len(marker))
+    return scene[start:] if next_node < 0 else scene[start:next_node]
+
+
+def _record_block(database: str, record_id: str) -> str:
+    marker = f'"id": &"{record_id}"'
+    start = database.index(marker)
+    next_record = database.find('\n\t{\n\t\t"id":', start + len(marker))
+    return database[start:] if next_record < 0 else database[start:next_record]
+
+
 def test_level02_shell_is_small_canonical_and_legacy_gameplay_stays_in_structure_source() -> None:
     shell = _read(SHELL)
     structure = _read(STRUCTURE)
@@ -141,12 +155,32 @@ def test_chapter02_three_records_match_campaign_plan_and_persistent_database() -
     assert "BASINÇ SAPMASI ÖNEMSİZDİR" in db
 
 
+def test_kor_thermal_signature_is_at_final_r33_relay_console() -> None:
+    content = _read(CONTENT)
+    db = _read(RECORD_DB)
+    doc = _read(DOC)
+
+    node = _node_block(content, "Record_KorThermalSourceSignature")
+    assert 'record_id = &"vex02_kor_thermal_source_signature"' in node
+    assert '50.2, 0.85, 28.8' in node
+
+    record = _record_block(db, "vex02_kor_thermal_source_signature")
+    assert '"room": "R33"' in record
+    assert '"title_tr": "KOR-TERMAL KAYNAK İMZASI"' in record
+
+    assert "### R33 — TEKNİK / KOR-TERMAL Kaynak İmzası" in doc
+    assert "final R33 ana röle konsolundadır" in doc
+    assert "### R08 — TEKNİK / KOR-TERMAL Kaynak İmzası" not in doc
+
+
 def test_environment_story_is_visual_only_and_marks_relay_route() -> None:
     environment = _read(ENVIRONMENT)
 
     assert "RoomCodes" in environment
     assert "ThermalConduits" in environment
     assert "StoryLights" in environment
+    assert 'room_name = "R33 // RELAY"' in environment
+    assert 'room_name = "R27 // BYPASS"' in environment
     for forbidden in ["CollisionShape3D", "StaticBody3D", "Area3D", "CharacterBody3D"]:
         assert forbidden not in environment
 
