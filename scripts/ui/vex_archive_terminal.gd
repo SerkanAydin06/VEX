@@ -108,14 +108,14 @@ func _refresh_header() -> void:
 	var discovered := _get_discovered_database_count()
 	var known_universes := _get_known_universe_count()
 	archive_summary.text = _t(
-		"XENOARŞİV %d / %d  //  EVREN %d / %d  //  AĞ AŞAMASI %02d" % [
+		"XENOARŞİV %d / %d  //  EVREN %d / %d\nAĞ AŞAMASI %02d" % [
 			discovered,
 			ArchiveDB.ENEMIES.size(),
 			known_universes,
 			ArchiveDB.UNIVERSES.size(),
 			GameState.campaign_stage,
 		],
-		"XENOARCHIVE %d / %d  //  REALITIES %d / %d  //  NETWORK STAGE %02d" % [
+		"XENOARCHIVE %d / %d  //  REALITIES %d / %d\nNETWORK STAGE %02d" % [
 			discovered,
 			ArchiveDB.ENEMIES.size(),
 			known_universes,
@@ -155,9 +155,11 @@ func _refresh_entries() -> void:
 	_selected_index = clampi(_selected_index, 0, _current_entries.size() - 1)
 	for index in _current_entries.size():
 		var button := Button.new()
-		button.custom_minimum_size = Vector2(0.0, 58.0)
+		button.custom_minimum_size = Vector2(0.0, 68.0)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.clip_text = true
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		button.clip_text = false
+		button.add_theme_font_size_override("font_size", 13)
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.toggle_mode = true
 		button.button_pressed = index == _selected_index
@@ -218,8 +220,8 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 	match _current_section:
 		Section.CREATURES:
 			if not _is_enemy_discovered(entry):
-				return "XENO-%02d  //  ???" % (index + 1)
-			return "%s  //  %s" % [
+				return "XENO-%02d\n// ???" % (index + 1)
+			return "%s\n// %s" % [
 				entry.get("name", "UNKNOWN"),
 				_get_universe_name(_entry_string_name(entry, "universe")),
 			]
@@ -227,8 +229,8 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 			if _is_universe_known(entry):
 				return str(entry.get("name", "UNKNOWN"))
 			return _t(
-				"SINIFLANDIRILMAMIŞ GERÇEKLİK %02d" % (index + 1),
-				"UNCLASSIFIED REALITY %02d" % (index + 1)
+				"GERÇEKLİK %02d\n// SINIFLANDIRILMAMIŞ" % (index + 1),
+				"REALITY %02d\n// UNCLASSIFIED" % (index + 1)
 			)
 		Section.RECORDS:
 			if _is_log_unlocked(entry):
