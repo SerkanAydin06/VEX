@@ -208,8 +208,8 @@ func _refresh_managed_area_button(button: Button, area_id: StringName) -> void:
 		button.disabled = false
 	else:
 		status = _t(
-			"KİLİTLİ // VEX-%02d" % int(definition.get("required_stage", 0)),
-			"LOCKED // VEX-%02d" % int(definition.get("required_stage", 0))
+			"KİLİTLİ // BÖLÜM %02d" % int(definition.get("required_stage", 0)),
+			"LOCKED // CHAPTER %02d" % int(definition.get("required_stage", 0))
 		)
 	button.text = "%s\n%s" % [area_name, status]
 	_set_button_color(button, color)
@@ -236,7 +236,7 @@ func _refresh_lighting_button(button: Button, mode: int) -> void:
 	var active := BaseManager.get_lighting_mode() == mode
 	var available := BaseManager.can_use_lighting_mode(mode, GameState.campaign_stage)
 	var load_percent := roundi(float(definition.get("energy_multiplier", 0.25)) * 100.0)
-	var status := _t("KİLİTLİ // VEX-%02d", "LOCKED // VEX-%02d") % int(definition.get("required_stage", 0))
+	var status := _t("KİLİTLİ // BÖLÜM %02d", "LOCKED // CHAPTER %02d") % int(definition.get("required_stage", 0))
 	var color := COLOR_LOCKED
 	button.disabled = true
 	if active:
@@ -275,7 +275,7 @@ func _refresh_upgrade_button(button: Button, upgrade_id: StringName) -> void:
 	else:
 		button.text = "%s\n%s" % [
 			_localized(definition, "name"),
-			_t("KİLİTLİ // VEX-%02d" % required_stage, "LOCKED // VEX-%02d" % required_stage),
+			_t("KİLİTLİ // BÖLÜM %02d" % required_stage, "LOCKED // CHAPTER %02d" % required_stage),
 		]
 		_set_button_color(button, COLOR_LOCKED)
 
@@ -348,21 +348,21 @@ func _refresh_editor_text() -> void:
 	lighting_title.text = "AYDINLATMA GÜÇ KADEMELERİ"
 	upgrade_title.text = "GELİŞTİRME OMURGASI // İLERLEME KİLİTLİ"
 	status_hint.text = "YEŞİL: AKTİF  //  TURUNCU: KULLANILABİLİR  //  KIRMIZI: İLERLEME KİLİTLİ"
-	firing_range_button.text = "ATIŞ POLİGONU\nKİLİTLİ // VEX-01"
-	research_button.text = "ARAŞTIRMA LABORATUVARI\nKİLİTLİ // VEX-01"
-	workshop_button.text = "SİLAH ATÖLYESİ\nKİLİTLİ // VEX-02"
-	engineering_button.text = "MÜHENDİSLİK BÖLMESİ\nKİLİTLİ // VEX-02"
+	firing_range_button.text = "ATIŞ POLİGONU\nKİLİTLİ // BÖLÜM 01"
+	research_button.text = "ARAŞTIRMA LABORATUVARI\nKİLİTLİ // BÖLÜM 01"
+	workshop_button.text = "SİLAH ATÖLYESİ\nKİLİTLİ // BÖLÜM 02"
+	engineering_button.text = "MÜHENDİSLİK BÖLMESİ\nKİLİTLİ // BÖLÜM 02"
 	_refresh_static_area_button(armory_button, "SİLAH DEPOSU")
 	_refresh_static_area_button(command_button, "KOMUTA MERKEZİ")
 	_refresh_static_area_button(south_corridor_button, "GÜNEY KORİDORU")
 	_refresh_static_area_button(operator_button, "OPERATÖR PLATFORMU")
 	lighting_25_button.text = "AYDINLATMA SEVİYESİ 1\nAKTİF // 25%"
-	lighting_50_button.text = "AYDINLATMA SEVİYESİ 2\nKİLİTLİ // VEX-01 // 50%"
-	lighting_75_button.text = "AYDINLATMA SEVİYESİ 3\nKİLİTLİ // VEX-02 // 75%"
-	lighting_100_button.text = "AYDINLATMA SEVİYESİ 4\nKİLİTLİ // VEX-03 // 100%"
-	power_upgrade_button.text = "ENERJİ DAĞITIM AĞI\nKİLİTLİ // VEX-01"
-	security_upgrade_button.text = "GÜVENLİK AĞI\nKİLİTLİ // VEX-02"
-	research_upgrade_button.text = "ARAŞTIRMA ALTYAPISI\nKİLİTLİ // VEX-03"
+	lighting_50_button.text = "AYDINLATMA SEVİYESİ 2\nKİLİTLİ // BÖLÜM 01 // 50%"
+	lighting_75_button.text = "AYDINLATMA SEVİYESİ 3\nKİLİTLİ // BÖLÜM 02 // 75%"
+	lighting_100_button.text = "AYDINLATMA SEVİYESİ 4\nKİLİTLİ // BÖLÜM 03 // 100%"
+	power_upgrade_button.text = "ENERJİ DAĞITIM AĞI\nKİLİTLİ // BÖLÜM 01"
+	security_upgrade_button.text = "GÜVENLİK AĞI\nKİLİTLİ // BÖLÜM 02"
+	research_upgrade_button.text = "ARAŞTIRMA ALTYAPISI\nKİLİTLİ // BÖLÜM 03"
 	_set_button_color(firing_range_button, COLOR_LOCKED)
 	_set_button_color(research_button, COLOR_LOCKED)
 	_set_button_color(workshop_button, COLOR_LOCKED)
