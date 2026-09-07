@@ -89,7 +89,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _select_section(section: int) -> void:
-	_current_section = section
+	_current_section = section as Section
 	_selected_index = 0
 	_refresh_all()
 
@@ -156,6 +156,8 @@ func _refresh_entries() -> void:
 	for index in _current_entries.size():
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(0.0, 58.0)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.clip_text = true
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.toggle_mode = true
 		button.button_pressed = index == _selected_index
