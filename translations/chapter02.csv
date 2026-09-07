@@ -1,18 +1,22 @@
 keys,tr,en
 CH02_NAME,BÖLÜM 02 // KÜL KORİDORU,CHAPTER 02 // ASH CORRIDOR
-CH02_OBJECTIVE_START,BATI SERVİS HATTINI ARA // MAVİ SERVİS YETKİSİNİ BUL,SEARCH THE WEST SERVICE LINE // FIND BLUE SERVICE CLEARANCE
-CH02_BRIEFING_STORY,"Bastion-7, İlk Kırılma'dan alınan veride ikinci bir aktif hat buldu: Kül Koridoru. Bu tesis enerji üretmiyor; uzak bir gerçeklikten çekilen ısı ve basıncı Zero Source omurgasına taşıyor. Koridorlarda Cinder Hound'lara ek olarak menzilli yeni bir Korvath formu görüldü. Servis yetkilerini topla, transfer kayıtlarını güvenceye al ve güney izolasyon hattını kapat.","Bastion-7 found a second active line in the data recovered from First Fracture: the Ash Corridor. This facility does not generate energy; it transfers heat and pressure drawn from a remote reality into the Zero Source backbone. A new ranged Korvath form has appeared alongside the Cinder Hounds. Recover the service clearances, secure the transfer records and shut down the southern isolation line."
-CH02_BRIEFING_OBJECTIVE,GÖREV: TRANSFER HATTINI İZLE // ÜÇ YETKİYİ TOPLA // KÜL KORİDORUNU İZOLE ET,MISSION: TRACE THE TRANSFER LINE // RECOVER THREE CLEARANCES // ISOLATE THE ASH CORRIDOR
-CH02_MAP_TITLE,TERMAL TRANSFER PLANI // KÜL KORİDORU,THERMAL TRANSFER PLAN // ASH CORRIDOR
-CH02_OBJECTIVE_BLUE,MAVİ SERVİS YETKİSİ ALINDI // DOĞU TRANSFER HATTINI AÇ,BLUE SERVICE CLEARANCE ACQUIRED // OPEN THE EAST TRANSFER LINE
-CH02_OBJECTIVE_YELLOW,SARI TRANSFER YETKİSİ ALINDI // TERMAL BÖLMEYİ AÇ,YELLOW TRANSFER CLEARANCE ACQUIRED // OPEN THE THERMAL BULKHEAD
-CH02_OBJECTIVE_RED,KIRMIZI İZOLASYON YETKİSİ ALINDI // GÜNEY HAVA KİLİDİNE İLERLE,RED ISOLATION CLEARANCE ACQUIRED // PROCEED TO THE SOUTH AIRLOCK
-CH02_MISSION_BRIEF,"Kül Koridoru'ndaki termal transfer hattına gir. Mavi, sarı ve kırmızı yetkileri kurtar; Cinder Spitter temasını doğrula ve güney izolasyon kontrolünü etkinleştir.","Enter the thermal transfer line in the Ash Corridor. Recover blue, yellow and red clearance, verify the Cinder Spitter contact and activate the southern isolation control."
-CH02_COMPLETE,BÖLÜM 02 TAMAMLANDI // KÜL KORİDORU TRANSFER HATTI İZOLE EDİLDİ,CHAPTER 02 COMPLETE // ASH CORRIDOR TRANSFER LINE ISOLATED
-CH02_GUNSHOT_ALARM,KÜL KORİDORU // SİLAH SESİ TERMAL HATTA YAYILDI,ASH CORRIDOR // GUNFIRE ECHOED THROUGH THE THERMAL LINE
+CH02_OBJECTIVE_START,BATI SERVİS HATTINI ARA // SG-04 VE MAVİ HAT SİGORTASINI BUL,SEARCH THE WEST SERVICE LINE // FIND THE SG-04 AND BLUE LINE FUSE
+CH02_BRIEFING_STORY,"Bastion-7 iletişim rölesine giden servis hattı Kül Koridoru'nda sustu. İlk Kırılma'dan alınan veriler, aynı hatta düzenli bir dış kaynak frekansı olduğunu gösteriyor. Koridorlarda Cinder Hound'lara ek olarak menzilli yeni bir Korvath formu görüldü. Acil durum SG-04'ünü al, güç sigortalarını yeniden kur ve röleyi çevrimiçi getir.","The service line feeding Bastion-7's communications relay went dark inside the Ash Corridor. Data recovered from First Fracture shows a stable external source frequency on the same line. A new ranged Korvath form has appeared alongside the Cinder Hounds. Recover the emergency SG-04, rebuild the power fuse chain and bring the relay back online."
+CH02_BRIEFING_OBJECTIVE,GÖREV: RÖLE GÜÇ HATTINI YENİDEN KUR // KOR-TERMAL İMZASINI YAKALA,MISSION: RESTORE RELAY POWER // CAPTURE THE KOR-THERMAL SIGNATURE
+CH02_MAP_TITLE,SERVİS + RÖLE PLANI // KÜL KORİDORU,SERVICE + RELAY PLAN // ASH CORRIDOR
+CH02_OBJECTIVE_BLUE,MAVİ HAT SİGORTASI ALINDI // DOĞU TRANSFER HATTINI BESLE,BLUE LINE FUSE ACQUIRED // POWER THE EAST TRANSFER LINE
+CH02_OBJECTIVE_YELLOW,SARI RÖLE SİGORTASI ALINDI // RÖLE ÇEKİRDEĞİNE İLERLE,YELLOW RELAY FUSE ACQUIRED // PROCEED TO THE RELAY CORE
+CH02_OBJECTIVE_RED,KIRMIZI ÇIKIŞ SİGORTASI ALINDI // İLETİŞİM RÖLESİNİ ETKİNLEŞTİR,RED OUTPUT FUSE ACQUIRED // ACTIVATE THE COMMUNICATIONS RELAY
+CH02_MISSION_BRIEF,"Kül Koridoru servis hattına gir. Acil durum SG-04'ünü bul, güç sigorta zincirini yeniden kur ve Bastion iletişim rölesinden KOR-TERMAL kaynak imzasını yakala.","Enter the Ash Corridor service line. Recover the emergency SG-04, rebuild the power fuse chain and capture the KOR-THERMAL source signature from the Bastion communications relay."
+CH02_COMPLETE,BÖLÜM 02 TAMAMLANDI // KOR-TERMAL İMZASI BASTION-7'YE AKTARILDI,CHAPTER 02 COMPLETE // KOR-THERMAL SIGNATURE TRANSFERRED TO BASTION-7
+CH02_GUNSHOT_ALARM,KÜL KORİDORU // SİLAH SESİ SERVİS HATTINDA YAYILDI,ASH CORRIDOR // GUNFIRE ECHOED THROUGH THE SERVICE LINE
 CH02_DOOR_BLUE_SHORTCUT,MAVİ SERVİS KISAYOLU,BLUE SERVICE SHORTCUT
-CH02_DOOR_THERMAL_BULKHEAD,TERMAL TRANSFER BÖLME KAPISI,THERMAL TRANSFER BULKHEAD
-CH02_DOOR_EAST_TRANSFER,DOĞU TRANSFER GÜVENLİK KAPISI,EAST TRANSFER SECURITY DOOR
-CH02_DOOR_ISOLATION_LOCK,KIRMIZI İZOLASYON KİLİDİ,RED ISOLATION LOCK
-CH02_DOOR_FINAL_AIRLOCK,GÜNEY İZOLASYON HAVA KİLİDİ,SOUTH ISOLATION AIRLOCK
-CH02_FINISH_CONTROL,TERMAL İZOLASYON KONTROLÜ,THERMAL ISOLATION CONTROL
+CH02_DOOR_THERMAL_BULKHEAD,SARI RÖLE GÜÇ BÖLMESİ,YELLOW RELAY POWER BULKHEAD
+CH02_DOOR_EAST_TRANSFER,DOĞU TRANSFER GÜÇ KAPISI,EAST TRANSFER POWER GATE
+CH02_DOOR_ISOLATION_LOCK,KIRMIZI RÖLE ÇIKIŞ KİLİDİ,RED RELAY OUTPUT LOCK
+CH02_DOOR_FINAL_AIRLOCK,RÖLE KONTROL HATTI,RELAY CONTROL LINE
+CH02_FINISH_CONTROL,BASTION İLETİŞİM RÖLESİ,BASTION COMMUNICATIONS RELAY
+CH02_BLUE_FUSE,MAVİ HAT SİGORTASI,BLUE LINE FUSE
+CH02_YELLOW_FUSE,SARI RÖLE SİGORTASI,YELLOW RELAY FUSE
+CH02_RED_FUSE,KIRMIZI ÇIKIŞ SİGORTASI,RED OUTPUT FUSE
+CH02_BYPASS_RESERVED,GÜÇ BYPASS KUPLÖRÜ BAĞLANTISI // DONANIM BEKLENİYOR,POWER BYPASS COUPLER PORT // HARDWARE PENDING
