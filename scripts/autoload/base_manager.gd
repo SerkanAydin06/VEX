@@ -166,6 +166,8 @@ func restore_state(state: Dictionary) -> void:
 	var restored_mode := int(state.get("lighting_mode", LightingMode.LEVEL_25))
 	if restored_mode >= LightingMode.LEVEL_25 and restored_mode <= LightingMode.LEVEL_100:
 		_lighting_mode = restored_mode as LightingMode
+	if not can_use_lighting_mode(int(_lighting_mode), GameState.campaign_stage):
+		_lighting_mode = get_highest_available_lighting_mode(GameState.campaign_stage) as LightingMode
 	var restored_upgrades: Variant = state.get("upgrade_levels", {})
 	if restored_upgrades is Dictionary:
 		var upgrade_dictionary := restored_upgrades as Dictionary
@@ -261,8 +263,9 @@ func get_highest_available_lighting_mode(campaign_stage: int) -> int:
 	return highest
 
 
-func set_lighting_mode(mode: int, campaign_stage: int) -> bool:
-	if not can_use_lighting_mode(mode, campaign_stage) or mode == int(_lighting_mode):
+func set_lighting_mode(mode: int, campaign_stage := -1) -> bool:
+	var resolved_stage := GameState.campaign_stage if campaign_stage < 0 else campaign_stage
+	if not can_use_lighting_mode(mode, resolved_stage) or mode == int(_lighting_mode):
 		return false
 	_lighting_mode = mode as LightingMode
 	lighting_mode_changed.emit(mode)
