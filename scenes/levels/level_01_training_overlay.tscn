@@ -1,17 +1,15 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/levels/level_01_training_flow.gd" id="1_flow"]
 [ext_resource type="PackedScene" path="res://scenes/levels/tutorial_trigger.tscn" id="2_tutorial"]
-[ext_resource type="PackedScene" path="res://scenes/world/door_status_light.tscn" id="3_status"]
-[ext_resource type="PackedScene" path="res://scenes/props/explosive_barrel.tscn" id="4_barrel"]
 
 [node name="Level01TrainingOverlay" type="Node3D"]
 script = ExtResource("1_flow")
-gate_door_paths = Array[NodePath]([NodePath("../Doors/Door_03_07"), NodePath("../Doors/Door_13_15")])
-gate_enemy_ids = Array[StringName]([&"ravager_01", &"ravager_07"])
-gate_display_name_keys = PackedStringArray("LEVEL01_DOOR_FIRE_TRAINING", "LEVEL01_DOOR_PROTOCOL_ENTRY")
-gate_clear_objective_keys = PackedStringArray("LEVEL01_TUTORIAL_RELOAD_OBJECTIVE", "LEVEL01_OBJECTIVE_SECURITY")
-replaced_static_light_paths = Array[NodePath]([NodePath("../Lights/Lamp_03_07_1"), NodePath("../Lights/Lamp_03_07_2"), NodePath("../Lights/Lamp_13_15_1"), NodePath("../Lights/Lamp_13_15_2")])
+gate_door_paths = Array[NodePath]([])
+gate_enemy_ids = Array[StringName]([])
+gate_display_name_keys = PackedStringArray()
+gate_clear_objective_keys = PackedStringArray()
+replaced_static_light_paths = Array[NodePath]([])
 
 [node name="TutorialMove" parent="." instance=ExtResource("2_tutorial")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 58.0)
@@ -21,75 +19,28 @@ notification_key = "LEVEL01_TUTORIAL_MOVE_HINT"
 trigger_size = Vector3(10, 3, 2)
 
 [node name="TutorialInteract" parent="." instance=ExtResource("2_tutorial")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 56.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 52.4)
 trigger_id = &"level01_tutorial_interact"
 notification_key = "LEVEL01_TUTORIAL_INTERACT_HINT"
-trigger_size = Vector3(10, 3, 1.2)
+trigger_size = Vector3(10, 3, 1.6)
 
 [node name="TutorialFire" parent="." instance=ExtResource("2_tutorial")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 51.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 48.6)
 trigger_id = &"level01_tutorial_fire"
 objective_key = "LEVEL01_TUTORIAL_FIRE_OBJECTIVE"
 notification_key = "LEVEL01_TUTORIAL_FIRE_HINT"
-trigger_size = Vector3(10, 3, 3)
+trigger_size = Vector3(10, 3, 1.8)
 
 [node name="TutorialReload" parent="." instance=ExtResource("2_tutorial")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 42.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 36.8)
 trigger_id = &"level01_tutorial_reload"
 objective_key = "LEVEL01_TUTORIAL_RELOAD_OBJECTIVE"
 notification_key = "LEVEL01_TUTORIAL_RELOAD_HINT"
-trigger_size = Vector3(10, 3, 2.4)
-
-[node name="TutorialStrafe" parent="." instance=ExtResource("2_tutorial")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 33.0)
-trigger_id = &"level01_tutorial_strafe"
-objective_key = "LEVEL01_TUTORIAL_STRAFE_OBJECTIVE"
-notification_key = "LEVEL01_TUTORIAL_STRAFE_HINT"
-trigger_size = Vector3(10, 3, 2.4)
-
-[node name="TutorialBarrel" parent="." instance=ExtResource("2_tutorial")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 30.5)
-trigger_id = &"level01_tutorial_barrel"
-objective_key = "LEVEL01_TUTORIAL_BARREL_OBJECTIVE"
-notification_key = "LEVEL01_TUTORIAL_BARREL_HINT"
-trigger_size = Vector3(10, 3, 2.2)
-
-[node name="TrainingBarrel" parent="." instance=ExtResource("4_barrel")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0.6, 28.5)
-
-[node name="TutorialResource" parent="." instance=ExtResource("2_tutorial")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 24.0)
-trigger_id = &"level01_tutorial_resource"
-objective_key = "LEVEL01_TUTORIAL_RESOURCE_OBJECTIVE"
-notification_key = "LEVEL01_TUTORIAL_RESOURCE_HINT"
 trigger_size = Vector3(10, 3, 2.0)
 
-[node name="TutorialFinal" parent="." instance=ExtResource("2_tutorial")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 22.0)
-trigger_id = &"level01_tutorial_final"
-objective_key = "LEVEL01_TUTORIAL_FINAL_OBJECTIVE"
-notification_key = "LEVEL01_TUTORIAL_FINAL_HINT"
-trigger_size = Vector3(10, 3, 1.4)
-
 [node name="TutorialComplete" parent="." instance=ExtResource("2_tutorial")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 13.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 22.0)
 trigger_id = &"level01_tutorial_complete"
 objective_key = "LEVEL01_OBJECTIVE_SECURITY"
 notification_key = "LEVEL01_TUTORIAL_COMPLETE_HINT"
 trigger_size = Vector3(10, 3, 2.0)
-
-[node name="Gate03_07StatusFront" parent="." instance=ExtResource("3_status")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 5.5, 44.68)
-door_path = NodePath("../../Doors/Door_03_07")
-
-[node name="Gate03_07StatusBack" parent="." instance=ExtResource("3_status")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 45.32)
-door_path = NodePath("../../Doors/Door_03_07")
-
-[node name="Gate13_15StatusFront" parent="." instance=ExtResource("3_status")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 5.5, 14.68)
-door_path = NodePath("../../Doors/Door_13_15")
-
-[node name="Gate13_15StatusBack" parent="." instance=ExtResource("3_status")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 15.32)
-door_path = NodePath("../../Doors/Door_13_15")
