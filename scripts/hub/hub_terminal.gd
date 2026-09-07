@@ -296,7 +296,7 @@ func _refresh_world_screen(force := false) -> void:
 		TerminalMode.MISSION_CONTROL:
 			title = "GÖREV KONTROLÜ" if turkish else "MISSION CONTROL"
 			subtitle = "OPERASYON AĞI // BRİFİNG VERİSİ" if turkish else "OPERATION NETWORK // BRIEFING DATA"
-			line_1 = "VEX-01 // VEX-02 // VEX-03"
+			line_1 = "BÖLÜM 01 // BÖLÜM 02 // BÖLÜM 03" if turkish else "CHAPTER 01 // CHAPTER 02 // CHAPTER 03"
 			line_2 = "GÖREV DURUMU // YETKİ // SAHA VERİSİ" if turkish else "MISSION STATUS // CLEARANCE // FIELD DATA"
 		TerminalMode.DEPLOYMENT:
 			title = "OPERASYON TERMİNALİ" if turkish else "DEPLOYMENT TERMINAL"
