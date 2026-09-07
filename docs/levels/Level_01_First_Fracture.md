@@ -181,15 +181,19 @@ Kısa contextual tutorial korunur:
 
 Enemy species ID tutorial için değiştirilmez. Bütün Cinder Hound örnekleri kanonik `cinderhound` kimliğini kullanır.
 
-## 12. Discovery/UI hedefi
+## 12. Discovery / bilgi kartı sistemi
 
-Bölüm 1'de oyuncuya bilgi kartı verilmesi gereken ana anlar:
+Bölüm 1'in temel büyük bilgi kartları runtime'a bağlanmıştır:
 
 - ilk P-01 edinimi → `SİLAH ARŞİVİ GÜNCELLENDİ`
 - ilk Cinder Hound discovery → `YENİ XENO KAYDI`
-- üç kayıt → `KAYIT ÇÖZÜLDÜ`
+- kayıt terminalinin ilk açılışı → `KAYIT ÇÖZÜLDÜ`
 
-Mevcut pickup notification altyapısı silah pickup'ını zaten bildirir. Ayrı, kuyruklu ve daha büyük discovery-card katmanı sonraki UI uygulama pass'inde bağlanacaktır; bu belge onu tamamlanmış runtime özellik olarak işaretlemez.
+Kartlar ayrı `discovery_notification_overlay.tscn` üzerinden gösterilir, aynı anda gelen bildirimler kuyruklanır ve gameplay/record reader pause durumunda tween çalışmaya devam eder. Kartın görseli sahne-authored, sıra/timing davranışı runtime helper scriptindedir.
+
+Silah kartı yalnız WeaponController'a göre gerçekten ilk edinimde gösterilir; yere bırakılıp tekrar alınan silah aynı discovery kartını tekrar üretmez. Xeno kartı ArchiveManager'ın kalıcı species discovery durumuna bağlıdır ve aynı tür için tekrar gösterilmez.
+
+**Kayıt tarafındaki önemli sınır:** `FieldRecordTerminal` şu anda kartı aynı terminal instance'ında yalnız ilk açılışta gösterir, fakat keşfedilmiş saha kayıtlarının kalıcı bir koleksiyon/save sistemi henüz yoktur. Bölüm restart/reload sonrası aynı kayıt tekrar discovery kartı gösterebilir. Kalıcı kayıt arşivi ayrı üretim işidir.
 
 ## 13. Kabul kriterleri
 
@@ -204,6 +208,7 @@ Mevcut pickup notification altyapısı silah pickup'ını zaten bildirir. Ayrı,
 - [x] R23/R35 zorunlu ikmal pencereleri mevcut.
 - [x] R37 Bastion-7'ye dönüyor.
 - [x] Çevresel hikâye katmanı collision'sız.
-- [ ] Discovery-card UI kuyruk sistemi tamamlanacak.
+- [x] Discovery-card UI kuyruk sistemi temel olarak bağlı.
+- [ ] Saha kayıtlarının kalıcı collection/save/arşiv sistemi tamamlanacak.
 - [ ] Godot runtime parse/playthrough testi yapılacak.
 - [ ] Gerçek playtest ile 18–20 dakika hedefi ölçülecek.
