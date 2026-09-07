@@ -9,13 +9,13 @@
 [node name="Level02_AshCorridor" type="Node3D"]
 script = ExtResource("1_script")
 map_revision = "VEX02-ASH-CORRIDOR-R33-CANONICAL"
-level_display_name = "LEVEL02_NAME"
+level_display_name = "CH02_NAME"
 campaign_completion_stage = 2
-first_objective = "LEVEL02_OBJECTIVE_START"
-briefing_story = "LEVEL02_BRIEFING_STORY"
-briefing_objective = "LEVEL02_BRIEFING_OBJECTIVE"
+first_objective = "CH02_OBJECTIVE_START"
+briefing_story = "CH02_BRIEFING_STORY"
+briefing_objective = "CH02_BRIEFING_OBJECTIVE"
 total_secrets = 1
-automap_title = "LEVEL02_MAP_TITLE"
+automap_title = "CH02_MAP_TITLE"
 automap_columns = 9
 automap_rows = 7
 automap_world_min = Vector2(-54, -35)
