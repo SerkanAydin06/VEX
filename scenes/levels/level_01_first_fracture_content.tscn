@@ -1,0 +1,255 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/actors/cinderhound.tscn" id="1_hound"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickup.tscn" id="2_pickup"]
+[ext_resource type="Texture2D" path="res://assets/weapons/p01/p01_side.png" id="3_p01"]
+[ext_resource type="Texture2D" path="res://assets/pickups/key_blue.png" id="4_blue"]
+[ext_resource type="Texture2D" path="res://assets/pickups/key_red.png" id="5_red"]
+[ext_resource type="Texture2D" path="res://assets/pickups/health.png" id="6_health"]
+[ext_resource type="Texture2D" path="res://assets/pickups/armor.png" id="7_armor"]
+[ext_resource type="Texture2D" path="res://assets/pickups/ammo_bullets.png" id="8_bullets"]
+[ext_resource type="PackedScene" path="res://scenes/props/field_record_terminal.tscn" id="9_record"]
+[ext_resource type="PackedScene" path="res://scenes/props/secret_trigger.tscn" id="10_secret"]
+[ext_resource type="PackedScene" path="res://scenes/props/finish_switch.tscn" id="11_finish"]
+[ext_resource type="PackedScene" path="res://scenes/world/exit_sign.tscn" id="12_exit"]
+
+[node name="Level01FirstFractureContent" type="Node3D"]
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="CinderHound_R07_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 40.4)
+patrol_offset = Vector3(0, 0, -2.2)
+
+[node name="CinderHound_R11_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1, 30.6)
+patrol_offset = Vector3(2, 0, 0)
+
+[node name="CinderHound_R13_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1, 20.2)
+patrol_offset = Vector3(2.2, 0, 0)
+
+[node name="CinderHound_R13_B" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 19.3)
+spawn_min_difficulty = 1
+patrol_offset = Vector3(-2.1, 0, 0)
+
+[node name="CinderHound_R15_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 1, 9.4)
+patrol_offset = Vector3(-2.4, 0, 0)
+
+[node name="CinderHound_R19_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1, 0.4)
+patrol_offset = Vector3(2.4, 0, 0)
+
+[node name="CinderHound_R25_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -20.5)
+patrol_offset = Vector3(-2.4, 0, 0)
+
+[node name="CinderHound_R27_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1, -29.2)
+patrol_offset = Vector3(2.6, 0, 0)
+
+[node name="CinderHound_R31_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1, -39.4)
+patrol_offset = Vector3(2.5, 0, 0)
+
+[node name="CinderHound_R31_B" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -40.8)
+spawn_min_difficulty = 1
+patrol_offset = Vector3(-2.5, 0, 0)
+
+[node name="CinderHound_R33_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 1, -39.2)
+spawn_min_difficulty = 2
+patrol_offset = Vector3(0, 0, -2.5)
+
+[node name="CinderHound_R35_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1, -50.3)
+patrol_offset = Vector3(2.4, 0, 0)
+
+[node name="CinderHound_R35_B" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -51.3)
+spawn_min_difficulty = 1
+patrol_offset = Vector3(-2.4, 0, 0)
+
+[node name="Pickups" type="Node3D" parent="."]
+
+[node name="P01SecurityLockerPickup" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.7, 51.2)
+pickup_id = &"level01_p01_security_locker"
+pickup_type = "p01"
+amount = 32
+display_name = "P-01 TAKTİK TABANCA"
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("3_p01")
+
+[node name="BlueKey_R17" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7, 0)
+pickup_id = &"level01_blue_key"
+pickup_type = "key_blue"
+amount = 1
+display_name = "MAVİ ERİŞİM ANAHTARI"
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("4_blue")
+
+[node name="RedKey_R33" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.7, -40)
+pickup_id = &"level01_red_key"
+pickup_type = "key_red"
+amount = 1
+display_name = "KIRMIZI ERİŞİM ANAHTARI"
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("5_red")
+
+[node name="R13Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.7, 20)
+pickup_id = &"level01_r13_bullets"
+pickup_type = "bullets"
+amount = 18
+display_name = "MERMİ"
+visual_texture = ExtResource("8_bullets")
+
+[node name="R13Armor" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.7, 20)
+pickup_id = &"level01_r13_armor"
+pickup_type = "armor"
+amount = 12
+display_name = "HAFİF ZIRH"
+visual_texture = ExtResource("7_armor")
+
+[node name="R17Health" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.4, 0.7, 1.5)
+pickup_id = &"level01_r17_health"
+pickup_type = "health"
+amount = 20
+display_name = "SAĞLIK"
+visual_texture = ExtResource("6_health")
+
+[node name="R19Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.7, 1.2)
+pickup_id = &"level01_r19_bullets"
+pickup_type = "bullets"
+amount = 18
+display_name = "MERMİ"
+visual_texture = ExtResource("8_bullets")
+
+[node name="R23ResupplyHealth" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0.7, -10)
+pickup_id = &"level01_r23_health"
+pickup_type = "health"
+amount = 25
+display_name = "SAĞLIK"
+visual_texture = ExtResource("6_health")
+
+[node name="R23ResupplyArmor" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.7, -10)
+pickup_id = &"level01_r23_armor"
+pickup_type = "armor"
+amount = 20
+display_name = "ZIRH"
+visual_texture = ExtResource("7_armor")
+
+[node name="R23ResupplyBullets" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -11.8)
+pickup_id = &"level01_r23_bullets"
+pickup_type = "bullets"
+amount = 30
+display_name = "MERMİ"
+visual_texture = ExtResource("8_bullets")
+
+[node name="R29SecretAmmo" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.8, 0.7, -41.6)
+pickup_id = &"level01_r29_secret_ammo"
+pickup_type = "bullets"
+amount = 24
+display_name = "GİZLİ BAKIM STOĞU"
+visual_texture = ExtResource("8_bullets")
+
+[node name="R29SecretArmor" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.2, 0.7, -41.6)
+pickup_id = &"level01_r29_secret_armor"
+pickup_type = "armor"
+amount = 15
+display_name = "BAKIM ZIRHI"
+visual_texture = ExtResource("7_armor")
+
+[node name="R33Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.7, -41.5)
+pickup_id = &"level01_r33_bullets"
+pickup_type = "bullets"
+amount = 18
+display_name = "MERMİ"
+visual_texture = ExtResource("8_bullets")
+
+[node name="R35FinalBullets" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -48.5)
+pickup_id = &"level01_r35_bullets"
+pickup_type = "bullets"
+amount = 32
+display_name = "MERMİ"
+visual_texture = ExtResource("8_bullets")
+
+[node name="R35FinalHealth" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0.7, -48.8)
+pickup_id = &"level01_r35_health"
+pickup_type = "health"
+amount = 25
+display_name = "SAĞLIK"
+visual_texture = ExtResource("6_health")
+
+[node name="R35FinalArmor" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.7, -48.8)
+pickup_id = &"level01_r35_armor"
+pickup_type = "armor"
+amount = 20
+display_name = "ZIRH"
+visual_texture = ExtResource("7_armor")
+
+[node name="Records" type="Node3D" parent="."]
+
+[node name="Record_R03_EmergencyTestOrder" parent="Records" instance=ExtResource("9_record")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -3.8, 0.85, 51.5)
+record_id = &"vex01_emergency_test_order_0417"
+category_tr = "OLAY // VEX-01"
+category_en = "INCIDENT // VEX-01"
+title_tr = "ACİL TEST EMRİ / 04:17"
+title_en = "EMERGENCY TEST ORDER / 04:17"
+body_tr = "ZERO SOURCE // TEST EMRİ 04:17\n\nÇekim kapasitesi %18 artırıldı. Emniyet ekibinin kararlılık itirazı yönetim yetkisiyle geçersiz kılındı. Eşzamanlı saha düğümleri aynı test penceresine bağlandı.\n\nNOT: Dalgalanma görülürse yerel reaktör kapatılmayacak; ağ senkronizasyonu korunacak."
+body_en = "ZERO SOURCE // TEST ORDER 04:17\n\nExtraction capacity increased by 18%. The safety team's stability objection was overridden by executive authorization. Synchronized field nodes were tied to the same test window.\n\nNOTE: If oscillation occurs, do not shut down the local reactor; preserve network synchronization."
+
+[node name="Record_R17_SecurityCamera07" parent="Records" instance=ExtResource("9_record")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -26.2, 0.85, -2.4)
+record_id = &"vex01_security_camera_07"
+category_tr = "PERSONEL // GÜVENLİK"
+category_en = "PERSONNEL // SECURITY"
+title_tr = "GÜVENLİK KAMERASI 07"
+title_en = "SECURITY CAMERA 07"
+body_tr = "KAMERA 07 // KARANTİNA KORİDORU\n\n04:22:11 — Koridorda canlı temas yok.\n04:22:13 — Duvar yüzeyinde termal bozulma.\n04:22:14 — Kısa süreli yarık oluşumu.\n04:22:15 — Bilinmeyen organizma doğrudan yarıktan tesise geçiyor.\n\nGüvenlik notu: Numune kafeslerinde kırılma kaydı yok. Temas laboratuvardan kaçmadı."
+body_en = "CAMERA 07 // QUARANTINE CORRIDOR\n\n04:22:11 — No biological contact in corridor.\n04:22:13 — Thermal distortion on wall surface.\n04:22:14 — Short-lived rift formation.\n04:22:15 — Unknown organism crosses directly through the rift into the facility.\n\nSecurity note: No sample cage breach recorded. The contact did not escape from the laboratory."
+
+[node name="Record_R29_WeDoNotProduceEnergy" parent="Records" instance=ExtResource("9_record")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -26.2, 0.85, -38.4)
+record_id = &"vex01_we_do_not_produce_energy"
+category_tr = "TEKNİK // SINIFLANDIRILMIŞ"
+category_en = "TECHNICAL // CLASSIFIED"
+title_tr = "ENERJİ ÜRETMİYORUZ"
+title_en = "WE ARE NOT PRODUCING ENERGY"
+body_tr = "ZERO SOURCE // DAHİLİ TEKNİK NOT\n\nReaktör verisi artık termodinamik açıklamalarla uyuşmuyor. Çıkış, yerel sisteme giren hammaddeden büyük. Kaynak içeride değil.\n\nEnerji üretmiyoruz. Bir yerden çekiyoruz.\n\nYarık kısa süreli değil; ağ onu açık tutuyor. Yönetim bu ayrımı aylardır biliyor olabilir."
+body_en = "ZERO SOURCE // INTERNAL TECHNICAL NOTE\n\nReactor data no longer matches thermodynamic explanations. Output exceeds the material entering the local system. The source is not inside the facility.\n\nWe are not producing energy. We are drawing it from somewhere.\n\nThe rift is not momentary; the network is holding it open. Management may have known this distinction for months."
+
+[node name="Triggers" type="Node3D" parent="."]
+
+[node name="SecretMaintenanceTrigger" parent="Triggers" instance=ExtResource("10_secret")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 1.5, -40.5)
+secret_id = &"level01_maintenance_cache"
+
+[node name="FinishSwitch" parent="Triggers" instance=ExtResource("11_finish")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5.72, 1.6, -60)
+next_level_path = "res://scenes/hub/bastion_7.tscn"
+
+[node name="ExitSign_FinalDoor_Room35" parent="Triggers" instance=ExtResource("12_exit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.85, -54.66)
+
+[node name="ExitSign_FinalDoor_Room37" parent="Triggers" instance=ExtResource("12_exit")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 4.85, -55.34)
