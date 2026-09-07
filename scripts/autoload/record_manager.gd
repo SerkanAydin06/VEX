@@ -1,3 +1,4 @@
+class_name VexRecordManager
 extends Node
 
 signal record_changed(record_id: StringName)
