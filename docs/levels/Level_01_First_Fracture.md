@@ -28,13 +28,15 @@ Bölüm finalinde R37'de görülen mavi-beyaz Yarık Ağı izi henüz Korvath ki
 
 ## 3. Sahne mimarisi
 
-Aktif `level_01.tscn` küçük ve temiz bir mission shell'dir. Runtime'da üç ayrı authored katman kurulmaktadır:
+Aktif `level_01.tscn` artık editörde bölüm kompozisyonunu doğrudan gösteren ana sahnedir:
 
-- `level_01_structure_source.tscn` → yalnız 37 odalık fiziksel omurga, kapılar, authored oda ışıkları ve temel props.
-- `level_01_environment_story.tscn` → oda kodları, hasar izleri, acil ışık vurguları ve final Yarık Ağı vistası.
-- `level_01_first_fracture_content.tscn` → düşmanlar, pickup'lar, kayıt terminalleri, secret ve finish switch.
+- `level_01_environment_story.tscn` → ana sahnede doğrudan instance ve **Editable Children**; oda kodları, hasar izleri, acil ışık vurguları ve final Yarık Ağı vistası burada görülüp düzenlenebilir.
+- `level_01_first_fracture_content.tscn` → ana sahnede doğrudan instance ve **Editable Children**; düşmanlar, pickup'lar, kayıt terminalleri, secret ve finish switch ana level viewport'unda görünür.
+- `level_01_structure_source.tscn` → eski 37 odalık authored fiziksel kaynak. İçinde legacy gameplay de bulunduğu için sahnenin tamamı ana level'a instance edilmez.
 
-`level_01.gd`, structure source içinden yalnız `WorldEnvironment`, `Geometry`, `Doors`, `RoomLights`, `Lights` ve `Props` root'larını alır. Legacy `Enemies/Pickups/Triggers` aktif SceneTree'ye girmez.
+`level_01.gd` `@tool` preview kullanır. Editörde ve runtime'da structure source içinden yalnız `WorldEnvironment`, `Geometry`, `Doors`, `RoomLights`, `Lights` ve `Props` root'ları filtrelenir; legacy `Enemies/Pickups/Triggers` aktif göreve veya editor preview'a taşınmaz. Runtime structure `_enter_tree()` aşamasında kurulduğu için doğrudan instance edilen gameplay/environment çocukları `_ready()` almadan önce fiziksel level hazırdır.
+
+Structure preview node'ları ana `level_01.tscn` dosyasına sahiplenilmez; fiziksel geometri değişikliklerinin authored kaynağı `level_01_structure_source.tscn` olmaya devam eder. Gameplay ve çevresel yerleşimler ise ana level içinde açılarak düzenlenebilir.
 
 ## 4. Sektörler ve süre
 
@@ -203,7 +205,8 @@ Silah kartı yalnız WeaponController'a göre gerçekten ilk edinimde gösterili
 
 ## 13. Kabul kriterleri
 
-- [x] Aktif level shell legacy Ravager/Veilmaw/pickup bloklarından temiz.
+- [x] Ana `level_01.tscn` canonical content/environment katmanlarını editörde doğrudan gösteriyor ve Editable Children ile açabiliyor.
+- [x] Legacy structure source yalnız güvenli fiziksel root'lar için filtreleniyor; eski Ravager/Veilmaw/pickup/trigger gameplay'i aktif göreve girmiyor.
 - [x] 37 odalık geometri ve kapı omurgası korunuyor.
 - [x] Yalnız Cinder Hound kullanılıyor.
 - [x] Easy/Normal/Hard+ sayıları 9/12/13.
