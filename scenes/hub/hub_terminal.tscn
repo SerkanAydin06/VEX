@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="4_font"]
 [ext_resource type="PackedScene" path="res://scenes/ui/terminal_menu.tscn" id="5_menu"]
 [ext_resource type="PackedScene" path="res://scenes/ui/vex_archive_terminal.tscn" id="6_archive"]
+[ext_resource type="PackedScene" path="res://scenes/ui/weapon_archive_terminal.tscn" id="7_weapon_archive"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
 albedo_color = Color(0.028, 0.034, 0.041, 1)
@@ -214,3 +215,5 @@ shape = SubResource("BoxShape_screen_interaction")
 [node name="TerminalMenu" parent="." unique_id=241743877 instance=ExtResource("5_menu")]
 
 [node name="ArchiveTerminal" parent="." instance=ExtResource("6_archive")]
+
+[node name="WeaponArchiveTerminal" parent="." instance=ExtResource("7_weapon_archive")]
