@@ -1,14 +1,14 @@
 extends VexBaseLevel
 
 const STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_01_structure_source.tscn"
-const STRUCTURE_NODE_NAMES := PackedStringArray([
-	"WorldEnvironment",
-	"Geometry",
-	"Doors",
-	"RoomLights",
-	"Lights",
-	"Props",
-])
+const STRUCTURE_NODE_NAMES := [
+	&"WorldEnvironment",
+	&"Geometry",
+	&"Doors",
+	&"RoomLights",
+	&"Lights",
+	&"Props",
+]
 const TRAINING_OVERLAY_SCENE := preload("res://scenes/levels/level_01_training_overlay.tscn")
 const FIRST_FRACTURE_CONTENT_SCENE := preload("res://scenes/levels/level_01_first_fracture_content.tscn")
 const ENVIRONMENT_STORY_SCENE := preload("res://scenes/levels/level_01_environment_story.tscn")
@@ -38,8 +38,8 @@ func _install_authored_structure() -> void:
 		push_error("VEX-01 yapısal kaynak sahnesi instantiate edilemedi.")
 		return
 
-	for node_name: String in STRUCTURE_NODE_NAMES:
-		var structure_node := source_root.get_node_or_null(NodePath(node_name))
+	for node_name: StringName in STRUCTURE_NODE_NAMES:
+		var structure_node := source_root.get_node_or_null(NodePath(str(node_name)))
 		if structure_node == null:
 			push_error("VEX-01 yapısal node bulunamadı: %s" % node_name)
 			continue
@@ -90,9 +90,13 @@ func _configure_first_fracture_start() -> void:
 	# İlk Kırılma'da ise P-01 R03 güvenlik dolabından fiziksel olarak edinilir.
 	# Bu override yalnız kampanyanın ilk aşamasında çalışır; tamamlanmış kampanya
 	# ile olası tekrar girişlerde taşınan loadout'a dokunmaz.
-	if GameState.campaign_stage != 0 or player == null:
+	if GameState.campaign_stage != 0:
 		return
-	var weapon_controller := player.get_node_or_null("WeaponController") as VexWeaponController
+	var level_player := get_node_or_null("Player") as Node
+	if level_player == null:
+		push_warning("VEX-01 silahsız başlangıç için Player bulunamadı.")
+		return
+	var weapon_controller := level_player.get_node_or_null("WeaponController") as VexWeaponController
 	if weapon_controller == null:
 		push_warning("VEX-01 silahsız başlangıç için WeaponController bulunamadı.")
 		return
