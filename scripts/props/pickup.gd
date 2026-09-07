@@ -2,6 +2,12 @@
 class_name VexPickup
 extends Area3D
 
+const DiscoveryOverlay = preload("res://scripts/ui/discovery_notification_overlay.gd")
+const DISCOVERY_WEAPON_TYPES := [
+	&"p01", &"p07", &"p14", &"p20",
+	&"sg04", &"sg09", &"sg15", &"vx47", &"mp90",
+]
+
 @export_category("Toplanabilir Nesne")
 @export var pickup_id: StringName = &"pickup"
 @export_enum("health", "armor", "bullets", "shells", "p01", "p07", "p14", "p20", "sg04", "sg09", "sg15", "vx47", "rifle_ammo", "mp90", "mp90_ammo", "night_vision", "key_blue", "key_red", "key_yellow") var pickup_type: String = "health"
@@ -106,10 +112,20 @@ func _on_body_entered(body: Node3D) -> void:
 	if _collected or not body.has_method("collect_pickup"):
 		return
 
+	var first_weapon_acquisition := _is_first_weapon_acquisition(body)
 	var consumed := bool(body.call("collect_pickup", StringName(pickup_type), _runtime_amount, self))
 	if not consumed:
 		GameState.notify(tr("PICKUP_CAPACITY_FULL") % tr(display_name))
 		return
+
+	if first_weapon_acquisition:
+		DiscoveryOverlay.request(
+			get_tree(),
+			&"weapon",
+			"SİLAH ARŞİVİ GÜNCELLENDİ",
+			"WEAPON ARCHIVE UPDATED",
+			_weapon_discovery_name(body)
+		)
 
 	_collected = true
 	set_process(false)
@@ -123,6 +139,26 @@ func _on_body_entered(body: Node3D) -> void:
 	if pickup_audio != null and pickup_audio.stream != null:
 		pickup_audio.play()
 	call_deferred("_finish_collection")
+
+
+func _is_first_weapon_acquisition(body: Node) -> bool:
+	var weapon_id := StringName(pickup_type)
+	if not DISCOVERY_WEAPON_TYPES.has(weapon_id):
+		return false
+	var controller := body.get_node_or_null("WeaponController")
+	if controller == null or not controller.has_method("owns_weapon"):
+		return false
+	return not bool(controller.call("owns_weapon", weapon_id))
+
+
+func _weapon_discovery_name(body: Node) -> String:
+	var controller := body.get_node_or_null("WeaponController")
+	if controller != null and controller.has_method("get_weapon_definition"):
+		var definition := controller.call("get_weapon_definition", StringName(pickup_type)) as WeaponDefinition
+		if definition != null:
+			return tr(definition.display_name)
+	return tr(display_name)
+
 
 func block_pickup_for(duration: float) -> void:
 	_pickup_blocked_until_msec = Time.get_ticks_msec() + int(duration * 1000.0)
