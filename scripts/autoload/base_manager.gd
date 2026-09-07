@@ -4,6 +4,7 @@ signal base_state_changed
 signal area_access_changed(area_id: StringName, unlocked: bool)
 signal lighting_mode_changed(mode: int)
 signal upgrade_level_changed(upgrade_id: StringName, level: int)
+signal field_record_changed(record_id: StringName)
 
 enum LightingMode {
 	LEVEL_25,
@@ -11,6 +12,8 @@ enum LightingMode {
 	LEVEL_75,
 	LEVEL_100,
 }
+
+const RecordManagerScript = preload("res://scripts/autoload/record_manager.gd")
 
 const AREA_DEFINITIONS := [
 	{
@@ -131,13 +134,21 @@ const UPGRADE_DEFINITIONS := [
 var _unlocked_areas: Dictionary = {}
 var _lighting_mode: LightingMode = LightingMode.LEVEL_25
 var _upgrade_levels: Dictionary = {}
+var _record_manager: VexRecordManager = null
+
+
+func _ready() -> void:
+	_record_manager = RecordManagerScript.new() as VexRecordManager
+	add_child(_record_manager)
+	_record_manager.record_changed.connect(_on_field_record_changed)
 
 
 func reset_campaign_state(emit_changes := true) -> void:
 	_unlocked_areas.clear()
 	_upgrade_levels.clear()
 	_lighting_mode = LightingMode.LEVEL_25
-	RecordManager.reset_campaign_state()
+	if _record_manager != null:
+		_record_manager.reset_campaign_state()
 	if emit_changes:
 		_emit_full_state()
 
@@ -152,7 +163,7 @@ func capture_state() -> Dictionary:
 		"unlocked_areas": unlocked,
 		"lighting_mode": int(_lighting_mode),
 		"upgrade_levels": _upgrade_levels.duplicate(true),
-		"field_record_state": RecordManager.capture_state(),
+		"field_record_state": _record_manager.capture_state() if _record_manager != null else {},
 	}
 
 
@@ -190,9 +201,29 @@ func restore_state(state: Dictionary) -> void:
 				0,
 				int(definition.get("max_level", 0))
 			)
-	var record_state: Variant = state.get("field_record_state", {})
-	RecordManager.restore_state(record_state as Dictionary if record_state is Dictionary else {})
+	if _record_manager != null:
+		var record_state: Variant = state.get("field_record_state", {})
+		if record_state is Dictionary:
+			_record_manager.restore_state(record_state as Dictionary)
+		else:
+			_record_manager.restore_state({})
 	_emit_full_state()
+
+
+func discover_field_record(record_id: StringName) -> bool:
+	return _record_manager != null and _record_manager.discover_record(record_id)
+
+
+func is_field_record_discovered(record_id: StringName) -> bool:
+	return _record_manager != null and _record_manager.is_record_discovered(record_id)
+
+
+func get_discovered_field_record_ids() -> Array[StringName]:
+	return _record_manager.get_discovered_record_ids() if _record_manager != null else []
+
+
+func get_discovered_field_record_count() -> int:
+	return _record_manager.get_discovered_count() if _record_manager != null else 0
 
 
 func sanitize_for_campaign_stage(campaign_stage: int) -> void:
@@ -318,6 +349,11 @@ func set_upgrade_level(upgrade_id: StringName, level: int) -> bool:
 	upgrade_level_changed.emit(upgrade_id, safe_level)
 	base_state_changed.emit()
 	return true
+
+
+func _on_field_record_changed(record_id: StringName) -> void:
+	field_record_changed.emit(record_id)
+	base_state_changed.emit()
 
 
 func _emit_full_state() -> void:
