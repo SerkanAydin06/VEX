@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cem37psjtbs5a" path="res://assets/world/bastion7/bastion_terminal_controls.png" id="3_controls"]
 [ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="4_font"]
 [ext_resource type="PackedScene" path="res://scenes/ui/terminal_menu.tscn" id="5_menu"]
+[ext_resource type="PackedScene" path="res://scenes/ui/vex_archive_terminal.tscn" id="6_archive"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
 albedo_color = Color(0.028, 0.034, 0.041, 1)
@@ -175,7 +176,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.58, -0.4019211)
 shape = SubResource("BoxShape_toe")
 
 [node name="SupportShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=1028475002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56367797, -0.32600585)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0.56367797, -0.32600585)
 shape = SubResource("BoxShape_support")
 
 [node name="DeckShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=1434179026]
@@ -187,27 +188,29 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8407265, -0.36237958)
 shape = SubResource("BoxShape_screen_back")
 
 [node name="TopRailShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=1028475003]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2246144, -0.4089676)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 1.2246144, -0.4089676)
 shape = SubResource("BoxShape_screen_rail_h")
 
 [node name="BottomRailShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=1028475004]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45683858, -0.4089676)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0.45683858, -0.4089676)
 shape = SubResource("BoxShape_screen_rail_h")
 
 [node name="LeftRailShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=1028475005]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.66510963, 0.8407265, -0.4089676)
+transform = Transform3D(1, 0, 0, 0, 1, -0.66510963, 0.8407265, -0.4089676)
 shape = SubResource("BoxShape_screen_rail_v")
 
 [node name="RightRailShape" type="CollisionShape3D" parent="PhysicalBody/SolidCollider" unique_id=1028475006]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.66510963, 0.8407265, -0.4089676)
+transform = Transform3D(1, 0, 0, 0, 1, 0.66510963, 0.8407265, -0.4089676)
 shape = SubResource("BoxShape_screen_rail_v")
 
-[node name="ScreenInteraction" type="StaticBody3D" parent="." unique_id=1662092751]
+[node name="ScreenInteraction" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8407265, -0.40510866)
 collision_layer = 8
 collision_mask = 0
 
-[node name="ScreenInteractionShape" type="CollisionShape3D" parent="ScreenInteraction" unique_id=1793298523]
+[node name="ScreenInteractionShape" type="CollisionShape3D" parent="ScreenInteraction"]
 shape = SubResource("BoxShape_screen_interaction")
 
-[node name="TerminalMenu" parent="." unique_id=241743877 instance=ExtResource("5_menu")]
+[node name="TerminalMenu" parent="." instance=ExtResource("5_menu")]
+
+[node name="ArchiveTerminal" parent="." instance=ExtResource("6_archive")]
