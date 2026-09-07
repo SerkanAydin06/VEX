@@ -15,15 +15,16 @@ const STRUCTURE_NODE_NAMES := [
 var _alarm_triggered := false
 
 
+func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		return
+	_install_authored_structure()
+
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		_install_editor_structure_preview()
 		return
-
-	# Canonical Ash Corridor gameplay/environment are real subscene instances of
-	# level_02.tscn. The old authored map is filtered here so only safe structural
-	# roots enter the live tree; legacy enemies/pickups/triggers remain excluded.
-	_install_authored_structure()
 	super._ready()
 
 
