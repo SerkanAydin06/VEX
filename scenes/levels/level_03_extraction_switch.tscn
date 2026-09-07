@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/props/finish_switch.tscn" id="1_base"]
 [ext_resource type="Script" path="res://scripts/levels/level_03_extraction_switch.gd" id="2_script"]
@@ -83,9 +83,16 @@ size = Vector3(0.74, 0.027, 0.018)
 [sub_resource type="BoxMesh" id="Mesh_indicator"]
 size = Vector3(0.08, 0.08, 0.04)
 
+[sub_resource type="BoxShape3D" id="Shape_console_interaction"]
+size = Vector3(1.62, 2.08, 0.34)
+
 [node name="Level03ExtractionSwitch" instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 visual_world_size = Vector2(0.01, 0.01)
+
+[node name="CollisionShape3D" parent="PanelBody"]
+position = Vector3(0, 1.06, 0.12)
+shape = SubResource("Shape_console_interaction")
 
 [node name="VisualConsole" type="Node3D" parent="."]
 
