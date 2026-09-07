@@ -107,11 +107,8 @@ piece_size = Vector3(12, 0.4, 10)
 surface_material = ExtResource("4_floor")
 occlusion_enabled = false
 
-[node name="Ceiling_FiringRange" parent="Geometry" unique_id=724834527 instance=ExtResource("2_piece")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 7.2, -10)
-piece_size = Vector3(12, 0.4, 10)
-surface_material = ExtResource("5_ceiling")
-occlusion_enabled = false
+[node name="Ceiling_FiringRange" parent="Geometry" instance=ExtResource("9_white")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 6.82, -10)
 
 [node name="Floor_Armory" parent="Geometry" unique_id=2011248365 instance=ExtResource("2_piece")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.996028, -0.19999988, -9.9977665)
@@ -917,7 +914,7 @@ visual_world_width = 1.16
 
 [node name="DrSelinErdem" parent="Systems/Survivors" unique_id=1970753788 instance=ExtResource("22_survivor")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 12.3)
-required_campaign_stage = 2
+required_campaign_stage = 3
 display_name_key = "SURVIVOR_SELIN_NAME"
 role_key = "SURVIVOR_SELIN_ROLE"
 dialogue_key = "SURVIVOR_SELIN_DIALOGUE_STAGE2"
