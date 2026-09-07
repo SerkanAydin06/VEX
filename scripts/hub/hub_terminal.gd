@@ -26,14 +26,15 @@ func _ready() -> void:
 
 
 func get_interaction_text(_player: Node) -> String:
+	var resolved_name := _get_display_name()
 	if offline:
-		return tr("INTERACT_LOCKED") % [tr(display_name), tr(offline_message)]
-	return tr("TERMINAL_INTERACT_OPEN") % tr(display_name)
+		return tr("INTERACT_LOCKED") % [resolved_name, tr(offline_message)]
+	return tr("TERMINAL_INTERACT_OPEN") % resolved_name
 
 
 func interact(_player: Node) -> void:
 	if offline:
-		GameState.notify(tr("DOOR_LOCKED_MESSAGE") % [tr(display_name), tr(offline_message)])
+		GameState.notify(tr("DOOR_LOCKED_MESSAGE") % [_get_display_name(), tr(offline_message)])
 		return
 	if terminal_mode == TerminalMode.INFORMATION:
 		archive_terminal.open_terminal()
@@ -43,6 +44,12 @@ func interact(_player: Node) -> void:
 		true,
 		terminal_mode == TerminalMode.DEPLOYMENT
 	)
+
+
+func _get_display_name() -> String:
+	if terminal_mode == TerminalMode.INFORMATION:
+		return "VEX ANA TERMİNALİ" if TranslationServer.get_locale().begins_with("tr") else "VEX MAIN TERMINAL"
+	return tr(display_name)
 
 
 func _on_language_changed(_locale: String) -> void:
