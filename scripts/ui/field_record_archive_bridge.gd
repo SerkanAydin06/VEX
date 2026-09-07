@@ -15,7 +15,6 @@ var _detail_meta: Label = null
 var _detail_body: RichTextLabel = null
 var _classification_label: Label = null
 var _base_action_row: Control = null
-var _base_dashboard: Control = null
 
 
 func _ready() -> void:
@@ -51,7 +50,6 @@ func _resolve_nodes() -> void:
 	_detail_body = _terminal.get_node_or_null("ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailBody") as RichTextLabel
 	_classification_label = _terminal.get_node_or_null("ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock/ClassificationLabel") as Label
 	_base_action_row = _terminal.get_node_or_null("ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/BaseActionRow") as Control
-	_base_dashboard = _terminal.get_node_or_null("ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/BaseManagementDashboard") as Control
 
 
 func _on_records_pressed() -> void:
@@ -86,9 +84,9 @@ func _refresh_records() -> void:
 		child.free()
 	if _base_action_row != null:
 		_base_action_row.visible = false
-	if _base_dashboard != null:
-		_base_dashboard.visible = false
 
+	# BaseManagementDashboard kendi sekme görünürlüğünün sahibidir. Bu köprü ona
+	# dokunmaz; Records sekmesi sadece mevcut index/detail kayıt alanını yeniler.
 	var record_ids := BaseManager.get_discovered_field_record_ids()
 	if _section_title != null:
 		_section_title.text = _t(
