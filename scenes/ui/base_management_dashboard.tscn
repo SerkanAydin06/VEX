@@ -1,0 +1,334 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/base_management_dashboard.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
+[ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="3_mono"]
+
+[node name="BaseManagementDashboard" type="PanelContainer"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Header" type="HBoxContainer" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleBlock" type="VBoxContainer" parent="Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
+[node name="BaseDashboardTitle" type="Label" parent="Margin/VBox/Header/TitleBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.34, 0.91, 1, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 20
+text = "BASTION-7 // ÜS KONTROLÜ"
+autowrap_mode = 2
+
+[node name="BaseDashboardSubtitle" type="Label" parent="Margin/VBox/Header/TitleBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.47, 0.68, 0.73, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 9
+text = "YEREL TESİS AĞI // KAPI YETKİSİ // AYDINLATMA // GELİŞTİRME OMURGASI"
+autowrap_mode = 2
+
+[node name="BaseStageBadge" type="Label" parent="Margin/VBox/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.38, 0.22, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 10
+text = "KAMPANYA // AŞAMA 00"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="StatusCards" type="HBoxContainer" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="AccessCard" type="PanelContainer" parent="Margin/VBox/StatusCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BaseAccessValue" type="Label" parent="Margin/VBox/StatusCards/AccessCard"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.88, 1, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 10
+text = "BÖLGE ERİŞİMİ\n0 / 4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LightingCard" type="PanelContainer" parent="Margin/VBox/StatusCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BaseLightingValue" type="Label" parent="Margin/VBox/StatusCards/LightingCard"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.62, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 10
+text = "AYDINLATMA\nSTANDART"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LightingLoadCard" type="PanelContainer" parent="Margin/VBox/StatusCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BaseLightingLoadValue" type="Label" parent="Margin/VBox/StatusCards/LightingLoadCard"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.88, 1, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 10
+text = "IŞIK YÜKÜ\n100%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UpgradeCard" type="PanelContainer" parent="Margin/VBox/StatusCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BaseUpgradeValue" type="Label" parent="Margin/VBox/StatusCards/UpgradeCard"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.58, 0.62, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 10
+text = "GELİŞTİRME\n0 / 9"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MapLine" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="BaseFacilityMapTitle" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48, 0.73, 0.8, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 10
+text = "TESİS ŞEMASI // CANLI DURUM"
+
+[node name="FacilityGrid" type="GridContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 3
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 5
+
+[node name="FiringRangeAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+text = "ATIŞ POLİGONU\nAKTİVASYONA HAZIR"
+autowrap_mode = 2
+
+[node name="ArmoryAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "SİLAH DEPOSU\nSİSTEM AKTİF"
+autowrap_mode = 2
+
+[node name="ResearchAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "ARAŞTIRMA LABORATUVARI\nKİLİTLİ // VEX-01"
+autowrap_mode = 2
+
+[node name="MapSpacerA" type="Control" parent="Margin/VBox/FacilityGrid"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+
+[node name="CommandAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "KOMUTA MERKEZİ\nSİSTEM AKTİF"
+autowrap_mode = 2
+
+[node name="MapSpacerB" type="Control" parent="Margin/VBox/FacilityGrid"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+
+[node name="WorkshopAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "SİLAH ATÖLYESİ\nKİLİTLİ // VEX-02"
+autowrap_mode = 2
+
+[node name="SouthCorridorAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "GÜNEY KORİDORU\nSİSTEM AKTİF"
+autowrap_mode = 2
+
+[node name="EngineeringAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "MÜHENDİSLİK BÖLMESİ\nKİLİTLİ // VEX-02"
+autowrap_mode = 2
+
+[node name="MapSpacerC" type="Control" parent="Margin/VBox/FacilityGrid"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+
+[node name="OperatorAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "OPERATÖR PLATFORMU\nSİSTEM AKTİF"
+autowrap_mode = 2
+
+[node name="MapSpacerD" type="Control" parent="Margin/VBox/FacilityGrid"]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+
+[node name="LightingLine" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="BaseLightingTitle" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48, 0.73, 0.8, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 10
+text = "AYDINLATMA DAĞITIMI"
+
+[node name="LightingButtons" type="HBoxContainer" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StandardLightingButton" type="Button" parent="Margin/VBox/LightingButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+text = "STANDART AYDINLATMA\nAKTİF // 100%"
+autowrap_mode = 2
+
+[node name="LowPowerLightingButton" type="Button" parent="Margin/VBox/LightingButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+text = "DÜŞÜK GÜÇ MODU\nUYGULA // 48%"
+autowrap_mode = 2
+
+[node name="EmergencyLightingButton" type="Button" parent="Margin/VBox/LightingButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+text = "ACİL DURUM MODU\nUYGULA // 28%"
+autowrap_mode = 2
+
+[node name="UpgradeLine" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="BaseUpgradeTitle" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48, 0.73, 0.8, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 10
+text = "GELİŞTİRME OMURGASI // GELECEK SİSTEM"
+
+[node name="UpgradeButtons" type="HBoxContainer" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PowerGridUpgradeButton" type="Button" parent="Margin/VBox/UpgradeButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "ENERJİ DAĞITIM AĞI\nSV 0 / 3 // YAKINDA"
+autowrap_mode = 2
+
+[node name="SecurityGridUpgradeButton" type="Button" parent="Margin/VBox/UpgradeButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "GÜVENLİK AĞI\nSV 0 / 3 // YAKINDA"
+autowrap_mode = 2
+
+[node name="ResearchInfrastructureUpgradeButton" type="Button" parent="Margin/VBox/UpgradeButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+disabled = true
+text = "ARAŞTIRMA ALTYAPISI\nSV 0 / 3 // YAKINDA"
+autowrap_mode = 2
+
+[node name="BaseDashboardStatusHint" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.38, 0.52, 0.57, 1)
+theme_override_fonts/font = ExtResource("3_mono")
+theme_override_font_sizes/font_size = 8
+text = "YEŞİL: AKTİF  //  TURUNCU: AKTİVASYONA HAZIR  //  KIRMIZI: YETKİ KİLİTLİ"
+autowrap_mode = 2
+vertical_alignment = 2
