@@ -62,10 +62,14 @@ static func get_records_for_chapter(chapter: int) -> Array[Dictionary]:
 	for entry: Dictionary in RECORDS:
 		if int(entry.get("chapter", 0)) == chapter:
 			result.append(entry)
-	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.get("order", 0)) < int(b.get("order", 0)))
+	result.sort_custom(_record_order_less)
 	return result
 
 
 static func localized(entry: Dictionary, field: String) -> String:
 	var suffix := "_tr" if TranslationServer.get_locale().begins_with("tr") else "_en"
 	return str(entry.get(field + suffix, entry.get(field, "")))
+
+
+static func _record_order_less(a: Dictionary, b: Dictionary) -> bool:
+	return int(a.get("order", 0)) < int(b.get("order", 0))
