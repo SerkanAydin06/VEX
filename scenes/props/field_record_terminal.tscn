@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/props/field_record_terminal.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="Material_body"]
+albedo_color = Color(0.075, 0.09, 0.105, 1)
+metallic = 0.72
+roughness = 0.33
+
+[sub_resource type="StandardMaterial3D" id="Material_screen"]
+shading_mode = 0
+albedo_color = Color(0.08, 0.72, 0.82, 1)
+emission_enabled = true
+emission = Color(0.04, 0.62, 0.78, 1)
+emission_energy_multiplier = 2.2
+
+[sub_resource type="BoxMesh" id="Mesh_body"]
+material = SubResource("Material_body")
+size = Vector3(1.1, 1.55, 0.42)
+
+[sub_resource type="BoxMesh" id="Mesh_screen"]
+material = SubResource("Material_screen")
+size = Vector3(0.78, 0.48, 0.035)
+
+[sub_resource type="BoxShape3D" id="Shape_body"]
+size = Vector3(1.1, 1.55, 0.42)
+
+[node name="FieldRecordTerminal" type="StaticBody3D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_script")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh_body")
+
+[node name="Screen" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.22, -0.227)
+mesh = SubResource("Mesh_screen")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_body")
