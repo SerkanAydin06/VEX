@@ -111,7 +111,11 @@ func _get_initial_selection_index() -> int:
 	for index in _mission_definitions.size():
 		if _get_status(index) == FacilityStatus.ACTIVE:
 			return index
-	return _mission_definitions.size() - 1
+	# No active operation means every currently authored mission is already
+	# cleared (or the campaign has reached the end of the playable build). Show
+	# the dedicated network-idle/all-cleared state instead of highlighting the
+	# last completed operation as if it were still the current mission.
+	return -1
 
 
 func _get_mission_buttons() -> Array[Button]:
