@@ -37,9 +37,11 @@ var _last_dashboard_active := false
 @onready var south_corridor_button: Button = %SouthCorridorAreaButton
 @onready var operator_button: Button = %OperatorAreaButton
 
-@onready var standard_lighting_button: Button = %StandardLightingButton
-@onready var low_power_lighting_button: Button = %LowPowerLightingButton
-@onready var emergency_lighting_button: Button = %EmergencyLightingButton
+@onready var lighting_25_button: Button = %Lighting25Button
+@onready var lighting_50_button: Button = %Lighting50Button
+@onready var lighting_75_button: Button = %Lighting75Button
+@onready var lighting_100_button: Button = %Lighting100Button
+
 @onready var power_upgrade_button: Button = %PowerGridUpgradeButton
 @onready var security_upgrade_button: Button = %SecurityGridUpgradeButton
 @onready var research_upgrade_button: Button = %ResearchInfrastructureUpgradeButton
@@ -55,9 +57,10 @@ func _ready() -> void:
 	research_button.pressed.connect(_activate_area.bind(&"research_lab"))
 	workshop_button.pressed.connect(_activate_area.bind(&"weapon_workshop"))
 	engineering_button.pressed.connect(_activate_area.bind(&"engineering_bay"))
-	standard_lighting_button.pressed.connect(_apply_lighting.bind(BaseManager.LightingMode.STANDARD))
-	low_power_lighting_button.pressed.connect(_apply_lighting.bind(BaseManager.LightingMode.LOW_POWER))
-	emergency_lighting_button.pressed.connect(_apply_lighting.bind(BaseManager.LightingMode.EMERGENCY))
+	lighting_25_button.pressed.connect(_apply_lighting.bind(BaseManager.LightingMode.LEVEL_25))
+	lighting_50_button.pressed.connect(_apply_lighting.bind(BaseManager.LightingMode.LEVEL_50))
+	lighting_75_button.pressed.connect(_apply_lighting.bind(BaseManager.LightingMode.LEVEL_75))
+	lighting_100_button.pressed.connect(_apply_lighting.bind(BaseManager.LightingMode.LEVEL_100))
 	if not BaseManager.base_state_changed.is_connected(_on_base_state_changed):
 		BaseManager.base_state_changed.connect(_on_base_state_changed)
 	if not SettingsManager.language_changed.is_connected(_on_language_changed):
@@ -96,16 +99,16 @@ func _apply_editor_preview() -> void:
 func _sync_section_visibility(force := false) -> void:
 	if base_tab == null:
 		return
-	var active := base_tab.button_pressed
-	if not force and active == _last_dashboard_active:
+	var dashboard_active := base_tab.button_pressed
+	if not force and dashboard_active == _last_dashboard_active:
 		return
-	_last_dashboard_active = active
-	visible = active
+	_last_dashboard_active = dashboard_active
+	visible = dashboard_active
 	if index_panel != null:
-		index_panel.visible = not active
+		index_panel.visible = not dashboard_active
 	if detail_margin != null:
-		detail_margin.visible = not active
-	if active:
+		detail_margin.visible = not dashboard_active
+	if dashboard_active:
 		_refresh_dashboard()
 
 
@@ -127,32 +130,32 @@ func _refresh_static_labels() -> void:
 		"LOCAL FACILITY GRID // ACCESS // LIGHTING // UPGRADE BACKBONE"
 	)
 	facility_map_title.text = _t("TESİS ŞEMASI // CANLI DURUM", "FACILITY SCHEMATIC // LIVE STATUS")
-	lighting_title.text = _t("AYDINLATMA DAĞITIMI", "LIGHTING DISTRIBUTION")
-	upgrade_title.text = _t("GELİŞTİRME OMURGASI // GELECEK SİSTEM", "UPGRADE BACKBONE // FUTURE SYSTEM")
+	lighting_title.text = _t("AYDINLATMA GÜÇ KADEMELERİ", "LIGHTING POWER TIERS")
+	upgrade_title.text = _t("GELİŞTİRME OMURGASI // İLERLEME KİLİTLİ", "UPGRADE BACKBONE // PROGRESSION LOCKED")
 	status_hint.text = _t(
-		"YEŞİL: AKTİF  //  TURUNCU: AKTİVASYONA HAZIR  //  KIRMIZI: YETKİ KİLİTLİ",
-		"GREEN: ONLINE  //  AMBER: READY TO ACTIVATE  //  RED: CLEARANCE LOCKED"
+		"YEŞİL: AKTİF  //  TURUNCU: KULLANILABİLİR  //  KIRMIZI: İLERLEME KİLİTLİ",
+		"GREEN: ACTIVE  //  AMBER: AVAILABLE  //  RED: PROGRESSION LOCKED"
 	)
 
 
 func _refresh_status_cards() -> void:
-	var areas := BaseManager.get_area_definitions()
+	var area_definitions := BaseManager.get_area_definitions()
 	var unlocked_count := 0
-	for definition: Dictionary in areas:
+	for definition: Dictionary in area_definitions:
 		if BaseManager.is_area_unlocked(StringName(str(definition.get("id", "")))):
 			unlocked_count += 1
 	access_value.text = _t(
-		"BÖLGE ERİŞİMİ\n%d / %d" % [unlocked_count, areas.size()],
-		"AREA ACCESS\n%d / %d" % [unlocked_count, areas.size()]
+		"BÖLGE ERİŞİMİ\n%d / %d" % [unlocked_count, area_definitions.size()],
+		"AREA ACCESS\n%d / %d" % [unlocked_count, area_definitions.size()]
 	)
-	access_value.add_theme_color_override("font_color", COLOR_ONLINE if unlocked_count == areas.size() else COLOR_SYSTEM)
+	access_value.add_theme_color_override("font_color", COLOR_ONLINE if unlocked_count == area_definitions.size() else COLOR_SYSTEM)
 
 	var lighting := BaseManager.get_lighting_definition(BaseManager.get_lighting_mode())
 	lighting_value.text = "%s\n%s" % [_t("AYDINLATMA", "LIGHTING"), _localized(lighting, "name")]
-	lighting_value.add_theme_color_override("font_color", _lighting_color(BaseManager.get_lighting_mode()))
+	lighting_value.add_theme_color_override("font_color", COLOR_ONLINE)
 	lighting_load_value.text = "%s\n%d%%" % [
-		_t("IŞIK YÜKÜ", "LIGHT LOAD"),
-		roundi(float(lighting.get("energy_multiplier", 1.0)) * 100.0),
+		_t("IŞIK GÜCÜ", "LIGHT POWER"),
+		roundi(float(lighting.get("energy_multiplier", 0.25)) * 100.0),
 	]
 	lighting_load_value.add_theme_color_override("font_color", COLOR_SYSTEM)
 
@@ -186,15 +189,20 @@ func _refresh_facility_map() -> void:
 
 func _refresh_managed_area_button(button: Button, area_id: StringName) -> void:
 	var definition := BaseManager.get_area_definition(area_id)
+	if definition.is_empty():
+		button.text = "UNKNOWN\n// NO DATA"
+		button.disabled = true
+		return
+	var area_name := _localized(definition, "name")
 	var unlocked := BaseManager.is_area_unlocked(area_id)
-	var ready := BaseManager.can_unlock_area(area_id, GameState.campaign_stage)
+	var activation_available := BaseManager.can_unlock_area(area_id, GameState.campaign_stage)
 	var status := _t("YETKİ KİLİTLİ", "CLEARANCE LOCKED")
 	var color := COLOR_LOCKED
 	button.disabled = true
 	if unlocked:
 		status = _t("ERİŞİM AÇIK", "ACCESS ONLINE")
 		color = COLOR_ONLINE
-	elif ready:
+	elif activation_available:
 		status = _t("AKTİVASYONA HAZIR", "READY TO ACTIVATE")
 		color = COLOR_READY
 		button.disabled = false
@@ -203,7 +211,7 @@ func _refresh_managed_area_button(button: Button, area_id: StringName) -> void:
 			"KİLİTLİ // VEX-%02d" % int(definition.get("required_stage", 0)),
 			"LOCKED // VEX-%02d" % int(definition.get("required_stage", 0))
 		)
-	button.text = "%s\n%s" % [_localized(definition, "name"), status]
+	button.text = "%s\n%s" % [area_name, status]
 	_set_button_color(button, color)
 
 
@@ -214,21 +222,32 @@ func _refresh_static_area_button(button: Button, title: String) -> void:
 
 
 func _refresh_lighting_controls() -> void:
-	_refresh_lighting_button(standard_lighting_button, BaseManager.LightingMode.STANDARD)
-	_refresh_lighting_button(low_power_lighting_button, BaseManager.LightingMode.LOW_POWER)
-	_refresh_lighting_button(emergency_lighting_button, BaseManager.LightingMode.EMERGENCY)
+	_refresh_lighting_button(lighting_25_button, BaseManager.LightingMode.LEVEL_25)
+	_refresh_lighting_button(lighting_50_button, BaseManager.LightingMode.LEVEL_50)
+	_refresh_lighting_button(lighting_75_button, BaseManager.LightingMode.LEVEL_75)
+	_refresh_lighting_button(lighting_100_button, BaseManager.LightingMode.LEVEL_100)
 
 
 func _refresh_lighting_button(button: Button, mode: int) -> void:
 	var definition := BaseManager.get_lighting_definition(mode)
+	if definition.is_empty():
+		button.disabled = true
+		return
 	var active := BaseManager.get_lighting_mode() == mode
-	button.text = "%s\n%s // %d%%" % [
-		_localized(definition, "name"),
-		_t("AKTİF", "ACTIVE") if active else _t("UYGULA", "APPLY"),
-		roundi(float(definition.get("energy_multiplier", 1.0)) * 100.0),
-	]
-	button.disabled = active
-	_set_button_color(button, _lighting_color(mode) if active else COLOR_SYSTEM)
+	var available := BaseManager.can_use_lighting_mode(mode, GameState.campaign_stage)
+	var load_percent := roundi(float(definition.get("energy_multiplier", 0.25)) * 100.0)
+	var status := _t("KİLİTLİ // VEX-%02d", "LOCKED // VEX-%02d") % int(definition.get("required_stage", 0))
+	var color := COLOR_LOCKED
+	button.disabled = true
+	if active:
+		status = _t("AKTİF", "ACTIVE")
+		color = COLOR_ONLINE
+	elif available:
+		status = _t("UYGULA", "APPLY")
+		color = COLOR_READY
+		button.disabled = false
+	button.text = "%s\n%s // %d%%" % [_localized(definition, "name"), status, load_percent]
+	_set_button_color(button, color)
 
 
 func _refresh_upgrade_controls() -> void:
@@ -239,19 +258,31 @@ func _refresh_upgrade_controls() -> void:
 
 func _refresh_upgrade_button(button: Button, upgrade_id: StringName) -> void:
 	var definition := BaseManager.get_upgrade_definition(upgrade_id)
+	var level := BaseManager.get_upgrade_level(upgrade_id)
+	var max_level := int(definition.get("max_level", 0))
+	var required_stage := int(definition.get("required_stage", 0))
+	var available := BaseManager.is_upgrade_available(upgrade_id, GameState.campaign_stage)
 	button.disabled = true
-	button.text = "%s\n%s %d / %d // %s" % [
-		_localized(definition, "name"),
-		_t("SV", "LVL"),
-		BaseManager.get_upgrade_level(upgrade_id),
-		int(definition.get("max_level", 0)),
-		_t("YAKINDA", "FUTURE"),
-	]
-	_set_button_color(button, COLOR_MUTED)
+	if available:
+		button.text = "%s\n%s %d / %d // %s" % [
+			_localized(definition, "name"),
+			_t("SV", "LVL"),
+			level,
+			max_level,
+			_t("YAKINDA", "FUTURE"),
+		]
+		_set_button_color(button, COLOR_MUTED)
+	else:
+		button.text = "%s\n%s" % [
+			_localized(definition, "name"),
+			_t("KİLİTLİ // VEX-%02d" % required_stage, "LOCKED // VEX-%02d" % required_stage),
+		]
+		_set_button_color(button, COLOR_LOCKED)
 
 
 func _activate_area(area_id: StringName) -> void:
 	if not BaseManager.can_unlock_area(area_id, GameState.campaign_stage):
+		_refresh_dashboard()
 		return
 	var previous_state := BaseManager.capture_state()
 	if not BaseManager.unlock_area(area_id, GameState.campaign_stage):
@@ -267,14 +298,17 @@ func _activate_area(area_id: StringName) -> void:
 func _apply_lighting(mode: int) -> void:
 	if BaseManager.get_lighting_mode() == mode:
 		return
+	if not BaseManager.can_use_lighting_mode(mode, GameState.campaign_stage):
+		_refresh_dashboard()
+		return
 	var previous_state := BaseManager.capture_state()
-	if not BaseManager.set_lighting_mode(mode):
+	if not BaseManager.set_lighting_mode(mode, GameState.campaign_stage):
 		return
 	if not GameState.save_current_safe_progress("base_dashboard_lighting"):
 		BaseManager.restore_state(previous_state)
 		GameState.notify(GameState.get_save_failure_message())
 		return
-	GameState.notify(_t("BASTION-7 // AYDINLATMA PROFİLİ GÜNCELLENDİ", "BASTION-7 // LIGHTING PROFILE UPDATED"))
+	GameState.notify(_t("BASTION-7 // AYDINLATMA KADEMESİ GÜNCELLENDİ", "BASTION-7 // LIGHTING TIER UPDATED"))
 	_refresh_dashboard()
 
 
@@ -293,16 +327,6 @@ func _set_button_color(button: Button, color: Color) -> void:
 		button.add_theme_color_override(state_name, color)
 
 
-func _lighting_color(mode: int) -> Color:
-	match mode:
-		BaseManager.LightingMode.EMERGENCY:
-			return Color(1.0, 0.35, 0.25, 1.0)
-		BaseManager.LightingMode.LOW_POWER:
-			return Color(0.55, 0.78, 1.0, 1.0)
-		_:
-			return COLOR_ONLINE
-
-
 func _localized(entry: Dictionary, key: String) -> String:
 	var suffix := "_tr" if TranslationServer.get_locale().begins_with("tr") else "_en"
 	return str(entry.get(key + suffix, entry.get(key, "")))
@@ -317,14 +341,14 @@ func _refresh_editor_text() -> void:
 	dashboard_subtitle.text = "YEREL TESİS AĞI // KAPI YETKİSİ // AYDINLATMA // GELİŞTİRME OMURGASI"
 	stage_badge.text = "KAMPANYA // AŞAMA 00"
 	access_value.text = "BÖLGE ERİŞİMİ\n0 / 4"
-	lighting_value.text = "AYDINLATMA\nSTANDART"
-	lighting_load_value.text = "IŞIK YÜKÜ\n100%"
+	lighting_value.text = "AYDINLATMA\nSEVİYE 1"
+	lighting_load_value.text = "IŞIK GÜCÜ\n25%"
 	upgrade_value.text = "GELİŞTİRME\n0 / 9"
 	facility_map_title.text = "TESİS ŞEMASI // CANLI DURUM"
-	lighting_title.text = "AYDINLATMA DAĞITIMI"
-	upgrade_title.text = "GELİŞTİRME OMURGASI // GELECEK SİSTEM"
-	status_hint.text = "YEŞİL: AKTİF  //  TURUNCU: AKTİVASYONA HAZIR  //  KIRMIZI: YETKİ KİLİTLİ"
-	firing_range_button.text = "ATIŞ POLİGONU\nAKTİVASYONA HAZIR"
+	lighting_title.text = "AYDINLATMA GÜÇ KADEMELERİ"
+	upgrade_title.text = "GELİŞTİRME OMURGASI // İLERLEME KİLİTLİ"
+	status_hint.text = "YEŞİL: AKTİF  //  TURUNCU: KULLANILABİLİR  //  KIRMIZI: İLERLEME KİLİTLİ"
+	firing_range_button.text = "ATIŞ POLİGONU\nKİLİTLİ // VEX-01"
 	research_button.text = "ARAŞTIRMA LABORATUVARI\nKİLİTLİ // VEX-01"
 	workshop_button.text = "SİLAH ATÖLYESİ\nKİLİTLİ // VEX-02"
 	engineering_button.text = "MÜHENDİSLİK BÖLMESİ\nKİLİTLİ // VEX-02"
@@ -332,19 +356,21 @@ func _refresh_editor_text() -> void:
 	_refresh_static_area_button(command_button, "KOMUTA MERKEZİ")
 	_refresh_static_area_button(south_corridor_button, "GÜNEY KORİDORU")
 	_refresh_static_area_button(operator_button, "OPERATÖR PLATFORMU")
-	standard_lighting_button.text = "STANDART AYDINLATMA\nAKTİF // 100%"
-	low_power_lighting_button.text = "DÜŞÜK GÜÇ MODU\nUYGULA // 48%"
-	emergency_lighting_button.text = "ACİL DURUM MODU\nUYGULA // 28%"
-	power_upgrade_button.text = "ENERJİ DAĞITIM AĞI\nSV 0 / 3 // YAKINDA"
-	security_upgrade_button.text = "GÜVENLİK AĞI\nSV 0 / 3 // YAKINDA"
-	research_upgrade_button.text = "ARAŞTIRMA ALTYAPISI\nSV 0 / 3 // YAKINDA"
-	_set_button_color(firing_range_button, COLOR_READY)
+	lighting_25_button.text = "AYDINLATMA SEVİYESİ 1\nAKTİF // 25%"
+	lighting_50_button.text = "AYDINLATMA SEVİYESİ 2\nKİLİTLİ // VEX-01 // 50%"
+	lighting_75_button.text = "AYDINLATMA SEVİYESİ 3\nKİLİTLİ // VEX-02 // 75%"
+	lighting_100_button.text = "AYDINLATMA SEVİYESİ 4\nKİLİTLİ // VEX-03 // 100%"
+	power_upgrade_button.text = "ENERJİ DAĞITIM AĞI\nKİLİTLİ // VEX-01"
+	security_upgrade_button.text = "GÜVENLİK AĞI\nKİLİTLİ // VEX-02"
+	research_upgrade_button.text = "ARAŞTIRMA ALTYAPISI\nKİLİTLİ // VEX-03"
+	_set_button_color(firing_range_button, COLOR_LOCKED)
 	_set_button_color(research_button, COLOR_LOCKED)
 	_set_button_color(workshop_button, COLOR_LOCKED)
 	_set_button_color(engineering_button, COLOR_LOCKED)
-	_set_button_color(standard_lighting_button, COLOR_ONLINE)
-	_set_button_color(low_power_lighting_button, COLOR_SYSTEM)
-	_set_button_color(emergency_lighting_button, COLOR_SYSTEM)
-	_set_button_color(power_upgrade_button, COLOR_MUTED)
-	_set_button_color(security_upgrade_button, COLOR_MUTED)
-	_set_button_color(research_upgrade_button, COLOR_MUTED)
+	_set_button_color(lighting_25_button, COLOR_ONLINE)
+	_set_button_color(lighting_50_button, COLOR_LOCKED)
+	_set_button_color(lighting_75_button, COLOR_LOCKED)
+	_set_button_color(lighting_100_button, COLOR_LOCKED)
+	_set_button_color(power_upgrade_button, COLOR_LOCKED)
+	_set_button_color(security_upgrade_button, COLOR_LOCKED)
+	_set_button_color(research_upgrade_button, COLOR_LOCKED)
