@@ -42,8 +42,13 @@ def _read(path: Path) -> str:
 def test_base_level_is_tool_compatible_without_changing_runtime_contract() -> None:
     base = _read(BASE_SCRIPT)
     assert base.startswith("@tool\nclass_name VexBaseLevel\nextends Node3D")
-    assert "GameState.begin_level" in base
-    assert "SettingsManager.apply_brightness()" in base
+    ready_start = base.index("func _ready() -> void:")
+    next_func = base.index("\n\nfunc _on_level_ready", ready_start)
+    ready_block = base[ready_start:next_func]
+    assert "if Engine.is_editor_hint():" in ready_block
+    assert ready_block.index("return") < ready_block.index("SettingsManager.apply_brightness()")
+    assert "GameState.begin_level" in ready_block
+    assert "SettingsManager.apply_brightness()" in ready_block
     assert "func get_campaign_completion_stage() -> int:" in base
 
 
