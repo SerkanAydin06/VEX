@@ -23,9 +23,13 @@ enum FacilityStatus {
 @onready var selected_type: Label = %SelectedType
 @onready var status_value: Label = %StatusValue
 @onready var briefing_label: Label = %BriefingLabel
-@onready var select_button: Button = %SelectButton
 @onready var deploy_button: Button = %DeployButton
 @onready var close_button: Button = %CloseButton
+@onready var footer_hint: Label = %FooterHint
+@onready var confirmation_overlay: Control = %ConfirmationOverlay
+@onready var confirmation_body: Label = %ConfirmationBody
+@onready var confirm_button: Button = %ConfirmButton
+@onready var cancel_confirm_button: Button = %CancelConfirmButton
 
 var _mission_definitions: Array[VexMissionDefinition] = []
 var _selected_index := -1
@@ -39,13 +43,15 @@ func _ready() -> void:
 	var buttons := _get_mission_buttons()
 	for index in buttons.size():
 		buttons[index].pressed.connect(_select_mission.bind(index))
-	select_button.pressed.connect(_select_current_operation)
-	deploy_button.pressed.connect(_deploy_current_operation)
+	deploy_button.pressed.connect(_request_deploy_current_operation)
+	confirm_button.pressed.connect(_confirm_deploy_current_operation)
+	cancel_confirm_button.pressed.connect(_close_deploy_confirmation)
 	close_button.pressed.connect(close_menu)
 	if not GameState.hub_mission_changed.is_connected(_on_hub_mission_changed):
 		GameState.hub_mission_changed.connect(_on_hub_mission_changed)
 	if not SettingsManager.language_changed.is_connected(_on_language_changed):
 		SettingsManager.language_changed.connect(_on_language_changed)
+	confirmation_overlay.visible = false
 	terminal_root.visible = false
 
 
@@ -58,6 +64,7 @@ func open_terminal(mission_definitions: Array, allow_selection: bool, allow_depl
 	_allow_deploy = allow_deploy
 	_selected_index = _get_initial_selection_index()
 	_was_paused = get_tree().paused
+	confirmation_overlay.visible = false
 	terminal_root.visible = true
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -72,6 +79,7 @@ func open_terminal(mission_definitions: Array, allow_selection: bool, allow_depl
 func close_menu() -> void:
 	if not terminal_root.visible:
 		return
+	confirmation_overlay.visible = false
 	terminal_root.visible = false
 	get_tree().paused = _was_paused
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if _was_paused else Input.MOUSE_MODE_CAPTURED
@@ -86,7 +94,10 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
-		close_menu()
+		if confirmation_overlay.visible:
+			_close_deploy_confirmation()
+		else:
+			close_menu()
 
 
 func _get_initial_selection_index() -> int:
@@ -104,6 +115,8 @@ func _get_mission_buttons() -> Array[Button]:
 
 
 func _select_mission(index: int) -> void:
+	if confirmation_overlay.visible:
+		return
 	if index < 0 or index >= _mission_definitions.size():
 		return
 	_selected_index = index
@@ -148,7 +161,10 @@ func _refresh_menu() -> void:
 	for index in _mission_definitions.size():
 		if _get_status(index) == FacilityStatus.CLEARED:
 			cleared_count += 1
-	network_summary.text = tr("TERMINAL_MENU_CLEARED_COUNT") % [cleared_count, _mission_definitions.size()]
+	network_summary.text = tr("TERMINAL_MENU_CLEARED_COUNT") % [
+		cleared_count,
+		_mission_definitions.size(),
+	]
 
 	var buttons := _get_mission_buttons()
 	for index in buttons.size():
@@ -195,13 +211,11 @@ func _refresh_menu() -> void:
 			briefing_label.text = tr("TERMINAL_MENU_LOCKED_DETAIL") % selected_definition.campaign_stage
 
 	var is_active := selected_status == FacilityStatus.ACTIVE
-	var is_selected := GameState.hub_selected_mission_path == selected_definition.scene_path
-	select_button.visible = _allow_selection and is_active
-	select_button.disabled = is_selected
-	select_button.text = tr("TERMINAL_MENU_SELECTED") if is_selected else tr("TERMINAL_MENU_SELECT")
 	deploy_button.visible = _allow_deploy and is_active
-	deploy_button.disabled = not is_selected
+	deploy_button.disabled = false
+	deploy_button.text = tr("TERMINAL_MENU_DEPLOY")
 	close_button.text = tr("TERMINAL_MENU_CLOSE")
+	_update_footer_hint()
 
 
 func _refresh_empty_detail() -> void:
@@ -212,29 +226,66 @@ func _refresh_empty_detail() -> void:
 	status_value.text = tr("TERMINAL_STATUS_CLEARED")
 	status_value.add_theme_color_override("font_color", cleared_color)
 	briefing_label.text = tr("TERMINAL_MENU_ALL_CLEARED_DETAIL")
-	select_button.visible = false
 	deploy_button.visible = false
 	close_button.text = tr("TERMINAL_MENU_CLOSE")
+	_update_footer_hint()
 
 
-func _select_current_operation() -> void:
+func _update_footer_hint() -> void:
+	if not _allow_deploy:
+		footer_hint.text = tr("TERMINAL_MENU_FOOTER_HINT")
+		return
+	if TranslationServer.get_locale().begins_with("tr"):
+		footer_hint.text = "[ESC] TERMİNALİ KAPAT // AKTİF OPERASYONU İNCELE VE GÖREVE ÇIK"
+	else:
+		footer_hint.text = "[ESC] CLOSE TERMINAL // REVIEW THE ACTIVE OPERATION AND DEPLOY"
+
+
+func _request_deploy_current_operation() -> void:
+	if not _allow_deploy:
+		return
 	if _selected_index < 0 or _selected_index >= _mission_definitions.size():
 		return
 	if _get_status(_selected_index) != FacilityStatus.ACTIVE:
 		return
 	var definition := _mission_definitions[_selected_index]
-	GameState.select_hub_mission(definition.scene_path, definition.display_name)
-	_refresh_menu()
-	if deploy_button.visible and not deploy_button.disabled:
+	confirmation_body.text = _get_deploy_confirmation_text(definition)
+	confirmation_overlay.visible = true
+	confirm_button.text = tr("TERMINAL_MENU_DEPLOY")
+	cancel_confirm_button.text = tr("UI_CANCEL")
+	confirm_button.grab_focus()
+
+
+func _get_deploy_confirmation_text(definition: VexMissionDefinition) -> String:
+	var mission_name := tr(definition.display_name)
+	if TranslationServer.get_locale().begins_with("tr"):
+		return "%s operasyonunu başlatmak istiyor musun?\n\nOnaydan sonra görev yüklenir." % mission_name
+	return "Start operation %s?\n\nThe mission will load after confirmation." % mission_name
+
+
+func _close_deploy_confirmation() -> void:
+	confirmation_overlay.visible = false
+	if deploy_button.visible:
 		deploy_button.grab_focus()
+	elif _selected_index >= 0:
+		var buttons := _get_mission_buttons()
+		if _selected_index < buttons.size():
+			buttons[_selected_index].grab_focus()
 
 
-func _deploy_current_operation() -> void:
-	if _selected_index < 0 or _selected_index >= _mission_definitions.size():
+func _confirm_deploy_current_operation() -> void:
+	if not confirmation_overlay.visible:
 		return
+	if _selected_index < 0 or _selected_index >= _mission_definitions.size():
+		_close_deploy_confirmation()
+		return
+	if _get_status(_selected_index) != FacilityStatus.ACTIVE:
+		_close_deploy_confirmation()
+		return
+
 	var definition := _mission_definitions[_selected_index]
-	if GameState.hub_selected_mission_path != definition.scene_path:
-		GameState.select_hub_mission(definition.scene_path, definition.display_name)
+	confirmation_overlay.visible = false
+	GameState.select_hub_mission(definition.scene_path, definition.display_name)
 	terminal_root.visible = false
 	get_tree().paused = false
 	if not GameState.deploy_selected_hub_mission():
@@ -251,3 +302,7 @@ func _on_hub_mission_changed(_path: String, _label: String) -> void:
 
 func _on_language_changed(_locale: String) -> void:
 	_refresh_menu()
+	if confirmation_overlay.visible and _selected_index >= 0 and _selected_index < _mission_definitions.size():
+		confirmation_body.text = _get_deploy_confirmation_text(_mission_definitions[_selected_index])
+		confirm_button.text = tr("TERMINAL_MENU_DEPLOY")
+		cancel_confirm_button.text = tr("UI_CANCEL")
