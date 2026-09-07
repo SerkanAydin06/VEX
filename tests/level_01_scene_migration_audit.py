@@ -3,8 +3,12 @@ import re
 
 
 ROOT = Path(__file__).resolve().parents[1]
+LEVEL_SCENE = ROOT / "scenes" / "levels" / "level_01.tscn"
+STRUCTURE_SOURCE = ROOT / "scenes" / "levels" / "level_01_structure_source.tscn"
 CONTENT = ROOT / "scenes" / "levels" / "level_01_first_fracture_content.tscn"
+ENVIRONMENT = ROOT / "scenes" / "levels" / "level_01_environment_story.tscn"
 LEVEL_SCRIPT = ROOT / "scripts" / "levels" / "level_01.gd"
+ENVIRONMENT_SCRIPT = ROOT / "scripts" / "levels" / "level_01_environment_story.gd"
 TRAINING = ROOT / "scenes" / "levels" / "level_01_training_overlay.tscn"
 RECORD_SCRIPT = ROOT / "scripts" / "props" / "field_record_terminal.gd"
 CINDER_SCRIPT = ROOT / "scripts" / "actors" / "cinderhound.gd"
@@ -12,6 +16,40 @@ CINDER_SCRIPT = ROOT / "scripts" / "actors" / "cinderhound.gd"
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def test_active_level_scene_is_a_physically_clean_mission_shell() -> None:
+    scene = _read(LEVEL_SCENE)
+    assert 'map_revision = "VEX01-FIRST-FRACTURE-R37-ENV01"' in scene
+    assert '[node name="Player"' in scene
+    assert '[node name="HUD"' in scene
+    assert '[node name="LevelMusic"' in scene
+    assert '[node name="AmbientLoop"' in scene
+    for forbidden in [
+        'res://scenes/actors/ravager.tscn',
+        'res://scenes/actors/veilmaw.tscn',
+        'res://scenes/props/pickup.tscn',
+        '[node name="Enemies"',
+        '[node name="Pickups"',
+        '[node name="Triggers"',
+        'pickup_type =',
+        'enemy_id =',
+        'Ravager_',
+        'Veilmaw_',
+    ]:
+        assert forbidden not in scene
+
+
+def test_structure_source_preserves_the_authored_37_room_spine() -> None:
+    structure = _read(STRUCTURE_SOURCE)
+    for room_number in range(1, 38):
+        assert f'Floor_R{room_number:02d}' in structure
+        assert f'Ceiling_R{room_number:02d}' in structure
+    assert 'Door_01_03' in structure
+    assert 'Door_25_27' in structure
+    assert 'Door_35_37' in structure
+    assert 'CeilingWhite_Room_37' in structure
+    assert 'Lamp_35_37_2' in structure
 
 
 def test_first_fracture_content_uses_only_cinder_hounds() -> None:
@@ -93,14 +131,59 @@ def test_finish_has_no_enemy_id_gate_and_returns_to_bastion() -> None:
     assert 'next_level_path = "res://scenes/hub/bastion_7.tscn"' in finish_block
 
 
-def test_level_installs_canonical_content_before_base_level_counting() -> None:
+def test_level_installs_structure_story_and_content_before_base_counting() -> None:
     script = _read(LEVEL_SCRIPT)
-    install_call = script.index("\t_install_first_fracture_content()")
+    structure_call = script.index("\t_install_authored_structure()")
+    environment_call = script.index("\t_install_environment_story()")
+    content_call = script.index("\t_install_first_fracture_content()")
     base_ready_call = script.index("\tsuper._ready()")
-    assert install_call < base_ready_call
-    assert 'for legacy_container_name in [&"Enemies", &"Pickups", &"Triggers"]' in script
+    assert structure_call < environment_call < content_call < base_ready_call
+    assert 'STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_01_structure_source.tscn"' in script
+    for structural_name in [
+        '"WorldEnvironment"',
+        '"Geometry"',
+        '"Doors"',
+        '"RoomLights"',
+        '"Lights"',
+        '"Props"',
+    ]:
+        assert structural_name in script
     assert 'preload("res://scenes/levels/level_01_first_fracture_content.tscn")' in script
-    assert 'map_revision = "VEX01-FIRST-FRACTURE-R37"' in script
+    assert 'preload("res://scenes/levels/level_01_environment_story.tscn")' in script
+    assert 'legacy_container_name' not in script
+    assert 'map_revision = "VEX01-FIRST-FRACTURE-R37-ENV01"' in script
+
+
+def test_environment_story_is_collision_free_and_scene_authored() -> None:
+    environment = _read(ENVIRONMENT)
+    assert environment.count('instance=ExtResource("2_display")') == 6
+    for room_code in [
+        "R03 // SEC",
+        "R17 // Q-CAM",
+        "R23 // MED",
+        "R29 // MNT",
+        "R35 // EVAC",
+        "R37 // NET",
+    ]:
+        assert room_code in environment
+    for disabled_room in [17, 29, 35, 37]:
+        assert f'CeilingWhite_Room_{disabled_room:02d}' in environment
+    assert 'FinalBreachCore' in environment
+    assert 'BreachLight' in environment
+    assert 'Material_breach_core' in environment
+    assert 'korvath_rift' not in environment.lower()
+    assert 'StaticBody3D' not in environment
+    assert 'CollisionShape3D' not in environment
+    assert 'Area3D' not in environment
+
+
+def test_environment_runtime_keeps_visual_tuning_in_inspector() -> None:
+    script = _read(ENVIRONMENT_SCRIPT)
+    assert '@export var disabled_structure_light_paths: Array[NodePath]' in script
+    assert '@export_range(0.1, 6.0, 0.1) var breach_pulse_speed' in script
+    assert '@export_range(0.0, 0.18, 0.005) var breach_scale_pulse' in script
+    assert '@export_range(0.0, 0.6, 0.01) var breach_light_pulse' in script
+    assert 'light_root.visible = false' in script
 
 
 def test_first_campaign_stage_starts_unarmed_until_r03_pickup() -> None:
