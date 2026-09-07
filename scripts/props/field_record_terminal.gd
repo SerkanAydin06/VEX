@@ -2,9 +2,12 @@ class_name VexFieldRecordTerminal
 extends StaticBody3D
 
 const DiscoveryOverlay = preload("res://scripts/ui/discovery_notification_overlay.gd")
+const RecordDB = preload("res://scripts/data/vex_field_record_database.gd")
 
 @export_category("Kayıt")
 @export var record_id: StringName = &""
+# Bu alanlar editor/fallback sunumu içindir. record_id veritabanında varsa
+# runtime okuyucu kanonik metni VexFieldRecordDatabase üzerinden kullanır.
 @export var category_tr := "KAYIT"
 @export var category_en := "RECORD"
 @export var title_tr := "SAHA KAYDI"
@@ -57,9 +60,18 @@ func _exit_tree() -> void:
 
 func _open_record() -> void:
 	_ensure_reader()
-	_reader_category.text = _localized(category_tr, category_en)
-	_reader_title.text = _localized(title_tr, title_en)
-	_reader_body.text = _localized(body_tr, body_en)
+	var database_entry := RecordDB.get_record(record_id)
+	var display_category := _localized(category_tr, category_en)
+	var display_title := _localized(title_tr, title_en)
+	var display_body := _localized(body_tr, body_en)
+	if not database_entry.is_empty():
+		display_category = RecordDB.localized(database_entry, "category")
+		display_title = RecordDB.localized(database_entry, "title")
+		display_body = RecordDB.localized(database_entry, "body")
+
+	_reader_category.text = display_category
+	_reader_title.text = display_title
+	_reader_body.text = display_body
 	_reader_layer.visible = true
 	_is_open = true
 	_ignore_close_until_msec = Time.get_ticks_msec() + 120
@@ -77,7 +89,7 @@ func _open_record() -> void:
 			&"record",
 			"KAYIT ÇÖZÜLDÜ",
 			"RECORD DECODED",
-			_localized(title_tr, title_en)
+			display_title
 		)
 	if not objective_after_read.is_empty():
 		GameState.set_objective(objective_after_read)
