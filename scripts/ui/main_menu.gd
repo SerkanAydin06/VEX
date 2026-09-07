@@ -1,8 +1,8 @@
 extends Control
 
-@export_category("Campaign Summary")
+@export_category("Playable Build Summary")
 @export_range(1, 99, 1) var campaign_level_count := 3
-@export_range(0, 99, 1) var campaign_secret_count := 5
+@export_range(0, 99, 1) var campaign_secret_count := 3
 
 @onready var background: TextureRect = %Background
 @onready var logo: TextureRect = %Logo
@@ -20,11 +20,14 @@ extends Control
 @onready var modal_shade: ColorRect = %ModalShade
 @onready var settings_panel: VexSettingsPanel = %SettingsPanel
 @onready var credits_panel: PanelContainer = %CreditsPanel
+@onready var credits_title: Label = $CreditsPanel/Margin/VBox/Title
 @onready var credits_body: Label = $CreditsPanel/Margin/VBox/Body
 @onready var credits_close_button: Button = %CreditsCloseButton
 @onready var confirm_panel: PanelContainer = %ConfirmPanel
+@onready var confirm_body: Label = $ConfirmPanel/Margin/VBox/Body
 @onready var confirm_yes_button: Button = %ConfirmYesButton
 @onready var confirm_no_button: Button = %ConfirmNoButton
+@onready var facility_status_label: Label = $FacilityStatus/VBox/Label
 @onready var menu_music: AudioStreamPlayer = $MenuMusic
 
 var _ambient_time := 0.0
@@ -212,7 +215,10 @@ func _on_language_changed(_locale: String) -> void:
 
 
 func _refresh_localized_dynamic_text() -> void:
-	credits_body.text = tr("MAIN_CREDITS_BODY").replace("\\n", "\n")
+	credits_title.text = tr("CAMPAIGN_PROTOCOL_TITLE")
+	credits_body.text = tr("CAMPAIGN_ARCHIVE_BODY").replace("\\n", "\n")
+	confirm_body.text = tr("CAMPAIGN_NEW_GAME_CONFIRM")
+	facility_status_label.text = tr("CH01_NAME")
 
 
 func _start_menu_music() -> void:
