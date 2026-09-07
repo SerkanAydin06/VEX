@@ -31,6 +31,8 @@ def test_physical_terminal_screen_has_subtle_runtime_signal_motion() -> None:
 
     assert '@export var screen_motion_enabled := true' in script
     assert "func _process(delta: float) -> void:" in script
+    assert "var signal :=" not in script
+    assert "var signal_amount :=" in script
     assert "screen_surface.position = _screen_base_position + Vector3" in script
     assert "screen_surface.pixel_size = _screen_base_pixel_size * scale_pulse" in script
     assert "screen_surface.modulate = Color(brightness, cyan_bias, 1.0, 1.0)" in script
