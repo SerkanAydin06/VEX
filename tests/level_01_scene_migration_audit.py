@@ -139,13 +139,15 @@ def test_level_installs_structure_story_and_content_before_base_counting() -> No
     base_ready_call = script.index("\tsuper._ready()")
     assert structure_call < environment_call < content_call < base_ready_call
     assert 'STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_01_structure_source.tscn"' in script
+    assert "const STRUCTURE_NODE_NAMES := [" in script
+    assert "PackedStringArray([" not in script
     for structural_name in [
-        '"WorldEnvironment"',
-        '"Geometry"',
-        '"Doors"',
-        '"RoomLights"',
-        '"Lights"',
-        '"Props"',
+        '&"WorldEnvironment"',
+        '&"Geometry"',
+        '&"Doors"',
+        '&"RoomLights"',
+        '&"Lights"',
+        '&"Props"',
     ]:
         assert structural_name in script
     assert 'preload("res://scenes/levels/level_01_first_fracture_content.tscn")' in script
@@ -188,7 +190,11 @@ def test_environment_runtime_keeps_visual_tuning_in_inspector() -> None:
 
 def test_first_campaign_stage_starts_unarmed_until_r03_pickup() -> None:
     script = _read(LEVEL_SCRIPT)
-    assert "if GameState.campaign_stage != 0 or player == null:" in script
+    assert "if GameState.campaign_stage != 0:" in script
+    assert 'var level_player := get_node_or_null("Player") as Node' in script
+    assert "if level_player == null:" in script
+    assert 'level_player.get_node_or_null("WeaponController")' in script
+    assert "if GameState.campaign_stage != 0 or player == null:" not in script
     assert "weapon_controller.unlocked_weapons.clear()" in script
     assert "weapon_controller.acquired_weapons.clear()" in script
     assert 'weapon_controller.current_weapon_id = &""' in script
