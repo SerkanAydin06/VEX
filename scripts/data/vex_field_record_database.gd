@@ -47,7 +47,7 @@ const RECORDS := [
 		"id": &"vex02_kor_thermal_source_signature",
 		"order": 4,
 		"chapter": 2,
-		"room": "R08",
+		"room": "R33",
 		"category_tr": "TEKNİK // RÖLE",
 		"category_en": "TECHNICAL // RELAY",
 		"title_tr": "KOR-TERMAL KAYNAK İMZASI",
