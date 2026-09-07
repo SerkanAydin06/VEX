@@ -139,6 +139,9 @@ var _record_manager: VexRecordManager = null
 
 func _ready() -> void:
 	_record_manager = RecordManagerScript.new() as VexRecordManager
+	if _record_manager == null:
+		push_error("VEX saha kayıt yöneticisi oluşturulamadı.")
+		return
 	add_child(_record_manager)
 	_record_manager.record_changed.connect(_on_field_record_changed)
 
@@ -159,11 +162,14 @@ func capture_state() -> Dictionary:
 		var area_id := StringName(str(definition.get("id", "")))
 		if is_area_unlocked(area_id):
 			unlocked.append(str(area_id))
+	var field_record_state: Dictionary = {}
+	if _record_manager != null:
+		field_record_state = _record_manager.capture_state()
 	return {
 		"unlocked_areas": unlocked,
 		"lighting_mode": int(_lighting_mode),
 		"upgrade_levels": _upgrade_levels.duplicate(true),
-		"field_record_state": _record_manager.capture_state() if _record_manager != null else {},
+		"field_record_state": field_record_state,
 	}
 
 
@@ -211,19 +217,28 @@ func restore_state(state: Dictionary) -> void:
 
 
 func discover_field_record(record_id: StringName) -> bool:
-	return _record_manager != null and _record_manager.discover_record(record_id)
+	if _record_manager == null:
+		return false
+	return _record_manager.discover_record(record_id)
 
 
 func is_field_record_discovered(record_id: StringName) -> bool:
-	return _record_manager != null and _record_manager.is_record_discovered(record_id)
+	if _record_manager == null:
+		return false
+	return _record_manager.is_record_discovered(record_id)
 
 
 func get_discovered_field_record_ids() -> Array[StringName]:
-	return _record_manager.get_discovered_record_ids() if _record_manager != null else []
+	if _record_manager == null:
+		var empty_ids: Array[StringName] = []
+		return empty_ids
+	return _record_manager.get_discovered_record_ids()
 
 
 func get_discovered_field_record_count() -> int:
-	return _record_manager.get_discovered_count() if _record_manager != null else 0
+	if _record_manager == null:
+		return 0
+	return _record_manager.get_discovered_count()
 
 
 func sanitize_for_campaign_stage(campaign_stage: int) -> void:
