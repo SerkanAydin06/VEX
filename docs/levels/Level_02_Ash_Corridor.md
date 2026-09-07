@@ -20,14 +20,15 @@ Ravager, Vaskari Raptor, Vaskari Ravager, Basalt Juggernaut ve Voidweaver bu bö
 
 ## 2. Sahne mimarisi
 
-Eski `level_02.tscn`, fiziksel tesis üretimi açısından değerli fakat gameplay açısından 30 bölümlük yeni kampanyadan önce hazırlanmış bir sahneydi. Bu nedenle yapı iki katmana ayrıldı:
+Aktif `level_02.tscn` artık yalnız bir runtime shell değildir; editörde kanonik bölüm katmanlarını doğrudan gösterir:
 
-- `level_02.tscn` → küçük canonical mission shell; Player, HUD, müzik ve briefing metadata.
-- `level_02_structure_source.tscn` → eski sahnenin authored fiziksel kaynağı. Runtime'a yalnız şu kökler aktarılır: `WorldEnvironment`, `Geometry`, `EnemyNavigation`, `Doors`, `RoomLights`, `Lights`, `Props`.
-- `level_02_ash_corridor_content.tscn` → yalnız kanonik düşmanlar, SG-04, sigorta zinciri, kaynaklar, kayıtlar, secret ve finish control.
-- `level_02_environment_story.tscn` → collision'sız termal izler, oda ekranları, yanık yüzeyler ve sıcaklık ışıkları.
+- `level_02_environment_story.tscn` → ana sahnede doğrudan instance ve **Editable Children**; termal izler, oda ekranları, yanık yüzeyler ve sıcaklık ışıkları ana viewport'ta görülür.
+- `level_02_ash_corridor_content.tscn` → ana sahnede doğrudan instance ve **Editable Children**; Cinder Hound/Spitter encounter'ları, SG-04, sigorta zinciri, kaynaklar, kayıtlar, secret ve finish control doğrudan görünür.
+- `level_02_structure_source.tscn` → eski authored fiziksel tesis kaynağı. İçindeki legacy gameplay nedeniyle tamamı ana level'a instance edilmez.
 
-Eski structure source içindeki `Enemies`, `Pickups` ve `Triggers` aktif SceneTree'ye **hiç eklenmez**. Böylece legacy düşmanların `_ready()` çalıştırması veya enemy count'a girmesi engellenir.
+`level_02.gd` `@tool` editor preview kullanır ve structure source içinden yalnız `WorldEnvironment`, `Geometry`, `EnemyNavigation`, `Doors`, `RoomLights`, `Lights` ve `Props` root'larını filtreler. Legacy `Enemies/Pickups/Triggers` hiçbir zaman aktif göreve veya editor preview'a taşınmaz.
+
+Runtime structure `_enter_tree()` aşamasında gameplay çocuklarından önce kurulur. Kapı scriptleri runtime aktörleri olarak non-tool kalır; editör preview'ında yalnız authored kapı geometrisi gösterilir, mavi/sarı/kırmızı kanonik kilit semantiği yalnız oyun çalışırken kapılar SceneTree'ye girmeden önce uygulanır. Fiziksel yapı değişikliklerinin otoritesi `level_02_structure_source.tscn`, gameplay/environment yerleşimlerinin otoritesi ise doğrudan görünen alt sahnelerdir.
 
 ## 3. Hikâye amacı
 
@@ -147,9 +148,9 @@ Bulunan kayıtlar campaign save'e kalıcı yazılır ve Bastion-7 Ana Terminali 
 
 ## 10. Kabul kriterleri
 
-- [x] Aktif `level_02.tscn` legacy enemy/pickup/trigger içermeyen küçük mission shell.
-- [x] Eski fiziksel geometri ayrı structure source olarak korunuyor.
-- [x] Runtime yalnız fiziksel/visual structure köklerini transfer ediyor.
+- [x] Ana `level_02.tscn` canonical content/environment katmanlarını editörde doğrudan gösteriyor ve Editable Children ile açabiliyor.
+- [x] Eski fiziksel geometri ayrı structure source olarak korunuyor ve yalnız güvenli fiziksel/visual root'lar filtreleniyor.
+- [x] Legacy enemy/pickup/trigger root'ları aktif göreve ve editor preview'a girmiyor.
 - [x] Aktif düşman ailesi yalnız Cinder Hound + Cinder Spitter.
 - [x] Easy/Normal/Hard/Nightmare toplamları 11/15/18/20.
 - [x] SG-04 Breacher Bölüm 2 ilk kalıcı shotgun edinimi olarak sahada mevcut.
