@@ -8,6 +8,7 @@ STRUCTURE = ROOT / "scenes" / "levels" / "level_03_structure_source.tscn"
 CONTENT = ROOT / "scenes" / "levels" / "level_03_pressure_line_content.tscn"
 ENVIRONMENT = ROOT / "scenes" / "levels" / "level_03_environment_story.tscn"
 LEVEL_SCRIPT = ROOT / "scripts" / "levels" / "level_03.gd"
+HINT_SCRIPT = ROOT / "scripts" / "props" / "one_shot_notification_trigger.gd"
 RESCUE_SCRIPT = ROOT / "scripts" / "props" / "survivor_rescue_terminal.gd"
 EXTRACTION_SCRIPT = ROOT / "scripts" / "levels" / "level_03_extraction_switch.gd"
 RECORD_DB = ROOT / "scripts" / "data" / "vex_field_record_database.gd"
@@ -83,8 +84,11 @@ def test_juggernaut_species_stats_remain_actor_authoritative() -> None:
     assert "520" not in content
 
 
-def test_p07_is_the_chapter03_weapon_and_is_found_early() -> None:
+def test_p07_is_the_chapter03_weapon_and_flashlight_is_taught_once() -> None:
     content = _read(CONTENT)
+    shell = _read(SHELL)
+    hint_script = _read(HINT_SCRIPT)
+    translations = _read(TRANSLATIONS)
     plan = _read(PLAN)
     weapon = _read(ROOT / "resources" / "weapons" / "p07.tres")
 
@@ -97,6 +101,13 @@ def test_p07_is_the_chapter03_weapon_and_is_found_early() -> None:
     assert 'magazine_size = 16' in weapon
     assert 'damage_per_pellet = 17' in weapon
     assert 'supports_flashlight = true' in weapon
+
+    assert '[node name="P07FlashlightHint"' in shell
+    assert 'message_key = "CH03_FLASHLIGHT_HINT"' in shell
+    assert 'required_weapon_id = &"p07"' in shell
+    assert "CH03_FLASHLIGHT_HINT" in translations
+    assert "var _consumed := false" in hint_script
+    assert "weapon_controller.owns_weapon(required_weapon_id)" in hint_script
 
 
 def test_three_stage_access_chain_is_blue_yellow_red() -> None:
@@ -187,7 +198,8 @@ def test_mission_translation_and_bastion_return_match_chapter03() -> None:
     assert 'terminal_code = "BÖLÜM-03"' in mission
     for key in [
         "CH03_NAME", "CH03_BRIEFING_STORY", "CH03_MISSION_BRIEF", "CH03_COMPLETE",
-        "CH03_RESCUE_INTERACT", "CH03_FINISH_REQUIRES_RESCUE", "HUB_SELIN_POST_CH03",
+        "CH03_RESCUE_INTERACT", "CH03_FINISH_REQUIRES_RESCUE", "CH03_FLASHLIGHT_HINT",
+        "HUB_SELIN_POST_CH03",
     ]:
         assert key in translations
 
