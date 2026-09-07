@@ -15,3 +15,7 @@ CH01_BLUE_ACCESS,MAVİ ERİŞİM KARTI,BLUE ACCESS CARD
 CH01_DUAL_ACCESS,MAVİ + KIRMIZI ERİŞİM KARTI,BLUE + RED ACCESS CARDS
 CH01_MISSION_BRIEF,"İlk Kırılma tesisinden sağ çık. P-01'i güvenlik dolabından al, mavi ve kırmızı erişim kartlarını bul ve Bastion-7 acil durum hattına ulaş.","Survive the First Fracture facility. Recover the P-01 from the security locker, find the blue and red access cards and reach the Bastion-7 emergency line."
 CH01_COMPLETE,BÖLÜM 01 TAMAMLANDI // İLK KIRILMA KAYITLARI BASTION-7'YE AKTARILDI,CHAPTER 01 COMPLETE // FIRST FRACTURE RECORDS TRANSFERRED TO BASTION-7
+CH01_HUB_RETURN,İLK KIRILMA TAMAMLANDI // KÜL KORİDORU OPERASYONU HAZIR,FIRST FRACTURE COMPLETE // ASH CORRIDOR OPERATION READY
+CAMPAIGN_PROTOCOL_TITLE,VEX // YARIK PROTOKOLÜ,VEX // RIFT PROTOCOL
+CAMPAIGN_ARCHIVE_BODY,"30 BÖLÜMLÜK ANA OPERASYON PLANI\n\nKORVATH // THORNWILD // VASKARI // NHAL VEIL // AETHER LOOM\n\nBASTION-7 OPERASYON KAYITLARI GÖREVLER TAMAMLANDIKÇA AÇILIR.","30-CHAPTER MAIN OPERATION PLAN\n\nKORVATH // THORNWILD // VASKARI // NHAL VEIL // AETHER LOOM\n\nBASTION-7 OPERATION RECORDS UNLOCK AS MISSIONS ARE COMPLETED."
+CAMPAIGN_NEW_GAME_CONFIRM,Mevcut kampanya ilerlemesi sıfırlanacak. Bölüm 01 // İlk Kırılma'dan yeni operasyon başlatmak istiyor musun?,Current campaign progress will be reset. Start a new operation from Chapter 01 // First Fracture?
