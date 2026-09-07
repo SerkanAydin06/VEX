@@ -1,0 +1,78 @@
+extends Node
+
+signal record_changed(record_id: StringName)
+
+const RecordDB = preload("res://scripts/data/vex_field_record_database.gd")
+
+var discovered_record_ids: Array[StringName] = []
+
+
+func discover_record(record_id: StringName) -> bool:
+	if record_id == &"" or discovered_record_ids.has(record_id):
+		return false
+	if not RecordDB.has_record(record_id):
+		push_warning("VEX saha kaydı veritabanında bulunamadı: %s" % str(record_id))
+		return false
+
+	discovered_record_ids.append(record_id)
+	record_changed.emit(record_id)
+
+	# Saha kaydı meta-ilerlemedir. Görev içindeki konum/can/mühimmat checkpoint'e
+	# dönüşmez; GameState son güvenli görev başlangıcıyla yalnız campaign metadata'yı yazar.
+	if not GameState.save_campaign_metadata_progress("field_record"):
+		discovered_record_ids.erase(record_id)
+		record_changed.emit(record_id)
+		GameState.notify(GameState.get_save_failure_message())
+		return false
+	return true
+
+
+func is_record_discovered(record_id: StringName) -> bool:
+	return record_id != &"" and discovered_record_ids.has(record_id)
+
+
+func get_discovered_record_ids() -> Array[StringName]:
+	var result := discovered_record_ids.duplicate()
+	result.sort_custom(func(a: StringName, b: StringName) -> bool:
+		var entry_a := RecordDB.get_record(a)
+		var entry_b := RecordDB.get_record(b)
+		return int(entry_a.get("order", 0)) < int(entry_b.get("order", 0))
+	)
+	return result
+
+
+func get_discovered_count() -> int:
+	return discovered_record_ids.size()
+
+
+func capture_state() -> Dictionary:
+	return {
+		"discovered_record_ids": discovered_record_ids.duplicate(),
+	}
+
+
+func restore_state(state: Dictionary) -> void:
+	discovered_record_ids.clear()
+	var stored: Variant = state.get("discovered_record_ids", [])
+	if stored is PackedStringArray:
+		for value: String in stored:
+			_add_restored_record(StringName(value))
+	elif stored is Array:
+		for value: Variant in stored:
+			_add_restored_record(StringName(str(value)))
+	record_changed.emit(&"")
+
+
+func reset_campaign_state() -> void:
+	if discovered_record_ids.is_empty():
+		return
+	discovered_record_ids.clear()
+	record_changed.emit(&"")
+
+
+func _add_restored_record(record_id: StringName) -> void:
+	if record_id == &"" or discovered_record_ids.has(record_id):
+		return
+	if not RecordDB.has_record(record_id):
+		return
+	discovered_record_ids.append(record_id)
