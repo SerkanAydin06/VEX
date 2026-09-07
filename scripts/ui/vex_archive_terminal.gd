@@ -4,6 +4,12 @@ extends CanvasLayer
 const ArchiveDB = preload("res://scripts/data/vex_archive_database.gd")
 const VEX_LOGO = preload("res://assets/ui/vex_logo.png")
 
+# Vaskari Ravager predates the canonical character-sheet manifest format.
+# Keep its authored idle frame explicit instead of displaying the whole legacy sheet.
+const LEGACY_PREVIEW_REGIONS := {
+	&"vaskari_ravager": Rect2(682.0, 512.0, 341.0, 512.0),
+}
+
 enum Section {
 	CREATURES,
 	UNIVERSES,
@@ -148,13 +154,12 @@ func _refresh_entries() -> void:
 		return
 	_selected_index = clampi(_selected_index, 0, _current_entries.size() - 1)
 	for index in _current_entries.size():
-		var entry := _current_entries[index]
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(0.0, 58.0)
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.toggle_mode = true
 		button.button_pressed = index == _selected_index
-		button.text = _get_entry_button_text(entry, index)
+		button.text = _get_entry_button_text(_current_entries[index], index)
 		button.pressed.connect(_select_entry.bind(index))
 		entry_list.add_child(button)
 
@@ -212,19 +217,37 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 		Section.CREATURES:
 			if not _is_enemy_discovered(entry):
 				return "XENO-%02d  //  ???" % (index + 1)
-			return "%s  //  %s" % [entry.get("name", "UNKNOWN"), _get_universe_name(entry.get("universe", &""))]
+			return "%s  //  %s" % [
+				entry.get("name", "UNKNOWN"),
+				_get_universe_name(_entry_string_name(entry, "universe")),
+			]
 		Section.UNIVERSES, Section.THREAT_ANALYSIS:
-			var known := _is_universe_known(entry)
-			return str(entry.get("name", "UNKNOWN")) if known else _t("SINIFLANDIRILMAMIŞ GERÇEKLİK %02d" % (index + 1), "UNCLASSIFIED REALITY %02d" % (index + 1))
+			if _is_universe_known(entry):
+				return str(entry.get("name", "UNKNOWN"))
+			return _t(
+				"SINIFLANDIRILMAMIŞ GERÇEKLİK %02d" % (index + 1),
+				"UNCLASSIFIED REALITY %02d" % (index + 1)
+			)
 		Section.RECORDS:
-			return str(entry.get("title", "RECORD")) if _is_log_unlocked(entry) else _t("ŞİFRELİ KAYIT // %02d" % (index + 1), "ENCRYPTED RECORD // %02d" % (index + 1))
+			if _is_log_unlocked(entry):
+				return str(entry.get("title", "RECORD"))
+			return _t(
+				"ŞİFRELİ KAYIT // %02d" % (index + 1),
+				"ENCRYPTED RECORD // %02d" % (index + 1)
+			)
 		_:
 			return str(entry.get("title", "DATA"))
 
 
 func _refresh_detail() -> void:
 	if _selected_index < 0 or _selected_index >= _current_entries.size():
-		_set_detail(_t("VERİ YOK", "NO DATA"), "", _t("Bu bölümde görüntülenecek kayıt yok.", "No records are available in this section."), null, true)
+		_set_detail(
+			_t("VERİ YOK", "NO DATA"),
+			"",
+			_t("Bu bölümde görüntülenecek kayıt yok.", "No records are available in this section."),
+			null,
+			true
+		)
 		return
 	var entry := _current_entries[_selected_index]
 	match _current_section:
@@ -255,14 +278,39 @@ func _show_enemy(entry: Dictionary) -> void:
 			true
 		)
 		return
-	var universe := ArchiveDB.get_universe(entry.get("universe", &""))
-	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("GÖZLENEN DAVRANIŞ", "OBSERVED BEHAVIOR"), ArchiveDB.localized(entry, "behavior")]
-	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("TAKTİK KARŞILIK", "TACTICAL RESPONSE"), ArchiveDB.localized(entry, "tactic")]
-	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("EKOLOJİK / TOPLUMSAL ROL", "ECOLOGICAL / SOCIAL ROLE"), ArchiveDB.localized(entry, "lore")]
-	body += "[color=#78cbd8]%s[/color]\n%s" % [_t("KAYNAK GERÇEKLİK", "ORIGIN REALITY"), ArchiveDB.localized(universe, "extraction")]
+
+	var universe_id := _entry_string_name(entry, "universe")
+	var universe := ArchiveDB.get_universe(universe_id)
+	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("GÖZLENEN DAVRANIŞ", "OBSERVED BEHAVIOR"),
+		ArchiveDB.localized(entry, "behavior"),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("TAKTİK KARŞILIK", "TACTICAL RESPONSE"),
+		ArchiveDB.localized(entry, "tactic"),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("EKOLOJİK / TOPLUMSAL ROL", "ECOLOGICAL / SOCIAL ROLE"),
+		ArchiveDB.localized(entry, "lore"),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s" % [
+		_t("KAYNAK GERÇEKLİK", "ORIGIN REALITY"),
+		ArchiveDB.localized(universe, "extraction"),
+	]
 	_set_detail(
 		str(entry.get("name", "UNKNOWN")),
-		_t("KÖKEN // %s    ROL // %s    TEHDİT // %s" % [_get_universe_name(entry.get("universe", &"")), ArchiveDB.localized(entry, "role"), entry.get("threat", "?")], "ORIGIN // %s    ROLE // %s    THREAT // %s" % [_get_universe_name(entry.get("universe", &"")), ArchiveDB.localized(entry, "role"), entry.get("threat", "?")]),
+		_t(
+			"KÖKEN // %s    ROL // %s    TEHDİT // %s" % [
+				_get_universe_name(universe_id),
+				ArchiveDB.localized(entry, "role"),
+				entry.get("threat", "?"),
+			],
+			"ORIGIN // %s    ROLE // %s    THREAT // %s" % [
+				_get_universe_name(universe_id),
+				ArchiveDB.localized(entry, "role"),
+				entry.get("threat", "?"),
+			]
+		),
 		body,
 		_get_enemy_preview(entry),
 		false
@@ -274,25 +322,43 @@ func _show_universe(entry: Dictionary) -> void:
 		_set_detail(
 			_t("SINIFLANDIRILMAMIŞ GERÇEKLİK", "UNCLASSIFIED REALITY"),
 			_t("XENO BAĞLANTISI DOĞRULANMADI", "XENO LINK UNVERIFIED"),
-			_t("Bu gerçekliğe ait doğrulanmış bir saha örneği bulunmuyor. İlk doğrulanmış temas sonrası kaynak, ekoloji ve baskı profili açılacak.", "No verified field specimen from this reality is available. Resource, ecology and pressure profiles will unlock after first confirmed contact."),
+			_t(
+				"Bu gerçekliğe ait doğrulanmış bir saha örneği bulunmuyor. İlk doğrulanmış temas sonrası kaynak, ekoloji ve baskı profili açılacak.",
+				"No verified field specimen from this reality is available. Resource, ecology and pressure profiles will unlock after first confirmed contact."
+			),
 			VEX_LOGO,
 			true
 		)
 		return
-	var ids: Array[StringName] = ArchiveDB.get_enemy_ids_for_universe(entry.get("id", &""))
-	var discovered_names: Array[String] = []
+
+	var ids := ArchiveDB.get_enemy_ids_for_universe(_entry_string_name(entry, "id"))
+	var discovered_names := PackedStringArray()
 	for enemy_id: StringName in ids:
 		var enemy := ArchiveDB.get_enemy(enemy_id)
 		if not enemy.is_empty() and _is_enemy_discovered(enemy):
 			discovered_names.append(str(enemy.get("name", enemy_id)))
-	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("GERÇEKLİK KİMLİĞİ", "REALITY IDENTITY"), ArchiveDB.localized(entry, "identity")]
-	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("VEX KAYNAK ÇEKİMİ", "VEX EXTRACTION"), ArchiveDB.localized(entry, "extraction")]
-	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("SAHA BASKI PROFİLİ", "FIELD PRESSURE PROFILE"), ArchiveDB.localized(entry, "pressure")]
-	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("GÖRSEL İMZA", "VISUAL SIGNATURE"), ArchiveDB.localized(entry, "palette")]
-	body += "[color=#78cbd8]%s[/color]\n%s" % [_t("DOĞRULANAN TÜRLER", "VERIFIED SPECIES"), ", ".join(discovered_names) if not discovered_names.is_empty() else "—"]
+	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("GERÇEKLİK KİMLİĞİ", "REALITY IDENTITY"), ArchiveDB.localized(entry, "identity")
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("VEX KAYNAK ÇEKİMİ", "VEX EXTRACTION"), ArchiveDB.localized(entry, "extraction")
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("SAHA BASKI PROFİLİ", "FIELD PRESSURE PROFILE"), ArchiveDB.localized(entry, "pressure")
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("GÖRSEL İMZA", "VISUAL SIGNATURE"), ArchiveDB.localized(entry, "palette")
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s" % [
+		_t("DOĞRULANAN TÜRLER", "VERIFIED SPECIES"),
+		", ".join(discovered_names) if not discovered_names.is_empty() else "—",
+	]
 	_set_detail(
 		str(entry.get("name", "UNKNOWN")),
-		_t("DOĞRULANAN TÜR // %d / %d" % [discovered_names.size(), ids.size()], "VERIFIED SPECIES // %d / %d" % [discovered_names.size(), ids.size()]),
+		_t(
+			"DOĞRULANAN TÜR // %d / %d" % [discovered_names.size(), ids.size()],
+			"VERIFIED SPECIES // %d / %d" % [discovered_names.size(), ids.size()]
+		),
 		body,
 		VEX_LOGO,
 		false
@@ -303,8 +369,14 @@ func _show_log(entry: Dictionary) -> void:
 	if not _is_log_unlocked(entry):
 		_set_detail(
 			_t("ŞİFRELİ OPERASYON KAYDI", "ENCRYPTED OPERATION RECORD"),
-			_t("YETKİ YETERSİZ // CAMPAIGN İLERLEMESİ GEREKLİ", "INSUFFICIENT CLEARANCE // CAMPAIGN PROGRESS REQUIRED"),
-			_t("Bu kayıt mevcut operasyon yetkisiyle açılamıyor.", "This record cannot be opened with the current operation clearance."),
+			_t(
+				"YETKİ YETERSİZ // OPERASYON TAMAMLANMALI",
+				"INSUFFICIENT CLEARANCE // OPERATION MUST BE COMPLETED"
+			),
+			_t(
+				"Bu kayıt mevcut operasyon yetkisiyle açılamıyor. İlgili saha operasyonunun tamamlanması gerekiyor.",
+				"This record cannot be opened with the current clearance. The related field operation must be completed."
+			),
 			VEX_LOGO,
 			true
 		)
@@ -312,7 +384,7 @@ func _show_log(entry: Dictionary) -> void:
 	_set_detail(
 		str(entry.get("title", "RECORD")),
 		_t("VEX GÜVENLİ KAYIT // DOĞRULANDI", "VEX SECURE RECORD // VERIFIED"),
-		str(entry.get("body_tr" if ArchiveDB.is_turkish() else "body_en", "")),
+		_localized_body(entry),
 		VEX_LOGO,
 		false
 	)
@@ -323,18 +395,30 @@ func _show_threat_analysis(entry: Dictionary) -> void:
 		_set_detail(
 			_t("TEHDİT MATRİSİ // VERİ YETERSİZ", "THREAT MATRIX // INSUFFICIENT DATA"),
 			_t("DOĞRULANMIŞ TÜR GEREKLİ", "VERIFIED SPECIES REQUIRED"),
-			_t("Aile düzeyi taktik model üretmek için bu gerçeklikten en az bir doğrulanmış saha teması gerekiyor.", "At least one verified field contact from this reality is required to build a family-level tactical model."),
+			_t(
+				"Aile düzeyi taktik model üretmek için bu gerçeklikten en az bir doğrulanmış saha teması gerekiyor.",
+				"At least one verified field contact from this reality is required to build a family-level tactical model."
+			),
 			VEX_LOGO,
 			true
 		)
 		return
-	var universe_id: StringName = entry.get("id", &"")
-	var recommendation := _get_universe_recommendation(universe_id)
-	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("ANA BASKI", "PRIMARY PRESSURE"), ArchiveDB.localized(entry, "pressure")]
-	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [_t("VEX TAKTİK ÖNERİSİ", "VEX TACTICAL RECOMMENDATION"), recommendation]
-	body += "[color=#78cbd8]%s[/color]\n%s" % [_t("TANIMA İMZASI", "IDENTIFICATION SIGNATURE"), ArchiveDB.localized(entry, "palette")]
+	var universe_id := _entry_string_name(entry, "id")
+	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("ANA BASKI", "PRIMARY PRESSURE"), ArchiveDB.localized(entry, "pressure")
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
+		_t("VEX TAKTİK ÖNERİSİ", "VEX TACTICAL RECOMMENDATION"),
+		_get_universe_recommendation(universe_id),
+	]
+	body += "[color=#78cbd8]%s[/color]\n%s" % [
+		_t("TANIMA İMZASI", "IDENTIFICATION SIGNATURE"), ArchiveDB.localized(entry, "palette")
+	]
 	_set_detail(
-		_t("%s // TEHDİT MODELİ" % entry.get("name", "UNKNOWN"), "%s // THREAT MODEL" % entry.get("name", "UNKNOWN")),
+		_t(
+			"%s // TEHDİT MODELİ" % entry.get("name", "UNKNOWN"),
+			"%s // THREAT MODEL" % entry.get("name", "UNKNOWN")
+		),
 		_t("AİLE BAZLI KARŞI OYUN", "FAMILY-LEVEL COUNTERPLAY"),
 		body,
 		VEX_LOGO,
@@ -356,71 +440,119 @@ func _show_protocol(entry: Dictionary) -> void:
 	_set_detail(
 		str(entry.get("title", "PROTOCOL")),
 		_t("VEX SAHA DOKTRİNİ // AKTİF", "VEX FIELD DOCTRINE // ACTIVE"),
-		str(entry.get("body_tr" if ArchiveDB.is_turkish() else "body_en", "")),
+		_localized_body(entry),
 		VEX_LOGO,
 		false
 	)
 
 
-func _set_detail(title: String, meta: String, body: String, texture: Texture2D, classified: bool) -> void:
+func _set_detail(
+	title: String,
+	meta: String,
+	body: String,
+	texture: Texture2D,
+	classified: bool
+) -> void:
 	detail_title.text = title
 	detail_meta.text = meta
 	detail_body.text = body
 	detail_preview.texture = texture
-	detail_preview.modulate = Color(0.42, 0.78, 0.82, 0.32) if classified else Color.WHITE
-	classification_label.text = _t("SINIFLANDIRILMIŞ // VERİ EKSİK", "CLASSIFIED // DATA INCOMPLETE") if classified else _t("VEX ARŞİV DOĞRULAMASI // GEÇERLİ", "VEX ARCHIVE VERIFICATION // VALID")
-	classification_label.add_theme_color_override("font_color", Color(1.0, 0.32, 0.18, 1.0) if classified else Color(0.30, 1.0, 0.62, 1.0))
+	detail_preview.modulate = (
+		Color(0.42, 0.78, 0.82, 0.32)
+		if classified
+		else Color.WHITE
+	)
+	classification_label.text = (
+		_t("SINIFLANDIRILMIŞ // VERİ EKSİK", "CLASSIFIED // DATA INCOMPLETE")
+		if classified
+		else _t("VEX ARŞİV DOĞRULAMASI // GEÇERLİ", "VEX ARCHIVE VERIFICATION // VALID")
+	)
+	classification_label.add_theme_color_override(
+		"font_color",
+		Color(1.0, 0.32, 0.18, 1.0) if classified else Color(0.30, 1.0, 0.62, 1.0)
+	)
 
 
 func _get_enemy_preview(entry: Dictionary) -> Texture2D:
-	var enemy_id: StringName = entry.get("id", &"")
+	var enemy_id := _entry_string_name(entry, "id")
 	if _preview_cache.has(enemy_id):
 		return _preview_cache[enemy_id] as Texture2D
+
 	var sheet_path := ArchiveDB.enemy_sheet_path(entry)
+	var manifest_path := ArchiveDB.enemy_manifest_path(entry)
 	if sheet_path.is_empty() or not ResourceLoader.exists(sheet_path):
-		_preview_cache[enemy_id] = VEX_LOGO
-		return VEX_LOGO
+		var folder := str(entry.get("asset_folder", ""))
+		var legacy_path := "res://assets/enemies/%s/%s_spritesheet.png" % [folder, folder]
+		if not folder.is_empty() and ResourceLoader.exists(legacy_path):
+			sheet_path = legacy_path
+			manifest_path = ""
+		else:
+			_preview_cache[enemy_id] = VEX_LOGO
+			return VEX_LOGO
+
 	var sheet := load(sheet_path) as Texture2D
 	if sheet == null:
 		_preview_cache[enemy_id] = VEX_LOGO
 		return VEX_LOGO
-	var manifest_path := ArchiveDB.enemy_manifest_path(entry)
-	if not FileAccess.file_exists(manifest_path):
-		_preview_cache[enemy_id] = sheet
-		return sheet
+
+	if not manifest_path.is_empty() and FileAccess.file_exists(manifest_path):
+		var manifest_preview := _preview_from_manifest(sheet, manifest_path)
+		if manifest_preview != null:
+			_preview_cache[enemy_id] = manifest_preview
+			return manifest_preview
+
+	if LEGACY_PREVIEW_REGIONS.has(enemy_id):
+		var atlas := AtlasTexture.new()
+		atlas.atlas = sheet
+		atlas.region = LEGACY_PREVIEW_REGIONS[enemy_id] as Rect2
+		_preview_cache[enemy_id] = atlas
+		return atlas
+
+	_preview_cache[enemy_id] = VEX_LOGO
+	return VEX_LOGO
+
+
+func _preview_from_manifest(sheet: Texture2D, manifest_path: String) -> Texture2D:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
 	if not (parsed is Dictionary):
-		_preview_cache[enemy_id] = sheet
-		return sheet
+		return null
 	var frame_size: Variant = (parsed as Dictionary).get("frame_size", {})
 	if not (frame_size is Dictionary):
-		_preview_cache[enemy_id] = sheet
-		return sheet
+		return null
 	var width := float((frame_size as Dictionary).get("width", 0))
 	var height := float((frame_size as Dictionary).get("height", 0))
 	if width <= 0.0 or height <= 0.0:
-		_preview_cache[enemy_id] = sheet
-		return sheet
+		return null
 	var atlas := AtlasTexture.new()
 	atlas.atlas = sheet
 	atlas.region = Rect2(0.0, 0.0, width, height)
-	_preview_cache[enemy_id] = atlas
 	return atlas
 
 
 func _is_enemy_discovered(entry: Dictionary) -> bool:
-	return ArchiveManager.is_enemy_discovered(entry.get("id", &""))
+	return ArchiveManager.is_enemy_discovered(_entry_string_name(entry, "id"))
 
 
 func _is_universe_known(entry: Dictionary) -> bool:
-	for enemy_id: StringName in entry.get("enemy_ids", []):
-		if ArchiveManager.is_enemy_discovered(enemy_id):
+	var values: Variant = entry.get("enemy_ids", [])
+	if not (values is Array):
+		return false
+	for value: Variant in values:
+		if ArchiveManager.is_enemy_discovered(StringName(str(value))):
 			return true
 	return false
 
 
 func _is_log_unlocked(entry: Dictionary) -> bool:
-	return GameState.campaign_stage >= int(entry.get("unlock_stage", 0))
+	var required_stage := int(entry.get("unlock_stage", 0))
+	match _entry_string_name(entry, "id"):
+		&"vex01":
+			required_stage = maxi(required_stage, 1)
+		&"vex02":
+			required_stage = maxi(required_stage, 2)
+		&"vex03":
+			required_stage = maxi(required_stage, 3)
+	return GameState.campaign_stage >= required_stage
 
 
 func _get_discovered_database_count() -> int:
@@ -447,15 +579,30 @@ func _get_universe_name(universe_id: StringName) -> String:
 func _get_universe_recommendation(universe_id: StringName) -> String:
 	match universe_id:
 		&"korvath":
-			return _t("Ağır hedeflerin hazırlık pencerelerini kullan; termal alanlarla projectile çizgilerinin aynı anda hareket alanını kapatmasına izin verme.", "Exploit heavy-unit windups and prevent thermal zones from overlapping projectile lanes until your movement space collapses.")
+			return _t(
+				"Ağır hedeflerin hazırlık pencerelerini kullan; termal alanlarla projectile çizgilerinin aynı anda hareket alanını kapatmasına izin verme.",
+				"Exploit heavy-unit windups and prevent thermal zones from overlapping projectile lanes until your movement space collapses."
+			)
 		&"thornwild":
-			return _t("Hareket koridorunu koru. Charge, zehir alanı ve hibrit avcılar aynı anda baskı kurduğunda hasardan önce pozisyonu çöz.", "Preserve movement corridors. When charges, toxic zones and hybrid hunters overlap, solve positioning before chasing damage.")
+			return _t(
+				"Hareket koridorunu koru. Charge, zehir alanı ve hibrit avcılar aynı anda baskı kurduğunda hasardan önce pozisyonu çöz.",
+				"Preserve movement corridors. When charges, toxic zones and hybrid hunters overlap, solve positioning before chasing damage."
+			)
 		&"vaskari":
-			return _t("Tek hedef gücüne değil formasyona bak. Komuta/destek ve uzun menzil rollerini güvenli fırsatta önce kır.", "Read the formation rather than individual strength. Break command/support and ranged roles first whenever a safe opportunity exists.")
+			return _t(
+				"Tek hedef gücüne değil formasyona bak. Komuta/destek ve uzun menzil rollerini güvenli fırsatta önce kır.",
+				"Read the formation rather than individual strength. Break command/support and ranged roles first whenever a safe opportunity exists."
+			)
 		&"nhal":
-			return _t("Bilgi kaybını ölümcül kabul et. Son güvenli konumu, ses bilgisini ve açı kontrolünü görüş bozulduğunda önceliklendir.", "Treat information loss as lethal. Prioritize the last safe position, audio cues and angle checks whenever visibility is disrupted.")
+			return _t(
+				"Bilgi kaybını ölümcül kabul et. Son güvenli konumu, ses bilgisini ve açı kontrolünü görüş bozulduğunda önceliklendir.",
+				"Treat information loss as lethal. Prioritize the last safe position, audio cues and angle checks whenever visibility is disrupted."
+			)
 		&"aether":
-			return _t("Düşmanın mevcut konumundan çok açabileceği açıları izle. Enerji fanları ve phase step için geniş kaçış payı bırak.", "Track possible attack angles more than current positions. Reserve broad dodge space for energy fans and phase steps.")
+			return _t(
+				"Düşmanın mevcut konumundan çok açabileceği açıları izle. Enerji fanları ve phase step için geniş kaçış payı bırak.",
+				"Track possible attack angles more than current positions. Reserve broad dodge space for energy fans and phase steps."
+			)
 		_:
 			return _t("Yeterli veri yok.", "Insufficient data.")
 
@@ -468,8 +615,20 @@ func _build_rift_network_entries() -> Array[Dictionary]:
 			"title": _t("YARIK AĞI // GENEL DURUM", "RIFT NETWORK // OVERVIEW"),
 			"meta": _t("BASTION-7 İZOLE TELEMETRİ", "BASTION-7 ISOLATED TELEMETRY"),
 			"body": _t(
-				"Yarık Ağı, VEX reaktörlerini birbirine bağlayan boyutlar arası enerji omurgasıdır. Yerel geçit kapansa bile ağ çalışıyorsa başka bir düğüm yeniden açılabilir.\n\nDOĞRULANAN GERÇEKLİK: %d / %d\nDOĞRULANAN XENO VARLIK: %d / %d\nCAMPAIGN AŞAMASI: %02d" % [known_universes, ArchiveDB.UNIVERSES.size(), discovered, ArchiveDB.ENEMIES.size(), GameState.campaign_stage],
-				"The Rift Network is the interdimensional energy backbone connecting VEX reactors. Even if a local passage closes, another node can reopen while the network remains active.\n\nVERIFIED REALITIES: %d / %d\nVERIFIED XENO ENTITIES: %d / %d\nCAMPAIGN STAGE: %02d" % [known_universes, ArchiveDB.UNIVERSES.size(), discovered, ArchiveDB.ENEMIES.size(), GameState.campaign_stage]
+				"Yarık Ağı, VEX reaktörlerini birbirine bağlayan boyutlar arası enerji omurgasıdır. Yerel geçit kapansa bile ağ çalışıyorsa başka bir düğüm yeniden açılabilir.\n\nDOĞRULANAN GERÇEKLİK: %d / %d\nDOĞRULANAN XENO VARLIK: %d / %d\nCAMPAIGN AŞAMASI: %02d" % [
+					known_universes,
+					ArchiveDB.UNIVERSES.size(),
+					discovered,
+					ArchiveDB.ENEMIES.size(),
+					GameState.campaign_stage,
+				],
+				"The Rift Network is the interdimensional energy backbone connecting VEX reactors. Even if a local passage closes, another node can reopen while the network remains active.\n\nVERIFIED REALITIES: %d / %d\nVERIFIED XENO ENTITIES: %d / %d\nCAMPAIGN STAGE: %02d" % [
+					known_universes,
+					ArchiveDB.UNIVERSES.size(),
+					discovered,
+					ArchiveDB.ENEMIES.size(),
+					GameState.campaign_stage,
+				]
 			),
 		},
 		{
@@ -480,24 +639,44 @@ func _build_rift_network_entries() -> Array[Dictionary]:
 		{
 			"title": "BASTION-7 // NETWORK AIR GAP",
 			"meta": _t("FİZİKSEL AĞ İZOLASYONU // AKTİF", "PHYSICAL NETWORK ISOLATION // ACTIVE"),
-			"body": _t("Bastion-7 ana Yarık Ağı'ndan fiziksel olarak ayrıdır. Bu izolasyon üssü güvenli operasyon, arşiv ve yeniden konuşlanma merkezi hâline getirir. Terminal verileri saha kayıtlarından yerel olarak derlenir.", "Bastion-7 is physically separated from the main Rift Network. This isolation makes the base a secure operations, archive and redeployment center. Terminal data is compiled locally from field records."),
+			"body": _t(
+				"Bastion-7 ana Yarık Ağı'ndan fiziksel olarak ayrıdır. Bu izolasyon üssü güvenli operasyon, arşiv ve yeniden konuşlanma merkezi hâline getirir. Terminal verileri saha kayıtlarından yerel olarak derlenir.",
+				"Bastion-7 is physically separated from the main Rift Network. This isolation makes the base a secure operations, archive and redeployment center. Terminal data is compiled locally from field records."
+			),
 		},
 		{
 			"title": _t("ANA HEDEF // AĞI SUSTUR", "PRIMARY OBJECTIVE // SILENCE THE NETWORK"),
 			"meta": _t("STRATEJİK DİREKTİF", "STRATEGIC DIRECTIVE"),
-			"body": _t("Tek tek yarıkları kapatmak kalıcı çözüm değildir. Nihai amaç enerji çekimini besleyen düğümleri devre dışı bırakmak, kaynak gerçeklik bağlantılarını çözmek ve Yarık Ağı'nın merkezini kalıcı olarak susturmaktır.", "Closing individual rifts is not a permanent solution. The final objective is to disable the nodes feeding extraction, resolve origin-reality links and permanently silence the core of the Rift Network."),
+			"body": _t(
+				"Tek tek yarıkları kapatmak kalıcı çözüm değildir. Nihai amaç enerji çekimini besleyen düğümleri devre dışı bırakmak, kaynak gerçeklik bağlantılarını çözmek ve Yarık Ağı'nın merkezini kalıcı olarak susturmaktır.",
+				"Closing individual rifts is not a permanent solution. The final objective is to disable the nodes feeding extraction, resolve origin-reality links and permanently silence the core of the Rift Network."
+			),
 		},
 	]
 
 
 func _build_extraction_matrix() -> String:
-	var lines: Array[String] = []
+	var lines := PackedStringArray()
 	for universe: Dictionary in ArchiveDB.UNIVERSES:
 		if _is_universe_known(universe):
-			lines.append("[color=#78cbd8]%s[/color]\n%s" % [universe.get("name", "UNKNOWN"), ArchiveDB.localized(universe, "extraction")])
+			lines.append("[color=#78cbd8]%s[/color]\n%s" % [
+				universe.get("name", "UNKNOWN"),
+				ArchiveDB.localized(universe, "extraction"),
+			])
 		else:
-			lines.append("[color=#7a4440]%s[/color]\n%s" % [_t("SINIFLANDIRILMAMIŞ GERÇEKLİK", "UNCLASSIFIED REALITY"), _t("Kaynak profili doğrulanmadı.", "Extraction profile unverified.")])
+			lines.append("[color=#7a4440]%s[/color]\n%s" % [
+				_t("SINIFLANDIRILMAMIŞ GERÇEKLİK", "UNCLASSIFIED REALITY"),
+				_t("Kaynak profili doğrulanmadı.", "Extraction profile unverified."),
+			])
 	return "\n\n".join(lines)
+
+
+func _localized_body(entry: Dictionary) -> String:
+	return str(entry.get("body_tr" if ArchiveDB.is_turkish() else "body_en", ""))
+
+
+func _entry_string_name(entry: Dictionary, key: String) -> StringName:
+	return StringName(str(entry.get(key, "")))
 
 
 func _on_archive_changed(_enemy_id: StringName) -> void:
