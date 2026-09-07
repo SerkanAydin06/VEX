@@ -147,13 +147,13 @@ func _intro_message() -> void:
 	if not is_inside_tree():
 		return
 	if GameState.campaign_stage >= 3:
-		GameState.notify(tr("HUB_VEX03_COMPLETE"))
+		GameState.notify(tr("CH03_HUB_RETURN"))
 		GameState.set_objective(first_objective)
 	elif GameState.campaign_stage >= 2:
-		GameState.notify(tr("HUB_VEX02_COMPLETE"))
+		GameState.notify(tr("CH02_HUB_RETURN"))
 		GameState.set_objective(first_objective)
 	elif GameState.campaign_stage >= 1:
-		GameState.notify(tr("HUB_VEX01_COMPLETE"))
+		GameState.notify(tr("CH01_HUB_RETURN"))
 		GameState.set_objective(first_objective)
 	else:
 		GameState.set_objective(first_objective)
