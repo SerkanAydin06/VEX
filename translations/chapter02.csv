@@ -20,4 +20,3 @@ CH02_BLUE_FUSE,MAVİ HAT SİGORTASI,BLUE LINE FUSE
 CH02_YELLOW_FUSE,SARI RÖLE SİGORTASI,YELLOW RELAY FUSE
 CH02_RED_FUSE,KIRMIZI ÇIKIŞ SİGORTASI,RED OUTPUT FUSE
 CH02_BYPASS_RESERVED,GÜÇ BYPASS KUPLÖRÜ BAĞLANTISI // DONANIM BEKLENİYOR,POWER BYPASS COUPLER PORT // HARDWARE PENDING
-HUB_SELIN_POST_CH03,"Selin: Basınç Hattı kayıtları akışın rastgele olmadığını gösteriyor. VEX bunu kazadan önce de görmüş. Verileri Bastion'da karşılaştıracağım; sıradaki Korvath hattını bulmamız gerek.","Selin: The Pressure Line records show the flow was not random. VEX saw it before the disaster. I'll compare the data at Bastion; we need to find the next Korvath line."
