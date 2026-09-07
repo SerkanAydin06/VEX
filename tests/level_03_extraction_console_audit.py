@@ -49,7 +49,7 @@ def test_level03_uses_authored_vex_console_instead_of_legacy_sprite_art() -> Non
     assert '[node name="CollisionShape3D" parent="PanelBody"]' in scene
     assert 'position = Vector3(0, 1.06, 0.12)' in scene
     assert 'shape = SubResource("Shape_console_interaction")' in scene
-    assert scene.startswith("[gd_scene load_steps=22 format=3]")
+    assert scene.startswith("[gd_scene load_steps=23 format=3]")
 
 
 def test_console_visual_language_matches_vex_industrial_control_theme() -> None:
