@@ -8,16 +8,16 @@
 [ext_resource type="PackedScene" path="res://scenes/levels/level_01_environment_story.tscn" id="6_environment"]
 [ext_resource type="PackedScene" path="res://scenes/levels/level_01_first_fracture_content.tscn" id="7_content"]
 
-[node name="Level01_QuarantineFacility" type="Node3D" unique_id=1518302970]
+[node name="Level01_FirstFracture" type="Node3D" unique_id=1518302970]
 script = ExtResource("1_script")
 map_revision = "VEX01-FIRST-FRACTURE-R37-ENV01"
-level_display_name = "LEVEL01_NAME"
+level_display_name = "CH01_NAME"
 campaign_completion_stage = 1
-first_objective = "LEVEL01_OBJECTIVE_START"
-briefing_story = "LEVEL01_BRIEFING_STORY"
-briefing_objective = "LEVEL01_BRIEFING_OBJECTIVE"
+first_objective = "CH01_OBJECTIVE_START"
+briefing_story = "CH01_BRIEFING_STORY"
+briefing_objective = "CH01_BRIEFING_OBJECTIVE"
 total_secrets = 1
-automap_title = "LEVEL01_MAP_TITLE"
+automap_title = "CH01_MAP_TITLE"
 automap_columns = 5
 automap_rows = 13
 automap_world_min = Vector2(-30, -65)
