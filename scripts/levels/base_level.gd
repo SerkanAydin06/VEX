@@ -35,6 +35,7 @@ var _briefing_reveal_requested := false
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
+	_sync_current_level_path()
 	SettingsManager.apply_brightness()
 	if not GameState.key_inventory_changed.is_connected(_on_key_inventory_changed):
 		GameState.key_inventory_changed.connect(_on_key_inventory_changed)
@@ -46,6 +47,16 @@ func _ready() -> void:
 	_start_audio_loop(ambient_loop)
 	_on_level_ready()
 	_show_briefing()
+
+
+func _sync_current_level_path() -> void:
+	# Running an individual level with F6 bypasses GameState.start/deploy/continue.
+	# Keep restart/death behavior pointed at the scene that is actually running,
+	# while leaving nested/non-current level instances unable to overwrite it.
+	var current_scene := get_tree().current_scene
+	if current_scene != self or scene_file_path.is_empty():
+		return
+	GameState.current_level_path = scene_file_path
 
 
 func _on_level_ready() -> void:
