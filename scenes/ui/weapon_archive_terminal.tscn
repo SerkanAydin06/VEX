@@ -1,0 +1,386 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/weapon_archive_terminal.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://bhmnp6n4k6k7" path="res://assets/ui/vex_logo.png" id="3_logo"]
+[ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="4_mono"]
+
+[node name="WeaponArchiveTerminal" type="CanvasLayer"]
+process_mode = 3
+layer = 73
+script = ExtResource("1_script")
+
+[node name="WeaponArchiveRoot" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme = ExtResource("2_theme")
+
+[node name="Dim" type="ColorRect" parent="WeaponArchiveRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.001, 0.004, 0.007, 0.988)
+
+[node name="ArmoryGlow" type="ColorRect" parent="WeaponArchiveRoot"]
+layout_mode = 1
+anchor_left = 0.025
+anchor_top = 0.035
+anchor_right = 0.975
+anchor_bottom = 0.965
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.02, 0.19, 0.24, 0.12)
+
+[node name="ScreenShell" type="PanelContainer" parent="WeaponArchiveRoot"]
+layout_mode = 1
+anchor_left = 0.035
+anchor_top = 0.045
+anchor_right = 0.965
+anchor_bottom = 0.955
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="WeaponArchiveRoot/ScreenShell"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 18
+
+[node name="VBox" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox"]
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Logo" type="TextureRect" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header"]
+custom_minimum_size = Vector2(135, 58)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleBlock" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header"]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Eyebrow" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header/TitleBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.31, 0.18, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 12
+text = "BASTION-7 // ARMORY DATA NODE"
+
+[node name="MainTitle" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header/TitleBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.36, 0.91, 1, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 28
+text = "SİLAH ARŞİV TERMİNALİ"
+
+[node name="HeaderSpacer" type="Control" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="SummaryBlock" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header"]
+custom_minimum_size = Vector2(315, 0)
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="SummaryLabel" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header/SummaryBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.6, 0.65, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 11
+text = "ARMORY RECORD STATUS"
+horizontal_alignment = 2
+
+[node name="ArchiveSummary" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header/SummaryBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.62, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 13
+text = "RECORDS 0 // ACQUIRED 0 // CARRIED 0"
+horizontal_alignment = 2
+autowrap_mode = 2
+
+[node name="HeaderLine" type="HSeparator" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+clip_contents = true
+theme_override_constants/separation = 12
+
+[node name="CategoryPanel" type="PanelContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body"]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+clip_contents = true
+
+[node name="CategoryMargin" type="MarginContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 12
+
+[node name="CategoryVBox" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="CategoryTitle" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.47, 0.72, 0.79, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 12
+text = "WEAPON CLASS"
+
+[node name="SidearmTab" type="Button" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+button_pressed = true
+text = "YAN SİLAH"
+alignment = 0
+autowrap_mode = 2
+
+[node name="ShotgunTab" type="Button" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+text = "POMPALI"
+alignment = 0
+autowrap_mode = 2
+
+[node name="RifleTab" type="Button" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+text = "TAARRUZ TÜFEĞİ"
+alignment = 0
+autowrap_mode = 2
+
+[node name="SmgTab" type="Button" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+text = "HAFİF OTOMATİK"
+alignment = 0
+autowrap_mode = 2
+
+[node name="LaserTab" type="Button" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+toggle_mode = true
+text = "LAZER VE ENERJİ"
+alignment = 0
+autowrap_mode = 2
+
+[node name="CategorySpacer" type="Control" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="CategoryNote" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.34, 0.49, 0.54, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 10
+text = "LIVE VALUES // WEAPON DEFINITION"
+autowrap_mode = 2
+
+[node name="IndexPanel" type="PanelContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+clip_contents = true
+
+[node name="IndexMargin" type="MarginContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 12
+
+[node name="IndexVBox" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel/IndexMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SectionTitle" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel/IndexMargin/IndexVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.75, 0.81, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 13
+text = "SIDEARM"
+autowrap_mode = 2
+
+[node name="SectionLine" type="HSeparator" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel/IndexMargin/IndexVBox"]
+layout_mode = 2
+
+[node name="WeaponScroll" type="ScrollContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel/IndexMargin/IndexVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="WeaponList" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel/IndexMargin/IndexVBox/WeaponScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 7
+
+[node name="DetailPanel" type="PanelContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+clip_contents = true
+
+[node name="DetailMargin" type="MarginContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="DetailVBox" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DetailTop" type="HBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+clip_contents = true
+theme_override_constants/separation = 14
+
+[node name="PreviewPanel" type="PanelContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop"]
+custom_minimum_size = Vector2(240, 210)
+layout_mode = 2
+clip_contents = true
+
+[node name="PreviewBack" type="ColorRect" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/PreviewPanel"]
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.006, 0.015, 0.021, 1)
+
+[node name="DetailPreview" type="TextureRect" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/PreviewPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="IdentityBlock" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="DetailEyebrow" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.31, 0.18, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 11
+text = "VEX ARMORY // VERIFIED LIVE VALUES"
+autowrap_mode = 2
+
+[node name="DetailTitle" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.34, 0.91, 1, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 23
+text = "WEAPON RECORD"
+autowrap_mode = 2
+
+[node name="DetailMeta" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.7, 0.75, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 11
+text = "LOADOUT CLASS"
+autowrap_mode = 2
+
+[node name="IdentitySpacer" type="Control" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="DetailStatus" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.62, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 13
+text = "ARMORY RECORD"
+autowrap_mode = 2
+
+[node name="DetailLine" type="HSeparator" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
+layout_mode = 2
+
+[node name="DetailBody" type="RichTextLabel" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.76, 0.87, 0.9, 1)
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "Weapon data awaiting link."
+fit_content = false
+scroll_active = true
+
+[node name="FooterLine" type="HSeparator" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="FooterStatus" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.34, 0.5, 0.55, 1)
+theme_override_fonts/font = ExtResource("4_mono")
+theme_override_font_sizes/font_size = 10
+text = "LIVE VALUES // WEAPON RESOURCES ARE THE SOURCE OF TRUTH"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="CloseButton" type="Button" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 48)
+layout_mode = 2
+text = "TERMİNALİ KAPAT"
