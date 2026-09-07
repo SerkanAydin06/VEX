@@ -52,42 +52,73 @@ func _install_authored_structure() -> void:
 
 
 func _configure_authored_doors(doors_root: Node) -> void:
-	var stair_access := doors_root.get_node_or_null("Door_StairAccess") as VexDoor
-	if stair_access != null:
-		stair_access.display_name = "CH03_DOOR_STAIR_ACCESS"
-		stair_access.locked = true
-		stair_access.required_key = &"blue"
-		stair_access.required_keys = []
-		stair_access.required_key_label = "CH03_BLUE_CLEARANCE"
-		stair_access.objective_on_unlock = "CH03_OBJECTIVE_UPPER"
-		stair_access.required_enemy_ids = []
-		stair_access.objective_on_combat_clear = ""
-		stair_access.permanently_locked = false
+	# Legacy combat gates and old key semantics must not leak from the structural
+	# snapshot. Start every authored door from a neutral traversal state, then
+	# apply the three canonical Pressure Line access gates below.
+	for child: Node in doors_root.get_children():
+		var door := child as VexDoor
+		if door == null:
+			continue
+		_reset_authored_door(door)
 
-	var archive_access := doors_root.get_node_or_null("Door_CoreAuthorization") as VexDoor
-	if archive_access != null:
-		archive_access.display_name = "CH03_DOOR_ARCHIVE_ACCESS"
-		archive_access.locked = true
-		archive_access.required_key = &"red"
-		archive_access.required_keys = []
-		archive_access.required_key_label = "CH03_RED_CLEARANCE"
-		archive_access.objective_on_unlock = "CH03_OBJECTIVE_RESCUE"
-		archive_access.required_enemy_ids = []
-		archive_access.objective_on_combat_clear = ""
-		archive_access.permanently_locked = false
-		archive_access.auto_close = false
+	_configure_key_door(
+		doors_root.get_node_or_null("Door_StairAccess"),
+		"CH03_DOOR_STAIR_ACCESS",
+		&"blue",
+		"CH03_BLUE_AUTH",
+		"CH03_OBJECTIVE_UPPER"
+	)
+	_configure_key_door(
+		doors_root.get_node_or_null("Door_StairSecurity"),
+		"CH03_DOOR_ARCHIVE_ACCESS",
+		&"yellow",
+		"CH03_YELLOW_AUTH",
+		"CH03_OBJECTIVE_RED"
+	)
+	_configure_key_door(
+		doors_root.get_node_or_null("Door_CoreAuthorization"),
+		"CH03_DOOR_REACTOR_ACCESS",
+		&"red",
+		"CH03_RED_AUTH",
+		"CH03_OBJECTIVE_RESCUE"
+	)
 
 	var final_service_door := doors_root.get_node_or_null("Door_RiftChamber") as VexDoor
 	if final_service_door != null:
-		final_service_door.display_name = "CH03_DOOR_REACTOR_SERVICE"
-		final_service_door.locked = false
-		final_service_door.required_key = &""
-		final_service_door.required_keys = []
-		final_service_door.required_key_label = ""
-		final_service_door.objective_on_unlock = ""
-		final_service_door.required_enemy_ids = []
-		final_service_door.objective_on_combat_clear = ""
-		final_service_door.permanently_locked = false
+		final_service_door.display_name = "CH03_DOOR_EVAC_SERVICE"
+		final_service_door.auto_close = false
+
+
+func _reset_authored_door(door: VexDoor) -> void:
+	door.locked = false
+	door.required_key = &""
+	door.required_keys = []
+	door.required_key_label = ""
+	door.objective_on_unlock = ""
+	door.required_enemy_ids = []
+	door.objective_on_combat_clear = ""
+	door.permanently_locked = false
+
+
+func _configure_key_door(
+	door_node: Node,
+	display_key: String,
+	required_key: StringName,
+	required_label_key: String,
+	objective_key: String
+) -> void:
+	var door := door_node as VexDoor
+	if door == null:
+		return
+	door.display_name = display_key
+	door.locked = true
+	door.required_key = required_key
+	door.required_keys = []
+	door.required_key_label = required_label_key
+	door.objective_on_unlock = objective_key
+	door.required_enemy_ids = []
+	door.objective_on_combat_clear = ""
+	door.permanently_locked = false
 
 
 func _install_environment_story() -> void:
@@ -110,12 +141,14 @@ func _install_pressure_line_content() -> void:
 		push_error("VEX-03 Basınç Hattı içerik sahnesi instantiate edilemedi.")
 		return
 	add_child(_pressure_line_content)
-	map_revision = "VEX03-PRESSURE-LINE-R01-CANONICAL"
+	map_revision = "VEX03-PRESSURE-LINE-R02-CANONICAL"
 
 
 func _on_key_inventory_changed(keys: Array[StringName]) -> void:
 	if keys.has(&"red"):
 		GameState.set_objective("CH03_OBJECTIVE_RESCUE")
+	elif keys.has(&"yellow"):
+		GameState.set_objective("CH03_OBJECTIVE_RED")
 	elif keys.has(&"blue"):
 		GameState.set_objective("CH03_OBJECTIVE_UPPER")
 
