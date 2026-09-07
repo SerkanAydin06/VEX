@@ -45,31 +45,31 @@ color = Color(0.025, 0.32, 0.38, 0.085)
 
 [node name="ScreenShell" type="PanelContainer" parent="TerminalRoot"]
 layout_mode = 1
-anchor_left = 0.045
-anchor_top = 0.06
-anchor_right = 0.955
-anchor_bottom = 0.94
+anchor_left = 0.05
+anchor_top = 0.065
+anchor_right = 0.95
+anchor_bottom = 0.935
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Margin" type="MarginContainer" parent="TerminalRoot/ScreenShell"]
 layout_mode = 2
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 26
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 18
 
 [node name="VBox" type="VBoxContainer" parent="TerminalRoot/ScreenShell/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
 [node name="Header" type="HBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox"]
-custom_minimum_size = Vector2(0, 82)
+custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 
 [node name="HeaderLogo" type="TextureRect" parent="TerminalRoot/ScreenShell/Margin/VBox/Header"]
-custom_minimum_size = Vector2(185, 72)
+custom_minimum_size = Vector2(150, 58)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("3_logo")
@@ -78,21 +78,23 @@ stretch_mode = 5
 
 [node name="TitleBlock" type="VBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Header"]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 1
 
 [node name="Eyebrow" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Header/TitleBlock"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.31, 0.18, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "TERMINAL_MENU_EYEBROW"
+autowrap_mode = 2
 
 [node name="Title" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Header/TitleBlock"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.36, 0.91, 1, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 28
 text = "TERMINAL_MENU_TITLE"
+autowrap_mode = 2
 
 [node name="HeaderSpacer" type="Control" parent="TerminalRoot/ScreenShell/Margin/VBox/Header"]
 layout_mode = 2
@@ -100,24 +102,25 @@ size_flags_horizontal = 3
 mouse_filter = 2
 
 [node name="NetworkBlock" type="VBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Header"]
-custom_minimum_size = Vector2(310, 0)
+custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 1
 
 [node name="SummaryTitle" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Header/NetworkBlock"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.6, 0.65, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 12
 text = "TERMINAL_MENU_NETWORK_STATUS"
 horizontal_alignment = 2
+autowrap_mode = 2
 
 [node name="NetworkSummary" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Header/NetworkBlock"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 1, 0.62, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 18
 text = "0 / 3"
 horizontal_alignment = 2
 
@@ -127,56 +130,60 @@ layout_mode = 2
 [node name="Body" type="HBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 22
+theme_override_constants/separation = 16
 
 [node name="MissionPanel" type="PanelContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body"]
-custom_minimum_size = Vector2(330, 0)
+custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 
 [node name="MissionMargin" type="MarginContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/MissionPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
 
 [node name="MissionVBox" type="VBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/MissionPanel/MissionMargin"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 9
 
 [node name="SectionLabel" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/MissionPanel/MissionMargin/MissionVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.47, 0.72, 0.79, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "TERMINAL_MENU_FACILITIES"
+autowrap_mode = 2
 
 [node name="Mission01Button" type="Button" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/MissionPanel/MissionMargin/MissionVBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 16
 toggle_mode = true
-text = "VEX-01"
+text = "BÖLÜM-01"
 alignment = 0
+autowrap_mode = 2
 
 [node name="Mission02Button" type="Button" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/MissionPanel/MissionMargin/MissionVBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 16
 toggle_mode = true
-text = "VEX-02"
+text = "BÖLÜM-02"
 alignment = 0
+autowrap_mode = 2
 
 [node name="Mission03Button" type="Button" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/MissionPanel/MissionMargin/MissionVBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 16
 toggle_mode = true
-text = "VEX-03"
+text = "BÖLÜM-03"
 alignment = 0
+autowrap_mode = 2
 
 [node name="MissionSpacer" type="Control" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/MissionPanel/MissionMargin/MissionVBox"]
 layout_mode = 2
@@ -187,7 +194,7 @@ mouse_filter = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.49, 0.54, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 text = "TERMINAL_MENU_SELECT_FACILITY_HINT"
 autowrap_mode = 2
 horizontal_alignment = 1
@@ -195,25 +202,26 @@ horizontal_alignment = 1
 [node name="DetailPanel" type="PanelContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body"]
 layout_mode = 2
 size_flags_horizontal = 3
+clip_contents = true
 
 [node name="DetailMargin" type="MarginContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 18
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
 
 [node name="DetailVBox" type="VBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="TopRow" type="HBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
-custom_minimum_size = Vector2(0, 250)
+custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 
 [node name="PreviewPanel" type="PanelContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/TopRow"]
-custom_minimum_size = Vector2(360, 0)
+custom_minimum_size = Vector2(330, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 clip_contents = true
@@ -228,25 +236,26 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="InfoVBox" type="VBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/TopRow"]
-custom_minimum_size = Vector2(345, 0)
+custom_minimum_size = Vector2(315, 0)
 layout_mode = 2
-theme_override_constants/separation = 7
+theme_override_constants/separation = 6
 
 [node name="SelectedCode" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/TopRow/InfoVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.31, 0.18, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 20
-text = "VEX-01"
+theme_override_font_sizes/font_size = 17
+text = "BÖLÜM-01"
+autowrap_mode = 2
 
 [node name="SelectedName" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/TopRow/InfoVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.91, 1, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 24
-text = "LEVEL01_NAME"
+theme_override_font_sizes/font_size = 21
+text = "CH01_NAME"
 autowrap_mode = 2
 
 [node name="SelectedType" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/TopRow/InfoVBox"]
@@ -254,8 +263,8 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48, 0.63, 0.68, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 14
-text = "TERMINAL_FACILITY_QUARANTINE"
+theme_override_font_sizes/font_size = 13
+text = "CH01_NAME"
 autowrap_mode = 2
 
 [node name="InfoSpacer" type="Control" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/TopRow/InfoVBox"]
@@ -267,7 +276,7 @@ mouse_filter = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.57, 0.61, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 text = "TERMINAL_MENU_STATUS"
 
 [node name="StatusValue" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/TopRow/InfoVBox"]
@@ -275,8 +284,9 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 17
 text = "TERMINAL_STATUS_ACTIVE"
+autowrap_mode = 2
 
 [node name="DetailLine" type="HSeparator" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
 layout_mode = 2
@@ -285,30 +295,30 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.5, 0.72, 0.78, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 13
 text = "TERMINAL_MENU_OPERATION_DATA"
 
 [node name="BriefingScroll" type="ScrollContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
 [node name="BriefingLabel" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/BriefingScroll"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(420, 110)
+custom_minimum_size = Vector2(390, 90)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.74, 0.86, 0.89, 1)
-theme_override_font_sizes/font_size = 16
-text = "LEVEL01_MISSION_BRIEF"
+theme_override_font_sizes/font_size = 15
+text = "CH01_MISSION_BRIEF"
 autowrap_mode = 2
 
 [node name="ActionRow" type="HBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="ActionSpacer" type="Control" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/ActionRow"]
 layout_mode = 2
@@ -317,18 +327,18 @@ mouse_filter = 2
 
 [node name="DeployButton" type="Button" parent="TerminalRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/ActionRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 62)
+custom_minimum_size = Vector2(250, 50)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 17
 text = "TERMINAL_MENU_DEPLOY"
 
 [node name="FooterLine" type="HSeparator" parent="TerminalRoot/ScreenShell/Margin/VBox"]
 layout_mode = 2
 
 [node name="Footer" type="HBoxContainer" parent="TerminalRoot/ScreenShell/Margin/VBox"]
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 14
 
 [node name="FooterHint" type="Label" parent="TerminalRoot/ScreenShell/Margin/VBox/Footer"]
 unique_name_in_owner = true
@@ -336,14 +346,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.34, 0.5, 0.55, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 text = "TERMINAL_MENU_FOOTER_HINT"
 autowrap_mode = 2
 vertical_alignment = 1
 
 [node name="CloseButton" type="Button" parent="TerminalRoot/ScreenShell/Margin/VBox/Footer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 52)
+custom_minimum_size = Vector2(190, 44)
 layout_mode = 2
 text = "TERMINAL_MENU_CLOSE"
 
@@ -378,51 +388,52 @@ grow_vertical = 2
 mouse_filter = 1
 
 [node name="ConfirmPanel" type="PanelContainer" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter"]
-custom_minimum_size = Vector2(700, 340)
+custom_minimum_size = Vector2(620, 290)
 layout_mode = 2
 
 [node name="ConfirmMargin" type="MarginContainer" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 38
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 38
-theme_override_constants/margin_bottom = 30
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 24
 
 [node name="ConfirmVBox" type="VBoxContainer" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
 [node name="ConfirmEyebrow" type="Label" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.31, 0.18, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 13
 text = "MAIN_CONFIRM_EYEBROW"
 
 [node name="ConfirmTitle" type="Label" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.36, 0.91, 1, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 26
 text = "TERMINAL_MENU_DEPLOY"
+autowrap_mode = 2
 
 [node name="ConfirmLine" type="HSeparator" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox"]
 layout_mode = 2
 
 [node name="ConfirmationBody" type="Label" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 105)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.76, 0.87, 0.9, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "OPERASYONU BAŞLATMAK İSTİYOR MUSUN?"
 autowrap_mode = 2
 vertical_alignment = 1
 
 [node name="ConfirmActions" type="HBoxContainer" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="ConfirmActionSpacer" type="Control" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox/ConfirmActions"]
 layout_mode = 2
@@ -431,12 +442,12 @@ mouse_filter = 2
 
 [node name="CancelConfirmButton" type="Button" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox/ConfirmActions"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(170, 54)
+custom_minimum_size = Vector2(160, 48)
 layout_mode = 2
 text = "UI_CANCEL"
 
 [node name="ConfirmButton" type="Button" parent="TerminalRoot/ConfirmationOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox/ConfirmActions"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(230, 54)
+custom_minimum_size = Vector2(210, 48)
 layout_mode = 2
 text = "TERMINAL_MENU_DEPLOY"
