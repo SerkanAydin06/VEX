@@ -38,9 +38,10 @@ patrol_offset = Vector3(-2.1, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 1, 9.4)
 patrol_offset = Vector3(-2.4, 0, 0)
 
-[node name="CinderHound_R19_A" parent="Enemies" instance=ExtResource("1_hound")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1, 0.4)
-patrol_offset = Vector3(2.4, 0, 0)
+[node name="CinderHound_R18_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 1, -1.2)
+spawn_min_difficulty = 1
+patrol_offset = Vector3(-1.8, 0, 2.2)
 
 [node name="CinderHound_R25_A" parent="Enemies" instance=ExtResource("1_hound")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -20.5)
@@ -54,32 +55,40 @@ patrol_offset = Vector3(2.6, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1, -39.4)
 patrol_offset = Vector3(2.5, 0, 0)
 
-[node name="CinderHound_R31_B" parent="Enemies" instance=ExtResource("1_hound")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -40.8)
-spawn_min_difficulty = 1
-patrol_offset = Vector3(-2.5, 0, 0)
-
 [node name="CinderHound_R33_A" parent="Enemies" instance=ExtResource("1_hound")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 1, -39.2)
 spawn_min_difficulty = 2
 patrol_offset = Vector3(0, 0, -2.5)
 
 [node name="CinderHound_R35_A" parent="Enemies" instance=ExtResource("1_hound")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1, -50.3)
-patrol_offset = Vector3(2.4, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1, -48.2)
+detection_range = 13.0
+hearing_radius = 9.0
+ally_alert_radius = 4.5
+patrol_offset = Vector3(2.0, 0, -1.2)
 
 [node name="CinderHound_R35_B" parent="Enemies" instance=ExtResource("1_hound")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, -51.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 1, -51.4)
+detection_range = 5.5
+hearing_radius = 4.5
+ally_alert_radius = 3.0
+patrol_offset = Vector3(-1.6, 0, -1.0)
+
+[node name="CinderHound_R35_C" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 1, -53.5)
 spawn_min_difficulty = 1
-patrol_offset = Vector3(-2.4, 0, 0)
+detection_range = 3.4
+hearing_radius = 2.8
+ally_alert_radius = 2.2
+patrol_offset = Vector3(1.2, 0, 0)
 
 [node name="Pickups" type="Node3D" parent="."]
 
 [node name="P01SecurityLockerPickup" parent="Pickups" instance=ExtResource("2_pickup")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.7, 51.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 47.8)
 pickup_id = &"level01_p01_security_locker"
 pickup_type = "p01"
-amount = 32
+amount = 24
 display_name = "P-01 TAKTİK TABANCA"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("3_p01")
@@ -102,11 +111,27 @@ display_name = "KIRMIZI ERİŞİM ANAHTARI"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("5_red")
 
+[node name="R06Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.7, 40)
+pickup_id = &"level01_r06_bullets"
+pickup_type = "bullets"
+amount = 10
+display_name = "MERMİ"
+visual_texture = ExtResource("8_bullets")
+
+[node name="R10Health" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.7, 30)
+pickup_id = &"level01_r10_health"
+pickup_type = "health"
+amount = 15
+display_name = "SAĞLIK"
+visual_texture = ExtResource("6_health")
+
 [node name="R13Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.7, 20)
 pickup_id = &"level01_r13_bullets"
 pickup_type = "bullets"
-amount = 18
+amount = 12
 display_name = "MERMİ"
 visual_texture = ExtResource("8_bullets")
 
@@ -114,7 +139,7 @@ visual_texture = ExtResource("8_bullets")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.7, 20)
 pickup_id = &"level01_r13_armor"
 pickup_type = "armor"
-amount = 12
+amount = 10
 display_name = "HAFİF ZIRH"
 visual_texture = ExtResource("7_armor")
 
@@ -122,7 +147,7 @@ visual_texture = ExtResource("7_armor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.4, 0.7, 1.5)
 pickup_id = &"level01_r17_health"
 pickup_type = "health"
-amount = 20
+amount = 18
 display_name = "SAĞLIK"
 visual_texture = ExtResource("6_health")
 
@@ -130,9 +155,17 @@ visual_texture = ExtResource("6_health")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.7, 1.2)
 pickup_id = &"level01_r19_bullets"
 pickup_type = "bullets"
-amount = 18
+amount = 10
 display_name = "MERMİ"
 visual_texture = ExtResource("8_bullets")
+
+[node name="R20Armor" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.7, 0)
+pickup_id = &"level01_r20_armor"
+pickup_type = "armor"
+amount = 10
+display_name = "HAFİF ZIRH"
+visual_texture = ExtResource("7_armor")
 
 [node name="R23ResupplyHealth" parent="Pickups" instance=ExtResource("2_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0.7, -10)
@@ -146,7 +179,7 @@ visual_texture = ExtResource("6_health")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.7, -10)
 pickup_id = &"level01_r23_armor"
 pickup_type = "armor"
-amount = 20
+amount = 16
 display_name = "ZIRH"
 visual_texture = ExtResource("7_armor")
 
@@ -154,7 +187,15 @@ visual_texture = ExtResource("7_armor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -11.8)
 pickup_id = &"level01_r23_bullets"
 pickup_type = "bullets"
-amount = 30
+amount = 24
+display_name = "MERMİ"
+visual_texture = ExtResource("8_bullets")
+
+[node name="R28Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.7, -30)
+pickup_id = &"level01_r28_bullets"
+pickup_type = "bullets"
+amount = 10
 display_name = "MERMİ"
 visual_texture = ExtResource("8_bullets")
 
@@ -162,7 +203,7 @@ visual_texture = ExtResource("8_bullets")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.8, 0.7, -41.6)
 pickup_id = &"level01_r29_secret_ammo"
 pickup_type = "bullets"
-amount = 24
+amount = 18
 display_name = "GİZLİ BAKIM STOĞU"
 visual_texture = ExtResource("8_bullets")
 
@@ -170,7 +211,7 @@ visual_texture = ExtResource("8_bullets")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.2, 0.7, -41.6)
 pickup_id = &"level01_r29_secret_armor"
 pickup_type = "armor"
-amount = 15
+amount = 12
 display_name = "BAKIM ZIRHI"
 visual_texture = ExtResource("7_armor")
 
@@ -178,20 +219,20 @@ visual_texture = ExtResource("7_armor")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.7, -41.5)
 pickup_id = &"level01_r33_bullets"
 pickup_type = "bullets"
-amount = 18
+amount = 12
 display_name = "MERMİ"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R35FinalBullets" parent="Pickups" instance=ExtResource("2_pickup")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -48.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -46.7)
 pickup_id = &"level01_r35_bullets"
 pickup_type = "bullets"
-amount = 32
+amount = 24
 display_name = "MERMİ"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R35FinalHealth" parent="Pickups" instance=ExtResource("2_pickup")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0.7, -48.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0.7, -46.8)
 pickup_id = &"level01_r35_health"
 pickup_type = "health"
 amount = 25
@@ -199,10 +240,10 @@ display_name = "SAĞLIK"
 visual_texture = ExtResource("6_health")
 
 [node name="R35FinalArmor" parent="Pickups" instance=ExtResource("2_pickup")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.7, -48.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.7, -46.8)
 pickup_id = &"level01_r35_armor"
 pickup_type = "armor"
-amount = 20
+amount = 15
 display_name = "ZIRH"
 visual_texture = ExtResource("7_armor")
 
