@@ -1,6 +1,8 @@
 class_name VexFieldRecordTerminal
 extends StaticBody3D
 
+const DiscoveryOverlay = preload("res://scripts/ui/discovery_notification_overlay.gd")
+
 @export_category("Kayıt")
 @export var record_id: StringName = &""
 @export var category_tr := "KAYIT"
@@ -21,6 +23,7 @@ var _reader_category: Label = null
 var _reader_body: RichTextLabel = null
 var _close_button: Button = null
 var _is_open := false
+var _discovery_announced := false
 var _previous_mouse_mode := Input.MOUSE_MODE_CAPTURED
 var _was_tree_paused := false
 var _ignore_close_until_msec := 0
@@ -65,6 +68,15 @@ func _open_record() -> void:
 	_was_tree_paused = get_tree().paused
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if not _discovery_announced:
+		_discovery_announced = true
+		DiscoveryOverlay.request(
+			get_tree(),
+			&"record",
+			"KAYIT ÇÖZÜLDÜ",
+			"RECORD DECODED",
+			_localized(title_tr, title_en)
+		)
 	if not objective_after_read.is_empty():
 		GameState.set_objective(objective_after_read)
 
