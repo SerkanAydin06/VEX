@@ -15,6 +15,7 @@ enum TerminalMode {
 
 @onready var offline_overlay: Label3D = $Visuals/ScreenAssembly/OfflineOverlay
 @onready var terminal_menu: VexTerminalMenu = $TerminalMenu
+@onready var archive_terminal: VexArchiveTerminal = $ArchiveTerminal
 
 
 func _ready() -> void:
@@ -34,9 +35,12 @@ func interact(_player: Node) -> void:
 	if offline:
 		GameState.notify(tr("DOOR_LOCKED_MESSAGE") % [tr(display_name), tr(offline_message)])
 		return
+	if terminal_mode == TerminalMode.INFORMATION:
+		archive_terminal.open_terminal()
+		return
 	terminal_menu.open_terminal(
 		_get_mission_definitions(),
-		terminal_mode != TerminalMode.INFORMATION,
+		true,
 		terminal_mode == TerminalMode.DEPLOYMENT
 	)
 
