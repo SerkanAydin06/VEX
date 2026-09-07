@@ -11,6 +11,7 @@ LEVEL_SCRIPT = ROOT / "scripts" / "levels" / "level_01.gd"
 ENVIRONMENT_SCRIPT = ROOT / "scripts" / "levels" / "level_01_environment_story.gd"
 TRAINING = ROOT / "scenes" / "levels" / "level_01_training_overlay.tscn"
 RECORD_SCRIPT = ROOT / "scripts" / "props" / "field_record_terminal.gd"
+CH01_TRANSLATIONS = ROOT / "translations" / "chapter01.csv"
 
 
 def _read(path: Path) -> str:
@@ -19,7 +20,14 @@ def _read(path: Path) -> str:
 
 def test_level01_main_scene_exposes_canonical_layers_in_editor() -> None:
     scene = _read(LEVEL_SCENE)
+    assert '[node name="Level01_FirstFracture" type="Node3D"' in scene
     assert 'map_revision = "VEX01-FIRST-FRACTURE-R37-ENV01"' in scene
+    assert 'level_display_name = "CH01_NAME"' in scene
+    assert 'first_objective = "CH01_OBJECTIVE_START"' in scene
+    assert 'briefing_story = "CH01_BRIEFING_STORY"' in scene
+    assert 'briefing_objective = "CH01_BRIEFING_OBJECTIVE"' in scene
+    assert 'automap_title = "CH01_MAP_TITLE"' in scene
+    assert "LEVEL01_NAME" not in scene
     assert 'path="res://scenes/levels/level_01_environment_story.tscn"' in scene
     assert 'path="res://scenes/levels/level_01_first_fracture_content.tscn"' in scene
     assert '[node name="Level01EnvironmentStory" parent="." instance=ExtResource("6_environment")]' in scene
@@ -60,8 +68,52 @@ def test_level01_tool_script_previews_only_safe_structure_roots() -> None:
         assert forbidden not in structure_block
     assert 'if get_node_or_null("Geometry") != null:' in script
     assert 'structure_node.owner = null' in script
+    assert 'if node_name == &"Doors" and not Engine.is_editor_hint():' in script
+    assert '_configure_authored_doors(structure_node)' in script
     assert "FIRST_FRACTURE_CONTENT_SCENE" not in script
     assert "ENVIRONMENT_STORY_SCENE" not in script
+
+
+def test_runtime_door_flow_resets_legacy_state_and_applies_only_canonical_gates() -> None:
+    script = _read(LEVEL_SCRIPT)
+    assert 'doors_root.get_node_or_null("Door_25_27")' in script
+    assert 'doors_root.get_node_or_null("Door_35_37")' in script
+    assert '"CH01_DOOR_BLUE_ACCESS"' in script
+    assert '"CH01_DOOR_FINAL_AIRLOCK"' in script
+    assert '[&"blue"]' in script
+    assert '[&"blue", &"red"]' in script
+    assert "_reset_authored_door" in script
+    assert 'door.required_enemy_ids = []' in script
+    assert 'door.objective_on_combat_clear = ""' in script
+    assert 'door.permanently_locked = false' in script
+    assert 'GameState.set_objective("CH01_OBJECTIVE_BOTH_KEYS")' in script
+    assert 'GameState.set_objective("CH01_OBJECTIVE_RED_ONLY")' in script
+    assert 'GameState.set_objective("CH01_OBJECTIVE_BLUE_ONLY")' in script
+
+
+def test_chapter01_translation_catalog_covers_active_level_and_door_keys() -> None:
+    translations = _read(CH01_TRANSLATIONS)
+    for key in [
+        "CH01_NAME",
+        "CH01_OBJECTIVE_START",
+        "CH01_BRIEFING_STORY",
+        "CH01_BRIEFING_OBJECTIVE",
+        "CH01_MAP_TITLE",
+        "CH01_OBJECTIVE_RED_ONLY",
+        "CH01_OBJECTIVE_BLUE_ONLY",
+        "CH01_OBJECTIVE_BOTH_KEYS",
+        "CH01_OBJECTIVE_DEEPER",
+        "CH01_OBJECTIVE_FINAL",
+        "CH01_DOOR_BLUE_ACCESS",
+        "CH01_DOOR_FINAL_AIRLOCK",
+        "CH01_BLUE_ACCESS",
+        "CH01_DUAL_ACCESS",
+        "CH01_MISSION_BRIEF",
+        "CH01_COMPLETE",
+    ]:
+        assert f"{key}," in translations
+    assert "BÖLÜM 01 // İLK KIRILMA" in translations
+    assert "CHAPTER 01 // FIRST FRACTURE" in translations
 
 
 def test_structure_source_preserves_the_authored_37_room_spine() -> None:
