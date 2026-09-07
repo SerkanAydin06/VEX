@@ -49,12 +49,8 @@ func is_record_discovered(record_id: StringName) -> bool:
 
 
 func get_discovered_record_ids() -> Array[StringName]:
-	var result := discovered_record_ids.duplicate()
-	result.sort_custom(func(a: StringName, b: StringName) -> bool:
-		var entry_a := RecordDB.get_record(a)
-		var entry_b := RecordDB.get_record(b)
-		return int(entry_a.get("order", 0)) < int(entry_b.get("order", 0))
-	)
+	var result: Array[StringName] = discovered_record_ids.duplicate()
+	result.sort_custom(_record_id_order_less)
 	return result
 
 
@@ -93,6 +89,12 @@ func _add_restored_record(record_id: StringName) -> void:
 	if not RecordDB.has_record(record_id):
 		return
 	discovered_record_ids.append(record_id)
+
+
+func _record_id_order_less(a: StringName, b: StringName) -> bool:
+	var entry_a := RecordDB.get_record(a)
+	var entry_b := RecordDB.get_record(b)
+	return int(entry_a.get("order", 0)) < int(entry_b.get("order", 0))
 
 
 func _on_tree_node_added(node: Node) -> void:
