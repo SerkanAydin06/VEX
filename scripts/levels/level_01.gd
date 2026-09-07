@@ -15,15 +15,18 @@ const TRAINING_OVERLAY_SCENE := preload("res://scenes/levels/level_01_training_o
 var _training_overlay: Node3D
 
 
+func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		return
+	# Structural roots must exist before the directly-instanced gameplay/environment
+	# children receive _ready(), especially for lighting and navigation references.
+	_install_authored_structure()
+
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		_install_editor_structure_preview()
 		return
-
-	# Gameplay content and environmental storytelling are real subscene instances
-	# of level_01.tscn so they are visible/editable from the Godot editor. Only the
-	# old 37-room structural snapshot is filtered here to keep legacy gameplay out.
-	_install_authored_structure()
 	super._ready()
 
 
