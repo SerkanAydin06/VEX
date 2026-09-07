@@ -1,0 +1,158 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/room_name_display.tscn" id="1_display"]
+
+[sub_resource type="StandardMaterial3D" id="Material_pressure"]
+albedo_color = Color(0.08, 0.16, 0.2, 1)
+metallic = 0.45
+roughness = 0.28
+emission_enabled = true
+emission = Color(0.08, 0.48, 0.72, 1)
+emission_energy_multiplier = 1.4
+
+[sub_resource type="StandardMaterial3D" id="Material_heat"]
+albedo_color = Color(0.24, 0.055, 0.014, 1)
+roughness = 0.38
+emission_enabled = true
+emission = Color(1, 0.19, 0.025, 1)
+emission_energy_multiplier = 2.1
+
+[sub_resource type="StandardMaterial3D" id="Material_scorch"]
+albedo_color = Color(0.025, 0.016, 0.012, 1)
+roughness = 0.96
+
+[sub_resource type="CylinderMesh" id="Mesh_pressure_pipe"]
+top_radius = 0.12
+bottom_radius = 0.12
+height = 5.0
+radial_segments = 12
+
+[sub_resource type="BoxMesh" id="Mesh_scorch"]
+size = Vector3(3.4, 0.045, 2.2)
+
+[sub_resource type="BoxMesh" id="Mesh_warning"]
+size = Vector3(3.0, 0.055, 0.3)
+
+[node name="Level03EnvironmentStory" type="Node3D"]
+
+[node name="RoomCodes" type="Node3D" parent="."]
+
+[node name="MaintenanceDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(-23.6, 4.85, -5)
+rotation = Vector3(0, 1.5708, 0)
+room_name = "L06 // MAINT"
+header_text = "VEX // 03"
+
+[node name="OperationsDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(23.6, 4.85, 15)
+rotation = Vector3(0, -1.5708, 0)
+room_name = "L04 // PRESS"
+header_text = "VEX // 03"
+
+[node name="UpperArchiveDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(-11.6, 12.65, -5)
+rotation = Vector3(0, 1.5708, 0)
+room_name = "U04 // 7-C"
+header_text = "VEX // 03"
+
+[node name="ReactorServiceDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(23.6, 12.65, -5)
+rotation = Vector3(0, -1.5708, 0)
+room_name = "U06 // MED"
+header_text = "VEX // 03"
+
+[node name="EvacDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
+position = Vector3(23.6, 12.65, -15)
+rotation = Vector3(0, -1.5708, 0)
+room_name = "U08 // EVAC"
+header_text = "VEX // 03"
+
+[node name="PressurePipes" type="Node3D" parent="."]
+
+[node name="LowerPressurePipeA" type="MeshInstance3D" parent="PressurePipes"]
+position = Vector3(12, 3.9, 15)
+rotation = Vector3(0, 0, 1.5708)
+mesh = SubResource("Mesh_pressure_pipe")
+material_override = SubResource("Material_pressure")
+cast_shadow = 0
+
+[node name="LowerPressurePipeB" type="MeshInstance3D" parent="PressurePipes"]
+position = Vector3(0, 3.9, -5)
+rotation = Vector3(0, 0, 1.5708)
+mesh = SubResource("Mesh_pressure_pipe")
+material_override = SubResource("Material_pressure")
+cast_shadow = 0
+
+[node name="UpperPressurePipeA" type="MeshInstance3D" parent="PressurePipes"]
+position = Vector3(12, 11.7, -5)
+rotation = Vector3(0, 0, 1.5708)
+mesh = SubResource("Mesh_pressure_pipe")
+material_override = SubResource("Material_pressure")
+cast_shadow = 0
+
+[node name="ThermalScars" type="Node3D" parent="."]
+
+[node name="JuggernautScorch" type="MeshInstance3D" parent="ThermalScars"]
+position = Vector3(18, 0.07, 15)
+rotation = Vector3(0, 0.2, 0)
+mesh = SubResource("Mesh_scorch")
+material_override = SubResource("Material_scorch")
+cast_shadow = 0
+
+[node name="ReactorScorch" type="MeshInstance3D" parent="ThermalScars"]
+position = Vector3(18, 7.87, -5)
+rotation = Vector3(0, -0.18, 0)
+mesh = SubResource("Mesh_scorch")
+material_override = SubResource("Material_scorch")
+cast_shadow = 0
+
+[node name="WarningBars" type="Node3D" parent="."]
+
+[node name="ArchiveWarning" type="MeshInstance3D" parent="WarningBars"]
+position = Vector3(-6, 12.45, -9.55)
+mesh = SubResource("Mesh_warning")
+material_override = SubResource("Material_heat")
+cast_shadow = 0
+
+[node name="EvacWarning" type="MeshInstance3D" parent="WarningBars"]
+position = Vector3(18, 12.45, -19.55)
+mesh = SubResource("Mesh_warning")
+material_override = SubResource("Material_heat")
+cast_shadow = 0
+
+[node name="StoryLights" type="Node3D" parent="."]
+
+[node name="P07LockerLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(-20.4, 3.5, -6.4)
+light_color = Color(0.35, 0.62, 1, 1)
+light_energy = 0.95
+omni_range = 4.0
+shadow_enabled = false
+
+[node name="FirstJuggernautHeat" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(18, 4.0, 15)
+light_color = Color(1, 0.22, 0.035, 1)
+light_energy = 2.0
+omni_range = 7.0
+shadow_enabled = true
+
+[node name="ArchiveLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(-6, 11.6, -5)
+light_color = Color(1, 0.16, 0.025, 1)
+light_energy = 1.35
+omni_range = 5.0
+shadow_enabled = false
+
+[node name="SelinMedicalLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(20.2, 11.4, -6.8)
+light_color = Color(0.16, 0.72, 1, 1)
+light_energy = 1.5
+omni_range = 5.2
+shadow_enabled = false
+
+[node name="EvacHeatLight" type="OmniLight3D" parent="StoryLights"]
+position = Vector3(18, 11.8, -15)
+light_color = Color(1, 0.12, 0.02, 1)
+light_energy = 2.0
+omni_range = 6.5
+shadow_enabled = true
