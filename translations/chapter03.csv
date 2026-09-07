@@ -24,3 +24,4 @@ CH03_RESCUE_COMPLETE,SELİN ERDEM STABİL // TAHLİYE HATTI AÇILDI,SELIN ERDEM 
 CH03_RESCUE_STABLE,MED // SELİN STABİL,MED // SELIN STABLE
 CH03_FINISH_CONTROL,BASTION TAHLİYE BAĞLANTISI,BASTION EVACUATION LINK
 CH03_FINISH_REQUIRES_RESCUE,TAHLİYE KİLİTLİ // ÖNCE SELİN ERDEM'İ STABİLİZE ET,EVACUATION LOCKED // STABILIZE SELIN ERDEM FIRST
+HUB_SELIN_POST_CH03,"Selin: Basınç Hattı kayıtları akışın rastgele olmadığını gösteriyor. VEX bunu kazadan önce de görmüş. Verileri Bastion'da karşılaştıracağım; sıradaki Korvath hattını bulmamız gerek.","Selin: The Pressure Line records show the flow was not random. VEX saw it before the disaster. I'll compare the data at Bastion; we need to find the next Korvath line."
