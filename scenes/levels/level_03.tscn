@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://bc6m2yvln3f84" path="res://assets/audio/game_music_pro.mp3" id="4_music"]
 [ext_resource type="AudioStream" uid="uid://cqfknp7dwdl6" path="res://assets/audio/facility_ambient_pro.mp3" id="5_ambient"]
 [ext_resource type="PackedScene" path="res://scenes/props/one_shot_notification_trigger.tscn" id="6_hint"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_03_environment_story.tscn" id="7_environment"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_03_pressure_line_content.tscn" id="8_content"]
 
 [node name="Level03_PressureLine" type="Node3D"]
 script = ExtResource("1_script")
@@ -28,6 +30,10 @@ automap_start_cell = Vector2i(1, 5)
 automap_exit_cell = Vector2i(7, 0)
 automap_merge_adjacent_cells = false
 automap_show_room_numbers = false
+
+[node name="Level03EnvironmentStory" parent="." instance=ExtResource("7_environment")]
+
+[node name="Level03PressureLineContent" parent="." instance=ExtResource("8_content")]
 
 [node name="Player" parent="." instance=ExtResource("2_player")]
 transform = Transform3D(0.5731233, 0, -0.8194692, 0, 1, 0, 0.8194692, 0, 0.5731233, -20, 1, 16.5)
