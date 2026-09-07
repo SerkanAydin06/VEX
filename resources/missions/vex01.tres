@@ -11,11 +11,11 @@ filter_clip = true
 [resource]
 script = ExtResource("1")
 mission_id = &"vex01"
-display_name = "LEVEL01_NAME"
-briefing = "LEVEL01_MISSION_BRIEF"
-completion_message = "LEVEL01_COMPLETE"
+display_name = "CH01_NAME"
+briefing = "CH01_MISSION_BRIEF"
+completion_message = "CH01_COMPLETE"
 scene_path = "res://scenes/levels/level_01.tscn"
 campaign_stage = 1
 terminal_code = "BÖLÜM-01"
-facility_type = "LEVEL01_NAME"
+facility_type = "CH01_NAME"
 terminal_preview = SubResource("AtlasTexture_terminal_preview")
