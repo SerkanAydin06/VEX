@@ -3,7 +3,7 @@
 ; since the parameters that go here are not all obvious.
 ;
 ; Format:
-;   [section] ; section goes between []
+;   [section] ; section between []
 ;   param=value ; assign values to parameters
 
 config_version=5
@@ -32,6 +32,7 @@ default_bus_layout="res://default_bus_layout.tres"
 
 SettingsManager="*res://scenes/autoload/settings_manager.tscn"
 GameState="*res://scripts/autoload/game_state.gd"
+BaseManager="*res://scripts/autoload/base_manager.gd"
 ArchiveManager="*res://scripts/autoload/archive_manager.gd"
 EnemyPerformance="*res://scripts/autoload/enemy_performance_manager.gd"
 FpsDisplay="*res://scripts/autoload/fps_display.gd"
