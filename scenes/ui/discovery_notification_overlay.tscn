@@ -17,7 +17,7 @@ shadow_color = Color(0, 0, 0, 0.58)
 shadow_size = 10
 
 [node name="DiscoveryNotificationOverlay" type="CanvasLayer"]
-layer = 70
+layer = 120
 process_mode = 3
 script = ExtResource("1_script")
 
