@@ -71,6 +71,7 @@ Bu, kapı ve inventory sistemini tekrar yazmadan kampanya planındaki ana rota s
 - Güney/east loop oyuncuyu Bastion iletişim rölesine taşır.
 - Normal ve üzeri zorluklarda final alanına ek Spitter katmanları gelir.
 - Finish control blue + yellow + red underlying key state'lerini ister; oyuncuya bunlar sigorta olarak sunulur.
+- **KOR-TERMAL Kaynak İmzası** kaydı final R33 ana röle konsolundadır; bölümün ana teknik keşfi final hedefiyle aynı odada gerçekleşir.
 - Finalde düşman-ID kilidi yoktur; bölüm erişim zinciri ve final rota savunması üzerinden tamamlanır.
 - Finish switch tekrar Bastion-7'ye döner ve campaign completion stage `2` olur.
 
@@ -111,9 +112,9 @@ P-01 için bullets, sağlık ve zırh pencereleri de ana rota üzerinde bulunur.
 
 Üç kayıt `VexFieldRecordDatabase` içinde kalıcı koleksiyona bağlıdır.
 
-### R08 — TEKNİK / KOR-TERMAL Kaynak İmzası
+### R33 — TEKNİK / KOR-TERMAL Kaynak İmzası
 
-Ana servis/röle kaydı. `KOR-TERMAL` frekansının rastgele rift noise değil, tekrarlayan düzenli bir dış kaynak imzası olduğunu ve VEX'in bunu yıllardır izlediğini gösterir.
+Ana röle konsolu kaydı. `KOR-TERMAL` frekansının rastgele rift noise değil, tekrarlayan düzenli bir dış kaynak imzası olduğunu ve VEX'in bunu yıllardır izlediğini gösterir. Final röle aktivasyonuyla aynı odada bulunur.
 
 ### R19 — PERSONEL / Röle Teknisyeni / Son Vardiya
 
@@ -133,7 +134,7 @@ Bulunan kayıtlar campaign save'e kalıcı yazılır ve Bastion-7 Ana Terminali 
 - İlk Spitter hattı: sıcak turuncu-kızıl transfer izi.
 - Röle transfer alanı: emissive termal conduit vurguları.
 - R27 gizli cep: sıcak basınç/yönetim arşivi tonu.
-- Final röle hattı: kırmızı acil durum ışığı.
+- Final R33 röle hattı: kırmızı acil durum ışığı ve ana teknik kayıt.
 
 ## 9. Canon sınırları
 
@@ -154,6 +155,7 @@ Bulunan kayıtlar campaign save'e kalıcı yazılır ve Bastion-7 Ana Terminali 
 - [x] SG-04 Breacher Bölüm 2 ilk kalıcı shotgun edinimi olarak sahada mevcut.
 - [x] Üçlü güç sigorta zinciri mevcut key/door altyapısına bağlandı.
 - [x] 3 kanonik kayıt persistent field-record database'e bağlı.
+- [x] KOR-TERMAL ana teknik kaydı final R33 röle konsolunda.
 - [x] 1 secret authored bakım cebinde mevcut.
 - [x] Final Bastion iletişim rölesi olarak sunuluyor ve Bastion-7'ye dönüyor.
 - [x] Çevresel hikâye katmanı collision'sız.
