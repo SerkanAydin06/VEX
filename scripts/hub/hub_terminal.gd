@@ -58,11 +58,11 @@ func _process(delta: float) -> void:
 	)
 	var slow_wave := sin(_screen_signal_time)
 	var scan_wave := sin(_screen_signal_time * 3.7 + 0.9)
-	var signal := clampf(screen_signal_strength, 0.0, 0.08)
-	var vertical_drift := slow_wave * signal * 0.06
-	var scale_pulse := 1.0 + scan_wave * signal * 0.15
-	var brightness := 0.96 + (slow_wave * 0.5 + 0.5) * signal * 1.7
-	var cyan_bias := 0.985 + (scan_wave * 0.5 + 0.5) * signal * 0.65
+	var signal_amount := clampf(screen_signal_strength, 0.0, 0.08)
+	var vertical_drift := slow_wave * signal_amount * 0.06
+	var scale_pulse := 1.0 + scan_wave * signal_amount * 0.15
+	var brightness := 0.96 + (slow_wave * 0.5 + 0.5) * signal_amount * 1.7
+	var cyan_bias := 0.985 + (scan_wave * 0.5 + 0.5) * signal_amount * 0.65
 
 	screen_surface.position = _screen_base_position + Vector3(0.0, vertical_drift, 0.0)
 	screen_surface.pixel_size = _screen_base_pixel_size * scale_pulse
