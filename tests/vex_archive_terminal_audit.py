@@ -66,7 +66,7 @@ def test_archive_database_matches_active_roster_and_five_realities() -> None:
         assert planned not in database
 
 
-def test_main_terminal_has_six_gameplay_relevant_sections_and_real_sprite_previews() -> None:
+def test_main_terminal_has_seven_gameplay_relevant_sections_and_real_sprite_previews() -> None:
     script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
     scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
 
@@ -77,9 +77,11 @@ def test_main_terminal_has_six_gameplay_relevant_sections_and_real_sprite_previe
         "ThreatTab",
         "RiftTab",
         "ProtocolsTab",
+        "BaseManagementTab",
     ]:
         assert f'[node name="{node}" type="Button"' in scene
 
+    assert "BASE_MANAGEMENT," in script
     assert "JSON.parse_string(FileAccess.get_file_as_string(manifest_path))" in script
     assert "AtlasTexture.new()" in script
     assert "ArchiveDB.enemy_sheet_path(entry)" in script
@@ -127,10 +129,10 @@ def test_archive_ui_is_viewport_relative_and_terminal_colliders_remain_canonical
     scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
     hub_scene = HUB_SCENE.read_text(encoding="utf-8")
 
-    assert "anchor_left = 0.035" in scene
-    assert "anchor_top = 0.045" in scene
-    assert "anchor_right = 0.965" in scene
-    assert "anchor_bottom = 0.955" in scene
+    assert "anchor_left = 0.025" in scene
+    assert "anchor_top = 0.035" in scene
+    assert "anchor_right = 0.975" in scene
+    assert "anchor_bottom = 0.965" in scene
     assert '[node name="Body" type="HBoxContainer"' in scene
 
     assert "size = Vector3(1.3230512, 0.7523071, 0.02)" in hub_scene
