@@ -13,6 +13,7 @@ TERMINAL = ROOT / "scenes" / "ui" / "terminal_menu.tscn"
 ARCHIVE = ROOT / "scenes" / "ui" / "vex_archive_terminal.tscn"
 WEAPON_ARCHIVE = ROOT / "scenes" / "ui" / "weapon_archive_terminal.tscn"
 BASE_DASHBOARD = ROOT / "scenes" / "ui" / "base_management_dashboard.tscn"
+HUD = ROOT / "scenes" / "ui" / "hud.tscn"
 
 
 def _read(path: Path) -> str:
@@ -35,10 +36,11 @@ def test_shared_theme_is_compact_without_double_panel_padding() -> None:
 def test_main_menu_uses_compact_buttons_and_modals() -> None:
     scene = _read(MAIN)
     assert "offset_left = 70.0\noffset_top = 326.0\noffset_right = 430.0\noffset_bottom = 708.0" in scene
-    assert scene.count("custom_minimum_size = Vector2(0, 46)") >= 7
+    assert scene.count("custom_minimum_size = Vector2(0, 46)") == 5
     assert "theme_override_font_sizes/font_size = 30\ntext = \"VOID EXTERMINATION\"" in scene
     assert "offset_left = 650.0\noffset_top = 280.0\noffset_right = 1270.0\noffset_bottom = 800.0" in scene
     assert "offset_left = 690.0\noffset_top = 370.0\noffset_right = 1230.0\noffset_bottom = 680.0" in scene
+    assert "custom_minimum_size = Vector2(170, 46)" in scene
     assert "custom_minimum_size = Vector2(220, 64)" not in scene
     assert "theme_override_font_sizes/font_size = 42" not in scene
 
@@ -113,3 +115,20 @@ def test_archive_surfaces_are_already_dense_and_scroll_based() -> None:
     assert "custom_minimum_size = Vector2(0, 44)" in dashboard
     assert "custom_minimum_size = Vector2(0, 40)" in dashboard
     assert "autowrap_mode = 2" in dashboard
+
+
+def test_hud_menu_overlays_keep_map_workspace_large_but_death_menu_compact() -> None:
+    scene = _read(HUD)
+    # The tactical map is a workspace, not a menu card; preserve its large usable area.
+    assert "offset_left = 420.0\noffset_top = 140.0\noffset_right = 1500.0\noffset_bottom = 890.0" in scene
+    assert "theme_override_font_sizes/font_size = 34\ntext = \"LEVEL_01_MAP\"" in scene
+
+    # The death interaction surface follows the same density as Pause/Complete.
+    assert "offset_left = 680.0\noffset_top = 330.0\noffset_right = 1240.0\noffset_bottom = 750.0" in scene
+    death_start = scene.index('[node name="DeathPanel"')
+    death = scene[death_start:]
+    assert "theme_override_font_sizes/font_size = 36" in death
+    assert death.count("custom_minimum_size = Vector2(0, 48)") == 2
+    assert "autowrap_mode = 2" in death
+    assert "theme_override_font_sizes/font_size = 54" not in death
+    assert "custom_minimum_size = Vector2(0, 70)" not in death
