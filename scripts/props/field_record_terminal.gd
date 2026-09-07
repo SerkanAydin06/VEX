@@ -23,7 +23,6 @@ var _reader_category: Label = null
 var _reader_body: RichTextLabel = null
 var _close_button: Button = null
 var _is_open := false
-var _discovery_announced := false
 var _previous_mouse_mode := Input.MOUSE_MODE_CAPTURED
 var _was_tree_paused := false
 var _ignore_close_until_msec := 0
@@ -68,8 +67,11 @@ func _open_record() -> void:
 	_was_tree_paused = get_tree().paused
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	if not _discovery_announced:
-		_discovery_announced = true
+
+	var newly_discovered := false
+	if record_id != &"":
+		newly_discovered = BaseManager.discover_field_record(record_id)
+	if newly_discovered:
 		DiscoveryOverlay.request(
 			get_tree(),
 			&"record",
