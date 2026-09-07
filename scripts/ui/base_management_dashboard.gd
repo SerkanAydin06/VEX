@@ -11,9 +11,10 @@ const COLOR_LOCKED := Color(1.0, 0.30, 0.20, 1.0)
 const COLOR_SYSTEM := Color(0.35, 0.88, 1.0, 1.0)
 const COLOR_MUTED := Color(0.45, 0.58, 0.62, 1.0)
 
-@onready var base_tab: Button = %BaseManagementTab
-@onready var index_panel: Control = %IndexPanel
-@onready var detail_margin: Control = %DetailMargin
+var base_tab: Button
+var index_panel: Control
+var detail_margin: Control
+var _last_dashboard_active := false
 
 @onready var dashboard_title: Label = %BaseDashboardTitle
 @onready var dashboard_subtitle: Label = %BaseDashboardSubtitle
@@ -39,17 +40,14 @@ const COLOR_MUTED := Color(0.45, 0.58, 0.62, 1.0)
 @onready var standard_lighting_button: Button = %StandardLightingButton
 @onready var low_power_lighting_button: Button = %LowPowerLightingButton
 @onready var emergency_lighting_button: Button = %EmergencyLightingButton
-
 @onready var power_upgrade_button: Button = %PowerGridUpgradeButton
 @onready var security_upgrade_button: Button = %SecurityGridUpgradeButton
 @onready var research_upgrade_button: Button = %ResearchInfrastructureUpgradeButton
 
-var _last_dashboard_active := false
-var _editor_initialized := false
-
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_resolve_archive_nodes()
 	if Engine.is_editor_hint():
 		call_deferred("_apply_editor_preview")
 		return
@@ -65,44 +63,49 @@ func _ready() -> void:
 	if not SettingsManager.language_changed.is_connected(_on_language_changed):
 		SettingsManager.language_changed.connect(_on_language_changed)
 	_sync_section_visibility(true)
-	_refresh_dashboard()
 
 
 func _process(_delta: float) -> void:
 	if Engine.is_editor_hint():
-		if not _editor_initialized:
-			_apply_editor_preview()
 		return
 	_sync_section_visibility()
 
 
+func _resolve_archive_nodes() -> void:
+	var current := get_parent()
+	while current != null:
+		if current is VexArchiveTerminal:
+			base_tab = current.find_child("BaseManagementTab", true, false) as Button
+			index_panel = current.find_child("IndexPanel", true, false) as Control
+			detail_margin = current.find_child("DetailMargin", true, false) as Control
+			return
+		current = current.get_parent()
+
+
 func _apply_editor_preview() -> void:
-	if not is_inside_tree():
-		return
-	_editor_initialized = true
 	visible = editor_preview
+	if base_tab != null and editor_preview:
+		base_tab.button_pressed = true
 	if index_panel != null:
 		index_panel.visible = not editor_preview
 	if detail_margin != null:
 		detail_margin.visible = not editor_preview
-	if base_tab != null and editor_preview:
-		base_tab.button_pressed = true
 	_refresh_editor_text()
 
 
 func _sync_section_visibility(force := false) -> void:
 	if base_tab == null:
 		return
-	var dashboard_active := base_tab.button_pressed
-	if not force and dashboard_active == _last_dashboard_active:
+	var active := base_tab.button_pressed
+	if not force and active == _last_dashboard_active:
 		return
-	_last_dashboard_active = dashboard_active
-	visible = dashboard_active
+	_last_dashboard_active = active
+	visible = active
 	if index_panel != null:
-		index_panel.visible = not dashboard_active
+		index_panel.visible = not active
 	if detail_margin != null:
-		detail_margin.visible = not dashboard_active
-	if dashboard_active:
+		detail_margin.visible = not active
+	if active:
 		_refresh_dashboard()
 
 
@@ -133,16 +136,16 @@ func _refresh_static_labels() -> void:
 
 
 func _refresh_status_cards() -> void:
-	var area_definitions := BaseManager.get_area_definitions()
+	var areas := BaseManager.get_area_definitions()
 	var unlocked_count := 0
-	for definition: Dictionary in area_definitions:
+	for definition: Dictionary in areas:
 		if BaseManager.is_area_unlocked(StringName(str(definition.get("id", "")))):
 			unlocked_count += 1
 	access_value.text = _t(
-		"BÖLGE ERİŞİMİ\n%d / %d" % [unlocked_count, area_definitions.size()],
-		"AREA ACCESS\n%d / %d" % [unlocked_count, area_definitions.size()]
+		"BÖLGE ERİŞİMİ\n%d / %d" % [unlocked_count, areas.size()],
+		"AREA ACCESS\n%d / %d" % [unlocked_count, areas.size()]
 	)
-	access_value.add_theme_color_override("font_color", COLOR_ONLINE if unlocked_count == area_definitions.size() else COLOR_SYSTEM)
+	access_value.add_theme_color_override("font_color", COLOR_ONLINE if unlocked_count == areas.size() else COLOR_SYSTEM)
 
 	var lighting := BaseManager.get_lighting_definition(BaseManager.get_lighting_mode())
 	lighting_value.text = "%s\n%s" % [_t("AYDINLATMA", "LIGHTING"), _localized(lighting, "name")]
@@ -164,7 +167,10 @@ func _refresh_status_cards() -> void:
 		"UPGRADES\n%d / %d" % [upgrade_total, upgrade_capacity]
 	)
 	upgrade_value.add_theme_color_override("font_color", COLOR_MUTED)
-	stage_badge.text = _t("KAMPANYA // AŞAMA %02d" % GameState.campaign_stage, "CAMPAIGN // STAGE %02d" % GameState.campaign_stage)
+	stage_badge.text = _t(
+		"KAMPANYA // AŞAMA %02d" % GameState.campaign_stage,
+		"CAMPAIGN // STAGE %02d" % GameState.campaign_stage
+	)
 
 
 func _refresh_facility_map() -> void:
@@ -180,19 +186,14 @@ func _refresh_facility_map() -> void:
 
 func _refresh_managed_area_button(button: Button, area_id: StringName) -> void:
 	var definition := BaseManager.get_area_definition(area_id)
-	if definition.is_empty():
-		button.text = "UNKNOWN\n// NO DATA"
-		button.disabled = true
-		return
-	var area_name := _localized(definition, "name")
 	var unlocked := BaseManager.is_area_unlocked(area_id)
 	var ready := BaseManager.can_unlock_area(area_id, GameState.campaign_stage)
-	var status := ""
+	var status := _t("YETKİ KİLİTLİ", "CLEARANCE LOCKED")
 	var color := COLOR_LOCKED
+	button.disabled = true
 	if unlocked:
 		status = _t("ERİŞİM AÇIK", "ACCESS ONLINE")
 		color = COLOR_ONLINE
-		button.disabled = true
 	elif ready:
 		status = _t("AKTİVASYONA HAZIR", "READY TO ACTIVATE")
 		color = COLOR_READY
@@ -202,8 +203,7 @@ func _refresh_managed_area_button(button: Button, area_id: StringName) -> void:
 			"KİLİTLİ // VEX-%02d" % int(definition.get("required_stage", 0)),
 			"LOCKED // VEX-%02d" % int(definition.get("required_stage", 0))
 		)
-		button.disabled = true
-	button.text = "%s\n%s" % [area_name, status]
+	button.text = "%s\n%s" % [_localized(definition, "name"), status]
 	_set_button_color(button, color)
 
 
@@ -222,11 +222,10 @@ func _refresh_lighting_controls() -> void:
 func _refresh_lighting_button(button: Button, mode: int) -> void:
 	var definition := BaseManager.get_lighting_definition(mode)
 	var active := BaseManager.get_lighting_mode() == mode
-	var load_percent := roundi(float(definition.get("energy_multiplier", 1.0)) * 100.0)
 	button.text = "%s\n%s // %d%%" % [
 		_localized(definition, "name"),
 		_t("AKTİF", "ACTIVE") if active else _t("UYGULA", "APPLY"),
-		load_percent,
+		roundi(float(definition.get("energy_multiplier", 1.0)) * 100.0),
 	]
 	button.disabled = active
 	_set_button_color(button, _lighting_color(mode) if active else COLOR_SYSTEM)
@@ -240,14 +239,12 @@ func _refresh_upgrade_controls() -> void:
 
 func _refresh_upgrade_button(button: Button, upgrade_id: StringName) -> void:
 	var definition := BaseManager.get_upgrade_definition(upgrade_id)
-	var level := BaseManager.get_upgrade_level(upgrade_id)
-	var max_level := int(definition.get("max_level", 0))
 	button.disabled = true
 	button.text = "%s\n%s %d / %d // %s" % [
 		_localized(definition, "name"),
 		_t("SV", "LVL"),
-		level,
-		max_level,
+		BaseManager.get_upgrade_level(upgrade_id),
+		int(definition.get("max_level", 0)),
 		_t("YAKINDA", "FUTURE"),
 	]
 	_set_button_color(button, COLOR_MUTED)
@@ -255,7 +252,6 @@ func _refresh_upgrade_button(button: Button, upgrade_id: StringName) -> void:
 
 func _activate_area(area_id: StringName) -> void:
 	if not BaseManager.can_unlock_area(area_id, GameState.campaign_stage):
-		_refresh_dashboard()
 		return
 	var previous_state := BaseManager.capture_state()
 	if not BaseManager.unlock_area(area_id, GameState.campaign_stage):
