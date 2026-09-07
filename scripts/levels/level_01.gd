@@ -1,3 +1,4 @@
+@tool
 extends VexBaseLevel
 
 const STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_01_structure_source.tscn"
@@ -10,22 +11,30 @@ const STRUCTURE_NODE_NAMES := [
 	&"Props",
 ]
 const TRAINING_OVERLAY_SCENE := preload("res://scenes/levels/level_01_training_overlay.tscn")
-const FIRST_FRACTURE_CONTENT_SCENE := preload("res://scenes/levels/level_01_first_fracture_content.tscn")
-const ENVIRONMENT_STORY_SCENE := preload("res://scenes/levels/level_01_environment_story.tscn")
 
 var _training_overlay: Node3D
-var _first_fracture_content: Node3D
-var _environment_story: Node3D
 
 
 func _ready() -> void:
-	# Aktif level_01.tscn artık legacy gameplay içermez. Korunan 37 odalı fiziksel
-	# omurga ayrı sahne kaynağından yalnız yapı node'ları seçilerek taşınır;
-	# eski düşman/pickup/trigger kökleri hiçbir zaman aktif SceneTree'ye girmez.
+	if Engine.is_editor_hint():
+		_install_editor_structure_preview()
+		return
+
+	# Gameplay content and environmental storytelling are real subscene instances
+	# of level_01.tscn so they are visible/editable from the Godot editor. Only the
+	# old 37-room structural snapshot is filtered here to keep legacy gameplay out.
 	_install_authored_structure()
-	_install_environment_story()
-	_install_first_fracture_content()
 	super._ready()
+
+
+func _install_editor_structure_preview() -> void:
+	# The old structural source also contains retired gameplay roots, so it cannot
+	# be instanced wholesale in the editor. Reuse the same safe structural filter
+	# used at runtime. These preview nodes are intentionally not scene-owned; edits
+	# to structural geometry should be made in the authored structure source.
+	if get_node_or_null("Geometry") != null:
+		return
+	_install_authored_structure()
 
 
 func _install_authored_structure() -> void:
@@ -39,6 +48,8 @@ func _install_authored_structure() -> void:
 		return
 
 	for node_name: StringName in STRUCTURE_NODE_NAMES:
+		if get_node_or_null(NodePath(str(node_name))) != null:
+			continue
 		var structure_node := source_root.get_node_or_null(NodePath(str(node_name)))
 		if structure_node == null:
 			push_error("VEX-01 yapısal node bulunamadı: %s" % node_name)
@@ -48,29 +59,6 @@ func _install_authored_structure() -> void:
 		add_child(structure_node)
 
 	source_root.free()
-
-
-func _install_environment_story() -> void:
-	if ENVIRONMENT_STORY_SCENE == null:
-		push_error("VEX-01 çevresel hikâye sahnesi yüklenemedi.")
-		return
-	_environment_story = ENVIRONMENT_STORY_SCENE.instantiate() as Node3D
-	if _environment_story == null:
-		push_error("VEX-01 çevresel hikâye sahnesi instantiate edilemedi.")
-		return
-	add_child(_environment_story)
-
-
-func _install_first_fracture_content() -> void:
-	if FIRST_FRACTURE_CONTENT_SCENE == null:
-		push_error("VEX-01 kanonik içerik sahnesi yüklenemedi.")
-		return
-	_first_fracture_content = FIRST_FRACTURE_CONTENT_SCENE.instantiate() as Node3D
-	if _first_fracture_content == null:
-		push_error("VEX-01 kanonik içerik sahnesi instantiate edilemedi.")
-		return
-	add_child(_first_fracture_content)
-	map_revision = "VEX01-FIRST-FRACTURE-R37-ENV01"
 
 
 func _on_level_ready() -> void:
