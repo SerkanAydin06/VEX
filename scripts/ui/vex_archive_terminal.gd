@@ -1,3 +1,4 @@
+@tool
 class_name VexArchiveTerminal
 extends CanvasLayer
 
@@ -45,6 +46,9 @@ var _preview_cache: Dictionary = {}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if Engine.is_editor_hint():
+		terminal_root.visible = get_tree().edited_scene_root == self
+		return
 	creatures_tab.pressed.connect(_select_section.bind(Section.CREATURES))
 	universes_tab.pressed.connect(_select_section.bind(Section.UNIVERSES))
 	records_tab.pressed.connect(_select_section.bind(Section.RECORDS))
@@ -81,7 +85,7 @@ func is_open() -> bool:
 
 
 func _input(event: InputEvent) -> void:
-	if not terminal_root.visible:
+	if Engine.is_editor_hint() or not terminal_root.visible:
 		return
 	if event.is_action_pressed("pause") or event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
