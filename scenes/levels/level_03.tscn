@@ -8,7 +8,7 @@
 
 [node name="Level03_PressureLine" type="Node3D"]
 script = ExtResource("1_script")
-map_revision = "VEX03-PRESSURE-LINE-R01-CANONICAL"
+map_revision = "VEX03-PRESSURE-LINE-R02-CANONICAL"
 level_display_name = "CH03_NAME"
 campaign_completion_stage = 3
 first_objective = "CH03_OBJECTIVE_START"
