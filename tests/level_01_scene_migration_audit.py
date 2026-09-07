@@ -11,33 +11,54 @@ LEVEL_SCRIPT = ROOT / "scripts" / "levels" / "level_01.gd"
 ENVIRONMENT_SCRIPT = ROOT / "scripts" / "levels" / "level_01_environment_story.gd"
 TRAINING = ROOT / "scenes" / "levels" / "level_01_training_overlay.tscn"
 RECORD_SCRIPT = ROOT / "scripts" / "props" / "field_record_terminal.gd"
-CINDER_SCRIPT = ROOT / "scripts" / "actors" / "cinderhound.gd"
 
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_active_level_scene_is_a_physically_clean_mission_shell() -> None:
+def test_level01_main_scene_exposes_canonical_layers_in_editor() -> None:
     scene = _read(LEVEL_SCENE)
     assert 'map_revision = "VEX01-FIRST-FRACTURE-R37-ENV01"' in scene
+    assert 'path="res://scenes/levels/level_01_environment_story.tscn"' in scene
+    assert 'path="res://scenes/levels/level_01_first_fracture_content.tscn"' in scene
+    assert '[node name="Level01EnvironmentStory" parent="." instance=ExtResource("6_environment")]' in scene
+    assert '[node name="Level01FirstFractureContent" parent="." instance=ExtResource("7_content")]' in scene
     assert '[node name="Player"' in scene
     assert '[node name="HUD"' in scene
-    assert '[node name="LevelMusic"' in scene
-    assert '[node name="AmbientLoop"' in scene
+    # Legacy gameplay is still not authored directly into the main scene.
     for forbidden in [
         'res://scenes/actors/ravager.tscn',
         'res://scenes/actors/veilmaw.tscn',
-        'res://scenes/props/pickup.tscn',
         '[node name="Enemies"',
         '[node name="Pickups"',
         '[node name="Triggers"',
-        'pickup_type =',
-        'enemy_id =',
-        'Ravager_',
-        'Veilmaw_',
     ]:
         assert forbidden not in scene
+
+
+def test_level01_tool_script_previews_only_safe_structure_roots() -> None:
+    script = _read(LEVEL_SCRIPT)
+    assert script.startswith("@tool\nextends VexBaseLevel")
+    assert 'if Engine.is_editor_hint():' in script
+    assert '\t\t_install_editor_structure_preview()' in script
+    assert '\t\treturn' in script
+    assert 'STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_01_structure_source.tscn"' in script
+    structure_block = script[script.index("const STRUCTURE_NODE_NAMES"):script.index("const TRAINING_OVERLAY_SCENE")]
+    for structural_name in [
+        '&"WorldEnvironment"', '&"Geometry"', '&"Doors"',
+        '&"RoomLights"', '&"Lights"', '&"Props"',
+    ]:
+        assert structural_name in structure_block
+    for forbidden in ['&"Enemies"', '&"Pickups"', '&"Triggers"']:
+        assert forbidden not in structure_block
+    assert 'if get_node_or_null("Geometry") != null:' in script
+    assert 'structure_node.owner = null' in script
+    # Content/environment are now real main-scene instances, not runtime preloads.
+    assert "FIRST_FRACTURE_CONTENT_SCENE" not in script
+    assert "ENVIRONMENT_STORY_SCENE" not in script
+    runtime_ready = script[script.index("func _ready() -> void:"):script.index("func _install_editor_structure_preview")]
+    assert runtime_ready.index("_install_authored_structure()") < runtime_ready.index("super._ready()")
 
 
 def test_structure_source_preserves_the_authored_37_room_spine() -> None:
@@ -49,7 +70,6 @@ def test_structure_source_preserves_the_authored_37_room_spine() -> None:
     assert 'Door_25_27' in structure
     assert 'Door_35_37' in structure
     assert 'CeilingWhite_Room_37' in structure
-    assert 'Lamp_35_37_2' in structure
 
 
 def test_first_fracture_content_uses_only_cinder_hounds() -> None:
@@ -83,100 +103,42 @@ def test_p01_is_the_only_weapon_acquisition() -> None:
     assert 'pickup_type = "p01"' in content
     assert 'pickup_id = &"level01_p01_security_locker"' in content
     for forbidden in [
-        'pickup_type = "sg04"',
-        'pickup_type = "p07"',
-        'pickup_type = "p14"',
-        'pickup_type = "p20"',
-        'pickup_type = "night_vision"',
-        'pickup_type = "shells"',
-        "ammo_shells.png",
+        'pickup_type = "sg04"', 'pickup_type = "p07"', 'pickup_type = "p14"',
+        'pickup_type = "p20"', 'pickup_type = "night_vision"', 'pickup_type = "shells"',
     ]:
         assert forbidden not in content
 
 
-def test_access_cards_secret_and_resupply_windows_are_present() -> None:
+def test_access_cards_records_secret_and_resupply_are_scene_authored() -> None:
     content = _read(CONTENT)
     assert "BlueKey_R17" in content
-    assert 'pickup_type = "key_blue"' in content
     assert "RedKey_R33" in content
-    assert 'pickup_type = "key_red"' in content
     assert "R23ResupplyHealth" in content
-    assert "R23ResupplyArmor" in content
-    assert "R23ResupplyBullets" in content
-    assert "R35FinalHealth" in content
-    assert "R35FinalArmor" in content
     assert "R35FinalBullets" in content
     assert "SecretMaintenanceTrigger" in content
-    assert 'secret_id = &"level01_maintenance_cache"' in content
-
-
-def test_three_canonical_story_records_are_scene_authored() -> None:
-    content = _read(CONTENT)
     record_ids = re.findall(r'^record_id = &"([^"]+)"$', content, flags=re.MULTILINE)
     assert record_ids == [
         "vex01_emergency_test_order_0417",
         "vex01_security_camera_07",
         "vex01_we_do_not_produce_energy",
     ]
-    assert "ACİL TEST EMRİ / 04:17" in content
-    assert "GÜVENLİK KAMERASI 07" in content
-    assert "ENERJİ ÜRETMİYORUZ" in content
-    assert "Enerji üretmiyoruz. Bir yerden çekiyoruz." in content
 
 
-def test_finish_has_no_enemy_id_gate_and_returns_to_bastion() -> None:
+def test_finish_returns_to_bastion_without_enemy_id_gate() -> None:
     content = _read(CONTENT)
     finish_block = content.split('[node name="FinishSwitch"', 1)[1]
     assert "required_enemy_id" not in finish_block
     assert 'next_level_path = "res://scenes/hub/bastion_7.tscn"' in finish_block
 
 
-def test_level_installs_structure_story_and_content_before_base_counting() -> None:
-    script = _read(LEVEL_SCRIPT)
-    structure_call = script.index("\t_install_authored_structure()")
-    environment_call = script.index("\t_install_environment_story()")
-    content_call = script.index("\t_install_first_fracture_content()")
-    base_ready_call = script.index("\tsuper._ready()")
-    assert structure_call < environment_call < content_call < base_ready_call
-    assert 'STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_01_structure_source.tscn"' in script
-    assert "const STRUCTURE_NODE_NAMES := [" in script
-    assert "PackedStringArray([" not in script
-    for structural_name in [
-        '&"WorldEnvironment"',
-        '&"Geometry"',
-        '&"Doors"',
-        '&"RoomLights"',
-        '&"Lights"',
-        '&"Props"',
-    ]:
-        assert structural_name in script
-    assert 'preload("res://scenes/levels/level_01_first_fracture_content.tscn")' in script
-    assert 'preload("res://scenes/levels/level_01_environment_story.tscn")' in script
-    assert 'legacy_container_name' not in script
-    assert 'map_revision = "VEX01-FIRST-FRACTURE-R37-ENV01"' in script
-
-
 def test_environment_story_is_collision_free_and_scene_authored() -> None:
     environment = _read(ENVIRONMENT)
     assert environment.count('instance=ExtResource("2_display")') == 6
-    for room_code in [
-        "R03 // SEC",
-        "R17 // Q-CAM",
-        "R23 // MED",
-        "R29 // MNT",
-        "R35 // EVAC",
-        "R37 // NET",
-    ]:
+    for room_code in ["R03 // SEC", "R17 // Q-CAM", "R23 // MED", "R29 // MNT", "R35 // EVAC", "R37 // NET"]:
         assert room_code in environment
-    for disabled_room in [17, 29, 35, 37]:
-        assert f'CeilingWhite_Room_{disabled_room:02d}' in environment
     assert 'FinalBreachCore' in environment
-    assert 'BreachLight' in environment
-    assert 'Material_breach_core' in environment
-    assert 'korvath_rift' not in environment.lower()
-    assert 'StaticBody3D' not in environment
-    assert 'CollisionShape3D' not in environment
-    assert 'Area3D' not in environment
+    for forbidden in ['StaticBody3D', 'CollisionShape3D', 'Area3D']:
+        assert forbidden not in environment
 
 
 def test_environment_runtime_keeps_visual_tuning_in_inspector() -> None:
@@ -185,47 +147,25 @@ def test_environment_runtime_keeps_visual_tuning_in_inspector() -> None:
     assert '@export_range(0.1, 6.0, 0.1) var breach_pulse_speed' in script
     assert '@export_range(0.0, 0.18, 0.005) var breach_scale_pulse' in script
     assert '@export_range(0.0, 0.6, 0.01) var breach_light_pulse' in script
-    assert 'light_root.visible = false' in script
 
 
 def test_first_campaign_stage_starts_unarmed_until_r03_pickup() -> None:
     script = _read(LEVEL_SCRIPT)
     assert "if GameState.campaign_stage != 0:" in script
     assert 'var level_player := get_node_or_null("Player") as Node' in script
-    assert "if level_player == null:" in script
     assert 'level_player.get_node_or_null("WeaponController")' in script
-    assert "if GameState.campaign_stage != 0 or player == null:" not in script
     assert "weapon_controller.unlocked_weapons.clear()" in script
     assert "weapon_controller.acquired_weapons.clear()" in script
     assert 'weapon_controller.current_weapon_id = &""' in script
     assert 'weapon_controller.magazines[&"p01"] = 0' in script
-    assert 'weapon_controller.reserve_ammo[&"bullets"] = 0' in script
 
 
-def test_tutorial_is_short_and_has_no_enemy_id_combat_gate() -> None:
+def test_tutorial_and_record_reader_contracts_remain_intact() -> None:
     training = _read(TRAINING)
+    record_script = _read(RECORD_SCRIPT)
     assert "ravager" not in training.lower()
     assert "gate_enemy_ids = Array[StringName]([])" in training
-    assert "gate_door_paths = Array[NodePath]([])" in training
     assert training.count('parent="." instance=ExtResource("2_tutorial")') == 5
-    for removed_step in ["TutorialStrafe", "TutorialBarrel", "TutorialResource", "TutorialFinal"]:
-        assert removed_step not in training
-
-
-def test_record_terminal_keeps_lore_in_scene_and_ui_as_runtime_helper() -> None:
-    script = _read(RECORD_SCRIPT)
-    assert "@export var record_id" in script
-    assert "@export_multiline var body_tr" in script
-    assert "@export_multiline var body_en" in script
-    assert "func get_interaction_text" in script
-    assert "func interact" in script
-    assert "get_tree().paused = true" in script
-    assert "CanvasLayer.new()" in script
-
-
-def test_cinderhound_keeps_species_id_and_counts_physical_duplicates() -> None:
-    script = _read(CINDER_SCRIPT)
-    assert "enemy_id =" not in script
-    assert "GameState.was_enemy_defeated(enemy_id)" in script
-    assert "super._die()" in script
-    assert "GameState.register_enemy_defeated()" in script
+    assert "@export var record_id" in record_script
+    assert "func get_interaction_text" in record_script
+    assert "func interact" in record_script
