@@ -13,18 +13,46 @@ def test_archive_section_switch_casts_int_back_to_enum() -> None:
     assert "_current_section = section as Section" in script
 
 
-def test_archive_columns_stay_fixed_and_leave_room_for_labels() -> None:
+def test_archive_columns_fit_1280_and_dynamic_labels_wrap() -> None:
     scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
     script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
 
-    assert "custom_minimum_size = Vector2(300, 0)" in scene
-    assert "custom_minimum_size = Vector2(480, 0)" in scene
+    assert "custom_minimum_size = Vector2(220, 0)" in scene
+    assert "custom_minimum_size = Vector2(340, 0)" in scene
     assert scene.count("size_flags_horizontal = 0") >= 2
     assert '[node name="IndexPanel" type="PanelContainer"' in scene
-    assert "custom_minimum_size = Vector2(452, 0)" in scene
-    assert scene.count("theme_override_font_sizes/font_size = 14") >= 7
-    assert "button.clip_text = true" in script
+    assert "custom_minimum_size = Vector2(452, 0)" not in scene
+    assert "custom_minimum_size = Vector2(240, 230)" in scene
+    assert "custom_minimum_size = Vector2(330, 0)" in scene
+
+    assert "button.custom_minimum_size = Vector2(0.0, 68.0)" in script
+    assert "button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART" in script
+    assert "button.clip_text = false" in script
     assert "button.size_flags_horizontal = Control.SIZE_EXPAND_FILL" in script
+    assert '"GERÇEKLİK %02d\\n// SINIFLANDIRILMAMIŞ"' in script
+    assert '"REALITY %02d\\n// UNCLASSIFIED"' in script
+
+
+def test_archive_detail_labels_wrap_instead_of_being_clipped() -> None:
+    scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
+
+    for node_name in ("SectionTitle", "DetailEyebrow", "DetailTitle", "DetailMeta", "ClassificationLabel"):
+        node_header = f'[node name="{node_name}"'
+        assert node_header in scene
+
+    assert scene.count("autowrap_mode = 2") >= 7
+    assert "max_lines_visible =" not in scene
+    assert "clip_text = true" not in scene
+
+
+def test_archive_header_uses_compact_two_line_summary() -> None:
+    scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
+    script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
+
+    assert "custom_minimum_size = Vector2(140, 58)" in scene
+    assert "custom_minimum_size = Vector2(330, 0)" in scene
+    assert '"XENOARŞİV %d / %d  //  EVREN %d / %d\\nAĞ AŞAMASI %02d"' in script
+    assert '"XENOARCHIVE %d / %d  //  REALITIES %d / %d\\nNETWORK STAGE %02d"' in script
 
 
 def test_physical_terminal_screen_has_subtle_runtime_signal_motion() -> None:
