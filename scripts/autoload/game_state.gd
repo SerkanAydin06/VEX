@@ -239,9 +239,11 @@ func publish_keys(keys: Array[StringName]) -> void:
 
 
 func register_enemy_defeated(enemy_id: StringName = &"") -> void:
-	if enemy_id != &"" and defeated_enemy_ids.has(enemy_id):
-		return
-	if enemy_id != &"":
+	# `enemy_id` identifies the canonical species/condition and therefore stays
+	# deduplicated for discovery/compatibility checks. The level kill counter,
+	# however, represents physical enemy instances and must advance for every
+	# actual death even when several enemies share the same species id.
+	if enemy_id != &"" and not defeated_enemy_ids.has(enemy_id):
 		defeated_enemy_ids.append(enemy_id)
 	kills += 1
 	level_stats_changed.emit(kills, total_enemies, secrets, total_secrets)
