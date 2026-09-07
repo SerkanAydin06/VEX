@@ -14,12 +14,21 @@ func discover_record(record_id: StringName) -> bool:
 		push_warning("VEX saha kaydı veritabanında bulunamadı: %s" % str(record_id))
 		return false
 
+	# Kayıt keşfi görev içi checkpoint değildir. Bu nedenle metadata yazarken
+	# oyuncunun o anki state'i değil, level girişinde yakalanmış güvenli state kullanılır.
+	# Böylece ölüm/Continue görevi baştan açarken keşfedilmiş kayıt korunur.
+	if GameState.current_level_start_state.is_empty():
+		push_warning("VEX saha kaydı güvenli görev başlangıcı yakalanmadan kaydedilemedi: %s" % str(record_id))
+		GameState.notify(GameState.get_save_failure_message())
+		return false
+
 	discovered_record_ids.append(record_id)
 	record_changed.emit(record_id)
-
-	# Saha kaydı meta-ilerlemedir. Görev içindeki konum/can/mühimmat checkpoint'e
-	# dönüşmez; GameState son güvenli görev başlangıcıyla yalnız campaign metadata'yı yazar.
-	if not GameState.save_campaign_metadata_progress("field_record"):
+	if not GameState.save_campaign_progress(
+		GameState.current_level_path,
+		GameState.current_level_start_state,
+		"field_record"
+	):
 		discovered_record_ids.erase(record_id)
 		record_changed.emit(record_id)
 		GameState.notify(GameState.get_save_failure_message())
