@@ -161,7 +161,11 @@ func restore_state(state: Dictionary) -> void:
 	var unlocked_values: Array = state.get("unlocked_areas", []) as Array
 	for value: Variant in unlocked_values:
 		var area_id := StringName(str(value))
-		if not get_area_definition(area_id).is_empty():
+		var area_definition := get_area_definition(area_id)
+		if (
+			not area_definition.is_empty()
+			and GameState.campaign_stage >= int(area_definition.get("required_stage", 0))
+		):
 			_unlocked_areas[area_id] = true
 	var restored_mode := int(state.get("lighting_mode", LightingMode.LEVEL_25))
 	if restored_mode >= LightingMode.LEVEL_25 and restored_mode <= LightingMode.LEVEL_100:
@@ -174,7 +178,10 @@ func restore_state(state: Dictionary) -> void:
 		for key: Variant in upgrade_dictionary.keys():
 			var upgrade_id := StringName(str(key))
 			var definition := get_upgrade_definition(upgrade_id)
-			if definition.is_empty():
+			if (
+				definition.is_empty()
+				or GameState.campaign_stage < int(definition.get("required_stage", 0))
+			):
 				continue
 			_upgrade_levels[upgrade_id] = clampi(
 				int(upgrade_dictionary.get(key, 0)),
