@@ -16,8 +16,8 @@ def test_level03_uses_authored_vex_console_instead_of_legacy_sprite_art() -> Non
     script = _read(SCRIPT)
     base = _read(BASE_SCENE)
 
-    # Shared finish-switch keeps the collision/interaction contract and legacy
-    # sprite for other levels; Level 3 replaces only its rendered presentation.
+    # Shared finish-switch keeps the interaction body and legacy sprite for other
+    # levels; Level 3 replaces its rendered presentation only for this instance.
     assert 'path="res://scenes/props/finish_switch.tscn"' in scene
     assert 'path="res://assets/world/finish_switch.png"' in base
     assert 'finish_switch_visual.visible = false' in script
@@ -40,10 +40,16 @@ def test_level03_uses_authored_vex_console_instead_of_legacy_sprite_art() -> Non
     ]:
         assert f'[node name="{node_name}"' in scene
 
-    # New console is scene/Inspector authoritative and does not add a second
-    # collision body that could interfere with the inherited interaction ray.
-    assert "CollisionShape3D" not in scene
+    # Do not add a competing StaticBody3D. Instead override the inherited
+    # CollisionShape3D so aiming at the tall authored console still hits the
+    # interaction body.
     assert "StaticBody3D" not in scene
+    assert '[sub_resource type="BoxShape3D" id="Shape_console_interaction"]' in scene
+    assert 'size = Vector3(1.62, 2.08, 0.34)' in scene
+    assert '[node name="CollisionShape3D" parent="PanelBody"]' in scene
+    assert 'position = Vector3(0, 1.06, 0.12)' in scene
+    assert 'shape = SubResource("Shape_console_interaction")' in scene
+    assert scene.startswith("[gd_scene load_steps=22 format=3]")
 
 
 def test_console_visual_language_matches_vex_industrial_control_theme() -> None:
