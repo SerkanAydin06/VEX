@@ -56,8 +56,17 @@ func _on_settings_closed() -> void:
 
 
 func _return_to_main_menu() -> void:
-	# This only writes while the current scene is Bastion-7. During a mission the
-	# safe-progress API deliberately returns false, so Pause -> Main Menu can never
-	# become a mid-level checkpoint.
-	GameState.save_current_safe_progress("main_menu_exit")
+	# Bastion is a free-form safe point. Flush its latest state synchronously
+	# before leaving; if disk writing fails, keep the player in Bastion instead of
+	# silently discarding the most recent base/loadout changes. Missions never
+	# write here, so Pause -> Main Menu still cannot create a mid-level checkpoint.
+	var current_scene := get_tree().current_scene
+	if (
+		current_scene != null
+		and current_scene.scene_file_path == GameState.BASTION_7_PATH
+		and not GameState.save_current_safe_progress("main_menu_exit")
+	):
+		GameState.notify(GameState.get_save_failure_message())
+		main_menu_button.grab_focus()
+		return
 	GameState.return_to_main_menu()
