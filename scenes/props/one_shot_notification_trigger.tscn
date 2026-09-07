@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/props/one_shot_notification_trigger.gd" id="1_script"]
+
+[sub_resource type="BoxShape3D" id="Shape_trigger"]
+size = Vector3(3.0, 2.2, 3.0)
+
+[node name="OneShotNotificationTrigger" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+monitoring = true
+monitorable = false
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.1, 0)
+shape = SubResource("Shape_trigger")
