@@ -29,11 +29,18 @@ extends Node3D
 @export var mission_definitions: Array[VexMissionDefinition] = []
 
 @onready var ambient_loop: AudioStreamPlayer = $AmbientLoop
+@onready var doors: Node3D = $Doors
+@onready var room_lights: Node3D = $RoomLights
+
+var _room_light_defaults: Dictionary = {}
 
 
 func _ready() -> void:
 	SettingsManager.apply_brightness()
 	GameState.begin_level(0, 0, first_objective)
+	_cache_room_light_defaults()
+	_connect_base_management()
+	_apply_base_management_state()
 	_apply_safe_zone_rules()
 	ambient_loop.volume_db = ambience_volume_db
 	_start_audio_loop(ambient_loop)
@@ -47,6 +54,78 @@ func _save_hub_safe_point() -> void:
 	await get_tree().process_frame
 	if is_inside_tree():
 		GameState.save_current_safe_progress("bastion_arrival")
+
+
+func _connect_base_management() -> void:
+	if not BaseManager.area_access_changed.is_connected(_on_base_area_access_changed):
+		BaseManager.area_access_changed.connect(_on_base_area_access_changed)
+	if not BaseManager.lighting_mode_changed.is_connected(_on_base_lighting_mode_changed):
+		BaseManager.lighting_mode_changed.connect(_on_base_lighting_mode_changed)
+
+
+func _apply_base_management_state() -> void:
+	for definition: Dictionary in BaseManager.get_area_definitions():
+		var area_id := StringName(str(definition.get("id", "")))
+		_on_base_area_access_changed(area_id, BaseManager.is_area_unlocked(area_id))
+	_on_base_lighting_mode_changed(BaseManager.get_lighting_mode())
+
+
+func _on_base_area_access_changed(area_id: StringName, unlocked: bool) -> void:
+	if doors == null:
+		return
+	var definition := BaseManager.get_area_definition(area_id)
+	if definition.is_empty():
+		return
+	var door_name := str(definition.get("door_node", ""))
+	var door := doors.get_node_or_null(door_name)
+	if door == null:
+		return
+	if door.has_method("set_facility_access_unlocked"):
+		door.call("set_facility_access_unlocked", unlocked)
+		return
+	# Compatibility fallback for an older door script. The current door scene
+	# exposes a dedicated facility-access API, so this should normally not run.
+	door.set("permanently_locked", not unlocked)
+	if unlocked and door.has_method("force_open"):
+		door.call("force_open")
+
+
+func _cache_room_light_defaults() -> void:
+	_room_light_defaults.clear()
+	if room_lights == null:
+		return
+	for child: Node in room_lights.get_children():
+		if not (child is VexRoomCeilingLight):
+			continue
+		var fixture := child as VexRoomCeilingLight
+		_room_light_defaults[fixture.name] = {
+			"energy": fixture.light_energy,
+			"color": fixture.light_color,
+			"fixture_modulate": fixture.fixture_modulate,
+		}
+
+
+func _on_base_lighting_mode_changed(mode: int) -> void:
+	if room_lights == null:
+		return
+	var profile := BaseManager.get_lighting_definition(mode)
+	if profile.is_empty():
+		return
+	var energy_multiplier := float(profile.get("energy_multiplier", 1.0))
+	var tint: Color = profile.get("tint", Color.WHITE)
+	var tint_strength := clampf(float(profile.get("tint_strength", 0.0)), 0.0, 1.0)
+	for child: Node in room_lights.get_children():
+		if not (child is VexRoomCeilingLight):
+			continue
+		var fixture := child as VexRoomCeilingLight
+		var defaults: Dictionary = _room_light_defaults.get(fixture.name, {})
+		if defaults.is_empty():
+			continue
+		var authored_color: Color = defaults.get("color", fixture.light_color)
+		var authored_fixture: Color = defaults.get("fixture_modulate", fixture.fixture_modulate)
+		fixture.light_energy = float(defaults.get("energy", fixture.light_energy)) * energy_multiplier
+		fixture.light_color = authored_color.lerp(tint, tint_strength)
+		fixture.fixture_modulate = authored_fixture.lerp(tint, tint_strength * 0.72)
 
 
 func _apply_safe_zone_rules() -> void:
