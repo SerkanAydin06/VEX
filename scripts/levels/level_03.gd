@@ -1,3 +1,4 @@
+@tool
 extends VexBaseLevel
 
 const STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_03_structure_source.tscn"
@@ -9,22 +10,26 @@ const STRUCTURE_NODE_NAMES := [
 	&"RoomLights",
 	&"Lights",
 ]
-const PRESSURE_LINE_CONTENT_SCENE := preload("res://scenes/levels/level_03_pressure_line_content.tscn")
-const ENVIRONMENT_STORY_SCENE := preload("res://scenes/levels/level_03_environment_story.tscn")
 
-var _pressure_line_content: Node3D
-var _environment_story: Node3D
 var _alarm_triggered := false
 
 
 func _ready() -> void:
-	# The legacy Ash Mine scene remains only as an authored two-level structure
-	# source. Mixed-reality enemies, old lore terminals, pickups and objectives are
-	# never added to the live SceneTree.
+	if Engine.is_editor_hint():
+		_install_editor_structure_preview()
+		return
+
+	# Canonical Pressure Line gameplay/environment are real subscene instances of
+	# level_03.tscn. Only the safe authored structural roots are filtered out of the
+	# legacy two-floor snapshot at runtime.
 	_install_authored_structure()
-	_install_environment_story()
-	_install_pressure_line_content()
 	super._ready()
+
+
+func _install_editor_structure_preview() -> void:
+	if get_node_or_null("Geometry") != null:
+		return
+	_install_authored_structure()
 
 
 func _install_authored_structure() -> void:
@@ -38,6 +43,8 @@ func _install_authored_structure() -> void:
 		return
 
 	for node_name: StringName in STRUCTURE_NODE_NAMES:
+		if get_node_or_null(NodePath(str(node_name))) != null:
+			continue
 		var structure_node := source_root.get_node_or_null(NodePath(str(node_name)))
 		if structure_node == null:
 			push_error("VEX-03 yapısal node bulunamadı: %s" % node_name)
@@ -119,29 +126,6 @@ func _configure_key_door(
 	door.required_enemy_ids = []
 	door.objective_on_combat_clear = ""
 	door.permanently_locked = false
-
-
-func _install_environment_story() -> void:
-	if ENVIRONMENT_STORY_SCENE == null:
-		push_error("VEX-03 çevresel hikâye sahnesi yüklenemedi.")
-		return
-	_environment_story = ENVIRONMENT_STORY_SCENE.instantiate() as Node3D
-	if _environment_story == null:
-		push_error("VEX-03 çevresel hikâye sahnesi instantiate edilemedi.")
-		return
-	add_child(_environment_story)
-
-
-func _install_pressure_line_content() -> void:
-	if PRESSURE_LINE_CONTENT_SCENE == null:
-		push_error("VEX-03 Basınç Hattı içerik sahnesi yüklenemedi.")
-		return
-	_pressure_line_content = PRESSURE_LINE_CONTENT_SCENE.instantiate() as Node3D
-	if _pressure_line_content == null:
-		push_error("VEX-03 Basınç Hattı içerik sahnesi instantiate edilemedi.")
-		return
-	add_child(_pressure_line_content)
-	map_revision = "VEX03-PRESSURE-LINE-R02-CANONICAL"
 
 
 func _on_key_inventory_changed(keys: Array[StringName]) -> void:
