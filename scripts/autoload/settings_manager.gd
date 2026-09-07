@@ -6,6 +6,8 @@ const TRANSLATION_RESOURCE_PATHS := [
 	"res://translations/vex.en.translation",
 	"res://translations/chapter02.tr.translation",
 	"res://translations/chapter02.en.translation",
+	"res://translations/chapter03.tr.translation",
+	"res://translations/chapter03.en.translation",
 ]
 const GRAPHICS_NATIVE_RENDER_SCALE := 1.0
 
