@@ -127,11 +127,14 @@ layout_mode = 2
 [node name="Body" type="HBoxContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+clip_contents = true
 theme_override_constants/separation = 14
 
 [node name="NavigationPanel" type="PanelContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body"]
 custom_minimum_size = Vector2(238, 0)
 layout_mode = 2
+size_flags_horizontal = 0
+clip_contents = true
 
 [node name="NavMargin" type="MarginContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel"]
 layout_mode = 2
@@ -150,6 +153,7 @@ theme_override_colors/font_color = Color(0.47, 0.72, 0.79, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 14
 text = "SYSTEM INDEX"
+clip_text = true
 
 [node name="CreaturesTab" type="Button" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
 unique_name_in_owner = true
@@ -159,6 +163,7 @@ toggle_mode = true
 button_pressed = true
 text = "YARATIKLAR"
 alignment = 0
+clip_text = true
 
 [node name="UniversesTab" type="Button" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
 unique_name_in_owner = true
@@ -167,6 +172,7 @@ layout_mode = 2
 toggle_mode = true
 text = "EVRENLER"
 alignment = 0
+clip_text = true
 
 [node name="RecordsTab" type="Button" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
 unique_name_in_owner = true
@@ -175,6 +181,7 @@ layout_mode = 2
 toggle_mode = true
 text = "KAYITLAR"
 alignment = 0
+clip_text = true
 
 [node name="ThreatTab" type="Button" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
 unique_name_in_owner = true
@@ -183,6 +190,7 @@ layout_mode = 2
 toggle_mode = true
 text = "TEHDİT ANALİZİ"
 alignment = 0
+clip_text = true
 
 [node name="RiftTab" type="Button" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
 unique_name_in_owner = true
@@ -191,6 +199,7 @@ layout_mode = 2
 toggle_mode = true
 text = "YARIK AĞI"
 alignment = 0
+clip_text = true
 
 [node name="ProtocolsTab" type="Button" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
 unique_name_in_owner = true
@@ -199,6 +208,7 @@ layout_mode = 2
 toggle_mode = true
 text = "PROTOKOLLER"
 alignment = 0
+clip_text = true
 
 [node name="NavSpacer" type="Control" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/NavigationPanel/NavMargin/NavVBox"]
 layout_mode = 2
@@ -216,6 +226,8 @@ autowrap_mode = 2
 [node name="IndexPanel" type="PanelContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body"]
 custom_minimum_size = Vector2(390, 0)
 layout_mode = 2
+size_flags_horizontal = 0
+clip_contents = true
 
 [node name="IndexMargin" type="MarginContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel"]
 layout_mode = 2
@@ -235,11 +247,13 @@ theme_override_colors/font_color = Color(0.5, 0.75, 0.81, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 15
 text = "XENO ENTITY INDEX"
+clip_text = true
 
 [node name="SectionLine" type="HSeparator" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel/IndexMargin/IndexVBox"]
 layout_mode = 2
 
 [node name="EntryScroll" type="ScrollContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/IndexPanel/IndexMargin/IndexVBox"]
+custom_minimum_size = Vector2(362, 0)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
@@ -248,11 +262,13 @@ horizontal_scroll_mode = 0
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+clip_contents = true
 theme_override_constants/separation = 7
 
 [node name="DetailPanel" type="PanelContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body"]
 layout_mode = 2
 size_flags_horizontal = 3
+clip_contents = true
 
 [node name="DetailMargin" type="MarginContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel"]
 layout_mode = 2
@@ -268,6 +284,7 @@ theme_override_constants/separation = 9
 [node name="DetailTop" type="HBoxContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
 custom_minimum_size = Vector2(0, 280)
 layout_mode = 2
+clip_contents = true
 theme_override_constants/separation = 18
 
 [node name="PreviewPanel" type="PanelContainer" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop"]
@@ -301,6 +318,7 @@ theme_override_colors/font_color = Color(1, 0.31, 0.18, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 13
 text = "VEX ARCHIVE // VERIFIED FIELD DATA"
+clip_text = true
 
 [node name="DetailTitle" type="Label" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
 unique_name_in_owner = true
@@ -310,6 +328,8 @@ theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 26
 text = "UNCLASSIFIED XENO ENTITY"
 autowrap_mode = 2
+max_lines_visible = 2
+clip_text = true
 
 [node name="DetailMeta" type="Label" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
 unique_name_in_owner = true
@@ -319,6 +339,8 @@ theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 12
 text = "FIELD CONTACT REQUIRED"
 autowrap_mode = 2
+max_lines_visible = 3
+clip_text = true
 
 [node name="IdentitySpacer" type="Control" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
 layout_mode = 2
@@ -333,6 +355,8 @@ theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 13
 text = "CLASSIFIED // DATA INCOMPLETE"
 autowrap_mode = 2
+max_lines_visible = 2
+clip_text = true
 
 [node name="DetailLine" type="HSeparator" parent="ArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox"]
 layout_mode = 2
