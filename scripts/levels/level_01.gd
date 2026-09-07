@@ -1,8 +1,34 @@
 extends VexBaseLevel
 
 const TRAINING_OVERLAY_SCENE := preload("res://scenes/levels/level_01_training_overlay.tscn")
+const FIRST_FRACTURE_CONTENT_SCENE := preload("res://scenes/levels/level_01_first_fracture_content.tscn")
 
 var _training_overlay: Node3D
+var _first_fracture_content: Node3D
+
+
+func _ready() -> void:
+	# Eski 37 odalı harita geometrisi/kapıları korunur. Düşman, pickup ve trigger
+	# katmanı yeni kanonik içerik sahnesinden, BaseLevel düşman sayımı başlamadan
+	# önce kurulur. Böylece tüm yerleşimler .tscn / Inspector otoriteli kalır.
+	_install_first_fracture_content()
+	super._ready()
+
+
+func _install_first_fracture_content() -> void:
+	for legacy_container_name in [&"Enemies", &"Pickups", &"Triggers"]:
+		var legacy_container := get_node_or_null(NodePath(str(legacy_container_name)))
+		if legacy_container != null:
+			legacy_container.free()
+	if FIRST_FRACTURE_CONTENT_SCENE == null:
+		push_error("VEX-01 kanonik içerik sahnesi yüklenemedi.")
+		return
+	_first_fracture_content = FIRST_FRACTURE_CONTENT_SCENE.instantiate() as Node3D
+	if _first_fracture_content == null:
+		push_error("VEX-01 kanonik içerik sahnesi instantiate edilemedi.")
+		return
+	add_child(_first_fracture_content)
+	map_revision = "VEX01-FIRST-FRACTURE-R37"
 
 
 func _on_level_ready() -> void:
