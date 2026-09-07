@@ -94,7 +94,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 1, 0.62, 1)
 theme_override_fonts/font = ExtResource("3_mono")
 theme_override_font_sizes/font_size = 10
-text = "AYDINLATMA\nSTANDART"
+text = "AYDINLATMA\nSEVİYE 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -108,7 +108,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.35, 0.88, 1, 1)
 theme_override_fonts/font = ExtResource("3_mono")
 theme_override_font_sizes/font_size = 10
-text = "IŞIK YÜKÜ\n100%"
+text = "IŞIK GÜCÜ\n25%"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -150,7 +150,8 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
-text = "ATIŞ POLİGONU\nAKTİVASYONA HAZIR"
+disabled = true
+text = "ATIŞ POLİGONU\nKİLİTLİ // VEX-01"
 autowrap_mode = 2
 
 [node name="ArmoryAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
@@ -248,35 +249,46 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.48, 0.73, 0.8, 1)
 theme_override_fonts/font = ExtResource("3_mono")
 theme_override_font_sizes/font_size = 10
-text = "AYDINLATMA DAĞITIMI"
+text = "AYDINLATMA GÜÇ KADEMELERİ"
 
 [node name="LightingButtons" type="HBoxContainer" parent="Margin/VBox"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="StandardLightingButton" type="Button" parent="Margin/VBox/LightingButtons"]
+[node name="Lighting25Button" type="Button" parent="Margin/VBox/LightingButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
-text = "STANDART AYDINLATMA\nAKTİF // 100%"
+theme_override_font_sizes/font_size = 8
+text = "SEVİYE 1\nAKTİF // 25%"
 autowrap_mode = 2
 
-[node name="LowPowerLightingButton" type="Button" parent="Margin/VBox/LightingButtons"]
+[node name="Lighting50Button" type="Button" parent="Margin/VBox/LightingButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
-text = "DÜŞÜK GÜÇ MODU\nUYGULA // 48%"
+theme_override_font_sizes/font_size = 8
+disabled = true
+text = "SEVİYE 2\nKİLİTLİ // VEX-01 // 50%"
 autowrap_mode = 2
 
-[node name="EmergencyLightingButton" type="Button" parent="Margin/VBox/LightingButtons"]
+[node name="Lighting75Button" type="Button" parent="Margin/VBox/LightingButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
-text = "ACİL DURUM MODU\nUYGULA // 28%"
+theme_override_font_sizes/font_size = 8
+disabled = true
+text = "SEVİYE 3\nKİLİTLİ // VEX-02 // 75%"
+autowrap_mode = 2
+
+[node name="Lighting100Button" type="Button" parent="Margin/VBox/LightingButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 8
+disabled = true
+text = "SEVİYE 4\nKİLİTLİ // VEX-03 // 100%"
 autowrap_mode = 2
 
 [node name="UpgradeLine" type="HSeparator" parent="Margin/VBox"]
@@ -288,7 +300,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.48, 0.73, 0.8, 1)
 theme_override_fonts/font = ExtResource("3_mono")
 theme_override_font_sizes/font_size = 10
-text = "GELİŞTİRME OMURGASI // GELECEK SİSTEM"
+text = "GELİŞTİRME OMURGASI // İLERLEME KİLİTLİ"
 
 [node name="UpgradeButtons" type="HBoxContainer" parent="Margin/VBox"]
 custom_minimum_size = Vector2(0, 44)
@@ -301,7 +313,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "ENERJİ DAĞITIM AĞI\nSV 0 / 3 // YAKINDA"
+text = "ENERJİ DAĞITIM AĞI\nKİLİTLİ // VEX-01"
 autowrap_mode = 2
 
 [node name="SecurityGridUpgradeButton" type="Button" parent="Margin/VBox/UpgradeButtons"]
@@ -310,7 +322,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "GÜVENLİK AĞI\nSV 0 / 3 // YAKINDA"
+text = "GÜVENLİK AĞI\nKİLİTLİ // VEX-02"
 autowrap_mode = 2
 
 [node name="ResearchInfrastructureUpgradeButton" type="Button" parent="Margin/VBox/UpgradeButtons"]
@@ -319,7 +331,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "ARAŞTIRMA ALTYAPISI\nSV 0 / 3 // YAKINDA"
+text = "ARAŞTIRMA ALTYAPISI\nKİLİTLİ // VEX-03"
 autowrap_mode = 2
 
 [node name="BaseDashboardStatusHint" type="Label" parent="Margin/VBox"]
@@ -329,6 +341,6 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.38, 0.52, 0.57, 1)
 theme_override_fonts/font = ExtResource("3_mono")
 theme_override_font_sizes/font_size = 8
-text = "YEŞİL: AKTİF  //  TURUNCU: AKTİVASYONA HAZIR  //  KIRMIZI: YETKİ KİLİTLİ"
+text = "YEŞİL: AKTİF  //  TURUNCU: KULLANILABİLİR  //  KIRMIZI: İLERLEME KİLİTLİ"
 autowrap_mode = 2
 vertical_alignment = 2
