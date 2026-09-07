@@ -21,7 +21,7 @@ Ravager, Vaskari Raptor, Vaskari Ravager, Voidweaver ve Loom Herald bu bölümü
 
 Eski iki katlı maden/servis sahnesinin fiziksel emeği korunur:
 
-- `level_03.tscn` → küçük görev kabuğu: Player, HUD, müzik, briefing ve automap metadata.
+- `level_03.tscn` → küçük görev kabuğu: Player, HUD, müzik, briefing/automap metadata ve P-07 edinimi sonrası tek seferlik fener öğretim trigger'ı.
 - `level_03_structure_source.tscn` → eski authored iki katlı yapı.
 - `level_03_pressure_line_content.tscn` → kanonik düşmanlar, P-07, erişim yetkileri, ikmal, kayıtlar, Selin kurtarma ve tahliye.
 - `level_03_environment_story.tscn` → collision'sız basınç boruları, sıcaklık izleri, oda kodları ve hikâye ışıkları.
@@ -35,7 +35,7 @@ Runtime'a structure source içinden yalnız `WorldEnvironment`, `Geometry`, `Doo
 - L01 başlangıcından bakım kanadına sapılır.
 - Bölüm 1–2 bilgisi kısa Hound baskısıyla tazelenir.
 - L06 karanlık bakım cebinde **P-07 Sentinel** bulunur.
-- P-07'nin silah feneri güvenli/okunabilir bir cepte öğretilir.
+- P-07'nin silah feneri güvenli/okunabilir bir cepte tek kullanımlık `CH03_FLASHLIGHT_HINT` bildirimiyle öğretilir.
 - Pickup ilk edinimde 16'lık dolu şarjör + **32 bonus bullet reserve** verir.
 
 ### 4–10 dakika — ilk Basalt Juggernaut
@@ -73,6 +73,8 @@ Runtime'a structure source içinden yalnız `WorldEnvironment`, `Geometry`, `Doo
 | Nightmare | 11 | 7 | 4 | **22** |
 
 Zorluk katmanları `spawn_min_difficulty` ile ek encounter olarak gelir. Species sağlık/hasar/hız değerleri content scene içinde override edilmez. Yalnız staging için bazı detection/hearing/ally-alert değerleri daraltılabilir.
+
+Global defeat mantığında `enemy_id` kanonik species/condition kimliği olarak tekilleştirilir; fakat `kills` her fiziksel yaratık ölümünde artar. Böylece aynı bölümdeki 9 ayrı Cinder Hound tek species kaydı üretirken level sonucu doğru şekilde 9 fiziksel kill sayabilir.
 
 ## 5. P-07 ekonomisi
 
@@ -139,10 +141,12 @@ Selin'in kurtarılması Aras'ın yalnız dosya bulmaktan canlı bir tanığa ula
 - [x] Easy/Normal/Hard/Nightmare toplamları 11/15/19/22.
 - [x] Basalt Juggernaut actor statları content scene'de override edilmez.
 - [x] P-07 Sentinel Bölüm 3'te fiziksel pickup'tır.
+- [x] P-07 feneri yalnız silah edinildikten sonra tek seferlik bildirimle öğretilir.
 - [x] Mavi/sarı/kırmızı erişim zinciri uygulanmıştır.
 - [x] 3 kanonik kayıt persistent database'e bağlıdır.
 - [x] Selin kurtarma etkileşimi uygulanmıştır.
 - [x] Selin kurtarılmadan tahliye tamamlanamaz.
 - [x] Selin Bastion'da yalnız campaign stage 3 sonrası görünür.
+- [x] Tekil species kimliği korunurken fiziksel düşman ölümleri ayrı ayrı sayılır.
 - [ ] Godot runtime parse/playthrough testi yapılacak.
 - [ ] Gerçek playtest ile 19–22 dakika hedefi ölçülecek.
