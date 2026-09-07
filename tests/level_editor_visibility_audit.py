@@ -12,7 +12,7 @@ LEVELS = [
         "content_path": "res://scenes/levels/level_01_first_fracture_content.tscn",
         "environment_node": "Level01EnvironmentStory",
         "content_node": "Level01FirstFractureContent",
-        "configures_doors": False,
+        "configures_doors": True,
     },
     {
         "scene": ROOT / "scenes" / "levels" / "level_02.tscn",
