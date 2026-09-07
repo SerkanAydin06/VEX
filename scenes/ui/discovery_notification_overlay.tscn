@@ -1,0 +1,95 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/discovery_notification_overlay.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_card"]
+bg_color = Color(0.006, 0.014, 0.022, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.56, 0.68, 0.58)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.58)
+shadow_size = 10
+
+[node name="DiscoveryNotificationOverlay" type="CanvasLayer"]
+layer = 70
+process_mode = 3
+script = ExtResource("1_script")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Card" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -340.0
+offset_top = 72.0
+offset_right = 340.0
+offset_bottom = 204.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Row" type="HBoxContainer" parent="Root/Card"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Accent" type="ColorRect" parent="Root/Card/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(6, 0)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.18, 0.86, 1, 1)
+
+[node name="Margin" type="MarginContainer" parent="Root/Card/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 17
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
+
+[node name="Content" type="VBoxContainer" parent="Root/Card/Row/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Category" type="Label" parent="Root/Card/Row/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.92, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "VEX // DATA"
+
+[node name="Title" type="Label" parent="Root/Card/Row/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.98, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 23
+text = "VEX BİLGİ GÜNCELLENDİ"
+autowrap_mode = 2
+
+[node name="Subtitle" type="Label" parent="Root/Card/Row/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.64, 0.74, 0.78, 1)
+theme_override_font_sizes/font_size = 15
+text = "RECORD"
+autowrap_mode = 2
