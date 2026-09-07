@@ -5,6 +5,8 @@ signal archive_changed(enemy_id: StringName)
 const SAVE_PATH := "user://vex_archive.cfg"
 const SAVE_SECTION := "archive"
 const SAVE_KEY := "discovered_enemy_ids"
+const ArchiveDatabase = preload("res://scripts/data/vex_archive_database.gd")
+const DiscoveryOverlay = preload("res://scripts/ui/discovery_notification_overlay.gd")
 
 var discovered_enemy_ids: Array[StringName] = []
 
@@ -25,6 +27,7 @@ func discover_enemy(enemy_id: StringName) -> bool:
 	discovered_enemy_ids.append(enemy_id)
 	_save_archive()
 	archive_changed.emit(enemy_id)
+	_show_discovery_card(enemy_id)
 	return true
 
 
@@ -38,6 +41,28 @@ func get_discovered_enemy_ids() -> Array[StringName]:
 
 func get_discovered_count() -> int:
 	return discovered_enemy_ids.size()
+
+
+func _show_discovery_card(enemy_id: StringName) -> void:
+	var enemy := ArchiveDatabase.get_enemy(enemy_id) as Dictionary
+	var enemy_name := str(enemy_id).replace("_", " ").to_upper()
+	var universe_name := ""
+	if not enemy.is_empty():
+		enemy_name = str(enemy.get("name", enemy_name))
+		var universe_id := StringName(str(enemy.get("universe", "")))
+		var universe := ArchiveDatabase.get_universe(universe_id) as Dictionary
+		if not universe.is_empty():
+			universe_name = str(universe.get("name", ""))
+	var subtitle := enemy_name
+	if not universe_name.is_empty():
+		subtitle = "%s // %s" % [enemy_name, universe_name]
+	DiscoveryOverlay.request(
+		get_tree(),
+		&"xeno",
+		"YENİ XENO KAYDI",
+		"NEW XENO RECORD",
+		subtitle
+	)
 
 
 func _load_archive() -> void:
