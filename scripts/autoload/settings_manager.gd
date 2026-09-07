@@ -4,6 +4,8 @@ const SETTINGS_SCHEMA_VERSION := 2
 const TRANSLATION_RESOURCE_PATHS := [
 	"res://translations/vex.tr.translation",
 	"res://translations/vex.en.translation",
+	"res://translations/chapter01.tr.translation",
+	"res://translations/chapter01.en.translation",
 	"res://translations/chapter02.tr.translation",
 	"res://translations/chapter02.en.translation",
 	"res://translations/chapter03.tr.translation",
