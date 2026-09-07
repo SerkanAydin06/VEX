@@ -13,9 +13,12 @@ def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_overlay_is_authored_ui_and_starts_hidden() -> None:
+def test_overlay_is_authored_ui_and_starts_hidden_above_record_reader() -> None:
     scene = _read(OVERLAY_SCENE)
+    record = _read(RECORD)
     assert '[node name="DiscoveryNotificationOverlay" type="CanvasLayer"]' in scene
+    assert "layer = 120" in scene
+    assert '_reader_layer.layer = 80' in record
     assert '[node name="Card" type="PanelContainer" parent="Root"]' in scene
     assert "visible = false" in scene
     for unique_name in ["Accent", "Category", "Title", "Subtitle"]:
