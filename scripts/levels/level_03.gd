@@ -14,15 +14,16 @@ const STRUCTURE_NODE_NAMES := [
 var _alarm_triggered := false
 
 
+func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		return
+	_install_authored_structure()
+
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		_install_editor_structure_preview()
 		return
-
-	# Canonical Pressure Line gameplay/environment are real subscene instances of
-	# level_03.tscn. Only the safe authored structural roots are filtered out of the
-	# legacy two-floor snapshot at runtime.
-	_install_authored_structure()
 	super._ready()
 
 
