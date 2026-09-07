@@ -33,6 +33,8 @@ var _briefing_reveal_requested := false
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	SettingsManager.apply_brightness()
 	if not GameState.key_inventory_changed.is_connected(_on_key_inventory_changed):
 		GameState.key_inventory_changed.connect(_on_key_inventory_changed)
