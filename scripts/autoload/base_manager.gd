@@ -19,8 +19,8 @@ const AREA_DEFINITIONS := [
 		"required_stage": 1,
 		"name_tr": "ATIŞ POLİGONU",
 		"name_en": "FIRING RANGE",
-		"description_tr": "Bastion-7 eğitim ve silah test alanı. VEX-01 sonrası yerel üs yönetiminden yeniden etkinleştirilebilir.",
-		"description_en": "Bastion-7 training and weapon test range. It can be recommissioned from local base management after VEX-01.",
+		"description_tr": "Bastion-7 eğitim ve silah test alanı. Bölüm 1 sonrası yerel üs yönetiminden yeniden etkinleştirilebilir.",
+		"description_en": "Bastion-7 training and weapon test range. It can be recommissioned from local base management after Chapter 1.",
 	},
 	{
 		"id": &"research_lab",
@@ -28,8 +28,8 @@ const AREA_DEFINITIONS := [
 		"required_stage": 1,
 		"name_tr": "ARAŞTIRMA LABORATUVARI",
 		"name_en": "RESEARCH LAB",
-		"description_tr": "Xeno örnekleri ve boyutsal materyal analizi için ayrılmış laboratuvar. VEX-01 saha verisi sonrası yeniden devreye alınabilir.",
-		"description_en": "Laboratory reserved for xeno samples and dimensional-material analysis. It can be recommissioned after VEX-01 field data is secured.",
+		"description_tr": "Xeno örnekleri ve boyutsal materyal analizi için ayrılmış laboratuvar. Bölüm 1 saha verisi sonrası yeniden devreye alınabilir.",
+		"description_en": "Laboratory reserved for xeno samples and dimensional-material analysis. It can be recommissioned after Chapter 1 field data is secured.",
 	},
 	{
 		"id": &"weapon_workshop",
@@ -68,8 +68,8 @@ const LIGHTING_DEFINITIONS := [
 		"required_stage": 1,
 		"name_tr": "AYDINLATMA SEVİYESİ 2",
 		"name_en": "LIGHTING LEVEL 2",
-		"description_tr": "VEX-01 sonrası açılan güç kademesi. Ana oda aydınlatmasını %50 seviyesine yükseltir.",
-		"description_en": "Power tier unlocked after VEX-01. Raises primary room lighting to 50%.",
+		"description_tr": "Bölüm 1 sonrası açılan güç kademesi. Ana oda aydınlatmasını %50 seviyesine yükseltir.",
+		"description_en": "Power tier unlocked after Chapter 1. Raises primary room lighting to 50%.",
 		"energy_multiplier": 0.50,
 		"tint": Color(1.0, 1.0, 1.0, 1.0),
 		"tint_strength": 0.0,
@@ -79,8 +79,8 @@ const LIGHTING_DEFINITIONS := [
 		"required_stage": 2,
 		"name_tr": "AYDINLATMA SEVİYESİ 3",
 		"name_en": "LIGHTING LEVEL 3",
-		"description_tr": "VEX-02 sonrası açılan güç kademesi. Ana oda aydınlatmasını %75 seviyesine yükseltir.",
-		"description_en": "Power tier unlocked after VEX-02. Raises primary room lighting to 75%.",
+		"description_tr": "Bölüm 2 sonrası açılan güç kademesi. Ana oda aydınlatmasını %75 seviyesine yükseltir.",
+		"description_en": "Power tier unlocked after Chapter 2. Raises primary room lighting to 75%.",
 		"energy_multiplier": 0.75,
 		"tint": Color(1.0, 1.0, 1.0, 1.0),
 		"tint_strength": 0.0,
@@ -90,8 +90,8 @@ const LIGHTING_DEFINITIONS := [
 		"required_stage": 3,
 		"name_tr": "AYDINLATMA SEVİYESİ 4",
 		"name_en": "LIGHTING LEVEL 4",
-		"description_tr": "VEX-03 sonrası açılan tam güç kademesi. Armatürleri sahnede tanımlanan %100 authored değerlerine döndürür.",
-		"description_en": "Full-power tier unlocked after VEX-03. Restores fixtures to 100% of their scene-authored values.",
+		"description_tr": "Bölüm 3 sonrası açılan tam güç kademesi. Armatürleri sahnede tanımlanan %100 authored değerlerine döndürür.",
+		"description_en": "Full-power tier unlocked after Chapter 3. Restores fixtures to 100% of their scene-authored values.",
 		"energy_multiplier": 1.0,
 		"tint": Color(1.0, 1.0, 1.0, 1.0),
 		"tint_strength": 0.0,
@@ -137,6 +137,7 @@ func reset_campaign_state(emit_changes := true) -> void:
 	_unlocked_areas.clear()
 	_upgrade_levels.clear()
 	_lighting_mode = LightingMode.LEVEL_25
+	RecordManager.reset_campaign_state()
 	if emit_changes:
 		_emit_full_state()
 
@@ -151,6 +152,7 @@ func capture_state() -> Dictionary:
 		"unlocked_areas": unlocked,
 		"lighting_mode": int(_lighting_mode),
 		"upgrade_levels": _upgrade_levels.duplicate(true),
+		"field_record_state": RecordManager.capture_state(),
 	}
 
 
@@ -188,6 +190,8 @@ func restore_state(state: Dictionary) -> void:
 				0,
 				int(definition.get("max_level", 0))
 			)
+	var record_state: Variant = state.get("field_record_state", {})
+	RecordManager.restore_state(record_state as Dictionary if record_state is Dictionary else {})
 	_emit_full_state()
 
 
