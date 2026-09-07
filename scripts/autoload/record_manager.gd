@@ -4,8 +4,15 @@ extends Node
 signal record_changed(record_id: StringName)
 
 const RecordDB = preload("res://scripts/data/vex_field_record_database.gd")
+const ArchiveBridgeScript = preload("res://scripts/ui/field_record_archive_bridge.gd")
 
 var discovered_record_ids: Array[StringName] = []
+
+
+func _ready() -> void:
+	if not get_tree().node_added.is_connected(_on_tree_node_added):
+		get_tree().node_added.connect(_on_tree_node_added)
+	call_deferred("_attach_existing_archive_terminal")
 
 
 func discover_record(record_id: StringName) -> bool:
@@ -86,3 +93,31 @@ func _add_restored_record(record_id: StringName) -> void:
 	if not RecordDB.has_record(record_id):
 		return
 	discovered_record_ids.append(record_id)
+
+
+func _on_tree_node_added(node: Node) -> void:
+	if node == null or node.name != "VexArchiveTerminal":
+		return
+	call_deferred("_attach_archive_bridge", node)
+
+
+func _attach_existing_archive_terminal() -> void:
+	var current_scene := get_tree().current_scene
+	if current_scene == null:
+		return
+	var terminal := current_scene.find_child("VexArchiveTerminal", true, false)
+	if terminal != null:
+		_attach_archive_bridge(terminal)
+
+
+func _attach_archive_bridge(terminal: Node) -> void:
+	if terminal == null or not is_instance_valid(terminal):
+		return
+	if terminal.get_node_or_null("FieldRecordArchiveBridge") != null:
+		return
+	var bridge := ArchiveBridgeScript.new() as VexFieldRecordArchiveBridge
+	if bridge == null:
+		push_warning("VEX saha kayıt arşiv köprüsü oluşturulamadı.")
+		return
+	bridge.name = "FieldRecordArchiveBridge"
+	terminal.add_child(bridge)
