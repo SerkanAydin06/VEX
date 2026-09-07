@@ -129,7 +129,9 @@ Ally alert yarıçapları da küçültülmüştür. Amaç ilk Hound'un önden ç
 
 Pickup'ların mevcut difficulty amount multiplier sistemi korunur. P-01 ilk bonus mühimmatı bilerek difficulty scaling dışında tutulur.
 
-## 8. Kayıtlar
+## 8. Kayıtlar ve kalıcı arşiv
+
+Ana kampanya için toplam **90 saha kaydı** hedeflenmiştir: 30 bölüm × 3 kayıt. Kanonik metin ve sıralama `scripts/data/vex_field_record_database.gd` içindedir; fiziksel terminalin konumu ve prop sunumu bölüm sahnesinde kalır.
 
 ### R03 — OLAY / Acil Test Emri / 04:17
 
@@ -146,6 +148,12 @@ Secret kayıt. Ana cümle:
 > **Enerji üretmiyoruz. Bir yerden çekiyoruz.**
 
 Bu kayıt ana hikâyeyi anlamak için zorunlu değildir fakat VEX gerçeğini erken kavrayan oyuncuyu ödüllendirir.
+
+Bir kayıt ilk kez açıldığında campaign metadata'ya hemen yazılır. Bu kayıt işlemi **mid-level checkpoint oluşturmaz**: kayıt dosyasına oyuncunun o anki konumu/canı/mühimmatı değil, görevin güvenli başlangıç state'i yazılır. Ölüm, Restart veya Continue görevi girişten başlatmaya devam eder fakat bulunan kayıt tekrar yeni sayılmaz.
+
+New Game, BaseManager campaign state ile birlikte saha kayıt koleksiyonunu da sıfırlar. Continue kayıt listesini geri yükler.
+
+Bastion-7 Ana Terminal → **KAYITLAR** sekmesi yalnız gerçekten bulunmuş saha kayıtlarını gösterir. Bulunmamış kayıtların başlıkları açıklanmaz; sayaç `bulunan / 90` biçimindedir.
 
 ## 9. Erişim akışı
 
@@ -187,13 +195,11 @@ Bölüm 1'in temel büyük bilgi kartları runtime'a bağlanmıştır:
 
 - ilk P-01 edinimi → `SİLAH ARŞİVİ GÜNCELLENDİ`
 - ilk Cinder Hound discovery → `YENİ XENO KAYDI`
-- kayıt terminalinin ilk açılışı → `KAYIT ÇÖZÜLDÜ`
+- bir saha kaydının campaign'deki ilk keşfi → `KAYIT ÇÖZÜLDÜ`
 
 Kartlar ayrı `discovery_notification_overlay.tscn` üzerinden gösterilir, aynı anda gelen bildirimler kuyruklanır ve gameplay/record reader pause durumunda tween çalışmaya devam eder. Kartın görseli sahne-authored, sıra/timing davranışı runtime helper scriptindedir.
 
-Silah kartı yalnız WeaponController'a göre gerçekten ilk edinimde gösterilir; yere bırakılıp tekrar alınan silah aynı discovery kartını tekrar üretmez. Xeno kartı ArchiveManager'ın kalıcı species discovery durumuna bağlıdır ve aynı tür için tekrar gösterilmez.
-
-**Kayıt tarafındaki önemli sınır:** `FieldRecordTerminal` şu anda kartı aynı terminal instance'ında yalnız ilk açılışta gösterir, fakat keşfedilmiş saha kayıtlarının kalıcı bir koleksiyon/save sistemi henüz yoktur. Bölüm restart/reload sonrası aynı kayıt tekrar discovery kartı gösterebilir. Kalıcı kayıt arşivi ayrı üretim işidir.
+Silah kartı yalnız WeaponController'a göre gerçekten ilk edinimde gösterilir; yere bırakılıp tekrar alınan silah aynı discovery kartını tekrar üretmez. Xeno kartı ArchiveManager'ın kalıcı species discovery durumuna bağlıdır ve aynı tür için tekrar gösterilmez. Kayıt kartı ise campaign-persistent saha kayıt state'ine bağlıdır; aynı kayıt bölüm restart/Continue sonrası tekrar okunabilir fakat discovery kartı yeniden gösterilmez.
 
 ## 13. Kabul kriterleri
 
@@ -209,6 +215,7 @@ Silah kartı yalnız WeaponController'a göre gerçekten ilk edinimde gösterili
 - [x] R37 Bastion-7'ye dönüyor.
 - [x] Çevresel hikâye katmanı collision'sız.
 - [x] Discovery-card UI kuyruk sistemi temel olarak bağlı.
-- [ ] Saha kayıtlarının kalıcı collection/save/arşiv sistemi tamamlanacak.
+- [x] Saha kayıtları campaign save içinde kalıcı collection olarak tutuluyor.
+- [x] Ana Terminal → KAYITLAR yalnız bulunan saha kayıtlarını tekrar okunabilir gösteriyor.
 - [ ] Godot runtime parse/playthrough testi yapılacak.
 - [ ] Gerçek playtest ile 18–20 dakika hedefi ölçülecek.
