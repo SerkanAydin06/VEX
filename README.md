@@ -51,6 +51,7 @@ Canonical tasarım kaynakları:
 - `Weapons_VEX.md`
 - `Enemies_VEX.md`
 - `Story_VEX.md`
+- `docs/Campaign_Level_Design_VEX.md` — 30 bölümün süre, encounter, silah/ekipman, kayıt ve keşif bildirimi üretim planı
 
 Önemli gameplay tuning değerleri ve sahnede bulunan görsel/oyunsal elemanlar
 Inspector/sahne otoritelidir. Geçici efektler ve yardımcı runtime sistemleri doğal
