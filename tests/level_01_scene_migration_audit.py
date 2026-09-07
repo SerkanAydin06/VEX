@@ -24,9 +24,10 @@ def test_level01_main_scene_exposes_canonical_layers_in_editor() -> None:
     assert 'path="res://scenes/levels/level_01_first_fracture_content.tscn"' in scene
     assert '[node name="Level01EnvironmentStory" parent="." instance=ExtResource("6_environment")]' in scene
     assert '[node name="Level01FirstFractureContent" parent="." instance=ExtResource("7_content")]' in scene
+    assert '[editable path="Level01EnvironmentStory"]' in scene
+    assert '[editable path="Level01FirstFractureContent"]' in scene
     assert '[node name="Player"' in scene
     assert '[node name="HUD"' in scene
-    # Legacy gameplay is still not authored directly into the main scene.
     for forbidden in [
         'res://scenes/actors/ravager.tscn',
         'res://scenes/actors/veilmaw.tscn',
@@ -40,9 +41,14 @@ def test_level01_main_scene_exposes_canonical_layers_in_editor() -> None:
 def test_level01_tool_script_previews_only_safe_structure_roots() -> None:
     script = _read(LEVEL_SCRIPT)
     assert script.startswith("@tool\nextends VexBaseLevel")
-    assert 'if Engine.is_editor_hint():' in script
-    assert '\t\t_install_editor_structure_preview()' in script
-    assert '\t\treturn' in script
+    assert 'func _enter_tree() -> void:' in script
+    enter_block = script[script.index("func _enter_tree() -> void:"):script.index("func _ready() -> void:")]
+    assert 'if Engine.is_editor_hint():' in enter_block
+    assert '_install_authored_structure()' in enter_block
+    ready_block = script[script.index("func _ready() -> void:"):script.index("func _install_editor_structure_preview")]
+    assert 'if Engine.is_editor_hint():' in ready_block
+    assert '_install_editor_structure_preview()' in ready_block
+    assert 'super._ready()' in ready_block
     assert 'STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_01_structure_source.tscn"' in script
     structure_block = script[script.index("const STRUCTURE_NODE_NAMES"):script.index("const TRAINING_OVERLAY_SCENE")]
     for structural_name in [
@@ -54,11 +60,8 @@ def test_level01_tool_script_previews_only_safe_structure_roots() -> None:
         assert forbidden not in structure_block
     assert 'if get_node_or_null("Geometry") != null:' in script
     assert 'structure_node.owner = null' in script
-    # Content/environment are now real main-scene instances, not runtime preloads.
     assert "FIRST_FRACTURE_CONTENT_SCENE" not in script
     assert "ENVIRONMENT_STORY_SCENE" not in script
-    runtime_ready = script[script.index("func _ready() -> void:"):script.index("func _install_editor_structure_preview")]
-    assert runtime_ready.index("_install_authored_structure()") < runtime_ready.index("super._ready()")
 
 
 def test_structure_source_preserves_the_authored_37_room_spine() -> None:
