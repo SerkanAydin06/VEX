@@ -1,0 +1,281 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/actors/cinderhound.tscn" id="1_hound"]
+[ext_resource type="PackedScene" path="res://scenes/actors/cinder_spitter.tscn" id="2_spitter"]
+[ext_resource type="PackedScene" path="res://scenes/props/pickup.tscn" id="3_pickup"]
+[ext_resource type="Texture2D" path="res://assets/weapons/sg04/sg04_side.png" id="4_sg04"]
+[ext_resource type="Texture2D" path="res://assets/pickups/key_blue.png" id="5_blue"]
+[ext_resource type="Texture2D" path="res://assets/pickups/key_yellow.png" id="6_yellow"]
+[ext_resource type="Texture2D" path="res://assets/pickups/key_red.png" id="7_red"]
+[ext_resource type="Texture2D" path="res://assets/pickups/health.png" id="8_health"]
+[ext_resource type="Texture2D" path="res://assets/pickups/armor.png" id="9_armor"]
+[ext_resource type="Texture2D" path="res://assets/pickups/ammo_bullets.png" id="10_bullets"]
+[ext_resource type="Texture2D" path="res://assets/pickups/ammo_shells.png" id="11_shells"]
+[ext_resource type="PackedScene" path="res://scenes/props/field_record_terminal.tscn" id="12_record"]
+[ext_resource type="PackedScene" path="res://scenes/props/secret_trigger.tscn" id="13_secret"]
+[ext_resource type="PackedScene" path="res://scenes/props/finish_switch.tscn" id="14_finish"]
+[ext_resource type="PackedScene" path="res://scenes/world/exit_sign.tscn" id="15_exit"]
+
+[node name="Level02AshCorridorContent" type="Node3D"]
+
+[node name="Enemies" type="Node3D" parent="."]
+
+; EASY BASELINE — 8 HOUNDS + 3 SPITTERS = 11
+[node name="CinderHound_WestEntry_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.2, 1, -0.8)
+patrol_offset = Vector3(-2.0, 0, 1.4)
+
+[node name="CinderHound_WestService_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.2, 1, -8.7)
+patrol_offset = Vector3(2.0, 0, -1.5)
+
+[node name="CinderHound_BreacherWing_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.0, 1, -10.4)
+patrol_offset = Vector3(-2.0, 0, 1.8)
+
+[node name="CinderSpitter_FirstContact" parent="Enemies" instance=ExtResource("2_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.4, 1, -20.2)
+detection_range = 20.0
+hearing_radius = 11.0
+ally_alert_radius = 6.0
+
+[node name="CinderHound_BlueApproach_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.2, 1, -21.0)
+patrol_offset = Vector3(1.8, 0, -1.8)
+
+[node name="CinderHound_EastEntry_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.8, 1, 0.6)
+patrol_offset = Vector3(1.8, 0, -1.2)
+
+[node name="CinderSpitter_TransferHall_A" parent="Enemies" instance=ExtResource("2_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.0, 1, -9.4)
+patrol_offset = Vector3(0, 0, 1.6)
+
+[node name="CinderHound_YellowApproach_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.8, 1, -19.0)
+patrol_offset = Vector3(-1.6, 0, 1.4)
+
+[node name="CinderHound_ReactorArchive_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.4, 1, -20.6)
+patrol_offset = Vector3(0, 0, -1.8)
+
+[node name="CinderSpitter_SouthTransfer_A" parent="Enemies" instance=ExtResource("2_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, 1, 10.2)
+detection_range = 18.0
+hearing_radius = 10.0
+ally_alert_radius = 5.5
+
+[node name="CinderHound_FinalApproach_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.2, 1, 20.4)
+patrol_offset = Vector3(1.8, 0, 0)
+
+; NORMAL ADDITIONS — +2 HOUNDS +2 SPITTERS = 15
+[node name="CinderHound_BreacherWing_B" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.0, 1, 10.0)
+spawn_min_difficulty = 1
+patrol_offset = Vector3(1.8, 0, -1.6)
+
+[node name="CinderSpitter_RedArchive_A" parent="Enemies" instance=ExtResource("2_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, 1, -29.2)
+spawn_min_difficulty = 1
+detection_range = 17.0
+hearing_radius = 9.0
+ally_alert_radius = 5.0
+
+[node name="CinderHound_EastLoop_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, 1, 0.5)
+spawn_min_difficulty = 1
+patrol_offset = Vector3(0, 0, 2.0)
+
+[node name="CinderSpitter_FinalHall_A" parent="Enemies" instance=ExtResource("2_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, 1, 30.2)
+spawn_min_difficulty = 1
+detection_range = 13.0
+hearing_radius = 7.0
+ally_alert_radius = 4.0
+
+; HARD ADDITIONS — +1 HOUND +2 SPITTERS = 18
+[node name="CinderHound_BlueShortcut_B" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0, 1, -20.0)
+spawn_min_difficulty = 2
+patrol_offset = Vector3(0, 0, 2.0)
+
+[node name="CinderSpitter_EastLoop_B" parent="Enemies" instance=ExtResource("2_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, 1, -9.8)
+spawn_min_difficulty = 2
+
+[node name="CinderSpitter_IsolationDoor_A" parent="Enemies" instance=ExtResource("2_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.0, 1, 20.2)
+spawn_min_difficulty = 2
+detection_range = 14.0
+hearing_radius = 8.0
+ally_alert_radius = 4.5
+
+; NIGHTMARE ADDITIONS — +1 HOUND +1 SPITTER = 20
+[node name="CinderHound_SecretPressure_A" parent="Enemies" instance=ExtResource("1_hound")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, 1, 20.2)
+spawn_min_difficulty = 3
+patrol_offset = Vector3(-1.6, 0, 0)
+
+[node name="CinderSpitter_FinalHall_B" parent="Enemies" instance=ExtResource("2_spitter")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, 1, 30.0)
+spawn_min_difficulty = 3
+detection_range = 10.0
+hearing_radius = 6.0
+ally_alert_radius = 3.5
+
+[node name="Pickups" type="Node3D" parent="."]
+
+[node name="SG04BreacherPickup" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.5, 0.7, 8.75)
+pickup_id = &"level02_sg04_breacher"
+pickup_type = "sg04"
+amount = 12
+display_name = "WEAPON_SG04_NAME"
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("4_sg04")
+
+[node name="BlueServiceKey" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7, -30)
+pickup_id = &"level02_blue_service_key"
+pickup_type = "key_blue"
+amount = 1
+display_name = "KEY_BLUE"
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("5_blue")
+
+[node name="YellowTransferKey" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.5, 0.7, -21.25)
+pickup_id = &"level02_yellow_transfer_key"
+pickup_type = "key_yellow"
+amount = 1
+display_name = "KEY_YELLOW"
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("6_yellow")
+
+[node name="RedIsolationKey" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0.7, -30)
+pickup_id = &"level02_red_isolation_key"
+pickup_type = "key_red"
+amount = 1
+display_name = "KEY_RED"
+scale_amount_with_difficulty = false
+visual_texture = ExtResource("7_red")
+
+[node name="WestBullets" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.0, 0.7, -8.0)
+pickup_id = &"level02_west_bullets"
+pickup_type = "bullets"
+amount = 18
+display_name = "AMMO_9X19"
+visual_texture = ExtResource("10_bullets")
+
+[node name="BreacherShells" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.2, 0.7, 8.8)
+pickup_id = &"level02_breacher_shells"
+pickup_type = "shells"
+amount = 8
+display_name = "AMMO_12GA"
+visual_texture = ExtResource("11_shells")
+
+[node name="BlueRoomHealth" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.8, 0.7, -29.5)
+pickup_id = &"level02_blue_health"
+pickup_type = "health"
+amount = 20
+display_name = "SAĞLIK"
+visual_texture = ExtResource("8_health")
+
+[node name="TransferShells" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.5, 0.7, -9.0)
+pickup_id = &"level02_transfer_shells"
+pickup_type = "shells"
+amount = 8
+display_name = "AMMO_12GA"
+visual_texture = ExtResource("11_shells")
+
+[node name="YellowRoomArmor" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.0, 0.7, -21.0)
+pickup_id = &"level02_yellow_armor"
+pickup_type = "armor"
+amount = 14
+display_name = "ZIRH"
+visual_texture = ExtResource("9_armor")
+
+[node name="RedArchiveBullets" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.5, 0.7, -29.0)
+pickup_id = &"level02_red_bullets"
+pickup_type = "bullets"
+amount = 18
+display_name = "AMMO_9X19"
+visual_texture = ExtResource("10_bullets")
+
+[node name="RedArchiveShells" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.2, 0.7, -29.0)
+pickup_id = &"level02_red_shells"
+pickup_type = "shells"
+amount = 10
+display_name = "AMMO_12GA"
+visual_texture = ExtResource("11_shells")
+
+[node name="SouthResupplyHealth" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.0, 0.7, 10.0)
+pickup_id = &"level02_south_health"
+pickup_type = "health"
+amount = 25
+display_name = "SAĞLIK"
+visual_texture = ExtResource("8_health")
+
+[node name="SouthResupplyArmor" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.0, 0.7, 10.0)
+pickup_id = &"level02_south_armor"
+pickup_type = "armor"
+amount = 18
+display_name = "ZIRH"
+visual_texture = ExtResource("9_armor")
+
+[node name="FinalShells" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, 0.7, 20.5)
+pickup_id = &"level02_final_shells"
+pickup_type = "shells"
+amount = 12
+display_name = "AMMO_12GA"
+visual_texture = ExtResource("11_shells")
+
+[node name="SecretArmor" parent="Pickups" instance=ExtResource("3_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.0, 0.7, 21.0)
+pickup_id = &"level02_secret_armor"
+pickup_type = "armor"
+amount = 18
+display_name = "GİZLİ ZIRH PLAKASI"
+visual_texture = ExtResource("9_armor")
+
+[node name="Records" type="Node3D" parent="."]
+
+[node name="Record_TransferDelta" parent="Records" instance=ExtResource("12_record")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -26.2, 0.85, -28.2)
+record_id = &"vex02_thermal_transfer_delta"
+
+[node name="Record_SpitterContact" parent="Records" instance=ExtResource("12_record")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 27.4, 0.85, -8.0)
+record_id = &"vex02_spitter_contact_report"
+
+[node name="Record_SourcePressureLoss" parent="Records" instance=ExtResource("12_record")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 50.2, 0.85, 20.6)
+record_id = &"vex02_source_world_pressure_loss"
+
+[node name="Triggers" type="Node3D" parent="."]
+
+[node name="SecretPressureArchive" parent="Triggers" instance=ExtResource("13_secret")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 1.5, 20)
+secret_id = &"level02_pressure_archive"
+
+[node name="FinishSwitch" parent="Triggers" instance=ExtResource("14_finish")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.58, 1.6, 30)
+display_name = "LEVEL02_FINISH_CONTROL"
+required_keys = Array[StringName]([&"blue", &"yellow", &"red"])
+required_enemy_id = &""
+next_level_path = "res://scenes/hub/bastion_7.tscn"
+
+[node name="ExitSignFinal" parent="Triggers" instance=ExtResource("15_exit")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 52.5, 4.85, 30)
