@@ -866,39 +866,42 @@ layout_mode = 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 610.0
-offset_top = 290.0
-offset_right = 1310.0
-offset_bottom = 790.0
+offset_left = 680.0
+offset_top = 330.0
+offset_right = 1240.0
+offset_bottom = 750.0
 
 [node name="Margin" type="MarginContainer" parent="Root/DeathPanel" unique_id=2010674071]
 layout_mode = 2
-theme_override_constants/margin_left = 56
-theme_override_constants/margin_top = 44
-theme_override_constants/margin_right = 56
-theme_override_constants/margin_bottom = 44
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 28
 
 [node name="VBox" type="VBoxContainer" parent="Root/DeathPanel/Margin" unique_id=1341982455]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 14
 
 [node name="Eyebrow" type="Label" parent="Root/DeathPanel/Margin/VBox" unique_id=93987414]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.3, 0.18, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 15
 text = "HUD_DEATH_EYEBROW"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="Title" type="Label" parent="Root/DeathPanel/Margin/VBox" unique_id=1815380996]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.42, 0.28, 1)
-theme_override_font_sizes/font_size = 54
+theme_override_font_sizes/font_size = 36
 text = "HUD_DEATH_TITLE"
 horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="Description" type="Label" parent="Root/DeathPanel/Margin/VBox" unique_id=1623829947]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
 text = "HUD_DEATH_BODY"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -906,12 +909,12 @@ autowrap_mode = 2
 
 [node name="RestartButton" type="Button" parent="Root/DeathPanel/Margin/VBox" unique_id=782576471]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 text = "HUD_DEATH_RESTART"
 
 [node name="DeathMainMenuButton" type="Button" parent="Root/DeathPanel/Margin/VBox" unique_id=260336087]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 text = "UI_MAIN_MENU"
