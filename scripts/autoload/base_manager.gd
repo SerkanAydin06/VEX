@@ -140,7 +140,8 @@ func restore_state(state: Dictionary) -> void:
 	_unlocked_areas.clear()
 	_upgrade_levels.clear()
 	_lighting_mode = LightingMode.STANDARD
-	for value: Variant in state.get("unlocked_areas", []) as Array:
+	var unlocked_values: Array = state.get("unlocked_areas", []) as Array
+	for value: Variant in unlocked_values:
 		var area_id := StringName(str(value))
 		if not get_area_definition(area_id).is_empty():
 			_unlocked_areas[area_id] = true
@@ -149,13 +150,14 @@ func restore_state(state: Dictionary) -> void:
 		_lighting_mode = restored_mode as LightingMode
 	var restored_upgrades: Variant = state.get("upgrade_levels", {})
 	if restored_upgrades is Dictionary:
-		for key: Variant in (restored_upgrades as Dictionary).keys():
+		var upgrade_dictionary := restored_upgrades as Dictionary
+		for key: Variant in upgrade_dictionary.keys():
 			var upgrade_id := StringName(str(key))
 			var definition := get_upgrade_definition(upgrade_id)
 			if definition.is_empty():
 				continue
 			_upgrade_levels[upgrade_id] = clampi(
-				int((restored_upgrades as Dictionary).get(key, 0)),
+				int(upgrade_dictionary.get(key, 0)),
 				0,
 				int(definition.get("max_level", 0))
 			)
