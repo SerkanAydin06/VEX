@@ -38,31 +38,31 @@ size = Vector3(3.0, 0.3, 0.055)
 [node name="RoomCodes" type="Node3D" parent="."]
 
 [node name="MaintenanceDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(-23.72, 4.85, -5)
+position = Vector3(-23.74, 4.85, -5)
 rotation = Vector3(0, 1.5708, 0)
 room_name = "L06 // MAINT"
 header_text = "VEX // 03"
 
 [node name="OperationsDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(23.72, 4.85, 15)
+position = Vector3(23.74, 4.85, 15)
 rotation = Vector3(0, -1.5708, 0)
 room_name = "L04 // PRESS"
 header_text = "VEX // 03"
 
 [node name="UpperArchiveDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(-11.72, 12.65, -5)
+position = Vector3(-11.74, 12.65, -5)
 rotation = Vector3(0, 1.5708, 0)
 room_name = "U04 // 7-C"
 header_text = "VEX // 03"
 
 [node name="ReactorServiceDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(23.72, 12.65, -5)
+position = Vector3(23.74, 12.65, -5)
 rotation = Vector3(0, -1.5708, 0)
 room_name = "U06 // MED"
 header_text = "VEX // 03"
 
 [node name="EvacDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(23.72, 12.65, -15)
+position = Vector3(23.74, 12.65, -15)
 rotation = Vector3(0, -1.5708, 0)
 room_name = "U08 // EVAC"
 header_text = "VEX // 03"
@@ -84,8 +84,8 @@ material_override = SubResource("Material_pressure")
 cast_shadow = 0
 
 [node name="UpperPressurePipeA" type="MeshInstance3D" parent="PressurePipes"]
-position = Vector3(12, 11.7, -9.68)
-rotation = Vector3(0, 0, 1.5708)
+position = Vector3(23.68, 11.7, -5)
+rotation = Vector3(1.5708, 0, 0)
 mesh = SubResource("Mesh_pressure_pipe")
 material_override = SubResource("Material_pressure")
 cast_shadow = 0
@@ -109,13 +109,13 @@ cast_shadow = 0
 [node name="WarningBars" type="Node3D" parent="."]
 
 [node name="ArchiveWarning" type="MeshInstance3D" parent="WarningBars"]
-position = Vector3(-6, 12.45, -9.77)
+position = Vector3(-6, 12.45, -9.7725)
 mesh = SubResource("Mesh_warning")
 material_override = SubResource("Material_heat")
 cast_shadow = 0
 
 [node name="EvacWarning" type="MeshInstance3D" parent="WarningBars"]
-position = Vector3(18, 12.45, -19.77)
+position = Vector3(18, 12.45, -19.7725)
 mesh = SubResource("Mesh_warning")
 material_override = SubResource("Material_heat")
 cast_shadow = 0
