@@ -14,6 +14,7 @@ ARCHIVE = ROOT / "scenes" / "ui" / "vex_archive_terminal.tscn"
 WEAPON_ARCHIVE = ROOT / "scenes" / "ui" / "weapon_archive_terminal.tscn"
 BASE_DASHBOARD = ROOT / "scenes" / "ui" / "base_management_dashboard.tscn"
 HUD = ROOT / "scenes" / "ui" / "hud.tscn"
+DISCOVERY = ROOT / "scenes" / "ui" / "discovery_notification_overlay.tscn"
 FIELD_RECORD_SCRIPT = ROOT / "scripts" / "props" / "field_record_terminal.gd"
 
 
@@ -80,15 +81,16 @@ def test_keybind_rows_remain_dense_and_complete() -> None:
 
 def test_level_complete_uses_fixed_rows_and_non_overlapping_actions() -> None:
     scene = _read(COMPLETE)
-    assert "offset_left = 570.0\noffset_top = 190.0\noffset_right = 1350.0\noffset_bottom = 820.0" in scene
+    assert "offset_left = 570.0\noffset_top = 190.0\noffset_right = 1350.0\noffset_bottom = 720.0" in scene
     assert "theme_override_font_sizes/font_size = 32" in scene
     assert '[node name="StatsRows" type="VBoxContainer"' in scene
+    assert "size_flags_vertical = 3" not in scene[scene.index('[node name="StatsRows"'):scene.index('[node name="TimeRow"')]
     assert '[node name="Stats" type="GridContainer"' not in scene
     for row in ["TimeRow", "KillsRow", "SecretsRow", "DifficultyRow", "RatingRow"]:
         assert f'[node name="{row}" type="HBoxContainer"' in scene
     assert scene.count("custom_minimum_size = Vector2(205, 48)") == 3
+    assert scene.count("theme_override_font_sizes/font_size = 18") >= 3
     assert '[node name="Actions" type="HBoxContainer"' in scene
-    assert "custom_minimum_size = Vector2(0, 52)" in scene
     assert scene.count("autowrap_mode = 2") >= 7
     assert "theme_override_font_sizes/font_size = 48" not in scene
     assert "custom_minimum_size = Vector2(0, 60)" not in scene
@@ -137,6 +139,16 @@ def test_field_record_reader_is_compact_scrollable_and_safe_for_long_text() -> N
     assert "_reader_body.custom_minimum_size = Vector2(0.0, 300.0)" in script
     assert "_reader_body.scroll_active = true" in script
     assert "_close_button.custom_minimum_size = Vector2(180.0, 46.0)" in script
+
+
+def test_discovery_card_has_room_for_wrapped_titles_without_becoming_huge() -> None:
+    scene = _read(DISCOVERY)
+    assert "offset_left = -310.0\noffset_top = 68.0\noffset_right = 310.0\noffset_bottom = 226.0" in scene
+    assert "theme_override_font_sizes/font_size = 20" in scene
+    assert "theme_override_font_sizes/font_size = 14" in scene
+    assert scene.count("autowrap_mode = 2") == 3
+    assert "offset_left = -340.0" not in scene
+    assert "theme_override_font_sizes/font_size = 23" not in scene
 
 
 def test_hud_menu_overlays_keep_map_workspace_large_but_death_menu_compact() -> None:
