@@ -5,63 +5,91 @@ ROOT = Path(__file__).resolve().parents[1]
 SCENE = ROOT / "scenes" / "levels" / "level_03_extraction_switch.tscn"
 SCRIPT = ROOT / "scripts" / "levels" / "level_03_extraction_switch.gd"
 BASE_SCENE = ROOT / "scenes" / "props" / "finish_switch.tscn"
+BASE_SCRIPT = ROOT / "scripts" / "props" / "finish_switch.gd"
+LEVEL01 = ROOT / "scenes" / "levels" / "level_01_first_fracture_content.tscn"
+LEVEL02 = ROOT / "scenes" / "levels" / "level_02_ash_corridor_content.tscn"
+LEVEL03 = ROOT / "scenes" / "levels" / "level_03_pressure_line_content.tscn"
 
 
 def _read(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def test_level03_uses_authored_vex_console_instead_of_legacy_sprite_art() -> None:
-    scene = _read(SCENE)
-    script = _read(SCRIPT)
+def test_all_active_chapter_end_controls_use_shared_vex_console() -> None:
     base = _read(BASE_SCENE)
+    scene = _read(SCENE)
+    level01 = _read(LEVEL01)
+    level02 = _read(LEVEL02)
+    level03 = _read(LEVEL03)
 
-    # Shared finish-switch keeps the interaction body and legacy sprite for other
-    # levels; Level 3 replaces its rendered presentation only for this instance.
-    assert 'path="res://scenes/props/finish_switch.tscn"' in scene
-    assert 'path="res://assets/world/finish_switch.png"' in base
-    assert 'finish_switch_visual.visible = false' in script
+    assert 'path="res://assets/world/finish_switch.png"' not in base
+    assert "Sprite3D" not in base
+    assert '[node name="VisualConsole" type="Node3D" parent="."]' in base
 
-    assert '[node name="VisualConsole" type="Node3D" parent="."]' in scene
     for node_name in [
         "BackPlate",
-        "LeftRib",
-        "RightRib",
+        "LeftRail",
+        "RightRail",
         "InnerFrame",
-        "ScreenBezel",
+        "HeaderPlate",
+        "ScreenFrame",
         "Screen",
         "LowerConsole",
-        "WarningStrip",
-        "ControlRed",
-        "ControlAmber",
-        "ControlReady",
+        "StatusRotor",
+        "ReadyCore",
+        "LeverPivot",
         "ScreenGlow",
-        "WarningGlow",
+        "AccentGlow",
     ]:
-        assert f'[node name="{node_name}"' in scene
+        assert f'[node name="{node_name}"' in base
 
-    # Do not add a competing StaticBody3D. Instead override the inherited
-    # CollisionShape3D so aiming at the tall authored console still hits the
-    # interaction body.
-    assert "StaticBody3D" not in scene
-    assert '[sub_resource type="BoxShape3D" id="Shape_console_interaction"]' in scene
-    assert 'size = Vector3(1.62, 2.08, 0.34)' in scene
-    assert '[node name="CollisionShape3D" parent="PanelBody"]' in scene
-    assert 'position = Vector3(0, 1.06, 0.12)' in scene
-    assert 'shape = SubResource("Shape_console_interaction")' in scene
-    assert scene.startswith("[gd_scene load_steps=23 format=3]")
+    assert 'path="res://scenes/props/finish_switch.tscn"' in level01
+    assert 'path="res://scenes/props/finish_switch.tscn"' in level02
+    assert 'path="res://scenes/levels/level_03_extraction_switch.tscn"' in level03
+    assert 'path="res://scenes/props/finish_switch.tscn"' in scene
 
 
-def test_console_visual_language_matches_vex_industrial_control_theme() -> None:
+def test_finish_console_has_idle_motion_and_activation_motion() -> None:
+    script = _read(BASE_SCRIPT)
+
+    assert "func _process(delta: float)" in script
+    assert "_status_rotor.rotation.z +=" in script
+    assert "_ready_core.scale =" in script
+    assert "_screen_glow.light_energy =" in script
+    assert "func _play_activation_visual()" in script
+    assert '"rotation_degrees:x", 48.0' in script
+    assert '_status_rotor.rotation_degrees.z + 180.0' in script
+    assert "LINK ACTIVE" in script
+    assert "EXTRACTION CONFIRMED" in script
+
+
+def test_level03_keeps_rescue_gate_without_duplicate_visual_console() -> None:
     scene = _read(SCENE)
+    script = _read(SCRIPT)
 
-    assert 'text = "VEX // EVAC CONTROL"' in scene
-    assert 'text = "PRESSURE LINE // LINK NODE"' in scene
-    assert 'text = "AUTHORIZED EXTRACTION CHANNEL"' in scene
-    assert 'text = "MANUAL LINK // STANDBY"' in scene
-    assert "Material_panel_dark" in scene
-    assert "Material_frame" in scene
-    assert "Material_screen" in scene
-    assert "Material_warning" in scene
-    assert "Material_ready" in scene
-    assert scene.count("emission_enabled = true") >= 4
+    assert scene.startswith("[gd_scene load_steps=3 format=3]")
+    assert 'script = ExtResource("2_script")' in scene
+    assert "VisualConsole" not in scene
+    assert "StaticBody3D" not in scene
+    assert "CollisionShape3D" not in scene
+    assert "finish_switch_visual" not in script
+    assert "_set_visual_access_state(false)" in script
+    assert "rescue_terminal_path" in script
+    assert "_is_survivor_rescued" in script
+
+
+def test_console_visual_language_is_detailed_and_not_placeholder_scale() -> None:
+    base = _read(BASE_SCENE)
+
+    assert "Material_dark" in base
+    assert "Material_frame" in base
+    assert "Material_screen" in base
+    assert "Material_accent" in base
+    assert "Material_ready" in base
+    assert "Material_warning" in base
+    assert base.count("emission_enabled = true") >= 4
+    assert 'size = Vector3(1.62, 2.1, 0.4)' in base
+    assert 'font_size = 30' in base
+    assert 'font_size = 22' in base
+    assert 'font_size = 18' in base
+    assert 'font_size = 17' in base
