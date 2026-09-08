@@ -17,10 +17,17 @@ static func acquire(projectile_scene: PackedScene, parent: Node) -> Node3D:
 	var bucket: Array = _buckets.get(key, [])
 	while not bucket.is_empty():
 		var candidate: Variant = bucket.pop_back()
+		# Node'lar current scene altında tutulduğu için sahne değişiminde Godot
+		# onları free eder; statik bucket ise eski Object referansını taşımaya devam
+		# edebilir. Freed Object üzerinde `is Node3D` kullanmak Godot'ta doğrudan
+		# hata üretir, bu yüzden tip/cast erişiminden ÖNCE instance validity kontrolü
+		# zorunludur.
+		if not is_instance_valid(candidate):
+			continue
 		if not (candidate is Node3D):
 			continue
 		var node := candidate as Node3D
-		if not is_instance_valid(node) or node.is_queued_for_deletion():
+		if node.is_queued_for_deletion():
 			continue
 		if node.get_parent() != parent:
 			node.queue_free()
@@ -30,7 +37,10 @@ static func acquire(projectile_scene: PackedScene, parent: Node) -> Node3D:
 		if node.has_method("activate_from_pool"):
 			node.call("activate_from_pool")
 		return node
-	_buckets[key] = bucket
+	if bucket.is_empty():
+		_buckets.erase(key)
+	else:
+		_buckets[key] = bucket
 
 	var instance := projectile_scene.instantiate()
 	if not (instance is Node3D):
