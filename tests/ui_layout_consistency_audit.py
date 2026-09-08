@@ -14,6 +14,7 @@ ARCHIVE = ROOT / "scenes" / "ui" / "vex_archive_terminal.tscn"
 WEAPON_ARCHIVE = ROOT / "scenes" / "ui" / "weapon_archive_terminal.tscn"
 BASE_DASHBOARD = ROOT / "scenes" / "ui" / "base_management_dashboard.tscn"
 HUD = ROOT / "scenes" / "ui" / "hud.tscn"
+FIELD_RECORD_SCRIPT = ROOT / "scripts" / "props" / "field_record_terminal.gd"
 
 
 def _read(path: Path) -> str:
@@ -103,7 +104,7 @@ def test_mission_terminal_uses_reasonable_three_line_button_height() -> None:
     assert scene.count("autowrap_mode = 2") >= 10
 
 
-def test_archive_surfaces_are_already_dense_and_scroll_based() -> None:
+def test_archive_surfaces_are_dense_scroll_based_and_use_chapter_labels() -> None:
     archive = _read(ARCHIVE)
     weapon = _read(WEAPON_ARCHIVE)
     dashboard = _read(BASE_DASHBOARD)
@@ -122,6 +123,20 @@ def test_archive_surfaces_are_already_dense_and_scroll_based() -> None:
     assert "custom_minimum_size = Vector2(0, 44)" in dashboard
     assert "custom_minimum_size = Vector2(0, 40)" in dashboard
     assert "autowrap_mode = 2" in dashboard
+    assert "KİLİTLİ // VEX-" not in dashboard
+    assert "KİLİTLİ // BÖLÜM 01" in dashboard
+    assert "KİLİTLİ // BÖLÜM 02" in dashboard
+    assert "KİLİTLİ // BÖLÜM 03" in dashboard
+
+
+def test_field_record_reader_is_compact_scrollable_and_safe_for_long_text() -> None:
+    script = _read(FIELD_RECORD_SCRIPT)
+    assert "panel.custom_minimum_size = Vector2(780.0, 480.0)" in script
+    assert '_reader_title.add_theme_font_size_override("font_size", 28)' in script
+    assert "_reader_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART" in script
+    assert "_reader_body.custom_minimum_size = Vector2(0.0, 300.0)" in script
+    assert "_reader_body.scroll_active = true" in script
+    assert "_close_button.custom_minimum_size = Vector2(180.0, 46.0)" in script
 
 
 def test_hud_menu_overlays_keep_map_workspace_large_but_death_menu_compact() -> None:
