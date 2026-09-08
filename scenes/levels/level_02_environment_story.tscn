@@ -35,29 +35,30 @@ size = Vector3(2.8, 0.28, 0.055)
 [node name="RoomCodes" type="Node3D" parent="."]
 
 [node name="WestServiceDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(-24, 4.85, -34.72)
+position = Vector3(-24, 4.85, -34.74)
 room_name = "R08 // ASH-W"
 header_text = "VEX // 02"
 
 [node name="BreacherCacheDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(-53.72, 4.85, 10)
+position = Vector3(-53.74, 4.85, 10)
 rotation = Vector3(0, 1.5708, 0)
 room_name = "R13 // ARM"
 header_text = "VEX // 02"
 
 [node name="TransferHallDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(24, 4.85, -14.72)
+position = Vector3(29.74, 4.85, -12.0)
+rotation = Vector3(0, -1.5708, 0)
 room_name = "R19 // XFER"
 header_text = "VEX // 02"
 
 [node name="BypassCabinetDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(53.72, 4.85, 20)
+position = Vector3(53.74, 4.85, 20)
 rotation = Vector3(0, -1.5708, 0)
 room_name = "R27 // BYPASS"
 header_text = "VEX // 02"
 
 [node name="RelayControlDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
-position = Vector3(48, 4.85, 34.72)
+position = Vector3(48, 4.85, 34.74)
 rotation = Vector3(0, 3.14159, 0)
 room_name = "R33 // RELAY"
 header_text = "VEX // 02"
@@ -88,22 +89,20 @@ cast_shadow = 0
 [node name="ThermalConduits" type="Node3D" parent="."]
 
 [node name="WestConduitA" type="MeshInstance3D" parent="ThermalConduits"]
-position = Vector3(-29.72, 3.5, -20)
-rotation = Vector3(1.5708, 0, 0)
+position = Vector3(-24, 2.7, -15.28)
+rotation = Vector3(0, 1.5708, 0)
 mesh = SubResource("Mesh_conduit")
 material_override = SubResource("Material_thermal")
 cast_shadow = 0
 
 [node name="EastConduitA" type="MeshInstance3D" parent="ThermalConduits"]
-position = Vector3(29.72, 3.5, -10)
-rotation = Vector3(1.5708, 0, 0)
+position = Vector3(29.72, 2.8, -8.0)
 mesh = SubResource("Mesh_conduit")
 material_override = SubResource("Material_thermal")
 cast_shadow = 0
 
 [node name="SouthConduitA" type="MeshInstance3D" parent="ThermalConduits"]
-position = Vector3(42.28, 3.5, 20)
-rotation = Vector3(1.5708, 0, 0)
+position = Vector3(42.28, 2.7, 20)
 mesh = SubResource("Mesh_conduit")
 material_override = SubResource("Material_thermal")
 cast_shadow = 0
@@ -111,19 +110,20 @@ cast_shadow = 0
 [node name="WarningBars" type="Node3D" parent="."]
 
 [node name="BlueWingWarning" type="MeshInstance3D" parent="WarningBars"]
-position = Vector3(-24, 4.65, -34.77)
+position = Vector3(-24, 4.22, -34.7725)
 mesh = SubResource("Mesh_warning")
 material_override = SubResource("Material_warning")
 cast_shadow = 0
 
 [node name="TransferWarning" type="MeshInstance3D" parent="WarningBars"]
-position = Vector3(24, 4.65, -14.77)
+position = Vector3(29.7725, 4.22, -12.0)
+rotation = Vector3(0, 1.5708, 0)
 mesh = SubResource("Mesh_warning")
 material_override = SubResource("Material_warning")
 cast_shadow = 0
 
 [node name="RelayWarning" type="MeshInstance3D" parent="WarningBars"]
-position = Vector3(48, 4.65, 34.77)
+position = Vector3(48, 4.22, 34.7725)
 mesh = SubResource("Mesh_warning")
 material_override = SubResource("Material_warning")
 cast_shadow = 0
