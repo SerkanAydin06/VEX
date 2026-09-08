@@ -64,7 +64,7 @@ layout_mode = 0
 offset_left = 570.0
 offset_top = 190.0
 offset_right = 1350.0
-offset_bottom = 820.0
+offset_bottom = 720.0
 
 [node name="Margin" type="MarginContainer" parent="ResultPanel"]
 layout_mode = 2
@@ -112,11 +112,10 @@ layout_mode = 2
 
 [node name="StatsRows" type="VBoxContainer" parent="ResultPanel/Margin/VBox"]
 layout_mode = 2
-size_flags_vertical = 3
 theme_override_constants/separation = 4
 
 [node name="TimeRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 
 [node name="TimeLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/TimeRow"]
@@ -138,7 +137,7 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="KillsRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 
 [node name="KillsLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/KillsRow"]
@@ -160,7 +159,7 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="SecretsRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 
 [node name="SecretsLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/SecretsRow"]
@@ -182,7 +181,7 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="DifficultyRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 
 [node name="DifficultyLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/DifficultyRow"]
@@ -206,7 +205,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="RatingRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 
 [node name="RatingLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/RatingRow"]
@@ -242,6 +241,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(205, 48)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "COMPLETE_REPLAY"
 
 [node name="MainMenuButton" type="Button" parent="ResultPanel/Margin/VBox/Actions"]
@@ -249,6 +249,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(205, 48)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "UI_MAIN_MENU"
 
 [node name="QuitButton" type="Button" parent="ResultPanel/Margin/VBox/Actions"]
@@ -256,4 +257,5 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(205, 48)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "UI_QUIT"
