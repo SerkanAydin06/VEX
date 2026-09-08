@@ -1,10 +1,90 @@
-[gd_scene load_steps=4 format=3 uid="uid://bx5ec3r640gak"]
+[gd_scene format=3 uid="uid://bx5ec3r640gak"]
 
 [ext_resource type="Script" uid="uid://d0imi3o7q2nw8" path="res://scripts/props/finish_switch.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bfl1mcv8ljpdd" path="res://assets/world/finish_switch.png" id="2_ue8u2"]
 
-[sub_resource type="BoxShape3D" id="BoxShape_switch"]
-size = Vector3(0.96, 1.36, 0.18)
+[sub_resource type="StandardMaterial3D" id="Material_dark"]
+albedo_color = Color(0.035, 0.045, 0.06, 1)
+metallic = 0.58
+roughness = 0.42
+
+[sub_resource type="StandardMaterial3D" id="Material_frame"]
+albedo_color = Color(0.14, 0.17, 0.21, 1)
+metallic = 0.72
+roughness = 0.28
+
+[sub_resource type="StandardMaterial3D" id="Material_screen"]
+albedo_color = Color(0.018, 0.085, 0.11, 1)
+roughness = 0.1
+emission_enabled = true
+emission = Color(0.08, 0.72, 0.95, 1)
+emission_energy_multiplier = 2.8
+
+[sub_resource type="StandardMaterial3D" id="Material_accent"]
+albedo_color = Color(0.22, 0.11, 0.025, 1)
+metallic = 0.48
+roughness = 0.22
+emission_enabled = true
+emission = Color(1, 0.38, 0.06, 1)
+emission_energy_multiplier = 2.2
+
+[sub_resource type="StandardMaterial3D" id="Material_ready"]
+albedo_color = Color(0.02, 0.14, 0.08, 1)
+roughness = 0.18
+emission_enabled = true
+emission = Color(0.18, 1, 0.52, 1)
+emission_energy_multiplier = 2.7
+
+[sub_resource type="StandardMaterial3D" id="Material_warning"]
+albedo_color = Color(0.17, 0.025, 0.018, 1)
+roughness = 0.2
+emission_enabled = true
+emission = Color(1, 0.12, 0.06, 1)
+emission_energy_multiplier = 2.4
+
+[sub_resource type="BoxMesh" id="Mesh_back"]
+size = Vector3(1.52, 2.0, 0.16)
+
+[sub_resource type="BoxMesh" id="Mesh_side"]
+size = Vector3(0.13, 1.86, 0.18)
+
+[sub_resource type="BoxMesh" id="Mesh_inner"]
+size = Vector3(1.22, 1.55, 0.1)
+
+[sub_resource type="BoxMesh" id="Mesh_screen_frame"]
+size = Vector3(1.02, 0.66, 0.08)
+
+[sub_resource type="BoxMesh" id="Mesh_screen"]
+size = Vector3(0.88, 0.5, 0.035)
+
+[sub_resource type="BoxMesh" id="Mesh_lower"]
+size = Vector3(1.04, 0.52, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_header"]
+size = Vector3(1.14, 0.13, 0.16)
+
+[sub_resource type="BoxMesh" id="Mesh_strip"]
+size = Vector3(0.92, 0.035, 0.03)
+
+[sub_resource type="BoxMesh" id="Mesh_led"]
+size = Vector3(0.1, 0.1, 0.05)
+
+[sub_resource type="BoxMesh" id="Mesh_rotor_bar"]
+size = Vector3(0.42, 0.035, 0.035)
+
+[sub_resource type="BoxMesh" id="Mesh_core"]
+size = Vector3(0.14, 0.14, 0.06)
+
+[sub_resource type="BoxMesh" id="Mesh_lever_base"]
+size = Vector3(0.32, 0.16, 0.1)
+
+[sub_resource type="BoxMesh" id="Mesh_lever_arm"]
+size = Vector3(0.1, 0.36, 0.08)
+
+[sub_resource type="BoxMesh" id="Mesh_vent"]
+size = Vector3(0.74, 0.025, 0.018)
+
+[sub_resource type="BoxShape3D" id="Shape_switch"]
+size = Vector3(1.62, 2.1, 0.4)
 
 [node name="FinishSwitch" type="Node3D"]
 script = ExtResource("1_script")
@@ -12,19 +92,170 @@ display_name = "TAHLİYE KONTROLÜ"
 required_keys = Array[StringName]([&"blue", &"red"])
 required_enemy_id = &""
 next_level_path = ""
-visual_world_size = Vector2(0.9, 1.3)
+visual_world_size = Vector2(1.0, 1.0)
 activated_modulate = Color(0.55, 0.65, 0.55, 1)
 
 [node name="PanelBody" type="StaticBody3D" parent="."]
 collision_layer = 8
 collision_mask = 0
 
-[node name="FinishSwitchVisual" type="Sprite3D" parent="PanelBody"]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0.105)
-pixel_size = 0.002
-alpha_cut = 1
-texture_filter = 1
-texture = ExtResource("2_ue8u2")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PanelBody"]
-shape = SubResource("BoxShape_switch")
+position = Vector3(0, 1.05, 0.12)
+shape = SubResource("Shape_switch")
+
+[node name="VisualConsole" type="Node3D" parent="."]
+
+[node name="BackPlate" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 1.05, 0.02)
+mesh = SubResource("Mesh_back")
+material_override = SubResource("Material_dark")
+
+[node name="LeftRail" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(-0.69, 1.05, 0.08)
+mesh = SubResource("Mesh_side")
+material_override = SubResource("Material_frame")
+
+[node name="RightRail" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0.69, 1.05, 0.08)
+mesh = SubResource("Mesh_side")
+material_override = SubResource("Material_frame")
+
+[node name="InnerFrame" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 1.17, 0.13)
+mesh = SubResource("Mesh_inner")
+material_override = SubResource("Material_frame")
+
+[node name="HeaderPlate" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 1.94, 0.16)
+mesh = SubResource("Mesh_header")
+material_override = SubResource("Material_accent")
+
+[node name="ScreenFrame" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 1.5, 0.205)
+mesh = SubResource("Mesh_screen_frame")
+material_override = SubResource("Material_dark")
+
+[node name="Screen" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 1.5, 0.265)
+mesh = SubResource("Mesh_screen")
+material_override = SubResource("Material_screen")
+
+[node name="AccentStrip" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 1.79, 0.275)
+mesh = SubResource("Mesh_strip")
+material_override = SubResource("Material_accent")
+
+[node name="LowerConsole" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 0.61, 0.21)
+mesh = SubResource("Mesh_lower")
+material_override = SubResource("Material_frame")
+
+[node name="Vent01" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 0.38, 0.325)
+mesh = SubResource("Mesh_vent")
+material_override = SubResource("Material_dark")
+
+[node name="Vent02" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 0.31, 0.325)
+mesh = SubResource("Mesh_vent")
+material_override = SubResource("Material_dark")
+
+[node name="Vent03" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0, 0.24, 0.325)
+mesh = SubResource("Mesh_vent")
+material_override = SubResource("Material_dark")
+
+[node name="StatusLeft" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(-0.49, 1.79, 0.305)
+mesh = SubResource("Mesh_led")
+material_override = SubResource("Material_warning")
+
+[node name="StatusRight" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0.49, 1.79, 0.305)
+mesh = SubResource("Mesh_led")
+material_override = SubResource("Material_ready")
+
+[node name="StatusRotor" type="Node3D" parent="VisualConsole"]
+position = Vector3(-0.28, 0.91, 0.35)
+
+[node name="RotorHorizontal" type="MeshInstance3D" parent="VisualConsole/StatusRotor"]
+mesh = SubResource("Mesh_rotor_bar")
+material_override = SubResource("Material_accent")
+
+[node name="RotorVertical" type="MeshInstance3D" parent="VisualConsole/StatusRotor"]
+rotation = Vector3(0, 0, 1.5708)
+mesh = SubResource("Mesh_rotor_bar")
+material_override = SubResource("Material_accent")
+
+[node name="ReadyCore" type="MeshInstance3D" parent="VisualConsole/StatusRotor"]
+position = Vector3(0, 0, 0.025)
+mesh = SubResource("Mesh_core")
+material_override = SubResource("Material_ready")
+
+[node name="LeverBase" type="MeshInstance3D" parent="VisualConsole"]
+position = Vector3(0.31, 0.82, 0.34)
+mesh = SubResource("Mesh_lever_base")
+material_override = SubResource("Material_dark")
+
+[node name="LeverPivot" type="Node3D" parent="VisualConsole"]
+position = Vector3(0.31, 0.82, 0.41)
+rotation_degrees = Vector3(-18, 0, 0)
+
+[node name="LeverArm" type="MeshInstance3D" parent="VisualConsole/LeverPivot"]
+position = Vector3(0, 0.16, 0)
+mesh = SubResource("Mesh_lever_arm")
+material_override = SubResource("Material_accent")
+
+[node name="HeaderLabel" type="Label3D" parent="VisualConsole"]
+position = Vector3(0, 1.95, 0.265)
+pixel_size = 0.0034
+font_size = 30
+outline_size = 8
+outline_modulate = Color(0.015, 0.02, 0.025, 1)
+modulate = Color(0.95, 0.78, 0.36, 1)
+text = "VEX // CONTROL"
+horizontal_alignment = 1
+
+[node name="ScreenLabel" type="Label3D" parent="VisualConsole"]
+position = Vector3(0, 1.56, 0.31)
+pixel_size = 0.003
+font_size = 22
+outline_size = 7
+outline_modulate = Color(0.01, 0.025, 0.035, 1)
+modulate = Color(0.7, 0.96, 1, 1)
+text = "EXTRACTION CONTROL"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label3D" parent="VisualConsole"]
+position = Vector3(0, 1.4, 0.31)
+pixel_size = 0.0028
+font_size = 18
+outline_size = 6
+outline_modulate = Color(0.01, 0.025, 0.035, 1)
+modulate = Color(0.42, 1, 0.62, 1)
+text = "SYSTEM READY"
+horizontal_alignment = 1
+
+[node name="FooterLabel" type="Label3D" parent="VisualConsole"]
+position = Vector3(0, 0.48, 0.34)
+pixel_size = 0.0028
+font_size = 17
+outline_size = 6
+outline_modulate = Color(0.02, 0.02, 0.025, 1)
+modulate = Color(0.85, 0.66, 0.28, 1)
+text = "MANUAL LINK // STANDBY"
+horizontal_alignment = 1
+
+[node name="ScreenGlow" type="OmniLight3D" parent="VisualConsole"]
+position = Vector3(0, 1.5, 0.46)
+light_color = Color(0.12, 0.72, 1, 1)
+light_energy = 0.8
+omni_range = 2.0
+shadow_enabled = false
+
+[node name="AccentGlow" type="OmniLight3D" parent="VisualConsole"]
+position = Vector3(-0.28, 0.91, 0.48)
+light_color = Color(1, 0.34, 0.06, 1)
+light_energy = 0.5
+omni_range = 1.45
+shadow_enabled = false
