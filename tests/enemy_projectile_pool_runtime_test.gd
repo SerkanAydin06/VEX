@@ -29,6 +29,23 @@ func _ready() -> void:
 	EnemyProjectilePool.recycle(reused)
 	EnemyProjectilePool.recycle(second)
 
+	# Sahne değişimiyle aynı failure mode'u doğrudan taklit et: pooled projectile
+	# current scene child'ı olduğu için dışarıdan free olabilir ama statik bucket
+	# eski Object referansını tutar. Bir sonraki acquire freed referansa `is`/cast
+	# uygulamadan onu atlamalı ve geçerli bir projectile döndürmelidir.
+	var stale := EnemyProjectilePool.acquire(PROJECTILE_SCENE, self)
+	assert(stale != null)
+	EnemyProjectilePool.recycle(stale)
+	stale.queue_free()
+	for _frame: int in range(3):
+		await get_tree().process_frame
+
+	var after_stale_free := EnemyProjectilePool.acquire(PROJECTILE_SCENE, self)
+	assert(after_stale_free != null)
+	assert(is_instance_valid(after_stale_free))
+	assert(not after_stale_free.is_queued_for_deletion())
+	EnemyProjectilePool.recycle(after_stale_free)
+
 	# Pooled Node'lar current scene altında tutulur. Test çıkışında fixture'ları
 	# serbest bırak; eski lifetime timer'ları lifecycle generation ile etkisizdir.
 	for child: Node in get_children():
