@@ -77,11 +77,18 @@ def test_keybind_rows_remain_dense_and_complete() -> None:
     assert "label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART" in script
 
 
-def test_level_complete_report_is_balanced_and_not_full_height() -> None:
+def test_level_complete_uses_fixed_rows_and_non_overlapping_actions() -> None:
     scene = _read(COMPLETE)
-    assert "offset_left = 580.0\noffset_top = 220.0\noffset_right = 1340.0\noffset_bottom = 930.0" in scene
-    assert "theme_override_font_sizes/font_size = 36" in scene
-    assert scene.count("custom_minimum_size = Vector2(0, 48)") == 3
+    assert "offset_left = 570.0\noffset_top = 190.0\noffset_right = 1350.0\noffset_bottom = 820.0" in scene
+    assert "theme_override_font_sizes/font_size = 32" in scene
+    assert '[node name="StatsRows" type="VBoxContainer"' in scene
+    assert '[node name="Stats" type="GridContainer"' not in scene
+    for row in ["TimeRow", "KillsRow", "SecretsRow", "DifficultyRow", "RatingRow"]:
+        assert f'[node name="{row}" type="HBoxContainer"' in scene
+    assert scene.count("custom_minimum_size = Vector2(205, 48)") == 3
+    assert '[node name="Actions" type="HBoxContainer"' in scene
+    assert "custom_minimum_size = Vector2(0, 52)" in scene
+    assert scene.count("autowrap_mode = 2") >= 7
     assert "theme_override_font_sizes/font_size = 48" not in scene
     assert "custom_minimum_size = Vector2(0, 60)" not in scene
 
