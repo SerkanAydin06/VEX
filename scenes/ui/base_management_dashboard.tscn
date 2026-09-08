@@ -151,7 +151,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "ATIŞ POLİGONU\nKİLİTLİ // VEX-01"
+text = "ATIŞ POLİGONU\nKİLİTLİ // BÖLÜM 01"
 autowrap_mode = 2
 
 [node name="ArmoryAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
@@ -171,7 +171,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "ARAŞTIRMA LABORATUVARI\nKİLİTLİ // VEX-01"
+text = "ARAŞTIRMA LABORATUVARI\nKİLİTLİ // BÖLÜM 01"
 autowrap_mode = 2
 
 [node name="MapSpacerA" type="Control" parent="Margin/VBox/FacilityGrid"]
@@ -199,7 +199,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "SİLAH ATÖLYESİ\nKİLİTLİ // VEX-02"
+text = "SİLAH ATÖLYESİ\nKİLİTLİ // BÖLÜM 02"
 autowrap_mode = 2
 
 [node name="SouthCorridorAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
@@ -219,7 +219,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "MÜHENDİSLİK BÖLMESİ\nKİLİTLİ // VEX-02"
+text = "MÜHENDİSLİK BÖLMESİ\nKİLİTLİ // BÖLÜM 02"
 autowrap_mode = 2
 
 [node name="MapSpacerC" type="Control" parent="Margin/VBox/FacilityGrid"]
@@ -270,7 +270,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 8
 disabled = true
-text = "SEVİYE 2\nKİLİTLİ // VEX-01 // 50%"
+text = "SEVİYE 2\nKİLİTLİ // BÖLÜM 01 // 50%"
 autowrap_mode = 2
 
 [node name="Lighting75Button" type="Button" parent="Margin/VBox/LightingButtons"]
@@ -279,7 +279,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 8
 disabled = true
-text = "SEVİYE 3\nKİLİTLİ // VEX-02 // 75%"
+text = "SEVİYE 3\nKİLİTLİ // BÖLÜM 02 // 75%"
 autowrap_mode = 2
 
 [node name="Lighting100Button" type="Button" parent="Margin/VBox/LightingButtons"]
@@ -288,7 +288,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 8
 disabled = true
-text = "SEVİYE 4\nKİLİTLİ // VEX-03 // 100%"
+text = "SEVİYE 4\nKİLİTLİ // BÖLÜM 03 // 100%"
 autowrap_mode = 2
 
 [node name="UpgradeLine" type="HSeparator" parent="Margin/VBox"]
@@ -313,7 +313,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "ENERJİ DAĞITIM AĞI\nKİLİTLİ // VEX-01"
+text = "ENERJİ DAĞITIM AĞI\nKİLİTLİ // BÖLÜM 01"
 autowrap_mode = 2
 
 [node name="SecurityGridUpgradeButton" type="Button" parent="Margin/VBox/UpgradeButtons"]
@@ -322,7 +322,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "GÜVENLİK AĞI\nKİLİTLİ // VEX-02"
+text = "GÜVENLİK AĞI\nKİLİTLİ // BÖLÜM 02"
 autowrap_mode = 2
 
 [node name="ResearchInfrastructureUpgradeButton" type="Button" parent="Margin/VBox/UpgradeButtons"]
@@ -331,7 +331,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 disabled = true
-text = "ARAŞTIRMA ALTYAPISI\nKİLİTLİ // VEX-03"
+text = "ARAŞTIRMA ALTYAPISI\nKİLİTLİ // BÖLÜM 03"
 autowrap_mode = 2
 
 [node name="BaseDashboardStatusHint" type="Label" parent="Margin/VBox"]
