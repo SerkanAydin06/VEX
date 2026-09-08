@@ -46,14 +46,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.002, 0.014, 0.019, 0.78)
+color = Color(0.002, 0.014, 0.019, 0.82)
 
 [node name="Logo" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 780.0
-offset_top = 42.0
-offset_right = 1140.0
-offset_bottom = 172.0
+offset_left = 810.0
+offset_top = 36.0
+offset_right = 1110.0
+offset_bottom = 146.0
 mouse_filter = 2
 texture = ExtResource("4_logo")
 expand_mode = 1
@@ -61,125 +61,199 @@ stretch_mode = 5
 
 [node name="ResultPanel" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = 580.0
-offset_top = 220.0
-offset_right = 1340.0
-offset_bottom = 930.0
+offset_left = 570.0
+offset_top = 190.0
+offset_right = 1350.0
+offset_bottom = 820.0
 
 [node name="Margin" type="MarginContainer" parent="ResultPanel"]
-theme_override_constants/margin_left = 42
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 42
-theme_override_constants/margin_bottom = 30
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 24
 
 [node name="VBox" type="VBoxContainer" parent="ResultPanel/Margin"]
-theme_override_constants/separation = 10
+layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Eyebrow" type="Label" parent="ResultPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 1, 0.66, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "COMPLETE_EYEBROW"
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="Title" type="Label" parent="ResultPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 1, 0.88, 1)
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 32
 text = "COMPLETE_TITLE"
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="Subtitle" type="Label" parent="ResultPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.5, 0.67, 0.72, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 15
 text = "LEVEL_01_NAME"
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="Divider" type="HSeparator" parent="ResultPanel/Margin/VBox"]
+layout_mode = 2
 
-[node name="Stats" type="GridContainer" parent="ResultPanel/Margin/VBox"]
+[node name="StatsRows" type="VBoxContainer" parent="ResultPanel/Margin/VBox"]
+layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/h_separation = 28
-theme_override_constants/v_separation = 10
-columns = 2
+theme_override_constants/separation = 4
 
-[node name="TimeLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="TimeRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+
+[node name="TimeLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/TimeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "COMPLETE_TIME"
+vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="TimeValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="TimeValue" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/TimeRow"]
 unique_name_in_owner = true
-theme_override_font_sizes/font_size = 26
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "00:00"
 horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="KillsLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="KillsRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+
+[node name="KillsLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/KillsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "COMPLETE_KILLS"
+vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="KillsValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="KillsValue" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/KillsRow"]
 unique_name_in_owner = true
-theme_override_font_sizes/font_size = 26
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "0 / 26"
 horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="SecretsLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="SecretsRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+
+[node name="SecretsLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/SecretsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "COMPLETE_SECRETS"
+vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="SecretsValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="SecretsValue" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/SecretsRow"]
 unique_name_in_owner = true
-theme_override_font_sizes/font_size = 26
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "0 / 2"
 horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="DifficultyLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="DifficultyRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+
+[node name="DifficultyLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/DifficultyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "SETTINGS_DIFFICULTY"
+vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="DifficultyValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="DifficultyValue" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/DifficultyRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.86, 1, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 20
 text = "DIFFICULTY_NORMAL"
 horizontal_alignment = 2
+vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="RatingLabel" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="RatingRow" type="HBoxContainer" parent="ResultPanel/Margin/VBox/StatsRows"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+
+[node name="RatingLabel" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/RatingRow"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.52, 0.27, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "COMPLETE_RATING"
+vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="RatingValue" type="Label" parent="ResultPanel/Margin/VBox/Stats"]
+[node name="RatingValue" type="Label" parent="ResultPanel/Margin/VBox/StatsRows/RatingRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.72, 0.42, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 21
 text = "RATING_B"
 horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Divider2" type="HSeparator" parent="ResultPanel/Margin/VBox"]
+layout_mode = 2
 
-[node name="ReplayButton" type="Button" parent="ResultPanel/Margin/VBox"]
+[node name="Actions" type="HBoxContainer" parent="ResultPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ReplayButton" type="Button" parent="ResultPanel/Margin/VBox/Actions"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(205, 48)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "COMPLETE_REPLAY"
 
-[node name="MainMenuButton" type="Button" parent="ResultPanel/Margin/VBox"]
+[node name="MainMenuButton" type="Button" parent="ResultPanel/Margin/VBox/Actions"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(205, 48)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "UI_MAIN_MENU"
 
-[node name="QuitButton" type="Button" parent="ResultPanel/Margin/VBox"]
+[node name="QuitButton" type="Button" parent="ResultPanel/Margin/VBox/Actions"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(205, 48)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "UI_QUIT"
