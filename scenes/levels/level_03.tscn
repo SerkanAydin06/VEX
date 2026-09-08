@@ -35,6 +35,24 @@ automap_show_room_numbers = false
 
 [node name="Level03PressureLineContent" parent="." instance=ExtResource("8_content")]
 
+[node name="Record_RegulatedGeothermalFlow" parent="Level03PressureLineContent/Records" index="0"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 11.59, 0.78, 13.8)
+
+[node name="Record_SelinObjectionDraft" parent="Level03PressureLineContent/Records" index="1"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 23.59, 8.58, -3.6)
+
+[node name="Record_Report7CClassified" parent="Level03PressureLineContent/Records" index="2"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -4.2, 8.58, -9.59)
+
+[node name="SelinStabilizationUnit" parent="Level03PressureLineContent/SurvivorRescue" index="0"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 23.375, 7.81, -6.8)
+
+[node name="EvacuationControl" parent="Level03PressureLineContent/Triggers" index="0"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 23.72, 7.8, -17)
+
+[node name="ExitSignEvac" parent="Level03PressureLineContent/Triggers" index="1"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 23.76, 12.4, -17)
+
 [node name="Player" parent="." instance=ExtResource("2_player")]
 transform = Transform3D(0.5731233, 0, -0.8194692, 0, 1, 0, 0.8194692, 0, 0.5731233, -20, 1, 16.5)
 
