@@ -35,6 +35,8 @@ for token in [
     'const IN_POOL_META := &"vex_projectile_in_pool"',
     "static var _buckets: Dictionary = {}",
     "static func acquire(projectile_scene: PackedScene, parent: Node) -> Node3D:",
+    "if not is_instance_valid(candidate):",
+    "if not (candidate is Node3D):",
     "node.set_meta(IN_POOL_META, false)",
     'node.call("activate_from_pool")',
     'projectile.set_meta("vex_projectile_pool_key", key)',
@@ -48,6 +50,13 @@ for token in [
     "bucket.append(projectile)",
 ]:
     assert token in pool, token
+
+# Scene changes free pooled current-scene children while the static bucket can
+# still retain the stale Object reference. Godot errors if `is Node3D` is used
+# on that freed instance, so validity MUST be checked before any type/cast access.
+validity_check = pool.index("if not is_instance_valid(candidate):")
+type_check = pool.index("if not (candidate is Node3D):")
+assert validity_check < type_check, "freed pooled instances must be validated before `is`"
 
 # The normal performance enemy path must acquire from the pool instead of
 # allocating a fresh projectile for every shot.
@@ -161,8 +170,9 @@ for source_name, source in [
     ]:
         assert token in source, (source_name, token)
 
-# Runtime fixture proves the double-recycle failure mode directly: one recycled
-# instance is reused once, while the second acquire must return a different Node.
+# Runtime fixture proves both pool corruption cases directly: duplicate recycle
+# must not return one Node twice, and a pooled Node freed by scene ownership must
+# be skipped safely on the next acquire rather than reaching `is Node3D`.
 for token in [
     "EnemyProjectilePool.recycle(first)",
     'first.get_meta("vex_projectile_in_pool", false)',
@@ -170,6 +180,11 @@ for token in [
     "assert(reused == first)",
     "var second := EnemyProjectilePool.acquire(PROJECTILE_SCENE, self)",
     "assert(second != reused)",
+    "var stale := EnemyProjectilePool.acquire(PROJECTILE_SCENE, self)",
+    "EnemyProjectilePool.recycle(stale)",
+    "stale.queue_free()",
+    "var after_stale_free := EnemyProjectilePool.acquire(PROJECTILE_SCENE, self)",
+    "assert(is_instance_valid(after_stale_free))",
 ]:
     assert token in pool_runtime_test, token
 
