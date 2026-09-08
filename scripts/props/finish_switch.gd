@@ -62,10 +62,10 @@ func get_interaction_text(player: Node) -> String:
 		return ""
 	if not _player_has_all_keys(player):
 		_set_visual_access_state(false)
-		return tr("INTERACT_REQUIRED") % [tr(display_name), _get_required_key_label()]
+		return tr("INTERACT_REQUIRED") % [_resolved_display_name(), _get_required_key_label()]
 	if required_enemy_id != &"" and not GameState.was_enemy_defeated(required_enemy_id):
 		_set_visual_access_state(false)
-		return tr("FINISH_GUARD_ACTIVE") % tr(display_name)
+		return tr("FINISH_GUARD_ACTIVE") % _resolved_display_name()
 	_set_visual_access_state(true)
 	return tr("FINISH_ACTIVATE")
 
@@ -176,9 +176,22 @@ func _play_activation_visual() -> void:
 
 func _refresh_console_text() -> void:
 	_header_label.text = _localized_device_text("VEX // KONTROL", "VEX // CONTROL")
-	_screen_label.text = tr(display_name).to_upper()
+	var screen_text := _resolved_display_name().to_upper()
+	_screen_label.text = screen_text
+	if screen_text.length() > 28:
+		_screen_label.font_size = 17
+	elif screen_text.length() > 22:
+		_screen_label.font_size = 19
+	else:
+		_screen_label.font_size = 22
 	_status_label.text = _localized_device_text("SİSTEM HAZIR", "SYSTEM READY")
 	_footer_label.text = _localized_device_text("MANUEL BAĞLANTI // BEKLEMEDE", "MANUAL LINK // STANDBY")
+
+
+func _resolved_display_name() -> String:
+	if display_name == "TAHLİYE KONTROLÜ":
+		return _localized_device_text("TAHLİYE KONTROLÜ", "EVACUATION CONTROL")
+	return tr(display_name)
 
 
 func _localized_device_text(tr_text: String, en_text: String) -> String:
