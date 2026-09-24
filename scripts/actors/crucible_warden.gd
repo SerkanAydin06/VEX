@@ -142,7 +142,7 @@ func _begin_ground_slam_attack() -> void:
 	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
 	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
 	var runtime_windup := maxf(0.01, _ability.ground_slam_windup * windup_scale)
-	await get_tree().create_timer(runtime_windup).timeout
+	await get_tree().create_timer(runtime_windup, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 
@@ -162,7 +162,7 @@ func _begin_ground_slam_attack() -> void:
 
 	var recovery := maxf(0.0, _ability.ground_slam_recovery * cooldown_scale)
 	if recovery > 0.0:
-		await get_tree().create_timer(recovery).timeout
+		await get_tree().create_timer(recovery, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false
@@ -183,7 +183,7 @@ func _begin_heatwave_attack() -> void:
 	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
 	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
 	var runtime_windup := maxf(0.01, _ability.heatwave_windup * windup_scale)
-	await get_tree().create_timer(runtime_windup).timeout
+	await get_tree().create_timer(runtime_windup, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 
@@ -203,7 +203,7 @@ func _begin_heatwave_attack() -> void:
 
 	var recovery := maxf(0.0, _ability.heatwave_recovery * cooldown_scale)
 	if recovery > 0.0:
-		await get_tree().create_timer(recovery).timeout
+		await get_tree().create_timer(recovery, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false

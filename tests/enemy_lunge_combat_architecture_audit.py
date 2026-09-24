@@ -43,7 +43,7 @@ assert "direction.z * _runtime_attack_lunge_speed" not in lunge_motion
 assert "move_toward(" in lunge_motion
 
 attack = function_block(lunge, "_attempt_attack")
-assert 'await get_tree().create_timer(_runtime_attack_windup).timeout' in attack
+assert 'await get_tree().create_timer(_runtime_attack_windup, false).timeout' in attack
 assert '_player.call("take_damage"' in attack
 assert '_play_animation(&"attack")' in attack
 assert '_play_animation(&"idle")' in attack

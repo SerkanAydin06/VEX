@@ -1467,7 +1467,7 @@ func _attempt_attack() -> void:
 	if attack_audio.stream != null:
 		attack_audio.play()
 
-	await get_tree().create_timer(_runtime_attack_windup).timeout
+	await get_tree().create_timer(_runtime_attack_windup, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	if _player != null and is_instance_valid(_player):
@@ -1491,7 +1491,7 @@ func _attempt_attack() -> void:
 		_runtime_attack_cooldown,
 		_runtime_attack_windup
 	)
-	await get_tree().create_timer(remaining).timeout
+	await get_tree().create_timer(remaining, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false
@@ -1644,14 +1644,14 @@ func _die() -> void:
 		animated_sprite.pause()
 	_place_corpse_on_floor(true)
 	GameState.register_enemy_defeated(enemy_id)
-	await get_tree().create_timer(death_duration).timeout
+	await get_tree().create_timer(death_duration, false).timeout
 	if not is_inside_tree():
 		return
 	if _has_animation(death_animation):
 		animated_sprite.pause()
 		animated_sprite.frame = maxi(0, animated_sprite.sprite_frames.get_frame_count(death_animation) - 1)
 	_apply_frame_ground_offset()
-	await get_tree().create_timer(corpse_hold_duration).timeout
+	await get_tree().create_timer(corpse_hold_duration, false).timeout
 	if not is_inside_tree():
 		return
 	_finalize_death_visual()

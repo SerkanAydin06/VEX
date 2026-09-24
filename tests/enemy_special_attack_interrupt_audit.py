@@ -23,7 +23,7 @@ gorehorn = read("scripts/actors/gorehorn.gd")
 # combatants should preserve the same death/interrupt semantics.
 for token in [
     "var combat_generation := _combat_interrupt_generation",
-    "await get_tree().create_timer(_runtime_attack_windup).timeout",
+    "await get_tree().create_timer(_runtime_attack_windup, false).timeout",
     "combat_generation != _combat_interrupt_generation",
     "state == State.DEAD",
 ]:
@@ -63,7 +63,7 @@ assert warden.count("state == State.DEAD") >= 4
 for token in [
     "func _begin_buff_attack() -> void:",
     "var combat_generation := _combat_interrupt_generation",
-    "await get_tree().create_timer(runtime_windup).timeout",
+    "await get_tree().create_timer(runtime_windup, false).timeout",
     "combat_generation != _combat_interrupt_generation",
     "state == State.DEAD",
 ]:

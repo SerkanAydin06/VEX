@@ -239,7 +239,7 @@ func _impact() -> void:
 
 
 func _expire_later(generation: int) -> void:
-	await get_tree().create_timer(lifetime).timeout
+	await get_tree().create_timer(lifetime, false).timeout
 	if is_inside_tree() and _active and generation == _lifecycle_generation:
 		_recycle_or_free()
 

@@ -31,6 +31,9 @@ const SAVE_BACKUP_PATH := "user://vex_save.bak"
 const SAVE_VERSION := 6
 const CAMPAIGN_SAVE_ENABLED := true
 const CHECKPOINTS_ENABLED := false
+const DEFAULT_PLAYER_MAXIMUM_HEALTH := 100
+## Ölüm/yeniden başlatma sonrası bölüm başlangıç canı için asgari oran.
+const RESTART_MINIMUM_HEALTH_RATIO := 0.5
 
 var player: Node = null
 var hud: CanvasLayer = null
@@ -115,8 +118,15 @@ func get_save_failure_message() -> String:
 	return "SAVE FAILED // RETRY BEFORE CONTINUING"
 
 
-func restart_level(_restore_full_health: bool = false) -> void:
+func restart_level(restore_full_health: bool = false) -> void:
 	# Legacy restart: bölümü mevcut bölüm başlangıcından açar.
+	# Oyuncu referansı _reset_level_counters() tarafından temizlenmeden önce
+	# canlı maximum_health okunur; aksi halde tam can seçeneği hiç çalışmaz.
+	var maximum_health := DEFAULT_PLAYER_MAXIMUM_HEALTH
+	var restart_health := DEFAULT_PLAYER_MAXIMUM_HEALTH
+	if player != null and is_instance_valid(player):
+		restart_health = int(player.get("maximum_health"))
+		maximum_health = maxi(1, restart_health)
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	loading_saved_state = false
@@ -125,9 +135,15 @@ func restart_level(_restore_full_health: bool = false) -> void:
 	pending_player_restore_state = {}
 	_reset_level_counters()
 	pending_player_restore_state = current_level_start_state.duplicate(true)
-	var restart_health := int(pending_player_restore_state.get("health", 100))
-	if _restore_full_health and player != null and is_instance_valid(player):
-		restart_health = int(player.get("maximum_health"))
+	if not restore_full_health:
+		# Bölüme çok düşük canla girildiyse her ölümde aynı canla başlamak
+		# oyunu kilitleyebilir. Yeniden başlangıç canı asgari bir tabana çekilir.
+		var minimum_health := ceili(float(maximum_health) * RESTART_MINIMUM_HEALTH_RATIO)
+		restart_health = clampi(
+			int(pending_player_restore_state.get("health", maximum_health)),
+			minimum_health,
+			maximum_health
+		)
 	pending_player_restore_state["health"] = restart_health
 	run_started_msec = Time.get_ticks_msec()
 	get_tree().change_scene_to_file(current_level_path)
@@ -269,7 +285,7 @@ func register_secret_found(secret_id: StringName = &"") -> void:
 		return
 	if secret_id != &"":
 		found_secret_ids.append(secret_id)
-	secrets = found_secret_ids.size() if not found_secret_ids.is_empty() else secrets + 1
+	secrets += 1
 	level_stats_changed.emit(kills, total_enemies, secrets, total_secrets)
 	notify("SECRET_FOUND")
 
@@ -439,6 +455,10 @@ func complete_level(next_level_path: String = "") -> void:
 		carry_state.erase("position")
 		carry_state.erase("rotation_y")
 		carry_state["keys"] = []
+		if next_level_path == BASTION_7_PATH:
+			# Bastion güvenli üstür: dönüşte oyuncu tam canla toparlanır, böylece
+			# bir sonraki göreve düşük canla kilitlenmiş bir kayıt taşınmaz.
+			carry_state["health"] = maxi(1, int(player.get("maximum_health")))
 		pending_player_restore_state = carry_state.duplicate(true)
 		current_level_path = next_level_path
 	else:

@@ -140,7 +140,7 @@ assert "func _play_animation(animation_name: StringName) -> void:" in lunge_perf
 assert 'animated_sprite.play(&"attack", _attack_playback_scale_for_runtime_windup())' in lunge_performance
 
 lunge_base = read("scripts/actors/enemy_lunge_base.gd")
-assert "await get_tree().create_timer(_runtime_attack_windup).timeout" in lunge_base
+assert "await get_tree().create_timer(_runtime_attack_windup, false).timeout" in lunge_base
 
 PERFORMANCE_LUNGE_SCRIPTS = (
     "scripts/actors/cinderhound.gd",
@@ -162,7 +162,7 @@ assert "func _melee_attack_playback_scale(animation_name: StringName, runtime_wi
 assert "frames.get_frame_duration(animation_name, 1) * 0.5" in hybrid_base
 assert "authored_release_time / maxf(runtime_windup, 0.001)" in hybrid_base
 assert "_melee_attack_playback_scale(attack_animation, runtime_windup)" in hybrid_base
-assert "await get_tree().create_timer(runtime_windup).timeout" in hybrid_base
+assert "await get_tree().create_timer(runtime_windup, false).timeout" in hybrid_base
 
 briar_script = read("scripts/actors/briar_skulker.gd")
 assert 'extends "res://scripts/actors/enemy_hybrid_base.gd"' in briar_script
