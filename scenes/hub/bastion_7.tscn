@@ -924,6 +924,15 @@ dialogue_key = "HUB_SELIN_POST_CH03"
 advanced_dialogue_stage = 100
 advanced_dialogue_key = ""
 
+[node name="CptLeylaSonmez" parent="Systems/Survivors" instance=ExtResource("22_survivor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, -1.8)
+required_campaign_stage = 1
+display_name_key = "SURVIVOR_LEYLA_NAME"
+role_key = "SURVIVOR_LEYLA_ROLE"
+dialogue_key = "HUB_LEYLA_POST_CH01"
+staged_dialogue_stages = PackedInt32Array(1, 2, 3)
+staged_dialogue_keys = PackedStringArray("HUB_LEYLA_POST_CH01", "HUB_LEYLA_POST_CH02", "HUB_LEYLA_POST_CH03")
+
 [node name="Player" parent="." unique_id=1205297111 instance=ExtResource("6_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 27.35)
 

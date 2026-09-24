@@ -212,7 +212,9 @@ func _get_entries_for_section() -> Array[Dictionary]:
 			result = _build_rift_network_entries()
 		Section.PROTOCOLS:
 			for entry: Dictionary in ArchiveDB.PROTOCOLS:
-				result.append(entry)
+				# Aileye özgü doktrinler o aile sahada tanınmadan listelenmez.
+				if GameState.campaign_stage >= int(entry.get("unlock_stage", 0)):
+					result.append(entry)
 		Section.BASE_MANAGEMENT:
 			result = _build_base_management_entries()
 	return result
@@ -249,14 +251,14 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 			]
 		Section.UNIVERSES, Section.THREAT_ANALYSIS:
 			if _is_universe_known(entry):
-				return str(entry.get("name", "UNKNOWN"))
+				return ArchiveDB.universe_name(entry)
 			return _t(
 				"GERÇEKLİK %02d\n// SINIFLANDIRILMAMIŞ" % (index + 1),
 				"REALITY %02d\n// UNCLASSIFIED" % (index + 1)
 			)
 		Section.RECORDS:
 			if _is_log_unlocked(entry):
-				return str(entry.get("title", "RECORD"))
+				return ArchiveDB.entry_title(entry, "RECORD")
 			return _t(
 				"ŞİFRELİ KAYIT // %02d" % (index + 1),
 				"ENCRYPTED RECORD // %02d" % (index + 1)
@@ -264,7 +266,7 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 		Section.BASE_MANAGEMENT:
 			return _get_base_management_button_text(entry)
 		_:
-			return str(entry.get("title", "DATA"))
+			return ArchiveDB.entry_title(entry, "DATA")
 
 
 func _refresh_detail() -> void:
@@ -321,11 +323,11 @@ func _show_enemy(entry: Dictionary) -> void:
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
 		_t("EKOLOJİK / TOPLUMSAL ROL", "ECOLOGICAL / SOCIAL ROLE"),
-		ArchiveDB.localized(entry, "lore"),
+		ArchiveDB.enemy_lore(entry, GameState.campaign_stage),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s" % [
 		_t("KAYNAK GERÇEKLİK", "ORIGIN REALITY"),
-		ArchiveDB.localized(universe, "extraction"),
+		ArchiveDB.universe_story_text(universe, "extraction", GameState.campaign_stage),
 	]
 	_set_detail(
 		str(entry.get("name", "UNKNOWN")),
@@ -368,10 +370,12 @@ func _show_universe(entry: Dictionary) -> void:
 		if not enemy.is_empty() and _is_enemy_discovered(enemy):
 			discovered_names.append(str(enemy.get("name", enemy_id)))
 	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("GERÇEKLİK KİMLİĞİ", "REALITY IDENTITY"), ArchiveDB.localized(entry, "identity")
+		_t("GERÇEKLİK KİMLİĞİ", "REALITY IDENTITY"),
+		ArchiveDB.universe_story_text(entry, "identity", GameState.campaign_stage)
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("VEX KAYNAK ÇEKİMİ", "VEX EXTRACTION"), ArchiveDB.localized(entry, "extraction")
+		_t("VEX KAYNAK ÇEKİMİ", "VEX EXTRACTION"),
+		ArchiveDB.universe_story_text(entry, "extraction", GameState.campaign_stage)
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
 		_t("SAHA BASKI PROFİLİ", "FIELD PRESSURE PROFILE"), ArchiveDB.localized(entry, "pressure")
@@ -384,7 +388,7 @@ func _show_universe(entry: Dictionary) -> void:
 		", ".join(discovered_names) if not discovered_names.is_empty() else "—",
 	]
 	_set_detail(
-		str(entry.get("name", "UNKNOWN")),
+		ArchiveDB.universe_name(entry),
 		_t(
 			"DOĞRULANAN TÜR // %d / %d" % [discovered_names.size(), ids.size()],
 			"VERIFIED SPECIES // %d / %d" % [discovered_names.size(), ids.size()]
@@ -412,7 +416,7 @@ func _show_log(entry: Dictionary) -> void:
 		)
 		return
 	_set_detail(
-		str(entry.get("title", "RECORD")),
+		ArchiveDB.entry_title(entry, "RECORD"),
 		_t("VEX GÜVENLİ KAYIT // DOĞRULANDI", "VEX SECURE RECORD // VERIFIED"),
 		_localized_body(entry),
 		VEX_LOGO,
@@ -446,8 +450,8 @@ func _show_threat_analysis(entry: Dictionary) -> void:
 	]
 	_set_detail(
 		_t(
-			"%s // TEHDİT MODELİ" % entry.get("name", "UNKNOWN"),
-			"%s // THREAT MODEL" % entry.get("name", "UNKNOWN")
+			"%s // TEHDİT MODELİ" % ArchiveDB.universe_name(entry),
+			"%s // THREAT MODEL" % ArchiveDB.universe_name(entry)
 		),
 		_t("AİLE BAZLI KARŞI OYUN", "FAMILY-LEVEL COUNTERPLAY"),
 		body,
@@ -468,7 +472,7 @@ func _show_rift_entry(entry: Dictionary) -> void:
 
 func _show_protocol(entry: Dictionary) -> void:
 	_set_detail(
-		str(entry.get("title", "PROTOCOL")),
+		ArchiveDB.entry_title(entry, "PROTOCOL"),
 		_t("VEX SAHA DOKTRİNİ // AKTİF", "VEX FIELD DOCTRINE // ACTIVE"),
 		_localized_body(entry),
 		VEX_LOGO,
@@ -905,7 +909,7 @@ func _get_known_universe_count() -> int:
 
 func _get_universe_name(universe_id: StringName) -> String:
 	var universe := ArchiveDB.get_universe(universe_id)
-	return str(universe.get("name", "UNKNOWN"))
+	return ArchiveDB.universe_name(universe) if not universe.is_empty() else "UNKNOWN"
 
 
 func _get_universe_recommendation(universe_id: StringName) -> String:
@@ -947,14 +951,16 @@ func _build_rift_network_entries() -> Array[Dictionary]:
 			"title": _t("YARIK AĞI // GENEL DURUM", "RIFT NETWORK // OVERVIEW"),
 			"meta": _t("BASTION-7 İZOLE TELEMETRİ", "BASTION-7 ISOLATED TELEMETRY"),
 			"body": _t(
-				"Yarık Ağı, VEX reaktörlerini birbirine bağlayan boyutlar arası enerji omurgasıdır. Yerel geçit kapansa bile ağ çalışıyorsa başka bir düğüm yeniden açılabilir.\n\nDOĞRULANAN GERÇEKLİK: %d / %d\nDOĞRULANAN XENO VARLIK: %d / %d\nCAMPAIGN AŞAMASI: %02d" % [
+				"Yarık Ağı, VEX reaktörlerini birbirine bağlayan boyutlar arası enerji omurgasıdır. %s\n\nDOĞRULANAN GERÇEKLİK: %d / %d\nDOĞRULANAN XENO VARLIK: %d / %d\nKAMPANYA AŞAMASI: %02d" % [
+					_rift_network_status_line(true),
 					known_universes,
 					ArchiveDB.UNIVERSES.size(),
 					discovered,
 					ArchiveDB.ENEMIES.size(),
 					GameState.campaign_stage,
 				],
-				"The Rift Network is the interdimensional energy backbone connecting VEX reactors. Even if a local passage closes, another node can reopen while the network remains active.\n\nVERIFIED REALITIES: %d / %d\nVERIFIED XENO ENTITIES: %d / %d\nCAMPAIGN STAGE: %02d" % [
+				"The Rift Network is the interdimensional energy backbone connecting VEX reactors. %s\n\nVERIFIED REALITIES: %d / %d\nVERIFIED XENO ENTITIES: %d / %d\nCAMPAIGN STAGE: %02d" % [
+					_rift_network_status_line(false),
 					known_universes,
 					ArchiveDB.UNIVERSES.size(),
 					discovered,
@@ -969,7 +975,7 @@ func _build_rift_network_entries() -> Array[Dictionary]:
 			"body": _build_extraction_matrix(),
 		},
 		{
-			"title": "BASTION-7 // NETWORK AIR GAP",
+			"title": _t("BASTION-7 // FİZİKSEL AĞ İZOLASYONU", "BASTION-7 // NETWORK AIR GAP"),
 			"meta": _t("FİZİKSEL AĞ İZOLASYONU // AKTİF", "PHYSICAL NETWORK ISOLATION // ACTIVE"),
 			"body": _t(
 				"Bastion-7 ana Yarık Ağı'ndan fiziksel olarak ayrıdır. Bu izolasyon üssü güvenli operasyon, arşiv ve yeniden konuşlanma merkezi hâline getirir. Terminal verileri saha kayıtlarından yerel olarak derlenir.",
@@ -977,14 +983,54 @@ func _build_rift_network_entries() -> Array[Dictionary]:
 			),
 		},
 		{
-			"title": _t("ANA HEDEF // AĞI SUSTUR", "PRIMARY OBJECTIVE // SILENCE THE NETWORK"),
+			"title": _t("ANA HEDEF // BASTION DİREKTİFİ", "PRIMARY OBJECTIVE // BASTION DIRECTIVE"),
 			"meta": _t("STRATEJİK DİREKTİF", "STRATEGIC DIRECTIVE"),
-			"body": _t(
-				"Tek tek yarıkları kapatmak kalıcı çözüm değildir. Nihai amaç enerji çekimini besleyen düğümleri devre dışı bırakmak, kaynak gerçeklik bağlantılarını çözmek ve Yarık Ağı'nın merkezini kalıcı olarak susturmaktır.",
-				"Closing individual rifts is not a permanent solution. The final objective is to disable the nodes feeding extraction, resolve origin-reality links and permanently silence the core of the Rift Network."
-			),
+			"body": _rift_network_directive(),
 		},
 	]
+
+
+# Yarık Ağı'nın kendi bağlantılarını dengelediği Bölüm 20'de keşfedilir; öncesinde
+# terminal yalnız o ana kadar doğrulanmış bilgiyi ve güncel direktifi gösterir.
+const RIFT_SELF_BALANCING_STAGE := 20
+const FIRST_ANCHOR_STAGE := 5
+
+
+func _rift_network_status_line(turkish: bool) -> String:
+	if GameState.campaign_stage >= RIFT_SELF_BALANCING_STAGE:
+		return (
+			"Yerel geçit kapansa bile ağ çalışıyorsa başka bir düğüm yeniden açılabilir."
+			if turkish
+			else "Even if a local passage closes, another node can reopen while the network remains active."
+		)
+	if GameState.campaign_stage >= 3:
+		return (
+			"Selin Erdem'in analizine göre ağ tek bir reaktör değil; farklı kaynak düğümleri ortak bir senkronizasyon sistemi kullanıyor."
+			if turkish
+			else "Selin Erdem's analysis shows the network is not a single reactor; separate source nodes share a common synchronization system."
+		)
+	return (
+		"Ağın ölçeği ve kaynak düğümleri henüz haritalanmadı."
+		if turkish
+		else "The network's scale and source nodes have not been mapped yet."
+	)
+
+
+func _rift_network_directive() -> String:
+	if GameState.campaign_stage >= RIFT_SELF_BALANCING_STAGE:
+		return _t(
+			"Tek tek yarıkları kapatmak kalıcı çözüm değildir. Nihai amaç enerji çekimini besleyen düğümleri devre dışı bırakmak, kaynak gerçeklik bağlantılarını çözmek ve Yarık Ağı'nın merkezini kalıcı olarak susturmaktır.",
+			"Closing individual rifts is not a permanent solution. The final objective is to disable the nodes feeding extraction, resolve origin-reality links and permanently silence the core of the Rift Network."
+		)
+	if GameState.campaign_stage >= FIRST_ANCHOR_STAGE:
+		return _t(
+			"Kaynak düğümlerini ve Dünya'daki ankrajlarını tespit edip enerji çekimini kesmek. Kapatılan her ankrajdan sonra ağın tepkisi izlenecek.",
+			"Locate source nodes and their anchors on Earth and cut the extraction. The network's response will be monitored after each anchor is shut down."
+		)
+	return _t(
+		"Hayatta kalanları bulmak, VEX tesis kayıtlarını güvenceye almak ve kırılmaları besleyen kaynağı tespit etmek.",
+		"Find survivors, secure VEX facility records and identify the source feeding the fractures."
+	)
 
 
 func _build_extraction_matrix() -> String:
@@ -992,8 +1038,8 @@ func _build_extraction_matrix() -> String:
 	for universe: Dictionary in ArchiveDB.UNIVERSES:
 		if _is_universe_known(universe):
 			lines.append("[color=#78cbd8]%s[/color]\n%s" % [
-				universe.get("name", "UNKNOWN"),
-				ArchiveDB.localized(universe, "extraction"),
+				ArchiveDB.universe_name(universe),
+				ArchiveDB.universe_story_text(universe, "extraction", GameState.campaign_stage),
 			])
 		else:
 			lines.append("[color=#7a4440]%s[/color]\n%s" % [

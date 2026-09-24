@@ -300,6 +300,7 @@ Aether Loom, Vaskari'den kesin ayrılmalıdır:
 ### Loom Herald
 - Elit koordinatör / miniboss. Faz kayması veya unit coordination gibi gerçek, uygulanmış bir özel sistemle gelmelidir.
 - **Tasarımı tamamlanmadan ve nihai sprite/animasyon seti hazır olmadan aktif roster'a alınmamalıdır.**
+- **Güncel durum:** `scenes/actors/loom_herald.tscn` yalnız **Level Test sandbox'ında** runtime spawn edilen bir prototiptir. Kampanya bölümlerinde, xenoarşivde ve 18 aktif yaratık sayısında yer almaz.
 
 ---
 

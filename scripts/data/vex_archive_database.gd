@@ -8,6 +8,13 @@ const UNIVERSES := [
 	{
 		"id": &"korvath",
 		"name": "KORVATH OCAĞI",
+		"name_en": "KORVATH FORGE",
+		# Köken/kaynak gerçeği hikâyede bu bölüm tamamlanınca doğrulanır.
+		"reveal_stage": 4,
+		"identity_provisional_tr": "Aşırı ısı ve basınca dayanıklı xeno formlar. Kamera kayıtları bu türlerin laboratuvardan kaçmadığını, doğrudan yarıktan geçtiğini gösteriyor. Köken gerçekliğin yapısı ve türlerin burada bulunma nedeni henüz doğrulanmadı.",
+		"identity_provisional_en": "Xeno forms resistant to extreme heat and pressure. Camera records show these species did not escape a laboratory; they crossed directly through the rift. The structure of their origin reality and why they are here remain unverified.",
+		"extraction_provisional_tr": "Kaynak ilişkisi henüz doğrulanmadı. Sıfır Kaynak akışında ısı ve basınç anomalileri ölçülüyor; VEX'in bu gerçeklikten ne çektiği ve karşı tarafa etkisi bilinmiyor.",
+		"extraction_provisional_en": "Source relationship unverified. Heat and pressure anomalies are measured in the Zero Source flow; what VEX drew from this reality and its effect on the far side remain unknown.",
 		"identity_tr": "Aşırı sıcaklık ve basınç altında kurulmuş yeraltı ocak uygarlığı. İş organizmaları, termal taşıyıcılar ve enerji kuyusu muhafızları aynı ekosistemin parçalarıdır.",
 		"identity_en": "A subterranean forge civilization adapted to extreme heat and pressure. Labor organisms, thermal carriers and well guardians belong to one industrial ecosystem.",
 		"extraction_tr": "VEX bu gerçeklikten jeotermal güç, ısı ve basınç dengesi çekti. Ocakların soğuması ve damar çökmeleri Korvath canlılarını yarık kaynağına sürükledi.",
@@ -21,6 +28,13 @@ const UNIVERSES := [
 	{
 		"id": &"thornwild",
 		"name": "THORNWILD SÜRÜSÜ",
+		"name_en": "THORNWILD SWARM",
+		# Köken/kaynak gerçeği hikâyede bu bölüm tamamlanınca doğrulanır.
+		"reveal_stage": 8,
+		"identity_provisional_tr": "Bu gerçekliğe ait türler doğrulandı. Köken ekolojisi ve davranış nedeni henüz sınıflandırılmadı.",
+		"identity_provisional_en": "Species from this reality are verified. Their origin ecology and motives have not been classified yet.",
+		"extraction_provisional_tr": "Kaynak ilişkisi henüz doğrulanmadı.",
+		"extraction_provisional_en": "Source relationship unverified.",
 		"identity_tr": "Et, kemik, diken ve spor dokusunun iç içe geçtiği sert bir av-avcı ekosistemi. Askerî bir kuvvet değil; bozulan habitatına tepki veren canlı zinciridir.",
 		"identity_en": "A harsh predator-prey ecosystem of flesh, bone, thorns and spores. It is not an army, but a living chain reacting to a damaged habitat.",
 		"extraction_tr": "VEX biyokütle, enzim ve rejeneratif doku çekti. Habitat ve av zinciri bozulunca türler yarık çevresinde yeni yaşam alanlarına yayıldı.",
@@ -34,6 +48,13 @@ const UNIVERSES := [
 	{
 		"id": &"vaskari",
 		"name": "VASKARI LEJYONU",
+		"name_en": "VASKARI LEGION",
+		# Köken/kaynak gerçeği hikâyede bu bölüm tamamlanınca doğrulanır.
+		"reveal_stage": 15,
+		"identity_provisional_tr": "Bu gerçekliğe ait türler doğrulandı. Köken ekolojisi ve davranış nedeni henüz sınıflandırılmadı.",
+		"identity_provisional_en": "Species from this reality are verified. Their origin ecology and motives have not been classified yet.",
+		"extraction_provisional_tr": "Kaynak ilişkisi henüz doğrulanmadı.",
+		"extraction_provisional_en": "Source relationship unverified.",
 		"identity_tr": "Biyozırh, zehir ve askerî kast düzeni üzerine kurulmuş organize savaş uygarlığı. Yarıkları tesadüfi geçiş değil kontrol edilmesi gereken cephe olarak görüyor.",
 		"identity_en": "An organized war civilization built around bio-armor, toxins and military castes. It treats rifts as fronts to control rather than accidental passages.",
 		"extraction_tr": "VEX biyotoksin, sinir iletimi ve rejeneratif savaş biyolojisi örnekleri çekti. Lejyon bunu doğrudan kaynak saldırısı olarak sınıflandırdı.",
@@ -47,6 +68,13 @@ const UNIVERSES := [
 	{
 		"id": &"nhal",
 		"name": "NHAL VEIL",
+		"name_en": "NHAL VEIL",
+		# Köken/kaynak gerçeği hikâyede bu bölüm tamamlanınca doğrulanır.
+		"reveal_stage": 18,
+		"identity_provisional_tr": "Bu gerçekliğe ait türler doğrulandı. Köken ekolojisi ve davranış nedeni henüz sınıflandırılmadı.",
+		"identity_provisional_en": "Species from this reality are verified. Their origin ecology and motives have not been classified yet.",
+		"extraction_provisional_tr": "Kaynak ilişkisi henüz doğrulanmadı.",
+		"extraction_provisional_en": "Source relationship unverified.",
 		"identity_tr": "Düşük görünürlük, sis, titreşim ve perde benzeri madde akışlarıyla şekillenmiş av ekosistemi. Tehdidi görünmezlikten değil bilgi ve görüş alanını bozmasından gelir.",
 		"identity_en": "A hunting ecosystem shaped by low visibility, mist, vibration and veil-like matter flows. Its threat comes from disrupting information and sight rather than invisibility.",
 		"extraction_tr": "VEX düşük ışık/faz maddesi ve perde dokusu çekti. Av yolları Dünya'nın karanlık bölgeleriyle istemsiz biçimde bağlandı.",
@@ -60,6 +88,13 @@ const UNIVERSES := [
 	{
 		"id": &"aether",
 		"name": "AETHER LOOM",
+		"name_en": "AETHER LOOM",
+		# Köken/kaynak gerçeği hikâyede bu bölüm tamamlanınca doğrulanır.
+		"reveal_stage": 22,
+		"identity_provisional_tr": "Bu gerçekliğe ait türler doğrulandı. Köken ekolojisi ve davranış nedeni henüz sınıflandırılmadı.",
+		"identity_provisional_en": "Species from this reality are verified. Their origin ecology and motives have not been classified yet.",
+		"extraction_provisional_tr": "Kaynak ilişkisi henüz doğrulanmadı.",
+		"extraction_provisional_en": "Source relationship unverified.",
 		"identity_tr": "Klasik biyolojiden çok enerji, örüntü ve uzamsal düzen üzerinden işleyen gerçeklik. Aether formları yarıkları bozuk bir desen olarak algılıyor.",
 		"identity_en": "A reality governed more by energy, patterns and spatial order than conventional biology. Aether forms interpret rifts as damaged patterns.",
 		"extraction_tr": "VEX faz dengesi ve gerçeklik örüntüsü çekti. Aether organizmaları kırılmış çizgileri yeniden bağlamaya çalışırken Dünya maddesini tehlikeli biçimde dönüştürüyor.",
@@ -275,55 +310,65 @@ const ENEMIES := [
 
 const LOGS := [
 	{
-		"id": &"zero_source", "unlock_stage": 0, "title": "SIFIR KAYNAK // KÖK KAYIT",
-		"body_tr": "Sıfır Kaynak Reaktörü enerji üretmiyordu. Mikroskobik boyutsal yarıklar üzerinden başka gerçekliklerden ısı, elektromanyetik alan, biyolojik enerji ve egzotik madde çekiyordu. Kapasite artışı yarıkları kalıcı hâle getirdi ve Yarık Ağı boyunca eşzamanlı kırılmalar başladı.",
-		"body_en": "The Zero Source Reactor did not create energy. It extracted heat, electromagnetic fields, biological energy and exotic matter from other realities through microscopic dimensional rifts. Increased capacity made the rifts persistent and triggered simultaneous failures across the Rift Network.",
+		"id": &"zero_source", "unlock_stage": 0,
+		"title_tr": "SIFIR KAYNAK // KÖK KAYIT", "title_en": "ZERO SOURCE // ROOT RECORD",
+		"body_tr": "Resmî kayıtlarda Sıfır Kaynak Reaktörü, yakıt tüketmeden sürekli enerji üreten stratejik temiz enerji projesi olarak tanımlanıyor. Son kapasite testinde birden fazla VEX tesisinde eşzamanlı kırılma yaşandı ve kalıcı yarıklar açıldı. İç teknik notlar reaktörün enerjiyi üretmediğini, bir yerden çektiğini söylüyor. Kaynağın ne olduğu henüz doğrulanmadı.",
+		"body_en": "Official records describe the Zero Source Reactor as a strategic clean-energy project producing continuous power without fuel. During the final capacity test, several VEX facilities fractured simultaneously and persistent rifts opened. Internal technical notes state the reactor did not produce energy but drew it from somewhere. The source remains unverified.",
 	},
 	{
-		"id": &"bastion", "unlock_stage": 0, "title": "BASTION-7 // OPERASYON ÜSSÜ",
-		"body_tr": "Ana Yarık Ağı'ndan fiziksel olarak ayrılmış eski askerî sığınak. Doğrudan yarık darbesi almaması nedeniyle VEX karşı operasyonunun güvenli merkezi olarak kullanılıyor. Operasyon terminali görev çıkışlarını; ana terminal ise xenoarşiv ve ağ analizini yönetir.",
-		"body_en": "An old military shelter physically isolated from the main Rift Network. Because it avoided a direct rift strike, it now serves as the secure center of the VEX counter-operation. The operations terminal handles deployment while the main terminal manages xeno-archive and network analysis.",
+		"id": &"bastion", "unlock_stage": 0,
+		"title_tr": "BASTION-7 // OPERASYON ÜSSÜ", "title_en": "BASTION-7 // OPERATIONS BASE",
+		"body_tr": "Ana Yarık Ağı'ndan fiziksel olarak ayrılmış eski askerî sığınak. Doğrudan yarık darbesi almaması nedeniyle VEX karşı operasyonunun güvenli merkezi olarak kullanılıyor. Operasyon koordinasyonu Yüzbaşı Leyla Sönmez'de. Operasyon terminali görev çıkışlarını; ana terminal ise xenoarşiv ve ağ analizini yönetir.",
+		"body_en": "An old military shelter physically isolated from the main Rift Network. Because it avoided a direct rift strike, it now serves as the secure center of the VEX counter-operation. Operations are coordinated by Captain Leyla Sönmez. The operations terminal handles deployment while the main terminal manages xeno-archive and network analysis.",
 	},
 	{
-		"id": &"vex01", "unlock_stage": 0, "title": "VEX-01 // İLK KIRILMA",
-		"body_tr": "Karantina tesisindeki ilk doğrulanmış büyük kırılma. Güvenlik sistemi çöktü, kalıcı geçitler açıldı ve Aras Koral Bastion-7 hattına ulaşmak için tesisi içeriden temizledi. Kritik kayıt: ‘Enerji üretmiyoruz. Bir yerden çekiyoruz.’",
-		"body_en": "The first confirmed major breach at the quarantine facility. Security collapsed, persistent passages opened and Aras Koral cleared a path to the Bastion-7 route. Critical record: ‘We are not producing energy. We are drawing it from somewhere.’",
+		"id": &"vex01", "unlock_stage": 1,
+		"title_tr": "BÖLÜM 01 // İLK KIRILMA", "title_en": "CHAPTER 01 // FIRST FRACTURE",
+		"body_tr": "Aras Koral felaketten dakikalar sonra bir VEX araştırma kompleksinin güvenlik odasında bilincini kazandı. Kamera 07 kaydı, Cinder Hound'ların laboratuvardan kaçmadığını, doğrudan açılan yarıktan geçtiğini gösterdi. Kurtarılan teknik not: ‘Enerji üretmiyoruz. Bir yerden çekiyoruz.’ Tesis dışında başka VEX noktalarından yükselen enerji sütunları görüldü; olay tek tesisle sınırlı değil. Aras acil durum protokolündeki Bastion-7'ye ulaştı ve Yüzbaşı Leyla Sönmez ile temas kurdu.",
+		"body_en": "Aras Koral regained consciousness in the security room of a VEX research complex minutes after the disaster. Camera 07 showed that the Cinder Hounds did not escape a laboratory; they crossed directly through an opening rift. Recovered technical note: ‘We are not producing energy. We are drawing it from somewhere.’ Energy columns were seen rising from other VEX sites; the event is not limited to one facility. Aras reached Bastion-7 from the emergency protocol and made contact with Captain Leyla Sönmez.",
 	},
 	{
-		"id": &"vex02", "unlock_stage": 1, "title": "VEX-02 // KIRIK OMURGA",
-		"body_tr": "Güvenlik ağı ve enerji ölçümlerinin merkezi. Kayıtlar VEX yönetiminin enerji akışının başka gerçekliklerden geldiğini kazadan aylar önce bildiğini gösteriyor. Buna rağmen deney durdurulmadı.",
-		"body_en": "The center of security networking and energy telemetry. Recovered records show VEX leadership knew months before the disaster that the energy flow came from other realities. The experiment continued anyway.",
+		"id": &"vex02", "unlock_stage": 2,
+		"title_tr": "BÖLÜM 02 // KÜL KORİDORU", "title_en": "CHAPTER 02 // ASH CORRIDOR",
+		"body_tr": "Bastion'ın dış iletişimi için eski aktarım rölesi yeniden çalıştırıldı. Servis tünellerinde Dünya jeolojisine ait olmayan bazalt oluşumları ve menzilli yeni bir form, Cinder Spitter, görüldü. Röle kayıtları Sıfır Kaynak'ın farklı frekanslarda enerji çektiğini ve KOR-TERMAL adlı bir dış kaynak imzasının yıllardır izlendiğini gösteriyor. Leyla aynı imzaya bağlı daha büyük bir yüksek basınç tesisinde hayatta kalan bir mühendisin sinyalini yakaladı: Dr. Selin Erdem.",
+		"body_en": "The old transfer relay was restarted to restore Bastion's external communications. Basalt formations foreign to Earth's geology and a new ranged form, the Cinder Spitter, were seen in the service tunnels. Relay records show the Zero Source drawing energy on different frequencies and an external source signature named KOR-THERMAL being tracked for years. Leyla picked up a surviving engineer's signal from a larger high-pressure facility tied to the same signature: Dr. Selin Erdem.",
 	},
 	{
-		"id": &"vex03", "unlock_stage": 2, "title": "VEX-03 // KÜL MADENİ",
-		"body_tr": "Jeotermal araştırma tesisi görünümündeki yüksek emiş düğümü. Korvath Ocağı'ndan yıllarca çekilen ısı ve basınç enerjisi başka bir uygarlığın altyapısını çökertti. Kül Madeni, yaratıkların tamamının planlı istilacı olmadığını doğrulayan ilk büyük saha kanıtıdır.",
-		"body_en": "A high-draw node disguised as a geothermal research facility. Years of heat and pressure extraction from the Korvath Forge damaged another civilization's infrastructure. Ash Mine is the first major field proof that not every hostile is part of a planned invasion.",
+		"id": &"vex03", "unlock_stage": 3,
+		"title_tr": "BÖLÜM 03 // BASINÇ HATTI", "title_en": "CHAPTER 03 // PRESSURE LINE",
+		"body_tr": "Basınç Hattı arşivindeki Akış Modeli 7-C, KOR-TERMAL akışının doğal jeolojik gürültü değil düzenlenmiş bir sistem gibi davrandığını gösteriyor. Rapor 7-C bu bulguyu sınıflandırmış ve Dr. Selin Erdem'in test durdurma önerisini reddetmişti: VEX yönetimi akışın düzenli bir sisteme bağlı olduğunu kazadan aylar önce biliyordu. Selin kurtarılıp Bastion-7'ye katıldı. İlk analizine göre Yarık Ağı tek bir reaktörden oluşmuyor; farklı kaynak düğümleri ortak bir senkronizasyon sistemi kullanıyor.",
+		"body_en": "Flow Model 7-C in the Pressure Line archive shows the KOR-THERMAL flow behaving like a regulated system rather than natural geological noise. Report 7-C classified this finding and rejected Dr. Selin Erdem's recommendation to halt testing: VEX leadership knew months before the disaster that the flow was tied to a regulated system. Selin was rescued and joined Bastion-7. Her first analysis shows the Rift Network is not a single reactor; separate source nodes share a common synchronization system.",
 	},
 ]
 
 const PROTOCOLS := [
 	{
-		"title": "SAHA TEMASI // XENO SINIFLANDIRMA",
+		"unlock_stage": 0,
+		"title_tr": "SAHA TEMASI // XENO SINIFLANDIRMA", "title_en": "FIELD CONTACT // XENO CLASSIFICATION",
 		"body_tr": "Yeni türle temas edildiğinde görsel aile, saldırı menzili, hareket paterni ve özel alan etkisi ayrı kaydedilir. Uygulanmamış bir yetenek arşive ‘mevcut’ olarak girilemez.",
 		"body_en": "On first contact with a new species, visual family, attack range, movement pattern and special area effects are logged separately. An unimplemented ability may never be archived as an active capability.",
 	},
 	{
-		"title": "YARIK TEMASI // GÜVENLİK",
-		"body_tr": "Kalıcı yarıklar yalnız portal değildir; Yarık Ağı'nın enerji düğümleridir. Yerel geçidi kapatmak ağı durdurmaz. Düğümün enerji beslemesi ve bağlantı kaynağı doğrulanmadan tam karantina ilan edilmez.",
-		"body_en": "Persistent rifts are not merely portals; they are energy nodes in the Rift Network. Closing a local passage does not stop the network. Full containment is not declared until its power feed and connection source are verified.",
+		"unlock_stage": 0,
+		"title_tr": "YARIK TEMASI // GÜVENLİK", "title_en": "RIFT CONTACT // SAFETY",
+		"body_tr": "Kalıcı yarıklar tesis arızası değil, Sıfır Kaynak akışına bağlı açık geçitlerdir. Yarık çevresindeki ani ısı ve basınç değişimleri yeni temasın habercisidir. Kaynak doğrulanmadan geçit bölgesinde tek başına ilerleme ve tam karantina ilan etme.",
+		"body_en": "Persistent rifts are not facility faults; they are open passages tied to the Zero Source flow. Sudden heat and pressure changes around a rift herald new contact. Do not advance alone through a passage zone or declare full containment before its source is verified.",
 	},
 	{
-		"title": "TOKSİK MARUZİYET // GÖRÜŞ KAYBI",
-		"body_tr": "Görüş bozulduğunda bilinmeyen alana sprint yasaktır. Son doğrulanmış güvenli konumu koru, ses bilgisini kullan ve efekt sona ermeden kapı/kenar geçişlerine körlemesine girme.",
-		"body_en": "When vision is compromised, sprinting into unknown space is prohibited. Hold the last verified safe position, use audio information and avoid blind transitions through doors or ledges until the effect clears.",
-	},
-	{
-		"title": "VASKARI TEMASI // ÖNCELİK MATRİSİ",
+		"unlock_stage": 11,
+		"title_tr": "VASKARI TEMASI // ÖNCELİK MATRİSİ", "title_en": "VASKARI CONTACT // PRIORITY MATRIX",
 		"body_tr": "Vaskari tehdidi tek birimin gücünden çok rol kombinasyonundan gelir. Komuta/destek ve uzun menzil birimleri güvenli biçimde erişilebiliyorsa öncelikli; ön hat yalnız seni kilitliyorsa önce hareket alanı aç.",
 		"body_en": "Vaskari threat comes from role combinations more than individual strength. Prioritize command/support and ranged units when safely accessible; clear frontline space first only when movement is being locked down.",
 	},
 	{
-		"title": "AETHER TEMASI // FAZ DOĞRULAMA",
+		"unlock_stage": 18,
+		"title_tr": "TOKSİK MARUZİYET // GÖRÜŞ KAYBI", "title_en": "TOXIC EXPOSURE // VISION LOSS",
+		"body_tr": "Görüş bozulduğunda bilinmeyen alana sprint yasaktır. Son doğrulanmış güvenli konumu koru, ses bilgisini kullan ve efekt sona ermeden kapı/kenar geçişlerine körlemesine girme.",
+		"body_en": "When vision is compromised, sprinting into unknown space is prohibited. Hold the last verified safe position, use audio information and avoid blind transitions through doors or ledges until the effect clears.",
+	},
+	{
+		"unlock_stage": 23,
+		"title_tr": "AETHER TEMASI // FAZ DOĞRULAMA", "title_en": "AETHER CONTACT // PHASE VALIDATION",
 		"body_tr": "Kısa faz hareketleri sınırsız teleport değildir. VEX saha modeli varış zemini, yükseklik farkı ve fiziksel geçiş güvenliğini ayrı değerlendirir. Faz izi görüldüğünde çevredeki güvenli varış açılarını kontrol et.",
 		"body_en": "Short phase movement is not unlimited teleportation. VEX field models validate arrival floor, height difference and physical traversal safety separately. When a phase trace appears, check safe arrival angles around your position.",
 	},
@@ -352,6 +397,41 @@ static func get_enemy_ids_for_universe(universe_id: StringName) -> Array[StringN
 	for value: StringName in universe.get("enemy_ids", []):
 		result.append(value)
 	return result
+
+
+static func universe_name(universe: Dictionary) -> String:
+	if not is_turkish() and universe.has("name_en"):
+		return str(universe["name_en"])
+	return str(universe.get("name", "UNKNOWN"))
+
+
+static func is_universe_origin_revealed(universe: Dictionary, campaign_stage: int) -> bool:
+	return campaign_stage >= int(universe.get("reveal_stage", 0))
+
+
+## Köken/kaynak alanları hikâyede açıklandığı bölüme kadar geçici metinle gösterilir.
+static func universe_story_text(universe: Dictionary, field: String, campaign_stage: int) -> String:
+	if not is_universe_origin_revealed(universe, campaign_stage):
+		var provisional := localized(universe, field + "_provisional")
+		if not provisional.is_empty():
+			return provisional
+	return localized(universe, field)
+
+
+static func enemy_lore(entry: Dictionary, campaign_stage: int) -> String:
+	var universe := get_universe(StringName(str(entry.get("universe", ""))))
+	if not universe.is_empty() and not is_universe_origin_revealed(universe, campaign_stage):
+		return (
+			"Kökendeki ekolojik ya da toplumsal rolü henüz doğrulanmadı. Kayıt yalnız gözlenen saha davranışına dayanıyor."
+			if is_turkish()
+			else "Its ecological or social role in its origin reality is unverified. This record relies only on observed field behavior."
+		)
+	return localized(entry, "lore")
+
+
+static func entry_title(entry: Dictionary, fallback: String) -> String:
+	var key := "title_tr" if is_turkish() else "title_en"
+	return str(entry.get(key, entry.get("title", fallback)))
 
 
 static func is_turkish() -> bool:

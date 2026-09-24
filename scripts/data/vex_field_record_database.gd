@@ -16,7 +16,7 @@ const RECORDS := [
 		"category_en": "INCIDENT",
 		"title_tr": "ACİL TEST EMRİ / 04:17",
 		"title_en": "EMERGENCY TEST ORDER / 04:17",
-		"body_tr": "ZERO SOURCE // TEST EMRİ 04:17\n\nÇekim kapasitesi %18 artırıldı. Emniyet ekibinin kararlılık itirazı yönetim yetkisiyle geçersiz kılındı. Eşzamanlı saha düğümleri aynı test penceresine bağlandı.\n\nNOT: Dalgalanma görülürse yerel reaktör kapatılmayacak; ağ senkronizasyonu korunacak.",
+		"body_tr": "SIFIR KAYNAK // TEST EMRİ 04:17\n\nÇekim kapasitesi %18 artırıldı. Emniyet ekibinin kararlılık itirazı yönetim yetkisiyle geçersiz kılındı. Eşzamanlı saha düğümleri aynı test penceresine bağlandı.\n\nNOT: Dalgalanma görülürse yerel reaktör kapatılmayacak; ağ senkronizasyonu korunacak.",
 		"body_en": "ZERO SOURCE // TEST ORDER 04:17\n\nExtraction capacity increased by 18%. The safety team's stability objection was overridden by executive authorization. Synchronized field nodes were tied to the same test window.\n\nNOTE: If oscillation occurs, do not shut down the local reactor; preserve network synchronization.",
 	},
 	{
@@ -40,7 +40,7 @@ const RECORDS := [
 		"category_en": "TECHNICAL // CLASSIFIED",
 		"title_tr": "ENERJİ ÜRETMİYORUZ",
 		"title_en": "WE ARE NOT PRODUCING ENERGY",
-		"body_tr": "ZERO SOURCE // DAHİLİ TEKNİK NOT\n\nReaktör verisi artık termodinamik açıklamalarla uyuşmuyor. Çıkış, yerel sisteme giren hammaddeden büyük. Kaynak içeride değil.\n\nEnerji üretmiyoruz. Bir yerden çekiyoruz.\n\nYarık kısa süreli değil; ağ onu açık tutuyor. Yönetim bu ayrımı aylardır biliyor olabilir.",
+		"body_tr": "SIFIR KAYNAK // DAHİLİ TEKNİK NOT\n\nReaktör verisi artık termodinamik açıklamalarla uyuşmuyor. Çıkış, yerel sisteme giren hammaddeden büyük. Kaynak içeride değil.\n\nEnerji üretmiyoruz. Bir yerden çekiyoruz.\n\nYarık kısa süreli değil; ağ onu açık tutuyor. Yönetim bu ayrımı aylardır biliyor olabilir.",
 		"body_en": "ZERO SOURCE // INTERNAL TECHNICAL NOTE\n\nReactor data no longer matches thermodynamic explanations. Output exceeds the material entering the local system. The source is not inside the facility.\n\nWe are not producing energy. We are drawing it from somewhere.\n\nThe rift is not momentary; the network is holding it open. Management may have known this distinction for months.",
 	},
 	{
@@ -112,7 +112,7 @@ const RECORDS := [
 		"category_en": "EXECUTIVE // 7-C",
 		"title_tr": "RAPOR 7-C SINIFLANDIRILDI",
 		"title_en": "REPORT 7-C CLASSIFIED",
-		"body_tr": "YÖNETİM KARARI // RAPOR 7-C\n\n'Düzenlenmiş kaynak altyapısı' değerlendirmesi doğrulanmış bulgu olarak kabul edilmeyecektir. İlgili akış anomalileri operasyon raporlarından çıkarılacak ve yalnız Zero Source yönetim arşivinde tutulacaktır.\n\nDr. Selin Erdem'in test durdurma önerisi reddedildi. KOR-TERMAL verimi hedef aralıkta kaldığı sürece çekim programı değiştirilmeyecektir.",
+		"body_tr": "YÖNETİM KARARI // RAPOR 7-C\n\n'Düzenlenmiş kaynak altyapısı' değerlendirmesi doğrulanmış bulgu olarak kabul edilmeyecektir. İlgili akış anomalileri operasyon raporlarından çıkarılacak ve yalnız Sıfır Kaynak yönetim arşivinde tutulacaktır.\n\nDr. Selin Erdem'in test durdurma önerisi reddedildi. KOR-TERMAL verimi hedef aralıkta kaldığı sürece çekim programı değiştirilmeyecektir.",
 		"body_en": "EXECUTIVE DECISION // REPORT 7-C\n\nThe 'regulated source infrastructure' assessment will not be treated as a confirmed finding. Related flow anomalies are to be removed from operational reports and retained only in the Zero Source executive archive.\n\nDr. Selin Erdem's recommendation to halt testing was rejected. The extraction schedule will remain unchanged while KOR-THERMAL yield stays within target range.",
 	},
 ]

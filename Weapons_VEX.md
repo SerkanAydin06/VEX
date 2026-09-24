@@ -71,7 +71,7 @@ Yeni içerikte her silah kendi model kimliğini kullanacaktır. Mevcut kayıtlar
 | Görünen model | Hedef `weapon_id` | Mevcut/eski kimlik | Durum |
 |---|---|---|---|
 | P-01 | `p01` | `pistol` | Oynanabilir; canonical ID aktif, legacy migration hazır |
-| P-07 | `p07` | Yok | Oynanabilir; Level 1 gizli bakım deposundan açılır |
+| P-07 | `p07` | Yok | Oynanabilir; Bölüm 3 — Basınç Hattı karanlık bakım cebinden alınır |
 | P-14 | `p14` | Yok | Oynanabilir |
 | P-20 | `p20` | Yok | Oynanabilir; ortak `bullets` rezervini kullanır |
 | SG-04 | `sg04` | `shotgun` | Oynanabilir; canonical ID aktif, legacy migration hazır |
@@ -100,7 +100,7 @@ Bir kayıt dosyasında hem eski hem yeni kimlik bulunursa yeni kimlik esas alın
 |---|---|---|---|---|---|
 | P-01 | P-01 Taktik Tabanca | Tabanca | Dengeli başlangıç silahı | Güvenilir mekanik nişangâh | Oynanabilir |
 | P-07 | P-07 Sentinel | Tabanca | Karanlık alan / hızlı takip | Entegre taktik fener | Oynanabilir |
-| P-14 | P-14 Specter | Tabanca | Gizli operasyon / hassasiyet | Fener, susturucu, gelişmiş optik | Oynanabilir; Level 1 başlangıcında test pickup'ı |
+| P-14 | P-14 Specter | Tabanca | Gizli operasyon / hassasiyet | Fener, susturucu, gelişmiş optik | Oynanabilir; kampanya edinimi Bölüm 9 (şimdilik yalnız Level Test sandbox'ında) |
 | P-20 | P-20 Magnum | Tabanca | Zırhlı hedef / tek atış gücü | Standart tabanca mühimmatı ve delme | Oynanabilir |
 | SG-04 | SG-04 Breacher | Pompalı | Yakın mesafe durdurma | Manuel pompa ve yüksek saçma | Oynanabilir |
 | SG-09 | SG-09 Aegis | Pompalı | Savunma / seri takip | Yarı otomatik mekanizma | Oynanabilir |

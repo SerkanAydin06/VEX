@@ -950,7 +950,7 @@ Bu tablo ilk güçlü kampanya tanıtımını gösterir. Üretilmiş eski sahnel
 | Voidweaver | Aether Loom | 21 | 24-25 |
 | Rift Reaver | Aether Loom | 23 | 24-25 |
 
-Planlanan **Murk Stalker, Shade Anchor, Rift Spindle, Parallax Drone ve Loom Herald** bu 30 bölümlük ana kampanyanın zorunlu parçası değildir. Gerçek gameplay rolleri ve üretim setleri tamamlanırsa ilgili evren bloklarına sonradan eklenebilirler; mevcut 18 yaratığın rolünü bozmak için kullanılmamalıdır.
+Planlanan **Murk Stalker, Shade Anchor, Rift Spindle, Parallax Drone ve Loom Herald** bu 30 bölümlük ana kampanyanın zorunlu parçası değildir. Loom Herald'ın şu anki sahnesi yalnız Level Test sandbox prototipidir; kampanyada kullanılmaz. Gerçek gameplay rolleri ve üretim setleri tamamlanırsa ilgili evren bloklarına sonradan eklenebilirler; mevcut 18 yaratığın rolünü bozmak için kullanılmamalıdır.
 
 ---
 
