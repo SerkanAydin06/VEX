@@ -12,6 +12,9 @@ extends Node3D
 @export_range(0, 20, 1) var total_secrets := 0
 @export_range(0.01, 0.1, 0.005) var briefing_character_delay := 0.028
 @export_range(0.1, 3.0, 0.05) var briefing_start_delay := 0.45
+## Oynanabilir kampanyanın son bölümünde açılır: bölüm ilk kez tamamlandığında
+## Bastion'a dönmeden önce kampanya ara sonu ekranı gösterilir.
+@export var shows_campaign_end_screen := false
 
 @export_category("02 - Otomatik Harita")
 @export var automap_title := "VEX MAP"
@@ -97,6 +100,10 @@ func get_level_display_name() -> String:
 
 func get_campaign_completion_stage() -> int:
 	return campaign_completion_stage
+
+
+func get_shows_campaign_end_screen() -> bool:
+	return shows_campaign_end_screen
 
 
 func get_automap_config() -> Dictionary:

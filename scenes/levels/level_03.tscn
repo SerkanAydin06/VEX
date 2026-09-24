@@ -20,6 +20,7 @@ briefing_objective = "CH03_BRIEFING_OBJECTIVE"
 total_secrets = 1
 briefing_character_delay = 0.026
 briefing_start_delay = 0.4
+shows_campaign_end_screen = true
 automap_title = "CH03_MAP_TITLE"
 automap_columns = 8
 automap_rows = 6
