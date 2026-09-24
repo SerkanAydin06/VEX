@@ -14,7 +14,7 @@
 [sub_resource type="Resource" id="Resource_furnice_ability"]
 script = ExtResource("10_furnice_settings")
 thermal_burst_scene = ExtResource("4_shockwave")
-thermal_burst_frame_y_offsets = PackedFloat32Array(0.1053, 0.1453, 0.1053, 0.1453)
+thermal_burst_frame_y_offsets = PackedFloat32Array(0.10929, 0.14129, 0.10396, 0.14129)
 
 [sub_resource type="CapsuleShape3D" id="CylinderShape3D_2gs8v"]
 radius = 0.58
@@ -318,14 +318,14 @@ runtime_grid_step = 1.08
 runtime_grid_max_nodes = 2000
 runtime_grid_search_margin = 13.0
 dormant_distance = 46.0
-corpse_visual_y = 0.5220053
-back_corpse_visual_y = 0.5220053
-idle_frame_y_offsets = PackedFloat32Array(0.1453, 0.1453, 0.1453, 0.1533)
-idle_back_frame_y_offsets = PackedFloat32Array(0.1373, 0.1293, 0.1613, 0.1373)
-walk_frame_y_offsets = PackedFloat32Array(0.1613, 0.1373, 0.1693, 0.1533)
-walk_back_frame_y_offsets = PackedFloat32Array(0.1373, 0.1373, 0.1213, 0.1373)
-attack_frame_y_offsets = PackedFloat32Array(0.1533, 0.1133, 0.1293, 0.0813)
-death_frame_y_offsets = PackedFloat32Array(0.1213, 0.1053, 0.0573, 0.0973)
+corpse_visual_y = 0.5233353
+back_corpse_visual_y = 0.5233353
+idle_frame_y_offsets = PackedFloat32Array(0.14129, 0.14663, 0.14663, 0.15196)
+idle_back_frame_y_offsets = PackedFloat32Array(0.14129, 0.13063, 0.15729, 0.13596)
+walk_frame_y_offsets = PackedFloat32Array(0.15729, 0.13596, 0.16796, 0.15196)
+walk_back_frame_y_offsets = PackedFloat32Array(0.13596, 0.13596, 0.11996, 0.13063)
+attack_frame_y_offsets = PackedFloat32Array(0.15729, 0.11463, 0.13063, 0.08263)
+death_frame_y_offsets = PackedFloat32Array(0.12529, 0.10396, 0.05596, 0.09863)
 burn_remains_scene = ExtResource("9_burn")
 burn_remains_scale = 1.1
 special_ability_settings = SubResource("Resource_furnice_ability")

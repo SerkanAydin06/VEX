@@ -17,11 +17,11 @@ PROJECTILE = ROOT / "scenes/actors/basalt_juggernaut_projectile.tscn"
 ANIMATIONS = ["idle", "walk", "attack", "death", "idle_back", "walk_back"]
 EXPECTED_OFFSETS = {
     "idle_frame_y_offsets": [0.0731, 0.0731, 0.0731, 0.0682],
-    "idle_back_frame_y_offsets": [0.0731, 0.0731, 0.0731, 0.0731],
-    "walk_frame_y_offsets": [0.1025, 0.0682, 0.1124, 0.0878],
-    "walk_back_frame_y_offsets": [0.1124, 0.078, 0.1124, 0.078],
-    "attack_frame_y_offsets": [0.0731, 0.078, 0.0731, 0.0731],
-    "death_frame_y_offsets": [0.0486, 0.0192, 0.0927, 0.0584],
+    "idle_back_frame_y_offsets": [0.06822, 0.07313, 0.06822, 0.06822],
+    "walk_frame_y_offsets": [0.10255, 0.06822, 0.11235, 0.08293],
+    "walk_back_frame_y_offsets": [0.11235, 0.07313, 0.11235, 0.07313],
+    "attack_frame_y_offsets": [0.06822, 0.07313, 0.06822, 0.07313],
+    "death_frame_y_offsets": [0.04861, 0.01429, 0.08784, 0.05842],
 }
 
 
