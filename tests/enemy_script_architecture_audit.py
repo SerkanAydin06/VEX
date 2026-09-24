@@ -143,9 +143,11 @@ assert enemy_base.count('@export_category("01 - Kimlik ve Zorluk")') == 1
 assert "01A -" not in enemy_base
 assert "01B -" not in enemy_base
 
-# Frame callback ailede kalır: base sınıfın aileye özgü _apply_frame_ground_offset
-# hook'unu doğrudan çağırması Godot runtime class-resolution'ını bozar.
-assert not re.search(r"(?m)^func _on_visual_frame_changed\b", enemy_base)
+# Base sınıf frame callback'i yalnız kendi tanımladığı varsayılan
+# _apply_frame_ground_offset hook'unu çağırabilir; aile sınıfları override eder.
+# Hook base'de tanımlı değilse Godot runtime class-resolution'ı bozulur.
+if re.search(r"(?m)^func _on_visual_frame_changed\b", enemy_base):
+    assert re.search(r"(?m)^func _apply_frame_ground_offset\(\) -> void:", enemy_base)
 assert re.search(r"(?m)^func _on_visual_frame_changed\b", combatant_base)
 assert re.search(r"(?m)^func _on_visual_frame_changed\b", lunge_base)
 

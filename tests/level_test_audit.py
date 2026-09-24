@@ -316,9 +316,21 @@ def main() -> int:
         for path in (ROOT / "scenes/actors").glob("*.tscn")
         if "_projectile" not in path.stem
     )
+    # level_test.gd may spawn an actor at runtime (before BaseLevel counts
+    # enemies) with an explicit level_test_* id; treat those as placed.
+    level_script = read("scripts/levels/level_test.gd")
+    runtime_ids: list[str] = []
+    runtime_actor_files: set[str] = set()
+    for actor_file in actor_files:
+        if f'preload("res://scenes/actors/{actor_file}")' in level_script:
+            runtime_actor_files.add(actor_file)
+    runtime_ids = re.findall(r'^const \w+_TEST_ID := &"(level_test_[^"]+)"$', level_script, re.M)
+    if len(runtime_ids) != len(runtime_actor_files):
+        fail("Level Test runtime spawn edilen düşmanların level_test_* ID'leri eksik")
+
     for actor_file in actor_files:
         reference = f'path="res://scenes/actors/{actor_file}"'
-        if reference not in scene:
+        if reference not in scene and actor_file not in runtime_actor_files:
             fail(f"Level Test güncel düşman sahnesini içermiyor: {actor_file}")
 
     enemy_nodes = [node for node in nodes if node["parent"] == "Enemies" and node["instance"] is not None]
@@ -343,8 +355,12 @@ def main() -> int:
             if node_property(node, "spawn_min_difficulty") is None and actor_spawn_match and int(actor_spawn_match.group(1)) != 0:
                 fail(f"Level Test düşman sahnesi Easy default taşımıyor: {node['name']}")
 
-    if len(enemy_nodes) != len(actor_files):
-        fail(f"Level Test düşman instance sayısı yanlış: {len(enemy_nodes)}/{len(actor_files)}")
+    enemy_ids.extend(runtime_ids)
+    if len(enemy_nodes) + len(runtime_actor_files) != len(actor_files):
+        fail(
+            "Level Test düşman instance sayısı yanlış: "
+            f"{len(enemy_nodes) + len(runtime_actor_files)}/{len(actor_files)}"
+        )
     if len(enemy_ids) != len(actor_files) or len(set(enemy_ids)) != len(enemy_ids):
         fail("Level Test düşman ID'leri eksik veya benzersiz değil")
 

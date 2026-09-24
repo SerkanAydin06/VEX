@@ -156,15 +156,19 @@ assert f"pixel_size = {IMPACT_PIXEL_SIZE}" in projectile_scene
 assert "speed = 13.5" in projectile_scene
 assert "radius = 0.18" in projectile_scene
 
-# Level 3 spawns Loom before VexBaseLevel performs its enemy count, and derives
-# placement from the scene-authored U01 marker instead of a hard-coded XYZ.
-assert 'preload("res://scenes/actors/loom_herald.tscn")' in level_script
-assert 'LOOM_HERALD_ENEMY_ID := &"vex03_upper_loom_herald"' in level_script
-assert '"Geometry/UpperLevel/Room_U01_StairLanding"' in level_script
-assert 'get_node_or_null("Enemies")' in level_script
-assert 'loom_herald.set("enemy_id", LOOM_HERALD_ENEMY_ID)' in level_script
-ready_block = re.search(r"func _ready\(\) -> void:\n(.*?)(?=\n\nfunc )", level_script, re.S)
-assert ready_block, "Level 3 _ready missing"
+# Loom Herald is not part of the canonical Pressure Line roster
+# (docs/levels/Level_03_Pressure_Line.md). The enemy sandbox spawns it before
+# VexBaseLevel performs its enemy count, anchored to a scene-authored room.
+assert "loom_herald" not in level_script.lower(), "Loom Herald leaked into VEX-03"
+level_03_content = read(ROOT / "scenes/levels/level_03_pressure_line_content.tscn")
+assert "loom_herald.tscn" not in level_03_content
+sandbox_script = read(ROOT / "scripts/levels/level_test.gd")
+assert 'preload("res://scenes/actors/loom_herald.tscn")' in sandbox_script
+assert 'LOOM_HERALD_TEST_ID := &"level_test_loom_herald"' in sandbox_script
+assert 'get_node_or_null("Enemies")' in sandbox_script
+assert 'loom_herald.set("enemy_id", LOOM_HERALD_TEST_ID)' in sandbox_script
+ready_block = re.search(r"func _ready\(\) -> void:\n(.*?)(?=\n\nfunc )", sandbox_script, re.S)
+assert ready_block, "Level Test _ready missing"
 assert ready_block.group(1).find("_spawn_loom_herald()") < ready_block.group(1).find("super._ready()"), (
     "Loom Herald must spawn before base level enemy counting"
 )

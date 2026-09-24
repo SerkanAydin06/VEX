@@ -141,7 +141,12 @@ assert "mouse_filter = Control.MOUSE_FILTER_IGNORE" in overlay_source
 
 canonical_test_source = canonical_test_scene.read_text(encoding="utf-8")
 assert 'path="res://scenes/actors/husk_leech.tscn"' in canonical_test_source
-assert '[node name="HuskLeech" parent="Enemies" instance=ExtResource("46_husk_leech")]' in canonical_test_source
+# Godot 4.7 may insert a unique_id attribute into saved node headers.
+assert re.search(
+    r'^\[node name="HuskLeech" parent="Enemies"(?: unique_id=\d+)? instance=ExtResource\("46_husk_leech"\)\]$',
+    canonical_test_source,
+    re.M,
+)
 assert 'enemy_id = &"level_test_husk_leech"' in canonical_test_source
 
 test_source = test_scene.read_text(encoding="utf-8")

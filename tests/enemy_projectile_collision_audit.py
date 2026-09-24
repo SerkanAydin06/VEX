@@ -43,8 +43,9 @@ def root_collision_mask(scene_source: str, scene_name: str) -> int:
 
 # Layer names are a project contract: bit 2 is player, bit 3 is enemy.
 project = read("project.godot")
-assert '3d_physics/layer_2="player"' in project
-assert '3d_physics/layer_3="enemy"' in project
+# Names are authored in Turkish in project.godot; English aliases stay accepted.
+assert re.search(r'^3d_physics/layer_2="(?:player|Oyuncu)"$', project, re.M)
+assert re.search(r'^3d_physics/layer_3="(?:enemy|Düşman)"$', project, re.M)
 
 # Hostile direct projectiles must be able to hit the player but never collide
 # with the enemy layer. World/interaction bits may vary by projectile family.

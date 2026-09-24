@@ -49,7 +49,8 @@ assert "_scaled_special_damage(_ability.projectile_decal_tick_damage)" in furnac
 assert 'projectile.call("launch", shot_direction, self, _runtime_attack_damage, decal_damage)' in furnace
 assert "_direct_damage = maxi(1, direct_damage)" in furnace_projectile
 assert "_decal_tick_damage = maxi(1, decal_tick_damage)" in furnace_projectile
-assert 'decal.call("configure", _decal_tick_damage, _source)' in furnace_projectile
+assert 'decal.call("configure", _decal_tick_damage, damage_source)' in furnace_projectile
+assert "var damage_source := _valid_source()" in furnace_projectile
 
 # Hybrid ranged attacks use the generic combatant projectile path; Veilmaw adds
 # reposition behavior but must still delegate projectile creation to its parent.
