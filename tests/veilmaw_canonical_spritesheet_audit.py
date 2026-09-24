@@ -75,7 +75,7 @@ assert regions == expected_regions, (regions, expected_regions)
 for needle in (
     "idle_frame_y_offsets = PackedFloat32Array(0.0707, 0.1035, 0.0953, 0.0994)",
     "idle_back_frame_y_offsets = PackedFloat32Array(0.0953, 0.0953, 0.0953, 0.0953)",
-    "walk_frame_y_offsets = PackedFloat32Array(0.0994, 0.1035, 0.1076, 0.1035)",
+    "walk_frame_y_offsets = PackedFloat32Array(0.0994, 0.10213, 0.10487, 0.10213)",
     "walk_back_frame_y_offsets = PackedFloat32Array(0.0789, 0.0871, 0.083, 0.0871)",
     "attack_frame_y_offsets = PackedFloat32Array(0.0994, 0.0953, 0.0912, 0.0953)",
     "death_frame_y_offsets = PackedFloat32Array(0.1035, 0.0953, 0.0953, 0.0871)",
