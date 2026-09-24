@@ -57,13 +57,13 @@ func _run_burst() -> void:
 	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_property(visual, "scale", _base_visual_scale * radius_scale * visual_end_scale, visual_duration)
 	var damage_delay := visual_duration * clampf(damage_time_ratio, 0.0, 1.0)
-	await get_tree().create_timer(damage_delay).timeout
+	await get_tree().create_timer(damage_delay, false).timeout
 	if not is_inside_tree():
 		return
 	_apply_damage_once()
 	var remaining := maxf(0.0, visual_duration - damage_delay)
 	if remaining > 0.0:
-		await get_tree().create_timer(remaining).timeout
+		await get_tree().create_timer(remaining, false).timeout
 	if is_inside_tree():
 		queue_free()
 

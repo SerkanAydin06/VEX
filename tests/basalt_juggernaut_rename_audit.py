@@ -44,14 +44,15 @@ for path in ROOT.rglob("*"):
 scene = (ROOT / "scenes/actors/basalt_juggernaut.tscn").read_text(encoding="utf-8")
 projectile = (ROOT / "scenes/actors/basalt_juggernaut_projectile.tscn").read_text(encoding="utf-8")
 script = (ROOT / "scripts/actors/basalt_juggernaut.gd").read_text(encoding="utf-8")
-level_02 = (ROOT / "scenes/levels/level_02.tscn").read_text(encoding="utf-8")
+# Canonical campaign placement: Pressure Line owns the Basalt Juggernaut roster.
+level_03_content = (ROOT / "scenes/levels/level_03_pressure_line_content.tscn").read_text(encoding="utf-8")
 assert "class_name VexBasaltJuggernaut" in script
 assert '[node name="BasaltJuggernaut" type="CharacterBody3D"' in scene
 assert 'enemy_id = &"basalt_juggernaut"' in scene
 assert 'path="res://scenes/actors/basalt_juggernaut_projectile.tscn"' in scene
 assert 'path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_character_spritesheet.png"' in scene
 assert 'path="res://assets/enemies/basalt_juggernaut/basalt_juggernaut_effects_spritesheet.png"' in projectile
-assert '[node name="BasaltJuggernaut_19"' in level_02
-assert 'enemy_id = &"v2_basalt_juggernaut_19"' in level_02
+assert 'path="res://scenes/actors/basalt_juggernaut.tscn"' in level_03_content
+assert '[node name="BasaltJuggernaut_FirstContact" parent="Enemies"' in level_03_content
 
 print("basalt juggernaut rename audit passed")

@@ -41,7 +41,7 @@ func _attempt_attack() -> void:
 	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
 	var selected_windup := _ability.thermal_burst_windup if use_thermal_burst else _ability.projectile_attack_windup
 	var runtime_windup := maxf(0.01, selected_windup * windup_scale)
-	await get_tree().create_timer(runtime_windup).timeout
+	await get_tree().create_timer(runtime_windup, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 
@@ -67,7 +67,7 @@ func _attempt_attack() -> void:
 	var runtime_attack_cooldown := maxf(runtime_windup, _ability.projectile_attack_cooldown * cooldown_scale)
 	var remaining := maxf(0.0, runtime_attack_cooldown - runtime_windup)
 	if remaining > 0.0:
-		await get_tree().create_timer(remaining).timeout
+		await get_tree().create_timer(remaining, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false

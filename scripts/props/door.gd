@@ -383,14 +383,14 @@ func _on_opening_finished(motion_generation: int, close_generation: int) -> void
 
 
 func _auto_close_sequence(close_generation: int) -> void:
-	await get_tree().create_timer(auto_close_delay).timeout
+	await get_tree().create_timer(auto_close_delay, false).timeout
 	while _can_auto_close(close_generation):
 		if _is_doorway_blocked():
-			await get_tree().create_timer(safety_recheck_time).timeout
+			await get_tree().create_timer(safety_recheck_time, false).timeout
 			continue
 
 		# Alanın yalnızca tek fizik karesi için boşalması kapanmayı başlatmasın.
-		await get_tree().create_timer(safety_clear_time).timeout
+		await get_tree().create_timer(safety_clear_time, false).timeout
 		if not _can_auto_close(close_generation):
 			return
 		if _is_doorway_blocked():

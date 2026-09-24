@@ -52,7 +52,7 @@ def read(relative: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def packed_array(source: str, property_name: str) -> list[float]:
+def packed_array(source: str, property_name: str, required: bool = True) -> list[float] | None:
     # .tscn stores `property = PackedFloat32Array(...)`, while GDScript
     # defaults use `@export var property := PackedFloat32Array(...)`.
     match = re.search(
@@ -60,8 +60,13 @@ def packed_array(source: str, property_name: str) -> list[float]:
         source,
         re.M,
     )
+    if match is None and not required:
+        return None
     assert match is not None, property_name
-    values = [float(value.strip()) for value in match.group(1).split(",")]
+    # GDScript defaults may wrap the values in an Array literal:
+    # PackedFloat32Array([0.75, 1.0, ...]).
+    raw_values = match.group(1).strip().removeprefix("[").removesuffix("]")
+    values = [float(value.strip()) for value in raw_values.split(",")]
     assert len(values) == 4, (property_name, values)
     return values
 
@@ -77,7 +82,7 @@ def assert_profile(values: list[float], direction: str, name: str) -> None:
             "must fall with difficulty",
             values,
         )
-    minimum, maximum = SANITY_RANGES[name]
+    minimum, maximum = SANITY_RANGES[name.split(":")[-1]]
     assert all(minimum <= value <= maximum for value in values), (
         name,
         "outside sanity band",
@@ -180,8 +185,10 @@ for scene_name in ACTIVE_ENEMY_SCENES:
         re.M,
     ), (scene_name, "enemy group must be assigned after difficulty gate")
     for property_name, direction in MULTIPLIERS.items():
-        values = packed_array(scene, property_name)
-        assert_profile(values, direction, f"{scene_name}:{property_name}")
+        # Scenes without an override inherit the enemy base default checked above.
+        values = packed_array(scene, property_name, required=False)
+        if values is not None:
+            assert_profile(values, direction, f"{scene_name}:{property_name}")
 
 # Both behavior families must difficulty-filter before joining the enemy group.
 # BaseLevel can then count only the active roster when its parent _ready runs.
@@ -227,7 +234,7 @@ for script_name, source, function_name in [
 # Gorehorn's custom charge must remain on the lunge family's already-scaled
 # runtime damage/windup/cooldown/speed values rather than bypassing difficulty.
 for token in [
-    "create_timer(_runtime_attack_windup)",
+    "create_timer(_runtime_attack_windup, false)",
     'take_damage", _runtime_attack_damage',
     "_runtime_attack_cooldown",
     "_runtime_attack_lunge_speed",
@@ -255,16 +262,22 @@ assert "if not scale_amount_with_difficulty:" in pickup
 # Every placed enemy needs a unique explicit ID for defeat tracking. Any enemy
 # required by a finish switch must exist and be available even on Easy, otherwise
 # the campaign can become impossible to complete on lower difficulties.
-for level_name in ["level_01.tscn", "level_02.tscn", "level_03.tscn"]:
+# Canonical levels author their roster in the per-level content scene; the
+# structural snapshot's legacy Enemies node is never installed at runtime.
+# Explicit IDs are only needed where a door/finish switch references them.
+for level_name in [
+    "level_01_first_fracture_content.tscn",
+    "level_02_ash_corridor_content.tscn",
+    "level_03_pressure_line_content.tscn",
+]:
     source = read(f"scenes/levels/{level_name}")
     blocks = enemy_blocks(source)
     assert blocks, level_name
     minimums: list[int] = []
     enemy_minimum_by_id: dict[str, int] = {}
-    for block in blocks:
+    for index, block in enumerate(blocks):
         id_match = re.search(r'^enemy_id\s*=\s*&"([^"]+)"\s*$', block, re.M)
-        assert id_match is not None, (level_name, "enemy without explicit enemy_id")
-        enemy_id = id_match.group(1)
+        enemy_id = id_match.group(1) if id_match is not None else f"<unnamed:{index}>"
         assert enemy_id not in enemy_minimum_by_id, (level_name, "duplicate enemy_id", enemy_id)
 
         match = re.search(r"^spawn_min_difficulty\s*=\s*(\d+)\s*$", block, re.M)

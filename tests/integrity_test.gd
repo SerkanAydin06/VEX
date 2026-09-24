@@ -117,37 +117,70 @@ func _count_named_children(root: Node, prefix: String) -> int:
 	return count
 
 
+func _instantiate_level(path: String) -> Node:
+	# Canonical levels install their structural roots from *_structure_source.tscn
+	# in _enter_tree(). A detached instance never enters the tree, so run the same
+	# installer explicitly to inspect the runtime structure.
+	var level := _instantiate(path)
+	if level != null and level.has_method("_install_authored_structure"):
+		level.call("_install_authored_structure")
+	return level
+
+
+func _child_count(root: Node, path: String) -> int:
+	var node := root.get_node_or_null(path) if root != null else null
+	return node.get_child_count() if node != null else -1
+
+
+func _check_key_door(level: Node, door_path: String, key_id: StringName, label: String) -> void:
+	var door := level.get_node_or_null(door_path) as VexDoor
+	if door == null or not door.locked:
+		failures.append("%s kilitli erişim kapısı yanlış: %s" % [label, door_path])
+		return
+	var keys := door.required_keys if not door.required_keys.is_empty() else ([door.required_key] as Array[StringName])
+	if keys != [key_id]:
+		failures.append("%s erişim kapısı anahtarı yanlış: %s -> %s" % [label, door_path, keys])
+
+
 func _check_level_01() -> void:
-	var level := _instantiate("res://scenes/levels/level_01.tscn")
+	var level := _instantiate_level("res://scenes/levels/level_01.tscn")
 	if level == null:
 		return
-	if str(level.get("map_revision")) != "VEX01-R28-37ROOM-13STEP":
-		failures.append("VEX-01 37 oda revision sözleşmesi yanlış.")
+	if str(level.get("map_revision")) != "VEX01-FIRST-FRACTURE-R37-ENV01":
+		failures.append("VEX-01 kanonik revision sözleşmesi yanlış.")
 
 	var geometry := level.get_node_or_null("Geometry")
 	if _count_named_children(geometry, "Floor_R") != 37:
 		failures.append("VEX-01 zemin modülü 37 değil.")
 	if _count_named_children(geometry, "Ceiling_R") != 37:
 		failures.append("VEX-01 tavan modülü 37 değil.")
-	var room_lights := level.get_node_or_null("RoomLights")
-	if room_lights == null or room_lights.get_child_count() != 37:
+	if _child_count(level, "RoomLights") != 37:
 		failures.append("VEX-01 beyaz oda ışığı 37 değil.")
-	var lights := level.get_node_or_null("Lights")
-	if lights == null or lights.get_child_count() != 24:
+	if _child_count(level, "Lights") != 24:
 		failures.append("VEX-01 statik kapı ışığı sayısı 24 değil.")
-	var doors := level.get_node_or_null("Doors")
-	if doors == null or doors.get_child_count() != 36:
+	if _child_count(level, "Doors") != 36:
 		failures.append("VEX-01 seçici bağlantı kapısı 36 değil.")
+	if level.get_node_or_null("Enemies") != null:
+		failures.append("VEX-01 yapısal kaynaktaki eski Enemies kökü runtime'a sızıyor.")
 
-	var blue_gate := level.get_node_or_null("Doors/Door_25_27") as VexDoor
-	if blue_gate == null or not blue_gate.locked or blue_gate.required_key != &"blue":
-		failures.append("VEX-01 mavi erişim kapısı yanlış.")
+	_check_key_door(level, "Doors/Door_25_27", &"blue", "VEX-01")
 	var final_gate := level.get_node_or_null("Doors/Door_35_37") as VexDoor
-	if final_gate == null or final_gate.required_keys != [&"blue", &"red"]:
+	if final_gate == null or not final_gate.locked or final_gate.required_keys != [&"blue", &"red"]:
 		failures.append("VEX-01 final çift erişim kapısı yanlış.")
-	var finish := level.get_node_or_null("Triggers/FinishSwitch") as VexFinishSwitch
-	if finish == null or finish.required_enemy_id != &"ravager_19":
-		failures.append("VEX-01 final muhafız/bitiş sözleşmesi yanlış.")
+
+	var content := level.get_node_or_null("Level01FirstFractureContent")
+	if _child_count(content, "Enemies") != 13:
+		failures.append("VEX-01 içerik düşman sayısı 13 değil.")
+	if _child_count(content, "Pickups") != 20:
+		failures.append("VEX-01 içerik pickup sayısı 20 değil.")
+	var finish := level.get_node_or_null("Level01FirstFractureContent/Triggers/FinishSwitch") as VexFinishSwitch
+	if (
+		finish == null
+		or finish.required_keys != [&"blue", &"red"]
+		or finish.required_enemy_id != &""
+		or finish.next_level_path != GameState.BASTION_7_PATH
+	):
+		failures.append("VEX-01 bitiş sözleşmesi yanlış.")
 
 	var config: Dictionary = level.call("get_automap_config")
 	var cells: Array = config.get("walkable_cells", []) as Array
@@ -159,54 +192,95 @@ func _check_level_01() -> void:
 
 
 func _check_level_02() -> void:
-	var level := _instantiate("res://scenes/levels/level_02.tscn")
+	var level := _instantiate_level("res://scenes/levels/level_02.tscn")
 	if level == null:
 		return
+	if str(level.get("map_revision")) != "VEX02-ASH-CORRIDOR-R33-CANONICAL":
+		failures.append("VEX-02 kanonik revision sözleşmesi yanlış.")
 	var geometry := level.get_node_or_null("Geometry")
 	if _count_named_children(geometry, "Floor_") != 33:
 		failures.append("VEX-02 zemin modülü 33 değil.")
 	if _count_named_children(geometry, "Ceiling_") != 33:
 		failures.append("VEX-02 tavan modülü 33 değil.")
-	var room_lights := level.get_node_or_null("RoomLights")
-	if room_lights == null or room_lights.get_child_count() != 33:
+	if _child_count(level, "RoomLights") != 33:
 		failures.append("VEX-02 beyaz ışık sayısı 33 değil.")
-	var doors := level.get_node_or_null("Doors")
-	if doors == null or doors.get_child_count() != 5:
+	if _child_count(level, "Doors") != 5:
 		failures.append("VEX-02 kapı sayısı 5 değil.")
-	for node_path in ["Enemies/BasaltJuggernaut_19", "Enemies/Voidweaver_30"]:
-		if level.get_node_or_null(node_path) == null:
-			failures.append("VEX-02 içerik eksik: %s" % node_path)
+	if level.get_node_or_null("EnemyNavigation") == null:
+		failures.append("VEX-02 düşman navigasyon kökü kurulmuyor.")
+	if level.get_node_or_null("Enemies") != null:
+		failures.append("VEX-02 yapısal kaynaktaki eski Enemies kökü runtime'a sızıyor.")
+	_check_key_door(level, "Doors/D01_Door", &"blue", "VEX-02")
+	_check_key_door(level, "Doors/D02_Door", &"yellow", "VEX-02")
+	_check_key_door(level, "Doors/D03_Door", &"blue", "VEX-02")
+	_check_key_door(level, "Doors/D04_Door", &"red", "VEX-02")
+	var airlock := level.get_node_or_null("Doors/D05_Door") as VexDoor
+	if airlock == null or airlock.locked:
+		failures.append("VEX-02 final hava kilidi serbest geçiş değil.")
+
+	var content := level.get_node_or_null("Level02AshCorridorContent")
+	if _child_count(content, "Enemies") != 20:
+		failures.append("VEX-02 içerik düşman sayısı 20 değil.")
+	if _child_count(content, "Pickups") != 15:
+		failures.append("VEX-02 içerik pickup sayısı 15 değil.")
+	var finish := level.get_node_or_null("Level02AshCorridorContent/Triggers/FinishSwitch") as VexFinishSwitch
+	if (
+		finish == null
+		or finish.required_keys != [&"blue", &"yellow", &"red"]
+		or finish.next_level_path != GameState.BASTION_7_PATH
+	):
+		failures.append("VEX-02 bitiş sözleşmesi yanlış.")
 	level.free()
 
 
 func _check_level_03() -> void:
-	var level := _instantiate("res://scenes/levels/level_03.tscn")
+	var level := _instantiate_level("res://scenes/levels/level_03.tscn")
 	if level == null:
 		return
+	if str(level.get("map_revision")) != "VEX03-PRESSURE-LINE-R02-CANONICAL":
+		failures.append("VEX-03 kanonik revision sözleşmesi yanlış.")
 	for node_path in [
-		"Geometry/UpperLevel/UpperDeck",
-		"Geometry/Stairs/Collision/SmoothRampCollision/LowerRamp",
-		"Geometry/Stairs/Collision/SmoothRampCollision/Landing",
-		"Geometry/Stairs/Collision/SmoothRampCollision/UpperRamp",
-		"Objectives/RiftIsolationSwitch",
-		"Enemies/KorvathWarden",
-		"Pickups/BluePowerCard",
-		"LoreTerminals/EceTanEmergencySignal",
+		"Geometry/LowerLevel",
+		"Geometry/UpperLevel/Room_U01_StairLanding",
+		"Geometry/Stairs",
+		"Level03PressureLineContent/SurvivorRescue/SelinStabilizationUnit",
+		"Level03PressureLineContent/Triggers/EvacuationControl",
+		"Level03PressureLineContent/Secrets/SecretClassifiedArchive",
 	]:
 		if level.get_node_or_null(node_path) == null:
 			failures.append("VEX-03 bileşeni eksik: %s" % node_path)
-	var enemies := level.get_node_or_null("Enemies")
-	if enemies == null or enemies.get_child_count() != 16:
-		failures.append("VEX-03 düşman yerleşimi 16 düğüm değil.")
-	var pickups := level.get_node_or_null("Pickups")
-	if pickups == null or pickups.get_child_count() != 12:
-		failures.append("VEX-03 pickup yerleşimi 12 düğüm değil.")
-	var doors := level.get_node_or_null("Doors")
-	if doors == null or doors.get_child_count() != 14:
+	if level.get_node_or_null("Enemies") != null:
+		failures.append("VEX-03 yapısal kaynaktaki eski Enemies kökü runtime'a sızıyor.")
+	if _child_count(level, "Doors") != 14:
 		failures.append("VEX-03 kapı sayısı 14 değil.")
-	var room_lights := level.get_node_or_null("RoomLights")
-	if room_lights == null or room_lights.get_child_count() != 17:
+	if _child_count(level, "RoomLights") != 17:
 		failures.append("VEX-03 beyaz ışık sayısı 17 değil.")
+	_check_key_door(level, "Doors/Door_StairAccess", &"blue", "VEX-03")
+	_check_key_door(level, "Doors/Door_StairSecurity", &"yellow", "VEX-03")
+	_check_key_door(level, "Doors/Door_CoreAuthorization", &"red", "VEX-03")
+	var locked_doors := 0
+	for door_node: Node in level.get_node("Doors").get_children():
+		var door := door_node as VexDoor
+		if door != null and door.locked:
+			locked_doors += 1
+	if locked_doors != 3:
+		failures.append("VEX-03 eski kilit/combat gate semantiği sızıyor: %d kilitli kapı" % locked_doors)
+
+	var content := level.get_node_or_null("Level03PressureLineContent")
+	if _child_count(content, "Enemies") != 22:
+		failures.append("VEX-03 içerik düşman sayısı 22 değil.")
+	if _child_count(content, "Pickups") != 12:
+		failures.append("VEX-03 içerik pickup sayısı 12 değil.")
+	var extraction := level.get_node_or_null(
+		"Level03PressureLineContent/Triggers/EvacuationControl"
+	) as VexLevel03ExtractionSwitch
+	if (
+		extraction == null
+		or not extraction.required_keys.is_empty()
+		or extraction.next_level_path != GameState.BASTION_7_PATH
+		or extraction.rescue_terminal_path.is_empty()
+	):
+		failures.append("VEX-03 tahliye/kurtarma sözleşmesi yanlış.")
 	level.free()
 
 
@@ -236,13 +310,12 @@ func _check_training_overlay() -> void:
 	var overlay := _instantiate("res://scenes/levels/level_01_training_overlay.tscn") as VexLevel01TrainingFlow
 	if overlay == null:
 		return
-	if overlay.gate_door_paths.size() != 2 or overlay.gate_enemy_ids != [&"ravager_01", &"ravager_07"]:
-		failures.append("VEX-01 Easy-safe combat gate eşlemesi yanlış.")
+	# First Fracture has no combat gates; any configured gate must stay paired.
+	if overlay.gate_door_paths.size() != overlay.gate_enemy_ids.size():
+		failures.append("VEX-01 eğitim kapısı/düşman eşlemesi eşleşmiyor.")
 	for node_name in [
 		"TutorialMove", "TutorialInteract", "TutorialFire", "TutorialReload",
-		"TutorialStrafe", "TutorialBarrel", "TutorialResource", "TutorialFinal",
-		"TutorialComplete", "TrainingBarrel", "Gate03_07StatusFront",
-		"Gate03_07StatusBack", "Gate13_15StatusFront", "Gate13_15StatusBack",
+		"TutorialComplete",
 	]:
 		if overlay.get_node_or_null(node_name) == null:
 			failures.append("VEX-01 eğitim overlay bileşeni eksik: %s" % node_name)

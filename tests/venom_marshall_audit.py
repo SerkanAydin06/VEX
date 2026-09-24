@@ -147,7 +147,7 @@ for contract in [
     "var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)",
     "_ability.buff_cooldown * cooldown_scale",
     "var runtime_recovery := maxf(0.0, _ability.buff_recovery * cooldown_scale)",
-    "create_timer(runtime_recovery)",
+    "create_timer(runtime_recovery, false)",
 ]:
     assert contract in actor_script, contract
 

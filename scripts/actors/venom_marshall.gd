@@ -78,7 +78,7 @@ func _begin_buff_attack() -> void:
 	var windup_scale := _scene_difficulty_multiplier(difficulty_windup_multipliers)
 	var cooldown_scale := _scene_difficulty_multiplier(difficulty_cooldown_multipliers)
 	var runtime_windup := maxf(0.05, _ability.buff_windup * windup_scale)
-	await get_tree().create_timer(runtime_windup).timeout
+	await get_tree().create_timer(runtime_windup, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_deploy_buff_field()
@@ -87,7 +87,7 @@ func _begin_buff_attack() -> void:
 	_play_directional_animation(&"idle", &"idle_back")
 	var runtime_recovery := maxf(0.0, _ability.buff_recovery * cooldown_scale)
 	if runtime_recovery > 0.0:
-		await get_tree().create_timer(runtime_recovery).timeout
+		await get_tree().create_timer(runtime_recovery, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false

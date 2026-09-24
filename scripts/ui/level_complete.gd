@@ -30,7 +30,7 @@ func _ready() -> void:
 	secrets_value.text = "%d / %d" % [secrets, total_secrets]
 	difficulty_value.text = tr(str(summary.get("difficulty", "DIFFICULTY_NORMAL")))
 	_refresh_subtitle()
-	var completion := float(kills) / float(total_enemies)
+	var completion := float(kills) / float(total_enemies) if total_enemies > 0 else 1.0
 	if total_secrets > 0:
 		completion = (completion + float(secrets) / float(total_secrets)) * 0.5
 	rating_value.text = _get_rating(completion)

@@ -99,7 +99,7 @@ func _begin_hybrid_attack(use_melee: bool) -> void:
 		attack_audio.stop()
 		attack_audio.play()
 
-	await get_tree().create_timer(runtime_windup).timeout
+	await get_tree().create_timer(runtime_windup, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 
@@ -112,7 +112,7 @@ func _begin_hybrid_attack(use_melee: bool) -> void:
 
 	var recovery := maxf(0.0, runtime_cooldown - runtime_windup)
 	if recovery > 0.0:
-		await get_tree().create_timer(recovery).timeout
+		await get_tree().create_timer(recovery, false).timeout
 	if not is_inside_tree() or state == State.DEAD or combat_generation != _combat_interrupt_generation:
 		return
 	_attack_locked = false

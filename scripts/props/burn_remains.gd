@@ -178,7 +178,7 @@ func _run_smoke_cycle(wisp: Sprite3D) -> void:
 	await tween.finished
 	if not is_inside_tree():
 		return
-	await get_tree().create_timer(randf_range(0.12, 0.38)).timeout
+	await get_tree().create_timer(randf_range(0.12, 0.38), false).timeout
 	if not is_inside_tree():
 		return
 	_run_smoke_cycle(wisp)

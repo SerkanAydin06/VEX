@@ -31,7 +31,7 @@ for token in [
     "const CROWD_START := 16.0",
     "const CROWD_FULL := 48.0",
     'enemy.set_physics_process(false)',
-    'sprite.speed_scale = 0.0',
+    'sprite.process_mode = Node.PROCESS_MODE_DISABLED',
     'enemy.set_physics_process(true)',
     'family == &"charge"',
 ]:

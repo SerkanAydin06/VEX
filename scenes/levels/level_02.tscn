@@ -29,63 +29,6 @@ automap_merge_adjacent_cells = false
 
 [node name="Level02EnvironmentStory" parent="." unique_id=487547306 instance=ExtResource("6_environment")]
 
-[node name="WestServiceDisplay" parent="Level02EnvironmentStory/RoomCodes" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 4.85, -34.72)
-
-[node name="BreacherCacheDisplay" parent="Level02EnvironmentStory/RoomCodes" index="1"]
-transform = Transform3D(-3.6199901e-06, 0, 1, 0, 1, 0, -1, 0, -3.6199901e-06, -53.72, 4.85, 10)
-
-[node name="TransferHallDisplay" parent="Level02EnvironmentStory/RoomCodes" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 4.85, -14.72)
-
-[node name="BypassCabinetDisplay" parent="Level02EnvironmentStory/RoomCodes" index="3"]
-transform = Transform3D(-3.6199901e-06, 0, -1, 0, 1, 0, 1, 0, -3.6199901e-06, 53.72, 4.85, 20)
-
-[node name="RelayControlDisplay" parent="Level02EnvironmentStory/RoomCodes" index="4"]
-transform = Transform3D(-1, 0, 2.5351817e-06, 0, 1, 0, -2.5351817e-06, 0, -1, 48, 4.85, 34.72)
-
-[node name="WestScorch" parent="Level02EnvironmentStory/ThermalScars" index="0"]
-transform = Transform3D(0.97589743, 0, 0.21822962, 0, 1, 0, -0.21822962, 0, 0.97589743, -24, 0.07, -20)
-
-[node name="TransferScorch" parent="Level02EnvironmentStory/ThermalScars" index="1"]
-transform = Transform3D(0.9393727, 0, -0.3428978, 0, 1, 0, 0.3428978, 0, 0.9393727, 24, 0.07, -10)
-
-[node name="SouthScorch" parent="Level02EnvironmentStory/ThermalScars" index="2"]
-transform = Transform3D(0.9887711, 0, 0.14943814, 0, 1, 0, -0.14943814, 0, 0.9887711, 36, 0.07, 20)
-
-[node name="WestConduitA" parent="Level02EnvironmentStory/ThermalConduits" index="0"]
-transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, -1, 0, 1, -3.6199901e-06, -29.72, 3.5, -20)
-
-[node name="EastConduitA" parent="Level02EnvironmentStory/ThermalConduits" index="1"]
-transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, -1, 0, 1, -3.6199901e-06, 29.72, 3.5, -10)
-
-[node name="SouthConduitA" parent="Level02EnvironmentStory/ThermalConduits" index="2"]
-transform = Transform3D(1, 0, 0, 0, -3.6199901e-06, -1, 0, 1, -3.6199901e-06, 42.28, 3.5, 20)
-
-[node name="BlueWingWarning" parent="Level02EnvironmentStory/WarningBars" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 4.65, -34.77)
-
-[node name="TransferWarning" parent="Level02EnvironmentStory/WarningBars" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 4.65, -14.77)
-
-[node name="RelayWarning" parent="Level02EnvironmentStory/WarningBars" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 4.65, 34.77)
-
-[node name="BreacherLockerLight" parent="Level02EnvironmentStory/StoryLights" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.5, 3.6, 8.75)
-
-[node name="FirstSpitterHeatLight" parent="Level02EnvironmentStory/StoryLights" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.7, -20)
-
-[node name="TransferHeatLight" parent="Level02EnvironmentStory/StoryLights" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.8, -10)
-
-[node name="BypassCabinetLight" parent="Level02EnvironmentStory/StoryLights" index="3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 3.8, 20)
-
-[node name="RelayControlLight" parent="Level02EnvironmentStory/StoryLights" index="4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 4, 30)
-
 [node name="Level02AshCorridorContent" parent="." unique_id=443091394 instance=ExtResource("7_content")]
 
 [node name="Record_KorThermalSourceSignature" parent="Level02AshCorridorContent/Records" index="0"]

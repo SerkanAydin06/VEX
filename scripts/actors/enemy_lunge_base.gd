@@ -741,7 +741,7 @@ func _attempt_attack() -> void:
 		attack_audio.play()
 
 	# 8 FPS'lik 4 kare saldırının 3. karesine yaklaşırken darbe uygulanır.
-	await get_tree().create_timer(_runtime_attack_windup).timeout
+	await get_tree().create_timer(_runtime_attack_windup, false).timeout
 	if not is_inside_tree() or _dead or attack_generation != _attack_generation:
 		return
 	_attack_lunge_remaining = 0.0
@@ -775,7 +775,7 @@ func _attempt_attack() -> void:
 		_runtime_attack_cooldown,
 		_runtime_attack_windup
 	)
-	await get_tree().create_timer(remaining).timeout
+	await get_tree().create_timer(remaining, false).timeout
 	if not is_inside_tree() or _dead or attack_generation != _attack_generation:
 		return
 	_attack_locked = false
@@ -951,20 +951,20 @@ func _die() -> void:
 	and animated_sprite.sprite_frames.get_frame_count(&"death") > 0:
 		_play_animation(&"death")
 		var death_duration := maxf(death_settle_duration, _get_animation_duration(&"death"))
-		await get_tree().create_timer(death_duration).timeout
+		await get_tree().create_timer(death_duration, false).timeout
 		if not is_inside_tree():
 			return
 		animated_sprite.pause()
 		animated_sprite.frame = animated_sprite.sprite_frames.get_frame_count(&"death") - 1
 		_place_corpse_visual_on_floor()
-		await get_tree().create_timer(corpse_hold_duration).timeout
+		await get_tree().create_timer(corpse_hold_duration, false).timeout
 		if not is_inside_tree():
 			return
 	else:
 		_play_animation(&"idle")
 		animated_sprite.pause()
 		_place_corpse_visual_on_floor()
-		await get_tree().create_timer(corpse_hold_duration).timeout
+		await get_tree().create_timer(corpse_hold_duration, false).timeout
 		if not is_inside_tree():
 			return
 	_finalize_death_visual()

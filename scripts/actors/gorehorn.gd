@@ -63,7 +63,7 @@ func _attempt_attack() -> void:
 
 	# Hazırlık oyuncuya şarjı okuyabileceği kısa bir pencere verir. Şarj yönü
 	# bu pencerenin sonunda bir kez kilitlenir; Gorehorn koşu sırasında dönmez.
-	await get_tree().create_timer(_runtime_attack_windup).timeout
+	await get_tree().create_timer(_runtime_attack_windup, false).timeout
 	if not _is_current_charge_attack(attack_generation):
 		return
 	if not _has_valid_player():
@@ -81,15 +81,18 @@ func _attempt_attack() -> void:
 	_attack_lunge_remaining = attack_lunge_duration
 	_charge_active = true
 
-	var charge_started_msec := Time.get_ticks_msec()
+	# Süre duvar saatiyle değil işlenen fizik kareleriyle ölçülür; oyun
+	# duraklatıldığında şarj süresi tükenmez.
+	var charge_elapsed := 0.0
 	while _is_current_charge_attack(attack_generation) and _charge_active:
 		if not _has_valid_player():
 			_cancel_charge_attack()
 			return
-		var elapsed := float(Time.get_ticks_msec() - charge_started_msec) / 1000.0
-		if elapsed >= attack_lunge_duration:
+		if charge_elapsed >= attack_lunge_duration:
 			break
 		await get_tree().physics_frame
+		if can_process():
+			charge_elapsed += get_physics_process_delta_time()
 	_stop_charge_motion(false)
 	if not _is_current_charge_attack(attack_generation):
 		return
@@ -102,7 +105,7 @@ func _attempt_attack() -> void:
 		if _charge_blocked
 		else settings.recovery_duration
 	)
-	await get_tree().create_timer(recovery).timeout
+	await get_tree().create_timer(recovery, false).timeout
 	if not _is_current_charge_attack(attack_generation):
 		return
 	var remaining_cooldown := maxf(
@@ -113,7 +116,7 @@ func _attempt_attack() -> void:
 		- recovery
 	)
 	if remaining_cooldown > 0.0:
-		await get_tree().create_timer(remaining_cooldown).timeout
+		await get_tree().create_timer(remaining_cooldown, false).timeout
 	if not _is_current_charge_attack(attack_generation):
 		return
 	_attack_locked = false

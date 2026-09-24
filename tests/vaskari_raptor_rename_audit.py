@@ -46,7 +46,9 @@ for name, loop, speed in [
 ]:
     assert f'"loop": {loop},\n"name": &"{name}",\n"speed": {speed}' in scene, name
 
-for level_path in ("scenes/levels/level_02.tscn", "scenes/levels/level_03.tscn", "scenes/levels/level_test.tscn"):
+# Canonical chapter rosters no longer place Raptors; the enemy sandbox keeps
+# the renamed scene reference alive.
+for level_path in ("scenes/levels/level_test.tscn",):
     level = (ROOT / level_path).read_text(encoding="utf-8")
     assert 'path="res://scenes/actors/vaskari_raptor.tscn"' in level, level_path
 
@@ -54,7 +56,7 @@ for level_path in ("scenes/levels/level_02.tscn", "scenes/levels/level_03.tscn",
 retired_needles = ("redviper", "red_viper", "red-viper", "red viper")
 tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT).decode().split("\0")
 for relative in tracked:
-    if not relative:
+    if not relative or relative == "tests/vaskari_raptor_rename_audit.py":
         continue
     assert not any(n in relative.lower() for n in retired_needles), relative
     data = (ROOT / relative).read_bytes()

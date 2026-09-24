@@ -21,7 +21,7 @@ func _fire_projectile() -> void:
 	_fire_burst_shot()
 	var combat_generation := _combat_interrupt_generation
 	for shot_index: int in range(1, _ability.burst_shot_count):
-		var timer := get_tree().create_timer(_ability.burst_interval * float(shot_index))
+		var timer := get_tree().create_timer(_ability.burst_interval * float(shot_index), false)
 		timer.timeout.connect(_fire_burst_followup.bind(combat_generation))
 
 
