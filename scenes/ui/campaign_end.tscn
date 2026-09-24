@@ -1,0 +1,206 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/campaign_end.gd" id="1_script"]
+[ext_resource type="Theme" path="res://resources/ui/vex_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://assets/ui/main_menu_background.png" id="3_background"]
+[ext_resource type="Texture2D" path="res://assets/ui/vex_logo.png" id="4_logo"]
+[ext_resource type="AudioStream" path="res://assets/audio/level_complete_pro.wav" id="5_audio"]
+
+[node name="CampaignEnd" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="EndAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_audio")
+volume_db = -4.0
+bus = &"Music"
+autoplay = true
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+modulate = Color(0.55, 0.36, 0.3, 1)
+texture = ExtResource("3_background")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Shade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.012, 0.008, 0.006, 0.84)
+
+[node name="Logo" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 810.0
+offset_top = 36.0
+offset_right = 1110.0
+offset_bottom = 146.0
+mouse_filter = 2
+texture = ExtResource("4_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EndPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 480.0
+offset_top = 190.0
+offset_right = 1440.0
+offset_bottom = 760.0
+
+[node name="Margin" type="MarginContainer" parent="EndPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 28
+
+[node name="VBox" type="VBoxContainer" parent="EndPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Eyebrow" type="Label" parent="EndPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.52, 0.27, 1)
+theme_override_font_sizes/font_size = 14
+text = "CAMPAIGN_PROTOCOL_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Title" type="Label" parent="EndPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.84, 0.66, 1)
+theme_override_font_sizes/font_size = 34
+text = "CAMPAIGN_END_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Divider" type="HSeparator" parent="EndPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Body" type="Label" parent="EndPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.9, 0.93, 1)
+theme_override_font_sizes/font_size = 19
+text = "CAMPAIGN_END_BODY"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Divider2" type="HSeparator" parent="EndPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="NextRow" type="HBoxContainer" parent="EndPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+
+[node name="NextLabel" type="Label" parent="EndPanel/Margin/VBox/NextRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
+theme_override_font_sizes/font_size = 16
+text = "CAMPAIGN_END_NEXT_LABEL"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="NextValue" type="Label" parent="EndPanel/Margin/VBox/NextRow"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.72, 0.42, 1)
+theme_override_font_sizes/font_size = 20
+text = "CAMPAIGN_END_NEXT_VALUE"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="StatusRow" type="HBoxContainer" parent="EndPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="EndPanel/Margin/VBox/StatusRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
+theme_override_font_sizes/font_size = 16
+text = "CAMPAIGN_END_STATUS_LABEL"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="StatusValue" type="Label" parent="EndPanel/Margin/VBox/StatusRow"]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.34, 0.86, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "CAMPAIGN_END_STATUS_VALUE"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="DifficultyRow" type="HBoxContainer" parent="EndPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+
+[node name="DifficultyLabel" type="Label" parent="EndPanel/Margin/VBox/DifficultyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.47, 0.69, 0.76, 1)
+theme_override_font_sizes/font_size = 16
+text = "SETTINGS_DIFFICULTY"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="DifficultyValue" type="Label" parent="EndPanel/Margin/VBox/DifficultyRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.34, 0.86, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "DIFFICULTY_NORMAL"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Divider3" type="HSeparator" parent="EndPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Actions" type="HBoxContainer" parent="EndPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ContinueButton" type="Button" parent="EndPanel/Margin/VBox/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "COMPLETE_RETURN_BASTION"
+
+[node name="MainMenuButton" type="Button" parent="EndPanel/Margin/VBox/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "UI_MAIN_MENU"

@@ -25,6 +25,7 @@ const LEVEL_01_PATH := "res://scenes/levels/level_01.tscn"
 const LEVEL_02_PATH := "res://scenes/levels/level_02.tscn"
 const BASTION_7_PATH := "res://scenes/hub/bastion_7.tscn"
 const LEVEL_COMPLETE_PATH := "res://scenes/ui/level_complete.tscn"
+const CAMPAIGN_END_PATH := "res://scenes/ui/campaign_end.tscn"
 const SAVE_PATH := "user://vex_save.cfg"
 const SAVE_TEMP_PATH := "user://vex_save.tmp"
 const SAVE_BACKUP_PATH := "user://vex_save.bak"
@@ -58,6 +59,7 @@ var campaign_stage := 0
 var hub_selected_mission_path := ""
 var hub_selected_mission_label := ""
 var last_campaign_save_failed := false
+var pending_campaign_end_screen := false
 var _loaded_save_from_backup := false
 
 
@@ -448,7 +450,16 @@ func complete_level(next_level_path: String = "") -> void:
 	if current_scene != null and current_scene.has_method("get_level_display_name"):
 		level_label = str(current_scene.call("get_level_display_name"))
 
+	var previous_campaign_stage := campaign_stage
 	_register_campaign_completion(current_scene)
+	# Oynanabilir içeriğin son bölümü yalnız ilk tamamlanışta ara son ekranını açar.
+	pending_campaign_end_screen = (
+		next_level_path != ""
+		and campaign_stage > previous_campaign_stage
+		and current_scene != null
+		and current_scene.has_method("get_shows_campaign_end_screen")
+		and bool(current_scene.call("get_shows_campaign_end_screen"))
+	)
 	pending_next_level_path = next_level_path
 	if next_level_path != "" and player != null and is_instance_valid(player) and player.has_method("capture_run_state"):
 		var carry_state: Dictionary = player.call("capture_run_state")
@@ -496,6 +507,13 @@ func continue_to_next_level() -> bool:
 			"level_complete_retry"
 		):
 			return false
+	if pending_campaign_end_screen:
+		# Ara son ekranı bir kez gösterilir; oradaki devam butonu bu fonksiyonu
+		# tekrar çağırır ve korunan pending_next_level_path ile Bastion'a geçer.
+		pending_campaign_end_screen = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		get_tree().change_scene_to_file(CAMPAIGN_END_PATH)
+		return true
 	var next_path := pending_next_level_path
 	var carry_state := pending_player_restore_state.duplicate(true)
 	pending_next_level_path = ""
@@ -749,3 +767,4 @@ func _reset_level_counters() -> void:
 	defeated_enemy_ids.clear()
 	collected_pickup_ids.clear()
 	found_secret_ids.clear()
+	pending_campaign_end_screen = false

@@ -27,3 +27,9 @@ CH03_FINISH_CONTROL,BASTION TAHLİYE BAĞLANTISI,BASTION EVACUATION LINK
 CH03_FINISH_REQUIRES_RESCUE,TAHLİYE KİLİTLİ // ÖNCE SELİN ERDEM'İ STABİLİZE ET,EVACUATION LOCKED // STABILIZE SELIN ERDEM FIRST
 CH03_FLASHLIGHT_HINT,P-07 FENERİ // F TUŞU İLE AÇ/KAPAT,P-07 FLASHLIGHT // PRESS F TO TOGGLE
 HUB_SELIN_POST_CH03,"Selin: Basınç Hattı kayıtları akışın rastgele olmadığını gösteriyor. VEX bunu kazadan önce de görmüş. Verileri Bastion'da karşılaştıracağım; sıradaki Korvath hattını bulmamız gerek.","Selin: The Pressure Line records show the flow was not random. VEX saw it before the disaster. I'll compare the data at Bastion; we need to find the next Korvath line."
+CAMPAIGN_END_TITLE,İLK OPERASYONLAR TAMAMLANDI,INITIAL OPERATIONS COMPLETE
+CAMPAIGN_END_BODY,Selin Erdem Bastion-7'ye katıldı. Basınç Hattı'ndan kurtarılan kayıtlar Yarık Ağı'nın tek bir reaktör olmadığını gösteriyor: farklı kaynak düğümleri ortak bir senkronizasyon sistemiyle birbirine bağlı. VEX bu düzeni kazadan aylar önce biliyordu.,Selin Erdem has joined Bastion-7. The records recovered from the Pressure Line show the Rift Network is not a single reactor: separate source nodes are bound together by a shared synchronization system. VEX knew this pattern months before the disaster.
+CAMPAIGN_END_NEXT_LABEL,SIRADAKİ OPERASYON,NEXT OPERATION
+CAMPAIGN_END_NEXT_VALUE,BÖLÜM 04 // ERİMİŞ DAMAR,CHAPTER 04 // MOLTEN VEIN
+CAMPAIGN_END_STATUS_LABEL,OPERASYON DURUMU,OPERATION STATUS
+CAMPAIGN_END_STATUS_VALUE,HAZIRLANIYOR // HAT HENÜZ AÇIK DEĞİL,IN PREPARATION // LINE NOT YET OPEN
