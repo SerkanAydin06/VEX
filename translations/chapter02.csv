@@ -21,3 +21,4 @@ CH02_BLUE_FUSE,MAVİ HAT SİGORTASI,BLUE LINE FUSE
 CH02_YELLOW_FUSE,SARI RÖLE SİGORTASI,YELLOW RELAY FUSE
 CH02_RED_FUSE,KIRMIZI ÇIKIŞ SİGORTASI,RED OUTPUT FUSE
 CH02_BYPASS_RESERVED,GÜÇ BYPASS KUPLÖRÜ BAĞLANTISI // DONANIM BEKLENİYOR,POWER BYPASS COUPLER PORT // HARDWARE PENDING
+HUB_LEYLA_POST_CH02,Leyla: Röle çalışıyor. KOR-TERMAL imzasını takip ettim; aynı imza eski yüksek basınç servis tesisinden geliyor. İçeride canlı bir sinyal var: Dr. Selin Erdem. Onu oradan çıkarmamız gerek.,Leyla: The relay is live. I traced the KOR-THERMAL signature to the old high-pressure service facility. There is a live signal inside: Dr. Selin Erdem. We need to get her out.

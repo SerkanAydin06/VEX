@@ -19,3 +19,6 @@ CH01_HUB_RETURN,İLK KIRILMA TAMAMLANDI // KÜL KORİDORU OPERASYONU HAZIR,FIRST
 CAMPAIGN_PROTOCOL_TITLE,VEX // YARIK PROTOKOLÜ,VEX // RIFT PROTOCOL
 CAMPAIGN_ARCHIVE_BODY,"30 BÖLÜMLÜK ANA OPERASYON PLANI\n\nKORVATH // THORNWILD // VASKARI // NHAL VEIL // AETHER LOOM\n\nBASTION-7 OPERASYON KAYITLARI GÖREVLER TAMAMLANDIKÇA AÇILIR.","30-CHAPTER MAIN OPERATION PLAN\n\nKORVATH // THORNWILD // VASKARI // NHAL VEIL // AETHER LOOM\n\nBASTION-7 OPERATION RECORDS UNLOCK AS MISSIONS ARE COMPLETED."
 CAMPAIGN_NEW_GAME_CONFIRM,Mevcut kampanya ilerlemesi sıfırlanacak. Bölüm 01 // İlk Kırılma'dan yeni operasyon başlatmak istiyor musun?,Current campaign progress will be reset. Start a new operation from Chapter 01 // First Fracture?
+SURVIVOR_LEYLA_NAME,YÜZBAŞI LEYLA SÖNMEZ,CAPTAIN LEYLA SÖNMEZ
+SURVIVOR_LEYLA_ROLE,OPERASYON KOORDİNATÖRÜ // BASTION-7,OPERATIONS COORDINATOR // BASTION-7
+HUB_LEYLA_POST_CH01,Leyla: Bastion-7 ana ağdan ayrı olduğu için ayakta kaldı ama dışarıyı duyamıyoruz. Kül Koridoru'ndaki eski aktarım rölesini çalıştırmadan başka hiçbir VEX noktasından haber alamayız.,"Leyla: Bastion-7 survived because it is cut off from the main network, but we are deaf to the outside. Until the old transfer relay in the Ash Corridor runs again, we won't hear from any other VEX site."

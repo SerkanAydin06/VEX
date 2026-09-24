@@ -52,7 +52,7 @@ func _show_discovery_card(enemy_id: StringName) -> void:
 		var universe_id := StringName(str(enemy.get("universe", "")))
 		var universe := ArchiveDatabase.get_universe(universe_id) as Dictionary
 		if not universe.is_empty():
-			universe_name = str(universe.get("name", ""))
+			universe_name = ArchiveDatabase.universe_name(universe)
 	var subtitle := enemy_name
 	if not universe_name.is_empty():
 		subtitle = "%s // %s" % [enemy_name, universe_name]
