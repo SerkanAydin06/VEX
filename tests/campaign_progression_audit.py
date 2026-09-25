@@ -188,3 +188,12 @@ def test_direct_scene_run_syncs_restart_target_to_the_actual_level() -> None:
     assert "var current_scene := get_tree().current_scene" in sync_block
     assert "if current_scene != self or scene_file_path.is_empty():" in sync_block
     assert "GameState.current_level_path = scene_file_path" in sync_block
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

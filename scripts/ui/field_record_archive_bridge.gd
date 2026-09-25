@@ -85,7 +85,7 @@ func _refresh_records() -> void:
 	if _base_action_row != null:
 		_base_action_row.visible = false
 
-	# BaseManagementDashboard kendi sekme görünürlüğünün sahibidir. Bu köprü ona
+	# Üs yönetim paneli kendi sekme görünürlüğünün sahibidir. Bu köprü ona
 	# dokunmaz; Records sekmesi sadece mevcut index/detail kayıt alanını yeniler.
 	var record_ids := BaseManager.get_discovered_field_record_ids()
 	if _section_title != null:

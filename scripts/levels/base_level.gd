@@ -35,8 +35,17 @@ var _opening_briefing_active := false
 var _briefing_reveal_requested := false
 
 
+func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		return
+	# Structural roots must exist before the directly-instanced gameplay/environment
+	# children receive _ready(), especially for lighting and navigation references.
+	_install_authored_structure()
+
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
+		_install_editor_structure_preview()
 		return
 	_sync_current_level_path()
 	SettingsManager.apply_brightness()
@@ -64,6 +73,102 @@ func _sync_current_level_path() -> void:
 
 func _on_level_ready() -> void:
 	pass
+
+
+## Kanonik bölümler fiziksel yapıyı ayrı bir *_structure_source.tscn sahnesinden
+## alır. Alt sınıf kaynağı ve kurulacak güvenli kök adlarını bildirir; eski
+## gameplay kökleri (Enemies, Pickups, Triggers...) bu listede yer almaz.
+func _get_structure_source_path() -> String:
+	return ""
+
+
+func _get_structure_node_names() -> Array:
+	return []
+
+
+## Yapısal kapılar runtime ağacına girmeden önce kanonik kilitlerine çekilir.
+func _configure_authored_doors(_doors_root: Node) -> void:
+	pass
+
+
+func _install_editor_structure_preview() -> void:
+	# The old structural source also contains retired gameplay roots, so it cannot
+	# be instanced wholesale in the editor. Reuse the same safe structural filter
+	# used at runtime. These preview nodes are intentionally not scene-owned; edits
+	# to structural geometry should be made in the authored structure source.
+	if get_node_or_null("Geometry") != null:
+		return
+	_install_authored_structure()
+
+
+func _install_authored_structure() -> void:
+	var source_path := _get_structure_source_path()
+	if source_path.is_empty():
+		return
+	var structure_resource := load(source_path) as PackedScene
+	if structure_resource == null:
+		push_error("Yapısal kaynak sahnesi yüklenemedi: %s" % source_path)
+		return
+	var source_root := structure_resource.instantiate() as Node3D
+	if source_root == null:
+		push_error("Yapısal kaynak sahnesi instantiate edilemedi: %s" % source_path)
+		return
+
+	for node_name: StringName in _get_structure_node_names():
+		if get_node_or_null(NodePath(str(node_name))) != null:
+			continue
+		var structure_node := source_root.get_node_or_null(NodePath(str(node_name)))
+		if structure_node == null:
+			push_error("Yapısal node bulunamadı: %s (%s)" % [node_name, source_path])
+			continue
+		# Door scripts are runtime actors and intentionally remain non-tool. Editor
+		# preview only needs their authored geometry; canonical lock semantics are
+		# applied before the doors enter the runtime SceneTree.
+		if node_name == &"Doors" and not Engine.is_editor_hint():
+			_configure_authored_doors(structure_node)
+		source_root.remove_child(structure_node)
+		structure_node.owner = null
+		add_child(structure_node)
+
+	source_root.free()
+
+
+## Eski yapısal snapshot'taki combat gate ve anahtar semantiği kanonik bölüme sızmaz.
+func _reset_authored_doors(doors_root: Node) -> void:
+	for child: Node in doors_root.get_children():
+		var door := child as VexDoor
+		if door != null:
+			_reset_authored_door(door)
+
+
+func _reset_authored_door(door: VexDoor) -> void:
+	door.locked = false
+	door.required_key = &""
+	door.required_keys = []
+	door.required_key_label = ""
+	door.objective_on_unlock = ""
+	door.required_enemy_ids = []
+	door.objective_on_combat_clear = ""
+	door.permanently_locked = false
+
+
+func _configure_access_door(
+	door_node: Node,
+	display_key: String,
+	required_keys: Array[StringName],
+	required_label_key: String,
+	objective_key: String
+) -> void:
+	var door := door_node as VexDoor
+	if door == null:
+		push_warning("Kanonik erişim kapısı bulunamadı: %s" % display_key)
+		return
+	_reset_authored_door(door)
+	door.display_name = display_key
+	door.locked = true
+	door.required_keys = required_keys
+	door.required_key_label = required_label_key
+	door.objective_on_unlock = objective_key
 
 
 func _on_key_inventory_changed(_keys: Array[StringName]) -> void:

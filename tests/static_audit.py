@@ -145,8 +145,10 @@ def check_canonical_level_shell(
             fail(f"{label} eski gameplay kökü yapısal kaynaktan kuruluyor: {forbidden}")
     if f'path="res://scenes/levels/{content_name}"' not in scene:
         fail(f"{label} içerik sahnesini instance etmiyor: {content_name}")
-    if "_configure_authored_doors(structure_node)" not in script:
+    if "func _configure_authored_doors(doors_root: Node) -> void:" not in script:
         fail(f"{label} yapısal kapıları runtime öncesi kanonik kilitlere çekmiyor")
+    if "_configure_authored_doors(structure_node)" not in read("scripts/levels/base_level.gd"):
+        fail("VexBaseLevel yapısal kapı yapılandırmasını çağırmıyor")
 
 
 def check_level_01() -> None:

@@ -93,3 +93,12 @@ def test_console_visual_language_is_detailed_and_not_placeholder_scale() -> None
     assert 'font_size = 22' in base
     assert 'font_size = 18' in base
     assert 'font_size = 17' in base
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

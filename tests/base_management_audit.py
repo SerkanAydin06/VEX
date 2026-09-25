@@ -93,3 +93,12 @@ def test_main_terminal_exposes_base_management_actions_and_future_upgrades() -> 
     assert "func is_upgrade_available(upgrade_id: StringName, campaign_stage: int) -> bool:" in manager
     assert "func set_upgrade_level(upgrade_id: StringName, level: int) -> bool:" in manager
     assert '"GELİŞTİRME YAKINDA"' in script
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

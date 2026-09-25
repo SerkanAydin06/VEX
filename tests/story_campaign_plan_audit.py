@@ -158,7 +158,7 @@ def test_story_preserves_non_alliance_rule_for_mixed_final_encounters() -> None:
     story = STORY.read_text(encoding="utf-8")
 
     assert "tek bir ortak “xeno ordusu” gibi anlatılmaz" in story
-    assert "Bu ortak ittifak anlamına gelmez" in story
+    assert "bu ortak ittifak anlamına gelmez" in story
     assert "Karma encounter, evrenlerin ittifak kurduğu anlamına gelmez" in story
 
 
@@ -185,3 +185,12 @@ def test_core_story_reveal_ladder_is_present() -> None:
     ]
     for reveal in required_reveals:
         assert reveal in story
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

@@ -97,3 +97,12 @@ def test_balance_assumptions_match_live_p01_and_cinder_stats() -> None:
     # Cinder Hound remains 85 HP on authored base/Normal before difficulty multipliers.
     assert "maximum_health = 85" in cinder
     assert "difficulty_health_multipliers = PackedFloat32Array(0.75, 1, 1.2, 1.45)" in cinder
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

@@ -15,115 +15,48 @@ const STRUCTURE_NODE_NAMES := [
 var _alarm_triggered := false
 
 
-func _enter_tree() -> void:
-	if Engine.is_editor_hint():
-		return
-	_install_authored_structure()
+func _get_structure_source_path() -> String:
+	return STRUCTURE_SOURCE_PATH
 
 
-func _ready() -> void:
-	if Engine.is_editor_hint():
-		_install_editor_structure_preview()
-		return
-	super._ready()
-
-
-func _install_editor_structure_preview() -> void:
-	if get_node_or_null("Geometry") != null:
-		return
-	_install_authored_structure()
-
-
-func _install_authored_structure() -> void:
-	var structure_resource := load(STRUCTURE_SOURCE_PATH) as PackedScene
-	if structure_resource == null:
-		push_error("VEX-02 yapısal kaynak sahnesi yüklenemedi.")
-		return
-	var source_root := structure_resource.instantiate() as Node3D
-	if source_root == null:
-		push_error("VEX-02 yapısal kaynak sahnesi instantiate edilemedi.")
-		return
-
-	for node_name: StringName in STRUCTURE_NODE_NAMES:
-		if get_node_or_null(NodePath(str(node_name))) != null:
-			continue
-		var structure_node := source_root.get_node_or_null(NodePath(str(node_name)))
-		if structure_node == null:
-			push_error("VEX-02 yapısal node bulunamadı: %s" % node_name)
-			continue
-		# Door scripts are runtime actors and intentionally remain non-tool. Editor
-		# preview only needs their authored geometry; canonical lock semantics are
-		# applied before the doors enter the runtime SceneTree.
-		if node_name == &"Doors" and not Engine.is_editor_hint():
-			_configure_authored_doors(structure_node)
-		source_root.remove_child(structure_node)
-		structure_node.owner = null
-		add_child(structure_node)
-
-	source_root.free()
+func _get_structure_node_names() -> Array:
+	return STRUCTURE_NODE_NAMES
 
 
 func _configure_authored_doors(doors_root: Node) -> void:
-	_configure_door(
+	# D05 final airlock stays a free traversal door; the four fuse doors gate the route.
+	_reset_authored_doors(doors_root)
+	_configure_access_door(
 		doors_root.get_node_or_null("D01_Door"),
 		"CH02_DOOR_BLUE_SHORTCUT",
-		&"blue",
+		[&"blue"],
 		"CH02_BLUE_FUSE",
 		"CH02_OBJECTIVE_BLUE"
 	)
-	_configure_door(
+	_configure_access_door(
 		doors_root.get_node_or_null("D02_Door"),
 		"CH02_DOOR_THERMAL_BULKHEAD",
-		&"yellow",
+		[&"yellow"],
 		"CH02_YELLOW_FUSE",
 		"CH02_OBJECTIVE_YELLOW"
 	)
-	_configure_door(
+	_configure_access_door(
 		doors_root.get_node_or_null("D03_Door"),
 		"CH02_DOOR_EAST_TRANSFER",
-		&"blue",
+		[&"blue"],
 		"CH02_BLUE_FUSE",
 		"CH02_OBJECTIVE_BLUE"
 	)
-	_configure_door(
+	_configure_access_door(
 		doors_root.get_node_or_null("D04_Door"),
 		"CH02_DOOR_ISOLATION_LOCK",
-		&"red",
+		[&"red"],
 		"CH02_RED_FUSE",
 		"CH02_OBJECTIVE_RED"
 	)
 	var final_airlock := doors_root.get_node_or_null("D05_Door") as VexDoor
 	if final_airlock != null:
 		final_airlock.display_name = "CH02_DOOR_FINAL_AIRLOCK"
-		final_airlock.locked = false
-		final_airlock.required_key = &""
-		final_airlock.required_keys = []
-		final_airlock.required_key_label = ""
-		final_airlock.objective_on_unlock = ""
-		final_airlock.required_enemy_ids = []
-		final_airlock.objective_on_combat_clear = ""
-		final_airlock.permanently_locked = false
-
-
-func _configure_door(
-	door_node: Node,
-	display_key: String,
-	required_key: StringName,
-	required_label: String,
-	objective_key: String
-) -> void:
-	var door := door_node as VexDoor
-	if door == null:
-		return
-	door.display_name = display_key
-	door.locked = true
-	door.required_key = required_key
-	door.required_keys = []
-	door.required_key_label = required_label
-	door.objective_on_unlock = objective_key
-	door.required_enemy_ids = []
-	door.objective_on_combat_clear = ""
-	door.permanently_locked = false
 
 
 func _on_gunshot_emitted(_position: Vector3, _loudness: float, source: Node) -> void:
