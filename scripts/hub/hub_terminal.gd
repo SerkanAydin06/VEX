@@ -116,9 +116,9 @@ func interact(_player: Node) -> void:
 
 func _get_display_name() -> String:
 	if terminal_mode == TerminalMode.INFORMATION:
-		return "VEX ANA TERMİNALİ" if TranslationServer.get_locale().begins_with("tr") else "VEX MAIN TERMINAL"
+		return tr("HUB_TERMINAL_UI_VEX_MAIN_TERMINAL")
 	if terminal_mode == TerminalMode.WEAPON_ARCHIVE:
-		return "SİLAH ARŞİV TERMİNALİ" if TranslationServer.get_locale().begins_with("tr") else "WEAPON ARCHIVE TERMINAL"
+		return tr("HUB_TERMINAL_UI_WEAPON_ARCHIVE_TERMINAL")
 	return tr(display_name)
 
 
@@ -287,34 +287,33 @@ func _refresh_world_screen(force := false) -> void:
 	if not force and signature == _world_display_signature:
 		return
 	_world_display_signature = signature
-	var turkish := locale.begins_with("tr")
 	var title := ""
 	var subtitle := ""
 	var line_1 := ""
 	var line_2 := ""
 	match terminal_mode:
 		TerminalMode.MISSION_CONTROL:
-			title = "GÖREV KONTROLÜ" if turkish else "MISSION CONTROL"
-			subtitle = "OPERASYON AĞI // BRİFİNG VERİSİ" if turkish else "OPERATION NETWORK // BRIEFING DATA"
-			line_1 = "BÖLÜM 01 // BÖLÜM 02 // BÖLÜM 03" if turkish else "CHAPTER 01 // CHAPTER 02 // CHAPTER 03"
-			line_2 = "GÖREV DURUMU // YETKİ // SAHA VERİSİ" if turkish else "MISSION STATUS // CLEARANCE // FIELD DATA"
+			title = tr("HUB_TERMINAL_UI_MISSION_CONTROL")
+			subtitle = tr("HUB_TERMINAL_UI_OPERATION_NETWORK_BRIEFING_DATA")
+			line_1 = tr("HUB_TERMINAL_UI_CHAPTER_01_CHAPTER_02_CHAPTER_03")
+			line_2 = tr("HUB_TERMINAL_UI_MISSION_STATUS_CLEARANCE_FIELD_DATA")
 		TerminalMode.DEPLOYMENT:
-			title = "OPERASYON TERMİNALİ" if turkish else "DEPLOYMENT TERMINAL"
-			subtitle = "AKTİF GÖREV // GÖREVE ÇIKIŞ" if turkish else "ACTIVE OPERATION // DEPLOYMENT"
-			line_1 = "OPERASYON HAZIR" if turkish else "OPERATION READY"
-			line_2 = "ONAY SONRASI SAHA TRANSFERİ" if turkish else "FIELD TRANSFER AFTER CONFIRMATION"
+			title = tr("HUB_TERMINAL_UI_DEPLOYMENT_TERMINAL")
+			subtitle = tr("HUB_TERMINAL_UI_ACTIVE_OPERATION_DEPLOYMENT")
+			line_1 = tr("HUB_TERMINAL_UI_OPERATION_READY")
+			line_2 = tr("HUB_TERMINAL_UI_FIELD_TRANSFER_AFTER_CONFIRMATION")
 		TerminalMode.INFORMATION:
-			title = "VEX ANA TERMİNALİ" if turkish else "VEX MAIN TERMINAL"
-			subtitle = "XENO ARŞİVİ // GERÇEKLİK VERİSİ" if turkish else "XENO ARCHIVE // REALITY DATA"
-			line_1 = "YARATIKLAR // EVRENLER // KAYITLAR" if turkish else "CREATURES // REALITIES // RECORDS"
-			line_2 = "TEHDİT ANALİZİ // YARIK AĞI // PROTOKOLLER" if turkish else "THREAT ANALYSIS // RIFT NETWORK // PROTOCOLS"
+			title = tr("HUB_TERMINAL_UI_VEX_MAIN_TERMINAL")
+			subtitle = tr("HUB_TERMINAL_UI_XENO_ARCHIVE_REALITY_DATA")
+			line_1 = tr("HUB_TERMINAL_UI_CREATURES_REALITIES_RECORDS")
+			line_2 = tr("HUB_TERMINAL_UI_THREAT_ANALYSIS_RIFT_NETWORK_PROTOCOLS")
 		TerminalMode.WEAPON_ARCHIVE:
-			title = "SİLAH ARŞİVİ" if turkish else "WEAPON ARCHIVE"
+			title = tr("HUB_TERMINAL_UI_WEAPON_ARCHIVE")
 			subtitle = "CANLI BALİSTİK // WEAPON DEFINITION"
-			line_1 = "HASAR // RPM // MENZİL // SEKME" if turkish else "DAMAGE // RPM // RANGE // RECOIL"
-			line_2 = "MÜHİMMAT // ÖZEL SİSTEM // UPGRADE HATTI" if turkish else "AMMUNITION // SPECIAL SYSTEM // UPGRADE TRACK"
+			line_1 = tr("HUB_TERMINAL_UI_DAMAGE_RPM_RANGE_RECOIL")
+			line_2 = tr("HUB_TERMINAL_UI_AMMUNITION_SPECIAL_SYSTEM_UPGRADE_TRACK")
 		_:
-			title = "VEX TERMİNALİ" if turkish else "VEX TERMINAL"
+			title = tr("HUB_TERMINAL_UI_VEX_TERMINAL")
 			subtitle = "BASTION-7 // SECURE NODE"
 			line_1 = "SYSTEM LINK"
 			line_2 = "DATA READY"
@@ -322,12 +321,12 @@ func _refresh_world_screen(force := false) -> void:
 	_world_subtitle_label.text = subtitle
 	_world_line_1_label.text = line_1
 	_world_line_2_label.text = line_2
-	_world_status_label.text = ("GÜÇ KAPALI" if turkish else "POWER OFFLINE") if offline else ("SİSTEM AKTİF" if turkish else "SYSTEM ONLINE")
+	_world_status_label.text = tr("HUB_TERMINAL_UI_POWER_OFFLINE") if offline else tr("BASE_UI_SYSTEM_ONLINE")
 	_world_status_label.add_theme_color_override(
 		"font_color",
 		Color(1.0, 0.22, 0.12, 1.0) if offline else Color(0.30, 1.0, 0.62, 1.0)
 	)
-	_world_footer_label.text = "[E] ERİŞİM // BASTION-7 GÜVENLİ DÜĞÜM" if turkish else "[E] ACCESS // BASTION-7 SECURE NODE"
+	_world_footer_label.text = tr("HUB_TERMINAL_UI_E_ACCESS_BASTION_7_SECURE_NODE")
 
 
 func _update_world_scan(delta: float) -> void:

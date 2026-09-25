@@ -116,15 +116,11 @@ func continue_game() -> bool:
 
 
 func get_continue_failure_message() -> String:
-	if TranslationServer.get_locale().begins_with("tr"):
-		return "KAYIT VERİSİ OKUNAMADI // MEVCUT KAYIT DOSYALARI KORUNDU"
-	return "SAVE DATA COULD NOT BE READ // EXISTING SAVE FILES WERE KEPT"
+	return tr("SAVE_UI_SAVE_DATA_COULD_NOT_BE_READ")
 
 
 func get_save_failure_message() -> String:
-	if TranslationServer.get_locale().begins_with("tr"):
-		return "KAYIT YAZILAMADI // İLERLEMEDEN ÖNCE TEKRAR DENE"
-	return "SAVE FAILED // RETRY BEFORE CONTINUING"
+	return tr("SAVE_UI_SAVE_FAILED_RETRY_BEFORE_CONTINUING")
 
 
 func restart_level(restore_full_health: bool = false) -> void:

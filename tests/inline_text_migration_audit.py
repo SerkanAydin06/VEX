@@ -10,6 +10,10 @@ MIGRATED_SCRIPTS = {
     "scripts/ui/weapon_archive_terminal.gd": 30,
     "scripts/ui/base_management_dashboard.gd": 25,
     "scripts/ui/field_record_archive_bridge.gd": 8,
+    "scripts/ui/settings_panel.gd": 3,
+    "scripts/ui/terminal_menu.gd": 2,
+    "scripts/hub/hub_terminal.gd": 15,
+    "scripts/autoload/game_state.gd": 2,
 }
 
 

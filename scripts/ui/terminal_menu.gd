@@ -244,10 +244,7 @@ func _update_footer_hint() -> void:
 	if not _allow_deploy:
 		footer_hint.text = tr("TERMINAL_MENU_FOOTER_HINT")
 		return
-	if TranslationServer.get_locale().begins_with("tr"):
-		footer_hint.text = "[ESC] TERMİNALİ KAPAT // AKTİF OPERASYONU İNCELE VE GÖREVE ÇIK"
-	else:
-		footer_hint.text = "[ESC] CLOSE TERMINAL // REVIEW THE ACTIVE OPERATION AND DEPLOY"
+	footer_hint.text = tr("TERMINAL_UI_ESC_CLOSE_TERMINAL_REVIEW_THE_ACTIVE")
 
 
 func _request_deploy_current_operation() -> void:
@@ -267,9 +264,7 @@ func _request_deploy_current_operation() -> void:
 
 func _get_deploy_confirmation_text(definition: VexMissionDefinition) -> String:
 	var mission_name := tr(definition.display_name)
-	if TranslationServer.get_locale().begins_with("tr"):
-		return "%s operasyonunu başlatmak istiyor musun?\n\nOnaydan sonra görev yüklenir." % mission_name
-	return "Start operation %s?\n\nThe mission will load after confirmation." % mission_name
+	return tr("TERMINAL_UI_START_OPERATION_THE_MISSION_WILL_LOAD") % mission_name
 
 
 func _close_deploy_confirmation() -> void:

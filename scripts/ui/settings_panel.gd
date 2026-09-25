@@ -79,24 +79,16 @@ func _populate_options() -> void:
 
 
 func _populate_performance_profile_options() -> void:
-	var is_turkish := TranslationServer.get_locale().begins_with("tr")
 	var profile_label := get_node(
 		"Margin/VBox/SettingsScroll/SettingsGrid/GraphicsQualityLabel"
 	) as Label
-	profile_label.text = "PERFORMANS PROFİLİ" if is_turkish else "PERFORMANCE PROFILE"
-	var tooltip := (
-		"Düşük; gölge/LOD ayarlarının yanında düşman yol bulma CPU bütçesini de azaltır. Orta ve Yüksek normal AI/navigation davranışını korur."
-		if is_turkish
-		else "Low reduces enemy pathfinding CPU budgets in addition to shadow/LOD settings. Medium and High keep normal AI/navigation behavior."
-	)
+	profile_label.text = tr("SETTINGS_UI_PERFORMANCE_PROFILE")
+	var tooltip := tr("SETTINGS_UI_LOW_REDUCES_ENEMY_PATHFINDING_CPU_BUDGETS")
 	profile_label.tooltip_text = tooltip
 	graphics_quality_option.tooltip_text = tooltip
 	graphics_quality_option.clear()
-	var labels := PackedStringArray(["DÜŞÜK", "ORTA", "YÜKSEK"])
-	if not is_turkish:
-		labels = PackedStringArray(["LOW", "MEDIUM", "HIGH"])
-	for label: String in labels:
-		graphics_quality_option.add_item(label)
+	for label_key: String in ["SETTINGS_UI_QUALITY_LOW", "SETTINGS_UI_QUALITY_MEDIUM", "QUALITY_HIGH"]:
+		graphics_quality_option.add_item(tr(label_key))
 
 
 func show_panel() -> void:
@@ -178,7 +170,7 @@ func _update_toggle_labels() -> void:
 func _toggle_text(value: bool) -> String:
 	if value:
 		return tr("UI_ENABLED")
-	return "KAPALI" if TranslationServer.get_locale().begins_with("tr") else "OFF"
+	return tr("SETTINGS_UI_OFF")
 
 
 func _on_resolution_selected(index: int) -> void:
