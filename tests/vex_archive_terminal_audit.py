@@ -1,4 +1,7 @@
+import re
 from pathlib import Path
+
+from translation_text import load_translations
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -138,6 +141,24 @@ def test_archive_ui_is_viewport_relative_and_terminal_colliders_remain_canonical
     assert "size = Vector3(1.3230512, 0.7523071, 0.02)" in hub_scene
     assert "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2246144, -0.4089676)" in hub_scene
     assert "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.66510963, 0.8407265, -0.4089676)" in hub_scene
+
+
+def test_archive_terminal_ui_text_lives_in_translations() -> None:
+    script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
+    translations = load_translations()
+
+    assert "func _t(" not in script
+    assert re.search(r"(?<![\w.])_t\(", script) is None
+    keys = set(re.findall(r'\btr\("([A-Z0-9_]+)"\)', script))
+    assert len(keys) >= 100
+    missing = sorted(key for key in keys if key not in translations)
+    assert not missing, missing
+    for key in keys:
+        turkish, english = translations[key]
+        assert turkish and english, key
+        assert turkish.count("%") == english.count("%"), key
+    assert "VEX-%02d" not in script
+    assert translations["ARCHIVE_UI_CHAPTER_02D_MUST_BE_COMPLETED"][0].startswith("BÖLÜM %02d")
 
 
 if __name__ == "__main__":

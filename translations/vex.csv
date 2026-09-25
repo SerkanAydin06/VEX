@@ -543,3 +543,124 @@ TERMINAL_MENU_ALL_CLEARED_DETAIL,KAYITLI TÜM TESİSLER TEMİZLENDİ // BASTION-
 TERMINAL_FACILITY_QUARANTINE,KARANTİNA ARAŞTIRMA TESİSİ,QUARANTINE RESEARCH FACILITY
 TERMINAL_FACILITY_ENERGY,ENERJİ VE REAKTÖR KOMPLEKSİ,ENERGY AND REACTOR COMPLEX
 TERMINAL_FACILITY_ASH_MINE,KÜL MADENİ YARIK TESİSİ,ASH MINE RIFT FACILITY
+ARCHIVE_UI_XENOARCHIVE_REALITIES_NETWORK_STAGE_02D,XENOARŞİV %d / %d  //  EVREN %d / %d\nAĞ AŞAMASI %02d,XENOARCHIVE %d / %d  //  REALITIES %d / %d\nNETWORK STAGE %02d
+ARCHIVE_UI_CREATURES,YARATIKLAR,CREATURES
+ARCHIVE_UI_REALITIES,EVRENLER,REALITIES
+ARCHIVE_UI_RECORDS,KAYITLAR,RECORDS
+ARCHIVE_UI_THREAT_ANALYSIS,TEHDİT ANALİZİ,THREAT ANALYSIS
+ARCHIVE_UI_RIFT_NETWORK,YARIK AĞI,RIFT NETWORK
+ARCHIVE_UI_PROTOCOLS,PROTOKOLLER,PROTOCOLS
+ARCHIVE_UI_BASE_MANAGEMENT,ÜS YÖNETİMİ,BASE MANAGEMENT
+ARCHIVE_UI_XENO_ENTITY_INDEX,XENO VARLIK İNDEKSİ,XENO ENTITY INDEX
+ARCHIVE_UI_REALITY_RECORDS,GERÇEKLİK KAYITLARI,REALITY RECORDS
+ARCHIVE_UI_OPERATION_RECORDS,OPERASYON KAYITLARI,OPERATION RECORDS
+ARCHIVE_UI_TACTICAL_THREAT_MATRIX,TAKTİK TEHDİT MATRİSİ,TACTICAL THREAT MATRIX
+ARCHIVE_UI_RIFT_NETWORK_TELEMETRY,YARIK AĞI TELEMETRİSİ,RIFT NETWORK TELEMETRY
+ARCHIVE_UI_VEX_FIELD_PROTOCOLS,VEX SAHA PROTOKOLLERİ,VEX FIELD PROTOCOLS
+ARCHIVE_UI_BASTION_7_BASE_MANAGEMENT,BASTION-7 // ÜS YÖNETİMİ,BASTION-7 // BASE MANAGEMENT
+ARCHIVE_UI_SYSTEM_DATA,SİSTEM VERİSİ,SYSTEM DATA
+ARCHIVE_UI_REALITY_02D_UNCLASSIFIED,GERÇEKLİK %02d\n// SINIFLANDIRILMAMIŞ,REALITY %02d\n// UNCLASSIFIED
+ARCHIVE_UI_ENCRYPTED_RECORD_02D,ŞİFRELİ KAYIT // %02d,ENCRYPTED RECORD // %02d
+ARCHIVE_UI_NO_DATA,VERİ YOK,NO DATA
+ARCHIVE_UI_NO_RECORDS_ARE_AVAILABLE_IN_THIS,Bu bölümde görüntülenecek kayıt yok.,No records are available in this section.
+ARCHIVE_UI_UNCLASSIFIED_XENO_ENTITY,SINIFLANDIRILMAMIŞ XENO VARLIK,UNCLASSIFIED XENO ENTITY
+ARCHIVE_UI_FIELD_CONTACT_REQUIRED,SAHA TEMASI GEREKLİ,FIELD CONTACT REQUIRED
+ARCHIVE_UI_THIS_RECORD_HAS_NOT_BEEN_VERIFIED,Bu kayıt henüz doğrulanmadı. VEX arşivi bir türü ilk doğrulanmış etkisizleştirmeden sonra davranış ve köken verisiyle açar.,This record has not been verified. The VEX archive unlocks behavior and origin data after the first confirmed elimination of a species.
+ARCHIVE_UI_OBSERVED_BEHAVIOR,GÖZLENEN DAVRANIŞ,OBSERVED BEHAVIOR
+ARCHIVE_UI_TACTICAL_RESPONSE,TAKTİK KARŞILIK,TACTICAL RESPONSE
+ARCHIVE_UI_ECOLOGICAL_SOCIAL_ROLE,EKOLOJİK / TOPLUMSAL ROL,ECOLOGICAL / SOCIAL ROLE
+ARCHIVE_UI_ORIGIN_REALITY,KAYNAK GERÇEKLİK,ORIGIN REALITY
+ARCHIVE_UI_ORIGIN_ROLE_THREAT,KÖKEN // %s    ROL // %s    TEHDİT // %s,ORIGIN // %s    ROLE // %s    THREAT // %s
+ARCHIVE_UI_UNCLASSIFIED_REALITY,SINIFLANDIRILMAMIŞ GERÇEKLİK,UNCLASSIFIED REALITY
+ARCHIVE_UI_XENO_LINK_UNVERIFIED,XENO BAĞLANTISI DOĞRULANMADI,XENO LINK UNVERIFIED
+ARCHIVE_UI_NO_VERIFIED_FIELD_SPECIMEN_FROM_THIS,"Bu gerçekliğe ait doğrulanmış bir saha örneği bulunmuyor. İlk doğrulanmış temas sonrası kaynak, ekoloji ve baskı profili açılacak.","No verified field specimen from this reality is available. Resource, ecology and pressure profiles will unlock after first confirmed contact."
+ARCHIVE_UI_REALITY_IDENTITY,GERÇEKLİK KİMLİĞİ,REALITY IDENTITY
+ARCHIVE_UI_VEX_EXTRACTION,VEX KAYNAK ÇEKİMİ,VEX EXTRACTION
+ARCHIVE_UI_FIELD_PRESSURE_PROFILE,SAHA BASKI PROFİLİ,FIELD PRESSURE PROFILE
+ARCHIVE_UI_VISUAL_SIGNATURE,GÖRSEL İMZA,VISUAL SIGNATURE
+ARCHIVE_UI_VERIFIED_SPECIES,DOĞRULANAN TÜRLER,VERIFIED SPECIES
+ARCHIVE_UI_VERIFIED_SPECIES_2,DOĞRULANAN TÜR // %d / %d,VERIFIED SPECIES // %d / %d
+ARCHIVE_UI_ENCRYPTED_OPERATION_RECORD,ŞİFRELİ OPERASYON KAYDI,ENCRYPTED OPERATION RECORD
+ARCHIVE_UI_INSUFFICIENT_CLEARANCE_OPERATION_MUST_BE_COMPLETED,YETKİ YETERSİZ // OPERASYON TAMAMLANMALI,INSUFFICIENT CLEARANCE // OPERATION MUST BE COMPLETED
+ARCHIVE_UI_THIS_RECORD_CANNOT_BE_OPENED_WITH,Bu kayıt mevcut operasyon yetkisiyle açılamıyor. İlgili saha operasyonunun tamamlanması gerekiyor.,This record cannot be opened with the current clearance. The related field operation must be completed.
+ARCHIVE_UI_VEX_SECURE_RECORD_VERIFIED,VEX GÜVENLİ KAYIT // DOĞRULANDI,VEX SECURE RECORD // VERIFIED
+ARCHIVE_UI_THREAT_MATRIX_INSUFFICIENT_DATA,TEHDİT MATRİSİ // VERİ YETERSİZ,THREAT MATRIX // INSUFFICIENT DATA
+ARCHIVE_UI_VERIFIED_SPECIES_REQUIRED,DOĞRULANMIŞ TÜR GEREKLİ,VERIFIED SPECIES REQUIRED
+ARCHIVE_UI_AT_LEAST_ONE_VERIFIED_FIELD_CONTACT,Aile düzeyi taktik model üretmek için bu gerçeklikten en az bir doğrulanmış saha teması gerekiyor.,At least one verified field contact from this reality is required to build a family-level tactical model.
+ARCHIVE_UI_PRIMARY_PRESSURE,ANA BASKI,PRIMARY PRESSURE
+ARCHIVE_UI_VEX_TACTICAL_RECOMMENDATION,VEX TAKTİK ÖNERİSİ,VEX TACTICAL RECOMMENDATION
+ARCHIVE_UI_IDENTIFICATION_SIGNATURE,TANIMA İMZASI,IDENTIFICATION SIGNATURE
+ARCHIVE_UI_THREAT_MODEL,%s // TEHDİT MODELİ,%s // THREAT MODEL
+ARCHIVE_UI_FAMILY_LEVEL_COUNTERPLAY,AİLE BAZLI KARŞI OYUN,FAMILY-LEVEL COUNTERPLAY
+ARCHIVE_UI_VEX_FIELD_DOCTRINE_ACTIVE,VEX SAHA DOKTRİNİ // AKTİF,VEX FIELD DOCTRINE // ACTIVE
+ARCHIVE_UI_BASE_STATUS,ÜS DURUMU,BASE STATUS
+ARCHIVE_UI_LOCAL_SYSTEMS,YEREL SİSTEMLER,LOCAL SYSTEMS
+ARCHIVE_UI_CLEARANCE_LOCKED,YETKİ KİLİTLİ,CLEARANCE LOCKED
+ARCHIVE_UI_ACCESS_ONLINE,ERİŞİM AÇIK,ACCESS ONLINE
+ARCHIVE_UI_ACTIVATION_READY,AKTİVASYON HAZIR,ACTIVATION READY
+ARCHIVE_UI_ACTIVE_PROFILE,AKTİF PROFİL,ACTIVE PROFILE
+ARCHIVE_UI_AVAILABLE,UYGULANABİLİR,AVAILABLE
+ARCHIVE_UI_LEVEL,SEVİYE,LEVEL
+ARCHIVE_UI_BASE_SYSTEM,ÜS SİSTEMİ,BASE SYSTEM
+ARCHIVE_UI_NO_VALID_BASE_MANAGEMENT_RECORD_WAS,Geçerli bir üs yönetim kaydı bulunamadı.,No valid base-management record was found.
+ARCHIVE_UI_AREA_ACCESS,BÖLGE ERİŞİMİ,AREA ACCESS
+ARCHIVE_UI_RECOMMISSIONED_RESTRICTED_AREAS,Yeniden etkinleştirilen kapalı bölüm: %d / %d,Recommissioned restricted areas: %d / %d
+ARCHIVE_UI_LIGHTING_PROFILE,AYDINLATMA PROFİLİ,LIGHTING PROFILE
+ARCHIVE_UI_UPGRADE_BACKBONE,GELİŞTİRME OMURGASI,UPGRADE BACKBONE
+ARCHIVE_UI_PERSISTENT_UPGRADE_SLOTS_ARE_REGISTERED_FOR,"Enerji dağıtımı, güvenlik ağı ve araştırma altyapısı için kalıcı geliştirme yuvaları hazır. Ekonomi ve oynanış etkileri sonraki sistemlere bağlanabilir.","Persistent upgrade slots are registered for power distribution, security and research infrastructure. Economy and gameplay effects can be attached later."
+ARCHIVE_UI_BASTION_7_BASE_STATUS,BASTION-7 // ÜS DURUMU,BASTION-7 // BASE STATUS
+ARCHIVE_UI_LOCAL_FACILITY_CONTROL_AIR_GAPPED,YEREL TESİS KONTROLÜ // ÇEVRİMDIŞI AĞ,LOCAL FACILITY CONTROL // AIR-GAPPED
+ARCHIVE_UI_BASTION_7_LOCAL_AUTHORITY_ACTIVE,BASTION-7 // YEREL YETKİ AKTİF,BASTION-7 // LOCAL AUTHORITY ACTIVE
+ARCHIVE_UI_AREA_STATUS,BÖLGE DURUMU,AREA STATUS
+ARCHIVE_UI_FACILITY_RECORD,TESİS KAYDI,FACILITY RECORD
+ARCHIVE_UI_CLEARANCE_REQUIREMENT,YETKİ KOŞULU,CLEARANCE REQUIREMENT
+ARCHIVE_UI_BASTION_7_AREA_ACCESS_GRID,BASTION-7 // BÖLGE ERİŞİM AĞI,BASTION-7 // AREA ACCESS GRID
+ARCHIVE_UI_THE_DOOR_NETWORK_IS_ACTIVELY_ENFORCING,Kapı ağı bu yetkiyi canlı olarak uyguluyor.,The door network is actively enforcing this authorization.
+ARCHIVE_UI_RESTORE_ACCESS,ERİŞİMİ AÇ,RESTORE ACCESS
+ARCHIVE_UI_ACTIVATION_IS_WRITTEN_TO_THE_CAMPAIGN,Aktivasyon kampanya kaydına yazılır ve ilgili kapı anında yetkilendirilir.,Activation is written to the campaign save and the linked door is authorized immediately.
+ARCHIVE_UI_PRIMARY_LIGHT_POWER,ANA IŞIK GÜCÜ,PRIMARY LIGHT POWER
+ARCHIVE_UI_SCENE_AUTHORITY,SAHNE OTORİTESİ,SCENE AUTHORITY
+ARCHIVE_UI_THIS_PROFILE_DOES_NOT_REPLACE_SCENE,Bu profil armatürlerin sahnede tanımlanan enerji/renk ayarlarını değiştirmez; çalışma anında yalnız çarpan ve ton uygular.,This profile does not replace scene-authored fixture energy/color settings; it only applies a runtime multiplier and tint.
+ARCHIVE_UI_BASTION_7_LIGHTING_CONTROL,BASTION-7 // AYDINLATMA KONTROLÜ,BASTION-7 // LIGHTING CONTROL
+ARCHIVE_UI_ACTIVE_LIGHTING_PROFILE,AKTİF AYDINLATMA PROFİLİ,ACTIVE LIGHTING PROFILE
+ARCHIVE_UI_PROFILE_READY_TO_APPLY,PROFİL UYGULAMAYA HAZIR,PROFILE READY TO APPLY
+ARCHIVE_UI_ACTIVE,AKTİF,ACTIVE
+ARCHIVE_UI_APPLY_PROFILE,PROFİLİ UYGULA,APPLY PROFILE
+ARCHIVE_UI_THE_CHANGE_IS_APPLIED_TO_BASTION,Değişiklik Bastion-7 oda ışıklarına anında uygulanır.,The change is applied to Bastion-7 room lighting immediately.
+ARCHIVE_UI_UPGRADE_TRACK,GELİŞTİRME HATTI,UPGRADE TRACK
+ARCHIVE_UI_CURRENT_LEVEL,MEVCUT SEVİYE,CURRENT LEVEL
+ARCHIVE_UI_INTEGRATION_STATUS,ENTEGRASYON DURUMU,INTEGRATION STATUS
+ARCHIVE_UI_PERSISTENT_STATE_LEVEL_LIMITS_AND_SAVE,"Kalıcı state, seviye sınırı ve save desteği hazır. Maliyet, kaynak ekonomisi ve gerçek oynanış etkileri sonraki geliştirme sistemine bağlanacak.","Persistent state, level limits and save support are ready. Costs, resource economy and gameplay effects will be connected by a future upgrade system."
+ARCHIVE_UI_BASTION_7_UPGRADE_INFRASTRUCTURE,BASTION-7 // GELİŞTİRME ALTYAPISI,BASTION-7 // UPGRADE INFRASTRUCTURE
+ARCHIVE_UI_INFRASTRUCTURE_READY_EFFECT_HOOK_PENDING,ALTYAPI HAZIR // ETKİ BAĞLANTISI BEKLİYOR,INFRASTRUCTURE READY // EFFECT HOOK PENDING
+ARCHIVE_UI_UPGRADES_COMING_LATER,GELİŞTİRME YAKINDA,UPGRADES COMING LATER
+ARCHIVE_UI_THIS_ACTION_WILL_ACTIVATE_WHEN_THE,Bu düğme ekonomi ve maliyet sistemi eklendiğinde aktifleşecek.,This action will activate when the economy and upgrade-cost system is added.
+ARCHIVE_UI_BASTION_7_AREA_ACCESS_RESTORED,BASTION-7 // BÖLGE ERİŞİMİ YENİDEN ETKİN,BASTION-7 // AREA ACCESS RESTORED
+ARCHIVE_UI_BASTION_7_LIGHTING_PROFILE_UPDATED,BASTION-7 // AYDINLATMA PROFİLİ GÜNCELLENDİ,BASTION-7 // LIGHTING PROFILE UPDATED
+ARCHIVE_UI_LOCAL_AUTHORITY_READY,YEREL YETKİ // HAZIR,LOCAL AUTHORITY // READY
+ARCHIVE_UI_CHAPTER_02D_MUST_BE_COMPLETED,BÖLÜM %02d TAMAMLANMALI,CHAPTER %02d MUST BE COMPLETED
+ARCHIVE_UI_CLASSIFIED_DATA_INCOMPLETE,SINIFLANDIRILMIŞ // VERİ EKSİK,CLASSIFIED // DATA INCOMPLETE
+ARCHIVE_UI_VEX_ARCHIVE_VERIFICATION_VALID,VEX ARŞİV DOĞRULAMASI // GEÇERLİ,VEX ARCHIVE VERIFICATION // VALID
+ARCHIVE_UI_EXPLOIT_HEAVY_UNIT_WINDUPS_AND_PREVENT,Ağır hedeflerin hazırlık pencerelerini kullan; termal alanlarla projectile çizgilerinin aynı anda hareket alanını kapatmasına izin verme.,Exploit heavy-unit windups and prevent thermal zones from overlapping projectile lanes until your movement space collapses.
+ARCHIVE_UI_PRESERVE_MOVEMENT_CORRIDORS_WHEN_CHARGES_TOXIC,"Hareket koridorunu koru. Charge, zehir alanı ve hibrit avcılar aynı anda baskı kurduğunda hasardan önce pozisyonu çöz.","Preserve movement corridors. When charges, toxic zones and hybrid hunters overlap, solve positioning before chasing damage."
+ARCHIVE_UI_READ_THE_FORMATION_RATHER_THAN_INDIVIDUAL,Tek hedef gücüne değil formasyona bak. Komuta/destek ve uzun menzil rollerini güvenli fırsatta önce kır.,Read the formation rather than individual strength. Break command/support and ranged roles first whenever a safe opportunity exists.
+ARCHIVE_UI_TREAT_INFORMATION_LOSS_AS_LETHAL_PRIORITIZE,"Bilgi kaybını ölümcül kabul et. Son güvenli konumu, ses bilgisini ve açı kontrolünü görüş bozulduğunda önceliklendir.","Treat information loss as lethal. Prioritize the last safe position, audio cues and angle checks whenever visibility is disrupted."
+ARCHIVE_UI_TRACK_POSSIBLE_ATTACK_ANGLES_MORE_THAN,Düşmanın mevcut konumundan çok açabileceği açıları izle. Enerji fanları ve phase step için geniş kaçış payı bırak.,Track possible attack angles more than current positions. Reserve broad dodge space for energy fans and phase steps.
+ARCHIVE_UI_INSUFFICIENT_DATA,Yeterli veri yok.,Insufficient data.
+ARCHIVE_UI_RIFT_NETWORK_OVERVIEW,YARIK AĞI // GENEL DURUM,RIFT NETWORK // OVERVIEW
+ARCHIVE_UI_BASTION_7_ISOLATED_TELEMETRY,BASTION-7 İZOLE TELEMETRİ,BASTION-7 ISOLATED TELEMETRY
+ARCHIVE_UI_THE_RIFT_NETWORK_IS_THE_INTERDIMENSIONAL,"Yarık Ağı, VEX reaktörlerini birbirine bağlayan boyutlar arası enerji omurgasıdır. %s\n\nDOĞRULANAN GERÇEKLİK: %d / %d\nDOĞRULANAN XENO VARLIK: %d / %d\nKAMPANYA AŞAMASI: %02d",The Rift Network is the interdimensional energy backbone connecting VEX reactors. %s\n\nVERIFIED REALITIES: %d / %d\nVERIFIED XENO ENTITIES: %d / %d\nCAMPAIGN STAGE: %02d
+ARCHIVE_UI_DIMENSIONAL_EXTRACTION_MATRIX,BOYUTSAL KAYNAK MATRİSİ,DIMENSIONAL EXTRACTION MATRIX
+ARCHIVE_UI_ZERO_SOURCE_REACTOR_CAUSALITY,SIFIR KAYNAK REAKTÖRÜ // NEDENSELLİK,ZERO SOURCE REACTOR // CAUSALITY
+ARCHIVE_UI_BASTION_7_NETWORK_AIR_GAP,BASTION-7 // FİZİKSEL AĞ İZOLASYONU,BASTION-7 // NETWORK AIR GAP
+ARCHIVE_UI_PHYSICAL_NETWORK_ISOLATION_ACTIVE,FİZİKSEL AĞ İZOLASYONU // AKTİF,PHYSICAL NETWORK ISOLATION // ACTIVE
+ARCHIVE_UI_BASTION_7_IS_PHYSICALLY_SEPARATED_FROM,"Bastion-7 ana Yarık Ağı'ndan fiziksel olarak ayrıdır. Bu izolasyon üssü güvenli operasyon, arşiv ve yeniden konuşlanma merkezi hâline getirir. Terminal verileri saha kayıtlarından yerel olarak derlenir.","Bastion-7 is physically separated from the main Rift Network. This isolation makes the base a secure operations, archive and redeployment center. Terminal data is compiled locally from field records."
+ARCHIVE_UI_PRIMARY_OBJECTIVE_BASTION_DIRECTIVE,ANA HEDEF // BASTION DİREKTİFİ,PRIMARY OBJECTIVE // BASTION DIRECTIVE
+ARCHIVE_UI_STRATEGIC_DIRECTIVE,STRATEJİK DİREKTİF,STRATEGIC DIRECTIVE
+ARCHIVE_UI_EVEN_IF_A_LOCAL_PASSAGE_CLOSES,Yerel geçit kapansa bile ağ çalışıyorsa başka bir düğüm yeniden açılabilir.,"Even if a local passage closes, another node can reopen while the network remains active."
+ARCHIVE_UI_SELIN_ERDEM_S_ANALYSIS_SHOWS_THE,Selin Erdem'in analizine göre ağ tek bir reaktör değil; farklı kaynak düğümleri ortak bir senkronizasyon sistemi kullanıyor.,Selin Erdem's analysis shows the network is not a single reactor; separate source nodes share a common synchronization system.
+ARCHIVE_UI_THE_NETWORK_S_SCALE_AND_SOURCE,Ağın ölçeği ve kaynak düğümleri henüz haritalanmadı.,The network's scale and source nodes have not been mapped yet.
+ARCHIVE_UI_CLOSING_INDIVIDUAL_RIFTS_IS_NOT_A,"Tek tek yarıkları kapatmak kalıcı çözüm değildir. Nihai amaç enerji çekimini besleyen düğümleri devre dışı bırakmak, kaynak gerçeklik bağlantılarını çözmek ve Yarık Ağı'nın merkezini kalıcı olarak susturmaktır.","Closing individual rifts is not a permanent solution. The final objective is to disable the nodes feeding extraction, resolve origin-reality links and permanently silence the core of the Rift Network."
+ARCHIVE_UI_LOCATE_SOURCE_NODES_AND_THEIR_ANCHORS,Kaynak düğümlerini ve Dünya'daki ankrajlarını tespit edip enerji çekimini kesmek. Kapatılan her ankrajdan sonra ağın tepkisi izlenecek.,Locate source nodes and their anchors on Earth and cut the extraction. The network's response will be monitored after each anchor is shut down.
+ARCHIVE_UI_FIND_SURVIVORS_SECURE_VEX_FACILITY_RECORDS,"Hayatta kalanları bulmak, VEX tesis kayıtlarını güvenceye almak ve kırılmaları besleyen kaynağı tespit etmek.","Find survivors, secure VEX facility records and identify the source feeding the fractures."
+ARCHIVE_UI_EXTRACTION_PROFILE_UNVERIFIED,Kaynak profili doğrulanmadı.,Extraction profile unverified.

@@ -115,38 +115,29 @@ func _refresh_all() -> void:
 	_refresh_tabs()
 	_refresh_entries()
 	_refresh_detail()
-	close_button.text = _t("TERMİNALİ KAPAT", "CLOSE TERMINAL")
+	close_button.text = tr("TERMINAL_MENU_CLOSE")
 
 
 func _refresh_header() -> void:
 	var discovered := _get_discovered_database_count()
 	var known_universes := _get_known_universe_count()
-	archive_summary.text = _t(
-		"XENOARŞİV %d / %d  //  EVREN %d / %d\nAĞ AŞAMASI %02d" % [
-			discovered,
-			ArchiveDB.ENEMIES.size(),
-			known_universes,
-			ArchiveDB.UNIVERSES.size(),
-			GameState.campaign_stage,
-		],
-		"XENOARCHIVE %d / %d  //  REALITIES %d / %d\nNETWORK STAGE %02d" % [
+	archive_summary.text = tr("ARCHIVE_UI_XENOARCHIVE_REALITIES_NETWORK_STAGE_02D") % [
 			discovered,
 			ArchiveDB.ENEMIES.size(),
 			known_universes,
 			ArchiveDB.UNIVERSES.size(),
 			GameState.campaign_stage,
 		]
-	)
 
 
 func _refresh_tabs() -> void:
-	creatures_tab.text = _t("YARATIKLAR", "CREATURES")
-	universes_tab.text = _t("EVRENLER", "REALITIES")
-	records_tab.text = _t("KAYITLAR", "RECORDS")
-	threat_tab.text = _t("TEHDİT ANALİZİ", "THREAT ANALYSIS")
-	rift_tab.text = _t("YARIK AĞI", "RIFT NETWORK")
-	protocols_tab.text = _t("PROTOKOLLER", "PROTOCOLS")
-	base_management_tab.text = _t("ÜS YÖNETİMİ", "BASE MANAGEMENT")
+	creatures_tab.text = tr("ARCHIVE_UI_CREATURES")
+	universes_tab.text = tr("ARCHIVE_UI_REALITIES")
+	records_tab.text = tr("ARCHIVE_UI_RECORDS")
+	threat_tab.text = tr("ARCHIVE_UI_THREAT_ANALYSIS")
+	rift_tab.text = tr("ARCHIVE_UI_RIFT_NETWORK")
+	protocols_tab.text = tr("ARCHIVE_UI_PROTOCOLS")
+	base_management_tab.text = tr("ARCHIVE_UI_BASE_MANAGEMENT")
 	var tabs: Array[Button] = [
 		creatures_tab,
 		universes_tab,
@@ -223,21 +214,21 @@ func _get_entries_for_section() -> Array[Dictionary]:
 func _get_section_title() -> String:
 	match _current_section:
 		Section.CREATURES:
-			return _t("XENO VARLIK İNDEKSİ", "XENO ENTITY INDEX")
+			return tr("ARCHIVE_UI_XENO_ENTITY_INDEX")
 		Section.UNIVERSES:
-			return _t("GERÇEKLİK KAYITLARI", "REALITY RECORDS")
+			return tr("ARCHIVE_UI_REALITY_RECORDS")
 		Section.RECORDS:
-			return _t("OPERASYON KAYITLARI", "OPERATION RECORDS")
+			return tr("ARCHIVE_UI_OPERATION_RECORDS")
 		Section.THREAT_ANALYSIS:
-			return _t("TAKTİK TEHDİT MATRİSİ", "TACTICAL THREAT MATRIX")
+			return tr("ARCHIVE_UI_TACTICAL_THREAT_MATRIX")
 		Section.RIFT_NETWORK:
-			return _t("YARIK AĞI TELEMETRİSİ", "RIFT NETWORK TELEMETRY")
+			return tr("ARCHIVE_UI_RIFT_NETWORK_TELEMETRY")
 		Section.PROTOCOLS:
-			return _t("VEX SAHA PROTOKOLLERİ", "VEX FIELD PROTOCOLS")
+			return tr("ARCHIVE_UI_VEX_FIELD_PROTOCOLS")
 		Section.BASE_MANAGEMENT:
-			return _t("BASTION-7 // ÜS YÖNETİMİ", "BASTION-7 // BASE MANAGEMENT")
+			return tr("ARCHIVE_UI_BASTION_7_BASE_MANAGEMENT")
 		_:
-			return _t("SİSTEM VERİSİ", "SYSTEM DATA")
+			return tr("ARCHIVE_UI_SYSTEM_DATA")
 
 
 func _get_entry_button_text(entry: Dictionary, index: int) -> String:
@@ -252,17 +243,11 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 		Section.UNIVERSES, Section.THREAT_ANALYSIS:
 			if _is_universe_known(entry):
 				return ArchiveDB.universe_name(entry)
-			return _t(
-				"GERÇEKLİK %02d\n// SINIFLANDIRILMAMIŞ" % (index + 1),
-				"REALITY %02d\n// UNCLASSIFIED" % (index + 1)
-			)
+			return tr("ARCHIVE_UI_REALITY_02D_UNCLASSIFIED") % (index + 1)
 		Section.RECORDS:
 			if _is_log_unlocked(entry):
 				return ArchiveDB.entry_title(entry, "RECORD")
-			return _t(
-				"ŞİFRELİ KAYIT // %02d" % (index + 1),
-				"ENCRYPTED RECORD // %02d" % (index + 1)
-			)
+			return tr("ARCHIVE_UI_ENCRYPTED_RECORD_02D") % (index + 1)
 		Section.BASE_MANAGEMENT:
 			return _get_base_management_button_text(entry)
 		_:
@@ -272,9 +257,9 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 func _refresh_detail() -> void:
 	if _selected_index < 0 or _selected_index >= _current_entries.size():
 		_set_detail(
-			_t("VERİ YOK", "NO DATA"),
+			tr("ARCHIVE_UI_NO_DATA"),
 			"",
-			_t("Bu bölümde görüntülenecek kayıt yok.", "No records are available in this section."),
+			tr("ARCHIVE_UI_NO_RECORDS_ARE_AVAILABLE_IN_THIS"),
 			null,
 			true
 		)
@@ -300,12 +285,9 @@ func _refresh_detail() -> void:
 func _show_enemy(entry: Dictionary) -> void:
 	if not _is_enemy_discovered(entry):
 		_set_detail(
-			_t("SINIFLANDIRILMAMIŞ XENO VARLIK", "UNCLASSIFIED XENO ENTITY"),
-			_t("SAHA TEMASI GEREKLİ", "FIELD CONTACT REQUIRED"),
-			_t(
-				"Bu kayıt henüz doğrulanmadı. VEX arşivi bir türü ilk doğrulanmış etkisizleştirmeden sonra davranış ve köken verisiyle açar.",
-				"This record has not been verified. The VEX archive unlocks behavior and origin data after the first confirmed elimination of a species."
-			),
+			tr("ARCHIVE_UI_UNCLASSIFIED_XENO_ENTITY"),
+			tr("ARCHIVE_UI_FIELD_CONTACT_REQUIRED"),
+			tr("ARCHIVE_UI_THIS_RECORD_HAS_NOT_BEEN_VERIFIED"),
 			VEX_LOGO,
 			true
 		)
@@ -314,35 +296,28 @@ func _show_enemy(entry: Dictionary) -> void:
 	var universe_id := _entry_string_name(entry, "universe")
 	var universe := ArchiveDB.get_universe(universe_id)
 	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("GÖZLENEN DAVRANIŞ", "OBSERVED BEHAVIOR"),
+		tr("ARCHIVE_UI_OBSERVED_BEHAVIOR"),
 		ArchiveDB.localized(entry, "behavior"),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("TAKTİK KARŞILIK", "TACTICAL RESPONSE"),
+		tr("ARCHIVE_UI_TACTICAL_RESPONSE"),
 		ArchiveDB.localized(entry, "tactic"),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("EKOLOJİK / TOPLUMSAL ROL", "ECOLOGICAL / SOCIAL ROLE"),
+		tr("ARCHIVE_UI_ECOLOGICAL_SOCIAL_ROLE"),
 		ArchiveDB.enemy_lore(entry, GameState.campaign_stage),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s" % [
-		_t("KAYNAK GERÇEKLİK", "ORIGIN REALITY"),
+		tr("ARCHIVE_UI_ORIGIN_REALITY"),
 		ArchiveDB.universe_story_text(universe, "extraction", GameState.campaign_stage),
 	]
 	_set_detail(
 		str(entry.get("name", "UNKNOWN")),
-		_t(
-			"KÖKEN // %s    ROL // %s    TEHDİT // %s" % [
+		tr("ARCHIVE_UI_ORIGIN_ROLE_THREAT") % [
 				_get_universe_name(universe_id),
 				ArchiveDB.localized(entry, "role"),
 				entry.get("threat", "?"),
 			],
-			"ORIGIN // %s    ROLE // %s    THREAT // %s" % [
-				_get_universe_name(universe_id),
-				ArchiveDB.localized(entry, "role"),
-				entry.get("threat", "?"),
-			]
-		),
 		body,
 		_get_enemy_preview(entry),
 		false
@@ -352,12 +327,9 @@ func _show_enemy(entry: Dictionary) -> void:
 func _show_universe(entry: Dictionary) -> void:
 	if not _is_universe_known(entry):
 		_set_detail(
-			_t("SINIFLANDIRILMAMIŞ GERÇEKLİK", "UNCLASSIFIED REALITY"),
-			_t("XENO BAĞLANTISI DOĞRULANMADI", "XENO LINK UNVERIFIED"),
-			_t(
-				"Bu gerçekliğe ait doğrulanmış bir saha örneği bulunmuyor. İlk doğrulanmış temas sonrası kaynak, ekoloji ve baskı profili açılacak.",
-				"No verified field specimen from this reality is available. Resource, ecology and pressure profiles will unlock after first confirmed contact."
-			),
+			tr("ARCHIVE_UI_UNCLASSIFIED_REALITY"),
+			tr("ARCHIVE_UI_XENO_LINK_UNVERIFIED"),
+			tr("ARCHIVE_UI_NO_VERIFIED_FIELD_SPECIMEN_FROM_THIS"),
 			VEX_LOGO,
 			true
 		)
@@ -370,29 +342,26 @@ func _show_universe(entry: Dictionary) -> void:
 		if not enemy.is_empty() and _is_enemy_discovered(enemy):
 			discovered_names.append(str(enemy.get("name", enemy_id)))
 	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("GERÇEKLİK KİMLİĞİ", "REALITY IDENTITY"),
+		tr("ARCHIVE_UI_REALITY_IDENTITY"),
 		ArchiveDB.universe_story_text(entry, "identity", GameState.campaign_stage)
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("VEX KAYNAK ÇEKİMİ", "VEX EXTRACTION"),
+		tr("ARCHIVE_UI_VEX_EXTRACTION"),
 		ArchiveDB.universe_story_text(entry, "extraction", GameState.campaign_stage)
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("SAHA BASKI PROFİLİ", "FIELD PRESSURE PROFILE"), ArchiveDB.localized(entry, "pressure")
+		tr("ARCHIVE_UI_FIELD_PRESSURE_PROFILE"), ArchiveDB.localized(entry, "pressure")
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("GÖRSEL İMZA", "VISUAL SIGNATURE"), ArchiveDB.localized(entry, "palette")
+		tr("ARCHIVE_UI_VISUAL_SIGNATURE"), ArchiveDB.localized(entry, "palette")
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s" % [
-		_t("DOĞRULANAN TÜRLER", "VERIFIED SPECIES"),
+		tr("ARCHIVE_UI_VERIFIED_SPECIES"),
 		", ".join(discovered_names) if not discovered_names.is_empty() else "—",
 	]
 	_set_detail(
 		ArchiveDB.universe_name(entry),
-		_t(
-			"DOĞRULANAN TÜR // %d / %d" % [discovered_names.size(), ids.size()],
-			"VERIFIED SPECIES // %d / %d" % [discovered_names.size(), ids.size()]
-		),
+		tr("ARCHIVE_UI_VERIFIED_SPECIES_2") % [discovered_names.size(), ids.size()],
 		body,
 		VEX_LOGO,
 		false
@@ -402,22 +371,16 @@ func _show_universe(entry: Dictionary) -> void:
 func _show_log(entry: Dictionary) -> void:
 	if not _is_log_unlocked(entry):
 		_set_detail(
-			_t("ŞİFRELİ OPERASYON KAYDI", "ENCRYPTED OPERATION RECORD"),
-			_t(
-				"YETKİ YETERSİZ // OPERASYON TAMAMLANMALI",
-				"INSUFFICIENT CLEARANCE // OPERATION MUST BE COMPLETED"
-			),
-			_t(
-				"Bu kayıt mevcut operasyon yetkisiyle açılamıyor. İlgili saha operasyonunun tamamlanması gerekiyor.",
-				"This record cannot be opened with the current clearance. The related field operation must be completed."
-			),
+			tr("ARCHIVE_UI_ENCRYPTED_OPERATION_RECORD"),
+			tr("ARCHIVE_UI_INSUFFICIENT_CLEARANCE_OPERATION_MUST_BE_COMPLETED"),
+			tr("ARCHIVE_UI_THIS_RECORD_CANNOT_BE_OPENED_WITH"),
 			VEX_LOGO,
 			true
 		)
 		return
 	_set_detail(
 		ArchiveDB.entry_title(entry, "RECORD"),
-		_t("VEX GÜVENLİ KAYIT // DOĞRULANDI", "VEX SECURE RECORD // VERIFIED"),
+		tr("ARCHIVE_UI_VEX_SECURE_RECORD_VERIFIED"),
 		_localized_body(entry),
 		VEX_LOGO,
 		false
@@ -427,33 +390,27 @@ func _show_log(entry: Dictionary) -> void:
 func _show_threat_analysis(entry: Dictionary) -> void:
 	if not _is_universe_known(entry):
 		_set_detail(
-			_t("TEHDİT MATRİSİ // VERİ YETERSİZ", "THREAT MATRIX // INSUFFICIENT DATA"),
-			_t("DOĞRULANMIŞ TÜR GEREKLİ", "VERIFIED SPECIES REQUIRED"),
-			_t(
-				"Aile düzeyi taktik model üretmek için bu gerçeklikten en az bir doğrulanmış saha teması gerekiyor.",
-				"At least one verified field contact from this reality is required to build a family-level tactical model."
-			),
+			tr("ARCHIVE_UI_THREAT_MATRIX_INSUFFICIENT_DATA"),
+			tr("ARCHIVE_UI_VERIFIED_SPECIES_REQUIRED"),
+			tr("ARCHIVE_UI_AT_LEAST_ONE_VERIFIED_FIELD_CONTACT"),
 			VEX_LOGO,
 			true
 		)
 		return
 	var universe_id := _entry_string_name(entry, "id")
 	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("ANA BASKI", "PRIMARY PRESSURE"), ArchiveDB.localized(entry, "pressure")
+		tr("ARCHIVE_UI_PRIMARY_PRESSURE"), ArchiveDB.localized(entry, "pressure")
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("VEX TAKTİK ÖNERİSİ", "VEX TACTICAL RECOMMENDATION"),
+		tr("ARCHIVE_UI_VEX_TACTICAL_RECOMMENDATION"),
 		_get_universe_recommendation(universe_id),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s" % [
-		_t("TANIMA İMZASI", "IDENTIFICATION SIGNATURE"), ArchiveDB.localized(entry, "palette")
+		tr("ARCHIVE_UI_IDENTIFICATION_SIGNATURE"), ArchiveDB.localized(entry, "palette")
 	]
 	_set_detail(
-		_t(
-			"%s // TEHDİT MODELİ" % ArchiveDB.universe_name(entry),
-			"%s // THREAT MODEL" % ArchiveDB.universe_name(entry)
-		),
-		_t("AİLE BAZLI KARŞI OYUN", "FAMILY-LEVEL COUNTERPLAY"),
+		tr("ARCHIVE_UI_THREAT_MODEL") % ArchiveDB.universe_name(entry),
+		tr("ARCHIVE_UI_FAMILY_LEVEL_COUNTERPLAY"),
 		body,
 		VEX_LOGO,
 		false
@@ -473,7 +430,7 @@ func _show_rift_entry(entry: Dictionary) -> void:
 func _show_protocol(entry: Dictionary) -> void:
 	_set_detail(
 		ArchiveDB.entry_title(entry, "PROTOCOL"),
-		_t("VEX SAHA DOKTRİNİ // AKTİF", "VEX FIELD DOCTRINE // ACTIVE"),
+		tr("ARCHIVE_UI_VEX_FIELD_DOCTRINE_ACTIVE"),
 		_localized_body(entry),
 		VEX_LOGO,
 		false
@@ -484,7 +441,7 @@ func _build_base_management_entries() -> Array[Dictionary]:
 	var result: Array[Dictionary] = [
 		{
 			"base_kind": &"overview",
-			"title": _t("ÜS DURUMU", "BASE STATUS"),
+			"title": tr("ARCHIVE_UI_BASE_STATUS"),
 		},
 	]
 	for definition: Dictionary in BaseManager.get_area_definitions():
@@ -510,28 +467,28 @@ func _get_base_management_button_text(entry: Dictionary) -> String:
 	var kind := StringName(str(entry.get("base_kind", "")))
 	match kind:
 		&"overview":
-			return "%s\n// %s" % [title, _t("YEREL SİSTEMLER", "LOCAL SYSTEMS")]
+			return "%s\n// %s" % [title, tr("ARCHIVE_UI_LOCAL_SYSTEMS")]
 		&"area":
 			var area_id := _entry_string_name(entry, "id")
-			var status := _t("YETKİ KİLİTLİ", "CLEARANCE LOCKED")
+			var status := tr("ARCHIVE_UI_CLEARANCE_LOCKED")
 			if BaseManager.is_area_unlocked(area_id):
-				status = _t("ERİŞİM AÇIK", "ACCESS ONLINE")
+				status = tr("ARCHIVE_UI_ACCESS_ONLINE")
 			elif BaseManager.can_unlock_area(area_id, GameState.campaign_stage):
-				status = _t("AKTİVASYON HAZIR", "ACTIVATION READY")
+				status = tr("ARCHIVE_UI_ACTIVATION_READY")
 			return "%s\n// %s" % [title, status]
 		&"lighting":
 			var mode := int(entry.get("mode", 0))
 			var status := (
-				_t("AKTİF PROFİL", "ACTIVE PROFILE")
+				tr("ARCHIVE_UI_ACTIVE_PROFILE")
 				if mode == BaseManager.get_lighting_mode()
-				else _t("UYGULANABİLİR", "AVAILABLE")
+				else tr("ARCHIVE_UI_AVAILABLE")
 			)
 			return "%s\n// %s" % [title, status]
 		&"upgrade":
 			var upgrade_id := _entry_string_name(entry, "id")
 			return "%s\n// %s %d / %d" % [
 				title,
-				_t("SEVİYE", "LEVEL"),
+				tr("ARCHIVE_UI_LEVEL"),
 				BaseManager.get_upgrade_level(upgrade_id),
 				int(entry.get("max_level", 0)),
 			]
@@ -552,9 +509,9 @@ func _show_base_management_entry(entry: Dictionary) -> void:
 			_show_base_upgrade(entry)
 		_:
 			_set_detail(
-				_t("ÜS SİSTEMİ", "BASE SYSTEM"),
+				tr("ARCHIVE_UI_BASE_SYSTEM"),
 				"BASTION-7",
-				_t("Geçerli bir üs yönetim kaydı bulunamadı.", "No valid base-management record was found."),
+				tr("ARCHIVE_UI_NO_VALID_BASE_MANAGEMENT_RECORD_WAS"),
 				VEX_LOGO,
 				false
 			)
@@ -568,31 +525,25 @@ func _show_base_overview() -> void:
 			unlocked_count += 1
 	var lighting := BaseManager.get_lighting_definition(BaseManager.get_lighting_mode())
 	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("BÖLGE ERİŞİMİ", "AREA ACCESS"),
-		_t(
-			"Yeniden etkinleştirilen kapalı bölüm: %d / %d" % [unlocked_count, areas.size()],
-			"Recommissioned restricted areas: %d / %d" % [unlocked_count, areas.size()]
-		),
+		tr("ARCHIVE_UI_AREA_ACCESS"),
+		tr("ARCHIVE_UI_RECOMMISSIONED_RESTRICTED_AREAS") % [unlocked_count, areas.size()],
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("AYDINLATMA PROFİLİ", "LIGHTING PROFILE"),
+		tr("ARCHIVE_UI_LIGHTING_PROFILE"),
 		_base_localized(lighting, "name"),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s" % [
-		_t("GELİŞTİRME OMURGASI", "UPGRADE BACKBONE"),
-		_t(
-			"Enerji dağıtımı, güvenlik ağı ve araştırma altyapısı için kalıcı geliştirme yuvaları hazır. Ekonomi ve oynanış etkileri sonraki sistemlere bağlanabilir.",
-			"Persistent upgrade slots are registered for power distribution, security and research infrastructure. Economy and gameplay effects can be attached later."
-		),
+		tr("ARCHIVE_UI_UPGRADE_BACKBONE"),
+		tr("ARCHIVE_UI_PERSISTENT_UPGRADE_SLOTS_ARE_REGISTERED_FOR"),
 	]
 	_set_detail(
-		_t("BASTION-7 // ÜS DURUMU", "BASTION-7 // BASE STATUS"),
-		_t("YEREL TESİS KONTROLÜ // ÇEVRİMDIŞI AĞ", "LOCAL FACILITY CONTROL // AIR-GAPPED"),
+		tr("ARCHIVE_UI_BASTION_7_BASE_STATUS"),
+		tr("ARCHIVE_UI_LOCAL_FACILITY_CONTROL_AIR_GAPPED"),
 		body,
 		VEX_LOGO,
 		false
 	)
-	_set_base_classification(_t("BASTION-7 // YEREL YETKİ AKTİF", "BASTION-7 // LOCAL AUTHORITY ACTIVE"))
+	_set_base_classification(tr("ARCHIVE_UI_BASTION_7_LOCAL_AUTHORITY_ACTIVE"))
 
 
 func _show_base_area(entry: Dictionary) -> void:
@@ -600,26 +551,26 @@ func _show_base_area(entry: Dictionary) -> void:
 	var required_stage := int(entry.get("required_stage", 0))
 	var unlocked := BaseManager.is_area_unlocked(area_id)
 	var can_unlock := BaseManager.can_unlock_area(area_id, GameState.campaign_stage)
-	var status := _t("YETKİ KİLİTLİ", "CLEARANCE LOCKED")
+	var status := tr("ARCHIVE_UI_CLEARANCE_LOCKED")
 	if unlocked:
-		status = _t("ERİŞİM AÇIK", "ACCESS ONLINE")
+		status = tr("ARCHIVE_UI_ACCESS_ONLINE")
 	elif can_unlock:
-		status = _t("AKTİVASYON HAZIR", "ACTIVATION READY")
+		status = tr("ARCHIVE_UI_ACTIVATION_READY")
 	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("BÖLGE DURUMU", "AREA STATUS"),
+		tr("ARCHIVE_UI_AREA_STATUS"),
 		status,
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("TESİS KAYDI", "FACILITY RECORD"),
+		tr("ARCHIVE_UI_FACILITY_RECORD"),
 		_base_localized(entry, "description"),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s" % [
-		_t("YETKİ KOŞULU", "CLEARANCE REQUIREMENT"),
+		tr("ARCHIVE_UI_CLEARANCE_REQUIREMENT"),
 		_get_base_stage_requirement_text(required_stage),
 	]
 	_set_detail(
 		str(entry.get("title", "FACILITY")),
-		_t("BASTION-7 // BÖLGE ERİŞİM AĞI", "BASTION-7 // AREA ACCESS GRID"),
+		tr("ARCHIVE_UI_BASTION_7_AREA_ACCESS_GRID"),
 		body,
 		VEX_LOGO,
 		false
@@ -627,19 +578,19 @@ func _show_base_area(entry: Dictionary) -> void:
 	_set_base_classification(status)
 	if unlocked:
 		_configure_base_action(
-			_t("ERİŞİM AÇIK", "ACCESS ONLINE"),
+			tr("ARCHIVE_UI_ACCESS_ONLINE"),
 			false,
-			_t("Kapı ağı bu yetkiyi canlı olarak uyguluyor.", "The door network is actively enforcing this authorization.")
+			tr("ARCHIVE_UI_THE_DOOR_NETWORK_IS_ACTIVELY_ENFORCING")
 		)
 	elif can_unlock:
 		_configure_base_action(
-			_t("ERİŞİMİ AÇ", "RESTORE ACCESS"),
+			tr("ARCHIVE_UI_RESTORE_ACCESS"),
 			true,
-			_t("Aktivasyon kampanya kaydına yazılır ve ilgili kapı anında yetkilendirilir.", "Activation is written to the campaign save and the linked door is authorized immediately.")
+			tr("ARCHIVE_UI_ACTIVATION_IS_WRITTEN_TO_THE_CAMPAIGN")
 		)
 	else:
 		_configure_base_action(
-			_t("YETKİ KİLİTLİ", "CLEARANCE LOCKED"),
+			tr("ARCHIVE_UI_CLEARANCE_LOCKED"),
 			false,
 			_get_base_stage_requirement_text(required_stage)
 		)
@@ -650,36 +601,33 @@ func _show_base_lighting(entry: Dictionary) -> void:
 	var active := mode == BaseManager.get_lighting_mode()
 	var energy_percent := roundi(float(entry.get("energy_multiplier", 1.0)) * 100.0)
 	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("AYDINLATMA PROFİLİ", "LIGHTING PROFILE"),
+		tr("ARCHIVE_UI_LIGHTING_PROFILE"),
 		_base_localized(entry, "description"),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("ANA IŞIK GÜCÜ", "PRIMARY LIGHT POWER"),
+		tr("ARCHIVE_UI_PRIMARY_LIGHT_POWER"),
 		"%d%%" % energy_percent,
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s" % [
-		_t("SAHNE OTORİTESİ", "SCENE AUTHORITY"),
-		_t(
-			"Bu profil armatürlerin sahnede tanımlanan enerji/renk ayarlarını değiştirmez; çalışma anında yalnız çarpan ve ton uygular.",
-			"This profile does not replace scene-authored fixture energy/color settings; it only applies a runtime multiplier and tint."
-		),
+		tr("ARCHIVE_UI_SCENE_AUTHORITY"),
+		tr("ARCHIVE_UI_THIS_PROFILE_DOES_NOT_REPLACE_SCENE"),
 	]
 	_set_detail(
 		str(entry.get("title", "LIGHTING")),
-		_t("BASTION-7 // AYDINLATMA KONTROLÜ", "BASTION-7 // LIGHTING CONTROL"),
+		tr("ARCHIVE_UI_BASTION_7_LIGHTING_CONTROL"),
 		body,
 		VEX_LOGO,
 		false
 	)
 	_set_base_classification(
-		_t("AKTİF AYDINLATMA PROFİLİ", "ACTIVE LIGHTING PROFILE")
+		tr("ARCHIVE_UI_ACTIVE_LIGHTING_PROFILE")
 		if active
-		else _t("PROFİL UYGULAMAYA HAZIR", "PROFILE READY TO APPLY")
+		else tr("ARCHIVE_UI_PROFILE_READY_TO_APPLY")
 	)
 	_configure_base_action(
-		_t("AKTİF", "ACTIVE") if active else _t("PROFİLİ UYGULA", "APPLY PROFILE"),
+		tr("ARCHIVE_UI_ACTIVE") if active else tr("ARCHIVE_UI_APPLY_PROFILE"),
 		not active,
-		_t("Değişiklik Bastion-7 oda ışıklarına anında uygulanır.", "The change is applied to Bastion-7 room lighting immediately.")
+		tr("ARCHIVE_UI_THE_CHANGE_IS_APPLIED_TO_BASTION")
 	)
 
 
@@ -688,33 +636,30 @@ func _show_base_upgrade(entry: Dictionary) -> void:
 	var level := BaseManager.get_upgrade_level(upgrade_id)
 	var max_level := int(entry.get("max_level", 0))
 	var body := "[color=#78cbd8]%s[/color]\n%s\n\n" % [
-		_t("GELİŞTİRME HATTI", "UPGRADE TRACK"),
+		tr("ARCHIVE_UI_UPGRADE_TRACK"),
 		_base_localized(entry, "description"),
 	]
 	body += "[color=#78cbd8]%s[/color]\n%d / %d\n\n" % [
-		_t("MEVCUT SEVİYE", "CURRENT LEVEL"),
+		tr("ARCHIVE_UI_CURRENT_LEVEL"),
 		level,
 		max_level,
 	]
 	body += "[color=#78cbd8]%s[/color]\n%s" % [
-		_t("ENTEGRASYON DURUMU", "INTEGRATION STATUS"),
-		_t(
-			"Kalıcı state, seviye sınırı ve save desteği hazır. Maliyet, kaynak ekonomisi ve gerçek oynanış etkileri sonraki geliştirme sistemine bağlanacak.",
-			"Persistent state, level limits and save support are ready. Costs, resource economy and gameplay effects will be connected by a future upgrade system."
-		),
+		tr("ARCHIVE_UI_INTEGRATION_STATUS"),
+		tr("ARCHIVE_UI_PERSISTENT_STATE_LEVEL_LIMITS_AND_SAVE"),
 	]
 	_set_detail(
 		str(entry.get("title", "UPGRADE")),
-		_t("BASTION-7 // GELİŞTİRME ALTYAPISI", "BASTION-7 // UPGRADE INFRASTRUCTURE"),
+		tr("ARCHIVE_UI_BASTION_7_UPGRADE_INFRASTRUCTURE"),
 		body,
 		VEX_LOGO,
 		false
 	)
-	_set_base_classification(_t("ALTYAPI HAZIR // ETKİ BAĞLANTISI BEKLİYOR", "INFRASTRUCTURE READY // EFFECT HOOK PENDING"))
+	_set_base_classification(tr("ARCHIVE_UI_INFRASTRUCTURE_READY_EFFECT_HOOK_PENDING"))
 	_configure_base_action(
-		_t("GELİŞTİRME YAKINDA", "UPGRADES COMING LATER"),
+		tr("ARCHIVE_UI_UPGRADES_COMING_LATER"),
 		false,
-		_t("Bu düğme ekonomi ve maliyet sistemi eklendiğinde aktifleşecek.", "This action will activate when the economy and upgrade-cost system is added.")
+		tr("ARCHIVE_UI_THIS_ACTION_WILL_ACTIVATE_WHEN_THE")
 	)
 
 
@@ -744,17 +689,11 @@ func _activate_base_management_entry() -> void:
 			var area_id := _entry_string_name(entry, "id")
 			changed = BaseManager.unlock_area(area_id, GameState.campaign_stage)
 			if changed:
-				success_message = _t(
-					"BASTION-7 // BÖLGE ERİŞİMİ YENİDEN ETKİN",
-					"BASTION-7 // AREA ACCESS RESTORED"
-				)
+				success_message = tr("ARCHIVE_UI_BASTION_7_AREA_ACCESS_RESTORED")
 		&"lighting":
 			changed = BaseManager.set_lighting_mode(int(entry.get("mode", 0)))
 			if changed:
-				success_message = _t(
-					"BASTION-7 // AYDINLATMA PROFİLİ GÜNCELLENDİ",
-					"BASTION-7 // LIGHTING PROFILE UPDATED"
-				)
+				success_message = tr("ARCHIVE_UI_BASTION_7_LIGHTING_PROFILE_UPDATED")
 		_:
 			return
 	if not changed:
@@ -767,11 +706,8 @@ func _activate_base_management_entry() -> void:
 
 func _get_base_stage_requirement_text(required_stage: int) -> String:
 	if required_stage <= 0:
-		return _t("YEREL YETKİ // HAZIR", "LOCAL AUTHORITY // READY")
-	return _t(
-		"VEX-%02d OPERASYONU TAMAMLANMALI" % required_stage,
-		"VEX-%02d OPERATION MUST BE COMPLETED" % required_stage
-	)
+		return tr("ARCHIVE_UI_LOCAL_AUTHORITY_READY")
+	return tr("ARCHIVE_UI_CHAPTER_02D_MUST_BE_COMPLETED") % required_stage
 
 
 func _base_localized(entry: Dictionary, key: String) -> String:
@@ -799,9 +735,9 @@ func _set_detail(
 		else Color.WHITE
 	)
 	classification_label.text = (
-		_t("SINIFLANDIRILMIŞ // VERİ EKSİK", "CLASSIFIED // DATA INCOMPLETE")
+		tr("ARCHIVE_UI_CLASSIFIED_DATA_INCOMPLETE")
 		if classified
-		else _t("VEX ARŞİV DOĞRULAMASI // GEÇERLİ", "VEX ARCHIVE VERIFICATION // VALID")
+		else tr("ARCHIVE_UI_VEX_ARCHIVE_VERIFICATION_VALID")
 	)
 	classification_label.add_theme_color_override(
 		"font_color",
@@ -915,32 +851,17 @@ func _get_universe_name(universe_id: StringName) -> String:
 func _get_universe_recommendation(universe_id: StringName) -> String:
 	match universe_id:
 		&"korvath":
-			return _t(
-				"Ağır hedeflerin hazırlık pencerelerini kullan; termal alanlarla projectile çizgilerinin aynı anda hareket alanını kapatmasına izin verme.",
-				"Exploit heavy-unit windups and prevent thermal zones from overlapping projectile lanes until your movement space collapses."
-			)
+			return tr("ARCHIVE_UI_EXPLOIT_HEAVY_UNIT_WINDUPS_AND_PREVENT")
 		&"thornwild":
-			return _t(
-				"Hareket koridorunu koru. Charge, zehir alanı ve hibrit avcılar aynı anda baskı kurduğunda hasardan önce pozisyonu çöz.",
-				"Preserve movement corridors. When charges, toxic zones and hybrid hunters overlap, solve positioning before chasing damage."
-			)
+			return tr("ARCHIVE_UI_PRESERVE_MOVEMENT_CORRIDORS_WHEN_CHARGES_TOXIC")
 		&"vaskari":
-			return _t(
-				"Tek hedef gücüne değil formasyona bak. Komuta/destek ve uzun menzil rollerini güvenli fırsatta önce kır.",
-				"Read the formation rather than individual strength. Break command/support and ranged roles first whenever a safe opportunity exists."
-			)
+			return tr("ARCHIVE_UI_READ_THE_FORMATION_RATHER_THAN_INDIVIDUAL")
 		&"nhal":
-			return _t(
-				"Bilgi kaybını ölümcül kabul et. Son güvenli konumu, ses bilgisini ve açı kontrolünü görüş bozulduğunda önceliklendir.",
-				"Treat information loss as lethal. Prioritize the last safe position, audio cues and angle checks whenever visibility is disrupted."
-			)
+			return tr("ARCHIVE_UI_TREAT_INFORMATION_LOSS_AS_LETHAL_PRIORITIZE")
 		&"aether":
-			return _t(
-				"Düşmanın mevcut konumundan çok açabileceği açıları izle. Enerji fanları ve phase step için geniş kaçış payı bırak.",
-				"Track possible attack angles more than current positions. Reserve broad dodge space for energy fans and phase steps."
-			)
+			return tr("ARCHIVE_UI_TRACK_POSSIBLE_ATTACK_ANGLES_MORE_THAN")
 		_:
-			return _t("Yeterli veri yok.", "Insufficient data.")
+			return tr("ARCHIVE_UI_INSUFFICIENT_DATA")
 
 
 func _build_rift_network_entries() -> Array[Dictionary]:
@@ -948,43 +869,30 @@ func _build_rift_network_entries() -> Array[Dictionary]:
 	var discovered := _get_discovered_database_count()
 	return [
 		{
-			"title": _t("YARIK AĞI // GENEL DURUM", "RIFT NETWORK // OVERVIEW"),
-			"meta": _t("BASTION-7 İZOLE TELEMETRİ", "BASTION-7 ISOLATED TELEMETRY"),
-			"body": _t(
-				"Yarık Ağı, VEX reaktörlerini birbirine bağlayan boyutlar arası enerji omurgasıdır. %s\n\nDOĞRULANAN GERÇEKLİK: %d / %d\nDOĞRULANAN XENO VARLIK: %d / %d\nKAMPANYA AŞAMASI: %02d" % [
-					_rift_network_status_line(true),
+			"title": tr("ARCHIVE_UI_RIFT_NETWORK_OVERVIEW"),
+			"meta": tr("ARCHIVE_UI_BASTION_7_ISOLATED_TELEMETRY"),
+			"body": tr("ARCHIVE_UI_THE_RIFT_NETWORK_IS_THE_INTERDIMENSIONAL") % [
+					_rift_network_status_line(),
 					known_universes,
 					ArchiveDB.UNIVERSES.size(),
 					discovered,
 					ArchiveDB.ENEMIES.size(),
 					GameState.campaign_stage,
 				],
-				"The Rift Network is the interdimensional energy backbone connecting VEX reactors. %s\n\nVERIFIED REALITIES: %d / %d\nVERIFIED XENO ENTITIES: %d / %d\nCAMPAIGN STAGE: %02d" % [
-					_rift_network_status_line(false),
-					known_universes,
-					ArchiveDB.UNIVERSES.size(),
-					discovered,
-					ArchiveDB.ENEMIES.size(),
-					GameState.campaign_stage,
-				]
-			),
 		},
 		{
-			"title": _t("BOYUTSAL KAYNAK MATRİSİ", "DIMENSIONAL EXTRACTION MATRIX"),
-			"meta": _t("SIFIR KAYNAK REAKTÖRÜ // NEDENSELLİK", "ZERO SOURCE REACTOR // CAUSALITY"),
+			"title": tr("ARCHIVE_UI_DIMENSIONAL_EXTRACTION_MATRIX"),
+			"meta": tr("ARCHIVE_UI_ZERO_SOURCE_REACTOR_CAUSALITY"),
 			"body": _build_extraction_matrix(),
 		},
 		{
-			"title": _t("BASTION-7 // FİZİKSEL AĞ İZOLASYONU", "BASTION-7 // NETWORK AIR GAP"),
-			"meta": _t("FİZİKSEL AĞ İZOLASYONU // AKTİF", "PHYSICAL NETWORK ISOLATION // ACTIVE"),
-			"body": _t(
-				"Bastion-7 ana Yarık Ağı'ndan fiziksel olarak ayrıdır. Bu izolasyon üssü güvenli operasyon, arşiv ve yeniden konuşlanma merkezi hâline getirir. Terminal verileri saha kayıtlarından yerel olarak derlenir.",
-				"Bastion-7 is physically separated from the main Rift Network. This isolation makes the base a secure operations, archive and redeployment center. Terminal data is compiled locally from field records."
-			),
+			"title": tr("ARCHIVE_UI_BASTION_7_NETWORK_AIR_GAP"),
+			"meta": tr("ARCHIVE_UI_PHYSICAL_NETWORK_ISOLATION_ACTIVE"),
+			"body": tr("ARCHIVE_UI_BASTION_7_IS_PHYSICALLY_SEPARATED_FROM"),
 		},
 		{
-			"title": _t("ANA HEDEF // BASTION DİREKTİFİ", "PRIMARY OBJECTIVE // BASTION DIRECTIVE"),
-			"meta": _t("STRATEJİK DİREKTİF", "STRATEGIC DIRECTIVE"),
+			"title": tr("ARCHIVE_UI_PRIMARY_OBJECTIVE_BASTION_DIRECTIVE"),
+			"meta": tr("ARCHIVE_UI_STRATEGIC_DIRECTIVE"),
 			"body": _rift_network_directive(),
 		},
 	]
@@ -996,41 +904,20 @@ const RIFT_SELF_BALANCING_STAGE := 20
 const FIRST_ANCHOR_STAGE := 5
 
 
-func _rift_network_status_line(turkish: bool) -> String:
+func _rift_network_status_line() -> String:
 	if GameState.campaign_stage >= RIFT_SELF_BALANCING_STAGE:
-		return (
-			"Yerel geçit kapansa bile ağ çalışıyorsa başka bir düğüm yeniden açılabilir."
-			if turkish
-			else "Even if a local passage closes, another node can reopen while the network remains active."
-		)
+		return tr("ARCHIVE_UI_EVEN_IF_A_LOCAL_PASSAGE_CLOSES")
 	if GameState.campaign_stage >= 3:
-		return (
-			"Selin Erdem'in analizine göre ağ tek bir reaktör değil; farklı kaynak düğümleri ortak bir senkronizasyon sistemi kullanıyor."
-			if turkish
-			else "Selin Erdem's analysis shows the network is not a single reactor; separate source nodes share a common synchronization system."
-		)
-	return (
-		"Ağın ölçeği ve kaynak düğümleri henüz haritalanmadı."
-		if turkish
-		else "The network's scale and source nodes have not been mapped yet."
-	)
+		return tr("ARCHIVE_UI_SELIN_ERDEM_S_ANALYSIS_SHOWS_THE")
+	return tr("ARCHIVE_UI_THE_NETWORK_S_SCALE_AND_SOURCE")
 
 
 func _rift_network_directive() -> String:
 	if GameState.campaign_stage >= RIFT_SELF_BALANCING_STAGE:
-		return _t(
-			"Tek tek yarıkları kapatmak kalıcı çözüm değildir. Nihai amaç enerji çekimini besleyen düğümleri devre dışı bırakmak, kaynak gerçeklik bağlantılarını çözmek ve Yarık Ağı'nın merkezini kalıcı olarak susturmaktır.",
-			"Closing individual rifts is not a permanent solution. The final objective is to disable the nodes feeding extraction, resolve origin-reality links and permanently silence the core of the Rift Network."
-		)
+		return tr("ARCHIVE_UI_CLOSING_INDIVIDUAL_RIFTS_IS_NOT_A")
 	if GameState.campaign_stage >= FIRST_ANCHOR_STAGE:
-		return _t(
-			"Kaynak düğümlerini ve Dünya'daki ankrajlarını tespit edip enerji çekimini kesmek. Kapatılan her ankrajdan sonra ağın tepkisi izlenecek.",
-			"Locate source nodes and their anchors on Earth and cut the extraction. The network's response will be monitored after each anchor is shut down."
-		)
-	return _t(
-		"Hayatta kalanları bulmak, VEX tesis kayıtlarını güvenceye almak ve kırılmaları besleyen kaynağı tespit etmek.",
-		"Find survivors, secure VEX facility records and identify the source feeding the fractures."
-	)
+		return tr("ARCHIVE_UI_LOCATE_SOURCE_NODES_AND_THEIR_ANCHORS")
+	return tr("ARCHIVE_UI_FIND_SURVIVORS_SECURE_VEX_FACILITY_RECORDS")
 
 
 func _build_extraction_matrix() -> String:
@@ -1043,8 +930,8 @@ func _build_extraction_matrix() -> String:
 			])
 		else:
 			lines.append("[color=#7a4440]%s[/color]\n%s" % [
-				_t("SINIFLANDIRILMAMIŞ GERÇEKLİK", "UNCLASSIFIED REALITY"),
-				_t("Kaynak profili doğrulanmadı.", "Extraction profile unverified."),
+				tr("ARCHIVE_UI_UNCLASSIFIED_REALITY"),
+				tr("ARCHIVE_UI_EXTRACTION_PROFILE_UNVERIFIED"),
 			])
 	return "\n\n".join(lines)
 
@@ -1070,6 +957,3 @@ func _on_language_changed(_locale: String) -> void:
 	_preview_cache.clear()
 	_refresh_all()
 
-
-func _t(turkish: String, english: String) -> String:
-	return turkish if ArchiveDB.is_turkish() else english

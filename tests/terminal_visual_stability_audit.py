@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from translation_text import with_translations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE_SCRIPT = ROOT / "scripts/ui/vex_archive_terminal.gd"
@@ -8,14 +10,14 @@ HUB_SCRIPT = ROOT / "scripts/hub/hub_terminal.gd"
 
 
 def test_archive_section_switch_casts_int_back_to_enum() -> None:
-    script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
+    script = with_translations(ARCHIVE_SCRIPT.read_text(encoding="utf-8"))
     assert "func _select_section(section: int) -> void:" in script
     assert "_current_section = section as Section" in script
 
 
 def test_archive_columns_fit_1280_and_dynamic_labels_wrap() -> None:
     scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
-    script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
+    script = with_translations(ARCHIVE_SCRIPT.read_text(encoding="utf-8"))
 
     assert "custom_minimum_size = Vector2(220, 0)" in scene
     assert "custom_minimum_size = Vector2(340, 0)" in scene
@@ -47,7 +49,7 @@ def test_archive_detail_labels_wrap_instead_of_being_clipped() -> None:
 
 def test_archive_header_uses_compact_two_line_summary() -> None:
     scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
-    script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
+    script = with_translations(ARCHIVE_SCRIPT.read_text(encoding="utf-8"))
 
     assert "custom_minimum_size = Vector2(140, 58)" in scene
     assert "custom_minimum_size = Vector2(330, 0)" in scene
