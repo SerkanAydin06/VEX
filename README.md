@@ -40,6 +40,18 @@ tools/validate.sh --godot   # + Godot import, integrity_test ve runtime testleri
 Godot PATH'te değilse `GODOT=/yol/godot tools/validate.sh --godot`. Claude Code on the web
 oturumlarında Godot 4.7.1 `.claude/hooks/session-start.sh` ile otomatik kurulur.
 
+### Push öncesi otomatik doğrulama
+
+Bir kez çalıştır (Windows'ta Git Bash / Git for Windows yeterli):
+
+```bash
+git config core.hooksPath tools/git-hooks
+```
+
+Bundan sonra `git push`, gönderilen commit'ler `tools/validate.sh`'ten geçmezse durur. Yalnız `.md`
+veya `.claude/` değiştiyse ya da aynı commit zaten doğrulandıysa denetim atlanır. Acil durumda
+`git push --no-verify`. Claude Code web oturumları bu ayarı otomatik yapar.
+
 ## Windows export
 
 ```bash

@@ -56,7 +56,15 @@ fi
 
 if [ "$failed" -eq 0 ]; then
   echo "VEX VALIDATION PASSED"
+  # Temiz çalışma kopyası doğrulandıysa ağacını damgala (pre-push tekrar çalıştırmaz).
+  stamp="$(git rev-parse --git-path vex-validated-tree 2>/dev/null)"
+  if [ -n "$stamp" ] && [ -z "$(git status --porcelain 2>/dev/null)" ]; then
+    git rev-parse HEAD^{tree} > "$stamp"
+  elif [ -n "$stamp" ]; then
+    rm -f "$stamp"
+  fi
 else
   echo "VEX VALIDATION FAILED ($failed)"
+  rm -f "$(git rev-parse --git-path vex-validated-tree 2>/dev/null)"
   exit 1
 fi
