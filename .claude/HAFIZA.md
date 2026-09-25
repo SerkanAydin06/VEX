@@ -11,8 +11,9 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - İşleri **sırayla**, her birini ayrı PR olarak yap.
 - Jeton/verim önemli: gereksiz keşif yapma, `tools/validate.sh` özetini kullan, büyük skill paketi / MCP ekleme.
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
+- Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#88)
+## Yapılanlar (2026-09, PR #80–#90)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -23,6 +24,8 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #86 Ara son ekranı "Ana Menü"ye rağmen kayıtta bekler.
 - #87 Hiç çalışmayan 25 pytest tarzı denetim (175 test) çalışır hâle getirildi; bölüm yapı kurulumu `VexBaseLevel`'da birleştirildi.
 - #88 `CLAUDE.md`, `tools/validate.sh`, Godot kuran session-start hook'u.
+- #89 Oturumlar arası hafıza (`.claude/HAFIZA.md`, `CLAUDE.md`'den yüklenir).
+- #90 Otomatik hafıza hook'ları: `memory-reminder.sh` (UserPromptSubmit) ve `memory-guard.sh` (Stop, `HAFIZA.md` güncellenmeden bitirmeyi bir kez durdurur).
 
 ## Kararlar (tekrar tartışma)
 

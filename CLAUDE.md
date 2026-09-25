@@ -10,6 +10,13 @@ Godot **4.7.1** (GL Compatibility, yalnız Windows export) ile 2.5D sprite düş
 
 Kullanıcı "kaldığımız yerden devam" derse `HAFIZA.md` → "Açık işler"deki ilk maddeyle başla. **Her iş bitince `HAFIZA.md`'yi aynı PR içinde güncelle** (yapılanı ekle, açık işten düş, yeni karar/ders yaz). Kararlar bölümündeki konuları yeniden tartışma.
 
+**Otomatik hafıza — kullanıcı söylemeden yap:** Aşağıdakilerden biri ortaya çıkınca hemen `HAFIZA.md`'nin ilgili bölümüne tek satır ekle:
+- kullanıcının kalıcı tercihi ya da çalışma biçimi ("hep böyle yap", "şunu sorma") → Kullanıcı tercihleri
+- verilen tasarım/denge/kanon kararı veya "bilinçli" denen davranış → Kararlar
+- birden fazla deneme gerektiren hata, tuzak, ortam sorunu → Öğrenilen dersler
+- yeni fark edilen ama bu işte yapılmayan iş → Açık işler (sona)
+Geçici ayrıntı, kodda/git geçmişinde zaten duran bilgi yazılmaz. Hook'lar: `memory-reminder.sh` her mesajda bunu hatırlatır; `memory-guard.sh` dosya değiştiği hâlde `HAFIZA.md` güncellenmemişse bitirmeyi bir kez durdurur.
+
 ## Doğrulama (her değişiklikten sonra)
 
 - `tools/validate.sh` → 107+ Python denetimi paralel, yalnız hataları yazar (~2 dk).
