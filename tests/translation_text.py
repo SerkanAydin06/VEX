@@ -37,6 +37,10 @@ def assert_ui_text_in_translations(script: str, min_keys: int) -> None:
     translations = load_translations()
     assert "func _t(" not in script
     assert re.search(r"(?<![\w.])_t\(", script) is None
+    # Oyuncu metnini dile göre seçen kalıplar (veri soneki "_tr"/"_en" seçimi hariç).
+    assert re.search(r'"[^"_][^"]*" if [^\n]*begins_with\("tr"\)', script) is None
+    assert re.search(r"if (?:not )?(?:is_)?turkish\b", script) is None
+    assert re.search(r'if TranslationServer\.get_locale\(\)\.begins_with\("tr"\):', script) is None
     keys = set(re.findall(r'\btr\("([A-Z0-9_]+)"\)', script))
     assert len(keys) >= min_keys, len(keys)
     missing = sorted(key for key in keys if key not in translations)

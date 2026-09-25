@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from translation_text import load_translations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME_STATE = ROOT / "scripts" / "autoload" / "game_state.gd"
@@ -130,7 +132,11 @@ def test_bastion_return_feedback_matches_completed_stage_and_selins_presence() -
 
 def test_bastion_world_terminal_uses_chapter_labels_not_retired_vex_numbers() -> None:
     terminal = _read(HUB_TERMINAL)
-    assert 'line_1 = "BÖLÜM 01 // BÖLÜM 02 // BÖLÜM 03" if turkish else "CHAPTER 01 // CHAPTER 02 // CHAPTER 03"' in terminal
+    assert 'line_1 = tr("HUB_TERMINAL_UI_CHAPTER_01_CHAPTER_02_CHAPTER_03")' in terminal
+    assert load_translations()["HUB_TERMINAL_UI_CHAPTER_01_CHAPTER_02_CHAPTER_03"] == (
+        "BÖLÜM 01 // BÖLÜM 02 // BÖLÜM 03",
+        "CHAPTER 01 // CHAPTER 02 // CHAPTER 03",
+    )
     assert 'line_1 = "VEX-01 // VEX-02 // VEX-03"' not in terminal
 
 

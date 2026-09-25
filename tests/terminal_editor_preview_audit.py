@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from translation_text import with_translations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MISSION_SCRIPT = ROOT / "scripts/ui/terminal_menu.gd"
@@ -20,7 +22,7 @@ def test_terminal_ui_scenes_have_safe_editor_preview_mode() -> None:
 
 
 def test_physical_terminal_uses_runtime_live_subviewport_content() -> None:
-    script = HUB_SCRIPT.read_text(encoding="utf-8")
+    script = with_translations(HUB_SCRIPT.read_text(encoding="utf-8"))
 
     assert not script.startswith("@tool\n")
     assert "WORLD_SCREEN_SIZE := Vector2i(640, 360)" in script

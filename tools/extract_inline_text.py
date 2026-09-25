@@ -32,6 +32,21 @@ def repl_pair(tr_,en):
     new[k]=pair; by_pair[pair]=k
     return 'tr("%s")'%k
 
+# Ön adım: dil koşullu kalıpları _t("A", "B") biçimine indir.
+COND=r'(?:turkish|is_turkish|TranslationServer\.get_locale\(\)\.begins_with\("tr"\))'
+VAL=STR+r'(?:[ \t]*%[ \t]*[^\n]+?)?'
+src=re.sub(r'\(\s*('+STR+r')\s+if\s+'+COND+r'\s+else\s+('+STR+r')\s*\)', r'_t(\1, \2)', src)
+src=re.sub(r'('+STR+r')[ \t]+if[ \t]+'+COND+r'[ \t]+else[ \t]+('+STR+r')', r'_t(\1, \2)', src)
+src=re.sub(r'if '+COND+r':\n(\t+)return ('+VAL+r')\n\t*return ('+VAL+r')\n',
+           lambda m: 'return _t(%s, %s)\n' % (m.group(2), m.group(3)), src)
+src=re.sub(r'if '+COND+r':\n(\t+)([\w.]+) = ('+VAL+r')\n(\t*)else:\n\t+\2 = ('+VAL+r')\n',
+           lambda m: '%s = _t(%s, %s)\n' % (m.group(2), m.group(3), m.group(5)), src)
+for var in ("turkish", "is_turkish"):
+    decl=re.compile(r'\n\t+var '+var+r' := [^\n]+')
+    if decl.search(src) and not re.search(r'\b'+var+r'\b', decl.sub('', src)):
+        src=decl.sub('', src)
+
+
 def scan_args(text,i):
     # i: index after '_t(' ; returns (args list, end index after ')')
     depth=0; args=[]; cur=i; j=i; n=len(text)

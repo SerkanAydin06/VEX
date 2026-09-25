@@ -124,7 +124,8 @@ def test_information_terminal_routes_to_archive_without_changing_deployment_term
 
     assert "terminal_mode = 1" in deployment_block
     assert "terminal_mode =" not in center_block
-    assert 'return "VEX ANA TERMİNALİ"' in hub_script
+    assert 'return tr("HUB_TERMINAL_UI_VEX_MAIN_TERMINAL")' in hub_script
+    assert load_translations()["HUB_TERMINAL_UI_VEX_MAIN_TERMINAL"][0] == "VEX ANA TERMİNALİ"
 
 
 def test_archive_ui_is_viewport_relative_and_terminal_colliders_remain_canonical() -> None:

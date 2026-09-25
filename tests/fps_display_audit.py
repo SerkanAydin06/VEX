@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
+from translation_text import load_translations
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -37,7 +39,8 @@ assert 'vsync_check.text = _toggle_text(vsync_check.button_pressed)' in settings
 assert 'fps_check.text = _toggle_text(fps_check.button_pressed)' in settings_script
 assert 'shake_check.text = _toggle_text(shake_check.button_pressed)' in settings_script
 assert 'head_bob_check.text = _toggle_text(head_bob_check.button_pressed)' in settings_script
-assert 'return "KAPALI" if TranslationServer.get_locale().begins_with("tr") else "OFF"' in settings_script
+assert 'return tr("SETTINGS_UI_OFF")' in settings_script
+assert load_translations()["SETTINGS_UI_OFF"] == ("KAPALI", "OFF")
 
 assert '[node name="FpsLabel" type="Label"' in settings_scene
 assert 'text = "FPS"' in settings_scene

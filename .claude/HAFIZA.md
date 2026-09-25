@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#95)
+## Yapılanlar (2026-09, PR #80–#96)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -31,25 +31,26 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #93 Silah arşivi terminali metinleri (30 anahtar, `WEAPON_UI_*`) taşındı; taşınan betikler `tests/inline_text_migration_audit.py` listesinde korunuyor.
 - #94 Bastion üs yönetimi paneli metinleri (22 yeni anahtar, `BASE_UI_*`) taşındı.
 - #95 Saha kaydı köprüsü metinleri (8 anahtar, `FIELD_RECORD_UI_*`) taşındı; `scripts/` içinde `_t()` yardımcısı kalmadı.
+- #96 Kalan dil koşullu metinler (`settings_panel`, `terminal_menu`, `hub_terminal`, `game_state`; `SETTINGS_UI_*`, `TERMINAL_UI_*`, `HUB_TERMINAL_UI_*`, `SAVE_UI_*`) taşındı; dönüştürücü artık `"A" if turkish else "B"` ve if/return kalıplarını da çeviriyor. Koda gömülü metin taşıma işi bitti.
 
 ## Kararlar (tekrar tartışma)
 
 - Doku boyutu sorun değil: yalnız Windows/D3D11 (ANGLE), sınır ≥8192 px; en büyük sayfa 5376 px.
 - Xeno arşiv keşifleri Yeni Oyun'da sıfırlanmaz — bilinçli (belgede yazılı). Saha kayıtları sıfırlanır.
 - Loom Herald yalnız Level Test sandbox prototipi; kampanyada/arşivde yok.
-- Kullanılmayan eski prototip çeviri satırları henüz silinmedi (açık iş 2).
+- Kullanılmayan eski prototip çeviri satırları henüz silinmedi (açık iş 1).
 
 ## Açık işler (sırayla)
 
-1. **Kalan dil kontrolleri:** oyuncuya görünen `"TR" if ...begins_with("tr") else "EN"` metinleri `tr()`'ye taşı: `settings_panel.gd` (82, 181), `terminal_menu.gd` (247, 270), `hub_terminal.gd` (119, 121, 290), `game_state.gd` (119, 125). Veri sözlüklerindeki `_tr/_en` sonek seçimi (`vex_archive_database`, `vex_field_record_database`, dashboard 313) veri kalıbıdır, kalır. Tek PR.
-2. **Temizlik:** kullanılmayan `LEVEL0x_*`, `HUB_VEX0x_*`, `SURVIVOR_SELIN_DIALOGUE_STAGE2/3`, `TERMINAL_FACILITY_ASH_MINE`, `MAIN_CREDITS_BODY`, `MAIN_CONFIRM_BODY` satırları (bağlı denetimleri de güncelle); `level_01_training_flow.gd` kapının iç alanlarını değiştirmek yerine `VexDoor` açık metodu kullansın; `furnice`/`furnace` adlandırması (dosya adları değişmez, yalnız oyuncuya dönük metin).
-3. **Karar bekliyor — Crucible Warden canı:** "elit/miniboss" ama 260 HP (Basalt Juggernaut 240). Kullanıcıya sor; Warden kampanyada Bölüm 5'te.
+1. **Temizlik:** kullanılmayan `LEVEL0x_*`, `HUB_VEX0x_*`, `SURVIVOR_SELIN_DIALOGUE_STAGE2/3`, `TERMINAL_FACILITY_ASH_MINE`, `MAIN_CREDITS_BODY`, `MAIN_CONFIRM_BODY` satırları (bağlı denetimleri de güncelle); `level_01_training_flow.gd` kapının iç alanlarını değiştirmek yerine `VexDoor` açık metodu kullansın; `furnice`/`furnace` adlandırması (dosya adları değişmez, yalnız oyuncuya dönük metin).
+2. **Karar bekliyor — Crucible Warden canı:** "elit/miniboss" ama 260 HP (Basalt Juggernaut 240). Kullanıcıya sor; Warden kampanyada Bölüm 5'te.
 
 ## Öğrenilen dersler
 
 - Headless Godot denemelerini scratchpad kopyasında yap (`git ls-files -co --exclude-standard | tar …`), depoya ekleme.
 - Denetim başarısız olursa önce `main`'de de başarısız mı bak: eskiden bozuk mu, yeni mi ayırt et.
 - Değişiklik denetim sözleşmesini bozuyorsa, oyunun mu testin mi doğru olduğuna karar ver ve doğru tarafı düzelt.
+- Veri sözlüklerindeki `_tr`/`_en` alan seçimi (`vex_archive_database`, `vex_field_record_database`) çeviri dosyasına taşınmaz; veri kalıbıdır.
 - `@tool` terminal betiklerinde `tr()` kullanımı mevcut kalıp (`terminal_menu.gd`); editör önizlemesinde anahtar görünmesi kabul.
 - Push'tan önce `tools/validate.sh` çalıştırmak yeterli: başarılı ve temiz çalışma kopyası ağacı damgalar, pre-push hook'u tekrar çalıştırmaz.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).
