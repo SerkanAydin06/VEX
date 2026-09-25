@@ -89,10 +89,7 @@ func _refresh_records() -> void:
 	# dokunmaz; Records sekmesi sadece mevcut index/detail kayıt alanını yeniler.
 	var record_ids := BaseManager.get_discovered_field_record_ids()
 	if _section_title != null:
-		_section_title.text = _t(
-			"SAHA KAYITLARI // %d / %d" % [record_ids.size(), RecordDB.TOTAL_CAMPAIGN_RECORDS],
-			"FIELD RECORDS // %d / %d" % [record_ids.size(), RecordDB.TOTAL_CAMPAIGN_RECORDS]
-		)
+		_section_title.text = tr("FIELD_RECORD_UI_FIELD_RECORDS") % [record_ids.size(), RecordDB.TOTAL_CAMPAIGN_RECORDS]
 
 	if record_ids.is_empty():
 		_show_empty_state()
@@ -141,25 +138,15 @@ func _select_record(record_id: StringName, selected_button: Button) -> void:
 	if _detail_title != null:
 		_detail_title.text = RecordDB.localized(entry, "title")
 	if _detail_meta != null:
-		_detail_meta.text = _t(
-			"SAHA KAYDI // BÖLÜM %02d // %s // %s" % [
-				int(entry.get("chapter", 0)),
-				str(entry.get("room", "—")),
-				RecordDB.localized(entry, "category"),
-			],
-			"FIELD RECORD // CHAPTER %02d // %s // %s" % [
+		_detail_meta.text = tr("FIELD_RECORD_UI_FIELD_RECORD_CHAPTER_02D") % [
 				int(entry.get("chapter", 0)),
 				str(entry.get("room", "—")),
 				RecordDB.localized(entry, "category"),
 			]
-		)
 	if _detail_body != null:
 		_detail_body.text = RecordDB.localized(entry, "body")
 	if _classification_label != null:
-		_classification_label.text = _t(
-			"SAHA VERİSİ // YEREL ARŞİVE AKTARILDI",
-			"FIELD DATA // COPIED TO LOCAL ARCHIVE"
-		)
+		_classification_label.text = tr("FIELD_RECORD_UI_FIELD_DATA_COPIED_TO_LOCAL_ARCHIVE")
 		_classification_label.add_theme_color_override("font_color", Color(0.30, 1.0, 0.62, 1.0))
 
 
@@ -168,28 +155,19 @@ func _show_empty_state() -> void:
 		_detail_preview.texture = VEX_LOGO
 		_detail_preview.modulate = Color(0.42, 0.78, 0.82, 0.32)
 	if _detail_title != null:
-		_detail_title.text = _t("SAHA KAYDI BULUNMADI", "NO FIELD RECORDS FOUND")
+		_detail_title.text = tr("FIELD_RECORD_UI_NO_FIELD_RECORDS_FOUND")
 	if _detail_meta != null:
-		_detail_meta.text = _t("SAHADA VERİ TERMİNALİ ARA", "SEARCH FOR DATA TERMINALS IN THE FIELD")
+		_detail_meta.text = tr("FIELD_RECORD_UI_SEARCH_FOR_DATA_TERMINALS_IN_THE")
 	if _detail_body != null:
-		_detail_body.text = _t(
-			"Bulduğun saha kayıtları burada kalıcı olarak listelenecek. Ana kampanyada toplam 90 kayıt planlandı; kilitli veya bulunmamış kayıtların başlıkları gösterilmez.",
-			"Recovered field records will be listed here permanently. The main campaign targets 90 records; titles for locked or undiscovered records are not shown."
-		)
+		_detail_body.text = tr("FIELD_RECORD_UI_RECOVERED_FIELD_RECORDS_WILL_BE_LISTED")
 	if _classification_label != null:
-		_classification_label.text = _t("VERİ BEKLİYOR", "AWAITING DATA")
+		_classification_label.text = tr("FIELD_RECORD_UI_AWAITING_DATA")
 		_classification_label.add_theme_color_override("font_color", Color(1.0, 0.52, 0.24, 1.0))
 
 
 func _record_button_text(entry: Dictionary) -> String:
 	return "%s\n// %s" % [
 		RecordDB.localized(entry, "title"),
-		_t(
-			"BÖLÜM %02d // %s" % [int(entry.get("chapter", 0)), str(entry.get("room", "—"))],
-			"CHAPTER %02d // %s" % [int(entry.get("chapter", 0)), str(entry.get("room", "—"))]
-		),
+		tr("FIELD_RECORD_UI_CHAPTER_02D") % [int(entry.get("chapter", 0)), str(entry.get("room", "—"))],
 	]
 
-
-func _t(turkish: String, english: String) -> String:
-	return turkish if TranslationServer.get_locale().begins_with("tr") else english

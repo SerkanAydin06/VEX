@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from translation_text import with_translations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DB = ROOT / "scripts" / "data" / "vex_field_record_database.gd"
@@ -76,7 +78,7 @@ def test_field_terminal_uses_campaign_discovery_and_canonical_database_text() ->
 
 
 def test_main_terminal_records_bridge_lists_only_discovered_field_records() -> None:
-    bridge = _read(BRIDGE)
+    bridge = with_translations(_read(BRIDGE))
     assert "BaseManager.get_discovered_field_record_ids()" in bridge
     assert "RecordDB.TOTAL_CAMPAIGN_RECORDS" in bridge
     assert "SAHA KAYITLARI" in bridge
