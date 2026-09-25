@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tools/validate.sh:*)",
+      "Bash(./tools/validate.sh:*)",
+      "Bash(python3 tests/:*)",
+      "Bash(python tests/:*)",
+      "Bash(godot --headless:*)",
+      "Bash(godot --version)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
