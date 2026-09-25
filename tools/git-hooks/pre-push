@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# VEX pre-push: gönderilecek commit'ler tools/validate.sh'ten geçmeden push'u durdurur.
+# Kurulum (bir kez): git config core.hooksPath tools/git-hooks
+# Atlamak için: git push --no-verify  veya  VEX_SKIP_VALIDATE=1 git push
+set -uo pipefail
+[ "${VEX_SKIP_VALIDATE:-0}" = "1" ] && exit 0
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+zero="0000000000000000000000000000000000000000"
+changed=""
+tips=""
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue # dal silme
+  tips="$tips $local_sha"
+  if [ "$remote_sha" = "$zero" ]; then
+    base="$(git merge-base "$local_sha" origin/main 2>/dev/null || true)"
+  else
+    base="$remote_sha"
+  fi
+  if [ -n "$base" ] && git cat-file -e "$base^{commit}" 2>/dev/null; then
+    changed="$changed$(git diff --name-only "$base" "$local_sha")"$'\n'
+  else
+    changed="$changed"$'\n'"(bilinmeyen taban)"$'\n'
+  fi
+done
+[ -z "$tips" ] && exit 0
+
+# Yalnız belge / Claude ayarı değiştiyse denetime gerek yok.
+if ! printf '%s\n' "$changed" | grep -v '^$' | grep -Evq '\.md$|^\.claude/'; then
+  exit 0
+fi
+
+# Aynı ağaç (tree) zaten temiz çalışma kopyasında doğrulandıysa tekrar çalıştırma.
+stamp="$(git rev-parse --git-path vex-validated-tree)"
+if [ -f "$stamp" ]; then
+  all_ok=1
+  for sha in $tips; do
+    [ "$(git rev-parse "$sha^{tree}")" = "$(cat "$stamp")" ] || all_ok=0
+  done
+  [ "$all_ok" = 1 ] && exit 0
+fi
+
+echo "pre-push: tools/validate.sh çalışıyor (atlamak için --no-verify)..."
+if ! bash tools/validate.sh; then
+  echo "pre-push: doğrulama başarısız, push durduruldu." >&2
+  exit 1
+fi
+if [ ! -f "$stamp" ]; then
+  echo "pre-push: uyarı — commit'lenmemiş değişiklikler de doğrulandı; gönderilen hâl farklı olabilir." >&2
+fi
+exit 0

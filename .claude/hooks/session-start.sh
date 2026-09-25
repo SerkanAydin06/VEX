@@ -23,6 +23,9 @@ if [ ! -x "$GODOT_BIN" ]; then
   chmod +x "$GODOT_BIN"
 fi
 
+# Push öncesi doğrulama hook'unu etkinleştir (tools/git-hooks/pre-push).
+git -C "$PROJECT_DIR" config core.hooksPath tools/git-hooks || true
+
 mkdir -p "$HOME/.local/bin"
 ln -sf "$GODOT_BIN" "$HOME/.local/bin/godot"
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then

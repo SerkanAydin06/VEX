@@ -6,3 +6,7 @@
 *.wav binary
 *.mp3 binary
 *.ttf binary
+
+# Shell scripts and git hooks must keep LF endings on Windows checkouts.
+*.sh text eol=lf
+tools/git-hooks/* text eol=lf
