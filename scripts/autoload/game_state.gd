@@ -104,6 +104,13 @@ func continue_game() -> bool:
 	pending_player_restore_state = (saved_run_state.get("resume_player_state", {}) as Dictionary).duplicate(true)
 	current_level_start_state = pending_player_restore_state.duplicate(true)
 	run_started_msec = Time.get_ticks_msec()
+	if bool(saved_run_state.get("campaign_end_pending", false)) and current_level_path == BASTION_7_PATH:
+		# Oyuncu ara son ekranını görmeden ana menüye döndüyse, devam ederken önce
+		# o ekran açılır; ekranın devam butonu korunan Bastion sınırına geçer.
+		pending_next_level_path = current_level_path
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		get_tree().change_scene_to_file(CAMPAIGN_END_PATH)
+		return true
 	get_tree().change_scene_to_file(current_level_path)
 	return true
 
@@ -363,6 +370,7 @@ func save_campaign_progress(
 		"campaign_stage": campaign_stage,
 		"hub_selected_mission_path": hub_selected_mission_path,
 		"hub_selected_mission_label": hub_selected_mission_label,
+		"campaign_end_pending": pending_campaign_end_screen,
 		"base_state": BaseManager.capture_state(),
 	}
 	var config := ConfigFile.new()
