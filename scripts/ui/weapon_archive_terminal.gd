@@ -125,7 +125,7 @@ func _refresh_all() -> void:
 	_refresh_summary()
 	_refresh_entries()
 	_refresh_detail()
-	close_button.text = _t("TERMİNALİ KAPAT", "CLOSE TERMINAL")
+	close_button.text = tr("TERMINAL_MENU_CLOSE")
 
 
 func _refresh_tabs() -> void:
@@ -144,10 +144,7 @@ func _refresh_summary() -> void:
 				acquired += 1
 			if _weapon_controller.is_weapon_carried(definition.weapon_id):
 				carried += 1
-	archive_summary.text = _t(
-		"KAYIT %d  //  EDİNİLEN %d  //  KUŞANILAN %d" % [_all_definitions.size(), acquired, carried],
-		"RECORDS %d  //  ACQUIRED %d  //  CARRIED %d" % [_all_definitions.size(), acquired, carried]
-	)
+	archive_summary.text = tr("WEAPON_UI_RECORDS_ACQUIRED_CARRIED") % [_all_definitions.size(), acquired, carried]
 
 
 func _refresh_entries() -> void:
@@ -164,10 +161,7 @@ func _refresh_entries() -> void:
 		var empty_label := Label.new()
 		empty_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		empty_label.add_theme_font_size_override("font_size", 13)
-		empty_label.text = _t(
-			"BU KATEGORİDE AKTİF SİLAH KAYDI YOK",
-			"NO ACTIVE WEAPON RECORDS IN THIS CATEGORY"
-		)
+		empty_label.text = tr("WEAPON_UI_NO_ACTIVE_WEAPON_RECORDS_IN_THIS")
 		weapon_list.add_child(empty_label)
 		return
 	_selected_index = clampi(_selected_index, 0, _current_entries.size() - 1)
@@ -201,20 +195,17 @@ func _select_weapon(index: int) -> void:
 func _refresh_detail() -> void:
 	if _selected_index < 0 or _selected_index >= _current_entries.size():
 		detail_preview.texture = null
-		detail_title.text = _t("AKTİF KAYIT YOK", "NO ACTIVE RECORD")
+		detail_title.text = tr("WEAPON_UI_NO_ACTIVE_RECORD")
 		detail_meta.text = tr(CATEGORY_LABEL_KEYS[int(_current_category)])
-		detail_status.text = _t("VEX CEPHANELİK VERİTABANI", "VEX ARMORY DATABASE")
-		detail_body.text = _t(
-			"Bu kategori için oyuncu silah sistemine bağlı aktif bir WeaponDefinition bulunmuyor.",
-			"No active WeaponDefinition connected to the player weapon system exists for this category."
-		)
+		detail_status.text = tr("WEAPON_UI_VEX_ARMORY_DATABASE")
+		detail_body.text = tr("WEAPON_UI_NO_ACTIVE_WEAPONDEFINITION_CONNECTED_TO_THE")
 		return
 	var definition := _current_entries[_selected_index]
 	detail_preview.texture = definition.world_pickup_texture
 	detail_title.text = tr(definition.display_name)
 	detail_meta.text = "%s  //  %s %d" % [
 		tr(definition.loadout_group_label),
-		_t("YÜK YUVASI", "LOADOUT SLOT"),
+		tr("WEAPON_UI_LOADOUT_SLOT"),
 		definition.loadout_slot,
 	]
 	detail_status.text = _weapon_status_text(definition)
@@ -223,7 +214,7 @@ func _refresh_detail() -> void:
 
 func _weapon_status_text(definition: WeaponDefinition) -> String:
 	if _weapon_controller == null:
-		return _t("VERİ BAĞLANTISI YOK", "DATA LINK OFFLINE")
+		return tr("WEAPON_UI_DATA_LINK_OFFLINE")
 	if _weapon_controller.is_weapon_carried(definition.weapon_id):
 		return tr("UI_CARRIED")
 	if _weapon_controller.owns_weapon(definition.weapon_id):
@@ -253,68 +244,44 @@ func _build_weapon_detail(definition: WeaponDefinition) -> String:
 	var magazine_damage := trigger_damage * float(magazine)
 
 	var lines := PackedStringArray()
-	lines.append("[color=#78cbd8]%s[/color]" % _t("ATEŞ GÜCÜ", "FIREPOWER"))
-	lines.append(_t(
-		"Hasar / pellet: %.1f\nPellet / atış: %d\nToplam tetik hasarı: %.1f\nKafa çarpanı: ×%.2f\nTeorik DPS: %.1f\nŞarjör teorik hasarı: %.1f" % [damage_per_pellet, pellet_count, trigger_damage, headshot, theoretical_dps, magazine_damage],
-		"Damage / pellet: %.1f\nPellets / shot: %d\nTotal trigger damage: %.1f\nHeadshot multiplier: ×%.2f\nTheoretical DPS: %.1f\nTheoretical magazine damage: %.1f" % [damage_per_pellet, pellet_count, trigger_damage, headshot, theoretical_dps, magazine_damage]
-	))
+	lines.append("[color=#78cbd8]%s[/color]" % tr("WEAPON_UI_FIREPOWER"))
+	lines.append(tr("WEAPON_UI_DAMAGE_PELLET_1F_PELLETS_SHOT_TOTAL") % [damage_per_pellet, pellet_count, trigger_damage, headshot, theoretical_dps, magazine_damage])
 
-	lines.append("[color=#78cbd8]%s[/color]" % _t("ATIŞ DÖNGÜSÜ VE MÜHİMMAT", "FIRE CYCLE & AMMUNITION"))
-	lines.append(_t(
-		"Atış modu: %s\nAtış hızı: %.0f RPM\nAtış aralığı: %.3f sn\nŞarjör: %d\nYedek kapasite: %d\nDoldurma: %.2f sn\nMühimmat: %s" % [_fire_mode_text(definition), rpm, fire_interval, magazine, definition.reserve_ammo_capacity, reload_duration, _ammo_text(definition.ammo_type)],
-		"Fire mode: %s\nFire rate: %.0f RPM\nShot interval: %.3f s\nMagazine: %d\nReserve capacity: %d\nReload: %.2f s\nAmmunition: %s" % [_fire_mode_text(definition), rpm, fire_interval, magazine, definition.reserve_ammo_capacity, reload_duration, _ammo_text(definition.ammo_type)]
-	))
+	lines.append("[color=#78cbd8]%s[/color]" % tr("WEAPON_UI_FIRE_CYCLE_AMMUNITION"))
+	lines.append(tr("WEAPON_UI_FIRE_MODE_FIRE_RATE_0F_RPM") % [_fire_mode_text(definition), rpm, fire_interval, magazine, definition.reserve_ammo_capacity, reload_duration, _ammo_text(definition.ammo_type)])
 
-	lines.append("[color=#78cbd8]%s[/color]" % _t("İSABET VE MENZİL", "ACCURACY & RANGE"))
-	var range_text := _t(
-		"Maksimum menzil: %.0f m\nKalça yayılımı: %.2f°" % [definition.maximum_range, spread],
-		"Maximum range: %.0f m\nHip spread: %.2f°" % [definition.maximum_range, spread]
-	)
+	lines.append("[color=#78cbd8]%s[/color]" % tr("WEAPON_UI_ACCURACY_RANGE"))
+	var range_text := tr("WEAPON_UI_MAXIMUM_RANGE_0F_M_HIP_SPREAD") % [definition.maximum_range, spread]
 	if definition.supports_ads_pose:
-		range_text += _t(
-			"\nADS yayılımı: %.2f°\nADS FOV oranı: %.2f" % [spread * definition.ads_spread_multiplier, definition.ads_fov_multiplier],
-			"\nADS spread: %.2f°\nADS FOV ratio: %.2f" % [spread * definition.ads_spread_multiplier, definition.ads_fov_multiplier]
-		)
+		range_text += tr("WEAPON_UI_ADS_SPREAD_2F_ADS_FOV_RATIO") % [spread * definition.ads_spread_multiplier, definition.ads_fov_multiplier]
 	else:
-		range_text += _t("\nADS: DESTEKLENMİYOR", "\nADS: NOT SUPPORTED")
+		range_text += tr("WEAPON_UI_ADS_NOT_SUPPORTED")
 	if definition.damage_falloff_end_distance > definition.damage_falloff_start_distance:
-		range_text += _t(
-			"\nHasar düşüşü: %.0f–%.0f m // minimum ×%.2f" % [definition.damage_falloff_start_distance, definition.damage_falloff_end_distance, definition.damage_falloff_min_multiplier],
-			"\nDamage falloff: %.0f–%.0f m // minimum ×%.2f" % [definition.damage_falloff_start_distance, definition.damage_falloff_end_distance, definition.damage_falloff_min_multiplier]
-		)
+		range_text += tr("WEAPON_UI_DAMAGE_FALLOFF_0F_0F_M_MINIMUM") % [definition.damage_falloff_start_distance, definition.damage_falloff_end_distance, definition.damage_falloff_min_multiplier]
 	lines.append(range_text)
 
-	lines.append("[color=#78cbd8]%s[/color]" % _t("SEKME VE İMZA", "RECOIL & SIGNATURE"))
-	lines.append(_t(
-		"Dikey sekme: %.2f°\nYatay sekme: %.2f°\nMaks. dikey birikim: %.2f°\nMaks. yatay birikim: %.2f°\nSekme toparlama: %.1f°/sn\nSilah sesi çarpanı: ×%.2f\nPenetrasyon gücü: %.2f" % [vertical_recoil, horizontal_recoil, definition.recoil_max_vertical_degrees, definition.recoil_max_horizontal_degrees, definition.recoil_recovery_degrees_per_second * float(modifiers.get("recoil_recovery", 1.0)), noise, penetration],
-		"Vertical recoil: %.2f°\nHorizontal recoil: %.2f°\nMax vertical buildup: %.2f°\nMax horizontal buildup: %.2f°\nRecoil recovery: %.1f°/s\nGunshot noise multiplier: ×%.2f\nPenetration power: %.2f" % [vertical_recoil, horizontal_recoil, definition.recoil_max_vertical_degrees, definition.recoil_max_horizontal_degrees, definition.recoil_recovery_degrees_per_second * float(modifiers.get("recoil_recovery", 1.0)), noise, penetration]
-	))
+	lines.append("[color=#78cbd8]%s[/color]" % tr("WEAPON_UI_RECOIL_SIGNATURE"))
+	lines.append(tr("WEAPON_UI_VERTICAL_RECOIL_2F_HORIZONTAL_RECOIL_2F") % [vertical_recoil, horizontal_recoil, definition.recoil_max_vertical_degrees, definition.recoil_max_horizontal_degrees, definition.recoil_recovery_degrees_per_second * float(modifiers.get("recoil_recovery", 1.0)), noise, penetration])
 
 	var systems := PackedStringArray()
 	if definition.supports_flashlight:
-		systems.append(_t("TAKTİK FENER", "TACTICAL LIGHT"))
+		systems.append(tr("WEAPON_UI_TACTICAL_LIGHT"))
 	if definition.supports_alt_fire:
-		systems.append(_t("ALTERNATİF ATIŞ", "ALT FIRE"))
+		systems.append(tr("WEAPON_UI_ALT_FIRE"))
 	if definition.uses_charge:
-		systems.append(_t("ŞARJLI ATIŞ", "CHARGED FIRE"))
+		systems.append(tr("WEAPON_UI_CHARGED_FIRE"))
 	if definition.uses_heat:
-		systems.append(_t("ISI SİSTEMİ", "HEAT SYSTEM"))
+		systems.append(tr("WEAPON_UI_HEAT_SYSTEM"))
 	if systems.is_empty():
-		systems.append(_t("EK SİSTEM YOK", "NO AUXILIARY SYSTEM"))
-	lines.append("[color=#78cbd8]%s[/color]" % _t("ÖZEL SİSTEMLER", "SPECIAL SYSTEMS"))
+		systems.append(tr("WEAPON_UI_NO_AUXILIARY_SYSTEM"))
+	lines.append("[color=#78cbd8]%s[/color]" % tr("WEAPON_UI_SPECIAL_SYSTEMS"))
 	lines.append(" // ".join(systems))
 	if definition.supports_flashlight:
-		lines.append(_t(
-			"Fener: %.1f m // %.1f enerji // %.0f°" % [definition.flashlight_range * float(modifiers.get("flashlight_range", 1.0)), definition.flashlight_energy * float(modifiers.get("flashlight_energy", 1.0)), definition.flashlight_angle_degrees],
-			"Light: %.1f m // %.1f energy // %.0f°" % [definition.flashlight_range * float(modifiers.get("flashlight_range", 1.0)), definition.flashlight_energy * float(modifiers.get("flashlight_energy", 1.0)), definition.flashlight_angle_degrees]
-		))
+		lines.append(tr("WEAPON_UI_LIGHT_1F_M_1F_ENERGY_0F") % [definition.flashlight_range * float(modifiers.get("flashlight_range", 1.0)), definition.flashlight_energy * float(modifiers.get("flashlight_energy", 1.0)), definition.flashlight_angle_degrees])
 	if definition.uses_heat:
-		lines.append(_t(
-			"Isı: %.1f/atış // kapasite %.1f // soğutma %.1f/sn // kilit açma %.0f%%" % [definition.heat_per_shot, definition.heat_capacity * float(modifiers.get("heat_capacity", 1.0)), definition.heat_cooling_per_second * float(modifiers.get("heat_cooling", 1.0)), definition.heat_unlock_ratio * 100.0],
-			"Heat: %.1f/shot // capacity %.1f // cooling %.1f/s // unlock %.0f%%" % [definition.heat_per_shot, definition.heat_capacity * float(modifiers.get("heat_capacity", 1.0)), definition.heat_cooling_per_second * float(modifiers.get("heat_cooling", 1.0)), definition.heat_unlock_ratio * 100.0]
-		))
+		lines.append(tr("WEAPON_UI_HEAT_1F_SHOT_CAPACITY_1F_COOLING") % [definition.heat_per_shot, definition.heat_capacity * float(modifiers.get("heat_capacity", 1.0)), definition.heat_cooling_per_second * float(modifiers.get("heat_cooling", 1.0)), definition.heat_unlock_ratio * 100.0])
 
-	lines.append("[color=#78cbd8]%s[/color]" % _t("GELİŞTİRME HATTI", "UPGRADE TRACK"))
+	lines.append("[color=#78cbd8]%s[/color]" % tr("ARCHIVE_UI_UPGRADE_TRACK"))
 	lines.append(_upgrade_track_text(definition.weapon_id, level))
 	return "\n\n".join(lines)
 
@@ -322,9 +289,9 @@ func _build_weapon_detail(definition: WeaponDefinition) -> String:
 func _upgrade_track_text(weapon_id: StringName, level: int) -> String:
 	var track := VexWeaponUpgradeCatalog.get_track(weapon_id)
 	if track.is_empty():
-		return _t("Kayıtlı geliştirme hattı yok.", "No registered upgrade track.")
+		return tr("WEAPON_UI_NO_REGISTERED_UPGRADE_TRACK")
 	var lines := PackedStringArray()
-	lines.append(_t("Mevcut seviye: %d / %d" % [level, track.size()], "Current level: %d / %d" % [level, track.size()]))
+	lines.append(tr("WEAPON_UI_CURRENT_LEVEL") % [level, track.size()])
 	for index in track.size():
 		var tier: Dictionary = track[index]
 		var marker := "[color=#4cff9a]✓[/color]" if index < level else "○"
@@ -333,7 +300,7 @@ func _upgrade_track_text(weapon_id: StringName, level: int) -> String:
 
 
 func _fire_mode_text(definition: WeaponDefinition) -> String:
-	return _t("OTOMATİK", "AUTOMATIC") if definition.automatic else _t("YARI OTOMATİK", "SEMI-AUTOMATIC")
+	return tr("WEAPON_UI_AUTOMATIC") if definition.automatic else tr("WEAPON_UI_SEMI_AUTOMATIC")
 
 
 func _ammo_text(ammo_type: StringName) -> String:
@@ -353,6 +320,3 @@ func _ammo_text(ammo_type: StringName) -> String:
 func _on_language_changed(_locale: String) -> void:
 	_refresh_all()
 
-
-func _t(turkish: String, english: String) -> String:
-	return turkish if TranslationServer.get_locale().begins_with("tr") else english

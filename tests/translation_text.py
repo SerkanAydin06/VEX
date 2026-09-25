@@ -30,3 +30,18 @@ def with_translations(script: str) -> str:
         turkish, english = translations[key]
         extra.append(f'"{turkish}"\n"{english}"')
     return script + "\n# --- translations ---\n" + "\n".join(extra)
+
+
+def assert_ui_text_in_translations(script: str, min_keys: int) -> None:
+    """Betikte gömülü _t("tr", "en") kalmadığını ve her tr() anahtarının iki dilde dolu olduğunu doğrular."""
+    translations = load_translations()
+    assert "func _t(" not in script
+    assert re.search(r"(?<![\w.])_t\(", script) is None
+    keys = set(re.findall(r'\btr\("([A-Z0-9_]+)"\)', script))
+    assert len(keys) >= min_keys, len(keys)
+    missing = sorted(key for key in keys if key not in translations)
+    assert not missing, missing
+    for key in keys:
+        turkish, english = translations[key]
+        assert turkish and english, key
+        assert turkish.count("%") == english.count("%"), key

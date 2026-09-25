@@ -664,3 +664,33 @@ ARCHIVE_UI_CLOSING_INDIVIDUAL_RIFTS_IS_NOT_A,"Tek tek yarıkları kapatmak kalı
 ARCHIVE_UI_LOCATE_SOURCE_NODES_AND_THEIR_ANCHORS,Kaynak düğümlerini ve Dünya'daki ankrajlarını tespit edip enerji çekimini kesmek. Kapatılan her ankrajdan sonra ağın tepkisi izlenecek.,Locate source nodes and their anchors on Earth and cut the extraction. The network's response will be monitored after each anchor is shut down.
 ARCHIVE_UI_FIND_SURVIVORS_SECURE_VEX_FACILITY_RECORDS,"Hayatta kalanları bulmak, VEX tesis kayıtlarını güvenceye almak ve kırılmaları besleyen kaynağı tespit etmek.","Find survivors, secure VEX facility records and identify the source feeding the fractures."
 ARCHIVE_UI_EXTRACTION_PROFILE_UNVERIFIED,Kaynak profili doğrulanmadı.,Extraction profile unverified.
+WEAPON_UI_RECORDS_ACQUIRED_CARRIED,KAYIT %d  //  EDİNİLEN %d  //  KUŞANILAN %d,RECORDS %d  //  ACQUIRED %d  //  CARRIED %d
+WEAPON_UI_NO_ACTIVE_WEAPON_RECORDS_IN_THIS,BU KATEGORİDE AKTİF SİLAH KAYDI YOK,NO ACTIVE WEAPON RECORDS IN THIS CATEGORY
+WEAPON_UI_NO_ACTIVE_RECORD,AKTİF KAYIT YOK,NO ACTIVE RECORD
+WEAPON_UI_VEX_ARMORY_DATABASE,VEX CEPHANELİK VERİTABANI,VEX ARMORY DATABASE
+WEAPON_UI_NO_ACTIVE_WEAPONDEFINITION_CONNECTED_TO_THE,Bu kategori için oyuncu silah sistemine bağlı aktif bir WeaponDefinition bulunmuyor.,No active WeaponDefinition connected to the player weapon system exists for this category.
+WEAPON_UI_LOADOUT_SLOT,YÜK YUVASI,LOADOUT SLOT
+WEAPON_UI_DATA_LINK_OFFLINE,VERİ BAĞLANTISI YOK,DATA LINK OFFLINE
+WEAPON_UI_FIREPOWER,ATEŞ GÜCÜ,FIREPOWER
+WEAPON_UI_DAMAGE_PELLET_1F_PELLETS_SHOT_TOTAL,Hasar / pellet: %.1f\nPellet / atış: %d\nToplam tetik hasarı: %.1f\nKafa çarpanı: ×%.2f\nTeorik DPS: %.1f\nŞarjör teorik hasarı: %.1f,Damage / pellet: %.1f\nPellets / shot: %d\nTotal trigger damage: %.1f\nHeadshot multiplier: ×%.2f\nTheoretical DPS: %.1f\nTheoretical magazine damage: %.1f
+WEAPON_UI_FIRE_CYCLE_AMMUNITION,ATIŞ DÖNGÜSÜ VE MÜHİMMAT,FIRE CYCLE & AMMUNITION
+WEAPON_UI_FIRE_MODE_FIRE_RATE_0F_RPM,Atış modu: %s\nAtış hızı: %.0f RPM\nAtış aralığı: %.3f sn\nŞarjör: %d\nYedek kapasite: %d\nDoldurma: %.2f sn\nMühimmat: %s,Fire mode: %s\nFire rate: %.0f RPM\nShot interval: %.3f s\nMagazine: %d\nReserve capacity: %d\nReload: %.2f s\nAmmunition: %s
+WEAPON_UI_ACCURACY_RANGE,İSABET VE MENZİL,ACCURACY & RANGE
+WEAPON_UI_MAXIMUM_RANGE_0F_M_HIP_SPREAD,Maksimum menzil: %.0f m\nKalça yayılımı: %.2f°,Maximum range: %.0f m\nHip spread: %.2f°
+WEAPON_UI_ADS_SPREAD_2F_ADS_FOV_RATIO,\nADS yayılımı: %.2f°\nADS FOV oranı: %.2f,\nADS spread: %.2f°\nADS FOV ratio: %.2f
+WEAPON_UI_ADS_NOT_SUPPORTED,\nADS: DESTEKLENMİYOR,\nADS: NOT SUPPORTED
+WEAPON_UI_DAMAGE_FALLOFF_0F_0F_M_MINIMUM,\nHasar düşüşü: %.0f–%.0f m // minimum ×%.2f,\nDamage falloff: %.0f–%.0f m // minimum ×%.2f
+WEAPON_UI_RECOIL_SIGNATURE,SEKME VE İMZA,RECOIL & SIGNATURE
+WEAPON_UI_VERTICAL_RECOIL_2F_HORIZONTAL_RECOIL_2F,Dikey sekme: %.2f°\nYatay sekme: %.2f°\nMaks. dikey birikim: %.2f°\nMaks. yatay birikim: %.2f°\nSekme toparlama: %.1f°/sn\nSilah sesi çarpanı: ×%.2f\nPenetrasyon gücü: %.2f,Vertical recoil: %.2f°\nHorizontal recoil: %.2f°\nMax vertical buildup: %.2f°\nMax horizontal buildup: %.2f°\nRecoil recovery: %.1f°/s\nGunshot noise multiplier: ×%.2f\nPenetration power: %.2f
+WEAPON_UI_TACTICAL_LIGHT,TAKTİK FENER,TACTICAL LIGHT
+WEAPON_UI_ALT_FIRE,ALTERNATİF ATIŞ,ALT FIRE
+WEAPON_UI_CHARGED_FIRE,ŞARJLI ATIŞ,CHARGED FIRE
+WEAPON_UI_HEAT_SYSTEM,ISI SİSTEMİ,HEAT SYSTEM
+WEAPON_UI_NO_AUXILIARY_SYSTEM,EK SİSTEM YOK,NO AUXILIARY SYSTEM
+WEAPON_UI_SPECIAL_SYSTEMS,ÖZEL SİSTEMLER,SPECIAL SYSTEMS
+WEAPON_UI_LIGHT_1F_M_1F_ENERGY_0F,Fener: %.1f m // %.1f enerji // %.0f°,Light: %.1f m // %.1f energy // %.0f°
+WEAPON_UI_HEAT_1F_SHOT_CAPACITY_1F_COOLING,Isı: %.1f/atış // kapasite %.1f // soğutma %.1f/sn // kilit açma %.0f%%,Heat: %.1f/shot // capacity %.1f // cooling %.1f/s // unlock %.0f%%
+WEAPON_UI_NO_REGISTERED_UPGRADE_TRACK,Kayıtlı geliştirme hattı yok.,No registered upgrade track.
+WEAPON_UI_CURRENT_LEVEL,Mevcut seviye: %d / %d,Current level: %d / %d
+WEAPON_UI_AUTOMATIC,OTOMATİK,AUTOMATIC
+WEAPON_UI_SEMI_AUTOMATIC,YARI OTOMATİK,SEMI-AUTOMATIC
