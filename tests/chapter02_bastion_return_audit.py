@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASTION = ROOT / "scenes" / "hub" / "bastion_7.tscn"
 PLAN = ROOT / "docs" / "Campaign_Level_Design_VEX.md"
 CH02_TRANSLATIONS = ROOT / "translations" / "chapter02.csv"
+CH03_TRANSLATIONS = ROOT / "translations" / "chapter03.csv"
 MAIN_TRANSLATIONS = ROOT / "translations" / "vex.csv"
 
 
@@ -45,7 +46,9 @@ def test_campaign_plan_introduces_selin_in_chapter03_not_chapter02() -> None:
 
 
 def test_post_rescue_selin_dialogue_matches_pressure_line_canon() -> None:
-    translations = CH02_TRANSLATIONS.read_text(encoding="utf-8")
+    # Selin is rescued in Chapter 3, so her Bastion line lives in the Chapter 3 catalog.
+    translations = CH03_TRANSLATIONS.read_text(encoding="utf-8")
+    assert "HUB_SELIN_POST_CH03" not in CH02_TRANSLATIONS.read_text(encoding="utf-8")
 
     assert "HUB_SELIN_POST_CH03" in translations
     assert "Basınç Hattı kayıtları akışın rastgele olmadığını gösteriyor" in translations
@@ -74,3 +77,12 @@ def test_firing_range_authored_ceiling_survives_survivor_progression_edits() -> 
     assert "piece_size = Vector3(12, 0.4, 10)" in ceiling
     assert 'surface_material = ExtResource("5_ceiling")' in ceiling
     assert "occlusion_enabled = false" in ceiling
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

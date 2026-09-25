@@ -76,3 +76,12 @@ def test_deploy_requires_at_least_one_carried_weapon() -> None:
     assert 'not bool(weapon_controller.call("has_carried_weapon"))' in block
     assert 'notify("HUB_LOADOUT_REQUIRED")' in block
     assert 'set_objective("HUB_OBJECTIVE_VISIT_ARMORY")' in block
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

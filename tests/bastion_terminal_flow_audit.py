@@ -65,5 +65,14 @@ def test_bastion_keeps_spawn_terminal_as_deployment_and_center_terminal_separate
 
     # CommandStatusTerminal intentionally has no terminal_mode override, so the
     # hub-terminal scene default INFORMATION mode remains authoritative.
-    center_block = bastion[center:center + 500]
+    center_block = bastion[center:bastion.index("\n[node ", center + 1)]
     assert "terminal_mode =" not in center_block
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

@@ -20,7 +20,10 @@ DOC = ROOT / "docs" / "levels" / "Level_03_Pressure_Line.md"
 
 
 def _read(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8")
+    # Godot 4.7 writes unique_id attributes into node headers on save; the
+    # contracts below describe node identity, not editor bookkeeping ids.
+    return re.sub(r" unique_id=\d+", "", text) if path.suffix == ".tscn" else text
 
 
 def test_level03_main_scene_exposes_canonical_layers_in_editor() -> None:
@@ -44,14 +47,16 @@ def test_level03_tool_script_previews_only_safe_structure_roots() -> None:
     assert '[node name="Doors" type="Node3D" parent="."]' in structure
     assert '[node name="Enemies" type="Node3D" parent="."]' in structure
     assert script.startswith("@tool\nextends VexBaseLevel")
-    assert 'if Engine.is_editor_hint():' in script
     assert 'STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_03_structure_source.tscn"' in script
     structure_block = script[script.index("const STRUCTURE_NODE_NAMES"):script.index("var _alarm_triggered")]
     for allowed in ['&"WorldEnvironment"', '&"Geometry"', '&"Doors"', '&"Props"', '&"RoomLights"', '&"Lights"']:
         assert allowed in structure_block
     for forbidden in ['&"Enemies"', '&"Pickups"', '&"Objectives"', '&"Secrets"', '&"LoreTerminals"']:
         assert forbidden not in structure_block
-    assert 'if get_node_or_null("Geometry") != null:' in script
+    base = _read(ROOT / "scripts" / "levels" / "base_level.gd")
+    assert 'func _get_structure_source_path() -> String:\n\treturn STRUCTURE_SOURCE_PATH' in script
+    assert 'func _get_structure_node_names() -> Array:\n\treturn STRUCTURE_NODE_NAMES' in script
+    assert 'if get_node_or_null("Geometry") != null:' in base
     assert "PRESSURE_LINE_CONTENT_SCENE" not in script
     assert "ENVIRONMENT_STORY_SCENE" not in script
     assert "LOOM_HERALD_SCENE" not in script
@@ -195,3 +200,12 @@ def test_mission_translation_and_bastion_return_match_chapter03() -> None:
     assert "required_campaign_stage = 3" in selin_block
     assert 'dialogue_key = "HUB_SELIN_POST_CH03"' in selin_block
     assert "19–22 dakika" in doc
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

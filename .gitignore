@@ -22,3 +22,7 @@ VEX.exe
 data_*/
 mono_crash.*.json
 tests/furnite_test.tscn
+
+# Python
+__pycache__/
+*.pyc

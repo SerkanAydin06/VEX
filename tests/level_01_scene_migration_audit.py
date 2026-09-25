@@ -15,7 +15,10 @@ CH01_TRANSLATIONS = ROOT / "translations" / "chapter01.csv"
 
 
 def _read(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8")
+    # Godot 4.7 writes unique_id attributes into node headers on save; the
+    # contracts below describe node identity, not editor bookkeeping ids.
+    return re.sub(r" unique_id=\d+", "", text) if path.suffix == ".tscn" else text
 
 
 def test_level01_main_scene_exposes_canonical_layers_in_editor() -> None:
@@ -48,16 +51,18 @@ def test_level01_main_scene_exposes_canonical_layers_in_editor() -> None:
 
 def test_level01_tool_script_previews_only_safe_structure_roots() -> None:
     script = _read(LEVEL_SCRIPT)
+    base = _read(ROOT / "scripts" / "levels" / "base_level.gd")
     assert script.startswith("@tool\nextends VexBaseLevel")
-    assert 'func _enter_tree() -> void:' in script
-    enter_block = script[script.index("func _enter_tree() -> void:"):script.index("func _ready() -> void:")]
+    # Shared structure install/preview mechanics live in VexBaseLevel.
+    enter_block = base[base.index("func _enter_tree() -> void:"):base.index("func _ready() -> void:")]
     assert 'if Engine.is_editor_hint():' in enter_block
     assert '_install_authored_structure()' in enter_block
-    ready_block = script[script.index("func _ready() -> void:"):script.index("func _install_editor_structure_preview")]
+    ready_block = base[base.index("func _ready() -> void:"):base.index("_sync_current_level_path()")]
     assert 'if Engine.is_editor_hint():' in ready_block
     assert '_install_editor_structure_preview()' in ready_block
-    assert 'super._ready()' in ready_block
     assert 'STRUCTURE_SOURCE_PATH := "res://scenes/levels/level_01_structure_source.tscn"' in script
+    assert 'func _get_structure_source_path() -> String:\n\treturn STRUCTURE_SOURCE_PATH' in script
+    assert 'func _get_structure_node_names() -> Array:\n\treturn STRUCTURE_NODE_NAMES' in script
     structure_block = script[script.index("const STRUCTURE_NODE_NAMES"):script.index("const TRAINING_OVERLAY_SCENE")]
     for structural_name in [
         '&"WorldEnvironment"', '&"Geometry"', '&"Doors"',
@@ -66,10 +71,11 @@ def test_level01_tool_script_previews_only_safe_structure_roots() -> None:
         assert structural_name in structure_block
     for forbidden in ['&"Enemies"', '&"Pickups"', '&"Triggers"']:
         assert forbidden not in structure_block
-    assert 'if get_node_or_null("Geometry") != null:' in script
-    assert 'structure_node.owner = null' in script
-    assert 'if node_name == &"Doors" and not Engine.is_editor_hint():' in script
-    assert '_configure_authored_doors(structure_node)' in script
+    assert 'if get_node_or_null("Geometry") != null:' in base
+    assert 'structure_node.owner = null' in base
+    assert 'if node_name == &"Doors" and not Engine.is_editor_hint():' in base
+    assert '_configure_authored_doors(structure_node)' in base
+    assert 'func _configure_authored_doors(doors_root: Node) -> void:' in script
     assert "FIRST_FRACTURE_CONTENT_SCENE" not in script
     assert "ENVIRONMENT_STORY_SCENE" not in script
 
@@ -82,10 +88,11 @@ def test_runtime_door_flow_resets_legacy_state_and_applies_only_canonical_gates(
     assert '"CH01_DOOR_FINAL_AIRLOCK"' in script
     assert '[&"blue"]' in script
     assert '[&"blue", &"red"]' in script
-    assert "_reset_authored_door" in script
-    assert 'door.required_enemy_ids = []' in script
-    assert 'door.objective_on_combat_clear = ""' in script
-    assert 'door.permanently_locked = false' in script
+    assert "_reset_authored_doors(doors_root)" in script
+    base = _read(ROOT / "scripts" / "levels" / "base_level.gd")
+    assert 'door.required_enemy_ids = []' in base
+    assert 'door.objective_on_combat_clear = ""' in base
+    assert 'door.permanently_locked = false' in base
     assert 'GameState.set_objective("CH01_OBJECTIVE_BOTH_KEYS")' in script
     assert 'GameState.set_objective("CH01_OBJECTIVE_RED_ONLY")' in script
     assert 'GameState.set_objective("CH01_OBJECTIVE_BLUE_ONLY")' in script
@@ -224,3 +231,12 @@ def test_tutorial_and_record_reader_contracts_remain_intact() -> None:
     assert "@export var record_id" in record_script
     assert "func get_interaction_text" in record_script
     assert "func interact" in record_script
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

@@ -166,3 +166,12 @@ def test_hud_menu_overlays_keep_map_workspace_large_but_death_menu_compact() -> 
     assert "autowrap_mode = 2" in death
     assert "theme_override_font_sizes/font_size = 54" not in death
     assert "custom_minimum_size = Vector2(0, 70)" not in death
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")

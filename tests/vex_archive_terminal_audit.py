@@ -118,7 +118,7 @@ def test_information_terminal_routes_to_archive_without_changing_deployment_term
     deployment = bastion.index('[node name="DeploymentTerminal"')
     center = bastion.index('[node name="CommandStatusTerminal"')
     deployment_block = bastion[deployment:center]
-    center_block = bastion[center:center + 500]
+    center_block = bastion[center:bastion.index("\n[node ", center + 1)]
 
     assert "terminal_mode = 1" in deployment_block
     assert "terminal_mode =" not in center_block
@@ -138,3 +138,12 @@ def test_archive_ui_is_viewport_relative_and_terminal_colliders_remain_canonical
     assert "size = Vector3(1.3230512, 0.7523071, 0.02)" in hub_scene
     assert "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2246144, -0.4089676)" in hub_scene
     assert "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.66510963, 0.8407265, -0.4089676)" in hub_scene
+
+
+if __name__ == "__main__":
+    # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
+    # tanım sırasıyla çalıştır; pytest gerekmez.
+    _audit_tests = [value for name, value in list(globals().items()) if name.startswith("test_") and callable(value)]
+    for _audit_test in _audit_tests:
+        _audit_test()
+    print(f"{__file__.rsplit('/', 1)[-1]}: {len(_audit_tests)} test passed")
