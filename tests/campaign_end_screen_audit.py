@@ -38,6 +38,12 @@ cont = game_state[game_state.index("func continue_to_next_level("):game_state.in
 assert cont.index('"level_complete_retry"') < cont.index("if pending_campaign_end_screen:")
 assert cont.index("if pending_campaign_end_screen:") < cont.index('pending_next_level_path = ""')
 assert "pending_campaign_end_screen = false" in cont
+# Leaving to the main menu before the screen keeps it pending in the save.
+assert '"campaign_end_pending": pending_campaign_end_screen,' in game_state
+continue_game = game_state[game_state.index("func continue_game("):game_state.index("func get_continue_failure_message")]
+assert 'bool(saved_run_state.get("campaign_end_pending", false)) and current_level_path == BASTION_7_PATH' in continue_game
+assert "pending_next_level_path = current_level_path" in continue_game
+assert "get_tree().change_scene_to_file(CAMPAIGN_END_PATH)" in continue_game
 reset = game_state[game_state.index("func _reset_level_counters("):]
 assert "pending_campaign_end_screen = false" in reset
 
