@@ -124,18 +124,12 @@ func _refresh_dashboard() -> void:
 
 
 func _refresh_static_labels() -> void:
-	dashboard_title.text = _t("BASTION-7 // ÜS KONTROLÜ", "BASTION-7 // BASE CONTROL")
-	dashboard_subtitle.text = _t(
-		"YEREL TESİS AĞI // KAPI YETKİSİ // AYDINLATMA // GELİŞTİRME OMURGASI",
-		"LOCAL FACILITY GRID // ACCESS // LIGHTING // UPGRADE BACKBONE"
-	)
-	facility_map_title.text = _t("TESİS ŞEMASI // CANLI DURUM", "FACILITY SCHEMATIC // LIVE STATUS")
-	lighting_title.text = _t("AYDINLATMA GÜÇ KADEMELERİ", "LIGHTING POWER TIERS")
-	upgrade_title.text = _t("GELİŞTİRME OMURGASI // İLERLEME KİLİTLİ", "UPGRADE BACKBONE // PROGRESSION LOCKED")
-	status_hint.text = _t(
-		"YEŞİL: AKTİF  //  TURUNCU: KULLANILABİLİR  //  KIRMIZI: İLERLEME KİLİTLİ",
-		"GREEN: ACTIVE  //  AMBER: AVAILABLE  //  RED: PROGRESSION LOCKED"
-	)
+	dashboard_title.text = tr("BASE_UI_BASTION_7_BASE_CONTROL")
+	dashboard_subtitle.text = tr("BASE_UI_LOCAL_FACILITY_GRID_ACCESS_LIGHTING_UPGRADE")
+	facility_map_title.text = tr("BASE_UI_FACILITY_SCHEMATIC_LIVE_STATUS")
+	lighting_title.text = tr("BASE_UI_LIGHTING_POWER_TIERS")
+	upgrade_title.text = tr("BASE_UI_UPGRADE_BACKBONE_PROGRESSION_LOCKED")
+	status_hint.text = tr("BASE_UI_GREEN_ACTIVE_AMBER_AVAILABLE_RED_PROGRESSION")
 
 
 func _refresh_status_cards() -> void:
@@ -144,17 +138,14 @@ func _refresh_status_cards() -> void:
 	for definition: Dictionary in area_definitions:
 		if BaseManager.is_area_unlocked(StringName(str(definition.get("id", "")))):
 			unlocked_count += 1
-	access_value.text = _t(
-		"BÖLGE ERİŞİMİ\n%d / %d" % [unlocked_count, area_definitions.size()],
-		"AREA ACCESS\n%d / %d" % [unlocked_count, area_definitions.size()]
-	)
+	access_value.text = tr("BASE_UI_AREA_ACCESS") % [unlocked_count, area_definitions.size()]
 	access_value.add_theme_color_override("font_color", COLOR_ONLINE if unlocked_count == area_definitions.size() else COLOR_SYSTEM)
 
 	var lighting := BaseManager.get_lighting_definition(BaseManager.get_lighting_mode())
-	lighting_value.text = "%s\n%s" % [_t("AYDINLATMA", "LIGHTING"), _localized(lighting, "name")]
+	lighting_value.text = "%s\n%s" % [tr("BASE_UI_LIGHTING"), _localized(lighting, "name")]
 	lighting_value.add_theme_color_override("font_color", COLOR_ONLINE)
 	lighting_load_value.text = "%s\n%d%%" % [
-		_t("IŞIK GÜCÜ", "LIGHT POWER"),
+		tr("BASE_UI_LIGHT_POWER"),
 		roundi(float(lighting.get("energy_multiplier", 0.25)) * 100.0),
 	]
 	lighting_load_value.add_theme_color_override("font_color", COLOR_SYSTEM)
@@ -165,15 +156,9 @@ func _refresh_status_cards() -> void:
 		var upgrade_id := StringName(str(definition.get("id", "")))
 		upgrade_total += BaseManager.get_upgrade_level(upgrade_id)
 		upgrade_capacity += int(definition.get("max_level", 0))
-	upgrade_value.text = _t(
-		"GELİŞTİRME\n%d / %d" % [upgrade_total, upgrade_capacity],
-		"UPGRADES\n%d / %d" % [upgrade_total, upgrade_capacity]
-	)
+	upgrade_value.text = tr("BASE_UI_UPGRADES") % [upgrade_total, upgrade_capacity]
 	upgrade_value.add_theme_color_override("font_color", COLOR_MUTED)
-	stage_badge.text = _t(
-		"KAMPANYA // AŞAMA %02d" % GameState.campaign_stage,
-		"CAMPAIGN // STAGE %02d" % GameState.campaign_stage
-	)
+	stage_badge.text = tr("BASE_UI_CAMPAIGN_STAGE_02D") % GameState.campaign_stage
 
 
 func _refresh_facility_map() -> void:
@@ -181,10 +166,10 @@ func _refresh_facility_map() -> void:
 	_refresh_managed_area_button(research_button, &"research_lab")
 	_refresh_managed_area_button(workshop_button, &"weapon_workshop")
 	_refresh_managed_area_button(engineering_button, &"engineering_bay")
-	_refresh_static_area_button(armory_button, _t("SİLAH DEPOSU", "ARMORY"))
-	_refresh_static_area_button(command_button, _t("KOMUTA MERKEZİ", "COMMAND CORE"))
-	_refresh_static_area_button(south_corridor_button, _t("GÜNEY KORİDORU", "SOUTH CORRIDOR"))
-	_refresh_static_area_button(operator_button, _t("OPERATÖR PLATFORMU", "OPERATOR PLATFORM"))
+	_refresh_static_area_button(armory_button, tr("BASE_UI_ARMORY"))
+	_refresh_static_area_button(command_button, tr("BASE_UI_COMMAND_CORE"))
+	_refresh_static_area_button(south_corridor_button, tr("BASE_UI_SOUTH_CORRIDOR"))
+	_refresh_static_area_button(operator_button, tr("BASE_UI_OPERATOR_PLATFORM"))
 
 
 func _refresh_managed_area_button(button: Button, area_id: StringName) -> void:
@@ -196,28 +181,25 @@ func _refresh_managed_area_button(button: Button, area_id: StringName) -> void:
 	var area_name := _localized(definition, "name")
 	var unlocked := BaseManager.is_area_unlocked(area_id)
 	var activation_available := BaseManager.can_unlock_area(area_id, GameState.campaign_stage)
-	var status := _t("YETKİ KİLİTLİ", "CLEARANCE LOCKED")
+	var status := tr("ARCHIVE_UI_CLEARANCE_LOCKED")
 	var color := COLOR_LOCKED
 	button.disabled = true
 	if unlocked:
-		status = _t("ERİŞİM AÇIK", "ACCESS ONLINE")
+		status = tr("ARCHIVE_UI_ACCESS_ONLINE")
 		color = COLOR_ONLINE
 	elif activation_available:
-		status = _t("AKTİVASYONA HAZIR", "READY TO ACTIVATE")
+		status = tr("BASE_UI_READY_TO_ACTIVATE")
 		color = COLOR_READY
 		button.disabled = false
 	else:
-		status = _t(
-			"KİLİTLİ // BÖLÜM %02d" % int(definition.get("required_stage", 0)),
-			"LOCKED // CHAPTER %02d" % int(definition.get("required_stage", 0))
-		)
+		status = tr("BASE_UI_LOCKED_CHAPTER_02D") % int(definition.get("required_stage", 0))
 	button.text = "%s\n%s" % [area_name, status]
 	_set_button_color(button, color)
 
 
 func _refresh_static_area_button(button: Button, title: String) -> void:
 	button.disabled = true
-	button.text = "%s\n%s" % [title, _t("SİSTEM AKTİF", "SYSTEM ONLINE")]
+	button.text = "%s\n%s" % [title, tr("BASE_UI_SYSTEM_ONLINE")]
 	_set_button_color(button, COLOR_SYSTEM)
 
 
@@ -236,14 +218,14 @@ func _refresh_lighting_button(button: Button, mode: int) -> void:
 	var active := BaseManager.get_lighting_mode() == mode
 	var available := BaseManager.can_use_lighting_mode(mode, GameState.campaign_stage)
 	var load_percent := roundi(float(definition.get("energy_multiplier", 0.25)) * 100.0)
-	var status := _t("KİLİTLİ // BÖLÜM %02d", "LOCKED // CHAPTER %02d") % int(definition.get("required_stage", 0))
+	var status := tr("BASE_UI_LOCKED_CHAPTER_02D") % int(definition.get("required_stage", 0))
 	var color := COLOR_LOCKED
 	button.disabled = true
 	if active:
-		status = _t("AKTİF", "ACTIVE")
+		status = tr("ARCHIVE_UI_ACTIVE")
 		color = COLOR_ONLINE
 	elif available:
-		status = _t("UYGULA", "APPLY")
+		status = tr("BASE_UI_APPLY")
 		color = COLOR_READY
 		button.disabled = false
 	button.text = "%s\n%s // %d%%" % [_localized(definition, "name"), status, load_percent]
@@ -266,16 +248,16 @@ func _refresh_upgrade_button(button: Button, upgrade_id: StringName) -> void:
 	if available:
 		button.text = "%s\n%s %d / %d // %s" % [
 			_localized(definition, "name"),
-			_t("SV", "LVL"),
+			tr("BASE_UI_LVL"),
 			level,
 			max_level,
-			_t("YAKINDA", "FUTURE"),
+			tr("BASE_UI_FUTURE"),
 		]
 		_set_button_color(button, COLOR_MUTED)
 	else:
 		button.text = "%s\n%s" % [
 			_localized(definition, "name"),
-			_t("KİLİTLİ // BÖLÜM %02d" % required_stage, "LOCKED // CHAPTER %02d" % required_stage),
+			tr("BASE_UI_LOCKED_CHAPTER_02D") % required_stage,
 		]
 		_set_button_color(button, COLOR_LOCKED)
 
@@ -291,7 +273,7 @@ func _activate_area(area_id: StringName) -> void:
 		BaseManager.restore_state(previous_state)
 		GameState.notify(GameState.get_save_failure_message())
 		return
-	GameState.notify(_t("BASTION-7 // BÖLGE ERİŞİMİ YENİDEN ETKİN", "BASTION-7 // AREA ACCESS RESTORED"))
+	GameState.notify(tr("ARCHIVE_UI_BASTION_7_AREA_ACCESS_RESTORED"))
 	_refresh_dashboard()
 
 
@@ -308,7 +290,7 @@ func _apply_lighting(mode: int) -> void:
 		BaseManager.restore_state(previous_state)
 		GameState.notify(GameState.get_save_failure_message())
 		return
-	GameState.notify(_t("BASTION-7 // AYDINLATMA KADEMESİ GÜNCELLENDİ", "BASTION-7 // LIGHTING TIER UPDATED"))
+	GameState.notify(tr("BASE_UI_BASTION_7_LIGHTING_TIER_UPDATED"))
 	_refresh_dashboard()
 
 
@@ -331,9 +313,6 @@ func _localized(entry: Dictionary, key: String) -> String:
 	var suffix := "_tr" if TranslationServer.get_locale().begins_with("tr") else "_en"
 	return str(entry.get(key + suffix, entry.get(key, "")))
 
-
-func _t(turkish: String, english: String) -> String:
-	return turkish if TranslationServer.get_locale().begins_with("tr") else english
 
 
 func _refresh_editor_text() -> void:
