@@ -2,6 +2,14 @@
 
 Godot **4.7.1** (GL Compatibility, yalnız Windows export) ile 2.5D sprite düşmanlı tek oyunculu FPS. Kullanıcı Türkçe konuşur; yanıtlar Türkçe. Oynanabilir içerik: Bölüm 1–3 + Bastion-7 hub'ı; hikâye 30 bölüm olarak planlı.
 
+## Hafıza (oturumlar arası)
+
+Önceki oturumlarda yapılanlar, kullanıcı tercihleri, verilmiş kararlar ve sıradaki açık işler:
+
+@.claude/HAFIZA.md
+
+Kullanıcı "kaldığımız yerden devam" derse `HAFIZA.md` → "Açık işler"deki ilk maddeyle başla. **Her iş bitince `HAFIZA.md`'yi aynı PR içinde güncelle** (yapılanı ekle, açık işten düş, yeni karar/ders yaz). Kararlar bölümündeki konuları yeniden tartışma.
+
 ## Doğrulama (her değişiklikten sonra)
 
 - `tools/validate.sh` → 107+ Python denetimi paralel, yalnız hataları yazar (~2 dk).
