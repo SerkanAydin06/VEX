@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#96)
+## Yapılanlar (2026-09, PR #80–#97)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -32,18 +32,20 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #94 Bastion üs yönetimi paneli metinleri (22 yeni anahtar, `BASE_UI_*`) taşındı.
 - #95 Saha kaydı köprüsü metinleri (8 anahtar, `FIELD_RECORD_UI_*`) taşındı; `scripts/` içinde `_t()` yardımcısı kalmadı.
 - #96 Kalan dil koşullu metinler (`settings_panel`, `terminal_menu`, `hub_terminal`, `game_state`; `SETTINGS_UI_*`, `TERMINAL_UI_*`, `HUB_TERMINAL_UI_*`, `SAVE_UI_*`) taşındı; dönüştürücü artık `"A" if turkish else "B"` ve if/return kalıplarını da çeviriyor. Koda gömülü metin taşıma işi bitti.
+- #97 Temizlik: 120 kullanılmayan çeviri satırı silindi (`tests/translation_usage_audit.py` artık ölü satırı yakalıyor); eğitim akışı kapı için `VexDoor.refresh_combat_lock()` kullanıyor.
 
 ## Kararlar (tekrar tartışma)
 
 - Doku boyutu sorun değil: yalnız Windows/D3D11 (ANGLE), sınır ≥8192 px; en büyük sayfa 5376 px.
 - Xeno arşiv keşifleri Yeni Oyun'da sıfırlanmaz — bilinçli (belgede yazılı). Saha kayıtları sıfırlanır.
 - Loom Herald yalnız Level Test sandbox prototipi; kampanyada/arşivde yok.
-- Kullanılmayan eski prototip çeviri satırları henüz silinmedi (açık iş 1).
+- Ayrılmış çeviri anahtarları (planlı içerik): `HUD_SLOT_05`, `HUD_AMMO_MAGNUM`, `CH02_BYPASS_RESERVED` — silme.
+- `furnice_carrier` iç kimliği (dosya/enemy_id) değişmez: arşiv keşfi kayıtta saklanıyor. Oyuncuya görünen ad zaten "FURNACE CARRIER".
 
 ## Açık işler (sırayla)
 
-1. **Temizlik:** kullanılmayan `LEVEL0x_*`, `HUB_VEX0x_*`, `SURVIVOR_SELIN_DIALOGUE_STAGE2/3`, `TERMINAL_FACILITY_ASH_MINE`, `MAIN_CREDITS_BODY`, `MAIN_CONFIRM_BODY` satırları (bağlı denetimleri de güncelle); `level_01_training_flow.gd` kapının iç alanlarını değiştirmek yerine `VexDoor` açık metodu kullansın; `furnice`/`furnace` adlandırması (dosya adları değişmez, yalnız oyuncuya dönük metin).
-2. **Karar bekliyor — Crucible Warden canı:** "elit/miniboss" ama 260 HP (Basalt Juggernaut 240). Kullanıcıya sor; Warden kampanyada Bölüm 5'te.
+1. **Karar bekliyor — Crucible Warden canı:** "elit/miniboss" ama 260 HP (Basalt Juggernaut 240). Kullanıcıya sor; Warden kampanyada Bölüm 5'te.
+2. **Metin anahtarlı çeviri satırları:** ~70 satır anahtar olarak Türkçe metin kullanıyor (ör. `"MAVİ ERİŞİM KARTI"`, sahnelerde `tr()` ile). `KEY_CARD_BLUE` gibi kimlik anahtarlarına taşı (sahne/kaynak referanslarıyla birlikte).
 
 ## Öğrenilen dersler
 

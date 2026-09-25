@@ -216,7 +216,7 @@ def check_level_01() -> None:
         if key not in overlay:
             fail(f"VEX-01 tutorial overlay eksik mesaj: {key}")
     flow = read("scripts/levels/level_01_training_flow.gd")
-    if "door._combat_lock_was_active = door._has_active_combat_lock()" not in flow:
+    if "door.refresh_combat_lock()" not in flow or "door._" in flow:
         fail("VEX-01 training flow kapı combat cache'ini bağlandıktan sonra yenilemiyor")
 
 
@@ -341,6 +341,7 @@ def check_door_contract() -> None:
             fail(f"Canonical kapı sahnesi sözleşmesi eksik: {contract}")
     for contract in [
         "required_enemy_ids", "objective_on_combat_clear", "_has_active_combat_lock",
+        "func refresh_combat_lock() -> void:",
         "lock_state_changed", "_is_doorway_blocked",
     ]:
         if contract not in script:

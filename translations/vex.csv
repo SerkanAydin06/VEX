@@ -10,12 +10,9 @@ DIFFICULTY_HARD,ZOR,HARD
 DIFFICULTY_NIGHTMARE,KÂBUS,NIGHTMARE
 SETTINGS_TITLE,AYARLAR,SETTINGS
 SETTINGS_LANGUAGE,DİL,LANGUAGE
-SETTINGS_LANGUAGE_TOOLTIP,Dil değişikliği anında bütün arayüze ve görev metinlerine uygulanır.,Language changes are applied immediately to the entire interface and mission text.
 SETTINGS_DIFFICULTY,ZORLUK,DIFFICULTY
-SETTINGS_DIFFICULTY_TOOLTIP,Düşman dayanıklılığı; hasarı; hızı; algısı ve kaynak miktarını etkiler.,Affects enemy durability; damage; speed; awareness and resource availability.
 SETTINGS_RESOLUTION,ÇÖZÜNÜRLÜK,RESOLUTION
 SETTINGS_GRAPHICS_QUALITY,GRAFİK KALİTESİ,GRAPHICS QUALITY
-SETTINGS_GRAPHICS_TOOLTIP,3B işleme çözünürlüğünü değiştirir. Arayüz her zaman doğal çözünürlükte kalır.,Changes 3D render resolution. The interface always remains at native resolution.
 SETTINGS_FULLSCREEN,TAM EKRAN,FULLSCREEN
 SETTINGS_VSYNC,DİKEY SENKRONİZASYON,VERTICAL SYNC
 SETTINGS_MASTER_VOLUME,ANA SES,MASTER VOLUME
@@ -61,7 +58,6 @@ UI_QUIT,OYUNDAN ÇIK,QUIT GAME
 UI_EXIT,ÇIKIŞ,EXIT
 UI_READ,OKU,READ
 UI_READ_AGAIN,TEKRAR OKU,READ AGAIN
-UI_READY,HAZIR,READY
 UI_LOCKED,KİLİTLİ,LOCKED
 UI_STORED,RAFTA,STORED
 UI_CARRIED,TAŞINIYOR,CARRIED
@@ -251,13 +247,8 @@ HUB_SELECT_OPERATION_FIRST,ÖNCE OPERASYON TERMİNALİNDEN GÖREV SEÇ,SELECT AN
 HUB_OBJECTIVE_USE_TERMINAL,OPERASYON TERMİNALİNİ KULLAN,USE THE OPERATIONS TERMINAL
 HUB_LOADOUT_REQUIRED,OPERASYON İPTAL // EN AZ BİR SİLAH KUŞANMALISIN,DEPLOYMENT CANCELLED // EQUIP AT LEAST ONE WEAPON
 HUB_OBJECTIVE_VISIT_ARMORY,CEPHANELİĞE GİT // EN AZ BİR SİLAH KUŞAN,VISIT THE ARMORY // EQUIP AT LEAST ONE WEAPON
-HUB_VEX01_COMPLETE,VEX-01 TAMAMLANDI // VEX-02 OPERASYONU HAZIR,VEX-01 COMPLETE // VEX-02 OPERATION READY
-HUB_VEX02_COMPLETE,OPERASYON TAMAMLANDI // VEX-02 KAYDI BASTION-7'YE AKTARILDI,OPERATION COMPLETE // VEX-02 DATA TRANSFERRED TO BASTION-7
-HUB_VEX03_COMPLETE,VEX-03 TAMAMLANDI // KORVATH DÜĞÜMÜ KAPATILDI,VEX-03 COMPLETE // KORVATH NODE SHUT DOWN
 MISSION_WAITING,YENİ OPERASYON BEKLENİYOR,AWAITING NEW OPERATION
 MISSION_BRIEFING_UNAVAILABLE,OPERASYON BRİFİNGİ YÜKLENEMEDİ.,OPERATION BRIEFING UNAVAILABLE.
-TERMINAL_INTERACT,[E] %s,[E] %s
-TERMINAL_INTERACT_STATUS,[E] %s // %s,[E] %s // %s
 RACK_INTERACT_LOCKED,[E] %s — KİLİTLİ,[E] %s — LOCKED
 RACK_INTERACT_EQUIP,[E] %s KUŞAN,[E] EQUIP %s
 RACK_INTERACT_STORE,[E] %s RAFA BIRAK,[E] STORE %s
@@ -292,47 +283,11 @@ WEAPON_LX01_NAME,LX-01 ARC,LX-01 ARC
 WEAPON_LX07_NAME,LX-07 PRISM,LX-07 PRISM
 WEAPON_LX13_NAME,LX-13 LANCE,LX-13 LANCE
 WEAPON_LX20_NAME,LX-20 EVENT HORIZON,LX-20 EVENT HORIZON
-ARMORY_COLUMN_SIDEARMS,YAN SİLAH DOLABI,SIDEARM CABINET
-ARMORY_COLUMN_LONG_GUNS,UZUN SİLAH DOLABI,LONG-GUN CABINET
-ARMORY_LOADOUT_CONTROL,VEX // TEÇHİZAT KONTROLÜ,VEX // LOADOUT CONTROL
-ARMORY_POLICY_ONE_PER_GROUP,HER SİLAH GRUBUNDAN EN FAZLA 1 ADET,MAXIMUM 1 WEAPON PER GROUP
-ARMORY_TERMINAL_INFO,RAFTAKİ SİLAHI KUŞAN VEYA TAŞIDIĞIN SİLAHI RAFA BIRAK // AYNI GRUPTAKİ SİLAHLAR OTOMATİK DEĞİŞTİRİLİR,EQUIP A STORED WEAPON OR RETURN A CARRIED WEAPON // SAME-GROUP WEAPONS SWAP AUTOMATICALLY
 LORE_INTERACT,[E] %s %s,[E] %s %s
 LORE_CLOSE_PROMPT,HERHANGİ BİR TUŞA BAS — KAYDI KAPAT,PRESS ANY KEY — CLOSE LOG
 RIFT_HEAT_DAMAGE,BOYUTSAL ISI DALGASI // -%d,DIMENSIONAL HEAT WAVE // -%d
-LEVEL02_GUNSHOT_ALARM,VEX-02 // GÜVENLİK ALARMI: SİLAH SESİ TESPİT EDİLDİ,VEX-02 // SECURITY ALERT: GUNFIRE DETECTED
-LEVEL03_GUNSHOT_ALARM,VEX-03 // KORVATH SÜRÜSÜ SİLAH SESİNİ ALGILADI,VEX-03 // KORVATH SWARM DETECTED GUNFIRE
-VEX-01 // KARANTİNA TESİSİ,VEX-01 // KARANTİNA TESİSİ,VEX-01 // QUARANTINE FACILITY
-BASTION-7 ÜSSÜNE GERİ DÖN,BASTION-7 ÜSSÜNE GERİ DÖN,RETURN TO BASTION-7
-"VEX-01 güvenlik sığınağında gözlerini açıyorsun. Sıfır Kaynak deneyi tesisi parçaladı; haberleşme kesik ve koridorlarda bilinmeyen yaşam biçimleri var. Güvenlik kayıtlarını bul, tahliye hattını aç ve Bastion-7'ye ulaş.","VEX-01 güvenlik sığınağında gözlerini açıyorsun. Sıfır Kaynak deneyi tesisi parçaladı; haberleşme kesik ve koridorlarda bilinmeyen yaşam biçimleri var. Güvenlik kayıtlarını bul, tahliye hattını aç ve Bastion-7'ye ulaş.","You awaken in the VEX-01 security shelter. The Zero Source experiment tore the facility apart; communications are down and unknown life forms roam the corridors. Recover the security records, open the evacuation route and reach Bastion-7."
-GÖREV: VEX-01'DEN ÇIK VE BASTION-7'YE ULAŞ,GÖREV: VEX-01'DEN ÇIK VE BASTION-7'YE ULAŞ,MISSION: ESCAPE VEX-01 AND REACH BASTION-7
-TESİS HARİTASI // VEX-01,TESİS HARİTASI // VEX-01,FACILITY MAP // VEX-01
-KIRMIZI ERİŞİM KARTI ALINDI // FİNAL HAVA KİLİDİNE İLERLE,KIRMIZI ERİŞİM KARTI ALINDI // FİNAL HAVA KİLİDİNE İLERLE,RED ACCESS CARD ACQUIRED // PROCEED TO THE FINAL AIRLOCK
-MAVİ ERİŞİM KARTI ALINDI // TESİSİN DERİNLİKLERİNE İLERLE,MAVİ ERİŞİM KARTI ALINDI // TESİSİN DERİNLİKLERİNE İLERLE,BLUE ACCESS CARD ACQUIRED // PROCEED DEEPER INTO THE FACILITY
-VEX-02 // KIRIK OMURGA,VEX-02 // KIRIK OMURGA,VEX-02 // BROKEN SPINE
-BATI KANADINI ARA // MAVİ ERİŞİM KARTINI BUL,BATI KANADINI ARA // MAVİ ERİŞİM KARTINI BUL,SEARCH THE WEST WING // FIND THE BLUE ACCESS CARD
-"VEX-02 enerji kayıtları hâlâ yayın yapıyor. Tesisin güvenlik ağı üç kademeli: önce batı kanadındaki mavi kartı bul, ardından doğu kanadında sarı reaktör yetkisine ulaş. Reaktör arşivindeki kırmızı kart tahliye bölümünü açacak. Baş mühendis Dr. Selin Erdem'in sinyali içeriden geliyor.","VEX-02 enerji kayıtları hâlâ yayın yapıyor. Tesisin güvenlik ağı üç kademeli: önce batı kanadındaki mavi kartı bul, ardından doğu kanadında sarı reaktör yetkisine ulaş. Reaktör arşivindeki kırmızı kart tahliye bölümünü açacak. Baş mühendis Dr. Selin Erdem'in sinyali içeriden geliyor.","VEX-02 is still broadcasting energy records. The facility security network has three stages: first find the blue card in the west wing, then reach the yellow reactor clearance in the east wing. The red card in the reactor archive will open the evacuation section. Chief engineer Dr. Selin Erdem's signal is coming from inside."
-GÖREV: ENERJİ KAYITLARINI AL VE DR. SELİN ERDEM'İ TAHLİYE ET,GÖREV: ENERJİ KAYITLARINI AL VE DR. SELİN ERDEM'İ TAHLİYE ET,MISSION: RECOVER THE ENERGY RECORDS AND EVACUATE DR. SELIN ERDEM
-TESİS HARİTASI // VEX-02,TESİS HARİTASI // VEX-02,FACILITY MAP // VEX-02
-KIRMIZI ERİŞİM KARTI ALINDI // TAHLİYE ODASINI TEMİZLE VE SELİN'İ KURTAR,KIRMIZI ERİŞİM KARTI ALINDI // TAHLİYE ODASINI TEMİZLE VE SELİN'İ KURTAR,RED ACCESS CARD ACQUIRED // CLEAR THE EVACUATION ROOM AND RESCUE SELIN
-SARI ERİŞİM KARTI ALINDI // REAKTÖR BÖLME KAPISINI AÇ,SARI ERİŞİM KARTI ALINDI // REAKTÖR BÖLME KAPISINI AÇ,YELLOW ACCESS CARD ACQUIRED // OPEN THE REACTOR BULKHEAD
-MAVİ ERİŞİM KARTI ALINDI // MERKEZE DÖN VE DOĞU KANADINI AÇ,MAVİ ERİŞİM KARTI ALINDI // MERKEZE DÖN VE DOĞU KANADINI AÇ,BLUE ACCESS CARD ACQUIRED // RETURN TO THE HUB AND OPEN THE EAST WING
-VEX-03 // KÜL MADENİ,VEX-03 // KÜL MADENİ,VEX-03 // ASH MINE
-ALT GALERİYİ ARA // MAVİ GÜÇ KARTINI BUL,ALT GALERİYİ ARA // MAVİ GÜÇ KARTINI BUL,SEARCH THE LOWER GALLERY // FIND THE BLUE POWER CARD
-"Kırık Omurga'dan alınan kayıtlar, VEX'in enerji üretmediğini doğruladı: başka boyutların fiziksel kaynaklarını çekip Dünya'ya aktarıyordu. Sinyalin ilk büyük düğümü, terk edilmiş Kül Madeni'nin altında çalışmaya devam ediyor. Korvath adı verilen madenci kastı, sömürülen dünyalarının açılan yarığından tesise ulaştı. Alt galerideki güç kartını bul, güvenlik merdiveninden kontrol katına çık ve yarık çekirdeğini kapat.","Kırık Omurga'dan alınan kayıtlar, VEX'in enerji üretmediğini doğruladı: başka boyutların fiziksel kaynaklarını çekip Dünya'ya aktarıyordu. Sinyalin ilk büyük düğümü, terk edilmiş Kül Madeni'nin altında çalışmaya devam ediyor. Korvath adı verilen madenci kastı, sömürülen dünyalarının açılan yarığından tesise ulaştı. Alt galerideki güç kartını bul, güvenlik merdiveninden kontrol katına çık ve yarık çekirdeğini kapat.","Records recovered from Broken Spine confirm that VEX was not creating energy: it was drawing physical resources from other dimensions and transferring them to Earth. The signal's first major node is still operating beneath the abandoned Ash Mine. A miner caste known as the Korvath reached the facility through a rift opened from their exploited world. Find the power card in the lower gallery, climb the security stairs to the control floor and shut down the rift core."
-GÖREV: MADEN DÜĞÜMÜNÜ KAPAT // KORVATH ÇEKİRDEĞİNİ İZOLE ET,GÖREV: MADEN DÜĞÜMÜNÜ KAPAT // KORVATH ÇEKİRDEĞİNİ İZOLE ET,MISSION: SHUT DOWN THE MINE NODE // ISOLATE THE KORVATH CORE
-KAT PLANI // VEX-03 ALT + ÜST,KAT PLANI // VEX-03 ALT + ÜST,FLOOR PLAN // VEX-03 LOWER + UPPER
-KIRMIZI ÇEKİRDEK YETKİSİ ALINDI // YARIK ODASINI AÇ,KIRMIZI ÇEKİRDEK YETKİSİ ALINDI // YARIK ODASINI AÇ,RED CORE CLEARANCE ACQUIRED // OPEN THE RIFT CHAMBER
-MAVİ GÜÇ KARTI ALINDI // GÜVENLİK MERDİVENİNDEN ÜST KATA ÇIK,MAVİ GÜÇ KARTI ALINDI // GÜVENLİK MERDİVENİNDEN ÜST KATA ÇIK,BLUE POWER CARD ACQUIRED // CLIMB THE SECURITY STAIRS
-BASTION-7 // VEX ANA ÜSSÜ,BASTION-7 // VEX ANA ÜSSÜ,BASTION-7 // VEX HEADQUARTERS
-OPERASYON TERMİNALİNİ KULLAN,OPERASYON TERMİNALİNİ KULLAN,USE THE OPERATIONS TERMINAL
-BASTION-7 // GÜVENLİ BÖLGE,BASTION-7 // GÜVENLİ BÖLGE,BASTION-7 // SAFE ZONE
-BASTION-7 // ÜS HARİTASI,BASTION-7 // ÜS HARİTASI,BASTION-7 // BASE MAP
 BASTION TERMİNALİ,BASTION TERMİNALİ,BASTION TERMINAL
-BASTION-7 SİSTEMİ ÇEVRİMİÇİ,BASTION-7 SİSTEMİ ÇEVRİMİÇİ,BASTION-7 SYSTEM ONLINE
 OPERASYON TERMİNALİ,OPERASYON TERMİNALİ,OPERATIONS TERMINAL
-VEX-01 KARANTİNA TESİSİ // GÖREV SEÇ / DEPLOY,VEX-01 KARANTİNA TESİSİ // GÖREV SEÇ / DEPLOY,VEX-01 QUARANTINE FACILITY // SELECT MISSION / DEPLOY
-BASTION-7 // SAVUNMA ÇEVRİMİÇİ // VEX-02 İÇ HAT ALARMI HAZIR,BASTION-7 // SAVUNMA ÇEVRİMİÇİ // VEX-02 İÇ HAT ALARMI HAZIR,BASTION-7 // DEFENSE ONLINE // VEX-02 INTERNAL ALERT READY
 CEPHANELİK DURUMU,CEPHANELİK DURUMU,ARMORY STATUS
 SAHİP OLDUĞUN SİLAHI RAFTAN SEÇ,SAHİP OLDUĞUN SİLAHI RAFTAN SEÇ,SELECT AN OWNED WEAPON FROM THE RACK
 GÖREVDE HENÜZ BULUNMADI,GÖREVDE HENÜZ BULUNMADI,NOT YET FOUND IN A MISSION
@@ -343,7 +298,6 @@ GÜVENLİK KAPISI,GÜVENLİK KAPISI,SECURITY DOOR
 TAHLİYE KONTROLÜ,TAHLİYE KONTROLÜ,EVACUATION CONTROL
 MAVİ ERİŞİM ANAHTARI,MAVİ ERİŞİM ANAHTARI,BLUE ACCESS KEY
 KIRMIZI ERİŞİM ANAHTARI,KIRMIZI ERİŞİM ANAHTARI,RED ACCESS KEY
-SARI ERİŞİM ANAHTARI,SARI ERİŞİM ANAHTARI,YELLOW ACCESS KEY
 MAVİ + KIRMIZI ERİŞİM ANAHTARI,MAVİ + KIRMIZI ERİŞİM ANAHTARI,BLUE + RED ACCESS KEYS
 MAVİ GÜÇ KARTI,MAVİ GÜÇ KARTI,BLUE POWER CARD
 KIRMIZI ÇEKİRDEK YETKİSİ,KIRMIZI ÇEKİRDEK YETKİSİ,RED CORE CLEARANCE
@@ -352,7 +306,6 @@ MERMİ,MERMİ,AMMO
 FİŞEK,FİŞEK,SHELLS
 HAFİF ZIRH,HAFİF ZIRH,LIGHT ARMOR
 GECE GÖRÜŞÜ,GECE GÖRÜŞÜ,NIGHT VISION
-VX-47 TAARRUZ TÜFEĞİ,VX-47 TAARRUZ TÜFEĞİ,VX-47 ASSAULT RIFLE
 7.62x39 MÜHİMMAT,7.62x39 MÜHİMMAT,7.62x39 AMMO
 5.7x28 MÜHİMMAT,5.7x28 MÜHİMMAT,5.7x28 AMMO
 ÜST KAT GÜVENLİK MERDİVENİ,ÜST KAT GÜVENLİK MERDİVENİ,UPPER-FLOOR SECURITY STAIRWAY
@@ -368,13 +321,9 @@ GİZLİ MERMİ KUTUSU,GİZLİ MERMİ KUTUSU,HIDDEN AMMO BOX
 ACİL SAĞLIK KİTİ,ACİL SAĞLIK KİTİ,EMERGENCY MEDKIT
 KORVATH FİŞEK KASASI,KORVATH FİŞEK KASASI,KORVATH SHELL CRATE
 ÇEKİRDEK ZIRHI,ÇEKİRDEK ZIRHI,CORE ARMOR
-Kayıt verisi bulunamadı.,Kayıt verisi bulunamadı.,No log data found.
 TRANSFER DENEYİ 41 // TERMAL KAYIP,TRANSFER DENEYİ 41 // TERMAL KAYIP,TRANSFER EXPERIMENT 41 // THERMAL LOSS
-"Sıfır Kaynak çıkışı yüzde on iki arttı. Eşzamanlı uzaksal ölçümde karşı taraftaki jeotermal damar sıcaklığı 318 derece düştü. Bu üretim değil; iki sistem arasında zorlanmış enerji aktarımı. Yönetim, ölçümün rapordan çıkarılmasını emretti.","Sıfır Kaynak çıkışı yüzde on iki arttı. Eşzamanlı uzaksal ölçümde karşı taraftaki jeotermal damar sıcaklığı 318 derece düştü. Bu üretim değil; iki sistem arasında zorlanmış enerji aktarımı. Yönetim, ölçümün rapordan çıkarılmasını emretti.",Zero Source output increased by twelve percent. Simultaneous remote measurement showed a 318-degree drop in the geothermal vein on the other side. This is not generation; it is forced energy transfer between two systems. Management ordered the measurement removed from the report.
 BİYOLOJİ RAPORU // KORVATH İŞÇİ KASTI,BİYOLOJİ RAPORU // KORVATH İŞÇİ KASTI,BIOLOGY REPORT // KORVATH WORKER CASTE
-"Basalt Juggernaut örneğinin uzuv aşınması savaş kullanımına değil, yüksek basınçta kaya kırmaya uyuyor. Zırh sandığımız tabaka doğal ısı kalkanı. Bunlar asker değil. Açtığımız kapıdan geçen, ocağı ve yön duygusu yok edilmiş canlı işçiler.","Basalt Juggernaut örneğinin uzuv aşınması savaş kullanımına değil, yüksek basınçta kaya kırmaya uyuyor. Zırh sandığımız tabaka doğal ısı kalkanı. Bunlar asker değil. Açtığımız kapıdan geçen, ocağı ve yön duygusu yok edilmiş canlı işçiler.","Limb wear on the Basalt Juggernaut specimen matches high-pressure rock breaking, not combat use. The layer we thought was armor is a natural heat shield. They are not soldiers. They are living workers who crossed the door we opened after losing their mine and sense of direction."
 ACİL TIP SİNYALİ // DR. ECE TAN,ACİL TIP SİNYALİ // DR. ECE TAN,EMERGENCY MEDICAL SIGNAL // DR. ECE TAN
-"Bastion-7, burası Dr. Ece Tan. Maden yüzeyindeki acil tıp istasyonunda on iki yaralıyla mahsur kaldık. Kül düğümü kapanırsa sinyalimiz netleşecek. Bizi duyuyorsanız kuzey tahliye hattını takip edin. Tekrar ediyorum: hayatta kalanlar var.","Bastion-7, burası Dr. Ece Tan. Maden yüzeyindeki acil tıp istasyonunda on iki yaralıyla mahsur kaldık. Kül düğümü kapanırsa sinyalimiz netleşecek. Bizi duyuyorsanız kuzey tahliye hattını takip edin. Tekrar ediyorum: hayatta kalanlar var.","Bastion-7, this is Dr. Ece Tan. We are trapped with twelve wounded at the emergency medical station on the mine surface. If the Ash node closes, our signal will clear. If you can hear us, follow the northern evacuation route. I repeat: there are survivors."
 MAVİ SERVİS KISAYOLU,MAVİ SERVİS KISAYOLU,BLUE SERVICE SHORTCUT
 MAVİ SERVİS KISAYOLU AÇILDI // MERKEZE DÖN,MAVİ SERVİS KISAYOLU AÇILDI // MERKEZE DÖN,BLUE SERVICE SHORTCUT OPEN // RETURN TO THE HUB
 REAKTÖR BÖLME KAPISI,REAKTÖR BÖLME KAPISI,REACTOR BULKHEAD
@@ -388,33 +337,9 @@ DR. SELİN ERDEM // TAHLİYE KONTROLÜ,DR. SELİN ERDEM // TAHLİYE KONTROLÜ,DR
 MERDİVENİ KULLAN // ÜST KATTA KIRMIZI YETKİYİ BUL,MERDİVENİ KULLAN // ÜST KATTA KIRMIZI YETKİYİ BUL,USE THE STAIRS // FIND RED CLEARANCE UPSTAIRS
 YARIK ODASINA GİR // KORVATH MUHAFIZINI İMHA ET,YARIK ODASINA GİR // KORVATH MUHAFIZINI İMHA ET,ENTER THE RIFT CHAMBER // ELIMINATE THE KORVATH GUARD
 GİZLİ BAKIM STOĞU,GİZLİ BAKIM STOĞU,HIDDEN MAINTENANCE CACHE
-BÖLME 1-2 GEÇİDİ,BÖLME 1-2 GEÇİDİ,SECTOR 1-2 PASSAGE
-BÖLME 2-5 GEÇİDİ,BÖLME 2-5 GEÇİDİ,SECTOR 2-5 PASSAGE
-BÖLME 4-5 GEÇİDİ,BÖLME 4-5 GEÇİDİ,SECTOR 4-5 PASSAGE
-BÖLME 4-7 GEÇİDİ,BÖLME 4-7 GEÇİDİ,SECTOR 4-7 PASSAGE
-BÖLME 5-6 GEÇİDİ,BÖLME 5-6 GEÇİDİ,SECTOR 5-6 PASSAGE
-BÖLME 5-8 GEÇİDİ,BÖLME 5-8 GEÇİDİ,SECTOR 5-8 PASSAGE
-BÖLME 6-9 GEÇİDİ,BÖLME 6-9 GEÇİDİ,SECTOR 6-9 PASSAGE
-BÖLME 7-8 GEÇİDİ,BÖLME 7-8 GEÇİDİ,SECTOR 7-8 PASSAGE
-BÖLME 7-10 GEÇİDİ,BÖLME 7-10 GEÇİDİ,SECTOR 7-10 PASSAGE
-BÖLME 8-9 GEÇİDİ,BÖLME 8-9 GEÇİDİ,SECTOR 8-9 PASSAGE
-BÖLME 8-11 GEÇİDİ,BÖLME 8-11 GEÇİDİ,SECTOR 8-11 PASSAGE
-BÖLME 9-12 GEÇİDİ,BÖLME 9-12 GEÇİDİ,SECTOR 9-12 PASSAGE
-BÖLME 11-14 GEÇİDİ,BÖLME 11-14 GEÇİDİ,SECTOR 11-14 PASSAGE
-BÖLME 13-14 GEÇİDİ,BÖLME 13-14 GEÇİDİ,SECTOR 13-14 PASSAGE
-BÖLME 14-15 GEÇİDİ,BÖLME 14-15 GEÇİDİ,SECTOR 14-15 PASSAGE
-BÖLME 14-17 GEÇİDİ,BÖLME 14-17 GEÇİDİ,SECTOR 14-17 PASSAGE
-BÖLME 15-18 GEÇİDİ,BÖLME 15-18 GEÇİDİ,SECTOR 15-18 PASSAGE
-BÖLME 16-17 GEÇİDİ,BÖLME 16-17 GEÇİDİ,SECTOR 16-17 PASSAGE
 NİHAİ TAHLİYE HAVA KİLİDİ,NİHAİ TAHLİYE HAVA KİLİDİ,FINAL EVACUATION AIRLOCK
 TESİSİN DERİNLİKLERİNE İLERLE,TESİSİN DERİNLİKLERİNE İLERLE,PROCEED DEEPER INTO THE FACILITY
 FİNAL HAVA KİLİDİNE GİR,FİNAL HAVA KİLİDİNE GİR,ENTER THE FINAL AIRLOCK
-VEX-01: Sıfır Kaynak kazasından sağ çık. Güvenlik erişimini yeniden kur ve Bastion-7 tahliye hattına ulaş.,VEX-01: Sıfır Kaynak kazasından sağ çık. Güvenlik erişimini yeniden kur ve Bastion-7 tahliye hattına ulaş.,VEX-01: Survive the Zero Source disaster. Restore security access and reach the Bastion-7 evacuation line.
-VEX-02: Enerji kayıtlarını ele geçir. Dr. Selin Erdem'i bul ve boyutsal yarıkların kaynağını ortaya çıkar.,VEX-02: Enerji kayıtlarını ele geçir. Dr. Selin Erdem'i bul ve boyutsal yarıkların kaynağını ortaya çıkar.,VEX-02: Recover the energy records. Find Dr. Selin Erdem and uncover the source of the dimensional rifts.
-"Kül Madeni'nin altında çalışan boyutsal emiş düğümüne sız. Mavi güç kartını bul, güvenlik merdiveninden üst kata çık ve Korvath yarık çekirdeğini izole et.","Kül Madeni'nin altında çalışan boyutsal emiş düğümüne sız. Mavi güç kartını bul, güvenlik merdiveninden üst kata çık ve Korvath yarık çekirdeğini izole et.","Infiltrate the dimensional extraction node operating beneath the Ash Mine. Find the blue power card, climb the security stairs and isolate the Korvath rift core."
-VEX-01 TAMAMLANDI. GÜVENLİK KAYDI BASTION-7'YE AKTARILDI.,VEX-01 TAMAMLANDI. GÜVENLİK KAYDI BASTION-7'YE AKTARILDI.,VEX-01 COMPLETE. SECURITY DATA TRANSFERRED TO BASTION-7.
-VEX-02 TAMAMLANDI. KIRIK OMURGA KAYDI BASTION-7'YE AKTARILDI.,VEX-02 TAMAMLANDI. KIRIK OMURGA KAYDI BASTION-7'YE AKTARILDI.,VEX-02 COMPLETE. BROKEN SPINE DATA TRANSFERRED TO BASTION-7.
-VEX-03 TAMAMLANDI. KORVATH DÜĞÜMÜ KAPATILDI; BASTION-7 YENİ BOYUTSAL İZLERİ TARIYOR.,VEX-03 TAMAMLANDI. KORVATH DÜĞÜMÜ KAPATILDI; BASTION-7 YENİ BOYUTSAL İZLERİ TARIYOR.,VEX-03 COMPLETE. KORVATH NODE SHUT DOWN; BASTION-7 IS SCANNING FOR NEW DIMENSIONAL TRACES.
 MAVİ ERİŞİM KARTI,MAVİ ERİŞİM KARTI,BLUE ACCESS CARD
 KIRMIZI ERİŞİM KARTI,KIRMIZI ERİŞİM KARTI,RED ACCESS CARD
 SARI ERİŞİM KARTI,SARI ERİŞİM KARTI,YELLOW ACCESS CARD
@@ -422,7 +347,6 @@ P-01 TAKTİK TABANCA,P-01 TAKTİK TABANCA,P-01 TACTICAL PISTOL
 KIRICI POMPALI,KIRICI POMPALI,BREACHER SHOTGUN
 P9 SIDEARM,P9 YAN SİLAH,P9 SIDEARM
 P9 SIDEARM KAYDI BULUNAMADI,P9 SIDEARM KAYDI BULUNAMADI,P9 SIDEARM RECORD NOT FOUND
-P-01 TAKTİK TABANCA KAYDI BULUNAMADI,P-01 TAKTİK TABANCA KAYDI BULUNAMADI,P-01 TACTICAL PISTOL RECORD NOT FOUND
 VEX SAHA KAYDI,VEX SAHA KAYDI,VEX FIELD LOG
 KAYIT,KAYIT,LOG
 NESNE,NESNE,ITEM
@@ -438,38 +362,21 @@ AK-47,AK-47,AK-47
 MP90,MP90,MP90
 POWER OFFLINE,GÜÇ ÇEVRİMDIŞI,POWER OFFLINE
 VEX // BASTION-7,VEX // BASTION-7,VEX // BASTION-7
-MISSION CONTROL,OPERASYON KONTROLÜ,MISSION CONTROL
-DEPLOYMENT HAZIR,KONUŞLANDIRMA HAZIR,DEPLOYMENT READY
 OPERASYON,OPERASYON,OPERATION
-YENİ GÖREV YOK,YENİ GÖREV YOK,NO NEW MISSION
-YENİ OPERASYON BEKLENİYOR,YENİ OPERASYON BEKLENİYOR,AWAITING NEW OPERATION
 OPERASYON SEÇ,OPERASYON SEÇ,SELECT OPERATION
-GÖREVE ÇIK,GÖREVE ÇIK,DEPLOY
-BASTION-7: İç hatta ilerle. Güvenlik erişimini yeniden kur ve tahliye yolunu aç.,BASTION-7: İç hatta ilerle. Güvenlik erişimini yeniden kur ve tahliye yolunu aç.,BASTION-7: Move into the interior. Restore security access and open the evacuation route.
-OPERASYON TAMAMLANDI. KAYIT BASTION-7'YE AKTARILDI.,OPERASYON TAMAMLANDI. KAYIT BASTION-7'YE AKTARILDI.,OPERATION COMPLETE. DATA TRANSFERRED TO BASTION-7.
 TESİS HARİTASI,TESİS HARİTASI,FACILITY MAP
 HUB_TALK_TO,[E] // %s İLE KONUŞ,[E] // TALK TO %s
 SURVIVOR_SELIN_NAME,DR. SELİN ERDEM,DR. SELIN ERDEM
 SURVIVOR_SELIN_ROLE,BAŞ MÜHENDİS // ENERJİ & SİLAH SİSTEMLERİ,CHIEF ENGINEER // ENERGY & WEAPON SYSTEMS
-SURVIVOR_SELIN_DIALOGUE_STAGE2,Selin: Atölye ve enerji hattı yeniden çevrimiçi. Kül Madeni düğümündeki akışı kesmeden Yarık Ağı’nı anlayamayız.,Selin: The workshop and energy line are back online. We cannot understand the Rift Network until we cut the flow at the Ash Mine node.
-SURVIVOR_SELIN_DIALOGUE_STAGE3,Selin: Kül Madeni akışı kesildi. Yarık tamamen kapanmadı ama artık enerji çekmiyor. Bir sonraki sinyali izlemeliyiz.,Selin: The Ash Mine flow is severed. The rift did not fully vanish but it is no longer drawing energy. We need to follow the next signal.
 LEVEL01_NAME,VEX-01 // KARANTİNA TESİSİ,VEX-01 // QUARANTINE FACILITY
 LEVEL01_OBJECTIVE_START,ACİL DURUM MUHAREBE PROTOKOLÜNÜ TAMAMLA,COMPLETE THE EMERGENCY COMBAT PROTOCOL
 LEVEL01_BRIEFING_STORY,"VEX-01 güvenlik sığınağında gözlerini açıyorsun. Sıfır Kaynak kazası tesisi parçaladı ve bilinmeyen yaşam biçimleri güvenlik ağını ele geçirdi. Tahliye hattı yalnız temizlenen bölmeleri açıyor. Muharebe protokolünü tamamla, mavi ve kırmızı erişim kartlarını topla ve Bastion-7 hattına ulaş.","You awaken in the VEX-01 security shelter. The Zero Source disaster tore the facility apart and unknown life forms seized the security network. The evacuation line only opens cleared sectors. Complete the combat protocol, collect the blue and red access cards, and reach the Bastion-7 line."
 LEVEL01_BRIEFING_OBJECTIVE,GÖREV: PROTOKOLÜ TAMAMLA // ÇİFTE ERİŞİMİ KUR // VEX-01'DEN ÇIK,MISSION: COMPLETE THE PROTOCOL // RESTORE DUAL ACCESS // ESCAPE VEX-01
 LEVEL01_MAP_TITLE,TESİS HARİTASI // VEX-01,FACILITY MAP // VEX-01
-LEVEL01_OBJECTIVE_RED_ONLY,KIRMIZI ERİŞİM KARTI ALINDI // MAVİ KARTI BUL,RED ACCESS CARD ACQUIRED // FIND THE BLUE CARD
-LEVEL01_OBJECTIVE_BLUE_ONLY,MAVİ ERİŞİM KARTI ALINDI // KIRMIZI KARTI BUL,BLUE ACCESS CARD ACQUIRED // FIND THE RED CARD
-LEVEL01_OBJECTIVE_BOTH_KEYS,ÇİFTE ERİŞİM KURULDU // FİNAL HAVA KİLİDİNE İLERLE,DUAL ACCESS RESTORED // PROCEED TO THE FINAL AIRLOCK
-LEVEL01_OBJECTIVE_FINAL_GUARD,TAHLİYE MUHAFIZINI ETKİSİZ HALE GETİR // KONTROLÜ ETKİNLEŞTİR,NEUTRALIZE THE EVACUATION GUARD // ACTIVATE THE CONTROL
 LEVEL01_OBJECTIVE_SECURITY,PROTOKOL TAMAMLANDI // MAVİ VE KIRMIZI ERİŞİM KARTLARINI BUL,PROTOCOL COMPLETE // FIND THE BLUE AND RED ACCESS CARDS
 LEVEL01_TUTORIAL_MOVE_OBJECTIVE,HAREKET KONTROLLERİNİ DOĞRULA // İLERİDEKİ KAPIYA ULAŞ,VERIFY MOVEMENT CONTROLS // REACH THE DOOR AHEAD
 LEVEL01_TUTORIAL_FIRE_OBJECTIVE,İLK TEHDİDİ TABANCA İLE ETKİSİZ HALE GETİR,NEUTRALIZE THE FIRST THREAT WITH YOUR PISTOL
 LEVEL01_TUTORIAL_RELOAD_OBJECTIVE,ŞARJÖR YÖNETİMİ YAP // BÖLMEYİ TEMİZLE,MANAGE YOUR MAGAZINE // CLEAR THE SECTOR
-LEVEL01_TUTORIAL_STRAFE_OBJECTIVE,HAREKET HALİNDE ATEŞ ET // İKİ TEHDİDİ TEMİZLE,FIRE WHILE MOVING // CLEAR BOTH THREATS
-LEVEL01_TUTORIAL_BARREL_OBJECTIVE,PATLAYICI VARİLİ KULLAN // BÖLMEYİ TEMİZLE,USE THE EXPLOSIVE BARREL // CLEAR THE SECTOR
-LEVEL01_TUTORIAL_RESOURCE_OBJECTIVE,KAYNAKLARI TOPLA // MUHAREBEYE DEVAM ET,COLLECT RESOURCES // CONTINUE THE ENGAGEMENT
-LEVEL01_TUTORIAL_FINAL_OBJECTIVE,SON MUHAREBE SINAMASINI TAMAMLA,COMPLETE THE FINAL COMBAT TRIAL
 LEVEL01_TUTORIAL_MOVE_HINT,HAREKET: W/A/S/D // KOŞ: SHIFT // EĞİL: C // ZIPLA: SPACE,MOVEMENT: W/A/S/D // SPRINT: SHIFT // CROUCH: C // JUMP: SPACE
 LEVEL01_TUTORIAL_INTERACT_HINT,ETKİLEŞİM: KAPILAR VE KONTROLLER İÇİN E TUŞUNU KULLAN,INTERACT: USE E FOR DOORS AND CONTROLS
 LEVEL01_TUTORIAL_FIRE_HINT,ATEŞ: SOL TIK // NİŞAN: SAĞ TIK // HEDEFİ MERKEZE AL,FIRE: LEFT MOUSE // AIM: RIGHT MOUSE // CENTER YOUR TARGET
@@ -479,40 +386,18 @@ LEVEL01_TUTORIAL_BARREL_HINT,ÇEVRE: KIRMIZI VARİLLERİ UZAKTAN VUR // PATLAMA 
 LEVEL01_TUTORIAL_RESOURCE_HINT,KAYNAKLAR: CAN // ZIRH // MERMİ // DOLU KAYNAK YERDE KALIR,RESOURCES: HEALTH // ARMOR // AMMO // FULL RESOURCES REMAIN IN PLACE
 LEVEL01_TUTORIAL_FINAL_HINT,SON SINAMA: HEDEFLERİ TEMİZLE // ATEŞ EDERKEN HAREKETTE KAL,FINAL TRIAL: CLEAR THE TARGETS // KEEP MOVING WHILE FIRING
 LEVEL01_TUTORIAL_COMPLETE_HINT,MUHAREBE PROTOKOLÜ TAMAMLANDI // ANA TESİS ERİŞİMİ AÇILDI,COMBAT PROTOCOL COMPLETE // MAIN FACILITY ACCESS GRANTED
-LEVEL01_TUTORIAL_WEAPON_HINT,SİLAH DEĞİŞTİR: 1–4 VEYA FARE TEKERLEĞİ // SINIF BAŞINA TEK SİLAH,SWITCH WEAPON: 1–4 OR MOUSE WHEEL // ONE WEAPON PER CLASS
-LEVEL01_TUTORIAL_LIGHT_HINT,FENER: F // GECE GÖRÜŞÜ: N // KARANLIK BÖLMELERDE GÖRÜŞÜNÜ KONTROL ET,FLASHLIGHT: F // NIGHT VISION: N // CONTROL VISIBILITY IN DARK SECTORS
 LEVEL01_DOOR_PROTOCOL_ENTRY,PROTOKOL GİRİŞ KAPISI,PROTOCOL ENTRY DOOR
 LEVEL01_DOOR_FIRE_TRAINING,ATEŞ EĞİTİMİ KİLİDİ,FIRE TRAINING LOCK
-LEVEL01_DOOR_RELOAD_TRAINING,ŞARJÖR EĞİTİMİ KİLİDİ,RELOAD TRAINING LOCK
-LEVEL01_DOOR_STRAFE_TRAINING,HAREKETLİ ATIŞ KİLİDİ,MOBILE FIRE LOCK
-LEVEL01_DOOR_ENVIRONMENT_TRAINING,ÇEVRESEL MUHAREBE KİLİDİ,ENVIRONMENTAL COMBAT LOCK
-LEVEL01_DOOR_RESOURCE_TRAINING,KAYNAK YÖNETİMİ KİLİDİ,RESOURCE MANAGEMENT LOCK
-LEVEL01_DOOR_FINAL_TRAINING,SON MUHAREBE SINAMASI KİLİDİ,FINAL COMBAT TRIAL LOCK
-LEVEL01_DOOR_MAIN_FACILITY,ANA TESİS ERİŞİMİ,MAIN FACILITY ACCESS
-LEVEL01_PICKUP_TRAINING_AMMO,EĞİTİM MERMİSİ,TRAINING AMMO
-LEVEL01_PICKUP_TRAINING_HEALTH,EĞİTİM SAĞLIK PAKETİ,TRAINING HEALTH PACK
-LEVEL01_PICKUP_TRAINING_ARMOR,EĞİTİM ZIRHI,TRAINING ARMOR
-LEVEL01_MISSION_BRIEF,VEX-01: Sıfır Kaynak kazasından sağ çık. Güvenlik erişimini yeniden kur ve Bastion-7 tahliye hattına ulaş.,VEX-01: Survive the Zero Source disaster. Restore security access and reach the Bastion-7 evacuation line.
-LEVEL01_COMPLETE,VEX-01 TAMAMLANDI. GÜVENLİK KAYDI BASTION-7'YE AKTARILDI.,VEX-01 COMPLETE. SECURITY DATA TRANSFERRED TO BASTION-7.
 LEVEL02_NAME,VEX-02 // KIRIK OMURGA,VEX-02 // BROKEN SPINE
 LEVEL02_OBJECTIVE_START,BATI KANADINI ARA // MAVİ ERİŞİM KARTINI BUL,SEARCH THE WEST WING // FIND THE BLUE ACCESS CARD
 LEVEL02_BRIEFING_STORY,"VEX-02 enerji kayıtları hâlâ yayın yapıyor. Tesisin güvenlik ağı üç kademeli: önce batı kanadındaki mavi kartı bul, ardından doğu kanadında sarı reaktör yetkisine ulaş. Reaktör arşivindeki kırmızı kart tahliye bölümünü açacak. Baş mühendis Dr. Selin Erdem'in sinyali içeriden geliyor.","VEX-02 is still broadcasting energy records. The facility security network has three stages: first find the blue card in the west wing, then reach the yellow reactor clearance in the east wing. The red card in the reactor archive will open the evacuation section. Chief engineer Dr. Selin Erdem's signal is coming from inside."
 LEVEL02_BRIEFING_OBJECTIVE,GÖREV: ENERJİ KAYITLARINI AL VE DR. SELİN ERDEM'İ TAHLİYE ET,MISSION: RECOVER THE ENERGY RECORDS AND EVACUATE DR. SELIN ERDEM
 LEVEL02_MAP_TITLE,TESİS HARİTASI // VEX-02,FACILITY MAP // VEX-02
-LEVEL02_OBJECTIVE_RED,KIRMIZI ERİŞİM KARTI ALINDI // TAHLİYE ODASINI TEMİZLE VE SELİN'İ KURTAR,RED ACCESS CARD ACQUIRED // CLEAR THE EVACUATION ROOM AND RESCUE SELIN
-LEVEL02_OBJECTIVE_YELLOW,SARI ERİŞİM KARTI ALINDI // REAKTÖR BÖLME KAPISINI AÇ,YELLOW ACCESS CARD ACQUIRED // OPEN THE REACTOR BULKHEAD
-LEVEL02_OBJECTIVE_BLUE,MAVİ ERİŞİM KARTI ALINDI // MERKEZE DÖN VE DOĞU KANADINI AÇ,BLUE ACCESS CARD ACQUIRED // RETURN TO THE HUB AND OPEN THE EAST WING
-LEVEL02_MISSION_BRIEF,VEX-02: Enerji kayıtlarını ele geçir. Dr. Selin Erdem'i bul ve boyutsal yarıkların kaynağını ortaya çıkar.,VEX-02: Recover the energy records. Find Dr. Selin Erdem and uncover the source of the dimensional rifts.
-LEVEL02_COMPLETE,VEX-02 TAMAMLANDI. KIRIK OMURGA KAYDI BASTION-7'YE AKTARILDI.,VEX-02 COMPLETE. BROKEN SPINE DATA TRANSFERRED TO BASTION-7.
 LEVEL03_NAME,VEX-03 // KÜL MADENİ,VEX-03 // ASH MINE
 LEVEL03_OBJECTIVE_START,ALT GALERİYİ ARA // MAVİ GÜÇ KARTINI BUL,SEARCH THE LOWER GALLERY // FIND THE BLUE POWER CARD
 LEVEL03_BRIEFING_STORY,"Kırık Omurga'dan alınan kayıtlar, VEX'in enerji üretmediğini doğruladı: başka boyutların fiziksel kaynaklarını çekip Dünya'ya aktarıyordu. Sinyalin ilk büyük düğümü, terk edilmiş Kül Madeni'nin altında çalışmaya devam ediyor. Korvath adı verilen madenci kastı, sömürülen dünyalarının açılan yarığından tesise ulaştı. Alt galerideki güç kartını bul, güvenlik merdiveninden kontrol katına çık ve yarık çekirdeğini kapat.","Records recovered from Broken Spine confirm that VEX was not creating energy: it was drawing physical resources from other dimensions and transferring them to Earth. The signal's first major node is still operating beneath the abandoned Ash Mine. A miner caste known as the Korvath reached the facility through a rift opened from their exploited world. Find the power card in the lower gallery, climb the security stairs to the control floor and shut down the rift core."
 LEVEL03_BRIEFING_OBJECTIVE,GÖREV: MADEN DÜĞÜMÜNÜ KAPAT // KORVATH ÇEKİRDEĞİNİ İZOLE ET,MISSION: SHUT DOWN THE MINE NODE // ISOLATE THE KORVATH CORE
 LEVEL03_MAP_TITLE,KAT PLANI // VEX-03 ALT + ÜST,FLOOR PLAN // VEX-03 LOWER + UPPER
-LEVEL03_OBJECTIVE_RED,KIRMIZI ÇEKİRDEK YETKİSİ ALINDI // YARIK ODASINI AÇ,RED CORE CLEARANCE ACQUIRED // OPEN THE RIFT CHAMBER
-LEVEL03_OBJECTIVE_BLUE,MAVİ GÜÇ KARTI ALINDI // GÜVENLİK MERDİVENİNDEN ÜST KATA ÇIK,BLUE POWER CARD ACQUIRED // CLIMB THE SECURITY STAIRS
-LEVEL03_MISSION_BRIEF,"Kül Madeni'nin altında çalışan boyutsal emiş düğümüne sız. Mavi güç kartını bul, güvenlik merdiveninden üst kata çık ve Korvath yarık çekirdeğini izole et.","Infiltrate the dimensional extraction node operating beneath the Ash Mine. Find the blue power card, climb the security stairs and isolate the Korvath rift core."
-LEVEL03_COMPLETE,VEX-03 TAMAMLANDI. KORVATH DÜĞÜMÜ KAPATILDI; BASTION-7 YENİ BOYUTSAL İZLERİ TARIYOR.,VEX-03 COMPLETE. KORVATH NODE SHUT DOWN; BASTION-7 IS SCANNING FOR NEW DIMENSIONAL TRACES.
 HUB_DISPLAY_NAME,BASTION-7 // VEX ANA ÜSSÜ,BASTION-7 // VEX HEADQUARTERS
 HUB_ARRIVAL_SAFE_ZONE,BASTION-7 // GÜVENLİ BÖLGE,BASTION-7 // SAFE ZONE
 HUB_MAP_TITLE,BASTION-7 // ÜS HARİTASI,BASTION-7 // BASE MAP
@@ -532,17 +417,12 @@ TERMINAL_STATUS_LOCKED,KİLİTLİ,LOCKED
 TERMINAL_MENU_NEXT_OPERATION,SIRADAKİ OPERASYON,NEXT OPERATION
 TERMINAL_MENU_COMPLETED_DETAIL,TESİS TEMİZLENDİ // ARŞİV KAYDI DOĞRULANDI,FACILITY CLEARED // ARCHIVE RECORD VERIFIED
 TERMINAL_MENU_LOCKED_DETAIL,ERİŞİM KİLİTLİ // ÖNCEKİ OPERASYON TAMAMLANMALI // AŞAMA %d,ACCESS LOCKED // PREVIOUS OPERATION MUST BE COMPLETED // STAGE %d
-TERMINAL_MENU_SELECT,OPERASYONU SEÇ,SELECT OPERATION
-TERMINAL_MENU_SELECTED,OPERASYON SEÇİLDİ,OPERATION SELECTED
 TERMINAL_MENU_DEPLOY,GÖREVE ÇIK,DEPLOY
 TERMINAL_MENU_CLOSE,TERMİNALİ KAPAT,CLOSE TERMINAL
 TERMINAL_MENU_FOOTER_HINT,[ESC] TERMİNALİ KAPAT // TESİS KAYITLARI SALT OKUNUR,[ESC] CLOSE TERMINAL // FACILITY RECORDS ARE READ-ONLY
 TERMINAL_MENU_ALL_CLEARED,TÜM TESİSLER TEMİZLENDİ,ALL FACILITIES CLEARED
 TERMINAL_MENU_NETWORK_IDLE,YENİ SİNYAL BEKLENİYOR,AWAITING NEW SIGNAL
 TERMINAL_MENU_ALL_CLEARED_DETAIL,KAYITLI TÜM TESİSLER TEMİZLENDİ // BASTION-7 YENİ OPERASYON SİNYALİ BEKLİYOR,ALL REGISTERED FACILITIES ARE CLEARED // BASTION-7 IS AWAITING A NEW OPERATION SIGNAL
-TERMINAL_FACILITY_QUARANTINE,KARANTİNA ARAŞTIRMA TESİSİ,QUARANTINE RESEARCH FACILITY
-TERMINAL_FACILITY_ENERGY,ENERJİ VE REAKTÖR KOMPLEKSİ,ENERGY AND REACTOR COMPLEX
-TERMINAL_FACILITY_ASH_MINE,KÜL MADENİ YARIK TESİSİ,ASH MINE RIFT FACILITY
 ARCHIVE_UI_XENOARCHIVE_REALITIES_NETWORK_STAGE_02D,XENOARŞİV %d / %d  //  EVREN %d / %d\nAĞ AŞAMASI %02d,XENOARCHIVE %d / %d  //  REALITIES %d / %d\nNETWORK STAGE %02d
 ARCHIVE_UI_CREATURES,YARATIKLAR,CREATURES
 ARCHIVE_UI_REALITIES,EVRENLER,REALITIES

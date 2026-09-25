@@ -249,6 +249,13 @@ func force_open() -> void:
 		_begin_opening()
 
 
+## Sahne dışı bir betik required_enemy_ids'i sonradan değiştirdiğinde çağrılır:
+## combat-lock önbelleğini yeniler ve kilit durumunu yayınlar.
+func refresh_combat_lock() -> void:
+	_combat_lock_was_active = _has_active_combat_lock()
+	_emit_lock_state()
+
+
 func is_access_locked() -> bool:
 	return permanently_locked or _runtime_locked or _has_active_combat_lock()
 
