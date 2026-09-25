@@ -29,7 +29,7 @@ const CAMPAIGN_END_PATH := "res://scenes/ui/campaign_end.tscn"
 const SAVE_PATH := "user://vex_save.cfg"
 const SAVE_TEMP_PATH := "user://vex_save.tmp"
 const SAVE_BACKUP_PATH := "user://vex_save.bak"
-const SAVE_VERSION := 6
+const SAVE_VERSION := 7
 const CAMPAIGN_SAVE_ENABLED := true
 const CHECKPOINTS_ENABLED := false
 const DEFAULT_PLAYER_MAXIMUM_HEALTH := 100
@@ -452,6 +452,9 @@ func complete_level(next_level_path: String = "") -> void:
 
 	var previous_campaign_stage := campaign_stage
 	_register_campaign_completion(current_scene)
+	if campaign_stage > previous_campaign_stage:
+		# Kayıttan önce: Bastion dönüşü yeni açılan güç kademesiyle kaydedilir.
+		BaseManager.raise_lighting_for_stage(campaign_stage)
 	# Oynanabilir içeriğin son bölümü yalnız ilk tamamlanışta ara son ekranını açar.
 	pending_campaign_end_screen = (
 		next_level_path != ""
@@ -725,6 +728,13 @@ func _migrate_save_state(state: Dictionary, version: int) -> Dictionary:
 			"lighting_mode": 0,
 			"upgrade_levels": {},
 		}
+	if version < 7:
+		# v7 öncesinde yeni güç kademeleri elle açılmak zorundaydı. Eski kayıtları
+		# bir kez ulaşılmış en yüksek kademeye taşı; sonraki elle seçimler korunur.
+		var base_state := (migrated.get("base_state", {}) as Dictionary).duplicate(true)
+		var reached_mode := BaseManager.get_highest_available_lighting_mode(int(migrated.get("campaign_stage", 0)))
+		base_state["lighting_mode"] = maxi(int(base_state.get("lighting_mode", 0)), reached_mode)
+		migrated["base_state"] = base_state
 	migrated["save_version"] = SAVE_VERSION
 	return migrated
 

@@ -330,6 +330,15 @@ func set_lighting_mode(mode: int, campaign_stage := -1) -> bool:
 	return true
 
 
+## Bir bölüm ilk kez tamamlanıp yeni güç kademesi açıldığında Bastion o kademeye
+## kendiliğinden geçer; oyuncu isterse üs yönetiminden daha düşük kademe seçebilir.
+func raise_lighting_for_stage(campaign_stage: int) -> bool:
+	var highest := get_highest_available_lighting_mode(campaign_stage)
+	if highest <= int(_lighting_mode):
+		return false
+	return set_lighting_mode(highest, campaign_stage)
+
+
 func get_upgrade_definitions() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for definition: Dictionary in UPGRADE_DEFINITIONS:

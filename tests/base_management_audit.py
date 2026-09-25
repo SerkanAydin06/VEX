@@ -24,11 +24,13 @@ def test_base_manager_is_campaign_state_autoload() -> None:
     assert "func capture_state() -> Dictionary:" in manager
     assert "func restore_state(state: Dictionary) -> void:" in manager
     assert "func reset_campaign_state(" in manager
-    assert "SAVE_VERSION := 6" in game_state
+    assert "SAVE_VERSION := 7" in game_state
     assert '"base_state": BaseManager.capture_state()' in game_state
     assert 'BaseManager.restore_state(saved_run_state.get("base_state", {}) as Dictionary)' in game_state
     assert "BaseManager.reset_campaign_state()" in game_state
     assert "if version < 6:" in game_state
+    assert "if version < 7:" in game_state
+    assert "BaseManager.raise_lighting_for_stage(campaign_stage)" in game_state
 
 
 def test_base_manager_defines_real_bastion_restricted_areas() -> None:
