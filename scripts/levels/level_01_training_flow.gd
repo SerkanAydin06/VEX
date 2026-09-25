@@ -39,8 +39,7 @@ func _configure_combat_gates() -> void:
 		# Bu nedenle kapının mevcut combat-lock cache'ini sahne verisi bağlandıktan
 		# sonra bir kez yenileriz. Bundan sonraki tüm açılma ve sinyal davranışı
 		# canonical VexDoor içinde kalır.
-		door._combat_lock_was_active = door._has_active_combat_lock()
-		door._emit_lock_state()
+		door.refresh_combat_lock()
 
 
 func _hide_replaced_static_lights() -> void:
