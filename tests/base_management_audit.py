@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from translation_text import with_translations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "project.godot"
@@ -77,7 +79,7 @@ def test_lighting_tiers_preserve_scene_authored_fixture_defaults() -> None:
 
 def test_main_terminal_exposes_base_management_actions_and_future_upgrades() -> None:
     manager = BASE_MANAGER.read_text(encoding="utf-8")
-    script = ARCHIVE_SCRIPT.read_text(encoding="utf-8")
+    script = with_translations(ARCHIVE_SCRIPT.read_text(encoding="utf-8"))
     scene = ARCHIVE_SCENE.read_text(encoding="utf-8")
 
     assert "BASE_MANAGEMENT," in script
