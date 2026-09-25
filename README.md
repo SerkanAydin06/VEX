@@ -30,14 +30,15 @@ Windows release export'unu da aynı doğrulamaya eklemek için:
 .\validate_local.ps1 -Export
 ```
 
-Bash kullanan ortamlarda temel karşılık:
+Bash / Git Bash kullanan ortamlarda karşılığı:
 
 ```bash
-for audit in tests/*_audit.py; do python "$audit"; done
-godot --headless --editor --path . --quit
-godot --headless --path . tests/integrity_test.tscn
-for scene in tests/*_runtime_test.tscn; do godot --headless --path . "$scene"; done
+tools/validate.sh           # Python denetimleri (paralel, yalnız hataları yazar)
+tools/validate.sh --godot   # + Godot import, integrity_test ve runtime testleri
 ```
+
+Godot PATH'te değilse `GODOT=/yol/godot tools/validate.sh --godot`. Claude Code on the web
+oturumlarında Godot 4.7.1 `.claude/hooks/session-start.sh` ile otomatik kurulur.
 
 ## Windows export
 
