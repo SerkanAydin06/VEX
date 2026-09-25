@@ -9,6 +9,7 @@ MIGRATED_SCRIPTS = {
     "scripts/ui/vex_archive_terminal.gd": 100,
     "scripts/ui/weapon_archive_terminal.gd": 30,
     "scripts/ui/base_management_dashboard.gd": 25,
+    "scripts/ui/field_record_archive_bridge.gd": 8,
 }
 
 
