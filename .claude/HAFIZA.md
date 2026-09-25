@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#93)
+## Yapılanlar (2026-09, PR #80–#94)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -29,6 +29,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #91 Pre-push git hook'u (`tools/git-hooks/pre-push` → `tools/validate.sh`; yalnız `.md`/`.claude/` değişikliğinde ya da aynı ağaç zaten doğrulandıysa atlar). Web oturumunda `session-start.sh` `core.hooksPath`'i ayarlar; Windows'ta bir kez `git config core.hooksPath tools/git-hooks`.
 - #92 Arşiv terminali metinleri (121 anahtar, `ARCHIVE_UI_*`) `translations/vex.csv` + `tr()`'ye taşındı; `tools/extract_inline_text.py` dönüştürücü, `tests/translation_text.py` denetim yardımcısı; oyuncuya görünen `VEX-%02d` → `BÖLÜM %02d`.
 - #93 Silah arşivi terminali metinleri (30 anahtar, `WEAPON_UI_*`) taşındı; taşınan betikler `tests/inline_text_migration_audit.py` listesinde korunuyor.
+- #94 Bastion üs yönetimi paneli metinleri (22 yeni anahtar, `BASE_UI_*`) taşındı.
 
 ## Kararlar (tekrar tartışma)
 
@@ -39,7 +40,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 
 ## Açık işler (sırayla)
 
-1. **Koda gömülü metinler (devam):** `python3 tools/extract_inline_text.py <dosya> <ÖNEK> --apply` ile sırayla `scripts/ui/base_management_dashboard.gd` (29), `field_record_archive_bridge.gd` (9); sonra `begins_with("tr")` / `if turkish` kalıpları. Bozulan denetimlerde betik okumasını `with_translations(...)` ile sar; taşınan dosyayı `tests/inline_text_migration_audit.py` `MIGRATED_SCRIPTS`'e ekle. Dosya başına ayrı PR.
+1. **Koda gömülü metinler (devam):** `python3 tools/extract_inline_text.py <dosya> <ÖNEK> --apply` ile `scripts/ui/field_record_archive_bridge.gd` (9); sonra `begins_with("tr")` / `if turkish` kalıpları. Bozulan denetimlerde betik okumasını `with_translations(...)` ile sar; taşınan dosyayı `tests/inline_text_migration_audit.py` `MIGRATED_SCRIPTS`'e ekle. Dosya başına ayrı PR.
 2. **Temizlik:** kullanılmayan `LEVEL0x_*`, `HUB_VEX0x_*`, `SURVIVOR_SELIN_DIALOGUE_STAGE2/3`, `TERMINAL_FACILITY_ASH_MINE`, `MAIN_CREDITS_BODY`, `MAIN_CONFIRM_BODY` satırları (bağlı denetimleri de güncelle); `level_01_training_flow.gd` kapının iç alanlarını değiştirmek yerine `VexDoor` açık metodu kullansın; `furnice`/`furnace` adlandırması (dosya adları değişmez, yalnız oyuncuya dönük metin).
 3. **Karar bekliyor — Crucible Warden canı:** "elit/miniboss" ama 260 HP (Basalt Juggernaut 240). Kullanıcıya sor; Warden kampanyada Bölüm 5'te.
 

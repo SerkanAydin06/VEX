@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MIGRATED_SCRIPTS = {
     "scripts/ui/vex_archive_terminal.gd": 100,
     "scripts/ui/weapon_archive_terminal.gd": 30,
+    "scripts/ui/base_management_dashboard.gd": 25,
 }
 
 
