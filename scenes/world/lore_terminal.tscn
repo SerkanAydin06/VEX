@@ -11,7 +11,7 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_script")
 log_id = &"lore_log"
-display_name = "VEX SAHA KAYDI"
+display_name = "LABEL_VEX_FIELD_LOG"
 log_title = "KAYIT"
 log_body = "Kayıt verisi bulunamadı."
 

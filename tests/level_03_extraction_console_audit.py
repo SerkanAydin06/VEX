@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from translation_text import with_translations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SCENE = ROOT / "scenes" / "levels" / "level_03_extraction_switch.tscn"
@@ -50,7 +52,7 @@ def test_all_active_chapter_end_controls_use_shared_vex_console() -> None:
 
 
 def test_finish_console_has_idle_motion_and_activation_motion() -> None:
-    script = _read(BASE_SCRIPT)
+    script = with_translations(_read(BASE_SCRIPT))
 
     assert "func _process(delta: float)" in script
     assert "_status_rotor.rotation.z +=" in script

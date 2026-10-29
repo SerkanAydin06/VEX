@@ -19,7 +19,7 @@ enum DoorOpeningMode {
 }
 
 @export_category("Kapı")
-@export var display_name := "GÜVENLİK KAPISI"
+@export var display_name := "LABEL_SECURITY_DOOR"
 @export var locked := false
 @export var required_key: StringName = &"blue"
 @export var required_keys: Array[StringName] = []
@@ -28,7 +28,7 @@ enum DoorOpeningMode {
 @export var required_enemy_ids: Array[StringName] = []
 @export var objective_on_combat_clear := ""
 @export var permanently_locked := false
-@export var permanent_lock_message := "POWER OFFLINE"
+@export var permanent_lock_message := "LABEL_POWER_OFFLINE"
 @export var campaign_unlock_stage := -1
 
 @export_category("Açılma Hareketi")

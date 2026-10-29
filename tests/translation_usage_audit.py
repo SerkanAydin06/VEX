@@ -34,6 +34,11 @@ def test_every_translation_row_is_referenced_by_game_content() -> None:
     assert not unused, f"kullanılmayan çeviri satırları: {unused}"
 
 
+def test_translation_keys_are_identifiers_not_text() -> None:
+    bad = sorted(key for key in load_translations() if not re.fullmatch(r"[A-Z][A-Z0-9_]*", key))
+    assert not bad, f"anahtar olarak metin kullanan satırlar: {bad}"
+
+
 if __name__ == "__main__":
     # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
     # tanım sırasıyla çalıştır; pytest gerekmez.

@@ -5,7 +5,7 @@ signal log_read(log_id: StringName)
 
 @export_category("Saha Kaydı")
 @export var log_id: StringName = &"lore_log"
-@export var display_name := "VEX SAHA KAYDI"
+@export var display_name := "LABEL_VEX_FIELD_LOG"
 @export var log_title := "KAYIT"
 @export_multiline var log_body := "Kayıt verisi bulunamadı."
 @export var accent_color := Color(0.25, 0.82, 1.0, 1.0)

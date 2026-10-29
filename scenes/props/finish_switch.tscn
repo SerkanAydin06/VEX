@@ -88,7 +88,7 @@ size = Vector3(1.62, 2.1, 0.4)
 
 [node name="FinishSwitch" type="Node3D"]
 script = ExtResource("1_script")
-display_name = "TAHLİYE KONTROLÜ"
+display_name = "LABEL_EVACUATION_CONTROL"
 required_keys = Array[StringName]([&"blue", &"red"])
 required_enemy_id = &""
 next_level_path = ""

@@ -456,7 +456,7 @@ automatic_open = true
 
 [node name="FiringRangeDoor" parent="Doors" unique_id=133637574 instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 2.24, -10)
-display_name = "FIRING RANGE"
+display_name = "LABEL_FIRING_RANGE"
 locked = true
 required_key = &""
 permanently_locked = true
@@ -465,7 +465,7 @@ automatic_open = true
 
 [node name="ResearchDoor" parent="Doors" unique_id=906119346 instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.24, -10)
-display_name = "RESEARCH LAB"
+display_name = "LABEL_RESEARCH_LAB"
 locked = true
 required_key = &""
 permanently_locked = true
@@ -475,7 +475,7 @@ automatic_open = true
 
 [node name="WorkshopDoor" parent="Doors" unique_id=920972897 instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.24, 10)
-display_name = "WEAPON WORKSHOP"
+display_name = "LABEL_WEAPON_WORKSHOP"
 locked = true
 required_key = &""
 permanently_locked = true
@@ -485,7 +485,7 @@ automatic_open = true
 
 [node name="EngineeringDoor" parent="Doors" unique_id=432996729 instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.24, 10)
-display_name = "ENGINEERING BAY"
+display_name = "LABEL_ENGINEERING_BAY"
 locked = true
 required_key = &""
 permanently_locked = true
@@ -495,7 +495,7 @@ automatic_open = true
 
 [node name="OperatorDoor" parent="Doors" unique_id=1049402474 instance=ExtResource("8_door")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 2.24, 25)
-display_name = "OPERATOR PLATFORMU"
+display_name = "LABEL_OPERATOR_PLATFORM"
 required_key = &""
 auto_close_delay = 1.5
 automatic_open = true
@@ -599,19 +599,19 @@ room_name = "ARMORY"
 
 [node name="FiringRangeDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -17.75, 5.25, -10)
-room_name = "FIRING RANGE"
+room_name = "LABEL_FIRING_RANGE"
 
 [node name="ResearchDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.75, 5.25, -10)
-room_name = "RESEARCH LAB"
+room_name = "LABEL_RESEARCH_LAB"
 
 [node name="WorkshopDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.75, 5.25, 10)
-room_name = "WEAPON WORKSHOP"
+room_name = "LABEL_WEAPON_WORKSHOP"
 
 [node name="EngineeringDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.75, 5.25, 10)
-room_name = "ENGINEERING BAY"
+room_name = "LABEL_ENGINEERING_BAY"
 
 [node name="OperatorDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 5.25, 24.75)
@@ -703,11 +703,11 @@ mesh = SubResource("BoxMesh_target")
 [node name="DeploymentTerminal" parent="Systems" unique_id=560238758 instance=ExtResource("11_terminal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 30.25)
 terminal_mode = 1
-display_name = "OPERASYON TERMİNALİ"
+display_name = "TERMINAL_MENU_TITLE"
 
 [node name="CommandStatusTerminal" parent="Systems" unique_id=975524091 instance=ExtResource("11_terminal")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.7276541, -1.8)
-display_name = "BASTION DURUMU"
+display_name = "LABEL_BASTION_STATUS"
 
 [node name="ArmoryWeaponArchiveTerminal" parent="Systems" instance=ExtResource("11_terminal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.65, -5.65)

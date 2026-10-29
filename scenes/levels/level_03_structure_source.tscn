@@ -793,10 +793,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.24, -5)
 
 [node name="Door_StairAccess" parent="Doors" unique_id=378520089 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.24, 5)
-display_name = "ÜST KAT GÜVENLİK MERDİVENİ"
+display_name = "LABEL_UPPER_FLOOR_SECURITY_STAIRWAY"
 locked = true
-required_key_label = "MAVİ GÜÇ KARTI"
-objective_on_unlock = "MERDİVENİ KULLAN // ÜST KATTA KIRMIZI YETKİYİ BUL"
+required_key_label = "LABEL_BLUE_POWER_CARD"
+objective_on_unlock = "LABEL_USE_THE_STAIRS_FIND_RED_CLEARANCE_UPSTAIRS"
 
 [node name="Door_UpperLanding" parent="Doors" unique_id=1511030468 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 10.04, 5)
@@ -809,11 +809,11 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -6, 
 
 [node name="Door_CoreAuthorization" parent="Doors" unique_id=2054669832 instance=ExtResource("9_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 10.04, -5)
-display_name = "KORVATH ÇEKİRDEK KAPISI"
+display_name = "LABEL_KORVATH_CORE_DOOR"
 locked = true
 required_key = &"red"
-required_key_label = "KIRMIZI ÇEKİRDEK YETKİSİ"
-objective_on_unlock = "YARIK ODASINA GİR // KORVATH MUHAFIZINI İMHA ET"
+required_key_label = "LABEL_RED_CORE_CLEARANCE"
+objective_on_unlock = "LABEL_ENTER_THE_RIFT_CHAMBER_ELIMINATE_THE_KORVATH"
 auto_close = false
 
 [node name="Door_RiftChamber" parent="Doors" unique_id=1752995174 instance=ExtResource("9_door")]
@@ -835,7 +835,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 7.85, -16)
 
 [node name="RiftIsolationSwitch" parent="Objectives" unique_id=1011628597 instance=ExtResource("11_finish")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 23.874836, 8.95, -17)
-display_name = "YARIK İZOLASYON ŞALTERİ"
+display_name = "LABEL_RIFT_ISOLATION_SWITCH"
 required_enemy_id = &"vex03_korvath_warden"
 next_level_path = "res://scenes/hub/bastion_7.tscn"
 
@@ -856,7 +856,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.75, -5)
 pickup_id = &"vex03_key_blue"
 pickup_type = "key_blue"
 amount = 1
-display_name = "MAVİ GÜÇ KARTI"
+display_name = "LABEL_BLUE_POWER_CARD"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("29_key_blue")
 
@@ -865,7 +865,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 8.55, -5)
 pickup_id = &"vex03_key_red"
 pickup_type = "key_red"
 amount = 1
-display_name = "KIRMIZI ÇEKİRDEK YETKİSİ"
+display_name = "LABEL_RED_CORE_CLEARANCE"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("30_key_red")
 
@@ -874,7 +874,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5, 0.8, 16)
 pickup_id = &"vex03_bullets_start"
 pickup_type = "bullets"
 amount = 30
-display_name = "TABANCA MERMİSİ"
+display_name = "LABEL_PISTOL_AMMO"
 visual_texture = ExtResource("25_bullets")
 
 [node name="ShellsVent" parent="Pickups" unique_id=2128190425 instance=ExtResource("12_pickup")]
@@ -882,14 +882,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 0.75, -5)
 pickup_id = &"vex03_shells_vent"
 pickup_type = "shells"
 amount = 12
-display_name = "POMPALI FİŞEĞİ"
+display_name = "LABEL_SHOTGUN_SHELLS"
 visual_texture = ExtResource("26_shells")
 
 [node name="HealthLobby" parent="Pickups" unique_id=11731456 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.8, 5)
 pickup_id = &"vex03_health_lobby"
 amount = 30
-display_name = "SAĞLIK KİTİ"
+display_name = "LABEL_MEDKIT"
 visual_texture = ExtResource("23_health")
 
 [node name="RifleAmmoUpper" parent="Pickups" unique_id=497553181 instance=ExtResource("12_pickup")]
@@ -897,7 +897,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 8.6, 6)
 pickup_id = &"vex03_rifle_upper"
 pickup_type = "rifle_ammo"
 amount = 45
-display_name = "TÜFEK MÜHİMMATI"
+display_name = "LABEL_RIFLE_AMMO"
 visual_texture = ExtResource("27_rifle")
 
 [node name="MP90AmmoUpper" parent="Pickups" unique_id=406967725 instance=ExtResource("12_pickup")]
@@ -905,7 +905,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 8.6, -5)
 pickup_id = &"vex03_mp90_upper"
 pickup_type = "mp90_ammo"
 amount = 54
-display_name = "MP90 MÜHİMMATI"
+display_name = "LABEL_MP90_AMMO"
 visual_texture = ExtResource("28_mp90")
 
 [node name="ArmorSecret" parent="Pickups" unique_id=129310730 instance=ExtResource("12_pickup")]
@@ -913,7 +913,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.5, 0.75, -8.2)
 pickup_id = &"vex03_armor_secret"
 pickup_type = "armor"
 amount = 45
-display_name = "GİZLİ ZIRH PLAKASI"
+display_name = "LABEL_HIDDEN_ARMOR_PLATE"
 visual_texture = ExtResource("24_armor")
 
 [node name="BulletsSecret" parent="Pickups" unique_id=1647313589 instance=ExtResource("12_pickup")]
@@ -921,14 +921,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 8.55, -17.8)
 pickup_id = &"vex03_bullets_secret"
 pickup_type = "bullets"
 amount = 42
-display_name = "GİZLİ MERMİ KUTUSU"
+display_name = "LABEL_HIDDEN_AMMO_BOX"
 visual_texture = ExtResource("25_bullets")
 
 [node name="HealthCore" parent="Pickups" unique_id=1733946816 instance=ExtResource("12_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5, 8.6, -6.5)
 pickup_id = &"vex03_health_core"
 amount = 35
-display_name = "ACİL SAĞLIK KİTİ"
+display_name = "LABEL_EMERGENCY_MEDKIT"
 visual_texture = ExtResource("23_health")
 
 [node name="ShellsCore" parent="Pickups" unique_id=249787223 instance=ExtResource("12_pickup")]
@@ -936,7 +936,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8.6, -13)
 pickup_id = &"vex03_shells_core"
 pickup_type = "shells"
 amount = 16
-display_name = "KORVATH FİŞEK KASASI"
+display_name = "LABEL_KORVATH_SHELL_CRATE"
 visual_texture = ExtResource("26_shells")
 
 [node name="ArmorCore" parent="Pickups" unique_id=110743360 instance=ExtResource("12_pickup")]
@@ -944,7 +944,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 8.6, -18)
 pickup_id = &"vex03_armor_core"
 pickup_type = "armor"
 amount = 35
-display_name = "ÇEKİRDEK ZIRHI"
+display_name = "LABEL_CORE_ARMOR"
 spawn_max_difficulty = 2
 visual_texture = ExtResource("24_armor")
 
@@ -1180,21 +1180,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 13.3, -9.68)
 [node name="TransferExperiment41" parent="LoreTerminals" unique_id=388259864 instance=ExtResource("17_lore")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.678209, 0.9, -9.8717)
 log_id = &"vex03_log_transfer_41"
-log_title = "TRANSFER DENEYİ 41 // TERMAL KAYIP"
+log_title = "LABEL_TRANSFER_EXPERIMENT_41_THERMAL_LOSS"
 log_body = "Sıfır Kaynak çıkışı yüzde on iki arttı. Eşzamanlı uzaksal ölçümde karşı taraftaki jeotermal damar sıcaklığı 318 derece düştü. Bu üretim değil; iki sistem arasında zorlanmış enerji aktarımı. Yönetim, ölçümün rapordan çıkarılmasını emretti."
 accent_color = Color(0.22, 0.78, 1, 1)
 
 [node name="KorvathBiologyReport" parent="LoreTerminals" unique_id=429040327 instance=ExtResource("17_lore")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6, 8.7, 9.87374)
 log_id = &"vex03_log_korvath"
-log_title = "BİYOLOJİ RAPORU // KORVATH İŞÇİ KASTI"
+log_title = "LABEL_BIOLOGY_REPORT_KORVATH_WORKER_CASTE"
 log_body = "Basalt Juggernaut örneğinin uzuv aşınması savaş kullanımına değil, yüksek basınçta kaya kırmaya uyuyor. Zırh sandığımız tabaka doğal ısı kalkanı. Bunlar asker değil. Açtığımız kapıdan geçen, ocağı ve yön duygusu yok edilmiş canlı işçiler."
 accent_color = Color(1, 0.34, 0.08, 1)
 
 [node name="EceTanEmergencySignal" parent="LoreTerminals" unique_id=1127023259 instance=ExtResource("17_lore")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 23.68, 8.7, -6.8)
 log_id = &"vex03_log_ece_signal"
-log_title = "ACİL TIP SİNYALİ // DR. ECE TAN"
+log_title = "LABEL_EMERGENCY_MEDICAL_SIGNAL_DR_ECE_TAN"
 log_body = "Bastion-7, burası Dr. Ece Tan. Maden yüzeyindeki acil tıp istasyonunda on iki yaralıyla mahsur kaldık. Kül düğümü kapanırsa sinyalimiz netleşecek. Bizi duyuyorsanız kuzey tahliye hattını takip edin. Tekrar ediyorum: hayatta kalanlar var."
 accent_color = Color(0.36, 0.92, 0.72, 1)
 

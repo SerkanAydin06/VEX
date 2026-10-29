@@ -89,7 +89,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 47.8)
 pickup_id = &"level01_p01_security_locker"
 pickup_type = "p01"
 amount = 24
-display_name = "P-01 TAKTİK TABANCA"
+display_name = "WEAPON_P01_NAME"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("3_p01")
 
@@ -98,7 +98,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7, 0)
 pickup_id = &"level01_blue_key"
 pickup_type = "key_blue"
 amount = 1
-display_name = "MAVİ ERİŞİM ANAHTARI"
+display_name = "LABEL_BLUE_ACCESS_KEY"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("4_blue")
 
@@ -107,7 +107,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.7, -40)
 pickup_id = &"level01_red_key"
 pickup_type = "key_red"
 amount = 1
-display_name = "KIRMIZI ERİŞİM ANAHTARI"
+display_name = "LABEL_RED_ACCESS_KEY"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("5_red")
 
@@ -116,7 +116,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.7, 40)
 pickup_id = &"level01_r06_bullets"
 pickup_type = "bullets"
 amount = 10
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R10Health" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -124,7 +124,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.7, 30)
 pickup_id = &"level01_r10_health"
 pickup_type = "health"
 amount = 15
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 visual_texture = ExtResource("6_health")
 
 [node name="R13Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -132,7 +132,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.7, 20)
 pickup_id = &"level01_r13_bullets"
 pickup_type = "bullets"
 amount = 12
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R13Armor" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -140,7 +140,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.7, 20)
 pickup_id = &"level01_r13_armor"
 pickup_type = "armor"
 amount = 10
-display_name = "HAFİF ZIRH"
+display_name = "LABEL_LIGHT_ARMOR"
 visual_texture = ExtResource("7_armor")
 
 [node name="R17Health" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -148,7 +148,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.4, 0.7, 1.5)
 pickup_id = &"level01_r17_health"
 pickup_type = "health"
 amount = 18
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 visual_texture = ExtResource("6_health")
 
 [node name="R19Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -156,7 +156,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.7, 1.2)
 pickup_id = &"level01_r19_bullets"
 pickup_type = "bullets"
 amount = 10
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R20Armor" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -164,7 +164,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.7, 0)
 pickup_id = &"level01_r20_armor"
 pickup_type = "armor"
 amount = 10
-display_name = "HAFİF ZIRH"
+display_name = "LABEL_LIGHT_ARMOR"
 visual_texture = ExtResource("7_armor")
 
 [node name="R23ResupplyHealth" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -172,7 +172,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0.7, -10)
 pickup_id = &"level01_r23_health"
 pickup_type = "health"
 amount = 25
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 visual_texture = ExtResource("6_health")
 
 [node name="R23ResupplyArmor" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -188,7 +188,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -11.8)
 pickup_id = &"level01_r23_bullets"
 pickup_type = "bullets"
 amount = 24
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R28Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -196,7 +196,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.7, -30)
 pickup_id = &"level01_r28_bullets"
 pickup_type = "bullets"
 amount = 10
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R29SecretAmmo" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -204,7 +204,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.8, 0.7, -41.6)
 pickup_id = &"level01_r29_secret_ammo"
 pickup_type = "bullets"
 amount = 18
-display_name = "GİZLİ BAKIM STOĞU"
+display_name = "LABEL_HIDDEN_MAINTENANCE_CACHE"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R29SecretArmor" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -220,7 +220,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.7, -41.5)
 pickup_id = &"level01_r33_bullets"
 pickup_type = "bullets"
 amount = 12
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R35FinalBullets" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -228,7 +228,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -46.7)
 pickup_id = &"level01_r35_bullets"
 pickup_type = "bullets"
 amount = 24
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 visual_texture = ExtResource("8_bullets")
 
 [node name="R35FinalHealth" parent="Pickups" instance=ExtResource("2_pickup")]
@@ -236,7 +236,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0.7, -46.8)
 pickup_id = &"level01_r35_health"
 pickup_type = "health"
 amount = 25
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 visual_texture = ExtResource("6_health")
 
 [node name="R35FinalArmor" parent="Pickups" instance=ExtResource("2_pickup")]

@@ -2,7 +2,7 @@ class_name VexFinishSwitch
 extends Node3D
 
 @export_category("Bitiş Kontrolü")
-@export var display_name := "TAHLİYE KONTROLÜ"
+@export var display_name := "LABEL_EVACUATION_CONTROL"
 @export var required_keys: Array[StringName] = [&"blue", &"red"]
 @export var required_enemy_id: StringName = &""
 @export_file("*.tscn") var next_level_path := ""
