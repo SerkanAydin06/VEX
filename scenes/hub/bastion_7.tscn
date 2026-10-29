@@ -469,7 +469,7 @@ display_name = "LABEL_RESEARCH_LAB"
 locked = true
 required_key = &""
 permanently_locked = true
-permanent_lock_message = "ACCESS RESTRICTED // POWER OFFLINE"
+permanent_lock_message = "LABEL_ACCESS_RESTRICTED_POWER_OFFLINE"
 auto_close_delay = 1.5
 automatic_open = true
 
@@ -615,7 +615,7 @@ room_name = "LABEL_ENGINEERING_BAY"
 
 [node name="OperatorDisplay" parent="RoomDisplays" instance=ExtResource("25_room_display")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 5.25, 24.75)
-room_name = "OPERATOR PLATFORM"
+room_name = "LABEL_OPERATOR_PLATFORM"
 
 [node name="Props" type="Node3D" parent="." unique_id=166057194]
 
@@ -712,7 +712,7 @@ display_name = "LABEL_BASTION_STATUS"
 [node name="ArmoryWeaponArchiveTerminal" parent="Systems" instance=ExtResource("11_terminal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.65, -5.65)
 terminal_mode = 3
-display_name = "SİLAH ARŞİV TERMİNALİ"
+display_name = "HUB_TERMINAL_UI_WEAPON_ARCHIVE_TERMINAL"
 
 [node name="ArmoryRacks" type="Node3D" parent="Systems" unique_id=117252377]
 

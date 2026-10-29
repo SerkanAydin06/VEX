@@ -186,11 +186,11 @@ func _apply_safe_zone_rules() -> void:
 
 
 func _intro_message() -> void:
-	await get_tree().create_timer(intro_message_delay).timeout
+	await get_tree().create_timer(intro_message_delay, false).timeout
 	if not is_inside_tree():
 		return
 	GameState.notify(tr(arrival_message))
-	await get_tree().create_timer(0.9).timeout
+	await get_tree().create_timer(0.9, false).timeout
 	if not is_inside_tree():
 		return
 	if GameState.campaign_stage >= 3:

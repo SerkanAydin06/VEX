@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#99)
+## Yapılanlar (2026-09, PR #80–#100)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -35,6 +35,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #97 Temizlik: 120 kullanılmayan çeviri satırı silindi (`tests/translation_usage_audit.py` artık ölü satırı yakalıyor); eğitim akışı kapı için `VexDoor.refresh_combat_lock()` kullanıyor.
 - #98 Crucible Warden canı 260 → 400 (kullanıcı kararı; miniboss, Bulwark 300'ün üstünde).
 - #99 Anahtar olarak metin kullanan 73 çeviri satırı `LABEL_*` kimlik anahtarına taşındı (186 sahne/betik referansı); `finish_switch`/`discovery_notification_overlay` dil yardımcıları da `tr()`'ye geçti. `translation_usage_audit` artık metin anahtarını reddediyor. Açık iş kalmadı.
+- #100 Tarama: 5 sahne alanında anahtar yerine düz metin (BAKIM ZIRHI, Bastion silah arşivi terminali, kısıtlı kapı mesajı, OPERATÖR PLATFORMU tabelası, test kapısı) düzeltildi; Bastion giriş mesajı zamanlayıcıları duraklatmaya duyarlı. Bölümler/hub/menü headless açılışta hatasız; kayıt, düşman ölümü, içerik kimlikleri temiz bulundu.
 
 ## Kararlar (tekrar tartışma)
 
@@ -43,6 +44,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Loom Herald yalnız Level Test sandbox prototipi; kampanyada/arşivde yok.
 - Ayrılmış çeviri anahtarları (planlı içerik): `HUD_SLOT_05`, `HUD_AMMO_MAGNUM`, `CH02_BYPASS_RESERVED` — silme.
 - `furnice_carrier` iç kimliği (dosya/enemy_id) değişmez: arşiv keşfi kayıtta saklanıyor. Oyuncuya görünen ad zaten "FURNACE CARRIER".
+- Bölüm tabelalarındaki `VEX // 01` başlığı ve `R03 // SEC` oda kodları dilden bağımsız tesis kodudur; kanondaki VEX-01 bölüm adı yasağına girmez.
 - Can sıralaması: Crucible Warden 400 (miniboss) > Vaskari Bulwark 300 > Basalt Juggernaut 240. Zorluk çarpanları `enemy_base.gd` varsayılanı (×0.75/1/1.2/1.45).
 
 ## Açık işler (sırayla)

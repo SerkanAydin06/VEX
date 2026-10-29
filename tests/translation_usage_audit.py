@@ -39,6 +39,29 @@ def test_translation_keys_are_identifiers_not_text() -> None:
     assert not bad, f"anahtar olarak metin kullanan satırlar: {bad}"
 
 
+TRANSLATED_FIELD = re.compile(
+    r"^(display_name|[a-z_]*message|objective[a-z_]*|required_key_label|log_title|room_name|header_text)"
+    r' = "([^"]+)"$'
+)
+# Dilden bağımsız tabela kodları (ör. "R03 // SEC", "VEX // 01") çeviri anahtarı gerektirmez.
+SIGNAGE_CODE = re.compile(r"[A-Z0-9-]+ // [A-Z0-9-]+")
+
+
+def test_scene_text_fields_use_translation_keys() -> None:
+    keys = set(load_translations())
+    bad = []
+    for path in sorted((ROOT / "scenes").rglob("*.tscn")) + sorted((ROOT / "resources").rglob("*.tres")):
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            match = TRANSLATED_FIELD.match(line.strip())
+            if match is None:
+                continue
+            value = match.group(2)
+            if value in keys or value.startswith(("res://", "uid://")) or SIGNAGE_CODE.fullmatch(value):
+                continue
+            bad.append(f"{path.relative_to(ROOT)}:{number}: {match.group(1)} = {value!r}")
+    assert not bad, "çeviri anahtarı yerine düz metin: " + "; ".join(bad)
+
+
 if __name__ == "__main__":
     # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
     # tanım sırasıyla çalıştır; pytest gerekmez.
