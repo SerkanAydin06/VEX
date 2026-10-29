@@ -20,7 +20,7 @@ func _ready() -> void:
 func _sync_text() -> void:
 	var room_label := get_node_or_null("RoomName") as Label3D
 	if room_label != null:
-		room_label.text = room_name
+		room_label.text = tr(room_name)
 	var header_label := get_node_or_null("Header") as Label3D
 	if header_label != null:
 		header_label.text = header_text

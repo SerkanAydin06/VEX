@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#98)
+## Yapılanlar (2026-09, PR #80–#99)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -34,6 +34,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #96 Kalan dil koşullu metinler (`settings_panel`, `terminal_menu`, `hub_terminal`, `game_state`; `SETTINGS_UI_*`, `TERMINAL_UI_*`, `HUB_TERMINAL_UI_*`, `SAVE_UI_*`) taşındı; dönüştürücü artık `"A" if turkish else "B"` ve if/return kalıplarını da çeviriyor. Koda gömülü metin taşıma işi bitti.
 - #97 Temizlik: 120 kullanılmayan çeviri satırı silindi (`tests/translation_usage_audit.py` artık ölü satırı yakalıyor); eğitim akışı kapı için `VexDoor.refresh_combat_lock()` kullanıyor.
 - #98 Crucible Warden canı 260 → 400 (kullanıcı kararı; miniboss, Bulwark 300'ün üstünde).
+- #99 Anahtar olarak metin kullanan 73 çeviri satırı `LABEL_*` kimlik anahtarına taşındı (186 sahne/betik referansı); `finish_switch`/`discovery_notification_overlay` dil yardımcıları da `tr()`'ye geçti. `translation_usage_audit` artık metin anahtarını reddediyor. Açık iş kalmadı.
 
 ## Kararlar (tekrar tartışma)
 
@@ -46,7 +47,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 
 ## Açık işler (sırayla)
 
-1. **Metin anahtarlı çeviri satırları:** ~70 satır anahtar olarak Türkçe metin kullanıyor (ör. `"MAVİ ERİŞİM KARTI"`, sahnelerde `tr()` ile). `KEY_CARD_BLUE` gibi kimlik anahtarlarına taşı (sahne/kaynak referanslarıyla birlikte).
+(Şu an açık iş yok. Yeni iş çıkınca buraya ekle.)
 
 ## Öğrenilen dersler
 
@@ -57,4 +58,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - `@tool` terminal betiklerinde `tr()` kullanımı mevcut kalıp (`terminal_menu.gd`); editör önizlemesinde anahtar görünmesi kabul.
 - Push'tan önce `tools/validate.sh` çalıştırmak yeterli: başarılı ve temiz çalışma kopyası ağacı damgalar, pre-push hook'u tekrar çalıştırmaz.
 - Web konteyneri uzun aradan sonra sıfırlanabilir: commit'lenmemiş iş kaybolur; her adımı hemen commit+push et.
+- Yeni çeviri anahtarı daima kimlik biçiminde (`[A-Z][A-Z0-9_]*`); sahnedeki `display_name` vb. alanlara metin değil anahtar yaz.
+- `tools/extract_inline_text.py | head` kullanma: boru kırılınca `--apply` yazmadan çıkar.
+- `tests/`'teki bazı denetimler `git ls-files` çalıştırır: Godot doğrulama kopyasını `git clone` ile oluştur.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).

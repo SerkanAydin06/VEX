@@ -63,7 +63,7 @@ size = Vector3(0.42, 0.24, 4.92)
 
 [node name="DoorSideSlide" type="Node3D" unique_id=311081800]
 script = ExtResource("1_script")
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 locked = false
 required_key = &"blue"
 required_keys = Array[StringName]([])
@@ -72,7 +72,7 @@ objective_on_unlock = ""
 required_enemy_ids = Array[StringName]([])
 objective_on_combat_clear = ""
 permanently_locked = false
-permanent_lock_message = "POWER OFFLINE"
+permanent_lock_message = "LABEL_POWER_OFFLINE"
 opening_mode = 1
 opening_offset_up = Vector3(0, 4.2, 0)
 opening_offset_left = Vector3(0, 0, -2.12)

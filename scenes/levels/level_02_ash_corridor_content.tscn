@@ -183,7 +183,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.8, 0.7, -29.5)
 pickup_id = &"level02_blue_health"
 pickup_type = "health"
 amount = 20
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 visual_texture = ExtResource("8_health")
 
 [node name="TransferShells" parent="Pickups" instance=ExtResource("3_pickup")]
@@ -223,7 +223,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.0, 0.7, 10.0)
 pickup_id = &"level02_relay_health"
 pickup_type = "health"
 amount = 25
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 visual_texture = ExtResource("8_health")
 
 [node name="RelayResupplyArmor" parent="Pickups" instance=ExtResource("3_pickup")]
@@ -247,7 +247,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.0, 0.7, 21.0)
 pickup_id = &"level02_secret_armor"
 pickup_type = "armor"
 amount = 18
-display_name = "GİZLİ ZIRH PLAKASI"
+display_name = "LABEL_HIDDEN_ARMOR_PLATE"
 visual_texture = ExtResource("9_armor")
 
 [node name="Records" type="Node3D" parent="."]

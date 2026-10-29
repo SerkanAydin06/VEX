@@ -124,11 +124,11 @@ func _apply_category(category: StringName) -> void:
 func _category_text(category: StringName) -> String:
 	match category:
 		&"weapon":
-			return "VEX // WEAPON ARCHIVE" if _is_english() else "VEX // SİLAH ARŞİVİ"
+			return tr("DISCOVERY_UI_VEX_WEAPON_ARCHIVE")
 		&"xeno":
-			return "VEX // XENO ARCHIVE" if _is_english() else "VEX // XENO ARŞİVİ"
+			return tr("DISCOVERY_UI_VEX_XENO_ARCHIVE")
 		&"record":
-			return "VEX // FIELD RECORD" if _is_english() else "VEX // SAHA KAYDI"
+			return tr("DISCOVERY_UI_VEX_FIELD_RECORD")
 	return "VEX // DATA"
 
 

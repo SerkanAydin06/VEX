@@ -1307,190 +1307,190 @@ surface_material = ExtResource("3_wall")
 
 [node name="Door_01_03" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, 55)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_02_03" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.24, 50)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_02_06" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -12, 2.24, 45)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_03_04" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.24, 50)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_03_07" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, 45)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_04_08" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 12, 2.24, 45)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_05_06" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 2.24, 40)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_06_10" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -12, 2.24, 35)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_07_11" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, 35)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_08_09" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2.24, 40)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_08_12" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 12, 2.24, 35)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_11_13" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, 25)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_13_15" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, 15)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_14_15" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.24, 10)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_14_18" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -12, 2.24, 5)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_15_16" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.24, 10)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_15_19" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, 5)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_16_20" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 12, 2.24, 5)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_17_18" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 2.24, 0)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_18_22" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -12, 2.24, -5)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_19_23" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, -5)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_20_21" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2.24, 0)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_20_24" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 12, 2.24, -5)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_23_25" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, -15)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_25_27" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, -25)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 locked = true
 required_key = &"blue"
-required_key_label = "MAVİ ERİŞİM ANAHTARI"
-objective_on_unlock = "TESİSİN DERİNLİKLERİNE İLERLE"
+required_key_label = "LABEL_BLUE_ACCESS_KEY"
+objective_on_unlock = "LABEL_PROCEED_DEEPER_INTO_THE_FACILITY"
 
 [node name="Door_26_27" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.24, -30)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_26_30" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -12, 2.24, -35)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_27_28" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.24, -30)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_27_31" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, -35)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_28_32" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 12, 2.24, -35)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_29_30" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 2.24, -40)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_30_34" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -12, 2.24, -45)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_31_35" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, -45)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_32_33" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2.24, -40)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_32_36" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 12, 2.24, -45)
-display_name = "GÜVENLİK KAPISI"
+display_name = "LABEL_SECURITY_DOOR"
 required_key = &""
 
 [node name="Door_35_37" parent="Doors" instance=ExtResource("8_door")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 2.24, -55)
-display_name = "NİHAİ TAHLİYE HAVA KİLİDİ"
+display_name = "LABEL_FINAL_EVACUATION_AIRLOCK"
 locked = true
 required_key = &"red"
 required_keys = Array[StringName]([&"blue", &"red"])
-required_key_label = "MAVİ + KIRMIZI ERİŞİM ANAHTARI"
-objective_on_unlock = "FİNAL HAVA KİLİDİNE GİR"
+required_key_label = "LABEL_BLUE_RED_ACCESS_KEYS"
+objective_on_unlock = "LABEL_ENTER_THE_FINAL_AIRLOCK"
 
 [node name="RoomLights" type="Node3D" parent="."]
 
@@ -1885,7 +1885,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.7, 0)
 pickup_id = &"bluekey"
 pickup_type = "key_blue"
 amount = 1
-display_name = "MAVİ ERİŞİM ANAHTARI"
+display_name = "LABEL_BLUE_ACCESS_KEY"
 visual_texture = ExtResource("18_key_blue")
 
 [node name="RedKey" parent="Pickups" unique_id=7998531 instance=ExtResource("9_pickup")]
@@ -1893,13 +1893,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.7, -40)
 pickup_id = &"redkey"
 pickup_type = "key_red"
 amount = 1
-display_name = "KIRMIZI ERİŞİM ANAHTARI"
+display_name = "LABEL_RED_ACCESS_KEY"
 visual_texture = ExtResource("19_key_red")
 
 [node name="Health_10" parent="Pickups" unique_id=1378693326 instance=ExtResource("9_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.7, 30)
 pickup_id = &"health_10"
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 visual_texture = ExtResource("13_health")
 
 [node name="Shells_12" parent="Pickups" unique_id=882259885 instance=ExtResource("9_pickup")]
@@ -1907,7 +1907,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.7, 30)
 pickup_id = &"shells_12"
 pickup_type = "shells"
 amount = 10
-display_name = "FİŞEK"
+display_name = "LABEL_SHELLS"
 spawn_max_difficulty = 1
 visual_texture = ExtResource("16_shells")
 
@@ -1924,7 +1924,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.7, -50)
 pickup_id = &"bullets_18"
 pickup_type = "bullets"
 amount = 28
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 spawn_max_difficulty = 2
 visual_texture = ExtResource("15_bullets")
 
@@ -1933,14 +1933,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.7, 58)
 pickup_id = &"bullets_2"
 pickup_type = "bullets"
 amount = 18
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 spawn_max_difficulty = 1
 visual_texture = ExtResource("15_bullets")
 
 [node name="Health_1" parent="Pickups" unique_id=1036715008 instance=ExtResource("9_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.7, 58)
 pickup_id = &"health_1"
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 spawn_max_difficulty = 1
 visual_texture = ExtResource("13_health")
 
@@ -1949,7 +1949,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 20)
 pickup_id = &"armor_5"
 pickup_type = "armor"
 amount = 15
-display_name = "HAFİF ZIRH"
+display_name = "LABEL_LIGHT_ARMOR"
 spawn_max_difficulty = 2
 visual_texture = ExtResource("14_armor")
 
@@ -1958,14 +1958,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 pickup_id = &"bullets_8"
 pickup_type = "bullets"
 amount = 22
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 visual_texture = ExtResource("15_bullets")
 
 [node name="Health_9" parent="Pickups" unique_id=806785313 instance=ExtResource("9_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0.7, 1.5)
 pickup_id = &"health_9"
 amount = 20
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 spawn_max_difficulty = 2
 visual_texture = ExtResource("13_health")
 
@@ -1974,7 +1974,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.7, 40)
 pickup_id = &"shells_4"
 pickup_type = "shells"
 amount = 8
-display_name = "FİŞEK"
+display_name = "LABEL_SHELLS"
 visual_texture = ExtResource("16_shells")
 
 [node name="Armor_14" parent="Pickups" unique_id=148206457 instance=ExtResource("9_pickup")]
@@ -1988,7 +1988,7 @@ visual_texture = ExtResource("14_armor")
 [node name="EasyHealth_17" parent="Pickups" unique_id=507699168 instance=ExtResource("9_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.7, 10)
 pickup_id = &"easy_health_17"
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 spawn_max_difficulty = 0
 visual_texture = ExtResource("13_health")
 
@@ -1997,7 +1997,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.7, 10)
 pickup_id = &"easy_bullets_17"
 pickup_type = "bullets"
 amount = 24
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 spawn_max_difficulty = 0
 visual_texture = ExtResource("15_bullets")
 
@@ -2014,7 +2014,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.7, -40)
 pickup_id = &"easy_shells_15"
 pickup_type = "shells"
 amount = 10
-display_name = "FİŞEK"
+display_name = "LABEL_SHELLS"
 spawn_max_difficulty = 0
 visual_texture = ExtResource("16_shells")
 
@@ -2022,7 +2022,7 @@ visual_texture = ExtResource("16_shells")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0.7, 20)
 pickup_id = &"easy_health_5"
 amount = 20
-display_name = "SAĞLIK"
+display_name = "HUD_CATEGORY_HEALTH"
 spawn_max_difficulty = 0
 visual_texture = ExtResource("13_health")
 
@@ -2031,7 +2031,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5, 0.7, -10)
 pickup_id = &"easy_bullets_13"
 pickup_type = "bullets"
 amount = 24
-display_name = "MERMİ"
+display_name = "LABEL_AMMO"
 spawn_max_difficulty = 0
 visual_texture = ExtResource("15_bullets")
 
@@ -2040,7 +2040,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 0.7, 61)
 pickup_id = &"night_vision_start"
 pickup_type = "night_vision"
 amount = 1
-display_name = "GECE GÖRÜŞÜ"
+display_name = "KEYBIND_NIGHT_VISION"
 scale_amount_with_difficulty = false
 visual_texture = ExtResource("24_night_vision")
 
@@ -2067,7 +2067,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.8, 0.7, -41.6)
 pickup_id = &"secret_maintenance_ammo"
 pickup_type = "bullets"
 amount = 24
-display_name = "GİZLİ BAKIM STOĞU"
+display_name = "LABEL_HIDDEN_MAINTENANCE_CACHE"
 visual_texture = ExtResource("15_bullets")
 
 [node name="Triggers" type="Node3D" parent="." unique_id=1315848807]

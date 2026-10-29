@@ -165,12 +165,13 @@ func _ensure_reader() -> void:
 	content.add_child(_reader_body)
 
 	_close_button = Button.new()
-	_close_button.text = _localized("KAPAT  [E / ESC]", "CLOSE  [E / ESC]")
+	_close_button.text = tr("FIELD_TERMINAL_UI_CLOSE_E_ESC")
 	_close_button.custom_minimum_size = Vector2(180.0, 46.0)
 	_close_button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_close_button.pressed.connect(_close_record)
 	content.add_child(_close_button)
 
 
+## Sahnede yazılı _tr/_en veri alanlarından birini seçer (çeviri anahtarı değil, veri kalıbı).
 func _localized(tr_text: String, en_text: String) -> String:
 	return en_text if TranslationServer.get_locale().to_lower().begins_with("en") else tr_text

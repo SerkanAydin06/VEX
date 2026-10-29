@@ -3,11 +3,11 @@ extends StaticBody3D
 
 @export_category("Silah Rafı")
 @export var weapon_id: StringName = &"p01"
-@export var display_name := "P-01 TAKTİK TABANCA"
+@export var display_name := "WEAPON_P01_NAME"
 @export var group_label := "ARMORY_GROUP_SIDEARM"
 @export var weapon_texture: Texture2D
 @export var fallback_visual_text := "P-01"
-@export var locked_message := "GÖREVDE HENÜZ BULUNMADI"
+@export var locked_message := "LABEL_NOT_YET_FOUND_IN_A_MISSION"
 @export_range(0.35, 1.5, 0.05) var visual_world_width := 1.2
 @export var visual_local_position := Vector3(0.0, 0.0, 0.14)
 @export var visual_rotation_degrees := Vector3.ZERO

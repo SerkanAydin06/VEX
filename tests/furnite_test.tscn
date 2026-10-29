@@ -466,7 +466,7 @@ automatic_open = true
 
 [node name="FiringRangeDoor" parent="Doors" unique_id=133637574 instance=ExtResource("6_ie01u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 2.24, -10)
-display_name = "FIRING RANGE"
+display_name = "LABEL_FIRING_RANGE"
 locked = true
 required_key = &""
 permanently_locked = true
@@ -475,7 +475,7 @@ automatic_open = true
 
 [node name="ResearchDoor" parent="Doors" unique_id=906119346 instance=ExtResource("6_ie01u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.24, -10)
-display_name = "RESEARCH LAB"
+display_name = "LABEL_RESEARCH_LAB"
 locked = true
 required_key = &""
 permanently_locked = true
@@ -485,7 +485,7 @@ automatic_open = true
 
 [node name="WorkshopDoor" parent="Doors" unique_id=920972897 instance=ExtResource("6_ie01u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.24, 10)
-display_name = "WEAPON WORKSHOP"
+display_name = "LABEL_WEAPON_WORKSHOP"
 locked = true
 required_key = &""
 permanently_locked = true
@@ -494,7 +494,7 @@ automatic_open = true
 
 [node name="EngineeringDoor" parent="Doors" unique_id=432996729 instance=ExtResource("6_ie01u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.24, 10)
-display_name = "ENGINEERING BAY"
+display_name = "LABEL_ENGINEERING_BAY"
 locked = true
 required_key = &""
 permanently_locked = true
@@ -503,7 +503,7 @@ automatic_open = true
 
 [node name="OperatorDoor" parent="Doors" unique_id=1049402474 instance=ExtResource("6_ie01u")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 2.24, 25)
-display_name = "OPERATOR PLATFORMU"
+display_name = "LABEL_OPERATOR_PLATFORM"
 required_key = &""
 auto_close_delay = 1.5
 automatic_open = true
@@ -595,7 +595,7 @@ mesh = SubResource("BoxMesh_door_sign_x")
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.07999992, 0, 0)
 pixel_size = 0.00195
 modulate = Color(0, 0, 0, 1)
-text = "FIRING RANGE"
+text = "LABEL_FIRING_RANGE"
 font_size = 150
 outline_size = 8
 
@@ -608,7 +608,7 @@ mesh = SubResource("BoxMesh_door_sign_x")
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.0800004, 0, 0)
 pixel_size = 0.00195
 modulate = Color(0, 0, 0, 1)
-text = "RESEARCH LAB"
+text = "LABEL_RESEARCH_LAB"
 font_size = 150
 outline_size = 8
 
@@ -621,7 +621,7 @@ mesh = SubResource("BoxMesh_door_sign_x")
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.051992416, -0.016989708, -0.018060684)
 pixel_size = 0.0018
 modulate = Color(0, 0, 0, 1)
-text = "WEAPON WORKSHOP"
+text = "LABEL_WEAPON_WORKSHOP"
 font_size = 150
 outline_size = 8
 
@@ -634,7 +634,7 @@ mesh = SubResource("BoxMesh_door_sign_x")
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.0800004, 0, 0)
 pixel_size = 0.00188
 modulate = Color(0, 0, 0, 1)
-text = "ENGINEERING BAY"
+text = "LABEL_ENGINEERING_BAY"
 font_size = 150
 outline_size = 8
 
@@ -728,19 +728,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.712398, 0, -14.286835)
 [node name="DeploymentTerminal" parent="Systems" unique_id=560238758 instance=ExtResource("11_u2ooc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 30.25)
 terminal_mode = 1
-display_name = "OPERASYON TERMİNALİ"
+display_name = "TERMINAL_MENU_TITLE"
 info_message = "OPERASYON SEÇ / DEPLOY"
 
 [node name="CommandStatusTerminal" parent="Systems" unique_id=975524091 instance=ExtResource("11_u2ooc")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.7276541, -1.8)
-display_name = "BASTION DURUMU"
+display_name = "LABEL_BASTION_STATUS"
 info_message = "BASTION-7 // SAVUNMA ÇEVRİMİÇİ // DIŞ HAT İZLENİYOR"
 screen_header = "VEX // COMMAND"
 
 [node name="ArmoryStatusTerminal" parent="Systems" unique_id=142806560 instance=ExtResource("11_u2ooc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.65, -7.2)
-display_name = "CEPHANELİK DURUMU"
-info_message = "SAHİP OLDUĞUN SİLAHI RAFTAN SEÇ"
+display_name = "LABEL_ARMORY_STATUS"
+info_message = "LABEL_SELECT_AN_OWNED_WEAPON_FROM_THE_RACK"
 screen_header = "VEX // ARMORY"
 
 [node name="ArmoryRacks" type="Node3D" parent="Systems" unique_id=117252377]
@@ -748,23 +748,23 @@ screen_header = "VEX // ARMORY"
 [node name="PistolRack" parent="Systems/ArmoryRacks" unique_id=1097700967 instance=ExtResource("12_i4t6o")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -16.106022, 1.9903786, -13.049632)
 visible = false
-locked_message = "P9 SIDEARM KAYDI BULUNAMADI"
+locked_message = "LABEL_P9_SIDEARM_RECORD_NOT_FOUND"
 
 [node name="ShotgunRack" parent="Systems/ArmoryRacks" unique_id=1644928597 instance=ExtResource("12_i4t6o")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -13.978129, 1.55, -13.279044)
 visible = false
 weapon_id = &"sg04"
-display_name = "KIRICI POMPALI"
+display_name = "LABEL_BREACHER_SHOTGUN"
 weapon_texture = ExtResource("13_wj067")
-locked_message = "SHOTGUN GÖREVDE HENÜZ BULUNMADI"
+locked_message = "LABEL_SHOTGUN_NOT_YET_FOUND_IN_A_MISSION"
 
 [node name="AK47Rack" parent="Systems/ArmoryRacks" unique_id=1339347110 instance=ExtResource("12_i4t6o")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -11.930443, 1.55, -13.222887)
 visible = false
 weapon_id = &"vx47"
-display_name = "AK-47"
+display_name = "LABEL_AK_47"
 weapon_texture = ExtResource("14_m2rkv")
-locked_message = "AK-47 GÖREVDE HENÜZ BULUNMADI"
+locked_message = "LABEL_AK_47_NOT_YET_FOUND_IN_A"
 
 [node name="MP90Rack" parent="Systems/ArmoryRacks" unique_id=815121853 instance=ExtResource("12_i4t6o")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.6, 1.55, -13.7)
@@ -772,7 +772,7 @@ visible = false
 weapon_id = &"mp90"
 display_name = "MP90"
 weapon_texture = ExtResource("15_mkccu")
-locked_message = "MP90 GÖREVDE HENÜZ BULUNMADI"
+locked_message = "LABEL_MP90_NOT_YET_FOUND_IN_A_MISSION"
 
 [node name="Player" parent="." unique_id=1205297111 instance=ExtResource("16_d1ucx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 27.35)

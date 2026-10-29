@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from translation_text import load_translations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/ui/terminal_menu.gd"
@@ -61,7 +63,8 @@ def test_bastion_keeps_spawn_terminal_as_deployment_and_center_terminal_separate
 
     deployment_block = bastion[deployment:center]
     assert "terminal_mode = 1" in deployment_block
-    assert 'display_name = "OPERASYON TERMİNALİ"' in deployment_block
+    assert 'display_name = "TERMINAL_MENU_TITLE"' in deployment_block
+    assert load_translations()["TERMINAL_MENU_TITLE"][0] == "OPERASYON TERMİNALİ"
 
     # CommandStatusTerminal intentionally has no terminal_mode override, so the
     # hub-terminal scene default INFORMATION mode remains authoritative.

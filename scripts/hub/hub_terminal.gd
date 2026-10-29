@@ -13,9 +13,9 @@ const WORLD_SCREEN_SIZE := Vector2i(640, 360)
 
 @export_category("Terminal")
 @export_enum("Mission Control", "Deployment", "Information", "Weapon Archive") var terminal_mode: int = TerminalMode.INFORMATION
-@export var display_name := "BASTION TERMİNALİ"
+@export var display_name := "LABEL_BASTION_TERMINAL"
 @export var offline := false
-@export var offline_message := "POWER OFFLINE"
+@export var offline_message := "LABEL_POWER_OFFLINE"
 
 @export_category("Screen Signal")
 @export var screen_motion_enabled := true
@@ -205,7 +205,7 @@ func _ensure_world_screen() -> void:
 	var facility_label := _make_world_label("FacilityLabel", 17, Color(0.35, 0.88, 1.0, 1.0))
 	facility_label.position = Vector2(28.0, 17.0)
 	facility_label.size = Vector2(360.0, 28.0)
-	facility_label.text = "VEX // BASTION-7"
+	facility_label.text = tr("LABEL_VEX_BASTION_7")
 	root.add_child(facility_label)
 
 	_world_status_label = _make_world_label("StatusLabel", 16, Color(0.30, 1.0, 0.62, 1.0))

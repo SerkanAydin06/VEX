@@ -49,7 +49,7 @@ var _exit_cell := Vector2i(-1, -1)
 var _merge_adjacent_cells := false
 var _show_room_numbers := true
 var _configured := false
-var _title := "TESİS HARİTASI"
+var _title := "LABEL_FACILITY_MAP"
 
 var _player_world_position := Vector2.ZERO
 var _player_rotation_y := 0.0
@@ -91,7 +91,7 @@ func configure(config: Dictionary, level_root: Node) -> void:
 	_doors.clear()
 	_has_player = false
 
-	_title = str(config.get("title", "TESİS HARİTASI"))
+	_title = str(config.get("title", "LABEL_FACILITY_MAP"))
 	_columns = maxi(1, int(config.get("columns", 1)))
 	_rows = maxi(1, int(config.get("rows", 1)))
 	_world_min = config.get("world_min", Vector2.ZERO) as Vector2
