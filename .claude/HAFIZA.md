@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#97)
+## Yapılanlar (2026-09, PR #80–#98)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -33,6 +33,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #95 Saha kaydı köprüsü metinleri (8 anahtar, `FIELD_RECORD_UI_*`) taşındı; `scripts/` içinde `_t()` yardımcısı kalmadı.
 - #96 Kalan dil koşullu metinler (`settings_panel`, `terminal_menu`, `hub_terminal`, `game_state`; `SETTINGS_UI_*`, `TERMINAL_UI_*`, `HUB_TERMINAL_UI_*`, `SAVE_UI_*`) taşındı; dönüştürücü artık `"A" if turkish else "B"` ve if/return kalıplarını da çeviriyor. Koda gömülü metin taşıma işi bitti.
 - #97 Temizlik: 120 kullanılmayan çeviri satırı silindi (`tests/translation_usage_audit.py` artık ölü satırı yakalıyor); eğitim akışı kapı için `VexDoor.refresh_combat_lock()` kullanıyor.
+- #98 Crucible Warden canı 260 → 400 (kullanıcı kararı; miniboss, Bulwark 300'ün üstünde).
 
 ## Kararlar (tekrar tartışma)
 
@@ -41,11 +42,11 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Loom Herald yalnız Level Test sandbox prototipi; kampanyada/arşivde yok.
 - Ayrılmış çeviri anahtarları (planlı içerik): `HUD_SLOT_05`, `HUD_AMMO_MAGNUM`, `CH02_BYPASS_RESERVED` — silme.
 - `furnice_carrier` iç kimliği (dosya/enemy_id) değişmez: arşiv keşfi kayıtta saklanıyor. Oyuncuya görünen ad zaten "FURNACE CARRIER".
+- Can sıralaması: Crucible Warden 400 (miniboss) > Vaskari Bulwark 300 > Basalt Juggernaut 240. Zorluk çarpanları `enemy_base.gd` varsayılanı (×0.75/1/1.2/1.45).
 
 ## Açık işler (sırayla)
 
-1. **Karar bekliyor — Crucible Warden canı:** "elit/miniboss" ama 260 HP (Basalt Juggernaut 240). Kullanıcıya sor; Warden kampanyada Bölüm 5'te.
-2. **Metin anahtarlı çeviri satırları:** ~70 satır anahtar olarak Türkçe metin kullanıyor (ör. `"MAVİ ERİŞİM KARTI"`, sahnelerde `tr()` ile). `KEY_CARD_BLUE` gibi kimlik anahtarlarına taşı (sahne/kaynak referanslarıyla birlikte).
+1. **Metin anahtarlı çeviri satırları:** ~70 satır anahtar olarak Türkçe metin kullanıyor (ör. `"MAVİ ERİŞİM KARTI"`, sahnelerde `tr()` ile). `KEY_CARD_BLUE` gibi kimlik anahtarlarına taşı (sahne/kaynak referanslarıyla birlikte).
 
 ## Öğrenilen dersler
 
@@ -55,4 +56,5 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Veri sözlüklerindeki `_tr`/`_en` alan seçimi (`vex_archive_database`, `vex_field_record_database`) çeviri dosyasına taşınmaz; veri kalıbıdır.
 - `@tool` terminal betiklerinde `tr()` kullanımı mevcut kalıp (`terminal_menu.gd`); editör önizlemesinde anahtar görünmesi kabul.
 - Push'tan önce `tools/validate.sh` çalıştırmak yeterli: başarılı ve temiz çalışma kopyası ağacı damgalar, pre-push hook'u tekrar çalıştırmaz.
+- Web konteyneri uzun aradan sonra sıfırlanabilir: commit'lenmemiş iş kaybolur; her adımı hemen commit+push et.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).

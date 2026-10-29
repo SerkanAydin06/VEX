@@ -53,7 +53,7 @@ CHARACTER_CONTRACTS = {
     "veilmaw": {"combat_role": "1", "move_speed": "2.55", "attack_preferred_distance": "7.5"},
     "voidweaver": {"combat_role": "1", "maximum_health": "120", "attack_preferred_distance": "8.5"},
     "furnice_carrier": {"combat_role": "2", "maximum_health": "130", "attack_range": "22.0"},
-    "crucible_warden": {"combat_role": "0", "maximum_health": "260", "attack_preferred_distance": "1.4"},
+    "crucible_warden": {"combat_role": "0", "maximum_health": "400", "attack_preferred_distance": "1.4"},
     "cinder_spitter": {"combat_role": "1", "maximum_health": "95", "attack_range": "14.0"},
     "coil_lancer": {"combat_role": "2", "maximum_health": "105", "attack_range": "22.0"},
     "spore_matriarch": {"combat_role": "1", "maximum_health": "165", "attack_range": "18.0"},
