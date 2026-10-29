@@ -212,7 +212,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.2, 0.7, -41.6)
 pickup_id = &"level01_r29_secret_armor"
 pickup_type = "armor"
 amount = 12
-display_name = "BAKIM ZIRHI"
+display_name = "LABEL_MAINTENANCE_ARMOR"
 visual_texture = ExtResource("7_armor")
 
 [node name="R33Bullets" parent="Pickups" instance=ExtResource("2_pickup")]
