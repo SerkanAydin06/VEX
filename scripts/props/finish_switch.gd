@@ -135,13 +135,13 @@ func _set_visual_access_state(is_ready: bool) -> void:
 		return
 	_visual_ready = is_ready
 	if is_ready:
-		_status_label.text = _localized_device_text("SİSTEM HAZIR", "SYSTEM READY")
+		_status_label.text = tr("FINISH_UI_SYSTEM_READY")
 		_status_label.modulate = ready_tint
 		_set_emissive_mesh(_status_right, ready_tint, 2.7)
 		_set_emissive_mesh(_ready_core, ready_tint, 2.9)
 		_screen_glow.light_color = screen_tint
 	else:
-		_status_label.text = _localized_device_text("YETKİ BEKLENİYOR", "CLEARANCE REQUIRED")
+		_status_label.text = tr("FINISH_UI_CLEARANCE_REQUIRED")
 		_status_label.modulate = Color(1.0, 0.38, 0.16, 1.0)
 		_set_emissive_mesh(_status_right, Color(1.0, 0.2, 0.08, 1.0), 2.2)
 		_set_emissive_mesh(_ready_core, Color(1.0, 0.2, 0.08, 1.0), 2.4)
@@ -150,9 +150,9 @@ func _set_visual_access_state(is_ready: bool) -> void:
 
 func _play_activation_visual() -> void:
 	_visual_ready = true
-	_status_label.text = _localized_device_text("BAĞLANTI AKTİF", "LINK ACTIVE")
+	_status_label.text = tr("FINISH_UI_LINK_ACTIVE")
 	_status_label.modulate = active_tint
-	_footer_label.text = _localized_device_text("TAHLİYE ONAYLANDI", "EXTRACTION CONFIRMED")
+	_footer_label.text = tr("FINISH_UI_EXTRACTION_CONFIRMED")
 	_set_emissive_mesh(_status_right, active_tint, 3.4)
 	_set_emissive_mesh(_ready_core, active_tint, 3.7)
 	_set_emissive_mesh(_screen, active_tint, 3.1)
@@ -175,7 +175,7 @@ func _play_activation_visual() -> void:
 
 
 func _refresh_console_text() -> void:
-	_header_label.text = _localized_device_text("VEX // KONTROL", "VEX // CONTROL")
+	_header_label.text = tr("FINISH_UI_VEX_CONTROL")
 	var screen_text := _resolved_display_name().to_upper()
 	_screen_label.text = screen_text
 	if screen_text.length() > 28:
@@ -184,18 +184,12 @@ func _refresh_console_text() -> void:
 		_screen_label.font_size = 19
 	else:
 		_screen_label.font_size = 22
-	_status_label.text = _localized_device_text("SİSTEM HAZIR", "SYSTEM READY")
-	_footer_label.text = _localized_device_text("MANUEL BAĞLANTI // BEKLEMEDE", "MANUAL LINK // STANDBY")
+	_status_label.text = tr("FINISH_UI_SYSTEM_READY")
+	_footer_label.text = tr("FINISH_UI_MANUAL_LINK_STANDBY")
 
 
 func _resolved_display_name() -> String:
-	if display_name == "TAHLİYE KONTROLÜ":
-		return _localized_device_text("TAHLİYE KONTROLÜ", "EVACUATION CONTROL")
 	return tr(display_name)
-
-
-func _localized_device_text(tr_text: String, en_text: String) -> String:
-	return en_text if TranslationServer.get_locale().to_lower().begins_with("en") else tr_text
 
 
 func _get_required_key_label() -> String:
