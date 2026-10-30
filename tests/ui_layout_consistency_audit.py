@@ -155,7 +155,7 @@ def test_hud_menu_overlays_keep_map_workspace_large_but_death_menu_compact() -> 
     scene = _read(HUD)
     # The tactical map is a workspace, not a menu card; preserve its large usable area.
     assert "offset_left = 420.0\noffset_top = 140.0\noffset_right = 1500.0\noffset_bottom = 890.0" in scene
-    assert "theme_override_font_sizes/font_size = 34\ntext = \"LEVEL_01_MAP\"" in scene
+    assert "theme_override_font_sizes/font_size = 34\ntext = \"HUD_MAP_TITLE\"" in scene
 
     # The death interaction surface follows the same density as Pause/Complete.
     assert "offset_left = 680.0\noffset_top = 330.0\noffset_right = 1240.0\noffset_bottom = 750.0" in scene

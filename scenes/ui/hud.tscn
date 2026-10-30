@@ -810,7 +810,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 34
-text = "LEVEL_01_MAP"
+text = "HUD_MAP_TITLE"
 horizontal_alignment = 1
 
 [node name="MapStatus" type="Label" parent="Root/MapOverlay" unique_id=1012992375]
