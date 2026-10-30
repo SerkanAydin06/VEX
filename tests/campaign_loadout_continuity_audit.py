@@ -78,6 +78,14 @@ def test_deploy_requires_at_least_one_carried_weapon() -> None:
     assert 'set_objective("HUB_OBJECTIVE_VISIT_ARMORY")' in block
 
 
+def test_armory_rack_never_defers_a_stale_player_reference() -> None:
+    rack = HUB_RACK.read_text(encoding="utf-8")
+    # Sahne geçişinde GameState.player bir kare boyunca serbest bırakılmış eski oyuncu olabilir.
+    assert 'call_deferred("_bind_player", GameState.player)' not in rack
+    assert 'call_deferred("_bind_registered_player")' in rack
+    assert "if is_instance_valid(GameState.player):" in rack
+
+
 if __name__ == "__main__":
     # Betik olarak çalıştırıldığında (validate_local.ps1) test_ fonksiyonlarını
     # tanım sırasıyla çalıştır; pytest gerekmez.

@@ -86,7 +86,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.31, 0.18, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 10
-text = "BASTION-7 // ARMORY DATA NODE"
+text = "WEAPON_UI_ARMORY_DATA_NODE"
 autowrap_mode = 2
 
 [node name="MainTitle" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header/TitleBlock"]
@@ -94,7 +94,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.36, 0.91, 1, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 22
-text = "SİLAH ARŞİV TERMİNALİ"
+text = "HUB_TERMINAL_UI_WEAPON_ARCHIVE_TERMINAL"
 autowrap_mode = 2
 
 [node name="HeaderSpacer" type="Control" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header"]
@@ -112,7 +112,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.6, 0.65, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 9
-text = "ARMORY RECORD STATUS"
+text = "WEAPON_UI_ARMORY_RECORD_STATUS"
 horizontal_alignment = 2
 autowrap_mode = 2
 
@@ -157,7 +157,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.47, 0.72, 0.79, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 10
-text = "WEAPON CLASS"
+text = "WEAPON_UI_WEAPON_CLASS"
 autowrap_mode = 2
 
 [node name="SidearmTab" type="Button" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/CategoryPanel/CategoryMargin/CategoryVBox"]
@@ -221,7 +221,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.49, 0.54, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 9
-text = "LIVE VALUES // WEAPON DEFINITION"
+text = "WEAPON_UI_LIVE_VALUES_VERIFIED"
 autowrap_mode = 2
 
 [node name="IndexPanel" type="PanelContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body"]
@@ -317,7 +317,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.31, 0.18, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 9
-text = "VEX ARMORY // VERIFIED LIVE VALUES"
+text = "WEAPON_UI_VERIFIED_LIVE_VALUES"
 autowrap_mode = 2
 
 [node name="DetailTitle" type="Label" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Body/DetailPanel/DetailMargin/DetailVBox/DetailTop/IdentityBlock"]
@@ -380,7 +380,7 @@ size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.34, 0.5, 0.55, 1)
 theme_override_fonts/font = ExtResource("4_mono")
 theme_override_font_sizes/font_size = 9
-text = "LIVE VALUES // WEAPON RESOURCES ARE THE SOURCE OF TRUTH"
+text = "WEAPON_UI_FOOTER_LIVE_VALUES"
 vertical_alignment = 1
 autowrap_mode = 2
 

@@ -40,7 +40,9 @@ func _ready() -> void:
 		GameState.player_registered.connect(_on_player_registered)
 	if not SettingsManager.language_changed.is_connected(_on_language_changed):
 		SettingsManager.language_changed.connect(_on_language_changed)
-	call_deferred("_bind_player", GameState.player)
+	# Oyuncu referansını erteleme anında değil çağrı anında oku: sahne geçişinde
+	# GameState.player bir kare boyunca önceki sahnenin serbest bırakılmış oyuncusu olabilir.
+	call_deferred("_bind_registered_player")
 
 
 func get_interaction_text(player: Node) -> String:
@@ -162,6 +164,11 @@ func _refresh_visual(player: Node) -> void:
 		name_label.modulate = stored_label_color
 		name_label.text = "%s\n%s" % [tr(display_name), tr("UI_STORED")]
 	group_name_label.text = tr(group_label)
+
+
+func _bind_registered_player() -> void:
+	if is_instance_valid(GameState.player):
+		_bind_player(GameState.player)
 
 
 func _on_player_registered(player: Node) -> void:
