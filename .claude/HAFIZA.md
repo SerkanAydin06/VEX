@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#100)
+## Yapılanlar (2026-09, PR #80–#101)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -36,6 +36,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #98 Crucible Warden canı 260 → 400 (kullanıcı kararı; miniboss, Bulwark 300'ün üstünde).
 - #99 Anahtar olarak metin kullanan 73 çeviri satırı `LABEL_*` kimlik anahtarına taşındı (186 sahne/betik referansı); `finish_switch`/`discovery_notification_overlay` dil yardımcıları da `tr()`'ye geçti. `translation_usage_audit` artık metin anahtarını reddediyor. Açık iş kalmadı.
 - #100 Tarama: 5 sahne alanında anahtar yerine düz metin (BAKIM ZIRHI, Bastion silah arşivi terminali, kısıtlı kapı mesajı, OPERATÖR PLATFORMU tabelası, test kapısı) düzeltildi; Bastion giriş mesajı zamanlayıcıları duraklatmaya duyarlı. Bölümler/hub/menü headless açılışta hatasız; kayıt, düşman ölümü, içerik kimlikleri temiz bulundu.
+- #101 Oyuncuya hiç görünmeyen 66 eski çeviri satırı silindi (VEX-01/Kırık Omurga/Kül Madeni prototip brifingleri, kullanılmayan eğitim ipuçları, test sahnesine özel etiketler). `tests/translation_reachability.py` yapı kaynaklarında yalnız kurulan kökleri ve sıfırlanmayan kapı alanlarını sayar; test sahneleri sayılmaz.
 
 ## Kararlar (tekrar tartışma)
 
@@ -63,4 +64,5 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Yeni çeviri anahtarı daima kimlik biçiminde (`[A-Z][A-Z0-9_]*`); sahnedeki `display_name` vb. alanlara metin değil anahtar yaz.
 - `tools/extract_inline_text.py | head` kullanma: boru kırılınca `--apply` yazmadan çıkar.
 - `tests/`'teki bazı denetimler `git ls-files` çalıştırır: Godot doğrulama kopyasını `git clone` ile oluştur.
+- Çeviri kullanım denetimi `tests/translation_reachability.py` ile ölçülür: `tests/` sahneleri ve `level_0N_structure_source.tscn` kök/sıfırlanan alanları "kullanım" sayılmaz.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).

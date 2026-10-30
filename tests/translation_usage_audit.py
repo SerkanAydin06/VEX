@@ -1,29 +1,17 @@
 import re
 from pathlib import Path
 
+from translation_reachability import live_source_files, live_source_text
 from translation_text import load_translations
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_SUFFIXES = {".gd", ".tscn", ".tres", ".cfg", ".godot"}
-SKIPPED_DIRS = {".godot", ".git", "assets", "build"}
 # Planlı içerik için bilerek tutulan anahtarlar (Weapons_VEX.md / Bölüm 2 bypass kuplörü).
 RESERVED_KEYS = {"HUD_SLOT_05", "HUD_AMMO_MAGNUM", "CH02_BYPASS_RESERVED"}
 
 
-def _source_text() -> str:
-    parts = []
-    for path in ROOT.rglob("*"):
-        if path.suffix not in SOURCE_SUFFIXES or not path.is_file():
-            continue
-        if SKIPPED_DIRS.intersection(path.relative_to(ROOT).parts):
-            continue
-        parts.append(path.read_text(encoding="utf-8", errors="ignore"))
-    return "\n".join(parts)
-
-
 def test_every_translation_row_is_referenced_by_game_content() -> None:
-    source = _source_text()
+    source = live_source_text()
     identifiers = set(re.findall(r"[A-Z][A-Z0-9_]+", source))
     unused = sorted(
         key
@@ -50,15 +38,17 @@ SIGNAGE_CODE = re.compile(r"[A-Z0-9-]+ // [A-Z0-9-]+")
 def test_scene_text_fields_use_translation_keys() -> None:
     keys = set(load_translations())
     bad = []
-    for path in sorted((ROOT / "scenes").rglob("*.tscn")) + sorted((ROOT / "resources").rglob("*.tres")):
-        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for path, text in live_source_files():
+        if path.suffix not in {".tscn", ".tres"}:
+            continue
+        for line in text.splitlines():
             match = TRANSLATED_FIELD.match(line.strip())
             if match is None:
                 continue
             value = match.group(2)
             if value in keys or value.startswith(("res://", "uid://")) or SIGNAGE_CODE.fullmatch(value):
                 continue
-            bad.append(f"{path.relative_to(ROOT)}:{number}: {match.group(1)} = {value!r}")
+            bad.append(f"{path.relative_to(ROOT)}: {match.group(1)} = {value!r}")
     assert not bad, "çeviri anahtarı yerine düz metin: " + "; ".join(bad)
 
 
