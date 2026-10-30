@@ -215,6 +215,8 @@ text = "MAIN_TERMINAL"
 
 [node name="AccessLabel" type="Label" parent="MainShell/Margin/VBox/Header" unique_id=1440388975]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.6
 theme_override_colors/font_color = Color(0.94, 0.36, 0.24, 1)
 theme_override_font_sizes/font_size = 12
 text = "MAIN_AUTHORITY"
@@ -280,7 +282,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.32, 0.48, 0.54, 1)
 theme_override_font_sizes/font_size = 12
-text = "VEX v4.1.0 // BILINGUAL BUILD"
+text = "VEX v4.1.0"
 
 [node name="SystemClock" type="Label" parent="MainShell/Margin/VBox/BuildLine" unique_id=1558230596]
 unique_name_in_owner = true
@@ -351,6 +353,7 @@ theme_override_font_sizes/font_size = 14
 text = "MAIN_ACTIVE_OPERATION"
 
 [node name="Title" type="Label" parent="MissionPanel/Margin/VBox" unique_id=1082169920]
+custom_minimum_size = Vector2(388, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.83, 0.95, 0.98, 1)
 theme_override_font_sizes/font_size = 22
@@ -358,6 +361,7 @@ text = "MAIN_MISSION_TITLE"
 autowrap_mode = 2
 
 [node name="Description" type="Label" parent="MissionPanel/Margin/VBox" unique_id=1414539382]
+custom_minimum_size = Vector2(388, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.5, 0.68, 0.73, 1)
 theme_override_font_sizes/font_size = 14
@@ -366,6 +370,7 @@ autowrap_mode = 2
 
 [node name="MissionData" type="Label" parent="MissionPanel/Margin/VBox" unique_id=2037313429]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(388, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.86, 1, 1)
 theme_override_font_sizes/font_size = 13

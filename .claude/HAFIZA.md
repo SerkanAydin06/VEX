@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#101)
+## Yapılanlar (2026-09, PR #80–#102)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -37,6 +37,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #99 Anahtar olarak metin kullanan 73 çeviri satırı `LABEL_*` kimlik anahtarına taşındı (186 sahne/betik referansı); `finish_switch`/`discovery_notification_overlay` dil yardımcıları da `tr()`'ye geçti. `translation_usage_audit` artık metin anahtarını reddediyor. Açık iş kalmadı.
 - #100 Tarama: 5 sahne alanında anahtar yerine düz metin (BAKIM ZIRHI, Bastion silah arşivi terminali, kısıtlı kapı mesajı, OPERATÖR PLATFORMU tabelası, test kapısı) düzeltildi; Bastion giriş mesajı zamanlayıcıları duraklatmaya duyarlı. Bölümler/hub/menü headless açılışta hatasız; kayıt, düşman ölümü, içerik kimlikleri temiz bulundu.
 - #101 Oyuncuya hiç görünmeyen 66 eski çeviri satırı silindi (VEX-01/Kırık Omurga/Kül Madeni prototip brifingleri, kullanılmayan eğitim ipuçları, test sahnesine özel etiketler). `tests/translation_reachability.py` yapı kaynaklarında yalnız kurulan kökleri ve sıfırlanmayan kapı alanlarını sayar; test sahneleri sayılmaz.
+- #102 Metin cilası: Türkçede İngilizce oyun jargonu (projectile, lunge, charge, pellet…) ve oyuncuya görünen geliştirici dili temizlendi; İngilizcede LEVEL→CHAPTER; arşiv/silah terminallerinde sabit İngilizce etiketler çeviriye bağlandı; ana menü görev paneli ve HUD hedef kutusu taşma/kesilme düzeltildi; silah rafının sahne geçişindeki eski oyuncu referansı hatası giderildi.
 
 ## Kararlar (tekrar tartışma)
 
@@ -46,6 +47,8 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Ayrılmış çeviri anahtarları (planlı içerik): `HUD_SLOT_05`, `HUD_AMMO_MAGNUM`, `CH02_BYPASS_RESERVED` — silme.
 - `furnice_carrier` iç kimliği (dosya/enemy_id) değişmez: arşiv keşfi kayıtta saklanıyor. Oyuncuya görünen ad zaten "FURNACE CARRIER".
 - Bölüm tabelalarındaki `VEX // 01` başlığı ve `R03 // SEC` oda kodları dilden bağımsız tesis kodudur; kanondaki VEX-01 bölüm adı yasağına girmez.
+- Ana menü sloganı "BOŞLUĞU YOK ET // ERASE THE VOID" bilinçli: logo alt yazısı "VOID EXTERMINATION" (VEX adı). Değiştirme.
+- Silah/yetenek özel adları (Thermal Burst, Ground Slam, Heatwave, P-07 Sentinel…) Türkçe metinde İngilizce kalır.
 - Can sıralaması: Crucible Warden 400 (miniboss) > Vaskari Bulwark 300 > Basalt Juggernaut 240. Zorluk çarpanları `enemy_base.gd` varsayılanı (×0.75/1/1.2/1.45).
 
 ## Açık işler (sırayla)
@@ -65,4 +68,6 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - `tools/extract_inline_text.py | head` kullanma: boru kırılınca `--apply` yazmadan çıkar.
 - `tests/`'teki bazı denetimler `git ls-files` çalıştırır: Godot doğrulama kopyasını `git clone` ile oluştur.
 - Çeviri kullanım denetimi `tests/translation_reachability.py` ile ölçülür: `tests/` sahneleri ve `level_0N_structure_source.tscn` kök/sıfırlanan alanları "kullanım" sayılmaz.
+- Gerçek ekran görüntüsü: `xvfb-run -a -s "-screen 0 1280x720x24" godot --path <klon> --resolution 1280x720 --rendering-driver opengl3 -s shot.gd` (Mesa llvmpipe çalışıyor); `root.get_viewport().get_texture().get_image().save_png()`.
+- Autowrap etiketlere genişlik verilmezse Godot yüksekliği kelime başına satır sayar; paneller şişer. `custom_minimum_size.x` ver.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).

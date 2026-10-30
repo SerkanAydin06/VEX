@@ -274,7 +274,7 @@ theme_override_font_sizes/font_size = 17
 text = "HUD_OBJECTIVE_EMPTY"
 horizontal_alignment = 1
 vertical_alignment = 1
-text_overrun_behavior = 3
+autowrap_mode = 3
 
 [node name="Crosshair" type="TextureRect" parent="Root" unique_id=1323792274]
 unique_name_in_owner = true
