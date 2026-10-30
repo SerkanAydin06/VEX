@@ -252,11 +252,11 @@ visual_texture = ExtResource("7_armor")
 [node name="Record_R03_EmergencyTestOrder" parent="Records" instance=ExtResource("9_record")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -3.8, 0.85, 51.5)
 record_id = &"vex01_emergency_test_order_0417"
-category_tr = "OLAY // VEX-01"
-category_en = "INCIDENT // VEX-01"
+category_tr = "OLAY"
+category_en = "INCIDENT"
 title_tr = "ACİL TEST EMRİ / 04:17"
 title_en = "EMERGENCY TEST ORDER / 04:17"
-body_tr = "ZERO SOURCE // TEST EMRİ 04:17\n\nÇekim kapasitesi %18 artırıldı. Emniyet ekibinin kararlılık itirazı yönetim yetkisiyle geçersiz kılındı. Eşzamanlı saha düğümleri aynı test penceresine bağlandı.\n\nNOT: Dalgalanma görülürse yerel reaktör kapatılmayacak; ağ senkronizasyonu korunacak."
+body_tr = "SIFIR KAYNAK // TEST EMRİ 04:17\n\nÇekim kapasitesi %18 artırıldı. Emniyet ekibinin kararlılık itirazı yönetim yetkisiyle geçersiz kılındı. Eşzamanlı saha düğümleri aynı test penceresine bağlandı.\n\nNOT: Dalgalanma görülürse yerel reaktör kapatılmayacak; ağ senkronizasyonu korunacak."
 body_en = "ZERO SOURCE // TEST ORDER 04:17\n\nExtraction capacity increased by 18%. The safety team's stability objection was overridden by executive authorization. Synchronized field nodes were tied to the same test window.\n\nNOTE: If oscillation occurs, do not shut down the local reactor; preserve network synchronization."
 
 [node name="Record_R17_SecurityCamera07" parent="Records" instance=ExtResource("9_record")]
@@ -276,7 +276,7 @@ category_tr = "TEKNİK // SINIFLANDIRILMIŞ"
 category_en = "TECHNICAL // CLASSIFIED"
 title_tr = "ENERJİ ÜRETMİYORUZ"
 title_en = "WE ARE NOT PRODUCING ENERGY"
-body_tr = "ZERO SOURCE // DAHİLİ TEKNİK NOT\n\nReaktör verisi artık termodinamik açıklamalarla uyuşmuyor. Çıkış, yerel sisteme giren hammaddeden büyük. Kaynak içeride değil.\n\nEnerji üretmiyoruz. Bir yerden çekiyoruz.\n\nYarık kısa süreli değil; ağ onu açık tutuyor. Yönetim bu ayrımı aylardır biliyor olabilir."
+body_tr = "SIFIR KAYNAK // DAHİLİ TEKNİK NOT\n\nReaktör verisi artık termodinamik açıklamalarla uyuşmuyor. Çıkış, yerel sisteme giren hammaddeden büyük. Kaynak içeride değil.\n\nEnerji üretmiyoruz. Bir yerden çekiyoruz.\n\nYarık kısa süreli değil; ağ onu açık tutuyor. Yönetim bu ayrımı aylardır biliyor olabilir."
 body_en = "ZERO SOURCE // INTERNAL TECHNICAL NOTE\n\nReactor data no longer matches thermodynamic explanations. Output exceeds the material entering the local system. The source is not inside the facility.\n\nWe are not producing energy. We are drawing it from somewhere.\n\nThe rift is not momentary; the network is holding it open. Management may have known this distinction for months."
 
 [node name="Triggers" type="Node3D" parent="."]

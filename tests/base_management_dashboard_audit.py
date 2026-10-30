@@ -116,7 +116,7 @@ def test_future_upgrade_backbone_is_progression_gated_but_not_fake_gameplay() ->
     assert "BaseManager.is_upgrade_available(upgrade_id, GameState.campaign_stage)" in script
     assert 'button.disabled = true' in script
     assert 'tr("BASE_UI_FUTURE")' in script
-    assert '"YAKINDA"\n"FUTURE"' in with_translations(script)
+    assert '"YAKINDA"\n"SOON"' in with_translations(script)
     assert 'BaseManager.get_upgrade_level(upgrade_id)' in script
 
 
