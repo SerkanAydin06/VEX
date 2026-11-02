@@ -36,32 +36,32 @@ size = Vector3(2.8, 0.28, 0.055)
 
 [node name="WestServiceDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
 position = Vector3(-24, 4.85, -34.74)
-room_name = "R08 // ASH-W"
-header_text = "VEX // 02"
+room_name = "R08 · ASH-W"
+header_text = "VEX 02"
 
 [node name="BreacherCacheDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
 position = Vector3(-53.74, 4.85, 10)
 rotation = Vector3(0, 1.5708, 0)
-room_name = "R13 // ARM"
-header_text = "VEX // 02"
+room_name = "R13 · ARM"
+header_text = "VEX 02"
 
 [node name="TransferHallDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
 position = Vector3(29.74, 4.85, -12.0)
 rotation = Vector3(0, -1.5708, 0)
-room_name = "R19 // XFER"
-header_text = "VEX // 02"
+room_name = "R19 · XFER"
+header_text = "VEX 02"
 
 [node name="BypassCabinetDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
 position = Vector3(53.74, 4.85, 20)
 rotation = Vector3(0, -1.5708, 0)
-room_name = "R27 // BYPASS"
-header_text = "VEX // 02"
+room_name = "R27 · BYPASS"
+header_text = "VEX 02"
 
 [node name="RelayControlDisplay" parent="RoomCodes" instance=ExtResource("1_display")]
 position = Vector3(48, 4.85, 34.74)
 rotation = Vector3(0, 3.14159, 0)
-room_name = "R33 // RELAY"
-header_text = "VEX // 02"
+room_name = "R33 · RELAY"
+header_text = "VEX 02"
 
 [node name="ThermalScars" type="Node3D" parent="."]
 

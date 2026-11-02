@@ -129,7 +129,7 @@ func _category_text(category: StringName) -> String:
 			return tr("DISCOVERY_UI_VEX_XENO_ARCHIVE")
 		&"record":
 			return tr("DISCOVERY_UI_VEX_FIELD_RECORD")
-	return "VEX // DATA"
+	return "VEX VERİ SİSTEMİ"
 
 
 func _is_english() -> bool:

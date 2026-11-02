@@ -38,7 +38,7 @@ material = SubResource("Material_panel")
 [node name="StatusLabel" type="Label3D" parent="."]
 unique_name_in_owner = true
 position = Vector3(0, 1.08, 0.48)
-text = "MED // STABILIZE"
+text = "MEDICAL · STABILIZATION"
 font_size = 30
 outline_size = 6
 billboard = 1

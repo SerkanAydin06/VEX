@@ -55,7 +55,7 @@ func _show_discovery_card(enemy_id: StringName) -> void:
 			universe_name = ArchiveDatabase.universe_name(universe)
 	var subtitle := enemy_name
 	if not universe_name.is_empty():
-		subtitle = "%s // %s" % [enemy_name, universe_name]
+		subtitle = "%s · %s" % [enemy_name, universe_name]
 	DiscoveryOverlay.request(
 		get_tree(),
 		&"xeno",

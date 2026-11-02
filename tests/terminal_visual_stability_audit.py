@@ -31,8 +31,8 @@ def test_archive_columns_fit_1280_and_dynamic_labels_wrap() -> None:
     assert "button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART" in script
     assert "button.clip_text = false" in script
     assert "button.size_flags_horizontal = Control.SIZE_EXPAND_FILL" in script
-    assert '"GERÇEKLİK %02d\\n// SINIFLANDIRILMAMIŞ"' in script
-    assert '"REALITY %02d\\n// UNCLASSIFIED"' in script
+    assert '"GERÇEKLİK %02d\\nSINIFLANDIRILMAMIŞ"' in script
+    assert '"REALITY %02d\\nUNCLASSIFIED"' in script
 
 
 def test_archive_detail_labels_wrap_instead_of_being_clipped() -> None:
@@ -53,8 +53,8 @@ def test_archive_header_uses_compact_two_line_summary() -> None:
 
     assert "custom_minimum_size = Vector2(140, 58)" in scene
     assert "custom_minimum_size = Vector2(330, 0)" in scene
-    assert '"XENOARŞİV %d / %d  //  EVREN %d / %d\\nAĞ AŞAMASI %02d"' in script
-    assert '"XENOARCHIVE %d / %d  //  REALITIES %d / %d\\nNETWORK STAGE %02d"' in script
+    assert '"XENOARŞİV %d / %d · EVREN %d / %d\\nAĞ AŞAMASI %02d"' in script
+    assert '"XENOARCHIVE %d / %d · REALITIES %d / %d\\nNETWORK STAGE %02d"' in script
 
 
 def test_physical_terminal_screen_has_subtle_runtime_signal_motion() -> None:

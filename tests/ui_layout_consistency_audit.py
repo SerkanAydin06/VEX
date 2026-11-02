@@ -126,9 +126,9 @@ def test_archive_surfaces_are_dense_scroll_based_and_use_chapter_labels() -> Non
     assert "custom_minimum_size = Vector2(0, 40)" in dashboard
     assert "autowrap_mode = 2" in dashboard
     assert "KİLİTLİ // VEX-" not in dashboard
-    assert "KİLİTLİ // BÖLÜM 01" in dashboard
-    assert "KİLİTLİ // BÖLÜM 02" in dashboard
-    assert "KİLİTLİ // BÖLÜM 03" in dashboard
+    assert "BÖLÜM 01 GEREKLİ" in dashboard
+    assert "BÖLÜM 02 GEREKLİ" in dashboard
+    assert "BÖLÜM 03 GEREKLİ" in dashboard
 
 
 def test_field_record_reader_is_compact_scrollable_and_safe_for_long_text() -> None:

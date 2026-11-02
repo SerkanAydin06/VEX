@@ -7,7 +7,7 @@ class_name VexRoomNameDisplay
 	set(value):
 		room_name = value
 		_sync_text()
-@export var header_text := "B-7 // LOCATION":
+@export var header_text := "BASTION-7":
 	set(value):
 		header_text = value
 		_sync_text()

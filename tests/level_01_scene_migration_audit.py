@@ -119,8 +119,8 @@ def test_chapter01_translation_catalog_covers_active_level_and_door_keys() -> No
         "CH01_COMPLETE",
     ]:
         assert f"{key}," in translations
-    assert "BÖLÜM 01 // İLK KIRILMA" in translations
-    assert "CHAPTER 01 // FIRST FRACTURE" in translations
+    assert "BÖLÜM 01 — İLK KIRILMA" in translations
+    assert "CHAPTER 01 — FIRST FRACTURE" in translations
 
 
 def test_structure_source_preserves_the_authored_37_room_spine() -> None:
@@ -196,7 +196,7 @@ def test_finish_returns_to_bastion_without_enemy_id_gate() -> None:
 def test_environment_story_is_collision_free_and_scene_authored() -> None:
     environment = _read(ENVIRONMENT)
     assert environment.count('instance=ExtResource("2_display")') == 6
-    for room_code in ["R03 // SEC", "R17 // Q-CAM", "R23 // MED", "R29 // MNT", "R35 // EVAC", "R37 // NET"]:
+    for room_code in ["R03 · SEC", "R17 · Q-CAM", "R23 · MED", "R29 · MNT", "R35 · EVAC", "R37 · NET"]:
         assert room_code in environment
     assert 'FinalBreachCore' in environment
     for forbidden in ['StaticBody3D', 'CollisionShape3D', 'Area3D']:

@@ -309,12 +309,12 @@ func _refresh_world_screen(force := false) -> void:
 			line_2 = tr("HUB_TERMINAL_UI_THREAT_ANALYSIS_RIFT_NETWORK_PROTOCOLS")
 		TerminalMode.WEAPON_ARCHIVE:
 			title = tr("HUB_TERMINAL_UI_WEAPON_ARCHIVE")
-			subtitle = "CANLI BALİSTİK // WEAPON DEFINITION"
+			subtitle = tr("HUB_TERMINAL_UI_LIVE_BALLISTICS")
 			line_1 = tr("HUB_TERMINAL_UI_DAMAGE_RPM_RANGE_RECOIL")
 			line_2 = tr("HUB_TERMINAL_UI_AMMUNITION_SPECIAL_SYSTEM_UPGRADE_TRACK")
 		_:
 			title = tr("HUB_TERMINAL_UI_VEX_TERMINAL")
-			subtitle = "BASTION-7 // SECURE NODE"
+			subtitle = tr("HUB_TERMINAL_UI_SECURE_NODE")
 			line_1 = "SYSTEM LINK"
 			line_2 = "DATA READY"
 	_world_title_label.text = title

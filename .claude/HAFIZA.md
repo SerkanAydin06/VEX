@@ -39,6 +39,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #101 Oyuncuya hiç görünmeyen 66 eski çeviri satırı silindi (VEX-01/Kırık Omurga/Kül Madeni prototip brifingleri, kullanılmayan eğitim ipuçları, test sahnesine özel etiketler). `tests/translation_reachability.py` yapı kaynaklarında yalnız kurulan kökleri ve sıfırlanmayan kapı alanlarını sayar; test sahneleri sayılmaz.
 - #102 Metin cilası: Türkçede İngilizce oyun jargonu (projectile, lunge, charge, pellet…) ve oyuncuya görünen geliştirici dili temizlendi; İngilizcede LEVEL→CHAPTER; arşiv/silah terminallerinde sabit İngilizce etiketler çeviriye bağlandı; ana menü görev paneli ve HUD hedef kutusu taşma/kesilme düzeltildi; silah rafının sahne geçişindeki eski oyuncu referansı hatası giderildi.
 - #103 (2026-11-02) Oyuncunun yerde hareket tuşunu bırakınca kayarak durması giderildi: yatay hız anında sıfırlanır; zıplama momentumu, havadaki hareket ve darbe savrulması korunur. Movement runtime testi ve statik audit eklendi. Kaynak sözleşmeleri doğrulandı; Godot bu ortamda bulunmadığından headless/runtime kontrolü yerelde bekliyor.
+- #105 (2026-11-02) Oyuncuya görünen `//` metin ayırıcıları; TR/EN görev, başlık, HUD, arşiv, terminal, Bastion kontrol paneli, saha kayıtları, oda tabelaları ve etkileşim etiketlerinde semantik metin, başlık çizgisi (`—`) veya hafif metadata ayırıcısı (`·`) ile değiştirildi. Editör önizleme/denetimler güncellendi; `tests/ui_copy_separator_audit.py` ve `docs/ui_copy_style.md` eklendi. Godot çalışma testi yerelde bekliyor.
 - #104 (2026-11-02) #103 anlık duruşu fazla sert hissettirdi: yere basarken tuş bırakılınca Inspector ayarlı `ground_stop_deceleration=100` ile yaklaşık 0,1 saniyede yumuşak frenleme; havada önceki yavaşlama ve savrulma önceliği korundu. Hareket testi ve audit güncellendi. Godot çalışma testi yerelde bekliyor.
 
 ## Kararlar (tekrar tartışma)
@@ -48,14 +49,14 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Loom Herald yalnız Level Test sandbox prototipi; kampanyada/arşivde yok.
 - Ayrılmış çeviri anahtarları (planlı içerik): `HUD_SLOT_05`, `HUD_AMMO_MAGNUM`, `CH02_BYPASS_RESERVED` — silme.
 - `furnice_carrier` iç kimliği (dosya/enemy_id) değişmez: arşiv keşfi kayıtta saklanıyor. Oyuncuya görünen ad zaten "FURNACE CARRIER".
-- Bölüm tabelalarındaki `VEX // 01` başlığı ve `R03 // SEC` oda kodları dilden bağımsız tesis kodudur; kanondaki VEX-01 bölüm adı yasağına girmez.
-- Ana menü sloganı "BOŞLUĞU YOK ET // ERASE THE VOID" bilinçli: logo alt yazısı "VOID EXTERMINATION" (VEX adı). Değiştirme.
+- Tesis tabelaları `VEX 01` ve `R03 · SEC` gibi dilden bağımsız kodlardır; bunlar oyuncuya dönük eski VEX-01 prototip bölüm adları değildir. Oyuncuya görünen metinlerde `//` kullanılmaz.
+- Ana menünün temel sloganı "BOŞLUĞU YOK ET" / "ERASE THE VOID" ve logo alt yazısı "VOID EXTERMINATION" (VEX adı) korunur; `//` yerine metin hiyerarşisi kullanılır.
 - Silah/yetenek özel adları (Thermal Burst, Ground Slam, Heatwave, P-07 Sentinel…) Türkçe metinde İngilizce kalır.
 - Can sıralaması: Crucible Warden 400 (miniboss) > Vaskari Bulwark 300 > Basalt Juggernaut 240. Zorluk çarpanları `enemy_base.gd` varsayılanı (×0.75/1/1.2/1.45).
 
 ## Açık işler (sırayla)
 
-- #104 için Windows/Godot 4.7 ortamında `validate_local.ps1` ve oynanışta yumuşak durma, zıplama, geri savrulma smoke testini çalıştır.
+- #104 hareket ve #105 arayüz metin güncellemeleri için Windows/Godot 4.7 ile `validate_local.ps1`; TR/EN menü, HUD, arşiv, tabela yerleşim kontrolü ve hareket smoke testi yapılmalı.
 
 ## Öğrenilen dersler
 

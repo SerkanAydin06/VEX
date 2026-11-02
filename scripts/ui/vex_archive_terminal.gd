@@ -235,8 +235,8 @@ func _get_entry_button_text(entry: Dictionary, index: int) -> String:
 	match _current_section:
 		Section.CREATURES:
 			if not _is_enemy_discovered(entry):
-				return "XENO-%02d\n// ???" % (index + 1)
-			return "%s\n// %s" % [
+				return "XENO-%02d\n???" % (index + 1)
+			return "%s\n%s" % [
 				entry.get("name", "UNKNOWN"),
 				_get_universe_name(_entry_string_name(entry, "universe")),
 			]
@@ -467,7 +467,7 @@ func _get_base_management_button_text(entry: Dictionary) -> String:
 	var kind := StringName(str(entry.get("base_kind", "")))
 	match kind:
 		&"overview":
-			return "%s\n// %s" % [title, tr("ARCHIVE_UI_LOCAL_SYSTEMS")]
+			return "%s\n%s" % [title, tr("ARCHIVE_UI_LOCAL_SYSTEMS")]
 		&"area":
 			var area_id := _entry_string_name(entry, "id")
 			var status := tr("ARCHIVE_UI_CLEARANCE_LOCKED")
@@ -475,7 +475,7 @@ func _get_base_management_button_text(entry: Dictionary) -> String:
 				status = tr("ARCHIVE_UI_ACCESS_ONLINE")
 			elif BaseManager.can_unlock_area(area_id, GameState.campaign_stage):
 				status = tr("ARCHIVE_UI_ACTIVATION_READY")
-			return "%s\n// %s" % [title, status]
+			return "%s\n%s" % [title, status]
 		&"lighting":
 			var mode := int(entry.get("mode", 0))
 			var status := (
@@ -483,10 +483,10 @@ func _get_base_management_button_text(entry: Dictionary) -> String:
 				if mode == BaseManager.get_lighting_mode()
 				else tr("ARCHIVE_UI_AVAILABLE")
 			)
-			return "%s\n// %s" % [title, status]
+			return "%s\n%s" % [title, status]
 		&"upgrade":
 			var upgrade_id := _entry_string_name(entry, "id")
-			return "%s\n// %s %d / %d" % [
+			return "%s\n%s %d / %d" % [
 				title,
 				tr("ARCHIVE_UI_LEVEL"),
 				BaseManager.get_upgrade_level(upgrade_id),

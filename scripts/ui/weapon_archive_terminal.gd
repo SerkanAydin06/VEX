@@ -175,7 +175,7 @@ func _refresh_entries() -> void:
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.toggle_mode = true
 		button.button_pressed = index == _selected_index
-		button.text = "%s\n// %s" % [tr(definition.display_name), _weapon_status_text(definition)]
+		button.text = "%s\n%s" % [tr(definition.display_name), _weapon_status_text(definition)]
 		button.pressed.connect(_select_weapon.bind(index))
 		weapon_list.add_child(button)
 
@@ -203,7 +203,7 @@ func _refresh_detail() -> void:
 	var definition := _current_entries[_selected_index]
 	detail_preview.texture = definition.world_pickup_texture
 	detail_title.text = tr(definition.display_name)
-	detail_meta.text = "%s  //  %s %d" % [
+	detail_meta.text = "%s · %s %d" % [
 		tr(definition.loadout_group_label),
 		tr("WEAPON_UI_LOADOUT_SLOT"),
 		definition.loadout_slot,
@@ -275,7 +275,7 @@ func _build_weapon_detail(definition: WeaponDefinition) -> String:
 	if systems.is_empty():
 		systems.append(tr("WEAPON_UI_NO_AUXILIARY_SYSTEM"))
 	lines.append("[color=#78cbd8]%s[/color]" % tr("WEAPON_UI_SPECIAL_SYSTEMS"))
-	lines.append(" // ".join(systems))
+	lines.append(" · ".join(systems))
 	if definition.supports_flashlight:
 		lines.append(tr("WEAPON_UI_LIGHT_1F_M_1F_ENERGY_0F") % [definition.flashlight_range * float(modifiers.get("flashlight_range", 1.0)), definition.flashlight_energy * float(modifiers.get("flashlight_energy", 1.0)), definition.flashlight_angle_degrees])
 	if definition.uses_heat:
@@ -295,7 +295,7 @@ func _upgrade_track_text(weapon_id: StringName, level: int) -> String:
 	for index in track.size():
 		var tier: Dictionary = track[index]
 		var marker := "[color=#4cff9a]✓[/color]" if index < level else "○"
-		lines.append("%s  T%d // %s" % [marker, index + 1, tr(str(tier.get("name", "UPGRADE_GENERIC")))])
+		lines.append("%s  T%d · %s" % [marker, index + 1, tr(str(tier.get("name", "UPGRADE_GENERIC")))])
 	return "\n".join(lines)
 
 

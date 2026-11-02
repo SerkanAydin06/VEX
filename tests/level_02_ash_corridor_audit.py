@@ -151,8 +151,8 @@ def test_environment_story_is_visual_only_and_marks_relay_route() -> None:
     assert "RoomCodes" in environment
     assert "ThermalConduits" in environment
     assert "StoryLights" in environment
-    assert 'room_name = "R33 // RELAY"' in environment
-    assert 'room_name = "R27 // BYPASS"' in environment
+    assert 'room_name = "R33 · RELAY"' in environment
+    assert 'room_name = "R27 · BYPASS"' in environment
     for forbidden in ["CollisionShape3D", "StaticBody3D", "Area3D", "CharacterBody3D"]:
         assert forbidden not in environment
 
