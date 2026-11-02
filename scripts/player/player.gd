@@ -8,6 +8,8 @@ const DROPPED_WEAPON_PICKUP_SCENE := preload("res://scenes/props/pickup.tscn")
 @export_range(1.0, 16.0, 0.1) var sprint_speed := 8.0
 @export_range(1.0, 40.0, 0.5) var acceleration := 18.0
 @export_range(1.0, 40.0, 0.5) var deceleration := 22.0
+# Ground braking only; higher than air deceleration to avoid slippery movement.
+@export_range(40.0, 200.0, 1.0) var ground_stop_deceleration := 100.0
 @export_category("Zıplama")
 @export_range(1.0, 20.0, 0.1) var jump_velocity := 7.0
 @export_range(0.0, 100.0, 1.0) var jump_stamina_cost := 15.0
@@ -167,18 +169,19 @@ func _physics_process(delta: float) -> void:
 	)
 	var target_velocity := world_direction * target_speed
 	var rate := acceleration if world_direction != Vector3.ZERO else deceleration
-	# Stop instantly on the ground when input is released, but keep jump momentum.
+	# Brief, tunable ground braking avoids both the old slide and abrupt hard stop.
 	var stop_on_release := (
 		input_vector.is_zero_approx()
 		and is_on_floor()
 		and not _movement_runtime.has_jump_request()
 	)
+	if stop_on_release:
+		rate = ground_stop_deceleration
 	velocity = _movement_runtime.update_horizontal_velocity(
 		velocity,
 		target_velocity,
 		rate,
-		delta,
-		stop_on_release
+		delta
 	)
 	var stepped_up := false
 	if is_on_floor() and not _movement_runtime.has_jump_request() and not is_crouching:
