@@ -41,6 +41,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #103 (2026-11-02) Oyuncunun yerde hareket tuşunu bırakınca kayarak durması giderildi: yatay hız anında sıfırlanır; zıplama momentumu, havadaki hareket ve darbe savrulması korunur. Movement runtime testi ve statik audit eklendi. Kaynak sözleşmeleri doğrulandı; Godot bu ortamda bulunmadığından headless/runtime kontrolü yerelde bekliyor.
 - #104 (2026-11-02) #103 anlık duruşu fazla sert hissettirdi: yere basarken tuş bırakılınca Inspector ayarlı `ground_stop_deceleration=100` ile yaklaşık 0,1 saniyede yumuşak frenleme; havada önceki yavaşlama ve savrulma önceliği korundu. Hareket testi ve audit güncellendi. Godot çalışma testi yerelde bekliyor.
 - #105 (2026-11-02) Oyuncuya görünen `//` metin ayırıcıları; TR/EN görev, başlık, HUD, arşiv, terminal, Bastion kontrol paneli, saha kayıtları, oda tabelaları ve etkileşim etiketlerinde semantik metin, başlık çizgisi (`—`) veya hafif metadata ayırıcısı (`·`) ile değiştirildi. Editör önizleme/denetimler güncellendi; `tests/ui_copy_separator_audit.py` ve `docs/ui_copy_style.md` eklendi. Godot çalışma testi yerelde bekliyor.
+- #107 (2026-11-02) #106'daki Godot sahne yükleme hatası: `main_menu.tscn` içinde `ext_resource` satırları `sub_resource` sonrasına eklenmişti. Ana menü, HUD, keşif bildirimi sahnelerinde font kaynakları dosya başına taşındı; `tests/ui_typography_audit.py` tüm sahne/kaynak dosyalarında sıralamayı denetler. Godot çalışma testi bekliyor.
 - #106 (2026-11-02) Tipografi standardı: tüm ekranlarda regular Segoe UI gövde, semibold başlık/buton, monospace teknik rakam. Bastion-7 8–9 piksellik yazılar 12+ yapıldı, kartlar genişletildi; menü/HUD/arşiv/terminal, sinematik brifing/okuyucu ve 3B tesis tabelaları düzenlendi. `docs/ui_typography.md`, `tests/ui_typography_audit.py`. Godot görsel/runtime kontrolü bekliyor.
 
 ## Kararlar (tekrar tartışma)
@@ -59,9 +60,11 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 
 ## Açık işler (sırayla)
 
-- #106 tipografi ile #104 hareket ve #105 metin düzenlemeleri için Windows/Godot 4.7 `validate_local.ps1`; TR/EN menü, HUD, arşiv, üs ekranı, 3B tabela yerleşimi ve hareket smoke testini çalıştır.
+- #107 ana menü açılış + #106 tipografi ile #104 hareket ve #105 metin düzenlemeleri için Windows/Godot 4.7 `validate_local.ps1`; TR/EN menü, HUD, arşiv, üs ekranı, 3B tabela yerleşimi ve hareket smoke testini çalıştır.
 
 ## Öğrenilen dersler
+
+- Godot `.tscn` dosyasında `[ext_resource]` kayıtları her zaman `[sub_resource]` ve `[node]` bölümlerinden **önce** olmalı. Sonradan eklenen font kaynaklarını ilk node önüne değil ilk `sub_resource` önüne taşı; `ui_typography_audit.py` kontrolü bunu yakalar.
 
 - Headless Godot denemelerini scratchpad kopyasında yap (`git ls-files -co --exclude-standard | tar …`), depoya ekleme.
 - Denetim başarısız olursa önce `main`'de de başarısız mı bak: eskiden bozuk mu, yeni mi ayırt et.
