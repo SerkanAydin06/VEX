@@ -20,6 +20,12 @@ assert 'get_node_or_null("Enemies")' in level_script
 assert 'loom_herald.name = "LoomHerald"' in level_script
 assert 'loom_herald.set("enemy_id", LOOM_HERALD_TEST_ID)' in level_script
 assert 'LOOM_HERALD_ROOT_CLEARANCE := 0.98' in level_script
+assert level_script.startswith('@tool\nextends VexBaseLevel\n'), (
+    'Test level must be @tool because VexBaseLevel is a tool script'
+)
+assert 'if not Engine.is_editor_hint():\n\t\t_spawn_loom_herald()' in level_script, (
+    'Boss must not spawn while the level is being previewed in the editor'
+)
 
 ready_block = re.search(r"func _ready\(\) -> void:\n(.*?)(?=\n\nfunc )", level_script, re.S)
 assert ready_block, "test level _ready missing"
