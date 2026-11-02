@@ -1,3 +1,4 @@
+@tool
 extends VexBaseLevel
 
 const LOOM_HERALD_SCENE := preload("res://scenes/actors/loom_herald.tscn")
@@ -6,7 +7,9 @@ const LOOM_HERALD_ROOT_CLEARANCE := 0.98
 
 
 func _ready() -> void:
-	_spawn_loom_herald()
+	# The base class previews structure in the editor; only spawn the boss in-game.
+	if not Engine.is_editor_hint():
+		_spawn_loom_herald()
 	super._ready()
 
 

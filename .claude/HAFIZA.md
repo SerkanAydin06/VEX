@@ -43,6 +43,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #105 (2026-11-02) Oyuncuya görünen `//` metin ayırıcıları; TR/EN görev, başlık, HUD, arşiv, terminal, Bastion kontrol paneli, saha kayıtları, oda tabelaları ve etkileşim etiketlerinde semantik metin, başlık çizgisi (`—`) veya hafif metadata ayırıcısı (`·`) ile değiştirildi. Editör önizleme/denetimler güncellendi; `tests/ui_copy_separator_audit.py` ve `docs/ui_copy_style.md` eklendi. Godot çalışma testi yerelde bekliyor.
 - #106 (2026-11-02) Tipografi standardı: tüm ekranlarda regular Segoe UI gövde, semibold başlık/buton, monospace teknik rakam. Bastion-7 8–9 piksellik yazılar 12+ yapıldı, kartlar genişletildi; menü/HUD/arşiv/terminal, sinematik brifing/okuyucu ve 3B tesis tabelaları düzenlendi. `docs/ui_typography.md`, `tests/ui_typography_audit.py`. Godot görsel/runtime kontrolü bekliyor.
 - #107 (2026-11-02) #106'daki Godot sahne yükleme hatası: `main_menu.tscn` içinde `ext_resource` satırları `sub_resource` sonrasına eklenmişti. Ana menü, HUD, keşif bildirimi sahnelerinde font kaynakları dosya başına taşındı; `tests/ui_typography_audit.py` tüm sahne/kaynak dosyalarında sıralamayı denetler. Godot çalışma testi bekliyor.
+- #108 (2026-11-02) `level_test.gd` üst sınıfı `@tool VexBaseLevel` olduğu hâlde kendisi @tool değildi; `MISSING_TOOL` uyarısı. Çocuğa `@tool` eklendi, editör modunda Loom Herald spawn edilmedi, `super._ready()` preview davranışı korundu. Kalıtım testi (`tests/tool_inheritance_audit.py`) ve Loom Herald audit'i güncellendi. Godot runtime testi yerelde bekliyor.
 
 ## Kararlar (tekrar tartışma)
 
@@ -63,6 +64,8 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #107 ana menü açılış + #106 tipografi ile #104 hareket ve #105 metin düzenlemeleri için Windows/Godot 4.7 `validate_local.ps1`; TR/EN menü, HUD, arşiv, üs ekranı, 3B tabela yerleşimi ve hareket smoke testini çalıştır.
 
 ## Öğrenilen dersler
+
+- Godot'ta `@tool` ile çalışan temel GDScript sınıfından miras alan alt betik de `@tool` olmalı; editörde çalışan `_ready()` gibi metotların runtime spawn/oyun mantığı `Engine.is_editor_hint()` ile korunmalı.
 
 - Godot `.tscn` dosyasında `[ext_resource]` kayıtları her zaman `[sub_resource]` ve `[node]` bölümlerinden **önce** olmalı. Sonradan eklenen font kaynaklarını ilk node önüne değil ilk `sub_resource` önüne taşı; `ui_typography_audit.py` kontrolü bunu yakalar.
 
