@@ -39,10 +39,13 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #101 Oyuncuya hiç görünmeyen 66 eski çeviri satırı silindi (VEX-01/Kırık Omurga/Kül Madeni prototip brifingleri, kullanılmayan eğitim ipuçları, test sahnesine özel etiketler). `tests/translation_reachability.py` yapı kaynaklarında yalnız kurulan kökleri ve sıfırlanmayan kapı alanlarını sayar; test sahneleri sayılmaz.
 - #102 Metin cilası: Türkçede İngilizce oyun jargonu (projectile, lunge, charge, pellet…) ve oyuncuya görünen geliştirici dili temizlendi; İngilizcede LEVEL→CHAPTER; arşiv/silah terminallerinde sabit İngilizce etiketler çeviriye bağlandı; ana menü görev paneli ve HUD hedef kutusu taşma/kesilme düzeltildi; silah rafının sahne geçişindeki eski oyuncu referansı hatası giderildi.
 - #103 (2026-11-02) Oyuncunun yerde hareket tuşunu bırakınca kayarak durması giderildi: yatay hız anında sıfırlanır; zıplama momentumu, havadaki hareket ve darbe savrulması korunur. Movement runtime testi ve statik audit eklendi. Kaynak sözleşmeleri doğrulandı; Godot bu ortamda bulunmadığından headless/runtime kontrolü yerelde bekliyor.
-- #105 (2026-11-02) Oyuncuya görünen `//` metin ayırıcıları; TR/EN görev, başlık, HUD, arşiv, terminal, Bastion kontrol paneli, saha kayıtları, oda tabelaları ve etkileşim etiketlerinde semantik metin, başlık çizgisi (`—`) veya hafif metadata ayırıcısı (`·`) ile değiştirildi. Editör önizleme/denetimler güncellendi; `tests/ui_copy_separator_audit.py` ve `docs/ui_copy_style.md` eklendi. Godot çalışma testi yerelde bekliyor.
 - #104 (2026-11-02) #103 anlık duruşu fazla sert hissettirdi: yere basarken tuş bırakılınca Inspector ayarlı `ground_stop_deceleration=100` ile yaklaşık 0,1 saniyede yumuşak frenleme; havada önceki yavaşlama ve savrulma önceliği korundu. Hareket testi ve audit güncellendi. Godot çalışma testi yerelde bekliyor.
+- #105 (2026-11-02) Oyuncuya görünen `//` metin ayırıcıları; TR/EN görev, başlık, HUD, arşiv, terminal, Bastion kontrol paneli, saha kayıtları, oda tabelaları ve etkileşim etiketlerinde semantik metin, başlık çizgisi (`—`) veya hafif metadata ayırıcısı (`·`) ile değiştirildi. Editör önizleme/denetimler güncellendi; `tests/ui_copy_separator_audit.py` ve `docs/ui_copy_style.md` eklendi. Godot çalışma testi yerelde bekliyor.
+- #106 (2026-11-02) Tipografi standardı: tüm ekranlarda regular Segoe UI gövde, semibold başlık/buton, monospace teknik rakam. Bastion-7 8–9 piksellik yazılar 12+ yapıldı, kartlar genişletildi; menü/HUD/arşiv/terminal, sinematik brifing/okuyucu ve 3B tesis tabelaları düzenlendi. `docs/ui_typography.md`, `tests/ui_typography_audit.py`. Godot görsel/runtime kontrolü bekliyor.
 
 ## Kararlar (tekrar tartışma)
+
+- Kullanıcı bütün yazıları profesyonel istiyor: kodla oluşturulanlar dahil tema/gövde/başlık/teknik font hiyerarşisi ve okunabilir ölçü; eski 8–9 px etiketlere geri dönme. `docs/ui_typography.md` standardıdır.
 
 - Doku boyutu sorun değil: yalnız Windows/D3D11 (ANGLE), sınır ≥8192 px; en büyük sayfa 5376 px.
 - Xeno arşiv keşifleri Yeni Oyun'da sıfırlanmaz — bilinçli (belgede yazılı). Saha kayıtları sıfırlanır.
@@ -56,7 +59,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 
 ## Açık işler (sırayla)
 
-- #104 hareket ve #105 arayüz metin güncellemeleri için Windows/Godot 4.7 ile `validate_local.ps1`; TR/EN menü, HUD, arşiv, tabela yerleşim kontrolü ve hareket smoke testi yapılmalı.
+- #106 tipografi ile #104 hareket ve #105 metin düzenlemeleri için Windows/Godot 4.7 `validate_local.ps1`; TR/EN menü, HUD, arşiv, üs ekranı, 3B tabela yerleşimi ve hareket smoke testini çalıştır.
 
 ## Öğrenilen dersler
 
