@@ -24,7 +24,7 @@ for retired in ["KÜL MADENİ", "Kül Madeni", "KIRIK OMURGA", "Kırık Omurga",
     assert retired not in archive, retired
 logs = archive[archive.index("const LOGS := ["):archive.index("const PROTOCOLS := [")]
 for chapter, title in [(1, "İLK KIRILMA"), (2, "KÜL KORİDORU"), (3, "BASINÇ HATTI")]:
-    assert f'"title_tr": "BÖLÜM 0{chapter} // {title}"' in logs, title
+    assert f'"title_tr": "BÖLÜM 0{chapter} — {title}"' in logs, title
 
 # Origin/extraction truths unlock at the chapter where the story reveals them.
 expected_reveal = {"korvath": 4, "thornwild": 8, "vaskari": 15, "nhal": 18, "aether": 22}
