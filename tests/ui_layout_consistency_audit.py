@@ -122,8 +122,8 @@ def test_archive_surfaces_are_dense_scroll_based_and_use_chapter_labels() -> Non
     assert '[node name="DetailBody" type="RichTextLabel"' in weapon
 
     assert "theme_override_font_sizes/font_size = 20" in dashboard
-    assert "custom_minimum_size = Vector2(0, 44)" in dashboard
-    assert "custom_minimum_size = Vector2(0, 40)" in dashboard
+    assert "custom_minimum_size = Vector2(0, 58)" in dashboard
+    assert "custom_minimum_size = Vector2(0, 52)" in dashboard
     assert "autowrap_mode = 2" in dashboard
     assert "KİLİTLİ // VEX-" not in dashboard
     assert "BÖLÜM 01 GEREKLİ" in dashboard
