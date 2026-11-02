@@ -8,6 +8,7 @@ func _ready() -> void:
 	_test_stamina_delay_and_recovery()
 	_test_jump_and_vertical_priority()
 	_test_horizontal_acceleration()
+	_test_instant_ground_stop()
 	if _failures.is_empty():
 		print("PLAYER MOVEMENT RUNTIME TEST OK")
 		get_tree().quit(0)
@@ -88,6 +89,30 @@ func _test_horizontal_acceleration() -> void:
 	)
 	_assert_approx(velocity.x, 1.0, "Horizontal X acceleration changed")
 	_assert_approx(velocity.z, -1.0, "Horizontal Z acceleration changed")
+
+
+func _test_instant_ground_stop() -> void:
+	var runtime := VexPlayerMovementRuntime.new()
+	var stopped := runtime.update_horizontal_velocity(
+		Vector3(5.0, 2.0, -4.0), Vector3.ZERO, 22.0, 0.016, true
+	)
+	_assert_approx(stopped.x, 0.0, "Ground release did not stop X immediately")
+	_assert_approx(stopped.z, 0.0, "Ground release did not stop Z immediately")
+	_assert_approx(stopped.y, 2.0, "Ground release changed vertical velocity")
+
+	var airborne := runtime.update_horizontal_velocity(
+		Vector3(5.0, 2.0, -4.0), Vector3.ZERO, 22.0, 0.016
+	)
+	_assert_true(airborne.x > 0.0 and airborne.z < 0.0,
+		"Air movement should keep gradual deceleration")
+
+	_assert_true(runtime.apply_external_impulse(Vector3.RIGHT, 6.0, 0.0, 0.5),
+		"External impulse setup failed")
+	var knocked_back := runtime.update_horizontal_velocity(
+		Vector3(5.0, 2.0, -4.0), Vector3.ZERO, 22.0, 0.016, true
+	)
+	_assert_approx(knocked_back.x, 6.0, "Ground release canceled external knockback")
+	_assert_approx(knocked_back.y, 2.0, "Knockback changed vertical velocity")
 
 
 func _assert_true(condition: bool, message: String) -> void:
