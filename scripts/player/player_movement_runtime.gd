@@ -110,7 +110,8 @@ func update_horizontal_velocity(
 	current_velocity: Vector3,
 	target_velocity: Vector3,
 	rate: float,
-	delta: float
+	delta: float,
+	instant_stop: bool = false
 ) -> Vector3:
 	var result := current_velocity
 	if has_external_impulse():
@@ -123,6 +124,12 @@ func update_horizontal_velocity(
 		)
 		if _external_impulse_remaining <= 0.0:
 			_external_impulse_velocity = Vector3.ZERO
+		return result
+
+	# Release on the ground stops voluntary motion immediately; knockback wins above.
+	if instant_stop:
+		result.x = 0.0
+		result.z = 0.0
 		return result
 
 	result.x = move_toward(result.x, target_velocity.x, rate * delta)

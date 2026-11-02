@@ -167,11 +167,18 @@ func _physics_process(delta: float) -> void:
 	)
 	var target_velocity := world_direction * target_speed
 	var rate := acceleration if world_direction != Vector3.ZERO else deceleration
+	# Stop instantly on the ground when input is released, but keep jump momentum.
+	var stop_on_release := (
+		input_vector.is_zero_approx()
+		and is_on_floor()
+		and not _movement_runtime.has_jump_request()
+	)
 	velocity = _movement_runtime.update_horizontal_velocity(
 		velocity,
 		target_velocity,
 		rate,
-		delta
+		delta,
+		stop_on_release
 	)
 	var stepped_up := false
 	if is_on_floor() and not _movement_runtime.has_jump_request() and not is_crouching:
