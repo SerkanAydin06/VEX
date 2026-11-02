@@ -55,7 +55,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 
 ## Açık işler (sırayla)
 
-- #103 için Windows/Godot 4.7 ortamında `validate_local.ps1` ve oynanışta WASD bırakma, zıplama, geri savrulma smoke testini çalıştır.
+- #104 için Windows/Godot 4.7 ortamında `validate_local.ps1` ve oynanışta yumuşak durma, zıplama, geri savrulma smoke testini çalıştır.
 
 ## Öğrenilen dersler
 
