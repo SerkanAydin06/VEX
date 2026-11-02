@@ -125,6 +125,7 @@ func _test_soft_ground_stop() -> void:
 	_assert_approx(knocked_back.x, 6.0, "Ground braking canceled external knockback")
 	_assert_approx(knocked_back.y, 2.0, "Knockback changed vertical velocity")
 
+
 func _assert_true(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
