@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/hub/hub_weapon_rack.gd" id="1_script"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/vex_mono_bold.ttf" id="90_mono3d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape_rack"]
 size = Vector3(1.62, 0.72, 0.44)
@@ -54,6 +56,7 @@ billboard = 0
 pixel_size = 0.003
 modulate = Color(0.3, 0.87, 1, 0.82)
 text = "P-01"
+font = ExtResource("90_mono3d")
 font_size = 56
 outline_size = 10
 horizontal_alignment = 1
@@ -64,6 +67,7 @@ billboard = 0
 pixel_size = 0.0024
 modulate = Color(0, 0, 0, 1)
 text = "[ P-01 ]"
+font = ExtResource("90_mono3d")
 font_size = 42
 outline_size = 8
 horizontal_alignment = 1
@@ -72,6 +76,7 @@ horizontal_alignment = 1
 position = Vector3(0, -0.27, 0.17)
 billboard = 0
 pixel_size = 0.00135
+font = ExtResource("90_mono3d")
 font_size = 18
 outline_size = 6
 text = "P-01 TAKTİK TABANCA\nTAŞINIYOR"
@@ -83,6 +88,7 @@ visible = false
 position = Vector3(0, 0.27, 0.17)
 billboard = 0
 pixel_size = 0.0013
+font = ExtResource("90_mono3d")
 font_size = 17
 outline_size = 6
 text = "SIDEARM"
