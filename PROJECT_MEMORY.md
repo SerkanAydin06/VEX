@@ -19,6 +19,7 @@ Mevcut validate_local.ps1 ve tools/validate.sh doğrulamalarını kullan. Önce 
 
 ## Çalışma günlüğü
 - 2026-10-30: Süreklilik için PROJECT_MEMORY.md başlatıldı. Bu dosya kod değişikliği veya geçmişte tamamlanmış işlerin doğrulaması değildir.
-- Son tamamlanan teknik görev: Henüz bu dosyaya işlenmedi.
-- Son doğrulanan commit: Henüz kaydedilmedi.
-- Bekleyen işler: Yeni kullanıcı görevinde belirlenecek.
+- 2026-11-02 — Oyuncu yere basarken hareket tuşu bırakılınca anında duruş eklendi; zıplama, hava hareketi ve dış darbe momentumu korunuyor. Dosyalar: `scripts/player/player.gd`, `scripts/player/player_movement_runtime.gd`, `tests/player_movement_runtime_test.gd`, `tests/player_movement_audit.py`. PR: https://github.com/SerkanAydin06/VEX/pull/103. Kaynak ve test sözleşmesi statik olarak kontrol edildi; Godot kurulu olmadığı için gerçek runtime/oynanış testi çalıştırılamadı.
+- Son tamamlanan teknik görev: #103 — yerde anında durma düzeltmesi.
+- Son doğrulanan commit: #103 dalında statik kaynak doğrulaması; Godot runtime doğrulaması bekleniyor.
+- Bekleyen işler: Windows/Godot 4.7 ile `validate_local.ps1`, kısa oynanış smoke testi (WASD bırakma, zıplama, darbe etkisi).
