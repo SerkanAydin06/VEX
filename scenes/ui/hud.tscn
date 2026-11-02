@@ -27,6 +27,8 @@
 [ext_resource type="AudioStream" uid="uid://d0lpi6dofstyy" path="res://assets/audio/game_over_pro.wav" id="28_game_over_audio"]
 [ext_resource type="AudioStream" uid="uid://dnig8inl0eshv" path="res://assets/audio/empty_gun.wav" id="29_empty_gun_audio"]
 
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBox_modern_objective"]
 bg_color = Color(0.008, 0.022, 0.03, 0.92)
 border_width_left = 2
@@ -95,7 +97,6 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
 
 
 [node name="HUD" type="CanvasLayer" unique_id=1189378943]

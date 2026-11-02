@@ -99,6 +99,33 @@ def test_world_labels_have_authored_fonts() -> None:
             )
 
 
+def test_godot_text_resource_declarations_precede_subresources_and_nodes() -> None:
+    # Godot 4.x fails loading an entire scene if an ext_resource is declared
+    # after a sub_resource or node. The main menu previously failed this way.
+    files = [
+        *sorted((ROOT / "scenes").rglob("*.tscn")),
+        *sorted((ROOT / "resources").rglob("*.tres")),
+    ]
+    assert files, "No Godot text resources found"
+    for path in files:
+        phase = 0  # ext_resource -> sub_resource -> node
+        for line_number, line in enumerate(
+            path.read_text(encoding="utf-8").splitlines(), start=1
+        ):
+            if line.startswith("[ext_resource "):
+                assert phase == 0, (
+                    f"{path.relative_to(ROOT)}:{line_number}: ext_resource placed "
+                    "after sub_resource or node"
+                )
+            elif line.startswith("[sub_resource "):
+                assert phase <= 1, (
+                    f"{path.relative_to(ROOT)}:{line_number}: sub_resource after node"
+                )
+                phase = 1
+            elif line.startswith("[node "):
+                phase = 2
+
+
 if __name__ == "__main__":
     tests = [
         fn for name, fn in list(globals().items())

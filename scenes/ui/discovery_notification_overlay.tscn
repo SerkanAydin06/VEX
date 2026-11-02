@@ -3,6 +3,9 @@
 [ext_resource type="Script" path="res://scripts/ui/discovery_notification_overlay.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/ui/vex_theme.tres" id="99_theme"]
 
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="91_mono"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBox_card"]
 bg_color = Color(0.006, 0.014, 0.022, 0.96)
 border_width_left = 1
@@ -17,8 +20,6 @@ corner_radius_bottom_left = 6
 shadow_color = Color(0, 0, 0, 0.58)
 shadow_size = 10
 
-[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
-[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="91_mono"]
 
 [node name="DiscoveryNotificationOverlay" type="CanvasLayer"]
 layer = 120

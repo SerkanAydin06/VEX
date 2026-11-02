@@ -7,6 +7,9 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/settings_panel.tscn" id="5_settings"]
 [ext_resource type="AudioStream" uid="uid://dfc8ful0dedx2" path="res://assets/audio/menu_background_pro.mp3" id="6_menu_music"]
 
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="91_mono"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBox_menu_shell"]
 content_margin_left = 0.0
 content_margin_top = 0.0
@@ -59,8 +62,6 @@ corner_radius_bottom_left = 3
 shadow_color = Color(0, 0, 0, 0.8)
 shadow_size = 14
 
-[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
-[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="91_mono"]
 
 [node name="MainMenu" type="Control" unique_id=55908172]
 layout_mode = 3
