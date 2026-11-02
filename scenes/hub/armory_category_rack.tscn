@@ -1,8 +1,10 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/hub/armory_category_rack.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/world/bastion7/armory_perforated_metal_v2.png" id="2_perforated"]
 [ext_resource type="Texture2D" path="res://assets/world/bastion7/armory_frame_metal_v2.png" id="3_frame"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/vex_mono_bold.ttf" id="90_mono3d"]
 
 [sub_resource type="StandardMaterial3D" id="Material_recess"]
 albedo_color = Color(0.012, 0.016, 0.019, 1)
@@ -97,6 +99,7 @@ position = Vector3(0, 0.93, 0.34)
 pixel_size = 0.0015
 modulate = Color(0.3, 0.87, 1, 1)
 text = "ARMORY_GROUP_SIDEARM"
+font = ExtResource("90_mono3d")
 font_size = 24
 outline_size = 7
 horizontal_alignment = 1
