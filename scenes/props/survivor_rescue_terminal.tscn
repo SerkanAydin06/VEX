@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/props/survivor_rescue_terminal.gd" id="1_script"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/vex_mono_bold.ttf" id="90_mono3d"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
 albedo_color = Color(0.025, 0.035, 0.045, 1)
@@ -39,6 +41,7 @@ material = SubResource("Material_panel")
 unique_name_in_owner = true
 position = Vector3(0, 1.08, 0.48)
 text = "MEDICAL · STABILIZATION"
+font = ExtResource("90_mono3d")
 font_size = 30
 outline_size = 6
 billboard = 1
