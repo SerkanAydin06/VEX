@@ -166,7 +166,7 @@ func _show_empty_state() -> void:
 
 
 func _record_button_text(entry: Dictionary) -> String:
-	return "%s\n// %s" % [
+	return "%s\n%s" % [
 		RecordDB.localized(entry, "title"),
 		tr("FIELD_RECORD_UI_CHAPTER_02D") % [int(entry.get("chapter", 0)), str(entry.get("room", "—"))],
 	]
