@@ -39,6 +39,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #101 Oyuncuya hiç görünmeyen 66 eski çeviri satırı silindi (VEX-01/Kırık Omurga/Kül Madeni prototip brifingleri, kullanılmayan eğitim ipuçları, test sahnesine özel etiketler). `tests/translation_reachability.py` yapı kaynaklarında yalnız kurulan kökleri ve sıfırlanmayan kapı alanlarını sayar; test sahneleri sayılmaz.
 - #102 Metin cilası: Türkçede İngilizce oyun jargonu (projectile, lunge, charge, pellet…) ve oyuncuya görünen geliştirici dili temizlendi; İngilizcede LEVEL→CHAPTER; arşiv/silah terminallerinde sabit İngilizce etiketler çeviriye bağlandı; ana menü görev paneli ve HUD hedef kutusu taşma/kesilme düzeltildi; silah rafının sahne geçişindeki eski oyuncu referansı hatası giderildi.
 - #103 (2026-11-02) Oyuncunun yerde hareket tuşunu bırakınca kayarak durması giderildi: yatay hız anında sıfırlanır; zıplama momentumu, havadaki hareket ve darbe savrulması korunur. Movement runtime testi ve statik audit eklendi. Kaynak sözleşmeleri doğrulandı; Godot bu ortamda bulunmadığından headless/runtime kontrolü yerelde bekliyor.
+- #104 (2026-11-02) #103 anlık duruşu fazla sert hissettirdi: yere basarken tuş bırakılınca Inspector ayarlı `ground_stop_deceleration=100` ile yaklaşık 0,1 saniyede yumuşak frenleme; havada önceki yavaşlama ve savrulma önceliği korundu. Hareket testi ve audit güncellendi. Godot çalışma testi yerelde bekliyor.
 
 ## Kararlar (tekrar tartışma)
 
@@ -54,7 +55,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 
 ## Açık işler (sırayla)
 
-- #103 için Windows/Godot 4.7 ortamında `validate_local.ps1` ve oynanışta WASD bırakma, zıplama, geri savrulma smoke testini çalıştır.
+- #104 için Windows/Godot 4.7 ortamında `validate_local.ps1` ve oynanışta yumuşak durma, zıplama, geri savrulma smoke testini çalıştır.
 
 ## Öğrenilen dersler
 

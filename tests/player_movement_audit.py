@@ -42,8 +42,8 @@ def main() -> int:
         ('var _movement_runtime := VexPlayerMovementRuntime.new()', "Player movement runtime helper kullanmıyor"),
         ('_movement_runtime.wants_to_sprint(', "Sprint gate movement runtime üzerinden yürümüyor"),
         ('_movement_runtime.update_horizontal_velocity(', "Yatay movement integration helper üzerinden yürümüyor"),
-        ('input_vector.is_zero_approx()\n\t\tand is_on_floor()\n\t\tand not _movement_runtime.has_jump_request()', "Yerde tuş bırakıldığında anlık duruş veya zıplama koruması eksik"),
-        ('\t\tstop_on_release\n\t)', "Anlık duruş movement runtime'a aktarılmıyor"),
+        ('input_vector.is_zero_approx()\n\t\tand is_on_floor()\n\t\tand not _movement_runtime.has_jump_request()', "Yerde tuş bırakma veya zıplama koruması eksik"),
+        ('if stop_on_release:\n\t\trate = ground_stop_deceleration', "Yerde kısa yumuşak frenleme kullanılmıyor"),
         ('_movement_runtime.resolve_vertical_velocity(', "Dikey movement integration helper üzerinden yürümüyor"),
         ('_movement_runtime.queue_jump(stamina_recovery_delay)', "Jump runtime state helper üzerinden yürümüyor"),
         ('_movement_runtime.apply_external_impulse(', "External impulse helper üzerinden yürümüyor"),
@@ -70,11 +70,21 @@ def main() -> int:
         ('func wants_to_sprint(', "Movement runtime sprint gate sunmuyor"),
         ('func update_stamina(', "Movement runtime stamina integration sunmuyor"),
         ('func update_horizontal_velocity(', "Movement runtime horizontal integration sunmuyor"),
-        ('instant_stop: bool = false', "Movement runtime anlık duruş parametresi eksik"),
-        ('if instant_stop:\n\t\tresult.x = 0.0\n\t\tresult.z = 0.0', "Movement runtime anlık duruşta yatay hızı sıfırlamıyor"),
+        ('result.x = move_toward(result.x, target_velocity.x, rate * delta)', "Movement runtime yumuşak X yavaşlatması eksik"),
+        ('result.z = move_toward(result.z, target_velocity.z, rate * delta)', "Movement runtime yumuşak Z yavaşlatması eksik"),
         ('func resolve_vertical_velocity(', "Movement runtime vertical integration sunmuyor"),
     ]:
         require(runtime, contract, message)
+
+    ground_stop_rate = number(script, r'^@export_range\(40\.0, 200\.0, 1\.0\) var ground_stop_deceleration := ([0-9.]+)$', "Ground stop frenleme ayarı Inspector'da yok")
+    if ground_stop_rate is not None and not 80.0 <= ground_stop_rate <= 120.0:
+        ERRORS.append("Yerde duruş çok kaygan veya aşırı sert: %s" % ground_stop_rate)
+
+    for forbidden, message in [
+        ('instant_stop:', "Movement runtime eski sert stop parametresi duruyor"),
+    ]:
+        if forbidden in runtime:
+            ERRORS.append(message)
 
     standing_height = number(scene, r'^height\s*=\s*([0-9.]+)$', "Player standing capsule yüksekliği bulunamadı")
     crouch_height = number(scene, r'^crouch_capsule_height\s*=\s*([0-9.]+)$', "Player crouch capsule yüksekliği scene-authority değil")
