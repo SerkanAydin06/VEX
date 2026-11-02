@@ -73,7 +73,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.92, 1, 1)
 theme_override_font_sizes/font_size = 11
-text = "VEX // DATA"
+text = "VEX VERİ SİSTEMİ"
 autowrap_mode = 2
 
 [node name="Title" type="Label" parent="Root/Card/Row/Margin/Content"]
