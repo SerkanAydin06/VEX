@@ -175,7 +175,7 @@ func _refresh_facility_map() -> void:
 func _refresh_managed_area_button(button: Button, area_id: StringName) -> void:
 	var definition := BaseManager.get_area_definition(area_id)
 	if definition.is_empty():
-		button.text = "UNKNOWN\n// NO DATA"
+		button.text = "VERİ BULUNAMADI"
 		button.disabled = true
 		return
 	var area_name := _localized(definition, "name")
@@ -228,7 +228,7 @@ func _refresh_lighting_button(button: Button, mode: int) -> void:
 		status = tr("BASE_UI_APPLY")
 		color = COLOR_READY
 		button.disabled = false
-	button.text = "%s\n%s // %d%%" % [_localized(definition, "name"), status, load_percent]
+	button.text = "%s\n%s · %d%%" % [_localized(definition, "name"), status, load_percent]
 	_set_button_color(button, color)
 
 
@@ -246,7 +246,7 @@ func _refresh_upgrade_button(button: Button, upgrade_id: StringName) -> void:
 	var available := BaseManager.is_upgrade_available(upgrade_id, GameState.campaign_stage)
 	button.disabled = true
 	if available:
-		button.text = "%s\n%s %d / %d // %s" % [
+		button.text = "%s\n%s %d / %d · %s" % [
 			_localized(definition, "name"),
 			tr("BASE_UI_LVL"),
 			level,
@@ -316,32 +316,32 @@ func _localized(entry: Dictionary, key: String) -> String:
 
 
 func _refresh_editor_text() -> void:
-	dashboard_title.text = "BASTION-7 // ÜS KONTROLÜ"
-	dashboard_subtitle.text = "YEREL TESİS AĞI // KAPI YETKİSİ // AYDINLATMA // GELİŞTİRME OMURGASI"
-	stage_badge.text = "KAMPANYA // AŞAMA 00"
+	dashboard_title.text = "BASTION-7 ÜS KONTROLÜ"
+	dashboard_subtitle.text = "ERİŞİM · AYDINLATMA · GELİŞTİRME"
+	stage_badge.text = "KAMPANYA AŞAMASI 00"
 	access_value.text = "BÖLGE ERİŞİMİ\n0 / 4"
 	lighting_value.text = "AYDINLATMA\nSEVİYE 1"
 	lighting_load_value.text = "IŞIK GÜCÜ\n25%"
 	upgrade_value.text = "GELİŞTİRME\n0 / 9"
-	facility_map_title.text = "TESİS ŞEMASI // CANLI DURUM"
+	facility_map_title.text = "TESİSİN GÜNCEL DURUMU"
 	lighting_title.text = "AYDINLATMA GÜÇ KADEMELERİ"
-	upgrade_title.text = "GELİŞTİRME OMURGASI // İLERLEME KİLİTLİ"
-	status_hint.text = "YEŞİL: AKTİF  //  TURUNCU: KULLANILABİLİR  //  KIRMIZI: İLERLEME KİLİTLİ"
-	firing_range_button.text = "ATIŞ POLİGONU\nKİLİTLİ // BÖLÜM 01"
-	research_button.text = "ARAŞTIRMA LABORATUVARI\nKİLİTLİ // BÖLÜM 01"
-	workshop_button.text = "SİLAH ATÖLYESİ\nKİLİTLİ // BÖLÜM 02"
-	engineering_button.text = "MÜHENDİSLİK BÖLMESİ\nKİLİTLİ // BÖLÜM 02"
+	upgrade_title.text = "GELİŞTİRMELER · AŞAMA KİLİDİ"
+	status_hint.text = "YEŞİL: AKTİF · TURUNCU: HAZIR · KIRMIZI: KİLİTLİ"
+	firing_range_button.text = "ATIŞ POLİGONU\nBÖLÜM 01 GEREKLİ"
+	research_button.text = "ARAŞTIRMA LABORATUVARI\nBÖLÜM 01 GEREKLİ"
+	workshop_button.text = "SİLAH ATÖLYESİ\nBÖLÜM 02 GEREKLİ"
+	engineering_button.text = "MÜHENDİSLİK BÖLMESİ\nBÖLÜM 02 GEREKLİ"
 	_refresh_static_area_button(armory_button, "SİLAH DEPOSU")
 	_refresh_static_area_button(command_button, "KOMUTA MERKEZİ")
 	_refresh_static_area_button(south_corridor_button, "GÜNEY KORİDORU")
 	_refresh_static_area_button(operator_button, "OPERATÖR PLATFORMU")
-	lighting_25_button.text = "AYDINLATMA SEVİYESİ 1\nAKTİF // 25%"
-	lighting_50_button.text = "AYDINLATMA SEVİYESİ 2\nKİLİTLİ // BÖLÜM 01 // 50%"
-	lighting_75_button.text = "AYDINLATMA SEVİYESİ 3\nKİLİTLİ // BÖLÜM 02 // 75%"
-	lighting_100_button.text = "AYDINLATMA SEVİYESİ 4\nKİLİTLİ // BÖLÜM 03 // 100%"
-	power_upgrade_button.text = "ENERJİ DAĞITIM AĞI\nKİLİTLİ // BÖLÜM 01"
-	security_upgrade_button.text = "GÜVENLİK AĞI\nKİLİTLİ // BÖLÜM 02"
-	research_upgrade_button.text = "ARAŞTIRMA ALTYAPISI\nKİLİTLİ // BÖLÜM 03"
+	lighting_25_button.text = "AYDINLATMA SEVİYESİ 1\nAKTİF (25%)"
+	lighting_50_button.text = "AYDINLATMA SEVİYESİ 2\nBÖLÜM 01 GEREKLİ · 50%"
+	lighting_75_button.text = "AYDINLATMA SEVİYESİ 3\nBÖLÜM 02 GEREKLİ · 75%"
+	lighting_100_button.text = "AYDINLATMA SEVİYESİ 4\nBÖLÜM 03 GEREKLİ · 100%"
+	power_upgrade_button.text = "ENERJİ DAĞITIM AĞI\nBÖLÜM 01 GEREKLİ"
+	security_upgrade_button.text = "GÜVENLİK AĞI\nBÖLÜM 02 GEREKLİ"
+	research_upgrade_button.text = "ARAŞTIRMA ALTYAPISI\nBÖLÜM 03 GEREKLİ"
 	_set_button_color(firing_range_button, COLOR_LOCKED)
 	_set_button_color(research_button, COLOR_LOCKED)
 	_set_button_color(workshop_button, COLOR_LOCKED)
