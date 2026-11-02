@@ -3,6 +3,9 @@ extends StaticBody3D
 
 const DiscoveryOverlay = preload("res://scripts/ui/discovery_notification_overlay.gd")
 const RecordDB = preload("res://scripts/data/vex_field_record_database.gd")
+const READER_THEME: Theme = preload("res://resources/ui/vex_theme.tres")
+const READER_HEADING: Font = preload("res://resources/ui/fonts/vex_heading_font.tres")
+const READER_MONO: Font = preload("res://resources/ui/fonts/vex_mono_font.tres")
 
 @export_category("Kayıt")
 @export var record_id: StringName = &""
@@ -130,6 +133,7 @@ func _ensure_reader() -> void:
 
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(780.0, 480.0)
+	panel.theme = READER_THEME
 	center.add_child(panel)
 
 	var margin := MarginContainer.new()
@@ -144,11 +148,13 @@ func _ensure_reader() -> void:
 	margin.add_child(content)
 
 	_reader_category = Label.new()
-	_reader_category.add_theme_font_size_override("font_size", 13)
+	_reader_category.add_theme_font_override("font", READER_MONO)
+	_reader_category.add_theme_font_size_override("font_size", 15)
 	_reader_category.modulate = Color(0.45, 0.9, 1.0)
 	content.add_child(_reader_category)
 
 	_reader_title = Label.new()
+	_reader_title.add_theme_font_override("font", READER_HEADING)
 	_reader_title.add_theme_font_size_override("font_size", 28)
 	_reader_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(_reader_title)
@@ -161,7 +167,7 @@ func _ensure_reader() -> void:
 	_reader_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_reader_body.fit_content = false
 	_reader_body.scroll_active = true
-	_reader_body.add_theme_font_size_override("normal_font_size", 17)
+	_reader_body.add_theme_font_size_override("normal_font_size", 18)
 	content.add_child(_reader_body)
 
 	_close_button = Button.new()
