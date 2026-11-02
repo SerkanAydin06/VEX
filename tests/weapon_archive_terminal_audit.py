@@ -72,7 +72,7 @@ def test_weapon_archive_categories_and_layout_fit_compact_viewports() -> None:
     # Long labels wrap instead of forcing their parent wider.
     assert 'text = "HUB_TERMINAL_UI_WEAPON_ARCHIVE_TERMINAL"\nautowrap_mode = 2' in scene
     assert 'text = "WEAPON_UI_ARMORY_RECORD_STATUS"\nhorizontal_alignment = 2\nautowrap_mode = 2' in scene
-    assert "theme_override_font_sizes/normal_font_size = 12" in scene
+    assert "theme_override_font_sizes/normal_font_size = 16" in scene
     assert "autowrap_mode = TextServer.AUTOWRAP_WORD_SMART" in script
 
 
