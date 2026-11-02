@@ -19,8 +19,8 @@ def test_chapter_translations_are_registered_without_truncating_settings_manager
         '"res://translations/chapter03.en.translation"',
     ]:
         assert path in settings
-    assert "CH02_NAME,BÖLÜM 02 // KÜL KORİDORU,CHAPTER 02 // ASH CORRIDOR" in chapter02
-    assert "CH03_NAME,BÖLÜM 03 // BASINÇ HATTI,CHAPTER 03 // PRESSURE LINE" in chapter03
+    assert "CH02_NAME,BÖLÜM 02 — KÜL KORİDORU,CHAPTER 02 — ASH CORRIDOR" in chapter02
+    assert "CH03_NAME,BÖLÜM 03 — BASINÇ HATTI,CHAPTER 03 — PRESSURE LINE" in chapter03
     assert "HUB_SELIN_POST_CH03" not in chapter02
     assert "HUB_SELIN_POST_CH03" in chapter03
 
