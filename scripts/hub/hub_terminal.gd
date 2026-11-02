@@ -8,7 +8,8 @@ enum TerminalMode {
 	WEAPON_ARCHIVE,
 }
 
-const SCREEN_FONT = preload("res://assets/fonts/vex_mono_bold.ttf")
+const SCREEN_FONT = preload("res://resources/ui/fonts/vex_mono_font.tres")
+const SCREEN_HEADING_FONT = preload("res://resources/ui/fonts/vex_heading_font.tres")
 const WORLD_SCREEN_SIZE := Vector2i(640, 360)
 
 @export_category("Terminal")
@@ -202,7 +203,7 @@ func _ensure_world_screen() -> void:
 	separator.color = Color(0.12, 0.38, 0.42, 0.8)
 	root.add_child(separator)
 
-	var facility_label := _make_world_label("FacilityLabel", 17, Color(0.35, 0.88, 1.0, 1.0))
+	var facility_label := _make_world_label("FacilityLabel", 18, Color(0.35, 0.88, 1.0, 1.0))
 	facility_label.position = Vector2(28.0, 17.0)
 	facility_label.size = Vector2(360.0, 28.0)
 	facility_label.text = tr("LABEL_VEX_BASTION_7")
@@ -238,7 +239,7 @@ func _ensure_world_screen() -> void:
 	_world_line_2_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	root.add_child(_world_line_2_label)
 
-	_world_footer_label = _make_world_label("FooterLabel", 13, Color(0.31, 0.55, 0.60, 1.0))
+	_world_footer_label = _make_world_label("FooterLabel", 15, Color(0.31, 0.55, 0.60, 1.0))
 	_world_footer_label.position = Vector2(28.0, 321.0)
 	_world_footer_label.size = Vector2(582.0, 24.0)
 	root.add_child(_world_footer_label)
@@ -271,7 +272,9 @@ func _cache_world_screen_nodes() -> void:
 func _make_world_label(node_name: String, font_size: int, font_color: Color) -> Label:
 	var label := Label.new()
 	label.name = node_name
-	label.add_theme_font_override("font", SCREEN_FONT)
+	label.add_theme_font_override(
+		"font", SCREEN_HEADING_FONT if node_name == "TitleLabel" else SCREEN_FONT
+	)
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", font_color)
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
