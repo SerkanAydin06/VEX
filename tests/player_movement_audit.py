@@ -76,80 +76,17 @@ def main() -> int:
     ]:
         require(runtime, contract, message)
 
-    ground_stop_rate = number(script, r'^@export_range\(40\.0, 200\.0, 1\.0\) var ground_stop_deceleration := ([0-9.]+)
-    crouch_height = number(scene, r'^crouch_capsule_height\s*=\s*([0-9.]+)$', "Player crouch capsule yüksekliği scene-authority değil")
-    crouch_view = number(scene, r'^crouch_view_pivot_height\s*=\s*([0-9.]+)$', "Player crouch göz yüksekliği scene-authority değil")
-    standing_view = number(scene, r'Transform3D\([^\n]*, 0, ([0-9.]+), 0\)', "Player ayakta ViewPivot yüksekliği bulunamadı")
-
-    if standing_height is not None and abs(standing_height - 1.8) > 0.001:
-        ERRORS.append(f"Player standing capsule 1.80 m değil: {standing_height:.2f}")
-    if crouch_height is not None and abs(crouch_height - 1.1) > 0.001:
-        ERRORS.append(f"Player crouch capsule 1.10 m değil: {crouch_height:.2f}")
-    if crouch_view is not None and abs(crouch_view - 0.05) > 0.001:
-        ERRORS.append(f"Player crouch ViewPivot 0.05 değil: {crouch_view:.2f}")
-
-    if None not in (standing_height, crouch_height, crouch_view, standing_view):
-        floor_relative_origin = standing_height / 2.0
-        standing_eye = floor_relative_origin + standing_view
-        crouch_eye = floor_relative_origin + crouch_view
-        if abs(standing_eye - 1.52) > 0.01:
-            ERRORS.append(f"Ayakta göz yüksekliği beklenen 1.52 m değil: {standing_eye:.2f}")
-        if abs(crouch_eye - 0.95) > 0.01:
-            ERRORS.append(f"Crouch göz yüksekliği beklenen 0.95 m değil: {crouch_eye:.2f}")
-        if standing_eye - crouch_eye < 0.50:
-            ERRORS.append("Crouch kamera düşüşü yeterince belirgin değil")
-
-    for message in ERRORS:
-        print("ERROR:", message)
-    print(f"PLAYER MOVEMENT VALIDATOR: {len(ERRORS)} hata")
-    return 1 if ERRORS else 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
-, "Ground stop frenleme ayarı Inspector'da yok")
+    ground_stop_rate = number(script, r'^@export_range\(40\.0, 200\.0, 1\.0\) var ground_stop_deceleration := ([0-9.]+)$', "Ground stop frenleme ayarı Inspector'da yok")
     if ground_stop_rate is not None and not 80.0 <= ground_stop_rate <= 120.0:
         ERRORS.append("Yerde duruş çok kaygan veya aşırı sert: %s" % ground_stop_rate)
 
     for forbidden, message in [
         ('instant_stop:', "Movement runtime eski sert stop parametresi duruyor"),
-        ('if instant_stop:', "Movement runtime eski ani sıfırlama yolu duruyor"),
     ]:
         if forbidden in runtime:
             ERRORS.append(message)
 
-    standing_height = number(scene, r'^height\s*=\s*([0-9.]+)
-    crouch_height = number(scene, r'^crouch_capsule_height\s*=\s*([0-9.]+)$', "Player crouch capsule yüksekliği scene-authority değil")
-    crouch_view = number(scene, r'^crouch_view_pivot_height\s*=\s*([0-9.]+)$', "Player crouch göz yüksekliği scene-authority değil")
-    standing_view = number(scene, r'Transform3D\([^\n]*, 0, ([0-9.]+), 0\)', "Player ayakta ViewPivot yüksekliği bulunamadı")
-
-    if standing_height is not None and abs(standing_height - 1.8) > 0.001:
-        ERRORS.append(f"Player standing capsule 1.80 m değil: {standing_height:.2f}")
-    if crouch_height is not None and abs(crouch_height - 1.1) > 0.001:
-        ERRORS.append(f"Player crouch capsule 1.10 m değil: {crouch_height:.2f}")
-    if crouch_view is not None and abs(crouch_view - 0.05) > 0.001:
-        ERRORS.append(f"Player crouch ViewPivot 0.05 değil: {crouch_view:.2f}")
-
-    if None not in (standing_height, crouch_height, crouch_view, standing_view):
-        floor_relative_origin = standing_height / 2.0
-        standing_eye = floor_relative_origin + standing_view
-        crouch_eye = floor_relative_origin + crouch_view
-        if abs(standing_eye - 1.52) > 0.01:
-            ERRORS.append(f"Ayakta göz yüksekliği beklenen 1.52 m değil: {standing_eye:.2f}")
-        if abs(crouch_eye - 0.95) > 0.01:
-            ERRORS.append(f"Crouch göz yüksekliği beklenen 0.95 m değil: {crouch_eye:.2f}")
-        if standing_eye - crouch_eye < 0.50:
-            ERRORS.append("Crouch kamera düşüşü yeterince belirgin değil")
-
-    for message in ERRORS:
-        print("ERROR:", message)
-    print(f"PLAYER MOVEMENT VALIDATOR: {len(ERRORS)} hata")
-    return 1 if ERRORS else 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
-, "Player standing capsule yüksekliği bulunamadı")
+    standing_height = number(scene, r'^height\s*=\s*([0-9.]+)$', "Player standing capsule yüksekliği bulunamadı")
     crouch_height = number(scene, r'^crouch_capsule_height\s*=\s*([0-9.]+)$', "Player crouch capsule yüksekliği scene-authority değil")
     crouch_view = number(scene, r'^crouch_view_pivot_height\s*=\s*([0-9.]+)$', "Player crouch göz yüksekliği scene-authority değil")
     standing_view = number(scene, r'Transform3D\([^\n]*, 0, ([0-9.]+), 0\)', "Player ayakta ViewPivot yüksekliği bulunamadı")
