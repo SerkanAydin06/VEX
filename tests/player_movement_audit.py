@@ -42,6 +42,8 @@ def main() -> int:
         ('var _movement_runtime := VexPlayerMovementRuntime.new()', "Player movement runtime helper kullanmıyor"),
         ('_movement_runtime.wants_to_sprint(', "Sprint gate movement runtime üzerinden yürümüyor"),
         ('_movement_runtime.update_horizontal_velocity(', "Yatay movement integration helper üzerinden yürümüyor"),
+        ('input_vector.is_zero_approx()\n\t\tand is_on_floor()\n\t\tand not _movement_runtime.has_jump_request()', "Yerde tuş bırakıldığında anlık duruş veya zıplama koruması eksik"),
+        ('\t\tstop_on_release\n\t)', "Anlık duruş movement runtime'a aktarılmıyor"),
         ('_movement_runtime.resolve_vertical_velocity(', "Dikey movement integration helper üzerinden yürümüyor"),
         ('_movement_runtime.queue_jump(stamina_recovery_delay)', "Jump runtime state helper üzerinden yürümüyor"),
         ('_movement_runtime.apply_external_impulse(', "External impulse helper üzerinden yürümüyor"),
@@ -68,6 +70,8 @@ def main() -> int:
         ('func wants_to_sprint(', "Movement runtime sprint gate sunmuyor"),
         ('func update_stamina(', "Movement runtime stamina integration sunmuyor"),
         ('func update_horizontal_velocity(', "Movement runtime horizontal integration sunmuyor"),
+        ('instant_stop: bool = false', "Movement runtime anlık duruş parametresi eksik"),
+        ('if instant_stop:\n\t\tresult.x = 0.0\n\t\tresult.z = 0.0', "Movement runtime anlık duruşta yatay hızı sıfırlamıyor"),
         ('func resolve_vertical_velocity(', "Movement runtime vertical integration sunmuyor"),
     ]:
         require(runtime, contract, message)
