@@ -59,6 +59,9 @@ corner_radius_bottom_left = 3
 shadow_color = Color(0, 0, 0, 0.8)
 shadow_size = 14
 
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="91_mono"]
+
 [node name="MainMenu" type="Control" unique_id=55908172]
 layout_mode = 3
 anchors_preset = 15
@@ -148,13 +151,15 @@ theme_override_constants/separation = 14
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.3, 0.76, 0.88, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_fonts/font = ExtResource("90_heading")
+theme_override_font_sizes/font_size = 15
 text = "MAIN_SYSTEM_NAME"
 
 [node name="Online" type="Label" parent="SystemHeader" unique_id=900502964]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.46, 1, 0.68, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_fonts/font = ExtResource("91_mono")
+theme_override_font_sizes/font_size = 15
 text = "MAIN_ONLINE"
 horizontal_alignment = 2
 
@@ -177,7 +182,7 @@ offset_top = 282.0
 offset_right = 580.0
 offset_bottom = 308.0
 theme_override_colors/font_color = Color(0.49, 0.63, 0.68, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 15
 text = "MAIN_TAGLINE"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -210,7 +215,8 @@ theme_override_constants/separation = 10
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.39, 0.88, 1, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_fonts/font = ExtResource("90_heading")
+theme_override_font_sizes/font_size = 17
 text = "MAIN_TERMINAL"
 
 [node name="AccessLabel" type="Label" parent="MainShell/Margin/VBox/Header" unique_id=1440388975]
@@ -218,7 +224,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.6
 theme_override_colors/font_color = Color(0.94, 0.36, 0.24, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_fonts/font = ExtResource("91_mono")
+theme_override_font_sizes/font_size = 14
 text = "MAIN_AUTHORITY"
 horizontal_alignment = 2
 autowrap_mode = 2
@@ -281,14 +288,16 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.32, 0.48, 0.54, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_fonts/font = ExtResource("91_mono")
+theme_override_font_sizes/font_size = 14
 text = "VEX v4.1.0"
 
 [node name="SystemClock" type="Label" parent="MainShell/Margin/VBox/BuildLine" unique_id=1558230596]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.44, 0.66, 0.72, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_fonts/font = ExtResource("91_mono")
+theme_override_font_sizes/font_size = 14
 text = "00:00:00"
 horizontal_alignment = 2
 
@@ -307,7 +316,7 @@ theme_override_constants/separation = 2
 [node name="Label" type="Label" parent="FacilityStatus/VBox" unique_id=1294651239]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.39, 0.82, 0.92, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 14
 text = "CH01_NAME"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -315,7 +324,8 @@ autowrap_mode = 2
 [node name="Alert" type="Label" parent="FacilityStatus/VBox" unique_id=1616500106]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.22, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_fonts/font = ExtResource("90_heading")
+theme_override_font_sizes/font_size = 17
 text = "MAIN_THREAT_CRITICAL"
 horizontal_alignment = 1
 
@@ -349,13 +359,15 @@ theme_override_constants/separation = 5
 [node name="Header" type="Label" parent="MissionPanel/Margin/VBox" unique_id=132228881]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.38, 0.24, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_fonts/font = ExtResource("90_heading")
+theme_override_font_sizes/font_size = 15
 text = "MAIN_ACTIVE_OPERATION"
 
 [node name="Title" type="Label" parent="MissionPanel/Margin/VBox" unique_id=1082169920]
 custom_minimum_size = Vector2(388, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.83, 0.95, 0.98, 1)
+theme_override_fonts/font = ExtResource("90_heading")
 theme_override_font_sizes/font_size = 22
 text = "MAIN_MISSION_TITLE"
 autowrap_mode = 2
@@ -364,7 +376,7 @@ autowrap_mode = 2
 custom_minimum_size = Vector2(388, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.5, 0.68, 0.73, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 15
 text = "MAIN_MISSION_DESCRIPTION"
 autowrap_mode = 2
 
@@ -373,7 +385,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(388, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.86, 1, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 14
 text = "MAIN_MISSION_DATA_DEFAULT"
 autowrap_mode = 2
 
@@ -393,7 +405,7 @@ offset_top = 1022.0
 offset_right = 1848.0
 offset_bottom = 1052.0
 theme_override_colors/font_color = Color(0.38, 0.55, 0.6, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 14
 text = "MAIN_CONTROLS"
 autowrap_mode = 2
 
@@ -439,13 +451,15 @@ theme_override_constants/separation = 14
 [node name="Eyebrow" type="Label" parent="CreditsPanel/Margin/VBox" unique_id=391135393]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.2, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_fonts/font = ExtResource("91_mono")
+theme_override_font_sizes/font_size = 15
 text = "MAIN_ARCHIVE"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="CreditsPanel/Margin/VBox" unique_id=1204212337]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.31, 0.86, 1, 1)
+theme_override_fonts/font = ExtResource("90_heading")
 theme_override_font_sizes/font_size = 30
 text = "VOID EXTERMINATION"
 horizontal_alignment = 1
@@ -454,7 +468,7 @@ autowrap_mode = 2
 [node name="Body" type="Label" parent="CreditsPanel/Margin/VBox" unique_id=678899086]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 17
 text = "CAMPAIGN_ARCHIVE_BODY"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -489,13 +503,15 @@ theme_override_constants/separation = 12
 [node name="Eyebrow" type="Label" parent="ConfirmPanel/Margin/VBox" unique_id=893317503]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.2, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_fonts/font = ExtResource("91_mono")
+theme_override_font_sizes/font_size = 15
 text = "MAIN_CONFIRM_EYEBROW"
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="ConfirmPanel/Margin/VBox" unique_id=513028345]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.78, 0.94, 0.98, 1)
+theme_override_fonts/font = ExtResource("90_heading")
 theme_override_font_sizes/font_size = 28
 text = "MAIN_CONFIRM_TITLE"
 horizontal_alignment = 1
@@ -503,7 +519,7 @@ horizontal_alignment = 1
 [node name="Body" type="Label" parent="ConfirmPanel/Margin/VBox" unique_id=1472915168]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 17
 text = "CAMPAIGN_NEW_GAME_CONFIRM"
 horizontal_alignment = 1
 vertical_alignment = 1
