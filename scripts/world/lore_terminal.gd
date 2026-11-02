@@ -1,6 +1,10 @@
 class_name VexLoreTerminal
 extends StaticBody3D
 
+const UI_THEME: Theme = preload("res://resources/ui/vex_theme.tres")
+const HEADING_FONT: Font = preload("res://resources/ui/fonts/vex_heading_font.tres")
+const MONO_FONT: Font = preload("res://resources/ui/fonts/vex_mono_font.tres")
+
 signal log_read(log_id: StringName)
 
 @export_category("Saha Kaydı")
@@ -46,6 +50,7 @@ func _show_log() -> void:
 	var root := Control.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_STOP
+	root.theme = UI_THEME
 	overlay.add_child(root)
 
 	var shade := ColorRect.new()
@@ -66,6 +71,7 @@ func _show_log() -> void:
 	title.position = Vector2(48, 38)
 	title.size = Vector2(944, 58)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", HEADING_FONT)
 	title.add_theme_font_size_override("font_size", 29)
 	title.add_theme_color_override("font_color", accent_color)
 	title.text = tr(log_title)
@@ -92,6 +98,7 @@ func _show_log() -> void:
 	prompt.position = Vector2(48, 438)
 	prompt.size = Vector2(944, 42)
 	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	prompt.add_theme_font_override("font", MONO_FONT)
 	prompt.add_theme_font_size_override("font_size", 18)
 	prompt.add_theme_color_override("font_color", Color(0.62, 0.68, 0.74, 1.0))
 	prompt.text = tr("LORE_CLOSE_PROMPT")
