@@ -36,8 +36,8 @@ def test_physical_terminal_uses_runtime_live_subviewport_content() -> None:
         "OPERASYON TERMİNALİ",
         "VEX ANA TERMİNALİ",
         "SİLAH ARŞİVİ",
-        "YARATIKLAR // EVRENLER // KAYITLAR",
-        "HASAR // RPM // MENZİL // SEKME",
+        "YARATIKLAR · EVRENLER · KAYITLAR",
+        "HASAR · RPM · MENZİL · SEKME",
     ]:
         assert text in script
 
