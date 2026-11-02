@@ -31,8 +31,8 @@ TRANSLATED_FIELD = re.compile(
     r"^(display_name|[a-z_]*message|objective[a-z_]*|required_key_label|log_title|room_name|header_text)"
     r' = "([^"]+)"$'
 )
-# Dilden bağımsız tabela kodları (ör. "R03 // SEC", "VEX // 01") çeviri anahtarı gerektirmez.
-SIGNAGE_CODE = re.compile(r"[A-Z0-9-]+ // [A-Z0-9-]+")
+# Dilden bağımsız tesis kodları (ör. "R03 · SEC", "VEX 01") çeviri anahtarı gerektirmez.
+SIGNAGE_CODE = re.compile(r"(?:[A-Z0-9-]+ · [A-Z0-9-]+|VEX [0-9]{2}|BASTION-7)")
 
 
 def test_scene_text_fields_use_translation_keys() -> None:
