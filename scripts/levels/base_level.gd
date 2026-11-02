@@ -2,6 +2,10 @@
 class_name VexBaseLevel
 extends Node3D
 
+const BRIEFING_THEME: Theme = preload("res://resources/ui/vex_theme.tres")
+const BRIEFING_HEADING: Font = preload("res://resources/ui/fonts/vex_heading_font.tres")
+const BRIEFING_MONO: Font = preload("res://resources/ui/fonts/vex_mono_font.tres")
+
 @export_category("01 - Bölüm")
 @export var map_revision := "VEX-LEVEL-CANONICAL"
 @export var level_display_name := "VEX"
@@ -245,6 +249,7 @@ func _show_briefing() -> void:
 
 	var root := Control.new()
 	root.name = "Root"
+	root.theme = BRIEFING_THEME
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_STOP
 	briefing.add_child(root)
@@ -265,6 +270,7 @@ func _show_briefing() -> void:
 	location.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	location.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	location.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	location.add_theme_font_override("font", BRIEFING_HEADING)
 	location.add_theme_font_size_override("font_size", 30)
 	location.add_theme_color_override("font_color", Color(0.55, 0.82, 1.0, 1.0))
 	location.text = tr(level_display_name)
@@ -296,6 +302,7 @@ func _show_briefing() -> void:
 	objective.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	objective.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	objective.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	objective.add_theme_font_override("font", BRIEFING_HEADING)
 	objective.add_theme_font_size_override("font_size", 24)
 	objective.add_theme_color_override("font_color", Color(0.78, 0.88, 0.96, 1.0))
 	objective.text = tr(briefing_objective)
@@ -311,6 +318,7 @@ func _show_briefing() -> void:
 	prompt.offset_bottom = -55.0
 	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	prompt.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	prompt.add_theme_font_override("font", BRIEFING_MONO)
 	prompt.add_theme_font_size_override("font_size", 20)
 	prompt.add_theme_color_override("font_color", Color(0.68, 0.74, 0.80, 1.0))
 	prompt.text = tr("BRIEFING_CONTINUE")
