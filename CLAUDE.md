@@ -39,6 +39,7 @@ Denetimler çoğunlukla **metin sözleşmesi**dir (kaynakta belirli satırları 
 
 - Hikâye/yaratık/silah kaynakları: `Story_VEX.md`, `Enemies_VEX.md`, `Weapons_VEX.md`, `docs/Campaign_Level_Design_VEX.md`, `docs/levels/*.md`. Oyunda olmayan yeteneği belgede "mevcut" yazma; oyuncuya hikâyenin henüz açıklamadığı bilgiyi gösterme.
 - Oyuncuya dönük bölüm başlıkları "BÖLÜM 0N — AD"; eski `VEX-01/02/03`, "Kül Madeni", "Kırık Omurga" prototip adlarıdır. Tüm oyuncu arayüzü metinlerinde `//` yerine `docs/ui_copy_style.md` kuralları uygulanır.
+- Yazı tipleri ve ölçüleri `docs/ui_typography.md`: normal metinde Segoe UI (400), başlıklarda Semibold (600), teknik veride Cascadia Mono/Consolas; UI teması `resources/ui/vex_theme.tres`. Godot sahnelerinde mikro yazı için 12 altına düşme, küçük panelde buton yüksekliğini düzenle.
 - Oynanış zamanlayıcıları duraklatmaya duyarlı olmalı: `get_tree().create_timer(t, false)`.
 - Kayıt formatı anlamı değişirse `SAVE_VERSION` artır ve göç ekle.
 

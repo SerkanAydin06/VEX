@@ -1,6 +1,8 @@
 [gd_resource type="Theme" format=3 uid="uid://caa7b7etp2exm"]
 
-[ext_resource type="FontFile" uid="uid://dt6b8nj54csq0" path="res://assets/fonts/vex_ui_bold.ttf" id="1_ui_font"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_body_font.tres" id="1_body_font"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="2_heading_font"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="3_mono_font"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_button_disabled"]
 content_margin_left = 16.0
@@ -107,14 +109,15 @@ shadow_color = Color(0, 0, 0, 0.7)
 shadow_size = 14
 
 [resource]
-default_font = ExtResource("1_ui_font")
+default_font = ExtResource("1_body_font")
 default_font_size = 19
 Button/colors/font_color = Color(0.82, 0.94, 0.98, 1)
-Button/colors/font_disabled_color = Color(0.35, 0.42, 0.45, 1)
+Button/colors/font_disabled_color = Color(0.53, 0.64, 0.68, 1)
 Button/colors/font_hover_color = Color(0.96, 0.99, 1, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 0.8)
 Button/colors/font_pressed_color = Color(1, 0.9, 0.84, 1)
-Button/constants/outline_size = 2
+Button/constants/outline_size = 1
+Button/fonts/font = ExtResource("2_heading_font")
 Button/font_sizes/font_size = 20
 Button/styles/disabled = SubResource("StyleBox_button_disabled")
 Button/styles/focus = SubResource("StyleBox_focus")
@@ -123,17 +126,39 @@ Button/styles/normal = SubResource("StyleBox_button")
 Button/styles/pressed = SubResource("StyleBox_button_pressed")
 CheckButton/colors/font_color = Color(0.79, 0.9, 0.94, 1)
 CheckButton/font_sizes/font_size = 18
+CheckButton/fonts/font = ExtResource("2_heading_font")
+CheckBox/fonts/font = ExtResource("2_heading_font")
+ItemList/fonts/font = ExtResource("1_body_font")
+ItemList/font_sizes/font_size = 17
 HSeparator/styles/separator = SubResource("StyleBox_separator")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBox_progress")
 Label/colors/font_color = Color(0.79, 0.9, 0.94, 1)
 Label/colors/font_outline_color = Color(0, 0, 0, 0.72)
-Label/constants/outline_size = 2
+Label/constants/outline_size = 1
+Label/fonts/font = ExtResource("1_body_font")
 Label/font_sizes/font_size = 19
 OptionButton/colors/font_color = Color(0.82, 0.94, 0.98, 1)
 OptionButton/font_sizes/font_size = 18
+OptionButton/fonts/font = ExtResource("2_heading_font")
 OptionButton/styles/focus = SubResource("StyleBox_focus")
 OptionButton/styles/hover = SubResource("StyleBox_button_hover")
 OptionButton/styles/normal = SubResource("StyleBox_button")
 OptionButton/styles/pressed = SubResource("StyleBox_button_pressed")
+PopupMenu/fonts/font = ExtResource("1_body_font")
+PopupMenu/font_sizes/font_size = 17
+TabBar/fonts/font = ExtResource("2_heading_font")
+TabBar/font_sizes/font_size = 18
+TooltipLabel/fonts/font = ExtResource("1_body_font")
+TooltipLabel/font_sizes/font_size = 16
+Tree/fonts/font = ExtResource("1_body_font")
+Tree/font_sizes/font_size = 17
+LineEdit/fonts/font = ExtResource("1_body_font")
+LineEdit/font_sizes/font_size = 18
+RichTextLabel/fonts/normal_font = ExtResource("1_body_font")
+RichTextLabel/fonts/bold_font = ExtResource("2_heading_font")
+RichTextLabel/fonts/mono_font = ExtResource("3_mono_font")
+RichTextLabel/font_sizes/normal_font_size = 17
+TextEdit/fonts/font = ExtResource("1_body_font")
+TextEdit/font_sizes/font_size = 17
 Panel/styles/panel = SubResource("StyleBox_panel")
 PanelContainer/styles/panel = SubResource("StyleBox_panel")

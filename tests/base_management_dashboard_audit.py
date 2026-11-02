@@ -124,11 +124,11 @@ def test_dashboard_is_compact_and_wrap_safe_for_1280_layout() -> None:
     scene = DASHBOARD_SCENE.read_text(encoding="utf-8")
 
     assert "theme_override_font_sizes/font_size = 20" in scene
-    assert scene.count("theme_override_font_sizes/font_size = 9") >= 11
-    assert scene.count("theme_override_font_sizes/font_size = 8") >= 5
+    assert scene.count("theme_override_font_sizes/font_size = 12") >= 25
+    assert "theme_override_font_sizes/font_size = 8" not in scene
     assert scene.count("autowrap_mode = 2") >= 16
-    assert "custom_minimum_size = Vector2(0, 40)" in scene
-    assert "custom_minimum_size = Vector2(0, 44)" in scene
+    assert "custom_minimum_size = Vector2(0, 52)" in scene
+    assert "custom_minimum_size = Vector2(0, 58)" in scene
 
 
 if __name__ == "__main__":

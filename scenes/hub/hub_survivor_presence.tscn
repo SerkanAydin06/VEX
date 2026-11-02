@@ -1,6 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/hub/hub_survivor_presence.gd" id="1_script"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/vex_mono_bold.ttf" id="90_mono3d"]
+[ext_resource type="FontFile" path="res://assets/fonts/vex_ui_bold.ttf" id="91_heading3d"]
 
 [sub_resource type="StandardMaterial3D" id="Material_console"]
 albedo_color = Color(0.025, 0.04, 0.05, 1)
@@ -41,6 +44,7 @@ material = SubResource("Material_holo")
 [node name="NameLabel" type="Label3D" parent="."]
 unique_name_in_owner = true
 position = Vector3(0, 2.55, 0.05)
+font = ExtResource("91_heading3d")
 font_size = 44
 outline_size = 8
 billboard = 1
@@ -49,6 +53,7 @@ text = "SURVIVOR_SELIN_NAME"
 [node name="RoleLabel" type="Label3D" parent="."]
 unique_name_in_owner = true
 position = Vector3(0, 2.15, 0.05)
+font = ExtResource("90_mono3d")
 font_size = 26
 outline_size = 6
 billboard = 1

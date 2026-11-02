@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://d0imi3o7q2nw8" path="res://scripts/props/finish_switch.gd" id="1_script"]
 
+[ext_resource type="FontFile" path="res://assets/fonts/vex_mono_bold.ttf" id="90_mono3d"]
+[ext_resource type="FontFile" path="res://assets/fonts/vex_ui_bold.ttf" id="91_heading3d"]
+
 [sub_resource type="StandardMaterial3D" id="Material_dark"]
 albedo_color = Color(0.035, 0.045, 0.06, 1)
 metallic = 0.58
@@ -209,6 +212,7 @@ material_override = SubResource("Material_accent")
 [node name="HeaderLabel" type="Label3D" parent="VisualConsole"]
 position = Vector3(0, 1.95, 0.265)
 pixel_size = 0.0034
+font = ExtResource("91_heading3d")
 font_size = 30
 outline_size = 8
 outline_modulate = Color(0.015, 0.02, 0.025, 1)
@@ -219,6 +223,7 @@ horizontal_alignment = 1
 [node name="ScreenLabel" type="Label3D" parent="VisualConsole"]
 position = Vector3(0, 1.56, 0.31)
 pixel_size = 0.003
+font = ExtResource("90_mono3d")
 font_size = 22
 outline_size = 7
 outline_modulate = Color(0.01, 0.025, 0.035, 1)
@@ -229,6 +234,7 @@ horizontal_alignment = 1
 [node name="StatusLabel" type="Label3D" parent="VisualConsole"]
 position = Vector3(0, 1.4, 0.31)
 pixel_size = 0.0028
+font = ExtResource("90_mono3d")
 font_size = 18
 outline_size = 6
 outline_modulate = Color(0.01, 0.025, 0.035, 1)
@@ -239,6 +245,7 @@ horizontal_alignment = 1
 [node name="FooterLabel" type="Label3D" parent="VisualConsole"]
 position = Vector3(0, 0.48, 0.34)
 pixel_size = 0.0028
+font = ExtResource("90_mono3d")
 font_size = 17
 outline_size = 6
 outline_modulate = Color(0.02, 0.02, 0.025, 1)

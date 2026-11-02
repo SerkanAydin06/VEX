@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" path="res://scripts/ui/base_management_dashboard.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
-[ext_resource type="FontFile" uid="uid://qchkn76r42n4" path="res://assets/fonts/vex_mono_bold.ttf" id="3_mono"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="3_mono"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
 
 [node name="BaseManagementDashboard" type="PanelContainer"]
 visible = false
@@ -40,7 +41,7 @@ theme_override_constants/separation = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.34, 0.91, 1, 1)
-theme_override_fonts/font = ExtResource("3_mono")
+theme_override_fonts/font = ExtResource("90_heading")
 theme_override_font_sizes/font_size = 20
 text = "BASTION-7 ÜS KONTROLÜ"
 autowrap_mode = 2
@@ -50,7 +51,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.47, 0.68, 0.73, 1)
 theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 text = "ERİŞİM · AYDINLATMA · GELİŞTİRME"
 autowrap_mode = 2
 
@@ -60,7 +61,7 @@ custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.38, 0.22, 1)
 theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 12
 text = "KAMPANYA AŞAMASI 00"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -79,7 +80,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.35, 0.88, 1, 1)
 theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 12
 text = "BÖLGE ERİŞİMİ\n0 / 4"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -93,7 +94,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 1, 0.62, 1)
 theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 12
 text = "AYDINLATMA\nSEVİYE 1"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -107,7 +108,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.35, 0.88, 1, 1)
 theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 12
 text = "IŞIK GÜCÜ\n25%"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -121,7 +122,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.58, 0.62, 1)
 theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 12
 text = "GELİŞTİRME\n0 / 9"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -133,8 +134,8 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48, 0.73, 0.8, 1)
-theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 10
+theme_override_fonts/font = ExtResource("90_heading")
+theme_override_font_sizes/font_size = 12
 text = "TESİSİN GÜNCEL DURUMU"
 
 [node name="FacilityGrid" type="GridContainer" parent="Margin/VBox"]
@@ -146,98 +147,98 @@ theme_override_constants/v_separation = 5
 
 [node name="FiringRangeAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "ATIŞ POLİGONU\nBÖLÜM 01 GEREKLİ"
 autowrap_mode = 2
 
 [node name="ArmoryAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "SİLAH DEPOSU\nSİSTEM AKTİF"
 autowrap_mode = 2
 
 [node name="ResearchAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "ARAŞTIRMA LABORATUVARI\nBÖLÜM 01 GEREKLİ"
 autowrap_mode = 2
 
 [node name="MapSpacerA" type="Control" parent="Margin/VBox/FacilityGrid"]
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
 [node name="CommandAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "KOMUTA MERKEZİ\nSİSTEM AKTİF"
 autowrap_mode = 2
 
 [node name="MapSpacerB" type="Control" parent="Margin/VBox/FacilityGrid"]
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
 [node name="WorkshopAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "SİLAH ATÖLYESİ\nBÖLÜM 02 GEREKLİ"
 autowrap_mode = 2
 
 [node name="SouthCorridorAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "GÜNEY KORİDORU\nSİSTEM AKTİF"
 autowrap_mode = 2
 
 [node name="EngineeringAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "MÜHENDİSLİK BÖLMESİ\nBÖLÜM 02 GEREKLİ"
 autowrap_mode = 2
 
 [node name="MapSpacerC" type="Control" parent="Margin/VBox/FacilityGrid"]
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
 [node name="OperatorAreaButton" type="Button" parent="Margin/VBox/FacilityGrid"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "OPERATÖR PLATFORMU\nSİSTEM AKTİF"
 autowrap_mode = 2
 
 [node name="MapSpacerD" type="Control" parent="Margin/VBox/FacilityGrid"]
-custom_minimum_size = Vector2(0, 34)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
 [node name="LightingLine" type="HSeparator" parent="Margin/VBox"]
@@ -247,12 +248,12 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48, 0.73, 0.8, 1)
-theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 10
+theme_override_fonts/font = ExtResource("90_heading")
+theme_override_font_sizes/font_size = 12
 text = "AYDINLATMA GÜÇ KADEMELERİ"
 
 [node name="LightingButtons" type="HBoxContainer" parent="Margin/VBox"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 theme_override_constants/separation = 6
 
@@ -260,7 +261,7 @@ theme_override_constants/separation = 6
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 12
 text = "SEVİYE 1\nAKTİF (25%)"
 autowrap_mode = 2
 
@@ -268,7 +269,7 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "SEVİYE 2\nBÖLÜM 01 GEREKLİ · 50%"
 autowrap_mode = 2
@@ -277,7 +278,7 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "SEVİYE 3\nBÖLÜM 02 GEREKLİ · 75%"
 autowrap_mode = 2
@@ -286,7 +287,7 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "SEVİYE 4\nBÖLÜM 03 GEREKLİ · 100%"
 autowrap_mode = 2
@@ -298,12 +299,12 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.48, 0.73, 0.8, 1)
-theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 10
+theme_override_fonts/font = ExtResource("90_heading")
+theme_override_font_sizes/font_size = 12
 text = "GELİŞTİRMELER · AŞAMA KİLİDİ"
 
 [node name="UpgradeButtons" type="HBoxContainer" parent="Margin/VBox"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 58)
 layout_mode = 2
 theme_override_constants/separation = 6
 
@@ -311,7 +312,7 @@ theme_override_constants/separation = 6
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "ENERJİ DAĞITIM AĞI\nBÖLÜM 01 GEREKLİ"
 autowrap_mode = 2
@@ -320,7 +321,7 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "GÜVENLİK AĞI\nBÖLÜM 02 GEREKLİ"
 autowrap_mode = 2
@@ -329,7 +330,7 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 12
 disabled = true
 text = "ARAŞTIRMA ALTYAPISI\nBÖLÜM 03 GEREKLİ"
 autowrap_mode = 2
@@ -340,7 +341,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.38, 0.52, 0.57, 1)
 theme_override_fonts/font = ExtResource("3_mono")
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 12
 text = "YEŞİL: AKTİF · TURUNCU: HAZIR · KIRMIZI: KİLİTLİ"
 autowrap_mode = 2
 vertical_alignment = 2

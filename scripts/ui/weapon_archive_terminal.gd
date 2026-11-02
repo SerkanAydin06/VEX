@@ -160,7 +160,7 @@ func _refresh_entries() -> void:
 		_selected_index = -1
 		var empty_label := Label.new()
 		empty_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		empty_label.add_theme_font_size_override("font_size", 13)
+		empty_label.add_theme_font_size_override("font_size", 15)
 		empty_label.text = tr("WEAPON_UI_NO_ACTIVE_WEAPON_RECORDS_IN_THIS")
 		weapon_list.add_child(empty_label)
 		return
@@ -171,7 +171,7 @@ func _refresh_entries() -> void:
 		button.custom_minimum_size = Vector2(0.0, 64.0)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		button.add_theme_font_size_override("font_size", 13)
+		button.add_theme_font_size_override("font_size", 15)
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.toggle_mode = true
 		button.button_pressed = index == _selected_index

@@ -54,6 +54,7 @@ func _build_ui() -> void:
 	_fps_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_fps_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fps_label.text = "FPS: --"
+	_fps_label.add_theme_font_override("font", preload("res://resources/ui/fonts/vex_mono_font.tres"))
 	_fps_label.add_theme_font_size_override("font_size", 19)
 	_fps_label.add_theme_color_override("font_color", Color(0.72, 0.93, 1.0, 0.96))
 	_fps_label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.9))

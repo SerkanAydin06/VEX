@@ -4,6 +4,9 @@
 [ext_resource type="Theme" uid="uid://caa7b7etp2exm" path="res://resources/ui/vex_theme.tres" id="2_theme"]
 [ext_resource type="AudioStream" uid="uid://bgayt3yu5wqho" path="res://assets/audio/splash_intro_pro.wav" id="3_intro_audio"]
 
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="91_mono"]
+
 [node name="SplashScreen" type="Control" unique_id=1687812979]
 layout_mode = 3
 anchors_preset = 15
@@ -83,6 +86,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.96, 1, 1)
 theme_override_colors/font_outline_color = Color(0.005, 0.012, 0.018, 1)
 theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("90_heading")
 theme_override_font_sizes/font_size = 72
 text = "PARDUS GAMES"
 horizontal_alignment = 1
@@ -92,6 +96,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.72, 0.84, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("91_mono")
 theme_override_font_sizes/font_size = 20
 text = "SPLASH_PRESENTS"
 horizontal_alignment = 1
@@ -116,6 +121,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.33, 0.78, 0.9, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("91_mono")
 theme_override_font_sizes/font_size = 20
 text = "SPLASH_A_GAME_BY"
 horizontal_alignment = 1
@@ -125,6 +131,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.91, 0.97, 1, 1)
 theme_override_colors/font_outline_color = Color(0.005, 0.012, 0.018, 1)
 theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("90_heading")
 theme_override_font_sizes/font_size = 64
 text = "SERKAN AYDIN"
 horizontal_alignment = 1
@@ -140,7 +147,8 @@ offset_bottom = -28.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.18, 0.33, 0.38, 0.72)
-theme_override_font_sizes/font_size = 13
+theme_override_fonts/font = ExtResource("91_mono")
+theme_override_font_sizes/font_size = 14
 text = "SPLASH_STARTUP"
 horizontal_alignment = 1
 

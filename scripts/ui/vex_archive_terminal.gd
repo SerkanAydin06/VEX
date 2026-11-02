@@ -166,7 +166,7 @@ func _refresh_entries() -> void:
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.clip_text = false
-		button.add_theme_font_size_override("font_size", 13)
+		button.add_theme_font_size_override("font_size", 15)
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.toggle_mode = true
 		button.button_pressed = index == _selected_index

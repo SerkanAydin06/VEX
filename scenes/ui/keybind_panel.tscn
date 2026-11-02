@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/keybind_panel.gd" id="1_script"]
 [ext_resource type="Theme" path="res://resources/ui/vex_theme.tres" id="2_theme"]
+
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_heading_font.tres" id="90_heading"]
+[ext_resource type="SystemFont" path="res://resources/ui/fonts/vex_mono_font.tres" id="91_mono"]
 
 [node name="KeybindPanel" type="PanelContainer"]
 visible = false
@@ -27,12 +30,13 @@ theme_override_constants/margin_bottom = 18
 theme_override_constants/separation = 8
 
 [node name="Title" type="Label" parent="Margin/VBox"]
+theme_override_fonts/font = ExtResource("90_heading")
 theme_override_font_sizes/font_size = 26
 text = "KEYBIND_TITLE"
 
 [node name="StatusLabel" type="Label" parent="Margin/VBox"]
 unique_name_in_owner = true
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 16
 text = "KEYBIND_HINT"
 autowrap_mode = 2
 
