@@ -107,6 +107,10 @@ var _world_ui_sample_remaining := 0.0
 var _weapon_presenter: VexHudWeaponPresenter = null
 
 
+func _exit_tree() -> void:
+	GameState.unregister_hud(self)
+
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_weapon_layer_rest_position = weapon_layer.position

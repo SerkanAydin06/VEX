@@ -99,6 +99,10 @@ var _impact_shock_rect: ColorRect = null
 var _impact_shock_tween: Tween = null
 
 
+func _exit_tree() -> void:
+	GameState.unregister_player(self)
+
+
 func _ready() -> void:
 	add_to_group("player")
 	_view_runtime.initialize(camera.position)

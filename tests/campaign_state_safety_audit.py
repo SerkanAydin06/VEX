@@ -80,4 +80,19 @@ assert "weapon.reload_duration * maxf(0.01, reload_time_multiplier)" in weapon_r
 assert "create_timer(shell_cycle_duration, false)" in weapon_reload
 assert "create_timer(finish_duration, false)" in weapon_reload
 
+
+
+def test_player_and_hud_unregister_when_leaving_the_tree() -> None:
+    root = Path(__file__).resolve().parents[1]
+    game_state = (root / "scripts/autoload/game_state.gd").read_text(encoding="utf-8")
+    player = (root / "scripts/player/player.gd").read_text(encoding="utf-8")
+    hud = (root / "scripts/ui/hud.gd").read_text(encoding="utf-8")
+    # Sahne geçişinde yeni sahnenin düğümleri serbest kalmış eski oyuncuyu okumasın.
+    assert "func unregister_player(value: Node) -> void:\n\tif player == value:\n\t\tplayer = null" in game_state
+    assert "func unregister_hud(value: CanvasLayer) -> void:\n\tif hud == value:\n\t\thud = null" in game_state
+    assert "func _exit_tree() -> void:\n\tGameState.unregister_player(self)" in player
+    assert "func _exit_tree() -> void:\n\tGameState.unregister_hud(self)" in hud
+
+
+test_player_and_hud_unregister_when_leaving_the_tree()
 print("campaign state safety audit passed")
