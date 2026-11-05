@@ -6,6 +6,15 @@ const RESULT_INTERRUPTED: StringName = &"interrupted"
 const RESULT_INVALID: StringName = &"invalid"
 
 
+## Await sonrası ilk kontrol: sahne değişimi/ölüm sırasında kontrolcü veya oyuncu
+## serbest bırakılmış olabilir; onlara (ve onlara bağlı Callable'lara) dokunmadan önce bak.
+## Parametreler bilerek tipsiz: serbest kalmış nesneyi tipli parametreye vermek de hata üretir.
+static func _is_alive(owner: Variant, player: Variant) -> bool:
+	if not is_instance_valid(owner) or not is_instance_valid(player):
+		return false
+	return (owner as Node).is_inside_tree() and not (player as VexPlayer).is_dead
+
+
 static func reload_magazine(
 	owner: Node,
 	player: VexPlayer,
@@ -21,7 +30,7 @@ static func reload_magazine(
 		weapon.reload_duration * maxf(0.01, reload_time_multiplier),
 		false
 	).timeout
-	if not owner.is_inside_tree() or player == null or player.is_dead:
+	if not _is_alive(owner, player):
 		return false
 
 	# Reload sürerken ammo pickup veya kapasite upgrade'i oluşmuş olabilir.
@@ -63,10 +72,10 @@ static func reload_sg04_shells(
 	for _round_index: int in range(rounds_to_load):
 		play_action.call(&"reload_shell")
 		await owner.get_tree().create_timer(shell_cycle_duration, false).timeout
+		if not _is_alive(owner, player):
+			return RESULT_INVALID
 		if int(get_generation.call()) != reload_generation:
 			return RESULT_INTERRUPTED
-		if not owner.is_inside_tree() or player == null or player.is_dead:
-			return RESULT_INVALID
 
 		var current_magazine := int(magazines.get(weapon.weapon_id, 0))
 		var current_reserve := int(reserve_ammo.get(weapon.ammo_type, 0))
@@ -76,12 +85,12 @@ static func reload_sg04_shells(
 		reserve_ammo[weapon.ammo_type] = current_reserve - 1
 		broadcast_state.call()
 
-	if not owner.is_inside_tree() or player == null or player.is_dead:
+	if not _is_alive(owner, player):
 		return RESULT_INVALID
 	play_action.call(&"reload_finish")
 	await owner.get_tree().create_timer(finish_duration, false).timeout
+	if not _is_alive(owner, player):
+		return RESULT_INVALID
 	if int(get_generation.call()) != reload_generation:
 		return RESULT_INTERRUPTED
-	if not owner.is_inside_tree() or player == null or player.is_dead:
-		return RESULT_INVALID
 	return RESULT_COMPLETED

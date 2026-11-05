@@ -23,6 +23,8 @@ func _ready() -> void:
 	player.free()
 	for _frame: int in range(3):
 		await get_tree().process_frame
+	await _test_reload_survives_player_freed_mid_reload(&"sg04")
+	await _test_reload_survives_player_freed_mid_reload(&"p01")
 	print("Weapon pause reload runtime test passed")
 	get_tree().quit(0)
 
@@ -202,3 +204,25 @@ func _test_world_weapon_repickup_preserves_empty_magazine(controller: VexWeaponC
 	assert(bool(repick.get("success", false)))
 	assert(StringName(str(repick.get("displaced_weapon_id", ""))) == &"p01")
 	assert(int(controller.magazines.get(&"p20", -1)) == 0)
+
+
+## Ölüm/sahne geçişi doldurma sürerken oyuncuyu (ve WeaponController'ı) serbest
+## bırakabilir. Bekleme bittiğinde runtime, serbest kalmış nesnelere dokunmamalı.
+func _test_reload_survives_player_freed_mid_reload(weapon_id: StringName) -> void:
+	var player := PLAYER_SCENE.instantiate() as VexPlayer
+	add_child(player)
+	await get_tree().process_frame
+	var controller := player.weapon_controller as VexWeaponController
+	var weapon := controller.get_weapon_definition(weapon_id)
+	assert(weapon != null)
+	var original_duration := weapon.reload_duration
+	weapon.reload_duration = 0.12
+	controller.current_weapon_id = weapon_id
+	controller.magazines[weapon_id] = 0
+	controller.reserve_ammo[weapon.ammo_type] = 4
+	controller.reload()
+	assert(controller.is_reloading)
+	await get_tree().create_timer(0.03, true).timeout
+	player.free()
+	await get_tree().create_timer(0.30, true).timeout
+	weapon.reload_duration = original_duration

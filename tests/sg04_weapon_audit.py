@@ -174,5 +174,18 @@ def main() -> int:
     return 0
 
 
+def test_reload_runtime_checks_freed_nodes_before_touching_them() -> None:
+    runtime = (Path(__file__).resolve().parents[1] / "scripts/player/weapon_reload_runtime.gd").read_text(encoding="utf-8")
+    # Ölüm/sahne geçişi doldurma sırasında WeaponController'ı serbest bırakabilir.
+    assert "static func _is_alive(owner: Variant, player: Variant) -> bool:" in runtime
+    for block in runtime.split(".timeout")[1:]:
+        alive = block.find("_is_alive(owner, player)")
+        generation = block.find("get_generation.call()")
+        assert alive != -1, "await sonrası _is_alive kontrolü yok"
+        assert generation == -1 or alive < generation, "Callable, canlılık kontrolünden önce çağrılıyor"
+    assert "owner.is_inside_tree() or player == null" not in runtime
+
+
 if __name__ == "__main__":
+    test_reload_runtime_checks_freed_nodes_before_touching_them()
     sys.exit(main())
