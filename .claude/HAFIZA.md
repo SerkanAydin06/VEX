@@ -89,4 +89,5 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - HUD tabanı 1920×1080 (canvas_items); 12 birim 720p'de ~8 px olur. Oyun içi ikincil HUD yazısı için 15–16 kullan.
 - Await sonrası düğüm/Callable kullanmadan önce `is_instance_valid` ile bak; serbest kalmış nesneyi tipli parametreye (`owner: Node`) vermek de SCRIPT ERROR üretir; yardımcıda `Variant` kullan.
 - Oyun içi hata avı için `godot --headless --path <klon> -s tools/smoke_scene_transitions.gd` çalıştır; `ERROR` satırlarını say. Godot testleri geçse bile gerçek sahne geçişi hataları ancak böyle görünür.
+- Yeni `.gd` dosyası eklerken Godot'un ürettiği `.gd.uid` eşini de commit'le (geçici klonda `godot --headless --editor --quit` üretir); `resource_uid_audit` ister.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).
