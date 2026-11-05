@@ -106,7 +106,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="SummaryBlock" type="VBoxContainer" parent="WeaponArchiveRoot/ScreenShell/Margin/VBox/Header"]
-custom_minimum_size = Vector2(225, 0)
+custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 theme_override_constants/separation = 1
 
@@ -124,7 +124,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 1, 0.62, 1)
 theme_override_fonts/font = ExtResource("4_mono")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 text = "RECORDS 0 · ACQUIRED 0 · CARRIED 0"
 horizontal_alignment = 2
 autowrap_mode = 2

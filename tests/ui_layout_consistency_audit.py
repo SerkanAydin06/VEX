@@ -37,7 +37,9 @@ def test_shared_theme_is_compact_without_double_panel_padding() -> None:
 
 def test_main_menu_uses_compact_buttons_and_modals() -> None:
     scene = _read(MAIN)
-    assert "offset_left = 70.0\noffset_top = 326.0\noffset_right = 430.0\noffset_bottom = 708.0" in scene
+    # Alt sınır içerikten küçük; PanelContainer içeriğe göre büyür (boş şerit kalmaz).
+    assert "offset_left = 70.0\noffset_top = 326.0\noffset_right = 430.0\noffset_bottom = 640.0" in scene
+    assert "custom_minimum_size = Vector2(184, 0)" in scene
     assert scene.count("custom_minimum_size = Vector2(0, 46)") == 5
     assert "theme_override_font_sizes/font_size = 30\ntext = \"VOID EXTERMINATION\"" in scene
     assert "offset_left = 650.0\noffset_top = 280.0\noffset_right = 1270.0\noffset_bottom = 800.0" in scene
