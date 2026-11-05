@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#102)
+## Yapılanlar (2026-09, PR #80–#109)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -44,6 +44,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #106 (2026-11-02) Tipografi standardı: tüm ekranlarda regular Segoe UI gövde, semibold başlık/buton, monospace teknik rakam. Bastion-7 8–9 piksellik yazılar 12+ yapıldı, kartlar genişletildi; menü/HUD/arşiv/terminal, sinematik brifing/okuyucu ve 3B tesis tabelaları düzenlendi. `docs/ui_typography.md`, `tests/ui_typography_audit.py`. Godot görsel/runtime kontrolü bekliyor.
 - #107 (2026-11-02) #106'daki Godot sahne yükleme hatası: `main_menu.tscn` içinde `ext_resource` satırları `sub_resource` sonrasına eklenmişti. Ana menü, HUD, keşif bildirimi sahnelerinde font kaynakları dosya başına taşındı; `tests/ui_typography_audit.py` tüm sahne/kaynak dosyalarında sıralamayı denetler. Godot çalışma testi bekliyor.
 - #108 (2026-11-02) `level_test.gd` üst sınıfı `@tool VexBaseLevel` olduğu hâlde kendisi @tool değildi; `MISSING_TOOL` uyarısı. Çocuğa `@tool` eklendi, editör modunda Loom Herald spawn edilmedi, `super._ready()` preview davranışı korundu. Kalıtım testi (`tests/tool_inheritance_audit.py`) ve Loom Herald audit'i güncellendi. Godot runtime testi yerelde bekliyor.
+- #109 (2026-11-05) #103–#108 bu oturumda Godot ile doğrulandı (import + 18 sahne, hareket testi dahil); #106 sonrası kırık kalan bildirim kartı denetimi düzeltildi. Görsel: HUD ikincil etiketleri 12 → 15–16, silah arşivi sayaç kutusu 225 → 400 (tek satır), ana menü sol panel boş şeridi giderildi (yetki etiketine genişlik). Ayarlar ekranı #106 ile zaten düzelmişti. xvfb ekran görüntüleriyle kontrol edildi.
 
 ## Kararlar (tekrar tartışma)
 
@@ -61,7 +62,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 
 ## Açık işler (sırayla)
 
-- #107 ana menü açılış + #106 tipografi ile #104 hareket ve #105 metin düzenlemeleri için Windows/Godot 4.7 `validate_local.ps1`; TR/EN menü, HUD, arşiv, üs ekranı, 3B tabela yerleşimi ve hareket smoke testini çalıştır.
+- Windows'ta `validate_local.ps1` ve gerçek Segoe UI/Cascadia fontlarıyla TR/EN görsel kontrol (Linux'ta fontlar yedek fonta düşüyor; yerleşim ve Godot testleri bu oturumda geçti).
 
 ## Öğrenilen dersler
 
@@ -82,4 +83,6 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Çeviri kullanım denetimi `tests/translation_reachability.py` ile ölçülür: `tests/` sahneleri ve `level_0N_structure_source.tscn` kök/sıfırlanan alanları "kullanım" sayılmaz.
 - Gerçek ekran görüntüsü: `xvfb-run -a -s "-screen 0 1280x720x24" godot --path <klon> --resolution 1280x720 --rendering-driver opengl3 -s shot.gd` (Mesa llvmpipe çalışıyor); `root.get_viewport().get_texture().get_image().save_png()`.
 - Autowrap etiketlere genişlik verilmezse Godot yüksekliği kelime başına satır sayar; paneller şişer. `custom_minimum_size.x` ver.
+- Başka oturumlar da `main`'e PR birleştiriyor: işe başlamadan `git fetch` + `git log` ile yeni PR'ları ve HAFIZA değişikliklerini oku; dalı `origin/main`'e eşitle.
+- HUD tabanı 1920×1080 (canvas_items); 12 birim 720p'de ~8 px olur. Oyun içi ikincil HUD yazısı için 15–16 kullan.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).
