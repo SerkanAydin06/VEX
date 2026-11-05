@@ -192,6 +192,18 @@ func register_player(value: Node) -> void:
 		player.call_deferred("broadcast_state")
 
 
+## Oyuncu/HUD sahneden çıkarken kaydını düşürür. Aksi hâlde sahne geçişinde yeni
+## sahnenin düğümleri bir süre serbest kalmış eski oyuncuyu okur ("cast a freed object").
+func unregister_player(value: Node) -> void:
+	if player == value:
+		player = null
+
+
+func unregister_hud(value: CanvasLayer) -> void:
+	if hud == value:
+		hud = null
+
+
 func register_hud(value: CanvasLayer) -> void:
 	hud = value
 	if player != null and is_instance_valid(player) and player.has_method("broadcast_state"):

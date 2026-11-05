@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#110)
+## Yapılanlar (2026-09, PR #80–#111)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -46,6 +46,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #108 (2026-11-02) `level_test.gd` üst sınıfı `@tool VexBaseLevel` olduğu hâlde kendisi @tool değildi; `MISSING_TOOL` uyarısı. Çocuğa `@tool` eklendi, editör modunda Loom Herald spawn edilmedi, `super._ready()` preview davranışı korundu. Kalıtım testi (`tests/tool_inheritance_audit.py`) ve Loom Herald audit'i güncellendi. Godot runtime testi yerelde bekliyor.
 - #109 (2026-11-05) #103–#108 bu oturumda Godot ile doğrulandı (import + 18 sahne, hareket testi dahil); #106 sonrası kırık kalan bildirim kartı denetimi düzeltildi. Görsel: HUD ikincil etiketleri 12 → 15–16, silah arşivi sayaç kutusu 225 → 400 (tek satır), ana menü sol panel boş şeridi giderildi (yetki etiketine genişlik). Ayarlar ekranı #106 ile zaten düzelmişti. xvfb ekran görüntüleriyle kontrol edildi.
 - #110 Kullanıcının bildirdiği `reload_sg04_shells: null::_get_sg04_reload_generation` hatası: doldurma beklerken ölüm/sahne geçişi WeaponController'ı serbest bırakıyordu. `VexWeaponReloadRuntime._is_alive` await sonrası önce canlılığa bakar (düz şarjör dolumundaki ikinci hata da giderildi); runtime testi oyuncuyu doldurma ortasında silerek hatayı yeniden üretir.
+- #111 `GameState.player`/`hud` sahne geçişinde serbest kalmış eski düğümü göstermeye devam ediyordu (2. ve 3. bölüm açılışında 19× "Trying to cast a freed object", Cinder Hound `_ready`). Oyuncu ve HUD `_exit_tree`'de `GameState.unregister_*` ile kaydını düşürüyor. `tools/smoke_scene_transitions.gd` duman testi eklendi (5 sahne, ateş/doldur/ölüm/ani geçiş; temiz).
 
 ## Kararlar (tekrar tartışma)
 
@@ -87,4 +88,6 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Başka oturumlar da `main`'e PR birleştiriyor: işe başlamadan `git fetch` + `git log` ile yeni PR'ları ve HAFIZA değişikliklerini oku; dalı `origin/main`'e eşitle.
 - HUD tabanı 1920×1080 (canvas_items); 12 birim 720p'de ~8 px olur. Oyun içi ikincil HUD yazısı için 15–16 kullan.
 - Await sonrası düğüm/Callable kullanmadan önce `is_instance_valid` ile bak; serbest kalmış nesneyi tipli parametreye (`owner: Node`) vermek de SCRIPT ERROR üretir; yardımcıda `Variant` kullan.
+- Oyun içi hata avı için `godot --headless --path <klon> -s tools/smoke_scene_transitions.gd` çalıştır; `ERROR` satırlarını say. Godot testleri geçse bile gerçek sahne geçişi hataları ancak böyle görünür.
+- Yeni `.gd` dosyası eklerken Godot'un ürettiği `.gd.uid` eşini de commit'le (geçici klonda `godot --headless --editor --quit` üretir); `resource_uid_audit` ister.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).
