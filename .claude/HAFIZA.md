@@ -49,6 +49,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #111 `GameState.player`/`hud` sahne geçişinde serbest kalmış eski düğümü göstermeye devam ediyordu (2. ve 3. bölüm açılışında 19× "Trying to cast a freed object", Cinder Hound `_ready`). Oyuncu ve HUD `_exit_tree`'de `GameState.unregister_*` ile kaydını düşürüyor. `tools/smoke_scene_transitions.gd` duman testi eklendi (5 sahne, ateş/doldur/ölüm/ani geçiş; temiz).
 - #112 `tools/smoke_combat.gd`: test alanındaki 18 düşman türünü sırayla gerçek silah yoluyla vurur; saldırı, ölüm ve sayaç ölçülür. Bulgu: isabet efekti (`hit_impact_v1.gd`) VRAM sıkıştırmalı düşman sayfalarından piksel okumaya çalışıp her isabette onlarca hata basıyordu; sıkıştırılmışsa yedek renge geçiyor (görünüm değişmedi). Diğer şüpheler test kaynaklı çıktı (Warden'ı Venom Marshall iyileştiriyor, Gorehorn 500 can).
 - #113 Yaratığa göre isabet/kan rengi ilk kez çalışıyor: sıkıştırılmış sayfa ilk isabette `WorkerThreadPool` ile açılıp 1/4 küçük kopya önbelleğe alınır (en fazla 12 sayfa); hazır olana kadar yedek renk. İsabet başına ana iş parçacığı ~0,1–0,5 ms, takılma yok.
+- #114 Bölüm içi terminaller: saha kaydı terminali düz kutudan gerçek konsola (koyu cam ekran, kategori, ŞİFRELİ VERİ/KAYIT ÇÖZÜLDÜ durumu, oda·kayıt künyesi, durum lambası); okuyucuya künye şeridi ve arşiv durumu. Kurtarma ünitesindeki sabit İngilizce billboard yazı çeviri anahtarlı panele döndü; bitiş/tahliye ekranları parlak blok değil. **9 saha kaydının 7'si, iki bitiş konsolu, tahliye konsolu ve Selin ünitesi duvara bakıyordu** (Transform3D sırası yanlış okunmuş); çevrildi. Keşif kartındaki boşluk giderildi.
 
 ## Kararlar (tekrar tartışma)
 
@@ -67,8 +68,13 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 ## Açık işler (sırayla)
 
 - Windows'ta `validate_local.ps1` ve gerçek Segoe UI/Cascadia fontlarıyla TR/EN görsel kontrol (Linux'ta fontlar yedek fonta düşüyor; yerleşim ve Godot testleri bu oturumda geçti).
+- `scenes/world/lore_terminal.tscn` ve `level_03_structure_source` içindeki `LoreTerminals` kökü kurulmuyor (oyunda yok); ya kaldır ya da saha kaydı terminaline taşı.
+- Selin stabilizasyon ünitesinin gövdesi hâlâ düz siyah kutu; istenirse tıbbi ünite modeli/sprite'ı.
 
 ## Öğrenilen dersler
+
+- `.tscn` `Transform3D(a,b,c, d,e,f, g,h,i, ox,oy,oz)` satır düzenindedir: yerel +Z dünyada `(c, f, i)`. Prop yönünü elle hesaplarken buna dikkat et; şüphede ekran görüntüsüyle iki taraftan bak.
+- Oyun içi prop ekran görüntüsü: yeni Camera3D'yi `make_current` yapmak işe yaramıyor (görüntü oyuncu kamerasından gelir); oyuncuyu `PROCESS_MODE_DISABLED` yapıp `player.camera`'yı taşı. Betik: scratchpad `tools/terminals.gd` kalıbı.
 
 - Godot'ta `@tool` ile çalışan temel GDScript sınıfından miras alan alt betik de `@tool` olmalı; editörde çalışan `_ready()` gibi metotların runtime spawn/oyun mantığı `Engine.is_editor_hint()` ile korunmalı.
 
