@@ -72,7 +72,8 @@ theme_override_constants/margin_bottom = 14
 
 [node name="Content" type="VBoxContainer" parent="Root/Card/Row/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 6
+alignment = 1
 
 [node name="Category" type="Label" parent="Root/Card/Row/Margin/Content"]
 unique_name_in_owner = true
@@ -98,9 +99,7 @@ autowrap_mode = 2
 [node name="Subtitle" type="Label" parent="Root/Card/Row/Margin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.64, 0.74, 0.78, 1)
 theme_override_font_sizes/font_size = 16
 text = "RECORD"
-vertical_alignment = 1
 autowrap_mode = 2

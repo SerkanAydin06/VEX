@@ -100,9 +100,10 @@ func _player_has_all_keys(player: Node) -> bool:
 
 
 func _prepare_console_materials() -> void:
-	_set_emissive_mesh(_screen, screen_tint, 2.8)
-	_set_emissive_mesh(_accent_strip, accent_tint, 2.2)
-	_set_emissive_mesh(_status_left, Color(1.0, 0.12, 0.06, 1.0), 2.4)
+	# Ekran koyu cam gibi kalır; metin kontrastı için parlaklık düşük tutulur.
+	_set_emissive_mesh(_screen, Color(screen_tint.r * 0.2, screen_tint.g * 0.2, screen_tint.b * 0.2, 1.0), 1.0)
+	_set_emissive_mesh(_accent_strip, accent_tint, 1.4)
+	_set_emissive_mesh(_status_left, Color(1.0, 0.12, 0.06, 1.0), 1.8)
 	_set_emissive_mesh(_status_right, ready_tint, 2.7)
 	_set_emissive_mesh(_ready_core, ready_tint, 2.9)
 	_screen_glow.light_color = screen_tint
@@ -155,7 +156,7 @@ func _play_activation_visual() -> void:
 	_footer_label.text = tr("FINISH_UI_EXTRACTION_CONFIRMED")
 	_set_emissive_mesh(_status_right, active_tint, 3.4)
 	_set_emissive_mesh(_ready_core, active_tint, 3.7)
-	_set_emissive_mesh(_screen, active_tint, 3.1)
+	_set_emissive_mesh(_screen, Color(active_tint.r * 0.28, active_tint.g * 0.28, active_tint.b * 0.28, 1.0), 1.2)
 	_screen_glow.light_color = active_tint
 	_accent_glow.light_color = active_tint
 

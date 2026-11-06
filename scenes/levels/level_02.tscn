@@ -32,16 +32,16 @@ automap_merge_adjacent_cells = false
 [node name="Level02AshCorridorContent" parent="." unique_id=443091394 instance=ExtResource("7_content")]
 
 [node name="Record_KorThermalSourceSignature" parent="Level02AshCorridorContent/Records" index="0"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 53.59, 0.78, 28.8)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.59, 0.78, 28.8)
 
 [node name="Record_RelayTechnicianLastShift" parent="Level02AshCorridorContent/Records" index="1"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 29.59, 0.78, -8)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 29.59, 0.78, -8)
 
 [node name="Record_PressureDeviationInsignificant" parent="Level02AshCorridorContent/Records" index="2"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 53.59, 0.78, 20.6)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.59, 0.78, 20.6)
 
 [node name="FinishSwitch" parent="Level02AshCorridorContent/Triggers" index="1"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.72, 0, 30)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 53.72, 0, 30)
 
 [node name="ExitSignRelay" parent="Level02AshCorridorContent/Triggers" index="2"]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.76, 4.85, 30)

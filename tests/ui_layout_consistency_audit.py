@@ -151,6 +151,10 @@ def test_discovery_card_has_room_for_wrapped_titles_without_becoming_huge() -> N
     assert "theme_override_font_sizes/font_size = 16" in scene
     assert scene.count("autowrap_mode = 2") == 3
     assert "offset_left = -340.0" not in scene
+    # Alt satır kartın ortasında boşluk bırakmaz; içerik dikeyde ortalanır.
+    subtitle = scene[scene.index('[node name="Subtitle"'):]
+    assert "size_flags_vertical = 3" not in subtitle
+    assert "separation = 6\nalignment = 1" in scene
     assert "theme_override_font_sizes/font_size = 23" not in scene
 
 

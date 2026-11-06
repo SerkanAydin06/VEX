@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/props/survivor_rescue_terminal.gd" id="1_script"]
 
 [ext_resource type="FontFile" path="res://assets/fonts/vex_mono_bold.ttf" id="90_mono3d"]
+[ext_resource type="FontFile" path="res://assets/fonts/vex_ui_bold.ttf" id="91_heading3d"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
 albedo_color = Color(0.025, 0.035, 0.045, 1)
@@ -10,11 +11,28 @@ metallic = 0.72
 roughness = 0.28
 
 [sub_resource type="StandardMaterial3D" id="Material_panel"]
-albedo_color = Color(0.04, 0.12, 0.16, 1)
+albedo_color = Color(0.012, 0.045, 0.06, 1)
 emission_enabled = true
-emission = Color(0.05, 0.62, 0.82, 1)
-emission_energy_multiplier = 1.5
-roughness = 0.35
+emission = Color(0.02, 0.15, 0.2, 1)
+emission_energy_multiplier = 1.0
+roughness = 0.08
+
+[sub_resource type="StandardMaterial3D" id="Material_frame"]
+albedo_color = Color(0.13, 0.155, 0.185, 1)
+metallic = 0.74
+roughness = 0.27
+
+[sub_resource type="StandardMaterial3D" id="Material_accent"]
+shading_mode = 0
+albedo_color = Color(1, 0.42, 0.18, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_bezel"]
+material = SubResource("Material_frame")
+size = Vector3(1.37, 0.42, 0.03)
+
+[sub_resource type="BoxMesh" id="Mesh_accent"]
+material = SubResource("Material_accent")
+size = Vector3(1.7, 0.025, 0.012)
 
 [sub_resource type="BoxMesh" id="Mesh_body"]
 size = Vector3(1.8, 1.1, 0.85)
@@ -32,25 +50,47 @@ position = Vector3(0, 0.55, 0)
 mesh = SubResource("Mesh_body")
 material_override = SubResource("Material_body")
 
+[node name="PanelBezel" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.05, 0.425)
+mesh = SubResource("Mesh_bezel")
+
+[node name="AccentStrip" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 0.62, 0.43)
+mesh = SubResource("Mesh_accent")
+
 [node name="StatusPanelMesh" type="CSGBox3D" parent="."]
 position = Vector3(0, 1.05, 0.44)
 size = Vector3(1.25, 0.32, 0.04)
 material = SubResource("Material_panel")
 
+[node name="UnitLabel" type="Label3D" parent="."]
+unique_name_in_owner = true
+position = Vector3(0, 1.15, 0.465)
+pixel_size = 0.0022
+modulate = Color(0.62, 0.86, 0.95, 1)
+outline_modulate = Color(0.005, 0.02, 0.028, 1)
+text = "CH03_RESCUE_UNIT"
+font = ExtResource("91_heading3d")
+font_size = 20
+outline_size = 4
+
 [node name="StatusLabel" type="Label3D" parent="."]
 unique_name_in_owner = true
-position = Vector3(0, 1.08, 0.48)
-text = "MEDICAL · STABILIZATION"
+position = Vector3(0, 1.02, 0.465)
+pixel_size = 0.0025
+modulate = Color(1, 0.55, 0.25, 1)
+outline_modulate = Color(0.005, 0.02, 0.028, 1)
+text = "CH03_RESCUE_STATUS_CRITICAL"
 font = ExtResource("90_mono3d")
-font_size = 30
-outline_size = 6
-billboard = 1
+font_size = 26
+outline_size = 5
 
 [node name="StatusLight" type="OmniLight3D" parent="."]
 unique_name_in_owner = true
 position = Vector3(0, 1.35, 0.3)
-light_color = Color(0.15, 0.68, 1, 1)
-light_energy = 1.5
+light_color = Color(1, 0.45, 0.2, 1)
+light_energy = 1.2
 omni_range = 3.5
 shadow_enabled = false
 

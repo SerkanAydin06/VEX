@@ -1,26 +1,81 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/props/field_record_terminal.gd" id="1_script"]
+[ext_resource type="FontFile" path="res://assets/fonts/vex_mono_bold.ttf" id="90_mono3d"]
+[ext_resource type="FontFile" path="res://assets/fonts/vex_ui_bold.ttf" id="91_heading3d"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
-albedo_color = Color(0.075, 0.09, 0.105, 1)
-metallic = 0.72
-roughness = 0.33
+albedo_color = Color(0.06, 0.072, 0.088, 1)
+metallic = 0.62
+roughness = 0.38
+
+[sub_resource type="StandardMaterial3D" id="Material_frame"]
+albedo_color = Color(0.13, 0.155, 0.185, 1)
+metallic = 0.74
+roughness = 0.27
 
 [sub_resource type="StandardMaterial3D" id="Material_screen"]
-shading_mode = 0
-albedo_color = Color(0.08, 0.72, 0.82, 1)
+albedo_color = Color(0.012, 0.045, 0.06, 1)
+roughness = 0.08
 emission_enabled = true
-emission = Color(0.04, 0.62, 0.78, 1)
-emission_energy_multiplier = 2.2
+emission = Color(0.02, 0.15, 0.2, 1)
+emission_energy_multiplier = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Material_accent"]
+shading_mode = 0
+albedo_color = Color(0.2, 0.82, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="Material_trim"]
+shading_mode = 0
+albedo_color = Color(0.07, 0.3, 0.38, 1)
+
+[sub_resource type="StandardMaterial3D" id="Material_status"]
+shading_mode = 0
+albedo_color = Color(1, 0.66, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_plinth"]
+material = SubResource("Material_frame")
+size = Vector3(1.06, 0.12, 0.46)
 
 [sub_resource type="BoxMesh" id="Mesh_body"]
 material = SubResource("Material_body")
-size = Vector3(1.1, 1.55, 0.42)
+size = Vector3(1, 1.4, 0.38)
+
+[sub_resource type="BoxMesh" id="Mesh_cap"]
+material = SubResource("Material_frame")
+size = Vector3(1.04, 0.05, 0.42)
+
+[sub_resource type="BoxMesh" id="Mesh_bezel"]
+material = SubResource("Material_frame")
+size = Vector3(0.9, 0.62, 0.03)
 
 [sub_resource type="BoxMesh" id="Mesh_screen"]
 material = SubResource("Material_screen")
-size = Vector3(0.78, 0.48, 0.035)
+size = Vector3(0.8, 0.52, 0.02)
+
+[sub_resource type="BoxMesh" id="Mesh_accent_h"]
+material = SubResource("Material_trim")
+size = Vector3(0.9, 0.014, 0.012)
+
+[sub_resource type="BoxMesh" id="Mesh_accent_v"]
+material = SubResource("Material_trim")
+size = Vector3(0.01, 1.12, 0.012)
+
+[sub_resource type="BoxMesh" id="Mesh_divider"]
+material = SubResource("Material_accent")
+size = Vector3(0.7, 0.004, 0.002)
+
+[sub_resource type="BoxMesh" id="Mesh_lower_panel"]
+material = SubResource("Material_frame")
+size = Vector3(0.66, 0.34, 0.02)
+
+[sub_resource type="BoxMesh" id="Mesh_slat"]
+material = SubResource("Material_trim")
+size = Vector3(0.36, 0.01, 0.012)
+
+[sub_resource type="BoxMesh" id="Mesh_status"]
+material = SubResource("Material_status")
+size = Vector3(0.12, 0.035, 0.012)
 
 [sub_resource type="BoxShape3D" id="Shape_body"]
 size = Vector3(1.1, 1.55, 0.42)
@@ -30,12 +85,115 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_script")
 
+[node name="Plinth" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.715, 0)
+mesh = SubResource("Mesh_plinth")
+
 [node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.045, 0)
 mesh = SubResource("Mesh_body")
+
+[node name="Cap" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.77, 0)
+mesh = SubResource("Mesh_cap")
+
+[node name="Bezel" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.22, -0.205)
+mesh = SubResource("Mesh_bezel")
 
 [node name="Screen" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0.22, -0.227)
 mesh = SubResource("Mesh_screen")
+
+[node name="AccentStrip" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.6, -0.196)
+mesh = SubResource("Mesh_accent_h")
+
+[node name="SideLightLeft" type="MeshInstance3D" parent="."]
+position = Vector3(-0.485, 0.02, -0.19)
+mesh = SubResource("Mesh_accent_v")
+
+[node name="SideLightRight" type="MeshInstance3D" parent="."]
+position = Vector3(0.485, 0.02, -0.19)
+mesh = SubResource("Mesh_accent_v")
+
+[node name="LowerPanel" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.33, -0.2)
+mesh = SubResource("Mesh_lower_panel")
+
+[node name="Slat1" type="MeshInstance3D" parent="."]
+position = Vector3(-0.08, -0.27, -0.214)
+mesh = SubResource("Mesh_slat")
+
+[node name="Slat2" type="MeshInstance3D" parent="."]
+position = Vector3(-0.08, -0.33, -0.214)
+mesh = SubResource("Mesh_slat")
+
+[node name="Slat3" type="MeshInstance3D" parent="."]
+position = Vector3(-0.08, -0.39, -0.214)
+mesh = SubResource("Mesh_slat")
+
+[node name="StatusLamp" type="MeshInstance3D" parent="."]
+position = Vector3(0.22, -0.27, -0.214)
+mesh = SubResource("Mesh_status")
+
+[node name="ScreenDivider" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.385, -0.238)
+mesh = SubResource("Mesh_divider")
+
+[node name="HeaderLabel" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.425, -0.24)
+pixel_size = 0.0022
+font = ExtResource("90_mono3d")
+font_size = 20
+outline_size = 4
+outline_modulate = Color(0.005, 0.02, 0.028, 1)
+modulate = Color(0.45, 0.9, 1, 1)
+text = "FIELD_TERMINAL_UI_HEADER"
+horizontal_alignment = 1
+
+[node name="CategoryLabel" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.355, -0.24)
+pixel_size = 0.0024
+font = ExtResource("91_heading3d")
+font_size = 22
+outline_size = 4
+outline_modulate = Color(0.005, 0.02, 0.028, 1)
+modulate = Color(0.9, 0.96, 1, 1)
+text = "KAYIT"
+horizontal_alignment = 1
+vertical_alignment = 0
+autowrap_mode = 3
+width = 290.0
+
+[node name="StatusLabel" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.165, -0.24)
+pixel_size = 0.0028
+font = ExtResource("90_mono3d")
+font_size = 26
+outline_size = 5
+outline_modulate = Color(0.005, 0.02, 0.028, 1)
+modulate = Color(1, 0.66, 0.2, 1)
+text = "FIELD_TERMINAL_UI_SCREEN_ENCRYPTED"
+horizontal_alignment = 1
+
+[node name="MetaLabel" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.03, -0.24)
+pixel_size = 0.0022
+font = ExtResource("90_mono3d")
+font_size = 17
+outline_size = 4
+outline_modulate = Color(0.005, 0.02, 0.028, 1)
+modulate = Color(0.55, 0.68, 0.74, 1)
+text = ""
+horizontal_alignment = 1
+
+[node name="ScreenGlow" type="OmniLight3D" parent="."]
+position = Vector3(0, 0.22, -0.55)
+light_color = Color(0.25, 0.8, 1, 1)
+light_energy = 0.45
+omni_range = 2.0
+shadow_enabled = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("Shape_body")
