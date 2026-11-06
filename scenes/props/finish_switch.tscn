@@ -19,8 +19,8 @@ roughness = 0.28
 albedo_color = Color(0.018, 0.085, 0.11, 1)
 roughness = 0.1
 emission_enabled = true
-emission = Color(0.08, 0.72, 0.95, 1)
-emission_energy_multiplier = 2.8
+emission = Color(0.016, 0.14, 0.19, 1)
+emission_energy_multiplier = 1.0
 
 [sub_resource type="StandardMaterial3D" id="Material_accent"]
 albedo_color = Color(0.22, 0.11, 0.025, 1)
@@ -211,7 +211,7 @@ material_override = SubResource("Material_accent")
 
 [node name="HeaderLabel" type="Label3D" parent="VisualConsole"]
 position = Vector3(0, 1.95, 0.265)
-pixel_size = 0.0034
+pixel_size = 0.0029
 font = ExtResource("91_heading3d")
 font_size = 30
 outline_size = 8

@@ -24,6 +24,10 @@ room_display_scene = _read("scenes/world/room_name_display.tscn")
 
 
 # Reusable prop facing/depth conventions used by placement calculations.
+# DİKKAT: .tscn içindeki Transform3D(a, b, c, d, e, f, g, h, i, ...) satır düzenindedir;
+# yerel +Z ekseni dünyada (c, f, i) yönüdür. Örn. Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0)
+# yerel +Z'yi dünya -X'e çevirir. Bu yanlış okununca saha kaydı ve bitiş konsollarının
+# ekranları duvara bakıyordu; aşağıdaki sabitler oyunda ekran görüntüsüyle doğrulandı.
 assert 'position = Vector3(0, 1.5, 0.265)' in finish_scene  # finish front = local +Z
 assert 'position = Vector3(0, 0.22, -0.227)' in record_scene  # record front = local -Z
 assert 'position = Vector3(0, 1.05, 0.44)' in rescue_scene  # rescue front = local +Z
@@ -67,9 +71,9 @@ assert 'position = Vector3(0, 4.85, -54.72)' not in env01
 assert 'transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.5, -60)' in structure01
 for token in [
     'Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -3.8, 0.78, 45.41)',
-    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -29.59, 0.78, -2.4)',
-    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -29.59, 0.78, -38.4)',
-    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5.72, 0, -60)',
+    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -29.59, 0.78, -2.4)',
+    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -29.59, 0.78, -38.4)',
+    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5.72, 0, -60)',
 ]:
     assert token in level01, token
 
@@ -141,10 +145,10 @@ assert 'position = Vector3(24, 4.65, -14.77)' not in env02
 
 # Gameplay wall props continue to use full east walls and correct facing.
 for token in [
-    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 53.59, 0.78, 28.8)',
-    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 29.59, 0.78, -8)',
-    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 53.59, 0.78, 20.6)',
-    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.72, 0, 30)',
+    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.59, 0.78, 28.8)',
+    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 29.59, 0.78, -8)',
+    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.59, 0.78, 20.6)',
+    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 53.72, 0, 30)',
     'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.76, 4.85, 30)',
 ]:
     assert token in level02, token
@@ -194,13 +198,24 @@ for token in [
 # Records, Selin stabilization and extraction continue to be floor-correct,
 # wall-flush and player-facing.
 for token in [
-    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 11.59, 0.78, 13.8)',
-    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 23.59, 8.58, -3.6)',
+    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 11.59, 0.78, 13.8)',
+    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 23.59, 8.58, -3.6)',
     'Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -4.2, 8.58, -9.59)',
-    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 23.375, 7.81, -6.8)',
-    'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 23.72, 7.8, -17)',
+    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 23.375, 7.81, -6.8)',
+    'Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 23.72, 7.8, -17)',
     'Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 23.76, 12.4, -17)',
 ]:
     assert token in level03, token
 
 print("level prop placement audit passed")
+
+# -----------------------------------------------------------------------------
+# Terminal sunumu: saha kaydı ekranı ve kurtarma ünitesi düz kutu/billboard değil.
+# -----------------------------------------------------------------------------
+for node in ['name="Bezel"', 'name="HeaderLabel"', 'name="CategoryLabel"', 'name="StatusLabel"', 'name="MetaLabel"', 'name="StatusLamp"']:
+    assert node in record_scene, node
+assert 'text = "FIELD_TERMINAL_UI_SCREEN_ENCRYPTED"' in record_scene
+assert "billboard = 1" not in rescue_scene
+assert "MEDICAL · STABILIZATION" not in rescue_scene
+assert 'text = "CH03_RESCUE_STATUS_CRITICAL"' in rescue_scene
+assert "emission_energy_multiplier = 2.8" not in finish_scene  # ekran düz parlak blok değil
