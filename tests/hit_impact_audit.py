@@ -96,6 +96,15 @@ for needle in [
     if needle not in hitscan:
         errors.append(f"WeaponHitscanRuntime impact sözleşmesi eksik: {needle}")
 
+# Düşman sayfaları VRAM sıkıştırmalı: sıkıştırılmış görüntüden piksel okunmaz (her isabette hata basıyordu).
+impact_source = read("scripts/effects/hit_impact_v1.gd")
+for needle in [
+    "if atlas_image == null or atlas_image.is_empty() or atlas_image.is_compressed():",
+    "if image == null or image.is_compressed():",
+]:
+    if needle not in impact_source:
+        errors.append(f"Sıkıştırılmış doku koruması eksik: {needle}")
+
 if errors:
     print("HIT IMPACT V1 AUDIT FAILED:")
     for error in errors:

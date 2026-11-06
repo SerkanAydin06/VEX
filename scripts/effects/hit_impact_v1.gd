@@ -199,13 +199,16 @@ func _sample_enemy_hit_color(hit_position: Vector3) -> Color:
 	return _prepare_fragment_color(sampled)
 
 
+## Düşman sprite sayfaları VRAM sıkıştırmalı içe aktarılır; sıkıştırılmış görüntüde
+## get_pixel/get_region çalışmaz (her isabette hata basardı). O durumda null dönülür ve
+## çağıran, sprite tonuna dayalı yedek renge geçer.
 func _texture_image(texture: Texture2D) -> Image:
 	if texture is AtlasTexture:
 		var atlas_texture := texture as AtlasTexture
 		if atlas_texture.atlas == null:
 			return null
 		var atlas_image := atlas_texture.atlas.get_image()
-		if atlas_image == null or atlas_image.is_empty():
+		if atlas_image == null or atlas_image.is_empty() or atlas_image.is_compressed():
 			return null
 		var region := atlas_texture.region
 		var region_rect := Rect2i(
@@ -215,7 +218,10 @@ func _texture_image(texture: Texture2D) -> Image:
 			maxi(1, roundi(region.size.y))
 		)
 		return atlas_image.get_region(region_rect)
-	return texture.get_image()
+	var image := texture.get_image()
+	if image == null or image.is_compressed():
+		return null
+	return image
 
 
 func _find_enemy_near_hit(hit_position: Vector3) -> Node:
