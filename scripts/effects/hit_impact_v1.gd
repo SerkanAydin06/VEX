@@ -11,6 +11,16 @@ const DEFAULT_FLESH_COLOR := Color(0.42, 0.025, 0.035, 1.0)
 const FLESH_QUERY_RADIUS := 0.24
 const WORLD_SURFACE_OFFSET := 0.018
 const MOVING_SURFACE_OFFSET := 0.065
+## Sıkıştırılmış sprite sayfaları için renk örnekleme kopyası: 1/4 ölçek, en fazla 12 sayfa.
+const SAMPLE_CACHE_SCALE := 0.25
+const SAMPLE_CACHE_LIMIT := 12
+
+# atlas instance_id -> Image (açılmış, küçültülmüş). İşçi havuzu yazar, ana iş parçacığı okur.
+static var _sample_cache: Dictionary = {}
+static var _sample_cache_order: Array[int] = []
+# atlas instance_id -> WorkerThreadPool görev kimliği
+static var _sample_tasks: Dictionary = {}
+static var _sample_mutex := Mutex.new()
 
 
 static func spawn_world(
@@ -171,6 +181,9 @@ func _build_world_visual() -> void:
 	add_child(mark)
 
 
+var _sample_scale := 1.0
+
+
 func _sample_enemy_hit_color(hit_position: Vector3) -> Color:
 	var enemy := _find_enemy_near_hit(hit_position)
 	if enemy == null:
@@ -199,29 +212,84 @@ func _sample_enemy_hit_color(hit_position: Vector3) -> Color:
 	return _prepare_fragment_color(sampled)
 
 
-## Düşman sprite sayfaları VRAM sıkıştırmalı içe aktarılır; sıkıştırılmış görüntüde
-## get_pixel/get_region çalışmaz (her isabette hata basardı). O durumda null dönülür ve
-## çağıran, sprite tonuna dayalı yedek renge geçer.
+## Örneklenecek kare görüntüsünü döndürür ve `_sample_scale`'i ayarlar. Düşman sprite
+## sayfaları VRAM sıkıştırmalıdır; sıkıştırılmış görüntüde get_pixel/get_region çalışmaz.
+## O durumda sayfanın küçültülmüş açık kopyası arka planda bir kez üretilir; hazır olana
+## kadar null dönülür ve çağıran sprite tonuna dayalı yedek renge geçer (takılma yok).
 func _texture_image(texture: Texture2D) -> Image:
+	_sample_scale = 1.0
+	var source := texture
+	var region := Rect2()
 	if texture is AtlasTexture:
 		var atlas_texture := texture as AtlasTexture
 		if atlas_texture.atlas == null:
 			return null
-		var atlas_image := atlas_texture.atlas.get_image()
-		if atlas_image == null or atlas_image.is_empty() or atlas_image.is_compressed():
-			return null
-		var region := atlas_texture.region
-		var region_rect := Rect2i(
-			roundi(region.position.x),
-			roundi(region.position.y),
-			maxi(1, roundi(region.size.x)),
-			maxi(1, roundi(region.size.y))
-		)
-		return atlas_image.get_region(region_rect)
-	var image := texture.get_image()
-	if image == null or image.is_compressed():
+		source = atlas_texture.atlas
+		region = atlas_texture.region
+	var source_image := source.get_image()
+	if source_image == null or source_image.is_empty():
 		return null
-	return image
+	var scale := 1.0
+	if source_image.is_compressed():
+		source_image = _cached_sample_image(source, source_image)
+		if source_image == null:
+			return null
+		scale = SAMPLE_CACHE_SCALE
+	if region.size == Vector2.ZERO:
+		_sample_scale = scale
+		return source_image
+	var region_rect := Rect2i(
+		roundi(region.position.x * scale),
+		roundi(region.position.y * scale),
+		maxi(1, roundi(region.size.x * scale)),
+		maxi(1, roundi(region.size.y * scale))
+	).intersection(Rect2i(Vector2i.ZERO, source_image.get_size()))
+	if region_rect.size.x <= 0 or region_rect.size.y <= 0:
+		return null
+	_sample_scale = scale
+	return source_image.get_region(region_rect)
+
+
+static func _cached_sample_image(source: Texture2D, compressed: Image) -> Image:
+	var key := source.get_instance_id()
+	_sample_mutex.lock()
+	var cached: Image = _sample_cache.get(key)
+	_sample_mutex.unlock()
+	if cached != null:
+		return cached
+	_reap_sample_tasks()
+	if not _sample_tasks.has(key):
+		var work := compressed.duplicate() as Image
+		_sample_tasks[key] = WorkerThreadPool.add_task(
+			_build_sample_image.bind(key, work), false, "VEX hit color sample cache"
+		)
+	return null
+
+
+## İşçi havuzunda çalışır: yalnız kendi Image kopyasına dokunur.
+static func _build_sample_image(key: int, work: Image) -> void:
+	if work.decompress() != OK:
+		return
+	work.resize(
+		maxi(1, roundi(work.get_width() * SAMPLE_CACHE_SCALE)),
+		maxi(1, roundi(work.get_height() * SAMPLE_CACHE_SCALE)),
+		Image.INTERPOLATE_BILINEAR
+	)
+	_sample_mutex.lock()
+	_sample_cache[key] = work
+	_sample_cache_order.append(key)
+	while _sample_cache_order.size() > SAMPLE_CACHE_LIMIT:
+		_sample_cache.erase(_sample_cache_order.pop_front())
+	_sample_mutex.unlock()
+
+
+## Biten görevleri WorkerThreadPool'dan teslim al (her görev bir kez beklenmeli).
+static func _reap_sample_tasks() -> void:
+	for key: int in _sample_tasks.keys():
+		var task_id: int = _sample_tasks[key]
+		if WorkerThreadPool.is_task_completed(task_id):
+			WorkerThreadPool.wait_for_task_completion(task_id)
+			_sample_tasks.erase(key)
 
 
 func _find_enemy_near_hit(hit_position: Vector3) -> Node:
@@ -337,22 +405,26 @@ func _sample_sprite_image_at_hit(
 	var view_up := camera.global_transform.basis.y.normalized()
 	var local_x_pixels := delta.dot(view_right) / pixel_size
 	var local_y_pixels := -delta.dot(view_up) / pixel_size
+	# Koordinatlar kaynak kare pikselinde hesaplanır; örnek görüntü küçültülmüşse ölçeklenir.
+	var scale := _sample_scale
+	var source_width := float(image.get_width()) / scale
+	var source_height := float(image.get_height()) / scale
 	var pixel_x := local_x_pixels - visual.offset.x
 	var pixel_y := local_y_pixels - visual.offset.y
 	if visual.centered:
-		pixel_x += float(image.get_width()) * 0.5
-		pixel_y += float(image.get_height()) * 0.5
+		pixel_x += source_width * 0.5
+		pixel_y += source_height * 0.5
 	if visual.flip_h:
-		pixel_x = float(image.get_width() - 1) - pixel_x
+		pixel_x = source_width - 1.0 - pixel_x
 	if visual.flip_v:
-		pixel_y = float(image.get_height() - 1) - pixel_y
+		pixel_y = source_height - 1.0 - pixel_y
 
-	var center_x := clampi(roundi(pixel_x), 0, image.get_width() - 1)
-	var center_y := clampi(roundi(pixel_y), 0, image.get_height() - 1)
-	var sampled := _sample_opaque_neighborhood(image, center_x, center_y, 3)
+	var center_x := clampi(roundi(pixel_x * scale), 0, image.get_width() - 1)
+	var center_y := clampi(roundi(pixel_y * scale), 0, image.get_height() - 1)
+	var sampled := _sample_opaque_neighborhood(image, center_x, center_y, maxi(1, roundi(3.0 * scale)))
 	if sampled.a > 0.01:
 		return sampled
-	return _sample_opaque_neighborhood(image, center_x, center_y, 12)
+	return _sample_opaque_neighborhood(image, center_x, center_y, maxi(1, roundi(12.0 * scale)))
 
 
 func _sample_opaque_neighborhood(
