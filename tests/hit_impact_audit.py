@@ -44,7 +44,7 @@ for needle in [
     "fragment_mesh := SphereMesh.new()",
     "PhysicsShapeQueryParameters3D.new()",
     'get_nodes_in_group("enemy")',
-    "texture.get_image()",
+    "source.get_image()",
     "GPUParticles3D.new()",
     "MAX_WORLD_IMPACTS := 72",
     "MAX_FLESH_IMPACTS := 24",
@@ -96,11 +96,17 @@ for needle in [
     if needle not in hitscan:
         errors.append(f"WeaponHitscanRuntime impact sözleşmesi eksik: {needle}")
 
-# Düşman sayfaları VRAM sıkıştırmalı: sıkıştırılmış görüntüden piksel okunmaz (her isabette hata basıyordu).
+# Düşman sayfaları VRAM sıkıştırmalı: sıkıştırılmış görüntüden doğrudan piksel okunmaz (her isabette
+# hata basıyordu). Açma+küçültme işçi havuzunda bir kez yapılır; ana iş parçacığı yalnız önbelleği okur.
 impact_source = read("scripts/effects/hit_impact_v1.gd")
 for needle in [
-    "if atlas_image == null or atlas_image.is_empty() or atlas_image.is_compressed():",
-    "if image == null or image.is_compressed():",
+    "if source_image.is_compressed():",
+    "source_image = _cached_sample_image(source, source_image)",
+    "WorkerThreadPool.add_task(",
+    "if work.decompress() != OK:",
+    "WorkerThreadPool.wait_for_task_completion(task_id)",
+    "const SAMPLE_CACHE_LIMIT := 12",
+    "var scale := _sample_scale",
 ]:
     if needle not in impact_source:
         errors.append(f"Sıkıştırılmış doku koruması eksik: {needle}")

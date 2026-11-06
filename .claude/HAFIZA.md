@@ -13,7 +13,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - GitHub Actions kotası yok; CI kurma, yerel doğrulama kullan.
 - Önemli bilgiyi (tercih, karar, ders, yeni açık iş) kullanıcı söylemeden `HAFIZA.md`'ye kendin ekle.
 
-## Yapılanlar (2026-09, PR #80–#112)
+## Yapılanlar (2026-09, PR #80–#113)
 
 - #80 Oynanış hataları: Level 2 prop geri dönüşü, düşük can kilidi (yeniden başlama min %50, Bastion'da tam can), pause'a duyarlı düşman/kapı zamanlayıcıları, eski denetimler kanonik bölümlere uyarlandı.
 - #81 15 düşmanın kare zemin ofsetleri spritesheet'lere göre yeniden hizalandı (8 mm temas).
@@ -48,6 +48,7 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - #110 Kullanıcının bildirdiği `reload_sg04_shells: null::_get_sg04_reload_generation` hatası: doldurma beklerken ölüm/sahne geçişi WeaponController'ı serbest bırakıyordu. `VexWeaponReloadRuntime._is_alive` await sonrası önce canlılığa bakar (düz şarjör dolumundaki ikinci hata da giderildi); runtime testi oyuncuyu doldurma ortasında silerek hatayı yeniden üretir.
 - #111 `GameState.player`/`hud` sahne geçişinde serbest kalmış eski düğümü göstermeye devam ediyordu (2. ve 3. bölüm açılışında 19× "Trying to cast a freed object", Cinder Hound `_ready`). Oyuncu ve HUD `_exit_tree`'de `GameState.unregister_*` ile kaydını düşürüyor. `tools/smoke_scene_transitions.gd` duman testi eklendi (5 sahne, ateş/doldur/ölüm/ani geçiş; temiz).
 - #112 `tools/smoke_combat.gd`: test alanındaki 18 düşman türünü sırayla gerçek silah yoluyla vurur; saldırı, ölüm ve sayaç ölçülür. Bulgu: isabet efekti (`hit_impact_v1.gd`) VRAM sıkıştırmalı düşman sayfalarından piksel okumaya çalışıp her isabette onlarca hata basıyordu; sıkıştırılmışsa yedek renge geçiyor (görünüm değişmedi). Diğer şüpheler test kaynaklı çıktı (Warden'ı Venom Marshall iyileştiriyor, Gorehorn 500 can).
+- #113 Yaratığa göre isabet/kan rengi ilk kez çalışıyor: sıkıştırılmış sayfa ilk isabette `WorkerThreadPool` ile açılıp 1/4 küçük kopya önbelleğe alınır (en fazla 12 sayfa); hazır olana kadar yedek renk. İsabet başına ana iş parçacığı ~0,1–0,5 ms, takılma yok.
 
 ## Kararlar (tekrar tartışma)
 
@@ -65,7 +66,6 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 
 ## Açık işler (sırayla)
 
-- Yaratığa göre isabet/kan rengi hiç çalışmadı (sayfalar VRAM sıkıştırmalı). İstenirse: atlası arka planda (WorkerThreadPool) bir kez açıp 1/8 küçük kopyayı önbelleğe al; ilk isabette ~40 ms takılma olmasın.
 - Windows'ta `validate_local.ps1` ve gerçek Segoe UI/Cascadia fontlarıyla TR/EN görsel kontrol (Linux'ta fontlar yedek fonta düşüyor; yerleşim ve Godot testleri bu oturumda geçti).
 
 ## Öğrenilen dersler
@@ -93,4 +93,5 @@ Bu dosya oturumlar arası hafızadır; `CLAUDE.md` tarafından her oturumda yük
 - Oyun içi hata avı için `godot --headless --path <klon> -s tools/smoke_scene_transitions.gd` çalıştır; `ERROR` satırlarını say. Godot testleri geçse bile gerçek sahne geçişi hataları ancak böyle görünür.
 - Yeni `.gd` dosyası eklerken Godot'un ürettiği `.gd.uid` eşini de commit'le (geçici klonda `godot --headless --editor --quit` üretir); `resource_uid_audit` ister.
 - Headless testte süreyi kare sayarak ölçme (kare hızı 60'ın çok üstü); `Time.get_ticks_msec()` kullan. Headless'ta fare yakalanamadığı için `WeaponController` tetik girdisini yok sayar; testte `_try_fire()`/`reload()` çağır, nişan için `PlayerViewRuntime._pitch` ve geri tepme alanlarını ayarla.
+- `WorkerThreadPool` görevlerinde `Texture.get_image()` ana iş parçacığında alınır; işçi yalnız kendi `Image` kopyasına dokunur. Her görev bir kez `wait_for_task_completion` ile teslim alınmalı.
 - `tests/__pycache__` commit'e girmesin (artık `.gitignore`'da; `validate.sh` bytecode yazmaz).
